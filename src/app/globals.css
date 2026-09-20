@@ -1,26 +1,179 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Core Sangam Palette Tokens */
+    --manjal: #f2b705;
+    --sevvaanam: #d6452f;
+    --neeli: #1e2a78;
+    --mayil: #0b7a75;
+    --sandhanam: #f3e7d3;
+    --olai: #6b8e4e;
+    --mann: #b5573a;
+    --irul: #0c0f1f;
+    --gold: #d4af37;
+
+    /* Base Surfaces (Default: Irul / Deep Night Mode) */
+    --bg-base: #0a0c16;
+    --surface-raised: #131728;
+    --surface-sunken: #060810;
+    --surface-overlay: rgba(19, 23, 40, 0.78);
+    --border-subtle: rgba(243, 231, 211, 0.1);
+    --border-strong: rgba(242, 183, 5, 0.28);
+    
+    /* Text */
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+
+    /* Active Tinai Accent Defaults (Marutham) */
+    --accent-tint: #f2b705;
+    --accent-glow: rgba(242, 183, 5, 0.25);
+    --accent-gradient: linear-gradient(135deg, #f2b705 0%, #d6452f 100%);
+    --sky-gradient: linear-gradient(180deg, #0f172a 0%, #1e2a78 60%, #312e81 100%);
+  }
+
+  /* 5 Landscapes (Tinai) Theming */
+  [data-tinai="marutham"] {
+    --accent-tint: #f2b705;
+    --accent-glow: rgba(242, 183, 5, 0.3);
+    --accent-gradient: linear-gradient(135deg, #f2b705 0%, #6b8e4e 100%);
+    --sky-gradient: linear-gradient(180deg, #09121f 0%, #152528 50%, #2f4528 100%);
+  }
+
+  [data-tinai="neithal"] {
+    --accent-tint: #0b7a75;
+    --accent-glow: rgba(11, 122, 117, 0.35);
+    --accent-gradient: linear-gradient(135deg, #0b7a75 0%, #d6452f 100%);
+    --sky-gradient: linear-gradient(180deg, #090e24 0%, #1e2a78 60%, #581c87 100%);
+  }
+
+  [data-tinai="mullai"] {
+    --accent-tint: #6b8e4e;
+    --accent-glow: rgba(107, 142, 78, 0.35);
+    --accent-gradient: linear-gradient(135deg, #6b8e4e 0%, #f2b705 100%);
+    --sky-gradient: linear-gradient(180deg, #06110f 0%, #13241b 60%, #243522 100%);
+  }
+
+  [data-tinai="paalai"] {
+    --accent-tint: #b5573a;
+    --accent-glow: rgba(181, 87, 58, 0.35);
+    --accent-gradient: linear-gradient(135deg, #b5573a 0%, #f2b705 100%);
+    --sky-gradient: linear-gradient(180deg, #140d0c 0%, #2e1a17 60%, #44241d 100%);
+  }
+
+  [data-tinai="kurinji"] {
+    --accent-tint: #8b5cf6;
+    --accent-glow: rgba(139, 92, 246, 0.35);
+    --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #1e2a78 100%);
+    --sky-gradient: linear-gradient(180deg, #070614 0%, #120e2e 60%, #20174a 100%);
+  }
+
+  /* Light Theme Variant */
+  [data-theme="light"] {
+    --bg-base: #f8f6f0;
+    --surface-raised: #ffffff;
+    --surface-sunken: #ede8dc;
+    --surface-overlay: rgba(255, 255, 255, 0.85);
+    --border-subtle: rgba(12, 15, 31, 0.08);
+    --border-strong: rgba(181, 87, 58, 0.3);
+    --text-primary: #0c0f1f;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
   }
 }
 
+/* Base Body Styles & Typography */
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  min-height: 100vh;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Non-negotiable Tamil Typography Standards */
+:lang(ta), [lang="ta"] {
+  line-height: 1.68 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  font-family: var(--font-tamil), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: var(--surface-overlay);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+}
+
+.glass-panel-elevated {
+  background: rgba(19, 23, 40, 0.88);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.5), 0 0 20px -4px var(--accent-glow);
+}
+
+.glass-glow-card {
+  position: relative;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-glow-card:hover {
+  border-color: var(--accent-tint);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.4), 0 0 24px -2px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+/* Kolam Line Drawing Utility */
+.kolam-stroke {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawStroke 2.4s ease-in-out forwards;
+}
+
+@keyframes drawStroke {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Film Grain Texture Overlay */
+.film-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(243, 231, 211, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-tint);
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

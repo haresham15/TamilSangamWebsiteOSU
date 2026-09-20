@@ -1,0 +1,194 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useLocale } from "@/context/LocaleContext";
+import { useAudio } from "@/context/AudioContext";
+import { INITIATIVE_PILLARS, ART_FORMS } from "@/data/initiatives";
+import { Sparkles, Music, HeartHandshake, Calendar, Users, ArrowRight } from "lucide-react";
+
+export default function InitiativesPage() {
+  const { locale } = useLocale();
+  const { playClick, playWoodClick } = useAudio();
+  const [selectedPillar, setSelectedPillar] = useState<string>("aatam");
+
+  const activePillar = INITIATIVE_PILLARS.find((p) => p.id === selectedPillar) || INITIATIVE_PILLARS[0];
+
+  return (
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left">
+      {/* Header */}
+      <div className="max-w-3xl mb-16">
+        <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2">
+          Paalai (பாலை) · Creative Journeys & Expressions
+        </span>
+        <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-serif mb-4">
+          {locale === "ta" ? "முன்னெடுப்புகள் · கலை & சமுதாயம்" : "Initiatives & Cultural Pillars"}
+        </h1>
+        <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+          {locale === "ta"
+            ? "ஆட்டம், பாட்டம், கொண்டாட்டம் என்ற மூன்று தூண்களின் வழியே ஓஹியோ வளாகத்தில் தமிழ்க் கலைகளையும் பண்பாட்டையும் முன்னெடுத்துச் செல்கிறோம்."
+            : "Anchored by our founding brand line — Aatam (Dance), Paatam (Music), and Kondatam (Celebration) — we empower student artists, preserve ancient traditions, and foster inclusive camaraderie."}
+        </p>
+      </div>
+
+      {/* 1. The Three Pillars Selector Tabs */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        {INITIATIVE_PILLARS.map((pillar) => {
+          const isSelected = selectedPillar === pillar.id;
+          return (
+            <button
+              key={pillar.id}
+              onClick={() => {
+                playWoodClick();
+                setSelectedPillar(pillar.id);
+              }}
+              className={`p-6 rounded-3xl text-left border transition-all shadow-xl ${
+                isSelected
+                  ? "bg-white/10 border-[var(--accent-tint)] scale-[1.02]"
+                  : "glass-panel border-white/10 hover:border-white/20 text-slate-300"
+              }`}
+            >
+              <div
+                className="w-10 h-10 rounded-2xl flex items-center justify-center text-white mb-4 shadow-md"
+                style={{ backgroundColor: pillar.accentColor }}
+              >
+                {pillar.id === "aatam" && <Sparkles className="w-5 h-5" />}
+                {pillar.id === "paatam" && <Music className="w-5 h-5" />}
+                {pillar.id === "kondatam" && <HeartHandshake className="w-5 h-5" />}
+              </div>
+              <h3 className="text-lg font-bold text-white mb-1">
+                {locale === "ta" ? pillar.titleTa : pillar.titleEn}
+              </h3>
+              <p className="text-xs text-slate-400 line-clamp-2">
+                {locale === "ta" ? pillar.taglineTa : pillar.taglineEn}
+              </p>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Active Pillar Deep Dive Showcase */}
+      <div className="rounded-3xl glass-panel-elevated border border-[var(--border-strong)] p-8 sm:p-12 shadow-2xl mb-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="lg:col-span-7 space-y-6">
+          <div className="flex items-center gap-2">
+            <span
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: activePillar.accentColor }}
+            />
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)]">
+              Pillar Focus
+            </span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl font-bold text-white font-serif tracking-tight">
+            {locale === "ta" ? activePillar.titleTa : activePillar.titleEn}
+          </h2>
+
+          <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+            {locale === "ta" ? activePillar.descriptionTa : activePillar.descriptionEn}
+          </p>
+
+          <div className="space-y-3 pt-2 text-xs font-mono text-slate-300">
+            <div className="flex items-start gap-2.5">
+              <Calendar className="w-4 h-4 text-[var(--accent-tint)] shrink-0 mt-0.5" />
+              <span>
+                <strong>Rehearsals:</strong> {locale === "ta" ? activePillar.rehearsalScheduleTa : activePillar.rehearsalScheduleEn}
+              </span>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <Users className="w-4 h-4 text-[var(--accent-tint)] shrink-0 mt-0.5" />
+              <span>
+                <strong>Eligibility:</strong> {locale === "ta" ? activePillar.whoCanJoinTa : activePillar.whoCanJoinEn}
+              </span>
+            </div>
+          </div>
+
+          <div className="pt-4 flex flex-wrap items-center gap-4">
+            <Link
+              href="/join#performer"
+              onClick={playClick}
+              className="px-6 py-3 rounded-2xl bg-[var(--accent-tint)] text-black font-bold text-xs hover:opacity-95 transition-all shadow-lg flex items-center gap-2"
+            >
+              <span>Audition / Interest Form</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <Link
+              href="/gallery"
+              onClick={playClick}
+              className="px-5 py-3 rounded-2xl glass-panel text-white text-xs font-medium hover:bg-white/10 transition-all"
+            >
+              View Performance Photos →
+            </Link>
+          </div>
+        </div>
+
+        <div className="lg:col-span-5 relative h-80 rounded-2xl overflow-hidden border border-white/10 shadow-inner">
+          <Image
+            src={activePillar.imageUrl}
+            alt={activePillar.titleEn}
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 500px"
+          />
+        </div>
+      </div>
+
+      {/* 2. Traditional Art Forms Explainer Section */}
+      <div>
+        <div className="max-w-2xl mb-10">
+          <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2">
+            Living Heritage
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-bold text-white font-serif tracking-tight">
+            {locale === "ta" ? "பாரம்பரிய கலை வடிவங்கள்" : "Traditional Tamil Art Forms"}
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-300 mt-2">
+            Explore the historical origins, rhythmic structures, and energetic expressions of classical and folk arts practiced by our club troupes.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {ART_FORMS.map((art) => (
+            <div
+              key={art.id}
+              className="glass-glow-card rounded-3xl overflow-hidden border border-white/10 flex flex-col justify-between"
+            >
+              <div className="relative h-48 w-full overflow-hidden">
+                <Image
+                  src={art.imageUrl}
+                  alt={art.nameEn}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 1024px) 100vw, 400px"
+                />
+                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-mono bg-black/60 backdrop-blur-md text-[var(--accent-tint)] border border-white/10">
+                  {art.category}
+                </span>
+              </div>
+
+              <div className="p-6 flex-1 flex flex-col justify-between space-y-3">
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-1">
+                    {locale === "ta" ? art.nameTa : art.nameEn}
+                  </h3>
+                  <p className="text-[11px] font-mono text-slate-400 mb-2">
+                    📍 {locale === "ta" ? art.originTa : art.originEn}
+                  </p>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    {locale === "ta" ? art.descriptionTa : art.descriptionEn}
+                  </p>
+                </div>
+
+                <div className="pt-3 border-t border-white/10 text-[11px] font-mono text-slate-400">
+                  <span className="text-white block font-medium">Style:</span>
+                  <span>{locale === "ta" ? art.rhythmOrStyleTa : art.rhythmOrStyleEn}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
