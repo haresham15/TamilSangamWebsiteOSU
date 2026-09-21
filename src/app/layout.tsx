@@ -6,7 +6,6 @@ import { LocaleProvider } from "@/context/LocaleContext";
 import { TinaiProvider } from "@/context/TinaiContext";
 import { AudioProvider } from "@/context/AudioContext";
 import { LiteModeProvider } from "@/context/LiteModeContext";
-import { CursorProvider } from "@/context/CursorContext";
 import { AppShell } from "@/components/global/AppShell";
 
 const muktaMalar = Mukta_Malar({
@@ -59,9 +58,7 @@ export default function RootLayout({
           <TinaiProvider>
             <AudioProvider>
               <LiteModeProvider>
-                <CursorProvider>
-                  <AppShell>{children}</AppShell>
-                </CursorProvider>
+                <AppShell>{children}</AppShell>
               </LiteModeProvider>
             </AudioProvider>
           </TinaiProvider>

@@ -34,15 +34,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
 
   // Build searchable index
   const items: SearchItem[] = [
-    // Pages & Culture Toys
-    { id: "p-home", category: "Page", title: "Home / முகப்பு", subtitle: "Gopuram Ascent & Signature Hero", href: "/", icon: <Sparkles className="w-4 h-4 text-[#f2b705]" /> },
-    { id: "p-events", category: "Page", title: "Events / நிகழ்வுகள்", subtitle: "Upcoming festivals & Tamil Calendar", href: "/events", icon: <Calendar className="w-4 h-4 text-[#d6452f]" /> },
-    { id: "p-initiatives", category: "Page", title: "Initiatives / முன்னெடுப்புகள்", subtitle: "Aatam, Paatam, Kondatam", href: "/initiatives", icon: <Sparkles className="w-4 h-4 text-[#0b7a75]" /> },
-    { id: "p-gallery", category: "Page", title: "Gallery / நினைவுகள்", subtitle: "Photo albums & Memory Vault", href: "/gallery", icon: <ImageIcon className="w-4 h-4 text-[#6b8e4e]" /> },
-    { id: "p-board", category: "Page", title: "Board / குழு", subtitle: "Trading cards & Liquid Roster", href: "/board", icon: <Users className="w-4 h-4 text-[#b5573a]" /> },
-    { id: "p-culture", category: "Culture Toy", title: "Culture Lab / கலாச்சார அரங்கம்", subtitle: "Kolam Studio, Solkattu, Thirukkural", href: "/culture-lab", icon: <Sparkles className="w-4 h-4 text-[#8b5cf6]" /> },
-    { id: "p-links", category: "Page", title: "Quick Links (Bio Hub)", subtitle: "Lightweight Linktree replacement", href: "/links", icon: <ArrowRight className="w-4 h-4 text-[#f2b705]" /> },
-    { id: "p-ask", category: "Page", title: "Help Desk & FAQ / கேளுங்கள்", subtitle: "Student inquiries & officer contact", href: "/ask", icon: <HelpCircle className="w-4 h-4 text-[#38bdf8]" /> },
+    // Core Pages
+    { id: "p-home", category: "Page", title: "Home / முகப்பு", subtitle: "Official Emblem & Flagship Highlights", href: "/", icon: <Sparkles className="w-4 h-4 text-[#55CCA2]" /> },
+    { id: "p-events", category: "Page", title: "Events / நிகழ்வுகள்", subtitle: "Upcoming festivals & Ticket drops", href: "/events", icon: <Calendar className="w-4 h-4 text-[#f59e0b]" /> },
+    { id: "p-about", category: "Page", title: "About / எங்களைப் பற்றி", subtitle: "Mission, Constitution, History & FAQ", href: "/about", icon: <Sparkles className="w-4 h-4 text-[#55CCA2]" /> },
+    { id: "p-board", category: "Page", title: "Board / குழு", subtitle: "Executive leadership & committee chairs", href: "/board", icon: <Users className="w-4 h-4 text-[#a855f7]" /> },
+    { id: "p-gallery", category: "Page", title: "Gallery / நினைவுகள்", subtitle: "Festival memories & photo albums", href: "/gallery", icon: <ImageIcon className="w-4 h-4 text-[#06b6d4]" /> },
+    { id: "p-join", category: "Page", title: "Join / இணைந்திடுங்கள்", subtitle: "GroupMe gateway & audition signups", href: "/join", icon: <Users className="w-4 h-4 text-[#10b981]" /> },
+    { id: "p-links", category: "Page", title: "Quick Links (Bio Hub)", subtitle: "Mobile link-in-bio & social links", href: "/links", icon: <ArrowRight className="w-4 h-4 text-[#55CCA2]" /> },
 
     // Events
     ...EVENTS.map((e) => ({

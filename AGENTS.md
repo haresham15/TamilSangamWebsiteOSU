@@ -75,6 +75,7 @@ All styling in this project is anchored by Tailwind v4 CSS-first `@theme` and th
 3. **Component Tier**: Micro-properties (`--button-bg-primary: var(--color-action-primary)`).
 
 ### Perceptually Uniform OKLCH Palette
+
 - **Primary**: Brand anchor (L ≈ 0.45–0.65, C ≈ 0.15–0.25).
 - **Secondary**: 120°–180° hue rotation from Primary.
 - **Accent**: 40°–80° hue rotation for deliberate focal highlights.
@@ -101,3 +102,34 @@ All styling in this project is anchored by Tailwind v4 CSS-first `@theme` and th
 - **Defensive Components**: Protect runtime stability with React Error Boundaries around experimental or dynamic components.
 - **Exhaustive Type Safety**: Use strict TypeScript unions and exhaustive `switch` / `satisfies` checks to prevent silent rendering failures.
 - **Verification Loop**: Always run `npx tsc --noEmit` and verify live page renders in the browser before marking tasks complete.
+
+---
+
+## 8. Process Gates (In Order — Do Not Skip Ahead)
+
+1. **/critique**: Structural hierarchy, eye flow, and whether the primary user action is unmistakable.
+2. **/audit**: Contrast ratios (WCAG AA/AAA), keyboard focusability, screen-reader semantics, and `prefers-reduced-motion`.
+3. **/polish**: Visual refinement, OKLCH chroma balance, and physics micro-interactions.
+
+> **Hard Rule**: A beautiful screen with a broken hierarchy or accessibility failing is a failed screen. `/critique` and `/audit` strictly block `/polish`.
+
+---
+
+## 9. Component Library Whitelist & Hallucination Guardrails
+
+- **Legitimate Project Primitives**:
+  - Semantic HTML elements (`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`) with Tailwind utilities.
+  - Cultural components: `DynamicKolamHero`, `AlphabetConstellation`, `KuralViewer`, `GlowingKolamField`, `TinaiLandscapeSelector`.
+  - UI primitives: Semantic buttons (`<button>`), links (`<a>` / Next.js `<Link>`), and form controls.
+- ❌ **Forbidden Hallucinated Primitives**: `<Container>`, `<Stack>`, `<Box>`, `<Flex>`, `<GridCard>` — these components do not exist in this codebase.
+- **Imports & Boundaries**: Never make relative parent imports (`../../`) into private internal directories from example/demo files.
+
+---
+
+## 10. Project-Specific Identity & Ground Truth
+
+- **Brand Voice**: Reverent, energetic, collegiate, and culturally grounded in classical Tamil civilization (Sangam literature, Dravidian architecture, festive Kanchipuram silk).
+- **Display Typography**: **Clash Display** (`var(--font-display)`).
+- **Body & Script Typography**: **Mukta Malar** (`var(--font-body)` / `var(--font-tamil)`).
+- **Metadata / Monospace**: **JetBrains Mono** (`var(--font-mono)`).
+- **Ground Truth Design Tokens**: Codified in [`design/tokens.json`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/design/tokens.json) and mirrored in [`src/app/globals.css`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/globals.css) via `@theme`.

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { CheckCircle2, ArrowRight } from "lucide-react";
@@ -133,13 +134,12 @@ export const Footer: React.FC = () => {
         {/* Links & Legal Bottom Bar */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-purple-200/80">
           <div className="flex flex-wrap items-center gap-6">
-            <Link href="/about" className="hover:text-[#55CCA2] transition-colors">{t("nav.about")}</Link>
+            <Link href="/" className="hover:text-[#55CCA2] transition-colors">{t("nav.home")}</Link>
             <Link href="/events" className="hover:text-[#55CCA2] transition-colors">{t("nav.events")}</Link>
-            <Link href="/gallery" className="hover:text-[#55CCA2] transition-colors">{t("nav.gallery")}</Link>
+            <Link href="/about" className="hover:text-[#55CCA2] transition-colors">{t("nav.about")}</Link>
             <Link href="/board" className="hover:text-[#55CCA2] transition-colors">{t("nav.board")}</Link>
-            <Link href="/culture-lab" className="hover:text-[#55CCA2] transition-colors">{t("nav.cultureLab")}</Link>
-            <Link href="/resources" className="hover:text-[#55CCA2] transition-colors">{t("nav.resources")}</Link>
-            <Link href="/ask" className="hover:text-[#55CCA2] transition-colors">{locale === "ta" ? "உதவி அரங்கம்" : "Help Desk & FAQ"}</Link>
+            <Link href="/gallery" className="hover:text-[#55CCA2] transition-colors">{t("nav.gallery")}</Link>
+            <Link href="/join" className="hover:text-[#55CCA2] transition-colors">{t("nav.join")}</Link>
             <Link href="/links" className="text-[#55CCA2] font-semibold hover:underline transition-colors">Linktree Bio Hub</Link>
           </div>
 
