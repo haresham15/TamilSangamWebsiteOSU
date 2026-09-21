@@ -36,7 +36,7 @@ This project replaces that with a single destination that is (a) genuinely usefu
 ### 1.1 Linktree audit (linktr.ee/osutamilsangam, checked Sep 20, 2026)
 
 | Current link | Problem | Replacement in this PRD |
-|---|---|---|
+| --- | --- | --- |
 | Instagram, TikTok | Outbound only; no content inside the site | Social section + shareable cards; in-app-browser-friendly bio hub (`/links`) |
 | Powerhouse Pongal tickets (Square link) | Seasonal; someone must manually swap it | Event page with ticket CTA that auto-expires; per-event QR + short link |
 | Powerhouse Pongal performance interest form (Google Form) | Responses live in a personal Google account | In-site form, admin export, board-owned data |
@@ -51,7 +51,7 @@ This project replaces that with a single destination that is (a) genuinely usefu
 **recent.design** is a curated gallery, so the takeaway is a *vocabulary of current interaction patterns*, not one layout. Items on its front page at time of review include: holographic card effect, ASCII image loader effect, 3D vinyl player, WebGL particle creature, liquid glass hero, expanding card transitions, infinite FAQ, reveal-to-copy, voice glow, and slingshot OTP input. Borrowed and adapted here:
 
 | Pattern seen | Aintinai adaptation |
-|---|---|
+| --- | --- |
 | ASCII image loader | **Glyph-mosaic loader** using Tamil characters, not Latin ASCII |
 | Holographic card | **Board trading cards** (foil shader; Tamil name in script on the front) |
 | WebGL particle creature | **Yali / Mayil particle mascot** |
@@ -65,7 +65,7 @@ This project replaces that with a single destination that is (a) genuinely usefu
 **landonorris.com** is the complexity benchmark. What it does (from the page as served): an interactive "vertical drive" intro with a lock / "back to scroll" toggle, pinned and horizontal-scroll photo sequences with captions, a signature that is drawn on, a hover-swap "Hall of Fame" grid (each item ships a base and a hover image), a 360° object viewer, and asset names that suggest Rive-powered interactive footer and partner modules. Borrowed and adapted:
 
 | Pattern seen | Aintinai adaptation |
-|---|---|
+| --- | --- |
 | Playable intro with scroll/lock toggle | **Gopuram Ascent** with "Explore ↔ Scroll" toggle; skippable from first paint |
 | Helmet Hall of Fame (hover-swap grid) | **Events Hall of Fame** — poster on rest, best photo on hover |
 | Signature draw-on | Hand-lettered "தமிழ் சங்கம்" drawn stroke by stroke |
@@ -97,7 +97,7 @@ This project replaces that with a single destination that is (a) genuinely usefu
 ### 2.3 Success metrics (proposed baselines; recalibrate after one semester)
 
 | Area | Metric | Target |
-|---|---|---|
+| --- | --- | --- |
 | Adoption | Share of Instagram/TikTok bio traffic routed through the new site | 100% by the second week after launch |
 | Task success | New users finding "next event" and "how to join" within 10 seconds (5-person hallway test) | ≥ 90% |
 | Growth | Mailing-list signups per semester vs. Google Form baseline | +50% |
@@ -113,7 +113,7 @@ This project replaces that with a single destination that is (a) genuinely usefu
 ## 3. Users and top tasks
 
 | Persona | Who | Top tasks |
-|---|---|---|
+| --- | --- | --- |
 | **The Curious Newcomer** | First-year or transfer student, Tamil or not, arrives from Instagram/TikTok in an in-app browser | What is this? Is it for me? When is the next thing? How do I join? |
 | **The Member** | Attends regularly | Event details, tickets/RSVP, add to calendar, find my photos, GroupMe |
 | **The Performer** | Dancer/singer/instrumentalist | Interest forms, rehearsal info, performance videos |
@@ -132,7 +132,7 @@ This project replaces that with a single destination that is (a) genuinely usefu
 In classical Sangam poetry (*akam* tradition), the world is organized into five landscapes, each with a mood and a time of day. We use them as **atmosphere and structure**, not as literal romance themes. Every section keeps a plain-language English and Tamil title so nothing is cryptic.
 
 | Tinai | Landscape | Traditional time of day (*sirupozhuthu*) | Site section (design choice) | Visual / sonic signature (design choice) |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **மருதம் Marutham** | Farmland, river plains | *Vaigarai* வைகறை (dawn) | **Events** — நிகழ்வுகள் (Pongal is a harvest festival) | Gold-green fields, rising sun, pongal pot boiling over |
 | **நெய்தல் Neithal** | Seashore | *Erpaadu* எற்பாடு (sunset) | **Memories / Gallery** — நினைவுகள் | Coral-to-indigo dusk, waves, glyph-mosaic photo shimmer |
 | **முல்லை Mullai** | Forest, pasture | *Maalai* மாலை (evening) | **Board & Alumni** — குழு | Jasmine petals drifting, warm lamp light |
@@ -155,7 +155,7 @@ In classical Sangam poetry (*akam* tradition), the world is organized into five 
 **Palette (OKLCH tokens in Tailwind `@theme`; hex shown as a rough guide):**
 
 | Token | Name | Guide |
-|---|---|---|
+| --- | --- | --- |
 | `--manjal` | Turmeric | `#F2B705` |
 | `--sevvaanam` | Sunset red | `#D6452F` |
 | `--neeli` | Indigo | `#1E2A78` |
@@ -170,7 +170,7 @@ Light/dark via `light-dark()` and a `[data-tinai]` attribute that swaps the acce
 **Typography (self-hosted, subset, variable where possible):**
 
 | Role | Candidates |
-|---|---|
+| --- | --- |
 | Tamil display | Anek Tamil (variable weight/width) |
 | Tamil editorial | Tiro Tamil or Noto Serif Tamil |
 | Tamil UI/body | Noto Sans Tamil, Hind Madurai, or Mukta Malar |
@@ -179,6 +179,7 @@ Light/dark via `light-dark()` and a `[data-tinai]` attribute that swaps the acce
 | Hand-lettered hero | Custom single-stroke "தமிழ் சங்கம்" lettering (commission from a member illustrator) |
 
 **Tamil typography rules (non-negotiable):**
+
 - Set `lang="ta"` on all Tamil text (correct shaping, fonts, screen readers).
 - Body line-height ≥ 1.6; Tamil glyphs are tall and need vertical room.
 - No `letter-spacing` tweaks or `text-transform: uppercase` on Tamil.
@@ -195,7 +196,7 @@ Light/dark via `light-dark()` and a `[data-tinai]` attribute that swaps the acce
 Tamil cinema's visual language is part of the culture, so the site borrows its *grammar*, not its content:
 
 | Device | Use on the site |
-|---|---|
+| --- | --- |
 | **Film grade** | Event footage graded in DaVinci Resolve (or any grading tool), exported as `.cube` LUTs, and applied live in the browser canvas; one look per landscape, blended by time of day (§6.16) |
 | **"Now Showing" posters** | Every major event gets a poster card in the Events Hall of Fame and a ≤ 15 s muted "trailer" loop on its page |
 | **Title cards** | Section entries use large Tamil + Latin title-card lockups; optional letterboxed (2.39:1) transitions in Explore mode |
@@ -208,11 +209,13 @@ Tamil cinema's visual language is part of the culture, so the site borrows its *
 ### 4.5 Interaction and sound design layer
 
 **Custom cursor and magnetic UI** (desktop, fine-pointer only):
+
 - A cursor *follower* changes state by context (e.g., "Explore" over event cards, "Watch" over video, "Drag" over film strips, "Play" over audio); Tamil labels available in the Tamil locale (draft: ஆராயுங்கள், பாருங்கள்).
 - Magnetic buttons pull toward the pointer within a small radius (≤ ~40 px); hit targets stay ≥ 44 × 44 px and never move out from under the pointer.
 - **Guardrails:** enabled only for `(pointer: fine) and (hover: hover)`; the system cursor is never hidden over text, inputs, or links; disabled in Lite mode and under `prefers-reduced-motion`; keyboard focus gets an equivalent visible state; touch devices get tap feedback instead.
 
 **UI sound design (opt-in, off by default):**
+
 - Micro-sounds tied to animation timelines via GSAP callbacks: a rice-flour "draw" sound as kolam lines trace, a soft temple-bell tick on landscape changes, a *parai*/*thavil* accent on major transitions, a gentle wood/metal tap on button press.
 - Built from Tamil instruments and club recordings rather than generic swooshes; delivered as a single compressed audio sprite to avoid many small requests.
 - **Audio-reactive visuals:** a Web Audio `AnalyserNode` feeds shader uniforms so the kolam field pulses with the ambient bed and with Solkattu Pads (§6.7).
@@ -222,7 +225,7 @@ Tamil cinema's visual language is part of the culture, so the site borrows its *
 
 ## 5. Information architecture
 
-```
+```text
 /                       Home — Gopuram Ascent (immersive) with plain-content fallback
 /links                  Bio Hub — Linktree replacement, ultra-light, no WebGL
 /about                  What is a Sangam? Mission, story, FAQ, values, accessibility & inclusion
@@ -256,7 +259,7 @@ Tamil cinema's visual language is part of the culture, so the site borrows its *
 ### 6.1 Home — Gopuram Ascent
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | HOME-01 | **Kolam Boot loader:** a kolam draws itself on a dot (*pulli*) grid; progress tied to real asset loading; ≤ 2.5 s on Tier B, instant skip available | P1 |
 | HOME-02 | Above-the-fold content is real HTML: headline, one-line explainer, next-event card, Join CTA — visible before any WebGL loads | P0 |
 | HOME-03 | **Procedural gopuram** (stylized, line-art/shader aesthetic, not photoreal): tiers scale with scroll; each tier is a landscape with its own sky, particles, and audio bed | P1 |
@@ -274,7 +277,7 @@ Tamil cinema's visual language is part of the culture, so the site borrows its *
 ### 6.2 About
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | ABOUT-01 | Mission and "who we welcome" statement (**board to confirm wording and membership rules**) | P0 |
 | ABOUT-02 | **What is a Sangam?** Short, beautiful explainer on the classical Tamil academies of poets and why the name fits a community | P0 |
 | ABOUT-03 | Club timeline (founding → present) as a horizontal scroll narrative with archive photos | P1 |
@@ -285,7 +288,7 @@ Tamil cinema's visual language is part of the culture, so the site borrows its *
 ### 6.3 Initiatives
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | INIT-01 | Three pillars from the club's tagline as top-level cards: **Aatam** (dance), **Paatam** (song/music), **Kondatam** (celebration/community) | P0 |
 | INIT-02 | Each initiative page: what it is, who it's for, how to join, schedule, gallery, contact; extensible to mentorship, service, cultural education | P0 |
 | INIT-03 | Performer hub: interest forms (e.g., Pongal performance), rehearsal info, past performance videos | P0 |
@@ -295,7 +298,7 @@ Tamil cinema's visual language is part of the culture, so the site borrows its *
 ### 6.4 Events
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | EVT-01 | Upcoming list + month calendar; each event: date/time, location + map, description, price, capacity, host(s), dress-code note, accessibility info | P0 |
 | EVT-02 | **Add to calendar:** ICS download + Google/Apple/Outlook links; subscribable ICS feed | P0 |
 | EVT-03 | RSVP (free) and ticketed events; keep the club's current payment processor at first (link-out), integrate checkout in P1 | P0 / P1 |
@@ -313,7 +316,7 @@ Tamil cinema's visual language is part of the culture, so the site borrows its *
 ### 6.5 Gallery
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | GAL-01 | Albums by event and academic year; responsive masonry; keyboard-accessible lightbox with captions and credits | P0 |
 | GAL-02 | **Glyph-mosaic loader:** each image resolves from a mosaic of Tamil characters (glyph atlas ordered by ink density; driven by a precomputed low-res luminance grid) | P1 |
 | GAL-03 | **Film strips:** horizontal, scroll-pinned, captioned runs for featured albums | P1 |
@@ -330,7 +333,7 @@ Tamil cinema's visual language is part of the culture, so the site borrows its *
 ### 6.5b Board & Alumni
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | BRD-01 | Current board with role, short bio, photo; opt-in details only (email/handle if the member chooses) | P0 |
 | BRD-02 | **Holographic trading cards** (foil shader responding to pointer/gyroscope; flip for bio; Tamil name in script on front) | P1 |
 | BRD-03 | Alumni boards by academic year (archive of officers, themes, signature events) | P0 |
@@ -343,7 +346,7 @@ Tamil cinema's visual language is part of the culture, so the site borrows its *
 ### 6.6 Join hub (Linktree replacement)
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | JOIN-01 | `/links`: ultra-light bio hub (< 30 KB JS target, no WebGL), instantly loads inside in-app browsers; dynamically features the current event | P0 |
 | JOIN-02 | Join paths: GroupMe, mailing list, Instagram, TikTok, membership interest, performer interest — each with "what to expect" | P0 |
 | JOIN-03 | In-site mailing-list signup with double opt-in, unsubscribe, and Cloudflare Turnstile (or equivalent) spam protection | P0 |
@@ -357,7 +360,7 @@ Tamil cinema's visual language is part of the culture, so the site borrows its *
 Each toy is standalone, shareable, and works without an account.
 
 | ID | Feature | What it does | Pri |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | LAB-01 | **Kolam Studio** | Choose a dot lattice; draw with mouse/touch/pen; auto-symmetry (mirror/rotate); "complete for me" generator (dot-lattice and looped/interlaced styles); export SVG/PNG/animated video; shareable link encoding the design. Also **seed from your name** for a personal kolam. Kolam has prior academic treatment as mathematical/computational structure (array grammars, knot theory), which is a good reference set. | P1 |
 | LAB-02 | **Solkattu Pads** | Rhythm pads for percussion syllables (e.g., *ta-ka-di-mi*, *ta-ki-ta*); loop, tempo, save/share patterns; samples recorded by club percussionists (synthesized fallback). Web Audio + Tone.js. | P1 |
 | LAB-03 | **Tamil Alphabet Constellation** | Interactive visualization of the script: 12 vowels (*uyir*), 18 consonants (*mei*), the special *aaytham*, and 216 combined letters (*uyirmei*) = 247. Select a consonant + vowel to see the combination form, hear the sound, and see words that use it. | P1 |
@@ -371,7 +374,7 @@ Each toy is standalone, shareable, and works without an account.
 ### 6.8 Ask Sangam (AI concierge)
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | AI-01 | Chat drawer answering questions about the club, events, joining, and FAQs in English and Tamil | P1 |
 | AI-02 | **Grounded only on published site content** (RAG over CMS content with pgvector); refuses/redirects if unknown; always offers a human handoff (email/GroupMe) | P1 |
 | AI-03 | Guardrails: prompt-injection resistance, rate limiting per IP/session, no collection of personal data, no logs with PII, hard monthly spend cap | P1 |
@@ -381,7 +384,7 @@ Each toy is standalone, shareable, and works without an account.
 ### 6.9 Search and command palette
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | SRCH-01 | `⌘K` / `Ctrl+K` palette: pages, events, albums, people, FAQs, actions ("Add next event to calendar") | P1 |
 | SRCH-02 | Tamil-aware search: English, Tamil script, and Tanglish (transliterated) queries hit the same results; custom tokenizer + transliteration index | P1 |
 | SRCH-03 | Fully keyboard- and screen-reader-accessible (ARIA combobox pattern) | P1 |
@@ -389,7 +392,7 @@ Each toy is standalone, shareable, and works without an account.
 ### 6.10 Resources
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | RES-01 | **Festival explainers** (Puthandu, Pongal, Deepavali, Karthigai Deepam, Navaratri/Golu, Aadi Perukku, Thiruvalluvar Day, and others the board chooses) with "what to wear / eat / say" | P0 |
 | RES-02 | **Tamil 101:** greetings, common phrases, pronunciation audio (e.g., வணக்கம், நன்றி, வாங்க) | P1 |
 | RES-03 | **Columbus guide** (curated by members: groceries, restaurants, temples/places of worship, cultural centers, community groups). *Content to be sourced and verified by members; not invented.* | P1 |
@@ -400,7 +403,7 @@ Each toy is standalone, shareable, and works without an account.
 ### 6.11 Partners
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | PART-01 | Sponsors and collaborators page (e.g., the TT/TS Diwali collaboration), with past collabs and logos | P0 |
 | PART-02 | "Partner with us" form → officers' inbox + admin queue | P0 |
 | PART-03 | Auto-generated **media kit** (PDF) from live data: mission, audience, past events, photos, contact | P2 |
@@ -408,7 +411,7 @@ Each toy is standalone, shareable, and works without an account.
 ### 6.12 PWA, notifications, wallet
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | PWA-01 | Installable PWA: offline schedule, saved events, cached tickets | P1 |
 | PWA-02 | Opt-in web-push event reminders (including installed-PWA push on iOS) | P2 |
 | PWA-03 | Add tickets to Apple/Google Wallet | P2 |
@@ -416,7 +419,7 @@ Each toy is standalone, shareable, and works without an account.
 ### 6.13 Admin console ("Sangam Console")
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | ADM-01 | Roles: Admin, Officer, Editor, Photographer; officer sign-in via Google (allowlist) or magic link; audit log | P0 |
 | ADM-02 | Event CRUD with recurrence, ticket tiers, capacity, waitlist; RSVP CSV export | P0 |
 | ADM-03 | Bulk album upload with progress, caption editor, reorder, publish/unpublish | P0 |
@@ -430,7 +433,7 @@ Each toy is standalone, shareable, and works without an account.
 ### 6.14 Immersion controls and Lite mode
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | IMM-01 | **Lite mode** toggle in the utility bar: disables WebGL scenes, smooth-scroll, particle effects, and heavy transitions; static art replaces shaders; persisted | P0 |
 | IMM-02 | Auto-Lite on `prefers-reduced-motion`, `Save-Data`, low-power/low-battery, and low GPU tier; user can override | P0 |
 | IMM-03 | Sound toggle (off by default) and a "reduce flashing" guarantee (no more than 3 flashes/second anywhere) | P0 |
@@ -447,7 +450,7 @@ A public engineering page (P2): architecture diagrams, performance budgets and R
 ### 6.16 Cinematic media pipeline
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | CIN-01 | **Asset sprint (Phase 0):** curate and rank footage and photography from past events, grade it, and lock the typography and palette before building scenes | P0 |
 | CIN-02 | **Live LUT grading:** export `.cube` LUTs from the grading tool; load them in the browser and apply as a 3D-LUT post-process (WebGPU path: three's `Lut3DNode` / `lut3D()` TSL addon, which has an intensity input for blending; WebGL path: three's `LUTPass` or the `postprocessing` library's LUT effect). Verify exact loader/API names at implementation time | P1 |
 | CIN-03 | **One LUT per landscape,** blended by time of day and by scroll position through the gopuram; a "Pure/Graded" toggle lets viewers see the ungraded footage | P1 |
@@ -459,7 +462,7 @@ A public engineering page (P2): architecture diagrams, performance budgets and R
 ### 6.17 Route choreography and transitions
 
 | ID | Requirement | Pri |
-|---|---|---|
+| --- | --- | --- |
 | TRANS-01 | **No full-page reloads:** persistent layout and canvas; the background scene crossfades between route scenes (§8.2) | P1 |
 | TRANS-02 | **Shared-element image flights:** images travel from their position on one route to their position on the next (e.g., Home film strip → Memory Vault grid; event card → event page; Hall of Fame → event). Implement with the View Transitions API (`view-transition-name` per photo/event) and GSAP Flip where needed; degrade to a crossfade | P1 |
 | TRANS-03 | Transitions are interruptible and ≤ ~700 ms; back/forward restores scroll and grid state (use React `<Activity>` to preserve hidden route state); Lite mode uses instant or simple fade | P1 |
@@ -472,7 +475,7 @@ A public engineering page (P2): architecture diagrams, performance budgets and R
 ### 7.1 Experience tiers and performance budgets
 
 | Tier | Detection | Experience |
-|---|---|---|
+| --- | --- | --- |
 | **A — Full** | `navigator.gpu` present, good GPU tier, no Save-Data | WebGPU + TSL scenes, compute-shader particles, post-processing |
 | **B — Reduced** | WebGL2 fallback, mid-tier GPU, or in-app browser | Same scenes, ~10× fewer particles, no post-processing, lower DPR |
 | **C — Lite** | Reduced-motion, Save-Data, low battery, low GPU tier, or user choice | Static art and video poster frames, CSS transitions, no scroll-hijack, no canvas, no custom cursor |
@@ -513,7 +516,7 @@ Latest two versions of Chrome, Edge, Safari (macOS/iOS), Firefox, and Samsung In
 "Verified" = checked against release notes/docs on Sep 20, 2026. Everything else: run `npm view <pkg> version` at scaffold time and pin exact versions in the lockfile.
 
 | Layer | Choice | Notes |
-|---|---|---|
+| --- | --- | --- |
 | Runtime / tooling | Current Node LTS, pnpm, TypeScript (strict), Biome (or ESLint flat config + Prettier) | Check versions at scaffold |
 | Framework | **Next.js 16.3.x**, App Router, Turbopack, Cache Components / PPR | **Verified:** 16.3 shipped Aug 2026 with Instant Navigations; Next.js moved to scheduled monthly security releases in July 2026. **Pin to the latest patch and automate patch updates.** 16.2 is the Active LTS line and the fallback if a dependency (see Payload) lags |
 | UI | **React 19.2.x** + React Compiler | **Verified:** 19.2 line current (`<Activity>`, `useEffectEvent`). Use `<Activity>` to keep hidden scenes' state alive between routes |
@@ -537,6 +540,7 @@ Latest two versions of Chrome, Edge, Safari (macOS/iOS), Firefox, and Samsung In
 | Delivery | GitHub Actions, preview deploys, Renovate | Hosting: Vercel or another platform via Next.js's stable Adapter API (verified in 16.2). **Check the host's plan terms** if ticket sales are involved |
 
 **Tamil-safe engineering rules:**
+
 - Grapheme-aware segmentation (`Intl.Segmenter`) for every text animation.
 - For WebGL text and particle targets, **do not rely on runtime text engines that skip complex shaping.** Shape at build time with HarfBuzz (WASM), convert outlines to SVG paths, then sample points for particle targets and lettering.
 - OG/social image generation: **verify Tamil shaping** in the chosen renderer (some HTML-to-image engines mishandle Indic scripts); fall back to headless-browser rendering if needed.
@@ -560,7 +564,7 @@ Latest two versions of Chrome, Edge, Safari (macOS/iOS), Firefox, and Samsung In
 
 ### 8.4 Repository layout
 
-```
+```text
 /apps/web                 Next.js app (site + Payload admin)
 /packages/ui              Design system (tokens, primitives, motion utilities)
 /packages/gpu             Scenes, TSL nodes, particle systems, tier detection
@@ -599,7 +603,7 @@ Aim for a low steady-state cost using free tiers where terms allow (verify curre
 Each phase is independently shippable. Launch on festival moments where possible.
 
 | Phase | Scope | Suggested milestone |
-|---|---|---|
+| --- | --- | --- |
 | **0 — Discovery** (≈ 2 wks) | Board interviews; content inventory; brand/asset audit; domain/hosting/payments decisions; design exploration of the five landscapes; **asset sprint** (curate and grade event footage/photos, lock typography and palette, start the rights log); 5 prototypes/spikes (kolam loader, gopuram ascent sketch, glyph mosaic, cross-route shared-element transition, LUT-graded video texture) | Late Sep – early Oct |
 | **1 — Foundation + "Lite" launch** (≈ 4 wks) | Design system, i18n, CMS, admin (events/albums/board/submissions), `/links`, Home (HTML baseline), About, Initiatives, Events (archive + calendar + ICS), Gallery (import Diwali 2025), Board, Join, Partners, legal, analytics, short links | **Live before the fall Diwali events (target: early Nov)** |
 | **2 — Immersion** (≈ 7 wks) | Kolam Boot, Gopuram Ascent, pointer-reactive kolam field, time-of-day theming, cinematic hero + live LUT grading, glyph-mosaic loader, cross-route shared-element transitions, Events Hall of Fame + Events Reel, Liquid Roster + trading cards + editorial bios, custom cursor/magnetic UI, UI sound design, tiers/Lite mode, in-app-browser mode | **Before Pongal (mid-January)** |
@@ -615,7 +619,7 @@ Each phase is independently shippable. Launch on festival moments where possible
 ## 11. Risks and mitigations
 
 | # | Risk | Mitigation |
-|---|---|---|
+| --- | --- | --- |
 | R1 | **Builder graduates; site rots** (the classic student-org failure) | Club-owned GitHub org/hosting/domain accounts (not personal); board handbook + videos; CMS-first content; a scheduled hand-off drill; "Lite" baseline requires no dev to keep alive |
 | R2 | Complexity hurts usability or performance | Tier system, Lite mode, budgets in CI, hallway tests on real phones in Instagram's in-app browser |
 | R3 | Dependency and security churn (Next.js now ships monthly security releases; several packages are moving fast) | Renovate + auto-merge for patch updates; pin exact versions; keep one LTS-line fallback; monitor advisories |
@@ -637,7 +641,8 @@ Each phase is independently shippable. Launch on festival moments where possible
 
 ## 12. Open questions (decisions needed)
 
-**For the board**
+### For the board
+
 1. Who is the site for — and can non-Tamil students join freely? Approved wording for mission and welcome.
 2. Domain: what is available, and who owns the registrar account?
 3. Payments: stay on Square, or move to Stripe? Who is the treasurer contact?
@@ -647,14 +652,15 @@ Each phase is independently shippable. Launch on festival moments where possible
 7. Collaborations: how should the TT/TS Diwali collaboration be presented?
 8. OSU brand/logo rules for student orgs — check with Student Life before using any university marks. No Block O or OSU marks until approved.
 
-**For the builder**
-9. CMS choice: Payload (self-hosted, more powerful, more ops) vs. Sanity (hosted, lower ops).
-10. Hosting platform and plan terms given ticket sales.
-11. Creative direction: commission illustrated kolam/line-art and hand-lettering, or generate procedurally first?
-12. AI scope: launch Ask Sangam in Phase 4, or hold until after Puthandu?
-13. Footage: who owns the raw video from past events (e.g., Pattas Tappas, Pongal), do we have consent from people on camera, and is third-party music audible in the audio?
-14. Memory Vault embeddings: hosted API (simplest) or self-hosted open-source model (more control, more ops)?
-15. Grading: who is grading the footage, and do we standardize on one base look before creating per-landscape LUTs?
+### For the builder
+
+1. CMS choice: Payload (self-hosted, more powerful, more ops) vs. Sanity (hosted, lower ops).
+2. Hosting platform and plan terms given ticket sales.
+3. Creative direction: commission illustrated kolam/line-art and hand-lettering, or generate procedurally first?
+4. AI scope: launch Ask Sangam in Phase 4, or hold until after Puthandu?
+5. Footage: who owns the raw video from past events (e.g., Pattas Tappas, Pongal), do we have consent from people on camera, and is third-party music audible in the audio?
+6. Memory Vault embeddings: hosted API (simplest) or self-hosted open-source model (more control, more ops)?
+7. Grading: who is grading the footage, and do we standardize on one base look before creating per-landscape LUTs?
 
 ---
 
@@ -667,7 +673,7 @@ Each phase is independently shippable. Launch on festival moments where possible
 **Draft UI vocabulary (needs native review):**
 
 | English | Tamil |
-|---|---|
+| --- | --- |
 | Hello / Welcome | வணக்கம் / வாங்க |
 | Thank you | நன்றி |
 | Events | நிகழ்வுகள் |
@@ -694,22 +700,22 @@ Puthandu (mid-April), Aadi Perukku (Aadi month), Navaratri/Golu (autumn), Deepav
 
 ### D. Sources consulted (Sep 20, 2026)
 
-- Current Linktree: https://linktr.ee/osutamilsangam
-- Inspiration: https://recent.design/ · https://landonorris.com/
-- Next.js releases and security cadence: https://nextjs.org/blog
+- Current Linktree: <https://linktr.ee/osutamilsangam>
+- Inspiration: <https://recent.design/> · <https://landonorris.com/>
+- Next.js releases and security cadence: <https://nextjs.org/blog>
 - React 19.2 release notes (via the React changelog and react.dev)
-- Tailwind CSS release table: https://endoflife.date/tailwind-css
-- GSAP free-plugin status: https://github.com/greensock/gsap-skills
-- three.js WebGPU/TSL + R3F v9/v10: https://r3f.docs.pmnd.rs/tutorials/v9-migration-guide · https://github.com/pmndrs/react-three-fiber/releases
-- Payload requirements/compatibility: https://payloadcms.com/docs (installation guide)
-- three.js WebGPU post-processing and LUT node: https://threejs.org/manual/en/webgpu-postprocessing.html · https://threejs.org/docs/pages/Lut3DNode.html
+- Tailwind CSS release table: <https://endoflife.date/tailwind-css>
+- GSAP free-plugin status: <https://github.com/greensock/gsap-skills>
+- three.js WebGPU/TSL + R3F v9/v10: <https://r3f.docs.pmnd.rs/tutorials/v9-migration-guide> · <https://github.com/pmndrs/react-three-fiber/releases>
+- Payload requirements/compatibility: <https://payloadcms.com/docs> (installation guide)
+- three.js WebGPU post-processing and LUT node: <https://threejs.org/manual/en/webgpu-postprocessing.html> · <https://threejs.org/docs/pages/Lut3DNode.html>
 
 ### E. Merge log: ideas from the Gemini-generated PRD
 
-**Adopted or adapted**
+#### Adopted or adapted
 
 | Gemini idea | Disposition | Where |
-|---|---|---|
+| --- | --- | --- |
 | Color-graded event footage with `.cube` LUTs applied live in the canvas | **Adopted and extended:** one LUT per landscape, blended by time of day and scroll position | §4.4, §6.16, HOME-11 |
 | Pointer-reactive glowing kolam hero (custom shaders) | **Adopted** as HOME-13; rewritten in TSL (see below) and reused as the cheap Tier B background | HOME-13, §8.1 |
 | Magnetic UI and a stateful custom cursor ("Watch," "Explore") | **Adopted with guardrails** (fine-pointer only, never hides the system cursor, off in Lite/reduced-motion, keyboard equivalents) | §4.5, IMM-06/07 |
@@ -727,10 +733,10 @@ Puthandu (mid-April), Aadi Perukku (Aadi month), Navaratri/Golu (autumn), Deepav
 | Optional FastAPI backend | **Kept as an optional service** for batch captioning/embedding with open-source models | §8.1 (AI row) |
 | S3 + CloudFront asset delivery | **Kept as an equivalent alternative;** Cloudflare R2 remains the default because zero egress suits photo/video-heavy pages | §8.1 (Media row) |
 
-**Changed or declined, and why**
+#### Changed or declined, and why
 
 | Gemini suggestion | Change | Reason |
-|---|---|---|
+| --- | --- | --- |
 | Hand-written GLSL shaders | **TSL-first;** GLSL only on WebGL-only paths | One TSL source targets both WebGPU (WGSL) and WebGL2 (GLSL), which is what makes automatic tiering possible |
 | Framer Motion for page transitions and orchestration | **GSAP + View Transitions + Motion** | Framer Motion is now Motion; cross-route layout animations are fragile in the App Router, and GSAP is stronger for scroll-linked timelines |
 | Replace external links so users stay "completely immersed" | **Immersion is optional, never required** | The site must work in Instagram/TikTok in-app browsers, without JS, and on low-end phones; GroupMe joining necessarily happens on GroupMe |

@@ -3,11 +3,32 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { GALLERY_ALBUMS, PhotoItem } from "@/data/gallery";
 import { GlyphMosaicImage } from "@/components/ui/GlyphMosaicImage";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { Search, Sparkles, Filter, ShieldAlert, ArrowRight, Eye } from "lucide-react";
+import { Search, Filter, ShieldAlert, ArrowRight, Eye, Camera, X } from "lucide-react";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.06,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
 
 export default function GalleryPage() {
   const { locale } = useLocale();
@@ -61,21 +82,21 @@ export default function GalleryPage() {
         <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2">
           Neithal (நெய்தல்) · Seashore, Tides & Memories
         </span>
-        <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-serif mb-4">
+        <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-display mb-4">
           {locale === "ta" ? "நினைவுகள் · புகைப்படத் தொகுப்பு" : "Memories & Photo Vault"}
         </h1>
         <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
           {locale === "ta"
-            ? "தமிழ் எழுத்துக்களின் அடர்த்தியிலிருந்து மெல்ல மெல்ல மலரும் புகைப்படங்கள்; இயற்கை மொழி கொண்டு தேடக்கூடிய நினைவகப் பெட்டகம்."
-            : "Every photograph resolves out of an intricate mosaic of classical Tamil typography. Search our archives in English, Tamil, or Tanglish."}
+            ? "தமிழ் எழுத்துக்களின் அடர்த்தியிலிருந்து மெல்ல மெல்ல மலரும் புகைப்படங்கள்; விழா நினைவுகள் மற்றும் புகைப்படத் தொகுப்பு."
+            : "Explore our archive of Diwali and Pongal celebrations at Ohio State. Filter by activity, dance, or traditional festivities."}
         </p>
       </div>
 
-      {/* 1. Memory Vault Semantic Natural-Language Search */}
+      {/* 1. Photo Archive Search */}
       <div className="rounded-3xl glass-panel-elevated p-6 sm:p-8 border border-[var(--border-strong)] shadow-2xl mb-12">
         <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] mb-3">
-          <Sparkles className="w-4 h-4" />
-          <span>Memory Vault Natural-Language Search</span>
+          <Search className="w-4 h-4" />
+          <span>Search Photos & Archives</span>
         </div>
 
         <div className="relative w-full mb-4">
@@ -85,7 +106,7 @@ export default function GalleryPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="e.g., 'classical dance performances', 'earthen pot boil-over', 'parai drums', 'saree'..."
-            className="w-full pl-12 pr-4 py-3 rounded-2xl bg-white/5 border border-white/15 text-white text-sm outline-none focus:border-[var(--accent-tint)] font-sans"
+            className="w-full pl-12 pr-4 py-3 rounded-2xl bg-white/5 border border-white/15 text-white text-sm outline-none focus:border-[var(--accent-tint)] font-body"
           />
         </div>
 
@@ -102,7 +123,7 @@ export default function GalleryPage() {
                 playWoodClick();
                 setActiveTag(tag);
               }}
-              className={`px-3 py-1 rounded-full text-xs font-mono capitalize transition-all ${
+              className={`px-3 py-1 rounded-full text-xs font-mono capitalize transition-colors ${
                 activeTag === tag
                   ? "bg-[var(--accent-tint)] text-black font-semibold shadow-sm"
                   : "glass-panel text-slate-300 border-white/10 hover:border-white/25"
@@ -114,11 +135,18 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* 2. Photo Grid with Glyph-Mosaic Resolving Loaders */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+      {/* 2. Photo Grid with Glyph-Mosaic Resolving Loaders & Shared Element Morph */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20"
+      >
         {filteredPhotos.map((photo) => (
-          <div
+          <motion.div
             key={photo.id}
+            variants={itemVariants}
+            layoutId={`photo-card-${photo.id}`}
             className="glass-glow-card rounded-3xl overflow-hidden border border-white/10 group text-left cursor-pointer flex flex-col justify-between"
             onClick={() => {
               playClick();
@@ -132,7 +160,7 @@ export default function GalleryPage() {
                 alt={photo.titleEn}
                 aspectRatio="aspect-[4/3]"
               />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <div className="absolute inset-0 bg-[var(--surface-sunken)]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
                 <span className="px-4 py-2 rounded-full glass-panel text-xs text-white font-mono flex items-center gap-2">
                   <Eye className="w-3.5 h-3.5 text-[var(--accent-tint)]" />
                   <span>View Lightbox</span>
@@ -142,7 +170,7 @@ export default function GalleryPage() {
 
             <div className="p-5 flex-1 flex flex-col justify-between">
               <div>
-                <h4 className="text-base font-bold text-white mb-1">
+                <h4 className="text-base font-bold text-white mb-1 font-display">
                   {locale === "ta" ? photo.titleTa : photo.titleEn}
                 </h4>
                 <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed mb-3">
@@ -151,17 +179,20 @@ export default function GalleryPage() {
               </div>
 
               <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 pt-3 border-t border-white/10">
-                <span>📸 {photo.photographer}</span>
+                <span className="flex items-center gap-1">
+                  <Camera className="w-3 h-3 text-[var(--accent-tint)]" />
+                  <span>{photo.photographer}</span>
+                </span>
                 <span>{photo.eventDate}</span>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* 3. Featured Albums Row */}
       <div className="pt-12 border-t border-white/10">
-        <h2 className="text-2xl sm:text-3xl font-bold text-white font-serif mb-6">
+        <h2 className="text-2xl sm:text-3xl font-bold text-white font-display mb-6">
           {locale === "ta" ? "சிறப்பு ஆல்பங்கள்" : "Featured Photo Albums"}
         </h2>
 
@@ -187,7 +218,7 @@ export default function GalleryPage() {
                 <span className="text-[10px] font-mono text-[var(--accent-tint)] uppercase">
                   {album.academicYear} · {album.photoCount} Photos
                 </span>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-lg font-bold text-white font-display">
                   {locale === "ta" ? album.titleTa : album.titleEn}
                 </h3>
                 <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed">
@@ -203,64 +234,80 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* Photo Lightbox & Privacy Modal */}
-      {selectedPhoto && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-fadeIn">
-          <div className="w-full max-w-4xl rounded-3xl glass-panel-elevated p-6 border border-white/15 shadow-2xl relative text-left">
-            <button
-              onClick={() => setSelectedPhoto(null)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white text-xs font-mono z-10"
+      {/* Photo Lightbox Shared Element Modal */}
+      <AnimatePresence>
+        {selectedPhoto && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--surface-sunken)]/90 backdrop-blur-xl"
+            onClick={() => setSelectedPhoto(null)}
+          >
+            <motion.div
+              layoutId={`photo-card-${selectedPhoto.id}`}
+              transition={{ type: "spring", stiffness: 350, damping: 28 }}
+              className="w-full max-w-4xl rounded-3xl glass-panel-elevated p-6 border border-white/15 shadow-2xl relative text-left"
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
-              ✕ Close
-            </button>
+              <button
+                onClick={() => setSelectedPhoto(null)}
+                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white z-10"
+                aria-label="Close photo lightbox"
+              >
+                <X className="w-4 h-4" />
+              </button>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-              <div className="lg:col-span-8 relative h-80 sm:h-[450px] rounded-2xl overflow-hidden border border-white/10">
-                <Image
-                  src={selectedPhoto.imageUrl}
-                  alt={selectedPhoto.titleEn}
-                  fill
-                  className="object-contain bg-black/60"
-                  sizes="(max-width: 1024px) 100vw, 800px"
-                />
-              </div>
-
-              <div className="lg:col-span-4 space-y-4">
-                <h3 className="text-xl font-bold text-white font-serif">
-                  {locale === "ta" ? selectedPhoto.titleTa : selectedPhoto.titleEn}
-                </h3>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  {locale === "ta" ? selectedPhoto.captionTa : selectedPhoto.captionEn}
-                </p>
-                <div className="text-xs font-mono text-slate-400 space-y-1 pt-2 border-t border-white/10">
-                  <p>Photo: {selectedPhoto.photographer}</p>
-                  <p>Date: {selectedPhoto.eventDate}</p>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                <div className="lg:col-span-8 relative h-80 sm:h-[450px] rounded-2xl overflow-hidden border border-white/10 bg-[var(--surface-sunken)]">
+                  <Image
+                    src={selectedPhoto.imageUrl}
+                    alt={selectedPhoto.titleEn}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 1024px) 100vw, 800px"
+                  />
                 </div>
 
-                <div className="pt-4 border-t border-white/10">
-                  <button
-                    onClick={() => setIsRemovalModalOpen(true)}
-                    className="text-[11px] font-mono text-red-400 hover:underline flex items-center gap-1"
-                  >
-                    <ShieldAlert className="w-3.5 h-3.5" />
-                    <span>Request Photo Removal (Privacy)</span>
-                  </button>
+                <div className="lg:col-span-4 space-y-4">
+                  <h3 className="text-xl font-bold text-white font-display">
+                    {locale === "ta" ? selectedPhoto.titleTa : selectedPhoto.titleEn}
+                  </h3>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    {locale === "ta" ? selectedPhoto.captionTa : selectedPhoto.captionEn}
+                  </p>
+                  <div className="text-xs font-mono text-slate-400 space-y-1 pt-2 border-t border-white/10">
+                    <p>Photo: {selectedPhoto.photographer}</p>
+                    <p>Date: {selectedPhoto.eventDate}</p>
+                  </div>
+
+                  <div className="pt-4 border-t border-white/10">
+                    <button
+                      onClick={() => setIsRemovalModalOpen(true)}
+                      className="text-[11px] font-mono text-red-400 hover:underline flex items-center gap-1"
+                    >
+                      <ShieldAlert className="w-3.5 h-3.5" />
+                      <span>Request Photo Removal (Privacy)</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Privacy Removal Request Modal */}
       {isRemovalModalOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 animate-fadeIn">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[var(--surface-sunken)]/90 backdrop-blur-md">
           <div className="w-full max-w-md rounded-3xl glass-panel-elevated p-6 border border-red-500/40 shadow-2xl relative text-left">
             <button
               onClick={() => setIsRemovalModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white text-xs font-mono"
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1"
+              aria-label="Close removal modal"
             >
-              ✕ Close
+              <X className="w-4 h-4" />
             </button>
 
             {!removalSent ? (
@@ -269,7 +316,7 @@ export default function GalleryPage() {
                   <ShieldAlert className="w-4 h-4" />
                   <span>Student Photo Privacy Request</span>
                 </div>
-                <h3 className="text-lg font-bold text-white">Request Photo Removal</h3>
+                <h3 className="text-lg font-bold text-white font-display">Request Photo Removal</h3>
                 <p className="text-xs text-slate-300">
                   We respect everyone&apos;s privacy. Submit this form to have this image unlisted or your face blurred within 48 hours.
                 </p>
@@ -290,7 +337,7 @@ export default function GalleryPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 rounded-xl bg-red-600 text-white font-semibold text-xs hover:bg-red-700 transition-all shadow-md"
+                  className="w-full py-2.5 rounded-xl bg-red-600 text-white font-semibold text-xs hover:bg-red-700 transition-colors shadow-md"
                 >
                   Submit Removal Request
                 </button>

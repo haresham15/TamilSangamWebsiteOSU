@@ -115,8 +115,8 @@ export const KolamBootLoader: React.FC<KolamBootLoaderProps> = ({ onComplete }) 
                 cx={dot.x}
                 cy={dot.y}
                 r={isRevealed ? 3.5 : 2}
-                fill={isRevealed ? "#f3e7d3" : "rgba(243, 231, 211, 0.25)"}
-                className="transition-all duration-300"
+                fill={isRevealed ? "oklch(0.92 0.03 85)" : "oklch(0.92 0.03 85 / 0.25)"}
+                className="transition-opacity duration-300"
               />
             );
           })}
@@ -127,7 +127,7 @@ export const KolamBootLoader: React.FC<KolamBootLoaderProps> = ({ onComplete }) 
               x="200"
               y="214"
               textAnchor="middle"
-              fill="#f2b705"
+              fill="oklch(0.68 0.16 85)"
               fontSize="38"
               fontWeight="bold"
               fontFamily="var(--font-tamil), serif"

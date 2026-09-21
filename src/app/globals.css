@@ -1,92 +1,119 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap');
 @import "tailwindcss";
+
+@theme {
+  /* Official Tamil Sangam Logo Color System (Perceptually Uniform OKLCH) */
+  --color-sangam-purple: oklch(0.38 0.22 305);       /* Deep Royal Purple from official logo base (#4c2472) */
+  --color-sangam-purple-light: oklch(0.48 0.24 300); /* Radiant Electric Violet (#6e2dae) */
+  --color-sangam-purple-dark: oklch(0.24 0.14 305);  /* Deep Plum Ink for text readability (#250d38) */
+  --color-sangam-mint: oklch(0.78 0.16 168);         /* Signature Mint Teal from 3D drop shadow (#55CCA2) */
+  --color-sangam-mint-dark: oklch(0.52 0.17 168);    /* Deep Accessible Mint Teal (#16835f) */
+  --color-sangam-mint-light: oklch(0.92 0.06 168);   /* Ice Mint Glow (#ccfbf1) */
+  --color-sangam-lilac: oklch(0.86 0.09 300);        /* Soft Lilac from repeating Tamil watermark (#e9d5ff) */
+  --color-sangam-cream: oklch(0.98 0.015 85);        /* Warm Ivory from TAMIL SANGAM lettering (#fffdf9) */
+  --color-sangam-gold: oklch(0.82 0.18 85);          /* Festive Turmeric Sun Gold (#f59e0b) */
+  --color-sangam-coral: oklch(0.62 0.22 25);         /* Kumkumam Celebration Coral (#f43f5e) */
+
+  /* Legacy aliases for backward compatibility */
+  --color-terracotta: oklch(0.38 0.22 305);
+  --color-temple-bronze: oklch(0.78 0.16 168);
+  --color-rich-charcoal: oklch(0.24 0.14 305);
+  --color-mayil-teal: oklch(0.78 0.16 168);
+  --color-kumkumam-crimson: oklch(0.62 0.22 25);
+  --color-sandhanam-silk: oklch(0.98 0.015 85);
+
+  /* Typography Scale */
+  --font-display: 'Clash Display', sans-serif;
+  --font-serif: 'Clash Display', serif;
+  --font-body: var(--font-mukta-malar), sans-serif;
+  --font-tamil: var(--font-mukta-malar), serif;
+  --font-mono: var(--font-mono), monospace;
+
+  /* Semantic Mappings for Bright, Colorful & Welcoming Experience */
+  --color-action-primary: var(--color-sangam-purple);
+  --color-action-hover: var(--color-sangam-purple-light);
+  --color-surface-base: oklch(0.975 0.015 300);
+  --color-surface-elevated: #ffffff;
+  --color-surface-sunken: oklch(0.95 0.025 300);
+  --color-surface-overlay: oklch(0.99 0.008 300 / 0.92);
+  --color-border-subtle: oklch(0.38 0.22 305 / 0.12);
+  --color-border-strong: oklch(0.38 0.22 305 / 0.25);
+  --color-border-mint: oklch(0.78 0.16 168 / 0.6);
+  --color-text-primary: oklch(0.20 0.10 305);
+  --color-text-secondary: oklch(0.36 0.09 305);
+  --color-text-muted: oklch(0.55 0.06 305);
+}
 
 @layer base {
   :root {
-    /* Core Sangam Palette Tokens */
-    --manjal: #f2b705;
-    --sevvaanam: #d6452f;
-    --neeli: #1e2a78;
-    --mayil: #0b7a75;
-    --sandhanam: #f3e7d3;
-    --olai: #6b8e4e;
-    --mann: #b5573a;
-    --irul: #0c0f1f;
-    --gold: #d4af37;
+    /* Bright, Colorful & Welcoming Palette Rooted in the Official Logo */
+    --sangam-purple: oklch(0.38 0.22 305);
+    --sangam-mint: oklch(0.78 0.16 168);
+    --sangam-lilac: oklch(0.86 0.09 300);
+    --sangam-cream: oklch(0.98 0.015 85);
+    --sangam-gold: oklch(0.82 0.18 85);
+    --sangam-coral: oklch(0.62 0.22 25);
 
-    /* Base Surfaces (Default: Irul / Deep Night Mode) */
-    --bg-base: #0a0c16;
-    --surface-raised: #131728;
-    --surface-sunken: #060810;
-    --surface-overlay: rgba(19, 23, 40, 0.78);
-    --border-subtle: rgba(243, 231, 211, 0.1);
-    --border-strong: rgba(242, 183, 5, 0.28);
-    
-    /* Text */
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
+    /* Luminous, Bright & Cheerful Base Surfaces */
+    --bg-base: oklch(0.975 0.015 300);
+    --surface-raised: #ffffff;
+    --surface-sunken: oklch(0.945 0.025 300);
+    --surface-overlay: oklch(0.99 0.008 300 / 0.92);
+    --border-subtle: oklch(0.38 0.22 305 / 0.12);
+    --border-strong: oklch(0.38 0.22 305 / 0.28);
+    --border-mint: oklch(0.78 0.16 168 / 0.65);
 
-    /* Active Tinai Accent Defaults (Marutham) */
-    --accent-tint: #f2b705;
-    --accent-glow: rgba(242, 183, 5, 0.25);
-    --accent-gradient: linear-gradient(135deg, #f2b705 0%, #d6452f 100%);
-    --sky-gradient: linear-gradient(180deg, #0f172a 0%, #1e2a78 60%, #312e81 100%);
+    /* Text Hierarchy: Rich Deep Plum for Immaculate Readability */
+    --text-primary: oklch(0.20 0.10 305);
+    --text-secondary: oklch(0.36 0.09 305);
+    --text-muted: oklch(0.55 0.06 305);
+
+    /* Interactive Elements & Logo 3D Accents */
+    --button-primary-bg: var(--sangam-purple);
+    --button-primary-hover: oklch(0.48 0.24 300);
+    --accent-tint: var(--sangam-purple);
+    --accent-mint: var(--sangam-mint);
+    --accent-glow: oklch(0.78 0.16 168 / 0.35);
+    --accent-gradient: linear-gradient(135deg, oklch(0.38 0.22 305) 0%, oklch(0.78 0.16 168) 100%);
+    --sky-gradient: linear-gradient(180deg, oklch(0.96 0.02 300) 0%, oklch(0.98 0.01 300) 60%, oklch(0.95 0.03 168) 100%);
   }
 
-  /* 5 Landscapes (Tinai) Theming */
+  /* 5 Classical Landscapes (Tinai) Tinting with Bright, Colorful Harmony */
   [data-tinai="marutham"] {
-    --accent-tint: #f2b705;
-    --accent-glow: rgba(242, 183, 5, 0.3);
-    --accent-gradient: linear-gradient(135deg, #f2b705 0%, #6b8e4e 100%);
-    --sky-gradient: linear-gradient(180deg, #09121f 0%, #152528 50%, #2f4528 100%);
+    --accent-tint: oklch(0.78 0.16 168);
+    --accent-glow: oklch(0.78 0.16 168 / 0.35);
+    --accent-gradient: linear-gradient(135deg, oklch(0.38 0.22 305) 0%, oklch(0.78 0.16 168) 100%);
   }
 
   [data-tinai="neithal"] {
-    --accent-tint: #0b7a75;
-    --accent-glow: rgba(11, 122, 117, 0.35);
-    --accent-gradient: linear-gradient(135deg, #0b7a75 0%, #d6452f 100%);
-    --sky-gradient: linear-gradient(180deg, #090e24 0%, #1e2a78 60%, #581c87 100%);
+    --accent-tint: oklch(0.55 0.18 210);
+    --accent-glow: oklch(0.55 0.18 210 / 0.35);
+    --accent-gradient: linear-gradient(135deg, oklch(0.38 0.22 305) 0%, oklch(0.55 0.18 210) 100%);
   }
 
   [data-tinai="mullai"] {
-    --accent-tint: #6b8e4e;
-    --accent-glow: rgba(107, 142, 78, 0.35);
-    --accent-gradient: linear-gradient(135deg, #6b8e4e 0%, #f2b705 100%);
-    --sky-gradient: linear-gradient(180deg, #06110f 0%, #13241b 60%, #243522 100%);
+    --accent-tint: oklch(0.65 0.16 140);
+    --accent-glow: oklch(0.65 0.16 140 / 0.35);
+    --accent-gradient: linear-gradient(135deg, oklch(0.65 0.16 140) 0%, oklch(0.78 0.16 168) 100%);
   }
 
   [data-tinai="paalai"] {
-    --accent-tint: #b5573a;
-    --accent-glow: rgba(181, 87, 58, 0.35);
-    --accent-gradient: linear-gradient(135deg, #b5573a 0%, #f2b705 100%);
-    --sky-gradient: linear-gradient(180deg, #140d0c 0%, #2e1a17 60%, #44241d 100%);
+    --accent-tint: oklch(0.72 0.18 60);
+    --accent-glow: oklch(0.72 0.18 60 / 0.35);
+    --accent-gradient: linear-gradient(135deg, oklch(0.38 0.22 305) 0%, oklch(0.72 0.18 60) 100%);
   }
 
   [data-tinai="kurinji"] {
-    --accent-tint: #8b5cf6;
-    --accent-glow: rgba(139, 92, 246, 0.35);
-    --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #1e2a78 100%);
-    --sky-gradient: linear-gradient(180deg, #070614 0%, #120e2e 60%, #20174a 100%);
-  }
-
-  /* Light Theme Variant */
-  [data-theme="light"] {
-    --bg-base: #f8f6f0;
-    --surface-raised: #ffffff;
-    --surface-sunken: #ede8dc;
-    --surface-overlay: rgba(255, 255, 255, 0.85);
-    --border-subtle: rgba(12, 15, 31, 0.08);
-    --border-strong: rgba(181, 87, 58, 0.3);
-    --text-primary: #0c0f1f;
-    --text-secondary: #334155;
-    --text-muted: #64748b;
+    --accent-tint: oklch(0.48 0.24 300);
+    --accent-glow: oklch(0.48 0.24 300 / 0.35);
+    --accent-gradient: linear-gradient(135deg, oklch(0.38 0.22 305) 0%, oklch(0.48 0.24 300) 100%);
   }
 }
 
 /* Base Body Styles & Typography */
 html {
   scroll-behavior: smooth;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -94,44 +121,116 @@ body {
   color: var(--text-primary);
   overflow-x: hidden;
   min-height: 100vh;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, .font-display, .font-serif {
+  font-family: var(--font-display), var(--font-body);
 }
 
 /* Non-negotiable Tamil Typography Standards */
 :lang(ta), [lang="ta"] {
-  line-height: 1.68 !important;
+  line-height: 1.72 !important;
   letter-spacing: 0 !important;
   text-transform: none !important;
-  font-family: var(--font-tamil), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-tamil), serif;
 }
 
-/* Glassmorphism Classes */
+/* Repeating Tamil Script Pattern Watermark (Signature Motif from Official Logo) */
+.bg-tamil-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='42' viewBox='0 0 120 42' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='6' y='16' font-family='sans-serif' font-size='13' font-weight='700' fill='%23582a86' fill-opacity='0.08' letter-spacing='2'%3Eதமிழ்%3C/text%3E%3Ctext x='66' y='16' font-family='sans-serif' font-size='13' font-weight='700' fill='%23582a86' fill-opacity='0.08' letter-spacing='2'%3Eதமிழ்%3C/text%3E%3Ctext x='36' y='36' font-family='sans-serif' font-size='13' font-weight='700' fill='%23582a86' fill-opacity='0.08' letter-spacing='2'%3Eதமிழ்%3C/text%3E%3Ctext x='96' y='36' font-family='sans-serif' font-size='13' font-weight='700' fill='%23582a86' fill-opacity='0.08' letter-spacing='2'%3Eதமிழ்%3C/text%3E%3C/svg%3E");
+}
+
+.bg-tamil-pattern-vibrant {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='42' viewBox='0 0 120 42' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='6' y='16' font-family='sans-serif' font-size='13' font-weight='700' fill='%238b65b6' fill-opacity='0.32' letter-spacing='2'%3Eதமிழ்%3C/text%3E%3Ctext x='66' y='16' font-family='sans-serif' font-size='13' font-weight='700' fill='%238b65b6' fill-opacity='0.32' letter-spacing='2'%3Eதமிழ்%3C/text%3E%3Ctext x='36' y='36' font-family='sans-serif' font-size='13' font-weight='700' fill='%238b65b6' fill-opacity='0.32' letter-spacing='2'%3Eதமிழ்%3C/text%3E%3Ctext x='96' y='36' font-family='sans-serif' font-size='13' font-weight='700' fill='%238b65b6' fill-opacity='0.32' letter-spacing='2'%3Eதமிழ்%3C/text%3E%3C/svg%3E");
+}
+
+/* Official Logo Mint 3D Drop-Shadow Utilities */
+.logo-mint-shadow {
+  box-shadow: 4px 4px 0px #55CCA2;
+}
+
+.logo-mint-shadow-lg {
+  box-shadow: 6px 6px 0px #55CCA2, 0 12px 28px -6px oklch(0.38 0.22 305 / 0.25);
+}
+
+.logo-mint-text-shadow {
+  text-shadow: 3px 3px 0px #55CCA2;
+}
+
+/* Luminous Glassmorphism Classes with Bright, Welcoming Polish */
 .glass-panel {
   background: var(--surface-overlay);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 20px -2px oklch(0.38 0.22 305 / 0.06);
 }
 
 .glass-panel-elevated {
-  background: rgba(19, 23, 40, 0.88);
+  background: #ffffff;
   -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
   border: 1px solid var(--border-strong);
-  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.5), 0 0 20px -4px var(--accent-glow);
+  box-shadow: 0 16px 40px -8px oklch(0.38 0.22 305 / 0.14), 0 0 24px -4px var(--accent-glow);
 }
 
 .glass-glow-card {
   position: relative;
-  background: var(--surface-raised);
+  background: #ffffff;
   border: 1px solid var(--border-subtle);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 18px -4px oklch(0.38 0.22 305 / 0.08);
+  transition-property: border-color, box-shadow, transform;
+  transition-duration: 250ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-glow-card:hover {
-  border-color: var(--accent-tint);
-  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.4), 0 0 24px -2px var(--accent-glow);
+  border-color: #55CCA2;
+  box-shadow: 4px 4px 0px #55CCA2, 0 16px 36px -8px oklch(0.38 0.22 305 / 0.16);
   transform: translateY(-2px);
+}
+
+/* Signature Official Logo Action Button */
+.btn-sangam {
+  background-color: var(--sangam-purple);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 4px 4px 0px #55CCA2;
+  border: 1px solid oklch(0.78 0.16 168 / 0.4);
+  transition: all 180ms ease;
+}
+
+.btn-sangam:hover {
+  background-color: oklch(0.48 0.24 300);
+  transform: translate(-1px, -1px);
+  box-shadow: 6px 6px 0px #55CCA2;
+}
+
+.btn-sangam:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #55CCA2;
+}
+
+.btn-sangam-mint {
+  background-color: #55CCA2;
+  color: #240e36;
+  font-weight: 700;
+  box-shadow: 4px 4px 0px var(--sangam-purple);
+  border: 1px solid var(--sangam-purple);
+  transition: all 180ms ease;
+}
+
+.btn-sangam-mint:hover {
+  background-color: #6fe4ba;
+  transform: translate(-1px, -1px);
+  box-shadow: 6px 6px 0px var(--sangam-purple);
+}
+
+.btn-sangam-mint:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px var(--sangam-purple);
 }
 
 /* Kolam Line Drawing Utility */
@@ -149,7 +248,7 @@ body {
 
 /* Film Grain Texture Overlay */
 .film-grain {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
 }
 
 /* Custom Scrollbar */
@@ -161,7 +260,7 @@ body {
   background: var(--bg-base);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(243, 231, 211, 0.2);
+  background: oklch(0.38 0.22 305 / 0.25);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {

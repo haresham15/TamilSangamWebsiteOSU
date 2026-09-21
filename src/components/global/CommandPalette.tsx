@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { EVENTS } from "@/data/events";
-import { CURRENT_BOARD } from "@/data/board";
+import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS } from "@/data/board";
 import { GALLERY_ALBUMS } from "@/data/gallery";
 import { FAQS } from "@/data/faq";
 import { Search, Calendar, Users, Image as ImageIcon, HelpCircle, ArrowRight, X, Sparkles } from "lucide-react";
@@ -42,7 +42,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
     { id: "p-board", category: "Page", title: "Board / குழு", subtitle: "Trading cards & Liquid Roster", href: "/board", icon: <Users className="w-4 h-4 text-[#b5573a]" /> },
     { id: "p-culture", category: "Culture Toy", title: "Culture Lab / கலாச்சார அரங்கம்", subtitle: "Kolam Studio, Solkattu, Thirukkural", href: "/culture-lab", icon: <Sparkles className="w-4 h-4 text-[#8b5cf6]" /> },
     { id: "p-links", category: "Page", title: "Quick Links (Bio Hub)", subtitle: "Lightweight Linktree replacement", href: "/links", icon: <ArrowRight className="w-4 h-4 text-[#f2b705]" /> },
-    { id: "p-ask", category: "Page", title: "Ask Sangam AI / கேளுங்கள்", subtitle: "Interactive concierge assistant", href: "/ask", icon: <HelpCircle className="w-4 h-4 text-[#38bdf8]" /> },
+    { id: "p-ask", category: "Page", title: "Help Desk & FAQ / கேளுங்கள்", subtitle: "Student inquiries & officer contact", href: "/ask", icon: <HelpCircle className="w-4 h-4 text-[#38bdf8]" /> },
 
     // Events
     ...EVENTS.map((e) => ({
@@ -59,9 +59,19 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       id: `brd-${b.id}`,
       category: "Person" as const,
       title: `${b.nameEn} (${b.nameTa})`,
-      subtitle: `${b.roleEn} · ${b.major}`,
-      href: `/board#${b.id}`,
+      subtitle: `${b.roleEn} · ${b.committeeEn}`,
+      href: `/board`,
       icon: <Users className="w-4 h-4 text-[#6b8e4e]" />,
+    })),
+
+    // Subcommittee Members
+    ...SUBCOMMITTEE_MEMBERS.map((s) => ({
+      id: `sub-${s.id}`,
+      category: "Person" as const,
+      title: `${s.nameEn} (${s.nameTa})`,
+      subtitle: `Subcommittee · ${s.areaEn}`,
+      href: `/board`,
+      icon: <Users className="w-4 h-4 text-[var(--accent-tint)]" />,
     })),
 
     // Gallery Albums

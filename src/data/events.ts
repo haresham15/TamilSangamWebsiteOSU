@@ -10,8 +10,8 @@ export interface SangamEvent {
   location: string;
   venueAddress: string;
   price: string;
-  capacity: number;
-  rsvpCount: number;
+  statusBadgeEn: string;
+  statusBadgeTa: string;
   status: "upcoming" | "past";
   academicYear: string;
   descriptionEn: string;
@@ -21,7 +21,8 @@ export interface SangamEvent {
   schedule: Array<{ time: string; activityEn: string; activityTa: string }>;
   posterImage: string;
   hoverImage: string;
-  trailerVideo?: string;
+  ticketUrl?: string;
+  interestFormUrl?: string;
   tags: string[];
 }
 
@@ -37,9 +38,9 @@ export const EVENTS: SangamEvent[] = [
     tamilDate: "தை 10, சுபகிருது",
     location: "Performance Hall, Ohio Union",
     venueAddress: "1739 N High St, Columbus, OH 43210",
-    price: "$10 (Students) / $15 (General)",
-    capacity: 450,
-    rsvpCount: 382,
+    price: "$10 (Students with BuckID) / $15 (General)",
+    statusBadgeEn: "Upcoming Flagship Celebration",
+    statusBadgeTa: "முதன்மை அறுவடைப் பெருவிழா",
     status: "upcoming",
     academicYear: "2026-2027",
     descriptionEn:
@@ -57,6 +58,8 @@ export const EVENTS: SangamEvent[] = [
     ],
     posterImage: "https://images.unsplash.com/photo-1610192244261-3f33de3f55e4?auto=format&fit=crop&w=1200&q=80",
     hoverImage: "https://images.unsplash.com/photo-1543807535-eceef0bc6599?auto=format&fit=crop&w=1200&q=80",
+    ticketUrl: "https://linktr.ee/osutamilsangam",
+    interestFormUrl: "/join#performer",
     tags: ["pongal", "harvest", "dance", "parai", "food"],
   },
   {
@@ -71,12 +74,12 @@ export const EVENTS: SangamEvent[] = [
     location: "Archie Griffin Ballroom, Ohio Union",
     venueAddress: "1739 N High St, Columbus, OH 43210",
     price: "$12 (BuckID) / $18 (General)",
-    capacity: 500,
-    rsvpCount: 500,
+    statusBadgeEn: "Co-hosted with Tamil Thalaivas",
+    statusBadgeTa: "கூட்டுத் தீபாவளித் திருவிழா",
     status: "upcoming",
     academicYear: "2026-2027",
     descriptionEn:
-      "A blockbuster evening co-hosted with Tamil Thalaivas, featuring energetic group choreography, light shows, a live band performing Tamil classics and indie hits, and festive fireworks viewing.",
+      "A blockbuster evening co-hosted with Tamil Thalaivas, featuring energetic group choreography, light shows, a live band performing Tamil classics and indie hits, and festive sparklers celebration.",
     descriptionTa:
       "தமிழ் தலைவாஸுடன் இணைந்து வழங்கும் பிரம்மாண்டமான தீபாவளித் திருநாள். வண்ண விளக்குகள், திரையிசை நடனங்கள், நேரடி இசைக்குழு மற்றும் சுவையான இனிப்புகளுடன் கூடிய இரவு.",
     dressCodeEn: "Festive Attire: Bright silks, sherwanis, and lehengas",
@@ -85,10 +88,12 @@ export const EVENTS: SangamEvent[] = [
       { time: "6:00 PM", activityEn: "Diwali Sweets & Red Carpet Welcome", activityTa: "தீபாவளி இனிப்பு & வரவேற்பு" },
       { time: "6:45 PM", activityEn: "Mega Dance Performances", activityTa: "மெகா நடன அரங்கேற்றம்" },
       { time: "8:00 PM", activityEn: "Dinner Feast & Mithai Bar", activityTa: "விருந்து மற்றும் இனிப்பு அரங்கம்" },
-      { time: "9:00 PM", activityEn: "Live Band 'Kondatam'", activityTa: "'கொண்டாட்டம்' நேரடி இசைக்குழு" },
+      { time: "9:00 PM", activityEn: "Live Musical Jam & Sparklers", activityTa: "நேரடி இசை மற்றும் மத்தாப்பு" },
     ],
     posterImage: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80",
     hoverImage: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80",
+    ticketUrl: "https://linktr.ee/osutamilsangam",
+    interestFormUrl: "/join#performer",
     tags: ["diwali", "dance", "concert", "lights", "festive"],
   },
   {
@@ -102,9 +107,9 @@ export const EVENTS: SangamEvent[] = [
     tamilDate: "சித்திரை 5, சுபகிருது",
     location: "South Oval Pavilion, OSU Campus",
     venueAddress: "South Oval, Columbus, OH 43210",
-    price: "Free Admission",
-    capacity: 300,
-    rsvpCount: 260,
+    price: "Free Admission (Open to all)",
+    statusBadgeEn: "Spring Outdoor Gathering",
+    statusBadgeTa: "வசந்தகால ஒன்றுகூடல்",
     status: "past",
     academicYear: "2025-2026",
     descriptionEn:
@@ -118,39 +123,8 @@ export const EVENTS: SangamEvent[] = [
       { time: "3:15 PM", activityEn: "Traditional Games (Kabaddi & Tug-of-war)", activityTa: "கபடி மற்றும் கயிறு இழுத்தல்" },
       { time: "4:30 PM", activityEn: "Kaviarangam & Acoustic Showcase", activityTa: "கவியரங்கம் மற்றும் மெல்லிசை" },
     ],
-    posterImage: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80",
-    tags: ["new-year", "puthandu", "games", "outdoors", "poetry"],
-  },
-  {
-    slug: "sangam-welcome-night-2025",
-    titleEn: "Sangam Welcome Night & Chai Social",
-    titleTa: "சங்கம் வரவேற்பு மாலை & தேநீர் சந்திப்பு",
-    taglineEn: "Connecting newcomers, freshmen, and returning Buckeyes.",
-    taglineTa: "புதிய மாணவர்களையும் நண்பர்களையும் வரவேற்கும் இனிமையான மாலை.",
-    date: "September 5, 2025",
-    time: "6:30 PM - 9:00 PM EST",
-    tamilDate: "ஆவணி 20, விசுவாசு",
-    location: "Hagerty Hall Courtyard",
-    venueAddress: "1775 College Rd S, Columbus, OH 43210",
-    price: "Free",
-    capacity: 200,
-    rsvpCount: 195,
-    status: "past",
-    academicYear: "2025-2026",
-    descriptionEn:
-      "Our semester kickoff event! Meet the executive board, learn about upcoming dance and cultural initiatives, grab fresh masala chai and hot samosas, and win Sangam merch.",
-    descriptionTa:
-      "புதிய கல்வியாண்டின் தொடக்க விழா! சங்க நிர்வாகிகளைச் சந்தியுங்கள், கலை முயற்சிகளில் இணையுங்கள், சூடான மசாலா டீயுடன் மகிழுங்கள்.",
-    dressCodeEn: "Campus Casual",
-    dressCodeTa: "வழக்கமான ஆடை",
-    schedule: [
-      { time: "6:30 PM", activityEn: "Icebreakers & Speed Friending", activityTa: "அறிமுக விளையாட்டுகள்" },
-      { time: "7:30 PM", activityEn: "Chai & Samosa Refreshments", activityTa: "மசாலா டீ & சமோசா" },
-      { time: "8:15 PM", activityEn: "Aatam/Paatam Audition Briefing", activityTa: "ஆட்டம்/பாட்டம் தேர்வு விவரங்கள்" },
-    ],
-    posterImage: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1200&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80",
-    tags: ["welcome", "social", "chai", "freshmen", "community"],
+    posterImage: "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80",
+    tags: ["puthandu", "new-year", "games", "poetry", "spring"],
   },
 ];

@@ -1,0 +1,33 @@
+# The Architecture of Distinctive Interfaces: Cursor & Agent Rules
+
+## Phase 1: Strict Anti-Slop Constraints
+1. **Banned Typography**: Strictly forbid Inter, Roboto, Arial, or generic sans-serif for headings or body. All headings MUST use Clash Display (`font-display`). All body text and Tamil typography MUST use Mukta Malar (`font-body` / `font-tamil`).
+2. **Banned Colors**: Strictly forbid pure black (`#000000`, `rgb(0,0,0)`), default purple/indigo Tailwind gradients (`from-indigo-500 to-purple-600`), and flat `#FFFFFF` backgrounds.
+3. **Banned Components**: Strictly eliminate heavily nested, uniform card wrappers with default 0.1 opacity drop shadows and oversized, center-aligned rounded icons.
+4. **Banned Motion**: Strictly forbid generic `transition: all 0.3s ease` and `transition-all duration-300`. Animate discrete properties with intentional curves.
+
+
+## Phase 2: Tailwind v4 & OKLCH System
+- Use CSS-first `@theme` and native CSS variables in `@import "tailwindcss"`. No legacy `tailwind.config.js`.
+- All colors must use perceptually uniform `oklch()`:
+  - Primary: Deep Terracotta (`oklch(0.48 0.18 38)`)
+  - Secondary: Temple Bronze (`oklch(0.68 0.16 85)`)
+  - Neutral: Rich Charcoal (`oklch(0.14 0.02 60)`) with warm amber undertone (zero pure blacks or dead grays)
+- Map primitives to semantic tokens (`--button-primary-bg`, `--surface-elevated`, etc.) before applying to the DOM.
+
+## Phase 3: Intentional Motion Engineering
+- Use parent `variants` with `staggerChildren` to sequence lists. Never calculate manual child delays.
+- Hardware-accelerate transforms using Framer Motion `layout` prop. Never animate width, height, margin, or top directly.
+- Use identical `layoutId` strings for shared-element morphs (thumbnails to lightboxes/modals).
+- Spring physics for user interactions (`stiffness: 350, damping: 28`); tweens strictly for systemic state/opacity fades.
+
+## Phase 4: The Novelty Budget
+- Safety Layer (Nav, close buttons, search, inputs): 0% novelty. Obey Jakob's Law.
+- Product Layer (Timelines, rosters, filtering): 30% novelty. Focus on information clarity.
+- Expression Layer (Hero, dynamic Kolam, typography, shaders): 100% novelty. Bold cultural distinctiveness.
+
+## Steering Commands Supported
+- `/typeset`: Enforce modular scale and line-heights for English-to-Tamil typography.
+- `/distill`: Strip redundant illustrative elements and reduce UI to functional core.
+- `/delight`: Apply 3D mouse-tracking tilt effects and spring micro-interactions.
+

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useLocale } from "@/context/LocaleContext";
 import { useTinai, TINAIS, Tinai } from "@/context/TinaiContext";
@@ -57,27 +58,34 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
     <>
       <header className="fixed top-4 left-0 right-0 z-50 px-4 sm:px-6 pointer-events-none">
         <div className="max-w-7xl mx-auto flex items-center justify-between pointer-events-auto">
-          {/* Logo & Classical Title */}
+          {/* Logo & Brand Title */}
           <Link
             href="/"
             onClick={playClick}
-            className="group flex items-center gap-3 px-4 py-2.5 rounded-full glass-panel border border-[var(--border-subtle)] shadow-xl transition-all duration-300 hover:border-[var(--accent-tint)] hover:scale-[1.02]"
+            className="group flex items-center gap-3 px-3.5 py-2 rounded-full glass-panel border border-purple-200/80 shadow-md transition-all duration-200 hover:border-[#55CCA2] hover:shadow-[0_0_16px_rgba(85,204,162,0.3)] bg-white/90"
           >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#f2b705] via-[#d6452f] to-[#1e2a78] flex items-center justify-center text-white font-bold text-sm shadow-md">
-              <span className="font-serif">ஐ</span>
+            <div className="relative w-9 h-9 rounded-full overflow-hidden shadow-sm shrink-0 border border-[#55CCA2]/60">
+              <Image
+                src="/emblem.svg"
+                alt="Official OSU Tamil Sangam Logo"
+                fill
+                className="object-cover"
+                sizes="36px"
+                priority
+              />
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold tracking-tight group-hover:text-[var(--accent-tint)] transition-colors">
+            <div className="flex flex-col text-left">
+              <span className="text-sm font-bold tracking-tight text-[#250d38] group-hover:text-[#4c2472] transition-colors font-display">
                 {t("brand.name")}
               </span>
-              <span className="text-[10px] text-[var(--text-muted)] tracking-wider uppercase font-mono">
+              <span className="text-[10px] text-[#6b478d] tracking-wider uppercase font-mono">
                 {t("brand.classicalTitle")} · {locale === "ta" ? meta.nameTa : meta.nameEn}
               </span>
             </div>
           </Link>
 
           {/* Desktop Navigation Center Bar */}
-          <nav className="hidden lg:flex items-center gap-1 px-3 py-1.5 rounded-full glass-panel border border-[var(--border-subtle)] shadow-xl">
+          <nav className="hidden lg:flex items-center gap-1 px-3 py-1.5 rounded-full glass-panel border border-purple-200/70 shadow-md bg-white/90">
             {navLinks.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -85,10 +93,10 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                   key={item.href}
                   href={item.href}
                   onClick={playClick}
-                  className={`px-3.5 py-1.5 text-xs font-medium rounded-full transition-all duration-200 ${
+                  className={`px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 ${
                     isActive
-                      ? "bg-[var(--accent-tint)] text-black font-semibold shadow-sm"
-                      : "text-[var(--text-secondary)] hover:text-white hover:bg-white/10"
+                      ? "bg-[#4c2472] text-white shadow-sm border border-[#55CCA2]/50"
+                      : "text-[#3c1959] hover:text-[#250d38] hover:bg-purple-100/70"
                   }`}
                 >
                   {t(item.labelKey)}
@@ -237,9 +245,9 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
 
       {/* Mobile Drawer Navigation */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-black/80 backdrop-blur-xl lg:hidden flex flex-col pt-24 px-6 pb-10 justify-between overflow-y-auto">
+        <div className="fixed inset-0 z-40 bg-white/95 backdrop-blur-2xl lg:hidden flex flex-col pt-24 px-6 pb-10 justify-between overflow-y-auto border-b border-purple-200 shadow-2xl">
           <div className="space-y-3">
-            <p className="text-xs uppercase font-mono tracking-widest text-[var(--text-muted)] px-3">
+            <p className="text-xs uppercase font-mono tracking-widest text-[#6b478d] px-3">
               {t("brand.classicalTitle")} · Navigation
             </p>
             <div className="grid grid-cols-1 gap-2">
@@ -250,10 +258,10 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                     key={item.href}
                     href={item.href}
                     onClick={handleLinkClick}
-                    className={`flex items-center justify-between px-4 py-3 rounded-2xl text-base font-medium transition-all ${
+                    className={`flex items-center justify-between px-4 py-3 rounded-2xl text-base font-semibold transition-all ${
                       isActive
-                        ? "bg-[var(--accent-tint)] text-black font-semibold shadow-md"
-                        : "glass-panel text-white hover:bg-white/10"
+                        ? "bg-[#4c2472] text-white shadow-md border border-[#55CCA2]"
+                        : "bg-purple-50/70 border border-purple-100 text-[#250d38] hover:bg-purple-100"
                     }`}
                   >
                     <span>{t(item.labelKey)}</span>
@@ -285,11 +293,11 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
             </button>
 
             <Link
-              href="/under-the-hood"
+              href="/ask"
               onClick={handleLinkClick}
               className="hover:text-[var(--accent-tint)]"
             >
-              {t("nav.underTheHood")}
+              {locale === "ta" ? "உதவி அரங்கம்" : "Help & FAQ"}
             </Link>
           </div>
         </div>

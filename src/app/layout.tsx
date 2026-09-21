@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Noto_Sans_Tamil, JetBrains_Mono } from "next/font/google";
+import { Mukta_Malar, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 import { LocaleProvider } from "@/context/LocaleContext";
@@ -9,15 +9,10 @@ import { LiteModeProvider } from "@/context/LiteModeContext";
 import { CursorProvider } from "@/context/CursorContext";
 import { AppShell } from "@/components/global/AppShell";
 
-const outfit = Outfit({
-  variable: "--font-sans",
-  subsets: ["latin"],
-});
-
-const notoSansTamil = Noto_Sans_Tamil({
-  variable: "--font-tamil",
-  subsets: ["tamil"],
-  weight: ["400", "500", "600", "700"],
+const muktaMalar = Mukta_Malar({
+  variable: "--font-mukta-malar",
+  subsets: ["latin", "tamil"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -56,7 +51,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${notoSansTamil.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${muktaMalar.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans bg-[var(--bg-base)] text-[var(--text-primary)]">

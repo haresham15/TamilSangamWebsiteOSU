@@ -1,51 +1,82 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { motion, Variants } from "framer-motion";
+import { EVENTS } from "@/data/events";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { EVENTS } from "@/data/events";
-import { Calendar, MapPin, Ticket, Clock, ArrowRight, Star } from "lucide-react";
+import { 
+  Calendar, 
+  MapPin, 
+  Clock, 
+  Ticket, 
+  ArrowRight, 
+  Star 
+} from "lucide-react";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
 
 export default function EventsPage() {
   const { locale } = useLocale();
-  const { playClick, playWoodClick } = useAudio();
+  const { playClick } = useAudio();
+
   const [filterYear, setFilterYear] = useState<string>("all");
 
-  const filteredEvents = EVENTS.filter((e) => {
+  const filteredEvents = EVENTS.filter((evt) => {
     if (filterYear === "all") return true;
-    return e.academicYear === filterYear;
+    return evt.academicYear.includes(filterYear);
   });
+
+  const years = ["all", "2026-2027", "2025-2026", "2024-2025"];
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-16">
+      {/* Page Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div className="max-w-2xl">
           <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2">
-            Marutham (மருதம்) · Harvest, Gathering & Festivals
+            Marutham (மருதம்) · Assembly, Harvest & Flagship Feasts
           </span>
-          <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-serif mb-4">
-            {locale === "ta" ? "நிகழ்வுகள் & நாள்காட்டி" : "Events & Festivals"}
+          <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-display mb-4">
+            {locale === "ta" ? "விழாக்கள் & சங்க நிகழ்வுகள்" : "Events & Cultural Showcases"}
           </h1>
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
             {locale === "ta"
-              ? "கிரிகோரியன் நாள்காட்டியுடன் தமிழ் மாதப் பிரிவுகளையும் (தை, சித்திரை, ஐப்பசி) இணைத்த கலாச்சார விழாக்கள்."
-              : "Discover upcoming flagship festivals, chai socials, dance workshops, and traditional feasts overlaid with the classical Tamil calendar."}
+              ? "ஆட்டம், பாட்டம், மற்றும் கொண்டாட்டம்! ஓஹியோ யூனியனில் நடக்கும் பிரம்மாண்ட பொங்கல் பெருவிழா முதல் வளாக சந்திப்புகள் வரை."
+              : "Start the Aatam, Paatam, and Kondatam! From our 400+ student Powerhouse Pongal celebration to semester chai socials and dance auditions."}
           </p>
         </div>
 
-        {/* Academic Year Filter */}
-        <div className="flex items-center gap-2">
-          {["all", "2026-2027", "2025-2026"].map((yr) => (
+        {/* Academic Year Filter Pills */}
+        <div className="flex flex-wrap gap-2">
+          {years.map((yr) => (
             <button
               key={yr}
               onClick={() => {
-                playWoodClick();
+                playClick();
                 setFilterYear(yr);
               }}
-              className={`px-3 py-1.5 rounded-full text-xs font-mono border transition-all ${
+              className={`px-4 py-2 rounded-full text-xs font-mono transition-colors ${
                 filterYear === yr
                   ? "bg-[var(--accent-tint)] text-black font-semibold border-transparent"
                   : "glass-panel text-slate-300 border-white/10 hover:border-white/20"
@@ -63,7 +94,7 @@ export default function EventsPage() {
           <span className="text-[10px] uppercase font-mono tracking-widest text-[var(--accent-tint)]">
             Tamil Calendar Overlay (தமிழ் பஞ்சாங்கம்)
           </span>
-          <h3 className="text-lg font-bold text-white font-serif mt-0.5">
+          <h3 className="text-lg font-bold text-white font-display mt-0.5">
             Current Season: தை மாதம் (Thai Month) · சுபகிருது ஆண்டு
           </h3>
           <p className="text-xs text-slate-300 mt-1">
@@ -79,12 +110,19 @@ export default function EventsPage() {
         </Link>
       </div>
 
-      {/* 2. Events Main Feed */}
-      <div className="space-y-8 mb-24">
+      {/* 2. Events Main Feed with Parent Variant Sequencing */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="space-y-8 mb-24"
+      >
         {filteredEvents.map((evt) => (
-          <div
+          <motion.div
             key={evt.slug}
-            className="rounded-3xl glass-panel-elevated border border-white/10 hover:border-[var(--accent-tint)] transition-all duration-300 p-6 sm:p-8 shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left"
+            variants={itemVariants}
+            layout
+            className="rounded-3xl glass-panel-elevated border border-white/10 hover:border-[var(--accent-tint)] transition-colors p-6 sm:p-8 shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left"
           >
             {/* Event Poster / Visual */}
             <div className="lg:col-span-5 relative h-64 sm:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-inner group">
@@ -112,7 +150,7 @@ export default function EventsPage() {
                 <span>{evt.academicYear}</span>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-bold text-white font-serif tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white font-display tracking-tight">
                 {locale === "ta" ? evt.titleTa : evt.titleEn}
               </h2>
 
@@ -139,7 +177,7 @@ export default function EventsPage() {
                 <Link
                   href={`/events/${evt.slug}`}
                   onClick={playClick}
-                  className="px-6 py-2.5 rounded-2xl bg-[var(--accent-tint)] text-black font-bold text-xs hover:opacity-95 transition-all shadow-md flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-2xl bg-[var(--accent-tint)] text-black font-bold text-xs hover:opacity-95 transition-opacity shadow-md flex items-center gap-2"
                 >
                   <Ticket className="w-3.5 h-3.5" />
                   <span>{evt.status === "upcoming" ? `Get Tickets (${evt.price})` : "View Event Recap"}</span>
@@ -148,16 +186,16 @@ export default function EventsPage() {
                 <Link
                   href={`/events/${evt.slug}`}
                   onClick={playClick}
-                  className="px-5 py-2.5 rounded-2xl glass-panel text-white text-xs font-semibold hover:bg-white/10 transition-all flex items-center gap-1.5"
+                  className="px-5 py-2.5 rounded-2xl glass-panel text-white text-xs font-semibold hover:bg-white/10 transition-colors flex items-center gap-1.5"
                 >
                   <span>Full Schedule</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* 3. Signature Feature: Events Hall of Fame (Hover Swap Poster-to-Photo Grid) */}
       <div id="hall-of-fame" className="pt-12 border-t border-white/10">
@@ -166,11 +204,11 @@ export default function EventsPage() {
             <Star className="w-3.5 h-3.5" />
             <span>Interactive Gallery</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-bold text-white font-serif tracking-tight">
+          <h2 className="text-2xl sm:text-4xl font-bold text-white font-display tracking-tight">
             {locale === "ta" ? "புகழ் அரங்கம் · Events Hall of Fame" : "Events Hall of Fame"}
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 mt-1">
-            Inspired by landonorris.com: Rest shows official festival artwork, hover seamlessly swaps to crowd photography.
+            Rest shows official festival artwork, hover seamlessly swaps to crowd photography.
           </p>
         </div>
 
@@ -201,7 +239,7 @@ export default function EventsPage() {
               />
 
               {/* Scrim and metadata */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-5">
+              <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface-sunken)]/90 via-[var(--surface-sunken)]/30 to-transparent flex flex-col justify-end p-5">
                 <span className="text-[10px] font-mono text-[var(--accent-tint)] uppercase">
                   {evt.date}
                 </span>

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <!-- Royal Violet Base Gradient -->
+    <radialGradient id="sangamVioletGlow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#5a2f8d" />
+      <stop offset="70%" stop-color="#462270" />
+      <stop offset="100%" stop-color="#361759" />
+    </radialGradient>
+
+    <!-- Mint Teal Drop Shadow Color -->
+    <filter id="mintTealExtrusion" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="8" dy="8" stdDeviation="0" flood-color="#55CCA2" flood-opacity="1" />
+      <feDropShadow dx="14" dy="14" stdDeviation="4" flood-color="#3eb088" flood-opacity="0.6" />
+    </filter>
+
+    <!-- Clip Path for Circular Boundary -->
+    <clipPath id="circleClip">
+      <circle cx="250" cy="250" r="235" />
+    </clipPath>
+
+    <!-- Repeating Tamil Script Pattern "தமிழ்" -->
+    <pattern id="tamilPattern" width="120" height="42" patternUnits="userSpaceOnUse" patternTransform="rotate(0)">
+      <text x="6" y="16" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#8b65b6" opacity="0.62" letter-spacing="2">தமிழ்</text>
+      <text x="66" y="16" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#8b65b6" opacity="0.62" letter-spacing="2">தமிழ்</text>
+      <text x="36" y="37" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#8b65b6" opacity="0.62" letter-spacing="2">தமிழ்</text>
+      <text x="96" y="37" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#8b65b6" opacity="0.62" letter-spacing="2">தமிழ்</text>
+    </pattern>
+  </defs>
+
+  <!-- Outer Ring Highlight -->
+  <circle cx="250" cy="250" r="242" fill="none" stroke="#55CCA2" stroke-width="3" opacity="0.35" />
+
+  <!-- Base Circle with Clip -->
+  <g clip-path="url(#circleClip)">
+    <!-- Deep Royal Violet Background -->
+    <circle cx="250" cy="250" r="235" fill="url(#sangamVioletGlow)" />
+
+    <!-- Watermarked Repeating Tamil Script Texture -->
+    <rect x="0" y="0" width="500" height="500" fill="url(#tamilPattern)" />
+
+    <!-- Subtle Vignette / Depth Overlay -->
+    <circle cx="250" cy="250" r="235" fill="none" stroke="#250d40" stroke-width="24" opacity="0.45" />
+
+    <!-- Central Typography: TAMIL -->
+    <!-- Extrusion Shadow Layer in Mint Teal -->
+    <text x="259" y="239" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="94" font-weight="900" fill="#55CCA2" letter-spacing="6">TAMIL</text>
+    <text x="257" y="237" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="94" font-weight="900" fill="#55CCA2" letter-spacing="6">TAMIL</text>
+    <text x="255" y="235" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="94" font-weight="900" fill="#55CCA2" letter-spacing="6">TAMIL</text>
+    <!-- Foreground Pure White Layer -->
+    <text x="250" y="230" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="94" font-weight="900" fill="#FFFDF9" letter-spacing="6">TAMIL</text>
+
+    <!-- Central Typography: SANGAM -->
+    <!-- Extrusion Shadow Layer in Mint Teal -->
+    <text x="259" y="324" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="86" font-weight="900" fill="#55CCA2" letter-spacing="6">SANGAM</text>
+    <text x="257" y="322" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="86" font-weight="900" fill="#55CCA2" letter-spacing="6">SANGAM</text>
+    <text x="255" y="320" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="86" font-weight="900" fill="#55CCA2" letter-spacing="6">SANGAM</text>
+    <!-- Foreground Pure White Layer -->
+    <text x="250" y="315" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="86" font-weight="900" fill="#FFFDF9" letter-spacing="6">SANGAM</text>
+  </g>
+</svg>

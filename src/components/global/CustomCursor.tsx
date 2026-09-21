@@ -85,7 +85,7 @@ export const CustomCursor: React.FC = () => {
       }}
     >
       <div
-        className={`-translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full transition-all duration-300 ${
+        className={`-translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full transition-transform duration-150 ease-out ${
           isExpanded
             ? "px-3 py-1.5 bg-[var(--accent-tint)] text-black font-semibold text-[11px] shadow-lg shadow-[var(--accent-glow)] scale-100 backdrop-blur-sm"
             : "w-4 h-4 bg-white/40 border border-white/60 backdrop-blur-[2px] scale-100"
