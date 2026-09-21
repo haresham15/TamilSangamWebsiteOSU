@@ -133,3 +133,34 @@ All styling in this project is anchored by Tailwind v4 CSS-first `@theme` and th
 - **Body & Script Typography**: **Mukta Malar** (`var(--font-body)` / `var(--font-tamil)`).
 - **Metadata / Monospace**: **JetBrains Mono** (`var(--font-mono)`).
 - **Ground Truth Design Tokens**: Codified in [`design/tokens.json`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/design/tokens.json) and mirrored in [`src/app/globals.css`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/globals.css) via `@theme`.
+
+---
+
+## 11. Redesign Rules (Emblem Engine)
+
+- **Source of Truth**: [`docs/redesign/REDESIGN-BRIEF.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/docs/redesign/REDESIGN-BRIEF.md). Read it before any UI work.
+- **Next.js 16 APIs**: Read `node_modules/next/dist/docs` before assuming APIs.
+- **Iconography**: Never use emoji or a generic stock icon set as UI. All icons are custom SVG in the kolam line style.
+- **Typography & Clean UI**: No eyebrow labels, middot chains, or arrow suffixes unless they encode real information.
+- **Tamil Typography**: Follow the `tamil-text` skill (`lang="ta"`, `letter-spacing: 0`, no uppercase transforms, grapheme-cluster splitting). Never alter Tamil meaning; log for review.
+- **Motion Restraint**: Every animation needs a Lite fallback and must respect `prefers-reduced-motion`. Maximum 3 "wow" moments per page.
+- **Disposal**: Dispose everything created in Three.js and GSAP on component unmount.
+- **Media**: No stock photography. Real collegiate event media only, with consensual crediting.
+- **Verification**: Run `npx tsc --noEmit` and browser visual inspection after visual updates.
+
+---
+
+## 12. Enterprise Context Engineering, Deliberation & Subagent Governance
+
+- **Active RAM Discipline**: Treat the context window as constrained working memory. Apply recursive summarization and retain only the 3–5 most recent tool observations verbatim to eliminate noise and prevent context rot / premature termination.
+- **Sequential Thinking MCP**: Enforce structured, stateful deliberation loops via `sequentialthinking` for complex data flows, multi-file refactors, and performance audits. Hypotheses must be systematically formulated and invalidated.
+- **Enterprise Semantic Grounding**: Ground cloud architectures in Google Cloud Knowledge Catalog (`LookupContext`) and Vertex AI Search (`groundingChunks` / `groundingSupports`). Map transport layers appropriately (`stdio` for local tools, `Streamable HTTP` for managed cloud services).
+- **Defensive Safeguards**: The `accidental-data-loss-prevention` skill strictly gates all destructive SQL (`DROP`, `TRUNCATE`, unbounded `DELETE`) and cloud infrastructure annihilation commands (`gcloud projects delete`, `gsutil rm`). Require explicit human consent.
+- **Autonomous Subagent Roster**:
+  - `enterprise-data-architect`: Manages BigQuery, dbt, Dataform, and Dataflow pipelines.
+  - `enterprise-security-auditor`: Executes pre-ship security reviews, cost efficiency audits, and GCS posture assessments.
+  - `design-architect` & `ui-engineer`: Drives the 5-phase design workflow with DTCG token fidelity.
+  - `motion-engineer`: Orchestrates hardware-accelerated Framer Motion variants and GSAP timelines.
+  - `critique-agent` & `a11y-auditor`: Enforces strict WCAG AA/AAA compliance and anti-slop verification.
+
+
