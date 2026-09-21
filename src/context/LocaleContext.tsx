@@ -30,7 +30,7 @@ export const translations: Record<string, Record<Locale, string>> = {
   // Brand and Tagline
   "brand.name": { en: "OSU Tamil Sangam", ta: "ஓஹியோ தமிழ் சங்கம்" },
   "brand.tagline": { en: "Start the Aatam, Paatam, and Kondatam!", ta: "ஆட்டம் · பாட்டம் · கொண்டாட்டம்!" },
-  "brand.classicalTitle": { en: "Project Aintinai", ta: "ஐந்திணை" },
+  "brand.classicalTitle": { en: "The Ohio State University", ta: "ஓஹியோ மாநிலப் பல்கலைக்கழகம்" },
 
   // Controls
   "control.soundOn": { en: "Sound: On", ta: "ஒலி: இயக்கு" },

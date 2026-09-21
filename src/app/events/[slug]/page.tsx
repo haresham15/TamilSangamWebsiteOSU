@@ -50,7 +50,7 @@ export default function EventDetailPage() {
     playClick();
     const icsData = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//OSU Tamil Sangam//Project Aintinai//EN
+PRODID:-//OSU Tamil Sangam//Events Calendar//EN
 BEGIN:VEVENT
 UID:${event.slug}@osutamilsangam.org
 DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z

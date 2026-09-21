@@ -77,7 +77,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 {t("brand.name")}
               </span>
               <span className="text-[10px] text-[#6b478d] tracking-wider uppercase font-mono">
-                {t("brand.classicalTitle")} · {locale === "ta" ? meta.nameTa : meta.nameEn}
+                {locale === "ta" ? "ஓஹியோ மாநிலப் பல்கலைக்கழகம்" : "The Ohio State University"}
               </span>
             </div>
           </Link>
@@ -117,20 +117,24 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               <Search className="w-4 h-4" />
             </button>
 
-            {/* Language Toggle (EN / தமிழ்) */}
+            {/* Language Toggle (EN / தமிழ்) - No Emoji */}
             <button
               onClick={() => {
                 playClick();
                 toggleLocale();
               }}
               title="Switch Language / மொழியை மாற்ற"
-              className="px-3 py-1.5 text-xs font-semibold rounded-full glass-panel border border-[var(--border-subtle)] text-[var(--accent-tint)] hover:border-[var(--accent-tint)] transition-all shadow-md flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-semibold rounded-full glass-panel border border-purple-200 text-[#4c2472] hover:border-[#55CCA2] transition-all shadow-md flex items-center gap-1.5"
             >
-              <span className="font-mono text-[10px]">🌐</span>
-              <span>{locale === "en" ? "தமிழ்" : "English"}</span>
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-purple-100 text-[#4c2472] font-bold">
+                {locale === "en" ? "TA" : "EN"}
+              </span>
+              <span className="font-tamil" style={{ letterSpacing: 0 }}>
+                {locale === "en" ? "தமிழ்" : "English"}
+              </span>
             </button>
 
-            {/* Tinai & Time-of-Day Chip */}
+            {/* Tinai & Time-of-Day Chip - No Emoji */}
             <div className="relative">
               <button
                 onClick={() => {
@@ -138,17 +142,17 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                   setIsTinaiMenuOpen(!isTinaiMenuOpen);
                 }}
                 title={locale === "ta" ? meta.timeLabelTa : meta.timeLabelEn}
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-full glass-panel border border-[var(--border-subtle)] hover:border-[var(--accent-tint)] transition-all shadow-md"
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-full glass-panel border border-purple-200 hover:border-[#55CCA2] transition-all shadow-md"
               >
                 <span
                   className="w-2.5 h-2.5 rounded-full animate-pulse"
                   style={{ backgroundColor: meta.accentColor }}
                 />
-                <span className="text-[var(--text-primary)]">
+                <span className="text-[#250d38] font-semibold">
                   {locale === "ta" ? meta.nameTa : meta.nameEn}
                 </span>
-                <span className="text-[10px] text-[var(--text-muted)] font-mono">
-                  {isManualPin ? "📌" : "⏱️"}
+                <span className="text-[10px] text-purple-700/60 font-mono">
+                  {isManualPin ? "Pin" : "Live"}
                 </span>
               </button>
 
@@ -246,7 +250,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
         <div className="fixed inset-0 z-40 bg-white/95 backdrop-blur-2xl lg:hidden flex flex-col pt-24 px-6 pb-10 justify-between overflow-y-auto border-b border-purple-200 shadow-2xl">
           <div className="space-y-3">
             <p className="text-xs uppercase font-mono tracking-widest text-[#6b478d] px-3 font-bold">
-              {t("brand.classicalTitle")} · Navigation
+              {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"} · Navigation
             </p>
             <div className="grid grid-cols-1 gap-2">
               {navLinks.map((item) => {

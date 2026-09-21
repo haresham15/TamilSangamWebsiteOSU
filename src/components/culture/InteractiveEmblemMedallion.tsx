@@ -160,7 +160,9 @@ export const InteractiveEmblemMedallion: React.FC<InteractiveEmblemMedallionProp
           className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-white/95 border-2 border-[#55CCA2] text-[10px] font-mono tracking-wider font-bold text-[#4c2472] shadow-md flex items-center gap-1.5 whitespace-nowrap pointer-events-none"
         >
           <span className="w-2 h-2 rounded-full bg-[#55CCA2] animate-pulse" />
-          <span>வளர்க தமிழ் 🔔</span>
+          <span lang="ta" style={{ letterSpacing: 0 }} className="font-tamil">
+            வளர்க தமிழ்
+          </span>
         </motion.div>
       </motion.div>
     </div>

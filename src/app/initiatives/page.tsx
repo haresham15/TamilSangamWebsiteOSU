@@ -28,7 +28,7 @@ export default function InitiativesPage() {
         <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
           {locale === "ta"
             ? "ஆட்டம், பாட்டம், கொண்டாட்டம் என்ற மூன்று தூண்களின் வழியே ஓஹியோ வளாகத்தில் தமிழ்க் கலைகளையும் பண்பாட்டையும் முன்னெடுத்துச் செல்கிறோம்."
-            : "Anchored by our founding brand line — Aatam (Dance), Paatam (Music), and Kondatam (Celebration) — we empower student artists, preserve ancient traditions, and foster inclusive camaraderie."}
+            : "Anchored by our founding brand line — Aatam (Dance), Paatam (Music), and Kondatam (Celebration) — we empower student artists, preserve ancient traditions, and foster inclusive student community."}
         </p>
       </div>
 
@@ -118,7 +118,7 @@ export default function InitiativesPage() {
               onClick={playClick}
               className="px-5 py-3 rounded-2xl glass-panel text-white text-xs font-medium hover:bg-white/10 transition-all"
             >
-              View Performance Photos →
+              View Performance Photos
             </Link>
           </div>
         </div>
@@ -173,7 +173,7 @@ export default function InitiativesPage() {
                     {locale === "ta" ? art.nameTa : art.nameEn}
                   </h3>
                   <p className="text-[11px] font-mono text-slate-400 mb-2">
-                    📍 {locale === "ta" ? art.originTa : art.originEn}
+                    <span className="text-[var(--accent-tint)] font-semibold">Origin:</span> {locale === "ta" ? art.originTa : art.originEn}
                   </p>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     {locale === "ta" ? art.descriptionTa : art.descriptionEn}

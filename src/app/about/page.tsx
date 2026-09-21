@@ -101,7 +101,7 @@ export default function AboutPage() {
         <p className="text-base sm:text-lg text-purple-950/85 leading-relaxed font-body font-medium">
           {locale === "ta"
             ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் என்பது தமிழ்ப் பண்பாட்டின் உன்னதங்களை, கலை வடிவங்களை, மற்றும் நட்புணர்வை ஓஹியோ பல்கலைக்கழக வளாகத்தில் வளர்க்கும் முதன்மை மாணவர் அமைப்பாகும்."
-            : "The Ohio State University Tamil Sangam is dedicated to uniting the Tamil diaspora, encouraging language literacy, promoting cross-cultural integration, and fostering lifelong Buckeye camaraderie."}
+            : "The Ohio State University Tamil Sangam is dedicated to uniting the Tamil diaspora, encouraging language literacy, promoting cross-cultural integration, and fostering lifelong community fellowship on campus."}
         </p>
       </div>
 

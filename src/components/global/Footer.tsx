@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { CheckCircle2, ArrowRight } from "lucide-react";
+import { EVENTS } from "@/data/events";
 
 export const Footer: React.FC = () => {
   const { locale, t } = useLocale();
@@ -31,7 +32,7 @@ export const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="relative bg-gradient-to-b from-[#351657] via-[#2a0f47] to-[#1c0830] border-t-2 border-purple-700/40 pt-20 pb-12 px-6 overflow-hidden bg-tamil-pattern-vibrant text-white">
+    <footer className="relative bg-gradient-to-b from-[#351657] via-[#2a0f47] to-[#1c0830] border-t-2 border-purple-700/40 pt-20 pb-12 px-6 overflow-hidden text-white">
       {/* Decorative Mint Top Accent Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[2px] bg-gradient-to-r from-transparent via-[#55CCA2] to-transparent shadow-[0_0_12px_#55CCA2]" />
 
@@ -59,13 +60,22 @@ export const Footer: React.FC = () => {
             <p className="text-sm text-purple-100/90 max-w-md leading-relaxed mb-6 font-body">
               {locale === "ta"
                 ? "ஆட்டம், பாட்டம், கொண்டாட்டம் என தமிழ்ப் பண்பாட்டின் உன்னதங்களை ஓஹியோ வளாகத்தில் இணைக்கும் கலாச்சாரப் பாலம்."
-                : "Start the Aatam, Paatam, and Kondatam! Bridging classical Tamil heritage with vibrant dance, feasts, and lifelong Buckeye camaraderie."}
+                : "Start the Aatam, Paatam, and Kondatam! Bridging classical Tamil heritage with student dance, earthen pot feasts, and lifelong community at Ohio State."}
             </p>
             <div className="flex items-center gap-4 text-xs font-mono text-purple-200">
-              <span className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-900/60 border border-purple-700/50">
+              <Link
+                href={`/events/${EVENTS[0].slug}`}
+                onClick={playClick}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-900/60 border border-purple-700/50 hover:border-[#55CCA2] hover:bg-purple-800/60 transition-all group"
+              >
                 <span className="w-2 h-2 rounded-full bg-[#55CCA2] animate-pulse" />
-                <span className="text-[#55CCA2] font-semibold">Next Flagship:</span> Powerhouse Pongal 2027
-              </span>
+                <span className="text-[#55CCA2] font-semibold">
+                  {locale === "ta" ? "அடுத்த பெருவிழா:" : "Next Flagship:"}
+                </span>
+                <span className="group-hover:text-white transition-colors">
+                  {locale === "ta" ? EVENTS[0].titleTa : EVENTS[0].titleEn}
+                </span>
+              </Link>
             </div>
           </div>
 
@@ -100,7 +110,7 @@ export const Footer: React.FC = () => {
                   onClick={playClick}
                   className="px-5 py-2.5 rounded-xl btn-sangam-mint text-xs font-bold transition-all flex items-center gap-1 shrink-0"
                 >
-                  <span>Join</span>
+                  <span>{locale === "ta" ? "இணைக" : "Join"}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </form>
@@ -115,7 +125,7 @@ export const Footer: React.FC = () => {
               {locale === "ta" ? "நன்றியுரை & திரைக் குழு" : "Closing Credits & Acknowledgements"}
             </p>
             <h4 className="text-xl font-display font-bold text-white">
-              {locale === "ta" ? "பங்களிப்பாளர்கள் பட்டியல்" : "Project Aintinai Production Roll"}
+              {locale === "ta" ? "நிர்வாகக் குழு மற்றும் பங்களிப்பாளர்கள் பட்டியல்" : "Student Leadership & Contributor Roll"}
             </h4>
           </div>
 
@@ -140,7 +150,7 @@ export const Footer: React.FC = () => {
             <Link href="/board" className="hover:text-[#55CCA2] transition-colors">{t("nav.board")}</Link>
             <Link href="/gallery" className="hover:text-[#55CCA2] transition-colors">{t("nav.gallery")}</Link>
             <Link href="/join" className="hover:text-[#55CCA2] transition-colors">{t("nav.join")}</Link>
-            <Link href="/links" className="text-[#55CCA2] font-semibold hover:underline transition-colors">Linktree Bio Hub</Link>
+            <Link href="/links" className="text-[#55CCA2] font-semibold hover:underline transition-colors">Quick Links</Link>
           </div>
 
           <div className="text-center md:text-right font-mono text-[11px] space-y-1">

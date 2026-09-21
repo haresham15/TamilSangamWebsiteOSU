@@ -74,8 +74,8 @@ export default function BoardPage() {
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left font-body">
       {/* Header */}
       <div className="max-w-3xl mb-12">
-        <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2">
-          Mullai (முல்லை) · Leadership, Evening Warmth & Community
+        <span className="text-xs font-mono uppercase tracking-widest text-[#55CCA2] block mb-2 font-bold">
+          The Ohio State University · Student Leadership
         </span>
         <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-display mb-4">
           {locale === "ta" ? "நிர்வாகக் குழு & தலைமைப் பொறுப்புகள்" : "Executive Board & Leadership"}

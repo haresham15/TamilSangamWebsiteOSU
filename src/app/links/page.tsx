@@ -80,8 +80,8 @@ export default function BioHubPage() {
     {
       id: "website",
       index: "06",
-      title: "Explore Project Aintinai",
-      subtitle: "The Five Classical Landscapes of Tamil Sangam",
+      title: "OSU Tamil Sangam Homepage",
+      subtitle: "Official website, festivals, and campus leadership",
       href: "/",
       icon: Globe,
     },
