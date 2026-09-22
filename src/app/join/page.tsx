@@ -13,7 +13,9 @@ import {
   CheckCircle2,
   Users,
   Award,
-  Scale
+  Scale,
+  Loader2,
+  AlertCircle
 } from "lucide-react";
 
 export default function JoinPage() {
@@ -29,6 +31,8 @@ export default function JoinPage() {
   const [major, setMajor] = useState("");
   const [interestRole, setInterestRole] = useState("Aatam (Dance)");
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const groupMeUrl = "https://groupme.com/join_group/osutamilsangam";
 
@@ -39,11 +43,42 @@ export default function JoinPage() {
     setTimeout(() => setCopiedGroupMe(false), 2000);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email) return;
-    playBell(880);
-    setSubmitted(true);
+    if (!name.trim() || !email.trim()) return;
+
+    setIsSubmitting(true);
+    setSubmitError("");
+    playClick();
+
+    try {
+      const res = await fetch("/api/stay-in-sangam", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          interests: [
+            activeFormTab === "member" ? "general-membership" : `performer-${interestRole.toLowerCase()}`,
+            major.trim() || "general-student",
+          ],
+          source: `join-${activeFormTab}`,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        playBell(880);
+        setSubmitted(true);
+      } else {
+        setSubmitError(data.error || "Unable to process application. Please check your email and try again.");
+      }
+    } catch {
+      setSubmitError("Network connection error. Please try again shortly.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -262,11 +297,28 @@ export default function JoinPage() {
               </div>
             )}
 
+            {submitError && (
+              <div className="p-3 bg-rose-950/80 border-2 border-rose-500 text-rose-200 text-xs flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                <span>{submitError}</span>
+              </div>
+            )}
+
             <button
               type="submit"
-              className="btn-sangam-mint px-6 py-3.5 text-xs uppercase tracking-wider"
+              disabled={isSubmitting}
+              className="btn-sangam-mint px-6 py-3.5 text-xs uppercase tracking-wider flex items-center gap-2 disabled:opacity-60"
             >
-              Submit Application →
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Submitting & Dispatching Welcome Email...</span>
+                </>
+              ) : (
+                <>
+                  <span>Submit Application →</span>
+                </>
+              )}
             </button>
           </form>
         ) : (

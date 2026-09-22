@@ -1,25 +1,76 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { CheckCircle2, ArrowRight, Loader2, AlertCircle, ExternalLink } from "lucide-react";
 import { EVENTS } from "@/data/events";
 
 export const Footer: React.FC = () => {
   const { locale, t } = useLocale();
   const { playClick, playBell } = useAudio();
   const [email, setEmail] = useState("");
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [statusMessage, setStatusMessage] = useState("");
+  const [isBuckeye, setIsBuckeye] = useState(false);
+  const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("sangam_stay_subscribed");
+      if (saved) {
+        setEmail(saved);
+        setStatus("success");
+        setStatusMessage("You're plugged into the Stay in Sangam loop!");
+        setIsBuckeye(saved.endsWith("@osu.edu") || saved.endsWith(".osu.edu"));
+      }
+    } catch {
+      // localStorage not accessible
+    }
+  }, []);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !email.includes("@")) return;
-    playBell(700);
-    setIsSubscribed(true);
-    setEmail("");
+
+    setStatus("loading");
+    playClick();
+
+    try {
+      const res = await fetch("/api/stay-in-sangam", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim(),
+          source: "footer",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        playBell(880);
+        setStatus("success");
+        setStatusMessage(data.message || "Vanakkam! You are now subscribed to Stay in Sangam.");
+        setIsBuckeye(!!data.isBuckeye);
+        if (data.totalSubscribers) {
+          setSubscriberCount(data.totalSubscribers);
+        }
+        try {
+          localStorage.setItem("sangam_stay_subscribed", email.trim());
+        } catch {
+          // ignore
+        }
+      } else {
+        setStatus("error");
+        setStatusMessage(data.error || "Failed to process subscription. Please check your email and try again.");
+      }
+    } catch {
+      setStatus("error");
+      setStatusMessage("Network error reaching Sangam Dispatch. Please check your connection and try again.");
+    }
   };
 
   const filmCredits = [
@@ -78,45 +129,114 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Newsletter Box: Architectural Ledger Console */}
-          <div className="p-6 bg-purple-950/90 border-2 border-purple-600/70 max-w-md shadow-[5px_5px_0px_#55CCA2]">
+          {/* Stay in Sangam Dispatch Console */}
+          <div className="p-6 bg-purple-950/90 border-2 border-purple-600/70 max-w-md shadow-[5px_5px_0px_#55CCA2] text-left">
             <div className="border-b border-purple-700/60 pb-2 mb-3 flex items-center justify-between">
-              <h4 className="text-base font-bold text-white font-display uppercase tracking-wider">
-                {locale === "ta" ? "சங்கச் செய்திகளைப் பெறுங்கள்" : "Stay in the Sangam Loop"}
-              </h4>
-              <span className="text-[10px] font-mono text-[#55CCA2] font-bold uppercase">
-                [DISPATCH]
+              <div>
+                <span className="text-[10px] font-mono text-[#55CCA2] font-bold uppercase tracking-widest block">
+                  [STAY IN SANGAM]
+                </span>
+                <h4 className="text-base font-bold text-white font-display uppercase tracking-wider">
+                  {locale === "ta" ? "சங்கச் செய்திகளைப் பெறுங்கள்" : "Stay in the Sangam Loop"}
+                </h4>
+              </div>
+              <span className="box-badge-dark text-[9px] font-mono text-[#55CCA2] font-bold uppercase border border-[#55CCA2]/40">
+                ACTIVE DISPATCH
               </span>
             </div>
-            <p className="text-xs text-purple-200/80 mb-4 font-body">
+
+            <p className="text-xs text-purple-200/85 mb-4 font-body leading-relaxed">
               {locale === "ta"
-                ? "நிகழ்வுகள், இலவச உணவுப் பதிவுகள் மற்றும் நடனத் தேர்வுகள் பற்றிய மின்னஞ்சல்கள்."
-                : "Get festival ticket drops, rehearsal updates, and chai social reminders straight to your inbox."}
+                ? "நிகழ்வுகள், இலவச உணவுப் பதிவுகள், மற்றும் சங்கம சந்திப்புகள் பற்றிய நேரடி மின்னஞ்சல் செய்திகள்."
+                : "Get ticket drops, free food alerts (Streetside Sapad, Oval picnics), and chai social updates straight to your inbox."}
             </p>
 
-            {isSubscribed ? (
-              <div className="flex items-center gap-2 text-[#55CCA2] text-sm font-semibold py-2">
-                <CheckCircle2 className="w-5 h-5" />
-                <span>{locale === "ta" ? "நன்றி! நீங்கள் இணைக்கப்பட்டுவிட்டீர்கள்." : "Vanakkam! You're subscribed."}</span>
+            {status === "success" ? (
+              <div className="p-3.5 bg-emerald-950/70 border-2 border-[#55CCA2] text-white space-y-2 shadow-[2px_2px_0px_#55CCA2]">
+                <div className="flex items-center gap-2 text-[#55CCA2] font-bold text-xs font-mono uppercase">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>{isBuckeye ? "Buckeye Verified · Connected" : "Subscribed · Welcome!"}</span>
+                </div>
+                <p className="text-xs text-purple-100/90 font-body leading-relaxed">
+                  {statusMessage}
+                </p>
+                <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-emerald-800/60">
+                  <a
+                    href="https://groupme.com/join_group/osutamilsangam"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[11px] font-mono text-[#55CCA2] font-bold hover:underline"
+                  >
+                    <span>Join Student GroupMe</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setStatus("idle");
+                      setEmail("");
+                    }}
+                    className="text-[10px] font-mono text-purple-300 hover:text-white underline"
+                  >
+                    Use another email
+                  </button>
+                </div>
               </div>
             ) : (
-              <form onSubmit={handleSubscribe} className="flex gap-2">
+              <form onSubmit={handleSubscribe} className="space-y-2">
+                {/* Honeypot field for bot suppression */}
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your.buckeyemail@osu.edu"
-                  required
-                  className="w-full px-3.5 py-2.5 bg-purple-900/60 border-2 border-purple-500 text-white placeholder-purple-300/60 text-xs outline-none focus:border-[#55CCA2] transition-all font-mono"
+                  type="text"
+                  name="hp_sangam"
+                  style={{ display: "none" }}
+                  tabIndex={-1}
+                  autoComplete="off"
                 />
-                <button
-                  type="submit"
-                  onClick={playClick}
-                  className="px-5 py-2.5 btn-sangam-mint text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0"
-                >
-                  <span>{locale === "ta" ? "இணைக" : "Join"}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="name.#@buckeyemail.osu.edu"
+                    required
+                    disabled={status === "loading"}
+                    className="w-full px-3.5 py-2.5 bg-purple-900/60 border-2 border-purple-500 text-white placeholder-purple-300/60 text-xs outline-none focus:border-[#55CCA2] transition-all font-mono disabled:opacity-50"
+                  />
+                  <button
+                    type="submit"
+                    disabled={status === "loading"}
+                    className="px-5 py-2.5 btn-sangam-mint text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-60"
+                  >
+                    {status === "loading" ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Sending...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>{locale === "ta" ? "இணைக" : "Join"}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {status === "error" && (
+                  <div className="p-2.5 bg-rose-950/80 border border-rose-500/80 text-rose-200 text-xs flex items-start gap-2">
+                    <AlertCircle className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                    <span>{statusMessage}</span>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between text-[10px] font-mono text-purple-300/60 pt-0.5">
+                  <span>Open to all majors & backgrounds</span>
+                  {subscriberCount && (
+                    <span className="text-[#55CCA2] font-bold">
+                      {subscriberCount} Buckeyes in loop
+                    </span>
+                  )}
+                </div>
               </form>
             )}
           </div>

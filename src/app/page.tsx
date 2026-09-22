@@ -476,10 +476,10 @@ export default function HomePage() {
                   sizes="(max-width: 768px) 100vw, 400px"
                 />
                 <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-[#55CCA2] font-bold uppercase border border-[#55CCA2]">
-                  2024–2025
+                  2025–2026
                 </div>
                 <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-white font-bold border border-white/40">
-                  31 Photos
+                  5 Photos
                 </div>
               </div>
               <div className="p-4">
@@ -511,10 +511,10 @@ export default function HomePage() {
                   sizes="(max-width: 768px) 100vw, 400px"
                 />
                 <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-[#55CCA2] font-bold uppercase border border-[#55CCA2]">
-                  2018–2019 Archive
+                  2025–2026 Archive
                 </div>
                 <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-white font-bold border border-white/40">
-                  31 Photos
+                  5 Photos
                 </div>
               </div>
               <div className="p-4">
@@ -546,10 +546,10 @@ export default function HomePage() {
                   sizes="(max-width: 768px) 100vw, 400px"
                 />
                 <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-[#55CCA2] font-bold uppercase border border-[#55CCA2]">
-                  2018–2019 Archive
+                  2025–2026 Archive
                 </div>
                 <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-white font-bold border border-white/40">
-                  31 Photos
+                  5 Photos
                 </div>
               </div>
               <div className="p-4">
