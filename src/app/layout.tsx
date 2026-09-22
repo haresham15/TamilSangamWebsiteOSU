@@ -8,6 +8,8 @@ import { AudioProvider } from "@/context/AudioContext";
 import { LiteModeProvider } from "@/context/LiteModeContext";
 import { AppShell } from "@/components/global/AppShell";
 import { OrganizationJsonLd, EventJsonLd } from "@/components/global/JsonLd";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { GlobalCanvas } from "@/components/canvas/GlobalCanvas";
 
 const muktaMalar = Mukta_Malar({
   variable: "--font-mukta-malar",
@@ -132,7 +134,10 @@ export default function RootLayout({
           <TinaiProvider>
             <AudioProvider>
               <LiteModeProvider>
-                <AppShell>{children}</AppShell>
+                <SmoothScroll>
+                  <GlobalCanvas />
+                  <AppShell>{children}</AppShell>
+                </SmoothScroll>
               </LiteModeProvider>
             </AudioProvider>
           </TinaiProvider>

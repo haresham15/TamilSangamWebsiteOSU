@@ -5,6 +5,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { FAQS } from "@/data/faq";
 import { CLUB_PURPOSE } from "@/data/constitution";
+import { GopuramZScroll } from "@/components/about/GopuramZScroll";
 import { 
   BookOpen, 
   Heart, 
@@ -89,8 +90,12 @@ export default function AboutPage() {
   });
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left font-body">
-      {/* Page Header with High Contrast Typography */}
+    <div className="w-full text-left font-body bg-[#fffdfa]">
+      {/* Cinematic 3D Gopuram Z-Axis Mission Fly-Through */}
+      <GopuramZScroll />
+
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-24">
+        {/* Page Header with High Contrast Typography */}
       <div className="max-w-3xl mb-16">
         <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold block mb-2">
           {locale === "ta" ? "எங்களைப் பற்றி" : "About the Sangam"}
@@ -277,5 +282,6 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 }
