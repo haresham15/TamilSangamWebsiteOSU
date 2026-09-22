@@ -143,42 +143,60 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
     const card = cardRef.current;
     const media = mediaRef.current;
 
-    // quickTo setters for 60fps cursor chasing
-    const setClipX = gsap.quickTo(media, "--mask-x", { duration: 0.35, ease: "power2.out" });
-    const setClipY = gsap.quickTo(media, "--mask-y", { duration: 0.35, ease: "power2.out" });
-    const setRotX = gsap.quickTo(card, "rotationX", { duration: 0.4, ease: "power2.out" });
-    const setRotY = gsap.quickTo(card, "rotationY", { duration: 0.4, ease: "power2.out" });
+    // quickTo setters for 60-120fps cursor chasing
+    const setClipX = gsap.quickTo(media, "--mask-x", { duration: 0.22, ease: "power2.out" });
+    const setClipY = gsap.quickTo(media, "--mask-y", { duration: 0.22, ease: "power2.out" });
+    const setRotX = gsap.quickTo(card, "rotationX", { duration: 0.3, ease: "power2.out" });
+    const setRotY = gsap.quickTo(card, "rotationY", { duration: 0.3, ease: "power2.out" });
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+    let cachedRect: DOMRect | null = null;
+    let rafPending = false;
+    let pendingX = 0;
+    let pendingY = 0;
 
-      const normX = (x / rect.width) * 100;
-      const normY = (y / rect.height) * 100;
+    const updateTilt = () => {
+      if (!cachedRect) return;
+      const x = pendingX - cachedRect.left;
+      const y = pendingY - cachedRect.top;
+
+      const normX = (x / cachedRect.width) * 100;
+      const normY = (y / cachedRect.height) * 100;
 
       setClipX(normX);
       setClipY(normY);
 
       // 3D Perspective Tilt Math based on mouse position
-      const tiltX = ((y / rect.height) - 0.5) * -12;
-      const tiltY = ((x / rect.width) - 0.5) * 12;
+      const tiltX = (y / cachedRect.height - 0.5) * -10;
+      const tiltY = (x / cachedRect.width - 0.5) * 10;
 
       setRotX(tiltX);
       setRotY(tiltY);
+
+      rafPending = false;
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      pendingX = e.clientX;
+      pendingY = e.clientY;
+      if (!rafPending) {
+        rafPending = true;
+        requestAnimationFrame(updateTilt);
+      }
+    };
+
+    const handleMouseEnter = () => {
+      cachedRect = card.getBoundingClientRect();
+      setIsHovered(true);
     };
 
     const handleMouseLeave = () => {
       setIsHovered(false);
       setRotX(0);
       setRotY(0);
+      cachedRect = null;
     };
 
-    const handleMouseEnter = () => {
-      setIsHovered(true);
-    };
-
-    card.addEventListener("mousemove", handleMouseMove);
+    card.addEventListener("mousemove", handleMouseMove, { passive: true });
     card.addEventListener("mouseenter", handleMouseEnter);
     card.addEventListener("mouseleave", handleMouseLeave);
 
@@ -194,7 +212,7 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
   return (
     <div
       ref={cardRef}
-      style={{ perspective: 1000, transformStyle: "preserve-3d" }}
+      style={{ perspective: 1000, transformStyle: "preserve-3d", willChange: "transform" }}
       className="relative w-full rounded-none border-2 border-[#250d38] bg-[#1a0b2e] text-white p-8 sm:p-10 overflow-hidden shadow-[6px_6px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[8px_8px_0px_#55CCA2] transition-colors duration-300 flex flex-col justify-between min-h-[360px] group select-none"
     >
       {/* 1. Iridescent Kanchipuram Silk Sheen Underlay */}
@@ -208,13 +226,14 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       {/* 2. Unmasking Media Layer (Cursor Following on Desktop, InView on Touch) */}
       <div
         ref={mediaRef}
-        className="absolute inset-0 z-10 pointer-events-none transition-opacity duration-500 overflow-hidden"
+        className="absolute inset-0 z-10 pointer-events-none overflow-hidden"
         style={{
           opacity: activeMedia ? 1 : 0,
           clipPath: isTouchDevice
             ? "circle(100% at 50% 50%)"
             : `circle(${isHovered ? "38%" : "0%"} at var(--mask-x, 50%) var(--mask-y, 50%))`,
-          transition: isTouchDevice ? "opacity 0.6s ease" : "clip-path 0.4s ease, opacity 0.3s ease",
+          transition: "opacity 0.35s ease, clip-path 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+          willChange: "clip-path, opacity",
         }}
       >
         <img

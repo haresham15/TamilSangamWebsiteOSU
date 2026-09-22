@@ -7,8 +7,6 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { GlowingKolamField } from "@/components/3d/GlowingKolamField";
-import { DynamicKolamHero } from "@/components/culture/DynamicKolamHero";
-import { InteractiveEmblemMedallion } from "@/components/culture/InteractiveEmblemMedallion";
 import { DigitalKolamHero } from "@/components/hero/DigitalKolamHero";
 import { SilkHoverPillars } from "@/components/home/SilkHoverPillars";
 import { WovenBorderMarquee } from "@/components/ui/WovenBorderMarquee";

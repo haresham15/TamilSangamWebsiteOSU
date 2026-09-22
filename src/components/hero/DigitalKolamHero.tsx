@@ -10,6 +10,7 @@ import { Ticket, Users, ArrowRight, Sparkles } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
 
 // Client-only R3F Canvas
 const Canvas = dynamic(
@@ -17,59 +18,76 @@ const Canvas = dynamic(
   { ssr: false }
 );
 
-// Mathematical Pulli (Dot) Kolam Generator
+// High-Performance Mathematical Tamil Sikku & Pulli Kolam Generator
 function generateKolamPoints(isMobile: boolean) {
   const points: number[] = [];
   const colors: number[] = [];
-  const baseCount = isMobile ? 1400 : 3800; // 60% reduction on mobile (Phase 6 mandate)
+  const baseCount = isMobile ? 1800 : 4800; // Scaled for density
 
   const colorMint = new THREE.Color("#55CCA2");
   const colorGold = new THREE.Color("#FFC526");
   const colorPurple = new THREE.Color("#a855f7");
+  const colorRose = new THREE.Color("#f43f5e");
   const colorWhite = new THREE.Color("#ffffff");
 
-  // 1. Central 8-fold radial Kolam lattice (Pulli Grid)
-  const rings = isMobile ? 8 : 16;
+  // 1. Authentic 8-Fold Interlocking Sikku / Brahma Mudi Kolam Lattice
+  const rings = isMobile ? 10 : 20;
   const dotsPerRing = isMobile ? 16 : 32;
 
   for (let r = 1; r <= rings; r++) {
-    const radius = (r / rings) * 5.8;
+    const radius = (r / rings) * 6.2;
     const numDots = dotsPerRing * (r % 2 === 0 ? 1 : 2);
     for (let d = 0; d < numDots; d++) {
       const theta = (d / numDots) * Math.PI * 2;
-      // Kolam symmetry modulation (8-fold lotus lobes)
-      const rMod = radius * (1 + 0.2 * Math.sin(theta * 8));
+      // Traditional Tamil Lotus / Sikku lobe modulation
+      const rMod = radius * (1.0 + 0.22 * Math.sin(theta * 8.0) + 0.1 * Math.cos(theta * 16.0));
       const x = Math.cos(theta) * rMod;
       const y = Math.sin(theta) * rMod;
-      const z = (Math.sin(r * 1.5) + Math.cos(theta * 4)) * 0.25;
+      const z = (Math.sin(r * 1.8) + Math.cos(theta * 4.0)) * 0.3;
 
       points.push(x, y, z);
 
-      // Color gradation
+      // Kanchipuram silk-inspired chromatic gradation (Gold -> Mint -> Rose -> Royal Purple)
       const ratio = r / rings;
       const c = new THREE.Color();
-      if (ratio < 0.28) {
-        c.copy(colorGold).lerp(colorMint, ratio / 0.28);
-      } else if (ratio < 0.72) {
-        c.copy(colorMint).lerp(colorPurple, (ratio - 0.28) / 0.44);
+      if (ratio < 0.25) {
+        c.copy(colorGold).lerp(colorMint, ratio / 0.25);
+      } else if (ratio < 0.6) {
+        c.copy(colorMint).lerp(colorRose, (ratio - 0.25) / 0.35);
+      } else if (ratio < 0.85) {
+        c.copy(colorRose).lerp(colorPurple, (ratio - 0.6) / 0.25);
       } else {
-        c.copy(colorPurple).lerp(colorWhite, (ratio - 0.72) / 0.28);
+        c.copy(colorPurple).lerp(colorWhite, (ratio - 0.85) / 0.15);
       }
       colors.push(c.r, c.g, c.b);
     }
   }
 
-  // 2. Surrounding swirling celestial dust (Topographic terrain points)
-  const dustCount = baseCount - points.length / 3;
-  for (let i = 0; i < dustCount; i++) {
-    const r = Math.sqrt(Math.random()) * 8.5;
+  // 2. Interlacing Brahma Mudi Knots (Geometric Crossing Points)
+  const knotCount = isMobile ? 300 : 900;
+  for (let k = 0; k < knotCount; k++) {
+    const t = (k / knotCount) * Math.PI * 4;
+    const r = 2.5 * Math.sin(t * 3.0) + 3.0;
+    const x = r * Math.cos(t * 2.0);
+    const y = r * Math.sin(t * 2.0);
+    const z = Math.sin(t * 6.0) * 0.5;
+
+    points.push(x, y, z);
+    const c = k % 2 === 0 ? colorMint : colorGold;
+    colors.push(c.r, c.g, c.b);
+  }
+
+  // 3. Ambient Celestial Cosmic Dust Field
+  const remaining = baseCount - points.length / 3;
+  for (let i = 0; i < remaining; i++) {
+    const r = Math.sqrt(Math.random()) * 9.5;
     const theta = Math.random() * Math.PI * 2;
     const x = Math.cos(theta) * r;
     const y = Math.sin(theta) * r;
-    const z = (Math.random() - 0.5) * 3.5;
+    const z = (Math.random() - 0.5) * 4.0;
 
     points.push(x, y, z);
-    const c = Math.random() > 0.4 ? colorMint : colorGold;
+    const c = Math.random() > 0.5 ? colorMint : colorGold;
     colors.push(c.r, c.g, c.b);
   }
 
@@ -79,8 +97,61 @@ function generateKolamPoints(isMobile: boolean) {
   };
 }
 
-// 3D Kolam Particle Mesh with turbulence
-function KolamParticles({
+// Custom GPU Vertex Shader (100% Hardware Accelerated, Zero CPU-to-GPU Re-upload Bottleneck)
+const vertexShader = `
+  uniform float uTime;
+  uniform float uScrollProgress;
+  uniform float uPointSize;
+
+  attribute vec3 aColor;
+  varying vec3 vColor;
+  varying float vAlpha;
+
+  void main() {
+    vColor = aColor;
+    vec3 pos = position;
+
+    float dist = length(pos.xy);
+
+    // 100% GPU Parallel Turbulence Math (No CPU Loops)
+    float breath = sin(dist * 2.0 - uTime * 2.2) * 0.25;
+    float vortex = uScrollProgress * sin(dist * 2.8 - uTime * 3.0) * 3.5;
+    float twist = sin(atan(pos.y, pos.x) * 8.0 + uTime * 0.8) * 0.18;
+
+    pos.z += breath + vortex + twist;
+
+    // GPU Rotation on Scroll
+    float angle = uScrollProgress * 2.2;
+    float cosA = cos(angle);
+    float sinA = sin(angle);
+    pos.xy = mat2(cosA, -sinA, sinA, cosA) * pos.xy;
+
+    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
+
+    // Perspective-attenuated point size
+    gl_PointSize = (uPointSize / -mvPosition.z) * (1.0 + uScrollProgress * 0.75);
+    vAlpha = smoothstep(20.0, 2.0, -mvPosition.z);
+  }
+`;
+
+// Custom Fragment Shader for Soft Glowing Circular Discs
+const fragmentShader = `
+  varying vec3 vColor;
+  varying float vAlpha;
+
+  void main() {
+    vec2 coord = gl_PointCoord - vec2(0.5);
+    float dist = length(coord);
+    if (dist > 0.5) discard;
+
+    float glow = smoothstep(0.5, 0.04, dist);
+    gl_FragColor = vec4(vColor, glow * vAlpha * 0.94);
+  }
+`;
+
+// GPU-Driven Shader Mesh Component
+function GPUKolamParticles({
   scrollProgress,
   isMobile,
 }: {
@@ -90,61 +161,37 @@ function KolamParticles({
   const pointsRef = useRef<THREE.Points>(null);
   const data = useMemo(() => generateKolamPoints(isMobile), [isMobile]);
 
-  useEffect(() => {
-    let animationFrameId: number;
-    let clock = new THREE.Clock();
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uScrollProgress: { value: 0 },
+      uPointSize: { value: isMobile ? 36.0 : 44.0 },
+    }),
+    [isMobile]
+  );
 
-    const renderLoop = () => {
-      const t = clock.getElapsedTime();
-      if (pointsRef.current) {
-        const positions = pointsRef.current.geometry.attributes.position.array as Float32Array;
-        const count = positions.length / 3;
-
-        // Subtle sine turbulence (breathing Kolam)
-        for (let i = 0; i < count; i++) {
-          const idx = i * 3;
-          const x = positions[idx];
-          const y = positions[idx + 1];
-          const dist = Math.sqrt(x * x + y * y);
-
-          // Topographic morph as scrollProgress increases
-          const vortexLift = scrollProgress * Math.sin(dist * 2.2 - t * 2.5) * 2.8;
-          const baseZ = data.positions[idx + 2];
-          positions[idx + 2] = baseZ + vortexLift + Math.sin(dist * 1.5 - t * 1.2) * 0.18;
-        }
-
-        pointsRef.current.geometry.attributes.position.needsUpdate = true;
-        // Radial rotation
-        pointsRef.current.rotation.z = t * 0.08 + scrollProgress * 1.8;
-        // Tilt with scroll
-        pointsRef.current.rotation.x = scrollProgress * 0.9;
-      }
-      animationFrameId = requestAnimationFrame(renderLoop);
-    };
-
-    renderLoop();
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [data, scrollProgress]);
+  // Buttery 60-120 FPS GPU uniform update via R3F useFrame (0 CPU buffer writes)
+  useFrame(({ clock }) => {
+    if (pointsRef.current) {
+      const mat = pointsRef.current.material as THREE.ShaderMaterial;
+      mat.uniforms.uTime.value = clock.getElapsedTime();
+      mat.uniforms.uScrollProgress.value = scrollProgress;
+    }
+  });
 
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[data.positions, 3]}
-        />
-        <bufferAttribute
-          attach="attributes-color"
-          args={[data.colors, 3]}
-        />
+        <bufferAttribute attach="attributes-position" args={[data.positions, 3]} />
+        <bufferAttribute attach="attributes-aColor" args={[data.colors, 3]} />
       </bufferGeometry>
-      <pointsMaterial
-        size={isMobile ? 0.05 : 0.036}
-        vertexColors
+      <shaderMaterial
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={uniforms}
         transparent
-        opacity={0.92}
-        blending={THREE.AdditiveBlending}
         depthWrite={false}
+        blending={THREE.AdditiveBlending}
       />
     </points>
   );
@@ -191,7 +238,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         },
       });
 
-      // 1. Fade out foreground UI elements quickly as scale begins (0 - 0.25)
+      // 1. Fade out foreground UI elements quickly as scale begins (0 - 0.22)
       if (foregroundRef.current) {
         tl.to(
           foregroundRef.current,
@@ -205,14 +252,17 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         );
       }
 
-      // 2. Scale up SVG text mask ~10,000% (scale 60) focusing on the letter 'A' in TAMIL
-      const originX = mobileCheck ? "48%" : "29.5%";
-      const originY = mobileCheck ? "42%" : "52%";
+      // 2. Scale up authentic Tamil text mask ~10,000% (scale 65)
+      // Focuses directly into the counter-space loop of the letter ம் in தமிழ்
+      // Desktop: 'ம்' counter is centered at approx x=460, y=210 (in 1400x350 viewBox) -> ~33% 60%
+      // Mobile: 'ழ்' counter is centered at approx x=250, y=160 -> 50% 40%
+      const originX = mobileCheck ? "50%" : "33%";
+      const originY = mobileCheck ? "40%" : "60%";
 
       tl.to(
         textGroupRef.current,
         {
-          scale: 60,
+          scale: 65,
           transformOrigin: `${originX} ${originY}`,
           duration: 0.85,
           ease: "power2.in",
@@ -220,7 +270,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         0
       );
 
-      // 3. Once the letter 'A' negative space swallows viewport, blossom into 100% full screen
+      // 3. Once the letter counter swallows viewport, blossom into 100% full screen
       if (fullRevealRef.current) {
         tl.to(
           fullRevealRef.current,
@@ -243,22 +293,26 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
       className="relative w-full h-[100dvh] overflow-hidden bg-[#10061a] text-white flex flex-col justify-between"
       style={{ minHeight: "100dvh" }}
     >
-      {/* 1. Full-Screen 3D Particle Canvas under the mask */}
+      {/* 1. Full-Screen 3D Particle Canvas with Pure GPU Shader Turbulence */}
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         {mounted && !isLiteMode && (
           <Canvas
             dpr={[1, 2]} // Capped device pixel ratio (Phase 6 rule)
             camera={{ position: [0, 0, 7.5], fov: 50 }}
-            gl={{ antialias: true, alpha: true }}
+            gl={{
+              antialias: true,
+              alpha: true,
+              powerPreference: "high-performance",
+            }}
             className="w-full h-full"
           >
-            <ambientLight intensity={0.5} />
-            <KolamParticles scrollProgress={scrollProgress} isMobile={isMobile} />
+            <ambientLight intensity={0.4} />
+            <GPUKolamParticles scrollProgress={scrollProgress} isMobile={isMobile} />
           </Canvas>
         )}
       </div>
 
-      {/* 2. SVG Mask Layer: The Landon Norris Effect (3D Kolam simulation only visible inside text) */}
+      {/* 2. SVG Mask Layer: Authentic Tamil Typography Window (தமிழ் சங்கம்) */}
       <div className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center">
         <svg
           viewBox={isMobile ? "0 0 500 400" : "0 0 1400 350"}
@@ -266,42 +320,50 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
           preserveAspectRatio="xMidYMid slice"
         >
           <defs>
-            <mask id="kolam-text-window-mask">
+            <mask id="kolam-tamil-window-mask">
               {/* Black background: hides everything by default */}
               <rect width="100%" height="100%" fill="black" />
-              {/* White text: punches open the window into the 3D Kolam particle simulation */}
+
+              {/* White text: punches open the window into the 3D Kolam simulation in AUTHENTIC TAMIL SCRIPT */}
               <g ref={textGroupRef}>
                 {isMobile ? (
+                  // Mobile stacked layout adhering to tamil-text skill
                   <text
+                    lang="ta"
                     x="250"
-                    y="180"
+                    y="170"
                     textAnchor="middle"
                     fill="white"
-                    fontFamily="var(--font-display), sans-serif"
+                    fontFamily="var(--font-mukta-malar), var(--font-tamil), sans-serif"
                     fontWeight="900"
-                    fontSize="88"
-                    letterSpacing="-2"
+                    fontSize="94"
+                    letterSpacing="0"
+                    style={{ letterSpacing: 0 }}
                   >
-                    TAMIL
-                    <tspan x="250" y="270">
-                      SANGAM
+                    தமிழ்
+                    <tspan x="250" y="275">
+                      சங்கம்
                     </tspan>
                   </text>
                 ) : (
+                  // Desktop single wide lockup adhering to tamil-text skill
                   <text
+                    lang="ta"
                     x="700"
-                    y="220"
+                    y="235"
                     textAnchor="middle"
                     fill="white"
-                    fontFamily="var(--font-display), sans-serif"
+                    fontFamily="var(--font-mukta-malar), var(--font-tamil), sans-serif"
                     fontWeight="900"
                     fontSize="155"
-                    letterSpacing="-4"
+                    letterSpacing="0"
+                    style={{ letterSpacing: 0 }}
                   >
-                    TAMIL SANGAM
+                    தமிழ் சங்கம்
                   </text>
                 )}
               </g>
+
               {/* Full reveal rectangle fading in at 75%+ scroll */}
               <rect
                 ref={fullRevealRef}
@@ -313,57 +375,61 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
             </mask>
           </defs>
 
-          {/* Deep Navy/Purple Shield with Cutout Text Window */}
+          {/* Deep Navy/Purple Shield with Cutout Tamil Text Window */}
           <rect
             width="100%"
             height="100%"
             fill="#12071d"
-            mask="url(#kolam-text-window-mask)"
+            mask="url(#kolam-tamil-window-mask)"
             opacity={0.96}
           />
         </svg>
       </div>
 
-      {/* 3. Subtle Mint Neon Outline of the Text for Sharp Definition */}
-      <div className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-80">
+      {/* 3. Subtle Mint Neon Architectural Contour of the Tamil Script */}
+      <div className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-85">
         <svg
           viewBox={isMobile ? "0 0 500 400" : "0 0 1400 350"}
           className="w-full h-full object-contain"
           preserveAspectRatio="xMidYMid slice"
         >
-          <g style={{ opacity: Math.max(0, 1 - scrollProgress * 3) }}>
+          <g style={{ opacity: Math.max(0, 1 - scrollProgress * 14) }}>
             {isMobile ? (
               <text
+                lang="ta"
                 x="250"
-                y="180"
-                textAnchor="middle"
-                fill="none"
-                stroke="#55CCA2"
-                strokeWidth="1.5"
-                fontFamily="var(--font-display), sans-serif"
-                fontWeight="900"
-                fontSize="88"
-                letterSpacing="-2"
-              >
-                TAMIL
-                <tspan x="250" y="270">
-                  SANGAM
-                </tspan>
-              </text>
-            ) : (
-              <text
-                x="700"
-                y="220"
+                y="170"
                 textAnchor="middle"
                 fill="none"
                 stroke="#55CCA2"
                 strokeWidth="2"
-                fontFamily="var(--font-display), sans-serif"
+                fontFamily="var(--font-mukta-malar), var(--font-tamil), sans-serif"
+                fontWeight="900"
+                fontSize="94"
+                letterSpacing="0"
+                style={{ letterSpacing: 0 }}
+              >
+                தமிழ்
+                <tspan x="250" y="275">
+                  சங்கம்
+                </tspan>
+              </text>
+            ) : (
+              <text
+                lang="ta"
+                x="700"
+                y="235"
+                textAnchor="middle"
+                fill="none"
+                stroke="#55CCA2"
+                strokeWidth="2.5"
+                fontFamily="var(--font-mukta-malar), var(--font-tamil), sans-serif"
                 fontWeight="900"
                 fontSize="155"
-                letterSpacing="-4"
+                letterSpacing="0"
+                style={{ letterSpacing: 0 }}
               >
-                TAMIL SANGAM
+                தமிழ் சங்கம்
               </text>
             )}
           </g>
@@ -384,7 +450,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
 
           <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-purple-200/70">
             <Sparkles className="w-3.5 h-3.5 text-[#FFC526]" />
-            <span>Digital Kolam 3D Simulation</span>
+            <span>GPU Vertex Shader · 60 FPS Engine</span>
           </div>
         </div>
 
@@ -402,7 +468,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
           </h1>
           <p className="text-xs sm:text-base text-purple-100/80 font-body leading-relaxed max-w-xl">
             {locale === "ta"
-              ? "ஓஹியோ பல்கலைக்கழகத்தில் தமிழ் மாணவர்கள் மற்றும் அனைத்து நண்பர்களையும் ஒன்றிணைக்கும் கலாச்சாரப் பாலம். மொழி பேதமின்றி அனைவரும் இணையலாம்!"
+              ? "ஓஹியோ பல்கலைக்கழகத்தில் தமிழ் மாணவர்கள் மற்றும் அனைத்து நண்பர்களையும் ஒன்றிணைக்கும் கலாச்சாரப் பாலம். மொழி பேதமின்றி அனைவரும் அன்போடு வரவேற்கப்படுகிறீர்கள்!"
               : "A welcoming campus hub for Tamil culture, good food, casual hangouts, and collegiate celebration in Columbus. Open to all students, majors, and languages."}
           </p>
         </div>

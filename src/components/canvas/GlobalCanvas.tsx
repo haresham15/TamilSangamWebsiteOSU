@@ -61,6 +61,7 @@ export function GlobalCanvas() {
         aria-hidden="true"
       >
         <Canvas
+          frameloop="demand"
           dpr={[1, 2]} // Capped device pixel ratio for Phase 6 mobile optimization
           gl={{
             antialias: true,

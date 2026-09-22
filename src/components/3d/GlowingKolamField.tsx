@@ -12,26 +12,59 @@ export const GlowingKolamField: React.FC = () => {
   useEffect(() => {
     if (isLiteMode || !canvasRef.current) return;
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
     let width = (canvas.width = canvas.clientWidth);
     let height = (canvas.height = canvas.clientHeight);
 
-    const mouse = { x: -1000, y: -1000, radius: 140 };
+    let isVisible = true;
+    let isTabActive = !document.hidden;
+    const mouse = { x: -1000, y: -1000, radius: 140, active: false };
+
+    // Pause rendering when canvas is outside viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        isVisible = entries[0]?.isIntersecting ?? false;
+      },
+      { rootMargin: "100px" }
+    );
+    observer.observe(canvas);
+
+    // Pause rendering when tab is hidden
+    const handleVisibilityChange = () => {
+      isTabActive = !document.hidden;
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    let mouseMovePending = false;
+    let lastClientX = -1000;
+    let lastClientY = -1000;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
+      lastClientX = e.clientX;
+      lastClientY = e.clientY;
+      if (!mouseMovePending) {
+        mouseMovePending = true;
+        requestAnimationFrame(() => {
+          if (canvas) {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = lastClientX - rect.left;
+            mouse.y = lastClientY - rect.top;
+            mouse.active = true;
+          }
+          mouseMovePending = false;
+        });
+      }
     };
 
     const handleMouseLeave = () => {
       mouse.x = -1000;
       mouse.y = -1000;
+      mouse.active = false;
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     document.addEventListener("mouseleave", handleMouseLeave);
 
     const handleResize = () => {
@@ -39,13 +72,17 @@ export const GlowingKolamField: React.FC = () => {
       width = canvas.width = canvas.clientWidth;
       height = canvas.height = canvas.clientHeight;
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
 
     const spacing = 48;
     let animationFrameId: number;
 
     const render = () => {
       animationFrameId = requestAnimationFrame(render);
+
+      // Only draw when element is visible in the viewport and tab is active
+      if (!isVisible || !isTabActive) return;
+
       ctx.clearRect(0, 0, width, height);
 
       const time = Date.now() * 0.001;
@@ -61,10 +98,10 @@ export const GlowingKolamField: React.FC = () => {
           let glow = 0;
 
           if (dist < mouse.radius) {
-            const factor = (1 - dist / mouse.radius);
+            const factor = 1 - dist / mouse.radius;
             r = 1.6 + factor * 3.5;
             alpha = 0.2 + factor * 0.8;
-            glow = factor * 12;
+            glow = factor * 10;
 
             // Connect lines to nearby dots in active radius (drawing kolam lines)
             ctx.beginPath();
@@ -95,6 +132,8 @@ export const GlowingKolamField: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);

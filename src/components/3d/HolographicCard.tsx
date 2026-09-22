@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import Image from "next/image";
-import { motion, useSpring, useMotionValue, useTransform } from "framer-motion";
+import { motion, useSpring, useMotionValue, useTransform, useMotionTemplate } from "framer-motion";
 import { BoardMember } from "@/data/board";
 import { useAudio } from "@/context/AudioContext";
 import { RotateCw, Mail, ShieldCheck } from "lucide-react";
@@ -28,6 +28,7 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
 
   const glareX = useTransform(mouseX, [-0.5, 0.5], [0, 100]);
   const glareY = useTransform(mouseY, [-0.5, 0.5], [0, 100]);
+  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, oklch(0.78 0.18 80 / 0.6), oklch(0.55 0.22 28 / 0.45), oklch(0.52 0.14 195 / 0.4), transparent 70%)`;
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -77,7 +78,7 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
           style={{
             opacity: isHovered ? 0.65 : 0,
             transition: "opacity 0.25s ease-out",
-            background: `radial-gradient(circle at ${glareX}% ${glareY}%, oklch(0.78 0.18 80 / 0.6), oklch(0.55 0.22 28 / 0.45), oklch(0.52 0.14 195 / 0.4), transparent 70%)`,
+            background: glareBackground,
           }}
         />
 
