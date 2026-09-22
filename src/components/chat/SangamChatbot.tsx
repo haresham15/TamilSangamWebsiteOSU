@@ -50,8 +50,8 @@ export const SangamChatbot: React.FC = () => {
       role: "assistant",
       content:
         locale === "ta"
-          ? "வணக்கம்! நான் ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் அதிகாரப்பூர்வ AI வழிகாட்டி. நிகழ்வுகள், உறுப்பினர் சேர்க்கை, மற்றும் சங்கத்தின் செயல்பாடுகள் குறித்து எதையும் கேளுங்கள்!"
-          : "Hello! I am the OSU Tamil Sangam AI Guide. I am strictly bounded to answer questions using our verified website knowledge base. Ask me anything about our events, membership, leadership, or how to get involved!",
+          ? "வணக்கம்! நான் நண்பா (Nanba) — ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் AI தோழன் / வழிகாட்டி. நிகழ்வுகள், உறுப்பினர் சேர்க்கை, மற்றும் சங்கத்தின் செயல்பாடுகள் குறித்து எதையும் என்னிடம் கேளுங்கள்!"
+          : "Vanakkam! I'm Nanba, your friendly OSU Tamil Sangam AI guide. I'm strictly bounded to answer questions using our verified website knowledge base. Ask me anything about our events, membership, leadership, or how to get involved!",
       citations: [{ title: "User Guide & FAQ", route: "/guide" }],
       timestamp: "Just now",
     },
@@ -213,7 +213,7 @@ export const SangamChatbot: React.FC = () => {
             playWoodClick();
             setIsOpen(!isOpen);
           }}
-          aria-label="Open OSU Tamil Sangam AI Chatbot"
+          aria-label="Ask Nanba - OSU Tamil Sangam AI Bot"
           className="relative group p-3.5 sm:px-4 sm:py-3 bg-[#250d38] text-white border-2 border-[#55CCA2] shadow-[4px_4px_0px_#55CCA2] hover:shadow-[6px_6px_0px_#55CCA2] flex items-center gap-2.5 transition-all"
         >
           <div className="relative">
@@ -222,7 +222,7 @@ export const SangamChatbot: React.FC = () => {
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#55CCA2]" />
           </div>
           <span className="hidden sm:inline text-xs font-mono font-bold uppercase tracking-wider text-white">
-            Ask Sangam AI
+            Ask Nanba!
           </span>
         </motion.button>
       </div>
@@ -246,14 +246,14 @@ export const SangamChatbot: React.FC = () => {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm font-bold font-display text-white tracking-tight">
-                      Sangam AI Guide
+                      Nanba (நண்பா)
                     </h3>
                     <span className="px-1.5 py-0.2 bg-emerald-950 border border-[#55CCA2] text-[9px] font-mono text-[#55CCA2] uppercase font-bold">
                       Free Tier
                     </span>
                   </div>
                   <p className="text-[10px] font-mono text-purple-200/80">
-                    Bounded to verified club knowledge
+                    Your Sangam AI Friend · Verified Knowledge
                   </p>
                 </div>
               </div>
@@ -444,8 +444,8 @@ export const SangamChatbot: React.FC = () => {
                   onChange={(e) => setInputQuery(e.target.value)}
                   placeholder={
                     locale === "ta"
-                      ? "கேள்வியைத் தட்டச்சு செய்க..."
-                      : "Ask about events, joining, tickets, board..."
+                      ? "நண்பாவிடம் கேளுங்கள் (நிகழ்வுகள், சேர்க்கை)..."
+                      : "Ask Nanba about events, joining, tickets, board..."
                   }
                   className="flex-1 px-3 py-2 text-xs bg-[#faf8f5] border-2 border-[#250d38] text-[#250d38] placeholder-purple-900/40 focus:outline-none focus:border-[#55CCA2] font-body"
                 />

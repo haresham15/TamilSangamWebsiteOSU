@@ -8,7 +8,7 @@ import { EVENTS } from "@/data/events";
 import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS } from "@/data/board";
 import { GALLERY_ALBUMS } from "@/data/gallery";
 import { FAQS } from "@/data/faq";
-import { Search, Calendar, Users, Image as ImageIcon, HelpCircle, ArrowRight, X, Sparkles, BookOpen } from "lucide-react";
+import { Search, Calendar, Users, Image as ImageIcon, HelpCircle, ArrowRight, X, Sparkles, BookOpen, Bot } from "lucide-react";
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -41,6 +41,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
     { id: "p-board", category: "Page", title: "Board / குழு", subtitle: "Executive leadership & committee chairs", href: "/board", icon: <Users className="w-4 h-4 text-[#a855f7]" /> },
     { id: "p-gallery", category: "Page", title: "Gallery / நினைவுகள்", subtitle: "Festival memories & photo albums", href: "/gallery", icon: <ImageIcon className="w-4 h-4 text-[#06b6d4]" /> },
     { id: "p-guide", category: "Page", title: "User Guide & FAQ / வழிகாட்டி", subtitle: "Handbook, Searchable FAQ & AI Knowledge Manager", href: "/guide", icon: <BookOpen className="w-4 h-4 text-[#55CCA2]" /> },
+    { id: "p-nanba", category: "Page", title: "Ask Nanba / நண்பா (AI Guide)", subtitle: "Chat with Nanba or search verified club knowledge", href: "/guide", icon: <Bot className="w-4 h-4 text-[#55CCA2]" /> },
     { id: "p-join", category: "Page", title: "Join / இணைந்திடுங்கள்", subtitle: "GroupMe gateway & audition signups", href: "/join", icon: <Users className="w-4 h-4 text-[#10b981]" /> },
     { id: "p-links", category: "Page", title: "Quick Links (Bio Hub)", subtitle: "Mobile link-in-bio & social links", href: "/links", icon: <ArrowRight className="w-4 h-4 text-[#55CCA2]" /> },
 

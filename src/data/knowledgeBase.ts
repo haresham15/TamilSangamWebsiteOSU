@@ -57,6 +57,29 @@ export const BASELINE_KNOWLEDGE: KnowledgeItem[] = [
     ],
     route: "/about",
   },
+  {
+    id: "kb-about-nanba",
+    category: "About",
+    titleEn: "Who is Nanba?",
+    titleTa: "நண்பா (Nanba) யார்?",
+    contentEn:
+      "Nanba (நண்பா, meaning 'Friend' in Tamil) is the friendly official AI assistant for OSU Tamil Sangam at The Ohio State University. Nanba is strictly bounded to answer questions using our verified website knowledge base about campus events, membership, leadership, constitution rules, and student resources. Nanba operates on a free-tier architecture with zero mandatory external API costs and immediate real-time indexing.",
+    contentTa:
+      "நண்பா (Nanba) என்பது ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் அதிகாரப்பூர்வ AI தோழன் மற்றும் வழிகாட்டி. எங்கள் நிகழ்வுகள், உறுப்பினர் சேர்க்கை, சட்ட விதிகள் மற்றும் இணையதள தகவல்களை மட்டுமே சரிபார்த்து பதிலளிக்கும் வகையில் உருவாக்கப்பட்டுள்ளது.",
+    keywords: [
+      "nanba",
+      "bot",
+      "chatbot",
+      "ai",
+      "who are you",
+      "what is nanba",
+      "assistant",
+      "friend",
+      "guide",
+      "sangam ai",
+    ],
+    route: "/guide",
+  },
 
   // 2. Membership & Joining
   {

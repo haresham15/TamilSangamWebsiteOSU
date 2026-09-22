@@ -37,8 +37,8 @@ function generateLocalAnswer(
     return {
       message:
         locale === "ta"
-          ? "வணக்கம்! நான் ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் AI வழிகாட்டி. எங்கள் மாணவர் அமைப்பு, நிகழ்வுகள், மற்றும் வளாக சந்திப்புகள் பற்றிய கேள்விகளுக்கு மட்டுமே என்னால் பதிலளிக்க முடியும். சங்கத்தைப் பற்றி ஏதேனும் கேட்க விரும்புகிறீர்களா?"
-          : "Hello! I am the OSU Tamil Sangam AI Assistant. I am strictly bounded to answer questions about our student organization, campus events, membership, constitution, and website features at The Ohio State University. Please let me know how I can help you with our club!",
+          ? "வணக்கம்! நான் நண்பா (Nanba) — ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் AI தோழன் / வழிகாட்டி. எங்கள் மாணவர் அமைப்பு, நிகழ்வுகள், மற்றும் வளாக சந்திப்புகள் பற்றிய கேள்விகளுக்கு மட்டுமே என்னால் பதிலளிக்க முடியும். சங்கத்தைப் பற்றி ஏதேனும் கேட்க விரும்புகிறீர்களா?"
+          : "Vanakkam! I am Nanba, the official OSU Tamil Sangam AI bot. I am strictly bounded to answer questions about our student organization, campus events, membership, constitution, and website features at The Ohio State University. Please let me know how I can help you with our club!",
       citations: [{ title: "User Guide & FAQ", route: "/guide" }],
       matchedItems: [],
       tier: "local-rag-engine",
@@ -130,7 +130,7 @@ export async function answerQuestion(
         )
         .join("\n\n");
 
-      const systemPrompt = `You are the official OSU Tamil Sangam AI Assistant for The Ohio State University in Columbus, OH.
+      const systemPrompt = `You are Nanba (நண்பா), the friendly and official student AI guide for OSU Tamil Sangam at The Ohio State University in Columbus, OH.
 Rules:
 1. Ground your answer STRICTLY and SOLELY in the provided Knowledge Base below.
 2. If the user asks something not in the knowledge base, politely state that you do not have that specific information and refer them to osutamilsangam@gmail.com or /guide.

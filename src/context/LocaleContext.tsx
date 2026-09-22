@@ -24,7 +24,7 @@ export const translations: Record<string, Record<Locale, string>> = {
   "nav.cultureLab": { en: "Culture Lab", ta: "கலாச்சார அரங்கம்" },
   "nav.resources": { en: "Resources", ta: "வளங்கள்" },
   "nav.partners": { en: "Partners", ta: "கூட்டாளர்கள்" },
-  "nav.ask": { en: "Ask Sangam", ta: "கேளுங்கள்" },
+  "nav.ask": { en: "Ask Nanba", ta: "நண்பாவிடம் கேளுங்கள்" },
   "nav.links": { en: "Quick Links", ta: "விரைவு இணைப்புகள்" },
   "nav.underTheHood": { en: "Under the Hood", ta: "தொழில்நுட்பம்" },
 
