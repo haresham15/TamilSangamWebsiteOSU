@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { FloatingNav } from "./FloatingNav";
 import { CommandPalette } from "./CommandPalette";
 import { Footer } from "./Footer";
+import { SangamChatbot } from "@/components/chat/SangamChatbot";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -39,7 +40,10 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
         </motion.div>
       </main>
 
-      {/* 4. Footer (Skipped on /links) */}
+      {/* 4. Bounded Free-Tier AI Chatbot (Skipped on /links) */}
+      {!isLinksPage && <SangamChatbot />}
+
+      {/* 5. Footer (Skipped on /links) */}
       {!isLinksPage && <Footer />}
     </div>
   );
