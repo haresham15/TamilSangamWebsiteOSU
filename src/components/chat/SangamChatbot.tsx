@@ -205,7 +205,7 @@ export const SangamChatbot: React.FC = () => {
   return (
     <>
       {/* 1. Floating Chat Trigger Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
