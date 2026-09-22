@@ -76,14 +76,14 @@ END:VCALENDAR`;
       <Link
         href="/events"
         onClick={playClick}
-        className="inline-flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-white mb-8 glass-panel px-3.5 py-1.5 rounded-full border border-white/10"
+        className="box-badge-dark inline-flex items-center gap-2 text-xs font-mono text-slate-300 hover:text-[#55CCA2] hover:border-[#55CCA2] mb-8 transition-colors"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
-        <span>Back to Events Calendar</span>
+        <span>BACK TO EVENTS CALENDAR</span>
       </Link>
 
       {/* Hero Poster Banner */}
-      <div className="relative h-80 sm:h-96 rounded-3xl overflow-hidden border border-white/15 shadow-2xl mb-12">
+      <div className="box-ticket relative h-80 sm:h-96 overflow-hidden border-2 border-white/20 shadow-[6px_6px_0px_#55CCA2] mb-12">
         <Image
           src={event.posterImage}
           alt={event.titleEn}
@@ -92,12 +92,12 @@ END:VCALENDAR`;
           sizes="(max-width: 1024px) 100vw, 1024px"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#090b14] via-black/40 to-transparent flex flex-col justify-end p-6 sm:p-10">
+        <div className="absolute inset-0 bg-gradient-to-t from-[#090b14] via-black/50 to-transparent flex flex-col justify-end p-6 sm:p-10">
           <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase bg-[var(--accent-tint)] text-black">
+            <span className="box-badge text-xs font-mono font-bold uppercase bg-[#55CCA2] text-[#1b0d28] border-2 border-[#1b0d28] shadow-[2px_2px_0px_#1b0d28]">
               {locale === "ta" ? event.statusBadgeTa : event.statusBadgeEn}
             </span>
-            <span className="px-3 py-1 rounded-full text-xs font-mono bg-black/60 backdrop-blur-md text-white border border-white/20">
+            <span className="box-badge-dark text-xs font-mono bg-black/70 backdrop-blur-md text-white border border-white/20">
               {event.tamilDate}
             </span>
           </div>
@@ -133,12 +133,12 @@ END:VCALENDAR`;
               {event.schedule.map((item, idx) => (
                 <div
                   key={idx}
-                  className="p-4 rounded-2xl glass-panel border border-white/10 flex items-center justify-between"
+                  className="p-4 border-2 border-white/10 bg-[#160d26]/70 shadow-[3px_3px_0px_rgba(76,36,114,0.3)] flex items-center justify-between"
                 >
-                  <span className="text-xs font-mono font-bold text-[var(--accent-tint)] w-24">
+                  <span className="text-xs font-mono font-bold text-[#55CCA2] w-24">
                     {item.time}
                   </span>
-                  <span className="text-xs sm:text-sm text-white font-medium flex-1 text-left">
+                  <span className="text-xs sm:text-sm text-white font-medium flex-1 text-left font-sans">
                     {locale === "ta" ? item.activityTa : item.activityEn}
                   </span>
                 </div>
@@ -147,9 +147,9 @@ END:VCALENDAR`;
           </div>
 
           {/* Attire & Accessibility */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-white/10">
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
-              <div className="flex items-center gap-2 text-xs font-mono text-[var(--accent-tint)] uppercase mb-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t-2 border-white/10">
+            <div className="p-5 border-2 border-white/10 bg-[#160d26]/80 shadow-[3px_3px_0px_rgba(76,36,114,0.4)]">
+              <div className="flex items-center gap-2 text-xs font-mono text-[#55CCA2] uppercase mb-1">
                 <Shirt className="w-4 h-4" />
                 <span>Dress Code</span>
               </div>
@@ -158,8 +158,8 @@ END:VCALENDAR`;
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
-              <div className="flex items-center gap-2 text-xs font-mono text-[var(--accent-tint)] uppercase mb-1">
+            <div className="p-5 border-2 border-white/10 bg-[#160d26]/80 shadow-[3px_3px_0px_rgba(76,36,114,0.4)]">
+              <div className="flex items-center gap-2 text-xs font-mono text-[#55CCA2] uppercase mb-1">
                 <Info className="w-4 h-4" />
                 <span>Accessibility</span>
               </div>
@@ -172,39 +172,39 @@ END:VCALENDAR`;
 
         {/* Right Column: Ticket Card, Venue, Add to Calendar */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="rounded-3xl glass-panel-elevated p-6 border border-[var(--border-strong)] shadow-2xl space-y-6">
-            <div>
-              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">
-                Admission
+          <div className="box-ticket p-6 sm:p-7 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] space-y-6">
+            <div className="border-b-2 border-white/10 pb-4">
+              <span className="text-[10px] font-mono text-[#55CCA2] uppercase tracking-widest block font-bold">
+                ADMISSION PASS
               </span>
-              <p className="text-2xl font-bold text-white font-mono mt-0.5">{event.price}</p>
+              <p className="text-3xl font-bold text-white font-mono mt-1">{event.price}</p>
             </div>
 
             <div className="space-y-3 text-xs font-mono text-slate-300">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-[var(--accent-tint)] shrink-0" />
+              <div className="flex items-center gap-2.5">
+                <Calendar className="w-4 h-4 text-[#55CCA2] shrink-0" />
                 <span>{event.date}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[var(--accent-tint)] shrink-0" />
+              <div className="flex items-center gap-2.5">
+                <Clock className="w-4 h-4 text-[#55CCA2] shrink-0" />
                 <span>{event.time}</span>
               </div>
-              <div className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 text-[var(--accent-tint)] shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-[#55CCA2] shrink-0 mt-0.5" />
                 <span>{event.venueAddress}</span>
               </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3 pt-2">
               <a
                 href="https://linktr.ee/osutamilsangam"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={playClick}
-                className="w-full py-3.5 rounded-2xl bg-[var(--accent-tint)] text-black font-bold text-xs hover:opacity-95 transition-all shadow-lg flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-4 bg-[#55CCA2] text-[#1b0d28] font-bold text-xs uppercase tracking-wider border-2 border-[#1b0d28] shadow-[3px_3px_0px_#1b0d28] hover:translate-x-0.5 hover:translate-y-0.5 transition-all flex items-center justify-center gap-2 text-center"
               >
                 <ExternalLink className="w-4 h-4" />
-                <span>Official Ticketing Portal (Linktree / Square)</span>
+                <span>Official Ticketing Portal</span>
               </a>
 
               <button
@@ -212,17 +212,17 @@ END:VCALENDAR`;
                   playClick();
                   setIsRsvpOpen(true);
                 }}
-                className="w-full py-3 rounded-2xl glass-panel border border-white/20 text-white font-semibold text-xs hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-white/5 border-2 border-white/20 text-white font-semibold text-xs uppercase tracking-wider hover:bg-white/10 hover:border-[#55CCA2] shadow-[3px_3px_0px_rgba(0,0,0,0.5)] transition-all flex items-center justify-center gap-2"
               >
-                <Ticket className="w-4 h-4 text-[var(--accent-tint)]" />
-                <span>RSVP for Event Updates & Group Rates</span>
+                <Ticket className="w-4 h-4 text-[#55CCA2]" />
+                <span>RSVP for Group Rates</span>
               </button>
 
               <button
                 onClick={handleDownloadIcs}
-                className="w-full py-2.5 rounded-xl glass-panel border border-white/10 text-slate-300 text-xs font-medium hover:bg-white/10 transition-all flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 px-4 bg-transparent border-2 border-white/10 text-slate-300 text-xs font-mono uppercase tracking-wider hover:text-white hover:border-white/30 transition-all flex items-center justify-center gap-1.5"
               >
-                <Download className="w-3.5 h-3.5 text-[var(--accent-tint)]" />
+                <Download className="w-3.5 h-3.5 text-[#55CCA2]" />
                 <span>Add to Calendar (.ics)</span>
               </button>
             </div>
@@ -232,13 +232,13 @@ END:VCALENDAR`;
 
       {/* RSVP Notification & Group Rate Modal */}
       {isRsvpOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-          <div className="w-full max-w-md rounded-3xl glass-panel-elevated p-6 sm:p-8 border border-[var(--border-strong)] shadow-2xl relative text-left">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+          <div className="box-ticket w-full max-w-md bg-[#160d26] p-6 sm:p-8 border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] relative text-left">
             <button
               onClick={() => setIsRsvpOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white text-xs font-mono"
+              className="absolute top-4 right-4 text-slate-400 hover:text-white text-xs font-mono uppercase tracking-wider"
             >
-              ✕ Close
+              [✕ Close]
             </button>
 
             {!isConfirmed ? (
@@ -246,13 +246,13 @@ END:VCALENDAR`;
                 <h3 className="text-xl font-bold text-white mb-1 font-serif">
                   RSVP & Ticket Updates
                 </h3>
-                <p className="text-xs text-slate-400 mb-6">
+                <p className="text-xs text-slate-400 mb-6 font-mono">
                   {event.titleEn} · Ohio Union
                 </p>
 
                 <form onSubmit={handleBookingSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-mono uppercase text-slate-400 mb-1">
+                    <label className="block text-xs font-mono uppercase text-slate-300 mb-1">
                       Full Name
                     </label>
                     <input
@@ -261,12 +261,12 @@ END:VCALENDAR`;
                       value={ticketName}
                       onChange={(e) => setTicketName(e.target.value)}
                       placeholder="Your Full Name"
-                      className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs outline-none focus:border-[var(--accent-tint)] font-sans"
+                      className="w-full px-4 py-2.5 bg-black/50 border-2 border-white/20 text-white text-xs outline-none focus:border-[#55CCA2] font-sans"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-slate-400 mb-1">
+                    <label className="block text-xs font-mono uppercase text-slate-300 mb-1">
                       BuckeyeMail or Personal Email
                     </label>
                     <input
@@ -275,18 +275,18 @@ END:VCALENDAR`;
                       value={ticketEmail}
                       onChange={(e) => setTicketEmail(e.target.value)}
                       placeholder="name.#@buckeyemail.osu.edu"
-                      className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs outline-none focus:border-[var(--accent-tint)] font-sans"
+                      className="w-full px-4 py-2.5 bg-black/50 border-2 border-white/20 text-white text-xs outline-none focus:border-[#55CCA2] font-sans"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-slate-400 mb-1">
+                    <label className="block text-xs font-mono uppercase text-slate-300 mb-1">
                       Number of Attendees
                     </label>
                     <select
                       value={ticketCount}
                       onChange={(e) => setTicketCount(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#111424] border border-white/10 text-white text-xs outline-none focus:border-[var(--accent-tint)] font-sans"
+                      className="w-full px-4 py-2.5 bg-[#0f0b18] border-2 border-white/20 text-white text-xs outline-none focus:border-[#55CCA2] font-sans"
                     >
                       <option value="1">1 Person (Individual)</option>
                       <option value="2">2 People</option>
@@ -301,7 +301,7 @@ END:VCALENDAR`;
 
                   <button
                     type="submit"
-                    className="w-full py-3 rounded-xl bg-[var(--accent-tint)] text-black font-bold text-xs hover:opacity-95 transition-all shadow-md"
+                    className="w-full py-3 bg-[#55CCA2] text-[#1b0d28] font-bold text-xs uppercase tracking-wider border-2 border-[#1b0d28] shadow-[3px_3px_0px_#1b0d28] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
                   >
                     Submit RSVP
                   </button>
@@ -309,7 +309,7 @@ END:VCALENDAR`;
               </div>
             ) : (
               <div className="text-center py-4 space-y-4">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+                <div className="w-12 h-12 border-2 border-emerald-400 bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-[3px_3px_0px_#10b981]">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold text-white font-serif">
@@ -319,15 +319,15 @@ END:VCALENDAR`;
                   Vanakkam {ticketName}! We have recorded your interest for {ticketCount} attendee(s). Check your inbox at {ticketEmail} for festival updates.
                 </p>
 
-                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-slate-300 text-left space-y-1">
+                <div className="p-4 border-2 border-white/15 bg-white/5 text-xs text-slate-300 text-left space-y-1 shadow-[2px_2px_0px_rgba(255,255,255,0.1)]">
                   <p className="font-semibold text-white">Next Steps:</p>
-                  <p>• Lock in your admission early via <a href="https://linktr.ee/osutamilsangam" target="_blank" rel="noopener noreferrer" className="text-[var(--accent-tint)] underline">linktr.ee/osutamilsangam</a>.</p>
+                  <p>• Lock in your admission early via <a href="https://linktr.ee/osutamilsangam" target="_blank" rel="noopener noreferrer" className="text-[#55CCA2] underline font-bold">linktr.ee/osutamilsangam</a>.</p>
                   <p>• Bring your OSU BuckID on event day for student admission.</p>
                 </div>
 
                 <button
                   onClick={() => setIsRsvpOpen(false)}
-                  className="px-6 py-2 rounded-xl bg-white/10 text-white text-xs font-semibold hover:bg-white/20 transition-all"
+                  className="px-6 py-2 bg-white/10 border-2 border-white/20 text-white text-xs font-semibold uppercase tracking-wider hover:bg-white/20 transition-all"
                 >
                   Close
                 </button>

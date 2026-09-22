@@ -41,13 +41,12 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pb-16 border-b border-purple-700/40">
           <div>
             <div className="flex items-center gap-4 mb-4">
-              <div className="relative w-14 h-14 rounded-full p-0.5 bg-gradient-to-br from-[#55CCA2] to-purple-400 shadow-lg shrink-0">
+              <div className="relative w-12 h-12 border-2 border-[#55CCA2] bg-[#250d38] p-1 shrink-0 shadow-[2px_2px_0px_#55CCA2]">
                 <Image
                   src="/emblem.svg"
                   alt="OSU Tamil Sangam Official Logo"
-                  width={56}
-                  height={56}
-                  className="rounded-full object-contain"
+                  fill
+                  className="object-contain p-0.5"
                 />
               </div>
               <div>
@@ -66,10 +65,10 @@ export const Footer: React.FC = () => {
               <Link
                 href={`/events/${EVENTS[0].slug}`}
                 onClick={playClick}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-900/60 border border-purple-700/50 hover:border-[#55CCA2] hover:bg-purple-800/60 transition-all group"
+                className="flex items-center gap-2 px-3.5 py-1.5 bg-[#250d38] border border-purple-700 border-l-4 border-l-[#55CCA2] hover:border-[#55CCA2] hover:bg-purple-900/60 transition-all group shadow-[2px_2px_0px_#55CCA2]"
               >
-                <span className="w-2 h-2 rounded-full bg-[#55CCA2] animate-pulse" />
-                <span className="text-[#55CCA2] font-semibold">
+                <span className="w-2 h-2 bg-[#55CCA2] animate-pulse" />
+                <span className="text-[#55CCA2] font-bold uppercase tracking-wider">
                   {locale === "ta" ? "அடுத்த பெருவிழா:" : "Next Flagship:"}
                 </span>
                 <span className="group-hover:text-white transition-colors">
@@ -79,11 +78,16 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Newsletter Box */}
-          <div className="p-6 rounded-3xl bg-purple-950/60 border border-purple-600/40 max-w-md shadow-xl backdrop-blur-md">
-            <h4 className="text-base font-semibold text-white mb-1 font-display">
-              {locale === "ta" ? "சங்கச் செய்திகளைப் பெறுங்கள்" : "Stay in the Sangam Loop"}
-            </h4>
+          {/* Newsletter Box: Architectural Ledger Console */}
+          <div className="p-6 bg-purple-950/90 border-2 border-purple-600/70 max-w-md shadow-[5px_5px_0px_#55CCA2]">
+            <div className="border-b border-purple-700/60 pb-2 mb-3 flex items-center justify-between">
+              <h4 className="text-base font-bold text-white font-display uppercase tracking-wider">
+                {locale === "ta" ? "சங்கச் செய்திகளைப் பெறுங்கள்" : "Stay in the Sangam Loop"}
+              </h4>
+              <span className="text-[10px] font-mono text-[#55CCA2] font-bold uppercase">
+                [DISPATCH]
+              </span>
+            </div>
             <p className="text-xs text-purple-200/80 mb-4 font-body">
               {locale === "ta"
                 ? "நிகழ்வுகள், இலவச உணவுப் பதிவுகள் மற்றும் நடனத் தேர்வுகள் பற்றிய மின்னஞ்சல்கள்."
@@ -103,12 +107,12 @@ export const Footer: React.FC = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your.buckeyemail@osu.edu"
                   required
-                  className="w-full px-4 py-2.5 rounded-xl bg-purple-900/40 border border-purple-600/60 text-white placeholder-purple-300/60 text-xs outline-none focus:border-[#55CCA2] transition-all font-sans"
+                  className="w-full px-3.5 py-2.5 bg-purple-900/60 border-2 border-purple-500 text-white placeholder-purple-300/60 text-xs outline-none focus:border-[#55CCA2] transition-all font-mono"
                 />
                 <button
                   type="submit"
                   onClick={playClick}
-                  className="px-5 py-2.5 rounded-xl btn-sangam-mint text-xs font-bold transition-all flex items-center gap-1 shrink-0"
+                  className="px-5 py-2.5 btn-sangam-mint text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0"
                 >
                   <span>{locale === "ta" ? "இணைக" : "Join"}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -129,10 +133,10 @@ export const Footer: React.FC = () => {
             </h4>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-center sm:text-left">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-center sm:text-left">
             {filmCredits.map((credit, idx) => (
-              <div key={idx} className="p-4 rounded-2xl bg-purple-900/30 border border-purple-700/30 hover:border-purple-500/50 transition-all">
-                <p className="text-[11px] uppercase tracking-wider text-purple-300 font-mono mb-1">
+              <div key={idx} className="p-3.5 bg-purple-900/40 border border-purple-700/40 border-l-4 border-l-purple-500 hover:border-l-[#55CCA2] hover:border-purple-400 transition-all shadow-sm">
+                <p className="text-[10px] uppercase tracking-wider text-[#55CCA2] font-mono mb-0.5 font-bold">
                   {locale === "ta" ? credit.roleTa : credit.roleEn}
                 </p>
                 <p className="text-sm font-semibold text-white font-body">{credit.name}</p>

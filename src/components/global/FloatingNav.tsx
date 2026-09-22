@@ -57,18 +57,19 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
       <header className="fixed top-4 left-0 right-0 z-50 px-4 sm:px-6 pointer-events-none">
         <div className="max-w-7xl mx-auto flex items-center justify-between pointer-events-auto">
           {/* Logo & Brand Title */}
+          {/* Brand Logo Module: Architectural Stone Inscription Box */}
           <Link
             href="/"
             onClick={playClick}
-            className="group flex items-center gap-3 px-3.5 py-2 rounded-full glass-panel border border-purple-200/80 shadow-md transition-all duration-200 hover:border-[#55CCA2] hover:shadow-[0_0_16px_rgba(85,204,162,0.3)] bg-white/90"
+            className="group flex items-center gap-3 px-3.5 py-2 border-2 border-[#250d38] bg-white shadow-[3px_3px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[3px_3px_0px_#55CCA2] transition-all"
           >
-            <div className="relative w-9 h-9 rounded-full overflow-hidden shadow-sm shrink-0 border border-[#55CCA2]/60">
+            <div className="relative w-8 h-8 border-2 border-[#55CCA2] bg-[#4c2472] overflow-hidden shrink-0 shadow-sm">
               <Image
                 src="/emblem.svg"
                 alt="Official OSU Tamil Sangam Logo"
                 fill
                 className="object-cover"
-                sizes="36px"
+                sizes="32px"
                 priority
               />
             </div>
@@ -76,14 +77,14 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               <span className="text-sm font-bold tracking-tight text-[#250d38] group-hover:text-[#4c2472] transition-colors font-display">
                 {t("brand.name")}
               </span>
-              <span className="text-[10px] text-[#6b478d] tracking-wider uppercase font-mono">
+              <span className="text-[10px] text-[#6b478d] tracking-wider uppercase font-mono font-bold">
                 {locale === "ta" ? "ஓஹியோ மாநிலப் பல்கலைக்கழகம்" : "The Ohio State University"}
               </span>
             </div>
           </Link>
 
-          {/* Desktop Navigation Center Bar */}
-          <nav className="hidden lg:flex items-center gap-1 px-3 py-1.5 rounded-full glass-panel border border-purple-200/70 shadow-md bg-white/90">
+          {/* Desktop Navigation Console: Segmented Ledger Bar */}
+          <nav className="hidden lg:flex items-center gap-1 p-1 bg-white border-2 border-[#250d38] shadow-[3px_3px_0px_#4c2472]">
             {navLinks.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -91,9 +92,9 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                   key={item.href}
                   href={item.href}
                   onClick={playClick}
-                  className={`px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 ${
+                  className={`px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 ${
                     isActive
-                      ? "bg-[#4c2472] text-white shadow-sm border border-[#55CCA2]/50"
+                      ? "bg-[#250d38] text-[#55CCA2] border-b-2 border-b-[#55CCA2] shadow-sm"
                       : "text-[#3c1959] hover:text-[#250d38] hover:bg-purple-100/70"
                   }`}
                 >
@@ -103,7 +104,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
             })}
           </nav>
 
-          {/* Controls: Search, Language, Landscape, Sound, Lite */}
+          {/* Controls: Architectural Box Controls */}
           <div className="flex items-center gap-2">
             {/* Search ⌘K Trigger */}
             <button
@@ -112,29 +113,29 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 onOpenSearch();
               }}
               title={t("control.search")}
-              className="p-2.5 rounded-full glass-panel border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--accent-tint)] hover:border-[var(--accent-tint)] transition-all shadow-md"
+              className="w-9 h-9 border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[2px_2px_0px_#55CCA2] hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex items-center justify-center"
             >
               <Search className="w-4 h-4" />
             </button>
 
-            {/* Language Toggle (EN / தமிழ்) - No Emoji */}
+            {/* Language Toggle (EN / தமிழ்) - Box Switch */}
             <button
               onClick={() => {
                 playClick();
                 toggleLocale();
               }}
               title="Switch Language / மொழியை மாற்ற"
-              className="px-3 py-1.5 text-xs font-semibold rounded-full glass-panel border border-purple-200 text-[#4c2472] hover:border-[#55CCA2] transition-all shadow-md flex items-center gap-1.5"
+              className="px-2.5 py-1.5 text-xs font-mono font-bold border-2 border-[#250d38] bg-white text-[#4c2472] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[2px_2px_0px_#55CCA2] transition-all flex items-center gap-1.5"
             >
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-purple-100 text-[#4c2472] font-bold">
+              <span className="px-1 py-0.5 text-[10px] font-mono bg-[#250d38] text-[#55CCA2] font-bold">
                 {locale === "en" ? "TA" : "EN"}
               </span>
-              <span className="font-tamil" style={{ letterSpacing: 0 }}>
+              <span className="font-tamil font-bold" style={{ letterSpacing: 0 }}>
                 {locale === "en" ? "தமிழ்" : "English"}
               </span>
             </button>
 
-            {/* Tinai & Time-of-Day Chip - No Emoji */}
+            {/* Tinai & Time-of-Day Chip - Box Chip */}
             <div className="relative">
               <button
                 onClick={() => {
@@ -142,28 +143,28 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                   setIsTinaiMenuOpen(!isTinaiMenuOpen);
                 }}
                 title={locale === "ta" ? meta.timeLabelTa : meta.timeLabelEn}
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-full glass-panel border border-purple-200 hover:border-[#55CCA2] transition-all shadow-md"
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-mono font-bold border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] transition-all"
               >
                 <span
-                  className="w-2.5 h-2.5 rounded-full animate-pulse"
+                  className="w-2 h-2 border border-black/40 animate-pulse"
                   style={{ backgroundColor: meta.accentColor }}
                 />
-                <span className="text-[#250d38] font-semibold">
+                <span className="text-[#250d38] font-bold">
                   {locale === "ta" ? meta.nameTa : meta.nameEn}
                 </span>
-                <span className="text-[10px] text-purple-700/60 font-mono">
-                  {isManualPin ? "Pin" : "Live"}
+                <span className="text-[10px] text-purple-700/80 font-mono">
+                  [{isManualPin ? "PIN" : "LIVE"}]
                 </span>
               </button>
 
-              {/* Tinai Dropdown Menu */}
+              {/* Tinai Dropdown Menu: Architectural Ledger Panel */}
               {isTinaiMenuOpen && (
-                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white p-2.5 shadow-2xl z-50 text-left border-2 border-purple-200">
-                  <div className="p-2 border-b border-purple-100 mb-1">
+                <div className="absolute right-0 mt-2 w-64 bg-white p-3 shadow-[6px_6px_0px_#250d38] z-50 text-left border-2 border-[#250d38]">
+                  <div className="p-2 border-b-2 border-purple-200 mb-2 bg-purple-50/60">
                     <p className="text-[10px] uppercase font-mono tracking-widest text-[#6b478d] font-bold">
                       {locale === "ta" ? "ஐந்திணை நிலங்கள் & பொழுது" : "5 Landscapes & Time of Day"}
                     </p>
-                    <p className="text-xs text-purple-950/80 mt-0.5 font-medium">
+                    <p className="text-xs text-purple-950/80 mt-0.5 font-mono">
                       {isManualPin
                         ? (locale === "ta" ? "நிலம் தேர்வு செய்யப்பட்டுள்ளது" : "Manual landscape pinned")
                         : (locale === "ta" ? "நேரத்துடன் ஒத்திசைக்கப்பட்டது" : "Syncing with your local clock")}
@@ -177,19 +178,19 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                         <button
                           key={key}
                           onClick={() => handleTinaiSelect(key)}
-                          className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs text-left transition-all ${
+                          className={`w-full flex items-center justify-between px-3 py-2 text-xs font-mono text-left transition-all border ${
                             isSelected
-                              ? "bg-[#4c2472] text-white font-semibold shadow-sm border border-[#55CCA2]/60"
-                              : "text-[#250d38] hover:bg-purple-50 hover:text-[#4c2472]"
+                              ? "bg-[#250d38] text-white font-bold border-[#55CCA2] shadow-[2px_2px_0px_#55CCA2]"
+                              : "border-transparent text-[#250d38] hover:bg-purple-50 hover:border-purple-200"
                           }`}
                         >
                           <div className="flex items-center gap-2">
                             <span
-                              className="w-2.5 h-2.5 rounded-full"
+                              className="w-2.5 h-2.5 border border-black/30 shrink-0"
                               style={{ backgroundColor: tMeta.accentColor }}
                             />
                             <div>
-                              <span className="font-semibold">
+                              <span className="font-bold">
                                 {locale === "ta" ? tMeta.nameTa : tMeta.nameEn}
                               </span>
                               <span className={`block text-[10px] ${isSelected ? "text-purple-200" : "text-purple-900/60"}`}>
@@ -209,7 +210,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                         resetToLiveTime();
                         setIsTinaiMenuOpen(false);
                       }}
-                      className="w-full mt-2 py-1.5 text-center text-[11px] font-bold text-[#4c2472] hover:text-[#16835f] border-t border-purple-100 pt-2 transition-colors"
+                      className="w-full mt-2 py-1.5 text-center text-[11px] font-mono font-bold text-[#4c2472] hover:text-[#11694c] border-t-2 border-purple-200 pt-2 transition-colors uppercase tracking-wider"
                     >
                       {locale === "ta" ? "நேரடி நேரத்திற்கு மீட்டமை" : "Reset to Live Clock"}
                     </button>
@@ -222,10 +223,10 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
             <button
               onClick={toggleSound}
               title={isSoundEnabled ? t("control.soundOff") : t("control.soundOn")}
-              className={`p-2.5 rounded-full glass-panel border transition-all shadow-md ${
+              className={`w-9 h-9 border-2 border-[#250d38] shadow-[2px_2px_0px_#4c2472] flex items-center justify-center transition-all ${
                 isSoundEnabled
-                  ? "border-[#55CCA2] text-[#16835f] bg-[#55CCA2]/15"
-                  : "border-purple-200/80 text-[#4c2472] hover:border-[#55CCA2] hover:bg-white"
+                  ? "border-[#250d38] text-[#11694c] bg-[#55CCA2]"
+                  : "bg-white text-[#4c2472] hover:border-[#55CCA2]"
               }`}
             >
               {isSoundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
@@ -237,7 +238,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 playClick();
                 setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
-              className="lg:hidden p-2.5 rounded-full glass-panel border border-purple-200 text-[#250d38] hover:text-[#4c2472] shadow-md transition-all"
+              className="lg:hidden w-9 h-9 border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] flex items-center justify-center transition-all"
             >
               {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -245,12 +246,12 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
         </div>
       </header>
 
-      {/* Mobile Drawer Navigation */}
+      {/* Mobile Drawer Navigation: Architectural Ledger Panel */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-white/95 backdrop-blur-2xl lg:hidden flex flex-col pt-24 px-6 pb-10 justify-between overflow-y-auto border-b border-purple-200 shadow-2xl">
+        <div className="fixed inset-0 z-40 bg-white/95 backdrop-blur-2xl lg:hidden flex flex-col pt-24 px-6 pb-10 justify-between overflow-y-auto border-b-4 border-[#250d38] shadow-2xl">
           <div className="space-y-3">
-            <p className="text-xs uppercase font-mono tracking-widest text-[#6b478d] px-3 font-bold">
-              {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"} · Navigation
+            <p className="text-xs uppercase font-mono tracking-widest text-[#250d38] px-1 font-bold border-l-4 border-[#55CCA2] pl-2">
+              {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"} · Navigation Index
             </p>
             <div className="grid grid-cols-1 gap-2">
               {navLinks.map((item) => {
@@ -260,10 +261,10 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                     key={item.href}
                     href={item.href}
                     onClick={handleLinkClick}
-                    className={`flex items-center justify-between px-4 py-3 rounded-2xl text-base font-semibold transition-all ${
+                    className={`flex items-center justify-between px-4 py-3 border-2 border-[#250d38] text-sm font-mono font-bold uppercase tracking-wider transition-all ${
                       isActive
-                        ? "bg-[#4c2472] text-white shadow-md border-2 border-[#55CCA2]"
-                        : "bg-purple-50/70 border border-purple-100 text-[#250d38] hover:bg-purple-100"
+                        ? "bg-[#250d38] text-[#55CCA2] shadow-[3px_3px_0px_#55CCA2]"
+                        : "bg-purple-50/70 text-[#250d38] hover:bg-purple-100 shadow-[2px_2px_0px_#4c2472]"
                     }`}
                   >
                     <span>{t(item.labelKey)}</span>
@@ -273,11 +274,11 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               })}
             </div>
 
-            <div className="pt-4 border-t border-purple-100">
+            <div className="pt-4 border-t-2 border-purple-200">
               <Link
                 href="/links"
                 onClick={handleLinkClick}
-                className="flex items-center justify-between px-4 py-3 rounded-2xl bg-purple-50 border border-purple-200 text-sm text-[#4c2472] font-semibold hover:bg-purple-100 transition-colors"
+                className="flex items-center justify-between px-4 py-3 border-2 border-[#250d38] bg-purple-100 text-sm font-mono font-bold text-[#4c2472] hover:bg-purple-200 shadow-[2px_2px_0px_#4c2472] transition-colors"
               >
                 <span>{t("nav.links")} (Linktree Bio Mode)</span>
                 <ExternalLink className="w-4 h-4 text-[#55CCA2]" />
@@ -285,19 +286,19 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
             </div>
           </div>
 
-          <div className="pt-6 border-t border-purple-100 flex items-center justify-between text-xs text-[#6b478d]">
+          <div className="pt-6 border-t-2 border-purple-200 flex items-center justify-between text-xs text-[#6b478d]">
             <button
               onClick={toggleLiteMode}
-              className="px-3.5 py-2 rounded-xl bg-purple-100 border border-purple-200 text-[#4c2472] font-semibold flex items-center gap-2 hover:bg-purple-200/70 transition-colors"
+              className="px-3.5 py-2 border-2 border-[#250d38] bg-purple-100 text-[#4c2472] font-mono font-bold flex items-center gap-2 hover:bg-purple-200 shadow-[2px_2px_0px_#4c2472] transition-colors"
             >
-              <Layers className="w-4 h-4 text-[#16835f]" />
+              <Layers className="w-4 h-4 text-[#11694c]" />
               <span>{isLiteMode ? "Lite Mode (Active)" : "3D Mode"}</span>
             </button>
 
             <Link
               href="/about#faq"
               onClick={handleLinkClick}
-              className="font-semibold text-[#4c2472] hover:text-[#16835f] transition-colors"
+              className="font-mono font-bold text-[#4c2472] hover:text-[#11694c] transition-colors"
             >
               {locale === "ta" ? "உதவி அரங்கம்" : "Help & FAQ"}
             </Link>

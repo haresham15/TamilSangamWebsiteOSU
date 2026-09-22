@@ -92,8 +92,8 @@ export default function BioHubPage() {
       {/* Container restricted to mobile width for sleek bio-link feel */}
       <div className="w-full max-w-md mx-auto text-center">
         {/* Distilled Profile Avatar */}
-        <div className="relative w-20 h-20 mx-auto mb-4 rounded-full p-1 border border-[var(--color-temple-bronze)]/40 bg-[var(--surface-raised)] shadow-2xl">
-          <div className="w-full h-full rounded-full bg-[var(--surface-sunken)] flex items-center justify-center text-3xl font-display font-bold text-[var(--accent-tint)]">
+        <div className="relative w-20 h-20 mx-auto mb-4 p-1 border-2 border-[#55CCA2] bg-[#160d26] shadow-[4px_4px_0px_#4c2472]">
+          <div className="w-full h-full bg-[#250d38] border border-white/10 flex items-center justify-center text-3xl font-display font-bold text-[#55CCA2]">
             ஐ
           </div>
         </div>
@@ -102,7 +102,7 @@ export default function BioHubPage() {
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-display mb-1">
           OSU Tamil Sangam
         </h1>
-        <p className="text-[11px] text-[var(--accent-tint)] font-mono uppercase tracking-widest mb-2">
+        <p className="text-[11px] text-[#55CCA2] font-mono uppercase tracking-widest mb-2 font-bold">
           @osutamilsangam · The Ohio State University
         </p>
         <p className="text-xs text-slate-300 mb-6 max-w-xs mx-auto leading-relaxed">
@@ -115,7 +115,7 @@ export default function BioHubPage() {
             href="https://instagram.com/osutamilsangam"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2.5 rounded-full bg-white/5 border border-white/10 hover:border-[var(--accent-tint)] hover:text-[var(--accent-tint)] transition-colors"
+            className="w-10 h-10 border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] transition-all flex items-center justify-center"
             title="Instagram"
           >
             <InstagramIcon className="w-4 h-4" />
@@ -124,7 +124,7 @@ export default function BioHubPage() {
             href="https://groupme.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2.5 rounded-full bg-white/5 border border-white/10 hover:border-[var(--accent-tint)] hover:text-[var(--accent-tint)] transition-colors"
+            className="w-10 h-10 border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] transition-all flex items-center justify-center"
             title="GroupMe"
           >
             <MessageSquare className="w-4 h-4" />
@@ -132,7 +132,7 @@ export default function BioHubPage() {
           <button
             type="button"
             onClick={() => handleCopy("email", "president.osutamilsangam@gmail.com")}
-            className="p-2.5 rounded-full bg-white/5 border border-white/10 hover:border-[var(--accent-tint)] hover:text-[var(--accent-tint)] transition-colors relative"
+            className="w-10 h-10 border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] transition-all flex items-center justify-center relative"
             title="Copy Contact Email"
           >
             {copiedItem === "email" ? (
@@ -149,22 +149,22 @@ export default function BioHubPage() {
             const IconComponent = link.icon;
             const content = (
               <div
-                className={`w-full p-4 rounded-2xl border transition-colors text-left flex items-center justify-between shadow-lg ${
+                className={`w-full p-4 border-2 transition-all text-left flex items-center justify-between ${
                   link.isFeatured
-                    ? "bg-gradient-to-r from-[var(--color-terracotta)]/25 to-[var(--color-temple-bronze)]/20 border-[var(--color-temple-bronze)]/50 hover:border-[var(--color-temple-bronze)]"
-                    : "bg-[var(--surface-raised)] border-white/10 hover:bg-white/10 hover:border-white/20"
+                    ? "bg-[#250d38] border-[#55CCA2] shadow-[4px_4px_0px_#55CCA2]"
+                    : "bg-[#160d26] border-white/15 hover:border-[#55CCA2] shadow-[3px_3px_0px_#4c2472] hover:shadow-[4px_4px_0px_#55CCA2]"
                 }`}
               >
                 <div className="flex items-center gap-3.5 min-w-0 pr-2">
-                  <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-[var(--accent-tint)]">
+                  <div className="w-9 h-9 border-2 border-white/20 bg-black/40 flex items-center justify-center shrink-0 text-[#55CCA2]">
                     <IconComponent className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono text-slate-500 uppercase">{link.index}</span>
+                      <span className="text-[10px] font-mono text-slate-400 uppercase font-bold">{link.index}</span>
                       <p className="text-sm font-bold text-white font-display truncate">{link.title}</p>
                       {link.badge && (
-                        <span className="px-2 py-0.5 rounded-full text-[9px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        <span className="box-badge-dark text-[9px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
                           {link.badge}
                         </span>
                       )}

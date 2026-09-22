@@ -69,11 +69,11 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
           rotateY,
           transformStyle: "preserve-3d",
         }}
-        className="relative w-full h-full rounded-3xl shadow-2xl border border-white/15 overflow-hidden group"
+        className="relative w-full h-full shadow-[6px_6px_0px_#4c2472] border-2 border-white/20 overflow-hidden group bg-[#160d26]"
       >
         {/* Holographic Iridescent Foil Overlay with Dynamic Flare */}
         <motion.div
-          className="absolute inset-0 pointer-events-none z-20 mix-blend-color-dodge rounded-3xl"
+          className="absolute inset-0 pointer-events-none z-20 mix-blend-color-dodge"
           style={{
             opacity: isHovered ? 0.65 : 0,
             transition: "opacity 0.25s ease-out",
@@ -90,7 +90,7 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
         >
           {/* FRONT OF CARD */}
           <div
-            className="absolute inset-0 backface-hidden flex flex-col justify-between p-6 rounded-3xl border border-white/10"
+            className="absolute inset-0 backface-hidden flex flex-col justify-between p-6 border-2 border-white/10"
             style={{
               backfaceVisibility: "hidden",
               backgroundColor: "var(--surface-raised)",
@@ -99,15 +99,15 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
           >
             {/* Top Header & Role */}
             <div className="flex items-center justify-between z-10">
-              <span className="px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-widest bg-white/10 text-[var(--accent-tint)] border border-white/10 flex items-center gap-1.5 shadow-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-tint)]" />
+              <span className="box-badge-dark text-[10px] font-mono uppercase tracking-wider text-[#55CCA2] border border-[#55CCA2]/40 flex items-center gap-1.5 shadow-sm">
+                <span className="w-1.5 h-1.5 bg-[#55CCA2]" />
                 <span>{member.roleEn}</span>
               </span>
               <span className="text-xs text-slate-400 font-mono">{member.term}</span>
             </div>
 
             {/* Member / Role Emblem Portrait */}
-            <div className="relative w-full h-56 rounded-2xl overflow-hidden my-auto border border-white/10 shadow-inner group-hover:scale-[1.02] transition-transform duration-300 flex items-center justify-center bg-[var(--surface-sunken)]">
+            <div className="relative w-full h-56 overflow-hidden my-auto border-2 border-white/10 shadow-inner group-hover:scale-[1.02] transition-transform duration-300 flex items-center justify-center bg-[var(--surface-sunken)]">
               <div className="relative w-36 h-36">
                 <Image
                   src={member.photoUrl}
@@ -130,7 +130,7 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
             </div>
 
             {/* Bottom Card Footer */}
-            <div className="flex items-center justify-between pt-3 border-t border-white/10 z-10">
+            <div className="flex items-center justify-between pt-3 border-t-2 border-white/10 z-10">
               <div>
                 <p className="text-base font-bold text-white tracking-tight">{member.nameEn}</p>
                 <p className="text-xs text-slate-400">{member.committeeEn}</p>
@@ -138,17 +138,17 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
               <button
                 type="button"
                 onClick={handleFlip}
-                className="flex items-center gap-1 text-[11px] text-slate-400 font-mono hover:text-white px-2 py-1 rounded-lg bg-white/5 border border-white/10"
+                className="flex items-center gap-1 text-[11px] text-slate-300 font-mono hover:text-white px-2.5 py-1 bg-white/5 border border-white/20 hover:border-[#55CCA2]"
               >
-                <RotateCw className="w-3 h-3 text-[var(--accent-tint)]" />
-                <span>Flip</span>
+                <RotateCw className="w-3 h-3 text-[#55CCA2]" />
+                <span>FLIP</span>
               </button>
             </div>
           </div>
 
           {/* BACK OF CARD */}
           <div
-            className="absolute inset-0 backface-hidden flex flex-col justify-between p-6 rounded-3xl border border-white/10 text-left"
+            className="absolute inset-0 backface-hidden flex flex-col justify-between p-6 border-2 border-white/10 text-left"
             style={{
               backfaceVisibility: "hidden",
               transform: "rotateY(180deg)",
@@ -157,17 +157,17 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
             }}
           >
             {/* Back Header */}
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <div className="flex items-center justify-between border-b-2 border-white/10 pb-3">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[var(--accent-tint)]" />
-                <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)]">
+                <ShieldCheck className="w-4 h-4 text-[#55CCA2]" />
+                <span className="text-xs font-mono uppercase tracking-widest text-[#55CCA2]">
                   Leadership Portfolio
                 </span>
               </div>
               <button
                 type="button"
                 onClick={handleFlip}
-                className="p-1 rounded-full bg-white/10 hover:bg-white/20 text-slate-300"
+                className="w-7 h-7 flex items-center justify-center border border-white/20 bg-white/10 hover:bg-white/20 text-slate-300"
               >
                 <RotateCw className="w-3.5 h-3.5" />
               </button>

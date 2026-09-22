@@ -56,7 +56,7 @@ export const WovenBorderMarquee: React.FC<WovenBorderMarqueeProps> = ({
             <span className="inline-block" lang="ta" style={{ letterSpacing: 0 }}>
               {str}
             </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-current opacity-60" />
+            <span className="w-1.5 h-1.5 bg-current opacity-70 rotate-45 shrink-0" />
             <TempleRekuMotif count={3} className={rekuColor} />
           </div>
         ))}
@@ -66,7 +66,7 @@ export const WovenBorderMarquee: React.FC<WovenBorderMarqueeProps> = ({
             <span className="inline-block" lang="ta" style={{ letterSpacing: 0 }}>
               {str}
             </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-current opacity-60" />
+            <span className="w-1.5 h-1.5 bg-current opacity-70 rotate-45 shrink-0" />
             <TempleRekuMotif count={3} className={rekuColor} />
           </div>
         ))}

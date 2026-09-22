@@ -106,7 +106,7 @@ export default function AboutPage() {
       </div>
 
       {/* 1. What is a Sangam? Essay Card */}
-      <div className="rounded-3xl bg-white p-8 sm:p-12 border-2 border-purple-200/90 shadow-xl mb-16 relative overflow-hidden">
+      <div className="box-architectural p-8 sm:p-12 border-2 border-[#250d38] shadow-[6px_6px_0px_#4c2472] mb-16 relative overflow-hidden">
         <div className="max-w-3xl space-y-4">
           <div className="flex items-center gap-2 text-[#4c2472] font-mono text-xs uppercase tracking-widest font-bold">
             <BookOpen className="w-4 h-4 text-[#55CCA2]" />
@@ -139,7 +139,7 @@ export default function AboutPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {CLUB_PURPOSE.map((p, idx) => (
-            <div key={p.id} className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-purple-100 hover:border-[#55CCA2] shadow-md flex flex-col justify-between transition-all hover:shadow-lg">
+            <div key={p.id} className="box-ticket p-6 sm:p-8 bg-white border-2 border-[#250d38] shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] flex flex-col justify-between transition-all">
               <div>
                 <span className="text-xs font-mono text-[#11694c] font-bold uppercase tracking-wider block mb-2">
                   Mandate 0{idx + 1}
@@ -170,9 +170,9 @@ export default function AboutPage() {
           {timelineEvents.map((evt, idx) => (
             <div
               key={idx}
-              className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-purple-100 hover:border-[#55CCA2] shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-6 transition-all hover:shadow-md"
+              className="box-architectural p-6 sm:p-8 border-2 border-[#250d38] shadow-[3px_3px_0px_#4c2472] hover:shadow-[5px_5px_0px_#55CCA2] flex flex-col sm:flex-row items-start sm:items-center gap-6 transition-all"
             >
-              <span className="text-3xl sm:text-4xl font-extrabold font-display text-[#4c2472] shrink-0">
+              <span className="text-3xl sm:text-4xl font-extrabold font-display text-[#4c2472] shrink-0 font-mono">
                 {evt.year}
               </span>
               <div className="space-y-1">
@@ -200,8 +200,8 @@ export default function AboutPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {partners.map((pt, idx) => (
-            <div key={idx} className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-purple-100 hover:border-[#55CCA2] shadow-md transition-all">
-              <span className="text-xs font-mono text-[#55CCA2] bg-[#55CCA2]/15 px-3 py-1 rounded-full font-bold uppercase tracking-wider inline-block mb-3">
+            <div key={idx} className="box-architectural p-6 sm:p-8 border-2 border-[#250d38] shadow-[4px_4px_0px_#4c2472] transition-all">
+              <span className="box-badge text-xs font-mono font-bold uppercase tracking-wider inline-block mb-3 bg-[#55CCA2] text-[#1b0d28] border border-[#1b0d28]">
                 {pt.type}
               </span>
               <h3 className="text-xl font-bold text-[#250d38] mb-2 font-display">
@@ -229,13 +229,13 @@ export default function AboutPage() {
 
           {/* Quick FAQ Search */}
           <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 text-purple-400 absolute left-3 top-3" />
+            <Search className="w-4 h-4 text-purple-600 absolute left-3 top-3.5" />
             <input
               type="text"
               value={faqSearch}
               onChange={(e) => setFaqSearch(e.target.value)}
               placeholder="Search questions..."
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white border-2 border-purple-200 text-[#250d38] placeholder-purple-300 text-xs outline-none focus:border-[#55CCA2] font-body shadow-sm"
+              className="w-full pl-9 pr-4 py-2.5 bg-white border-2 border-[#250d38] shadow-[3px_3px_0px_#4c2472] text-[#250d38] placeholder-purple-400 text-xs outline-none focus:border-[#55CCA2] font-body"
             />
           </div>
         </div>
@@ -246,7 +246,7 @@ export default function AboutPage() {
             return (
               <div
                 key={faq.id}
-                className="bg-white rounded-2xl border-2 border-purple-100 hover:border-[#55CCA2] overflow-hidden shadow-sm transition-all"
+                className="bg-white border-2 border-[#250d38] shadow-[3px_3px_0px_#4c2472] hover:shadow-[4px_4px_0px_#55CCA2] overflow-hidden transition-all"
               >
                 <button
                   type="button"
@@ -262,12 +262,12 @@ export default function AboutPage() {
                   {isExpanded ? (
                     <ChevronUp className="w-4 h-4 text-[#4c2472] shrink-0 font-bold" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-purple-400 shrink-0" />
+                    <ChevronDown className="w-4 h-4 text-purple-500 shrink-0" />
                   )}
                 </button>
 
                 {isExpanded && (
-                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-purple-950/80 leading-relaxed border-t border-purple-100 font-body">
+                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-purple-950/80 leading-relaxed border-t-2 border-purple-100 font-body">
                     {locale === "ta" ? faq.answerTa : faq.answerEn}
                   </div>
                 )}

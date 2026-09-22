@@ -147,40 +147,38 @@ export default function GalleryPage() {
         </p>
       </div>
 
-      {/* 1. Academic Year Filter Tabs */}
-      <div className="flex flex-wrap items-center gap-2.5 mb-8">
-        <span className="text-xs font-mono text-purple-950/80 mr-2 flex items-center gap-1.5 font-bold">
+      {/* 1. Academic Year Filter: Architectural Console Strip */}
+      <div className="flex flex-wrap items-center gap-2 mb-8">
+        <div className="box-badge mr-1">
           <Calendar className="w-3.5 h-3.5 text-[#55CCA2]" />
           <span>Timeline Era:</span>
-        </span>
-        {academicYears.map((year) => (
-          <button
-            key={year.id}
-            onClick={() => {
-              playWoodClick();
-              setActiveYear(year.id);
-              setVisibleCount(24);
-            }}
-            className={`px-4 py-2 rounded-full text-xs font-mono transition-all duration-200 ${
-              activeYear === year.id
-                ? "bg-[#4c2472] text-white font-bold shadow-md scale-105 border border-[#4c2472]"
-                : "bg-white text-[#250d38] border-2 border-purple-200/90 hover:border-[#55CCA2] hover:bg-purple-50/50 shadow-sm"
-            }`}
-          >
-            {locale === "ta" ? year.labelTa : year.labelEn}
-          </button>
-        ))}
+        </div>
+        <div className="box-tab-strip">
+          {academicYears.map((year) => (
+            <button
+              key={year.id}
+              onClick={() => {
+                playWoodClick();
+                setActiveYear(year.id);
+                setVisibleCount(24);
+              }}
+              className={`box-tab-item ${activeYear === year.id ? "box-tab-item-active" : ""}`}
+            >
+              {locale === "ta" ? year.labelTa : year.labelEn}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* 2. Photo Archive Search & Filter Panel */}
-      <div className="rounded-3xl bg-white p-6 sm:p-8 border-2 border-purple-200/90 shadow-xl mb-12">
-        <div className="flex items-center justify-between gap-2 text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold mb-3">
+      {/* 2. Photo Archive Search & Filter Panel: Architectural Console */}
+      <div className="border-2 border-[#250d38] bg-white p-6 sm:p-8 shadow-[5px_5px_0px_#4c2472] mb-12">
+        <div className="flex items-center justify-between gap-2 text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold mb-3 border-b-2 border-purple-200 pb-2">
           <div className="flex items-center gap-2">
             <Search className="w-4 h-4 text-[#55CCA2]" />
             <span>Search Photo Vault</span>
           </div>
-          <span className="text-purple-900/70 normal-case text-xs font-medium">
-            {filteredPhotos.length} {filteredPhotos.length === 1 ? "photo" : "photos"} matched
+          <span className="text-purple-900/80 font-mono text-xs font-bold">
+            [{filteredPhotos.length} {filteredPhotos.length === 1 ? "photo" : "photos"} matched]
           </span>
         </div>
 
@@ -194,13 +192,13 @@ export default function GalleryPage() {
               setVisibleCount(24);
             }}
             placeholder="Search by title, event, tag (e.g. 'picnic', 'sapad', 'dosa', 'jathara', 'dance', 'lawn')..."
-            className="w-full pl-12 pr-4 py-3 rounded-2xl bg-purple-50/50 border-2 border-purple-200 text-[#250d38] placeholder-purple-900/40 text-sm outline-none focus:border-[#4c2472] focus:bg-white font-body transition-all"
+            className="w-full pl-12 pr-4 py-3 bg-purple-50/50 border-2 border-[#250d38] text-[#250d38] placeholder-purple-900/40 text-sm outline-none focus:border-[#4c2472] focus:bg-white font-body transition-all"
           />
         </div>
 
-        {/* Quick Tag Pills */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-mono text-purple-950/70 mr-2 flex items-center gap-1 font-bold">
+        {/* Quick Tag Ledger Chips */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-xs font-mono text-purple-950/70 mr-1 flex items-center gap-1 font-bold">
             <Filter className="w-3.5 h-3.5 text-[#55CCA2]" />
             <span>Tag:</span>
           </span>
@@ -212,10 +210,10 @@ export default function GalleryPage() {
                 setActiveTag(tag);
                 setVisibleCount(24);
               }}
-              className={`px-3 py-1 rounded-full text-xs font-mono capitalize transition-all ${
+              className={`px-2.5 py-1 text-xs font-mono uppercase font-bold border transition-all ${
                 activeTag === tag
-                  ? "bg-[#55CCA2] text-[#250d38] font-bold shadow-sm"
-                  : "bg-purple-50/70 text-[#4c2472] border border-purple-200/80 hover:bg-purple-100/70 hover:border-purple-300"
+                  ? "bg-[#250d38] text-[#55CCA2] border-[#250d38] shadow-[1px_1px_0px_#55CCA2]"
+                  : "bg-purple-50/80 text-[#4c2472] border-purple-300 hover:bg-purple-100"
               }`}
             >
               {tag}
@@ -231,7 +229,7 @@ export default function GalleryPage() {
             {locale === "ta" ? "சிறப்பு புகைப்படத் தொகுப்புகள்" : "Featured Photo Albums"}
           </h2>
           <span className="text-xs font-mono text-[#4c2472] font-bold">
-            {filteredAlbums.length} {filteredAlbums.length === 1 ? "Album" : "Albums"}
+            [{filteredAlbums.length} {filteredAlbums.length === 1 ? "Album" : "Albums"}]
           </span>
         </div>
 
@@ -239,13 +237,13 @@ export default function GalleryPage() {
           {filteredAlbums.map((album) => (
             <div
               key={album.slug}
-              className="rounded-3xl bg-white border-2 border-purple-200/90 p-5 flex flex-col justify-between group hover:border-[#55CCA2] hover:shadow-xl transition-all duration-300 shadow-md"
+              className="border-2 border-[#250d38] bg-white p-5 flex flex-col justify-between group hover:border-[#55CCA2] hover:shadow-[6px_6px_0px_#55CCA2] transition-all duration-200 shadow-[4px_4px_0px_#4c2472]"
             >
               <div>
                 <Link
                   href={`/gallery/${album.slug}`}
                   onClick={playClick}
-                  className="block w-full h-48 relative rounded-2xl overflow-hidden mb-4 border border-purple-100"
+                  className="block w-full h-48 relative border-2 border-[#250d38] overflow-hidden mb-4"
                 >
                   <Image
                     src={album.coverImage}
@@ -254,10 +252,10 @@ export default function GalleryPage() {
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                     sizes="(max-width: 768px) 100vw, 400px"
                   />
-                  <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#250d38]/85 backdrop-blur-md border border-white/20 text-[10px] font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
+                  <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#250d38] border border-[#55CCA2] text-[10px] font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
                     {album.academicYear}
                   </div>
-                  <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-[#250d38]/85 backdrop-blur-md border border-white/20 text-[10px] font-mono text-white font-bold">
+                  <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-[#250d38] border border-white/40 text-[10px] font-mono text-white font-bold">
                     {album.photoCount} Photos
                   </div>
                 </Link>
@@ -272,14 +270,14 @@ export default function GalleryPage() {
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-purple-100 flex items-center justify-between text-xs">
+              <div className="pt-3 border-t-2 border-purple-200 flex items-center justify-between text-xs font-mono font-bold">
                 <div className="flex items-center gap-3">
                   <Link
                     href={`/gallery/${album.slug}`}
                     onClick={playClick}
-                    className="font-bold text-[#4c2472] hover:text-[#250d38] hover:underline"
+                    className="text-[#4c2472] hover:text-[#250d38] hover:underline uppercase tracking-wider"
                   >
-                    <span>Open Album</span>
+                    <span>Open Album →</span>
                   </Link>
                   <button
                     type="button"
@@ -289,7 +287,7 @@ export default function GalleryPage() {
                       const el = document.getElementById("photo-stream");
                       if (el) el.scrollIntoView({ behavior: "smooth" });
                     }}
-                    className="text-[11px] font-mono text-[#55CCA2] hover:underline font-bold"
+                    className="text-[11px] text-[#11694c] hover:underline uppercase"
                   >
                     <span>Browse Stream</span>
                   </button>
@@ -300,7 +298,7 @@ export default function GalleryPage() {
                     href={album.googlePhotosUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[11px] font-mono text-purple-800/80 hover:text-[#4c2472] transition-colors font-medium"
+                    className="inline-flex items-center gap-1 text-[11px] text-purple-800/80 hover:text-[#4c2472] transition-colors"
                     title="View on Google Photos"
                   >
                     <span>Google Photos</span>
@@ -328,18 +326,18 @@ export default function GalleryPage() {
         </span>
       </div>
 
-      {/* Seamless Album Switcher Tabs */}
-      <div className="flex flex-wrap items-center gap-2 mb-8">
+      {/* Seamless Album Switcher Tabs: Architectural Segmented Console */}
+      <div className="flex flex-wrap items-center gap-1.5 mb-8 p-1.5 bg-purple-50 border-2 border-[#250d38] shadow-[3px_3px_0px_#4c2472]">
         <button
           onClick={() => {
             playWoodClick();
             setActiveAlbum("all");
             setVisibleCount(24);
           }}
-          className={`px-4 py-2 rounded-full text-xs font-mono transition-all duration-200 ${
+          className={`px-3.5 py-1.5 text-xs font-mono font-bold uppercase tracking-wider transition-all ${
             activeAlbum === "all"
-              ? "bg-[#4c2472] text-white font-bold shadow-md scale-105"
-              : "bg-white text-[#250d38] border-2 border-purple-200 hover:border-[#55CCA2] hover:bg-purple-50 shadow-sm"
+              ? "bg-[#250d38] text-[#55CCA2] border-b-2 border-b-[#55CCA2] shadow-sm"
+              : "text-[#3c1959] hover:text-[#250d38] hover:bg-purple-100"
           }`}
         >
           All Albums ({allPhotos.length})
@@ -352,10 +350,10 @@ export default function GalleryPage() {
               setActiveAlbum(album.slug);
               setVisibleCount(24);
             }}
-            className={`px-4 py-2 rounded-full text-xs font-mono transition-all duration-200 ${
+            className={`px-3.5 py-1.5 text-xs font-mono font-bold uppercase tracking-wider transition-all ${
               activeAlbum === album.slug
-                ? "bg-[#4c2472] text-white font-bold shadow-md scale-105"
-                : "bg-white text-[#250d38] border-2 border-purple-200 hover:border-[#55CCA2] hover:bg-purple-50 shadow-sm"
+                ? "bg-[#250d38] text-[#55CCA2] border-b-2 border-b-[#55CCA2] shadow-sm"
+                : "text-[#3c1959] hover:text-[#250d38] hover:bg-purple-100"
             }`}
           >
             {locale === "ta" ? album.titleTa : album.titleEn} ({album.photoCount})
@@ -364,7 +362,7 @@ export default function GalleryPage() {
       </div>
 
       {filteredPhotos.length === 0 ? (
-        <div className="py-20 text-center bg-white rounded-3xl border-2 border-purple-200/90 shadow-md mb-16">
+        <div className="py-20 text-center bg-white border-2 border-[#250d38] shadow-[4px_4px_0px_#4c2472] mb-16">
           <p className="text-purple-900/80 font-mono text-sm">No photos found matching your search filter.</p>
           <button
             onClick={() => {
@@ -373,7 +371,7 @@ export default function GalleryPage() {
               setActiveTag("all");
               setActiveAlbum("all");
             }}
-            className="mt-4 px-5 py-2.5 rounded-xl bg-[#4c2472] text-white text-xs font-mono font-bold hover:bg-[#250d38] transition-colors shadow-sm"
+            className="mt-4 px-5 py-2.5 btn-sangam text-xs font-mono font-bold uppercase tracking-wider"
           >
             Reset All Filters
           </button>
@@ -393,7 +391,7 @@ export default function GalleryPage() {
                   key={photo.id}
                   variants={itemVariants}
                   layoutId={`photo-card-${photo.id}`}
-                  className="relative aspect-[4/3] rounded-2xl overflow-hidden group cursor-pointer bg-purple-950/10 border border-purple-200/70 shadow-sm hover:shadow-xl hover:border-[#55CCA2] transition-all duration-300"
+                  className="relative aspect-[4/3] overflow-hidden group cursor-pointer bg-purple-950/10 border-2 border-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:shadow-[4px_4px_0px_#55CCA2] hover:border-[#55CCA2] transition-all duration-200"
                   onClick={() => {
                     playClick();
                     setSelectedPhoto(photo);
@@ -407,9 +405,9 @@ export default function GalleryPage() {
                   />
 
                   {/* Subtle, seamless hover overlay showing album tag and expand icon */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#250d38]/85 via-[#250d38]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3 sm:p-3.5 pointer-events-none">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#250d38]/90 via-[#250d38]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-3 sm:p-3.5 pointer-events-none">
                     <div className="flex justify-end">
-                      <span className="p-1.5 rounded-full bg-black/40 backdrop-blur-md text-white/90">
+                      <span className="p-1 bg-[#250d38] border border-[#55CCA2] text-white">
                         <Eye className="w-3.5 h-3.5 text-[#55CCA2]" />
                       </span>
                     </div>
@@ -435,36 +433,36 @@ export default function GalleryPage() {
                   playClick();
                   setVisibleCount((prev) => prev + 24);
                 }}
-                className="px-8 py-3.5 rounded-full bg-white border-2 border-purple-200 text-[#4c2472] font-mono font-bold text-xs hover:border-[#55CCA2] hover:bg-purple-50 transition-all shadow-md hover:scale-105"
+                className="px-8 py-3.5 btn-sangam-white font-mono font-bold text-xs uppercase tracking-wider"
               >
-                Load More Photos ({filteredPhotos.length - visibleCount} Remaining)
+                Load More Photos ({filteredPhotos.length - visibleCount} Remaining) →
               </button>
             </div>
           )}
         </>
       )}
 
-      {/* Photo Lightbox Shared Element Modal */}
+      {/* Photo Lightbox Shared Element Modal: Architectural Exhibition Box */}
       <AnimatePresence>
         {selectedPhoto && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#250d38]/90 backdrop-blur-xl"
             onClick={() => setSelectedPhoto(null)}
           >
             <motion.div
               layoutId={`photo-card-${selectedPhoto.id}`}
               transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="w-full max-w-5xl rounded-3xl bg-[#1c082b] border-2 border-purple-400/30 p-6 shadow-2xl relative text-left"
+              className="w-full max-w-5xl bg-[#1c082b] border-2 border-[#55CCA2] p-6 shadow-[8px_8px_0px_#55CCA2] relative text-left"
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
               {/* Close Button */}
               <button
                 onClick={() => setSelectedPhoto(null)}
-                className="absolute top-4 right-4 p-2.5 rounded-full bg-white/15 hover:bg-white/30 text-white z-20 transition-colors"
+                className="absolute top-4 right-4 w-8 h-8 border border-white/40 bg-white/10 hover:bg-white/25 text-white z-20 transition-colors flex items-center justify-center"
                 aria-label="Close photo lightbox"
               >
                 <X className="w-4 h-4" />
@@ -473,21 +471,21 @@ export default function GalleryPage() {
               {/* Prev / Next Navigation Buttons */}
               <button
                 onClick={handlePrevPhoto}
-                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/70 hover:bg-black/90 text-white border border-white/20 z-20 transition-all hover:scale-110"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/80 hover:bg-[#250d38] text-white border-2 border-[#55CCA2] z-20 transition-all flex items-center justify-center shadow-[2px_2px_0px_#55CCA2]"
                 aria-label="Previous photo"
               >
                 <ChevronLeft className="w-5 h-5 text-[#55CCA2]" />
               </button>
               <button
                 onClick={handleNextPhoto}
-                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/70 hover:bg-black/90 text-white border border-white/20 z-20 transition-all hover:scale-110"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/80 hover:bg-[#250d38] text-white border-2 border-[#55CCA2] z-20 transition-all flex items-center justify-center shadow-[2px_2px_0px_#55CCA2]"
                 aria-label="Next photo"
               >
                 <ChevronRight className="w-5 h-5 text-[#55CCA2]" />
               </button>
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-                <div className="lg:col-span-8 relative h-80 sm:h-[480px] rounded-2xl overflow-hidden border border-white/10 bg-black/50">
+                <div className="lg:col-span-8 relative h-80 sm:h-[480px] border-2 border-white/20 bg-black/60 overflow-hidden shadow-inner">
                   <Image
                     src={selectedPhoto.imageUrl}
                     alt={selectedPhoto.titleEn}
@@ -499,7 +497,7 @@ export default function GalleryPage() {
                 </div>
 
                 <div className="lg:col-span-4 space-y-4 text-white">
-                  <div className="text-[11px] font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
+                  <div className="box-badge-dark text-[10px] font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
                     Photo {currentPhotoIndex + 1} of {filteredPhotos.length}
                   </div>
 
@@ -519,7 +517,7 @@ export default function GalleryPage() {
                     {selectedPhoto.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2.5 py-0.5 rounded-full bg-white/15 text-[10px] font-mono text-purple-200 font-semibold"
+                        className="px-2 py-0.5 border border-purple-400/40 bg-purple-950/70 text-[10px] font-mono text-[#55CCA2] font-bold uppercase"
                       >
                         #{tag}
                       </span>
@@ -531,10 +529,10 @@ export default function GalleryPage() {
                       href={selectedPhoto.imageUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs font-mono text-[#55CCA2] hover:underline flex items-center gap-1.5 font-bold"
+                      className="text-xs font-mono text-[#55CCA2] hover:underline flex items-center gap-1.5 font-bold uppercase tracking-wider"
                     >
                       <Maximize2 className="w-3.5 h-3.5" />
-                      <span>Full Resolution</span>
+                      <span>Full Resolution →</span>
                     </a>
 
                     <button
@@ -552,10 +550,10 @@ export default function GalleryPage() {
         )}
       </AnimatePresence>
 
-      {/* Privacy Removal Request Modal */}
+      {/* Privacy Removal Request Modal: Architectural Alert Box */}
       {isRemovalModalOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#250d38]/90 backdrop-blur-md">
-          <div className="w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 border-2 border-red-400 shadow-2xl relative text-left">
+          <div className="w-full max-w-md bg-white p-6 sm:p-8 border-2 border-red-500 shadow-[6px_6px_0px_#dc2626] relative text-left">
             <button
               onClick={() => setIsRemovalModalOpen(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 p-1"
@@ -585,13 +583,13 @@ export default function GalleryPage() {
                     value={removalReason}
                     onChange={(e) => setRemovalReason(e.target.value)}
                     placeholder="I am in this photo and prefer not to have it on the website..."
-                    className="w-full p-3 rounded-xl bg-purple-50/50 border-2 border-purple-200 text-[#250d38] text-xs outline-none focus:border-red-500 font-body"
+                    className="w-full p-3 bg-purple-50/50 border-2 border-purple-200 text-[#250d38] text-xs outline-none focus:border-red-500 font-body"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 rounded-xl bg-red-600 text-white font-bold text-xs hover:bg-red-700 transition-colors shadow-md"
+                  className="w-full py-2.5 border-2 border-[#250d38] bg-red-600 text-white font-mono font-bold text-xs uppercase tracking-wider hover:bg-red-700 transition-colors shadow-[3px_3px_0px_#000]"
                 >
                   Submit Removal Request
                 </button>

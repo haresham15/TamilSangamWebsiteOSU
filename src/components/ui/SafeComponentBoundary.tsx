@@ -37,9 +37,9 @@ export class SafeComponentBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         this.props.fallback || (
-          <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 text-slate-300 text-xs font-mono my-2">
+          <div className="p-4 border-2 border-amber-500/30 bg-[#160d26] text-slate-300 text-xs font-mono my-2 shadow-[3px_3px_0px_#f59e0b]">
             <div className="flex items-center gap-2 text-amber-400 font-semibold mb-1">
-              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="w-2 h-2 bg-amber-400 animate-pulse border border-amber-300" />
               <span>{this.props.name ? `${this.props.name} Unavailable` : "Component Unavailable"}</span>
             </div>
             <p className="text-slate-400 text-[11px]">

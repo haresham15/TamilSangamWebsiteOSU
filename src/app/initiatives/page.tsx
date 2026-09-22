@@ -43,14 +43,14 @@ export default function InitiativesPage() {
                 playWoodClick();
                 setSelectedPillar(pillar.id);
               }}
-              className={`p-6 rounded-3xl text-left border transition-all shadow-xl ${
+              className={`box-architectural-dark p-6 text-left border-2 transition-all ${
                 isSelected
-                  ? "bg-white/10 border-[var(--accent-tint)] scale-[1.02]"
-                  : "glass-panel border-white/10 hover:border-white/20 text-slate-300"
+                  ? "border-[#55CCA2] bg-[#250d38] shadow-[6px_6px_0px_#55CCA2] -translate-y-0.5"
+                  : "border-white/10 bg-[#160d26]/80 hover:border-white/25 shadow-[4px_4px_0px_#4c2472] text-slate-300"
               }`}
             >
               <div
-                className="w-10 h-10 rounded-2xl flex items-center justify-center text-white mb-4 shadow-md"
+                className="w-10 h-10 border-2 border-white/20 flex items-center justify-center text-white mb-4 shadow-[2px_2px_0px_rgba(0,0,0,0.5)]"
                 style={{ backgroundColor: pillar.accentColor }}
               >
                 {pillar.id === "aatam" && <Sparkles className="w-5 h-5" />}
@@ -69,14 +69,14 @@ export default function InitiativesPage() {
       </div>
 
       {/* Active Pillar Deep Dive Showcase */}
-      <div className="rounded-3xl glass-panel-elevated border border-[var(--border-strong)] p-8 sm:p-12 shadow-2xl mb-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="box-ticket p-8 sm:p-12 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] mb-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div className="lg:col-span-7 space-y-6">
           <div className="flex items-center gap-2">
             <span
-              className="w-3 h-3 rounded-full"
+              className="w-3 h-3 border border-white/30"
               style={{ backgroundColor: activePillar.accentColor }}
             />
-            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)]">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#55CCA2] font-bold">
               Pillar Focus
             </span>
           </div>
@@ -91,13 +91,13 @@ export default function InitiativesPage() {
 
           <div className="space-y-3 pt-2 text-xs font-mono text-slate-300">
             <div className="flex items-start gap-2.5">
-              <Calendar className="w-4 h-4 text-[var(--accent-tint)] shrink-0 mt-0.5" />
+              <Calendar className="w-4 h-4 text-[#55CCA2] shrink-0 mt-0.5" />
               <span>
                 <strong>Rehearsals:</strong> {locale === "ta" ? activePillar.rehearsalScheduleTa : activePillar.rehearsalScheduleEn}
               </span>
             </div>
             <div className="flex items-start gap-2.5">
-              <Users className="w-4 h-4 text-[var(--accent-tint)] shrink-0 mt-0.5" />
+              <Users className="w-4 h-4 text-[#55CCA2] shrink-0 mt-0.5" />
               <span>
                 <strong>Eligibility:</strong> {locale === "ta" ? activePillar.whoCanJoinTa : activePillar.whoCanJoinEn}
               </span>
@@ -108,7 +108,7 @@ export default function InitiativesPage() {
             <Link
               href="/join#performer"
               onClick={playClick}
-              className="px-6 py-3 rounded-2xl bg-[var(--accent-tint)] text-black font-bold text-xs hover:opacity-95 transition-all shadow-lg flex items-center gap-2"
+              className="btn-sangam-mint px-6 py-3 text-xs uppercase tracking-wider inline-flex items-center gap-2"
             >
               <span>Audition / Interest Form</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -116,14 +116,14 @@ export default function InitiativesPage() {
             <Link
               href="/gallery"
               onClick={playClick}
-              className="px-5 py-3 rounded-2xl glass-panel text-white text-xs font-medium hover:bg-white/10 transition-all"
+              className="px-5 py-3 border-2 border-white/20 bg-white/5 text-white text-xs font-mono uppercase tracking-wider hover:bg-white/10 hover:border-[#55CCA2] transition-all"
             >
               View Performance Photos
             </Link>
           </div>
         </div>
 
-        <div className="lg:col-span-5 relative h-80 rounded-2xl overflow-hidden border border-white/10 shadow-inner">
+        <div className="lg:col-span-5 relative h-80 overflow-hidden border-2 border-white/15 shadow-inner">
           <Image
             src={activePillar.imageUrl}
             alt={activePillar.titleEn}
@@ -137,7 +137,7 @@ export default function InitiativesPage() {
       {/* 2. Traditional Art Forms Explainer Section */}
       <div>
         <div className="max-w-2xl mb-10">
-          <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2">
+          <span className="text-xs font-mono uppercase tracking-widest text-[#55CCA2] block mb-2 font-bold">
             Living Heritage
           </span>
           <h2 className="text-2xl sm:text-4xl font-bold text-white font-serif tracking-tight">
@@ -152,9 +152,9 @@ export default function InitiativesPage() {
           {ART_FORMS.map((art) => (
             <div
               key={art.id}
-              className="glass-glow-card rounded-3xl overflow-hidden border border-white/10 flex flex-col justify-between"
+              className="box-ticket bg-[#160d26] overflow-hidden border-2 border-white/15 hover:border-[#55CCA2] shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] flex flex-col justify-between transition-all"
             >
-              <div className="relative h-48 w-full overflow-hidden">
+              <div className="relative h-48 w-full overflow-hidden border-b-2 border-white/10">
                 <Image
                   src={art.imageUrl}
                   alt={art.nameEn}
@@ -162,20 +162,20 @@ export default function InitiativesPage() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 1024px) 100vw, 400px"
                 />
-                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-mono bg-black/60 backdrop-blur-md text-[var(--accent-tint)] border border-white/10">
+                <span className="box-badge-dark absolute top-3 left-3 text-[10px] font-mono bg-black/75 text-[#55CCA2] border border-white/20">
                   {art.category}
                 </span>
               </div>
 
               <div className="p-6 flex-1 flex flex-col justify-between space-y-3">
                 <div>
-                  <h3 className="text-lg font-bold text-white mb-1">
+                  <h3 className="text-lg font-bold text-white mb-1 font-display">
                     {locale === "ta" ? art.nameTa : art.nameEn}
                   </h3>
                   <p className="text-[11px] font-mono text-slate-400 mb-2">
-                    <span className="text-[var(--accent-tint)] font-semibold">Origin:</span> {locale === "ta" ? art.originTa : art.originEn}
+                    <span className="text-[#55CCA2] font-semibold">Origin:</span> {locale === "ta" ? art.originTa : art.originEn}
                   </p>
-                  <p className="text-xs text-slate-300 leading-relaxed">
+                  <p className="text-xs text-slate-300 leading-relaxed font-body">
                     {locale === "ta" ? art.descriptionTa : art.descriptionEn}
                   </p>
                 </div>

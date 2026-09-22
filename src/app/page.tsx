@@ -74,9 +74,9 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Column: Typography & Intent */}
             <div className="lg:col-span-8 space-y-6">
-              {/* Collegiate Affiliation Badge */}
-              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white border-2 border-purple-200/90 text-xs font-mono tracking-wider text-[#4c2472] font-bold uppercase shadow-sm">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#55CCA2] animate-pulse" />
+              {/* Collegiate Affiliation Badge: Inscription Block */}
+              <div className="box-badge shadow-[2px_2px_0px_#4c2472]">
+                <span className="w-2 h-2 bg-[#55CCA2] animate-pulse" />
                 <span>The Ohio State University · Student Organization</span>
               </div>
 
@@ -104,12 +104,12 @@ export default function HomePage() {
                   : "We bring together students, language, and the living arts of Tamilakam at Ohio State — from authentic earthen pot Pongal feasts and live Parai drumming to collegiate dance teams and lifelong campus friendships in Columbus."}
               </p>
 
-              {/* Primary Action Buttons with Real Physical Depth */}
+              {/* Primary Action Buttons: Architectural Blocks with Real Physical Depth */}
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Link
                   href={`/events/${nextEvent.slug}`}
                   onClick={playClick}
-                  className="px-8 py-4 rounded-2xl btn-sangam text-sm font-bold flex items-center gap-2.5 shadow-lg"
+                  className="px-7 py-3.5 btn-sangam text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2.5"
                 >
                   <Ticket className="w-4 h-4 text-[#55CCA2]" />
                   <span>{locale === "ta" ? "பொங்கல் நுழைவுச்சீட்டு வாங்குக" : "Buy Pongal Tickets"}</span>
@@ -118,7 +118,7 @@ export default function HomePage() {
                 <Link
                   href="/join"
                   onClick={playClick}
-                  className="px-8 py-4 rounded-2xl btn-sangam-mint text-sm font-bold flex items-center gap-2.5 shadow-lg"
+                  className="px-7 py-3.5 btn-sangam-mint text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2.5"
                 >
                   <Users className="w-4 h-4 text-[#240e36]" />
                   <span>{locale === "ta" ? "சங்கத்தில் இணைக" : "Join The Club"}</span>
@@ -127,7 +127,7 @@ export default function HomePage() {
                 <Link
                   href="/board"
                   onClick={playClick}
-                  className="px-6 py-4 rounded-2xl bg-white border-2 border-purple-200 text-[#4c2472] font-bold text-sm hover:border-[#55CCA2] hover:bg-purple-50/50 transition-all shadow-sm flex items-center gap-2"
+                  className="px-6 py-3.5 btn-sangam-white text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2"
                 >
                   <span>{locale === "ta" ? "நிர்வாகக் குழு" : "Meet The Board"}</span>
                   <ArrowRight className="w-4 h-4 text-[#55CCA2]" />
@@ -144,24 +144,24 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Live Next Event Woven Border Ticker Strip */}
+        {/* Live Next Event Architectural Ticker Strip */}
         <div className="relative z-10 max-w-6xl mx-auto w-full pt-10">
           <Link
             href={`/events/${nextEvent.slug}`}
             onClick={playClick}
             className="block group"
           >
-            <div className="rounded-2xl bg-white/95 border-2 border-purple-200 hover:border-[#55CCA2] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md hover:shadow-xl transition-all">
+            <div className="border-2 border-[#250d38] bg-white p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-[4px_4px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[4px_4px_0px_#55CCA2] transition-all">
               <div className="flex items-center gap-3">
-                <span className="px-3 py-1 rounded-full bg-[#4c2472] text-white text-[11px] font-mono font-bold uppercase tracking-wider">
-                  Upcoming Event
+                <span className="px-2.5 py-1 bg-[#250d38] text-[#55CCA2] text-[10px] font-mono font-bold uppercase tracking-wider border border-[#55CCA2]">
+                  [NEXT EVENT]
                 </span>
                 <span className="text-sm font-bold text-[#250d38] font-display group-hover:text-[#4c2472] transition-colors">
                   {nextEvent.titleEn} · {nextEvent.date}
                 </span>
               </div>
               <span className="text-xs font-mono font-bold text-[#11694c] group-hover:underline">
-                {nextEvent.location} · Reserve Tickets
+                {nextEvent.location} · Reserve Tickets →
               </span>
             </div>
           </Link>
@@ -195,26 +195,26 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Poster & Ticket Presentation Card */}
-        <div className="rounded-3xl bg-white border-2 border-purple-200/90 p-6 sm:p-10 shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative">
+        {/* Poster & Ticket Presentation Box Structure */}
+        <div className="box-ticket border-2 border-[#250d38] bg-white p-6 sm:p-10 shadow-[6px_6px_0px_#250d38] overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative">
           {/* Subtle Perforated Die-Cut Ticket Notch Details for Large Screens */}
-          <div className="hidden lg:block absolute left-[58.33%] top-0 bottom-0 w-0 border-r-2 border-dashed border-purple-200/80 pointer-events-none" />
-          <div className="hidden lg:block absolute left-[58.33%] -top-4 -translate-x-1/2 w-7 h-7 rounded-full bg-[#fffdfa] border-2 border-purple-200/80 z-20 pointer-events-none" />
-          <div className="hidden lg:block absolute left-[58.33%] -bottom-4 -translate-x-1/2 w-7 h-7 rounded-full bg-[#fffdfa] border-2 border-purple-200/80 z-20 pointer-events-none" />
+          <div className="hidden lg:block absolute left-[58.33%] top-0 bottom-0 w-0 border-r-2 border-dashed border-[#250d38]/50 pointer-events-none" />
+          <div className="hidden lg:block absolute left-[58.33%] -top-3 -translate-x-1/2 w-6 h-6 bg-[#fffdfa] border-2 border-[#250d38] rotate-45 z-20 pointer-events-none" />
+          <div className="hidden lg:block absolute left-[58.33%] -bottom-3 -translate-x-1/2 w-6 h-6 bg-[#fffdfa] border-2 border-[#250d38] rotate-45 z-20 pointer-events-none" />
 
           <div className="lg:col-span-7 space-y-4 text-left">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#55CCA2]/25 text-[#11694c] border border-[#55CCA2]/50">
+              <span className="box-badge text-[#11694c] border-l-[#55CCA2]">
                 ● {locale === "ta" ? nextEvent.statusBadgeTa : nextEvent.statusBadgeEn}
               </span>
               <span
                 lang="ta"
                 style={{ letterSpacing: 0 }}
-                className="px-3 py-1 rounded-full text-xs font-mono bg-purple-100 text-[#4c2472] font-bold border border-purple-200"
+                className="px-2.5 py-1 text-xs font-mono bg-purple-100 text-[#4c2472] font-bold border border-purple-300"
               >
                 {nextEvent.tamilDate}
               </span>
-              <span className="px-3 py-1 rounded-full text-xs font-mono bg-slate-100 text-slate-700 font-semibold">
+              <span className="px-2.5 py-1 text-xs font-mono bg-slate-100 text-slate-700 font-semibold border border-slate-300">
                 {nextEvent.academicYear}
               </span>
             </div>
@@ -242,7 +242,7 @@ export default function HomePage() {
               <Link
                 href={`/events/${nextEvent.slug}`}
                 onClick={playClick}
-                className="px-8 py-3.5 rounded-2xl btn-sangam text-xs font-bold flex items-center gap-2"
+                className="px-7 py-3 btn-sangam text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2"
               >
                 <Ticket className="w-4 h-4 text-[#55CCA2]" />
                 <span>{locale === "ta" ? "நுழைவுச்சீட்டு பெறுக" : `Buy Pongal Tickets (${nextEvent.price})`}</span>
@@ -251,14 +251,14 @@ export default function HomePage() {
               <Link
                 href={`/events/${nextEvent.slug}`}
                 onClick={playClick}
-                className="px-6 py-3.5 rounded-2xl bg-purple-50/80 border-2 border-purple-200 text-[#4c2472] text-xs font-bold hover:bg-purple-100 hover:border-[#55CCA2] transition-colors"
+                className="px-6 py-3 btn-sangam-white text-xs font-mono font-bold uppercase tracking-wider"
               >
                 <span>Event Schedule & Dress Code</span>
               </Link>
             </div>
           </div>
 
-          <div className="lg:col-span-5 relative h-72 sm:h-84 rounded-2xl overflow-hidden border-2 border-purple-200/80 shadow-lg group">
+          <div className="lg:col-span-5 relative h-72 sm:h-84 border-2 border-[#250d38] shadow-[4px_4px_0px_#4c2472] overflow-hidden group">
             <Image
               src={nextEvent.posterImage}
               alt={nextEvent.titleEn}
@@ -270,10 +270,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. The Three Pillars of OSU Tamil Sangam: Bespoke Kolam Glyphs & Giant Script */}
+      {/* 5. The Three Pillars of OSU Tamil Sangam: Bespoke Kolam Glyphs & Monolithic Stele Blocks */}
       <section className="relative py-20 px-4 sm:px-8 z-10 max-w-6xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-purple-200 text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold mb-3 shadow-sm">
+          <div className="box-badge shadow-[2px_2px_0px_#4c2472] mb-3">
             <span>Our Foundation · முப்பெரும் தூண்கள்</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display">
@@ -296,8 +296,8 @@ export default function HomePage() {
           {/* Pillar 1: Aatam */}
           <motion.div
             variants={cardVariants}
-            whileHover={shouldReduceMotion ? undefined : { y: -6, transition: { type: "spring", stiffness: 350, damping: 25 } }}
-            className="relative bg-white border-2 border-purple-100 hover:border-[#55CCA2] p-8 rounded-3xl overflow-hidden transition-all hover:shadow-[4px_4px_0px_#55CCA2,0_16px_32px_-8px_rgba(76,36,114,0.12)] flex flex-col justify-between group"
+            whileHover={shouldReduceMotion ? undefined : { y: -4, transition: { type: "spring", stiffness: 350, damping: 25 } }}
+            className="relative bg-white border-2 border-[#250d38] p-8 overflow-hidden transition-all shadow-[5px_5px_0px_#4c2472] hover:shadow-[7px_7px_0px_#55CCA2] hover:border-[#55CCA2] flex flex-col justify-between group"
           >
             {/* Giant Background Tamil Watermark Script with Zero Letter Spacing */}
             <div
@@ -312,7 +312,7 @@ export default function HomePage() {
               <motion.div
                 whileHover={shouldReduceMotion ? undefined : { scale: 1.1, rotate: 4 }}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                className="w-14 h-14 rounded-2xl bg-purple-100/90 text-[#4c2472] flex items-center justify-center mb-5 border border-purple-200 shadow-sm"
+                className="w-12 h-12 border-2 border-[#250d38] bg-purple-100 text-[#4c2472] flex items-center justify-center mb-5 shadow-[2px_2px_0px_#4c2472]"
               >
                 <AatamDanceGlyph size={28} className="text-[#4c2472]" />
               </motion.div>
@@ -332,17 +332,17 @@ export default function HomePage() {
             <Link
               href="/join"
               onClick={playClick}
-              className="inline-flex items-center text-xs font-mono font-bold text-[#4c2472] hover:text-[#11694c] transition-colors hover:underline"
+              className="inline-flex items-center text-xs font-mono font-bold text-[#4c2472] hover:text-[#11694c] transition-colors hover:underline uppercase tracking-wider"
             >
-              <span>Audition for Dance Troupe</span>
+              <span>Audition for Dance Troupe →</span>
             </Link>
           </motion.div>
 
           {/* Pillar 2: Paatam */}
           <motion.div
             variants={cardVariants}
-            whileHover={shouldReduceMotion ? undefined : { y: -6, transition: { type: "spring", stiffness: 350, damping: 25 } }}
-            className="relative bg-white border-2 border-purple-100 hover:border-[#55CCA2] p-8 rounded-3xl overflow-hidden transition-all hover:shadow-[4px_4px_0px_#55CCA2,0_16px_32px_-8px_rgba(76,36,114,0.12)] flex flex-col justify-between group"
+            whileHover={shouldReduceMotion ? undefined : { y: -4, transition: { type: "spring", stiffness: 350, damping: 25 } }}
+            className="relative bg-white border-2 border-[#250d38] p-8 overflow-hidden transition-all shadow-[5px_5px_0px_#4c2472] hover:shadow-[7px_7px_0px_#55CCA2] hover:border-[#55CCA2] flex flex-col justify-between group"
           >
             {/* Giant Background Tamil Watermark Script with Zero Letter Spacing */}
             <div
@@ -357,7 +357,7 @@ export default function HomePage() {
               <motion.div
                 whileHover={shouldReduceMotion ? undefined : { scale: 1.1, rotate: -4 }}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                className="w-14 h-14 rounded-2xl bg-[#55CCA2]/20 text-[#11694c] flex items-center justify-center mb-5 border border-[#55CCA2]/40 shadow-sm"
+                className="w-12 h-12 border-2 border-[#250d38] bg-[#55CCA2]/30 text-[#11694c] flex items-center justify-center mb-5 shadow-[2px_2px_0px_#4c2472]"
               >
                 <PaatamMusicGlyph size={28} className="text-[#11694c]" />
               </motion.div>
@@ -377,17 +377,17 @@ export default function HomePage() {
             <Link
               href="/join"
               onClick={playClick}
-              className="inline-flex items-center text-xs font-mono font-bold text-[#11694c] hover:text-[#4c2472] transition-colors hover:underline"
+              className="inline-flex items-center text-xs font-mono font-bold text-[#11694c] hover:text-[#4c2472] transition-colors hover:underline uppercase tracking-wider"
             >
-              <span>Play with Music Troupe</span>
+              <span>Play with Music Troupe →</span>
             </Link>
           </motion.div>
 
           {/* Pillar 3: Kondatam */}
           <motion.div
             variants={cardVariants}
-            whileHover={shouldReduceMotion ? undefined : { y: -6, transition: { type: "spring", stiffness: 350, damping: 25 } }}
-            className="relative bg-white border-2 border-purple-100 hover:border-[#55CCA2] p-8 rounded-3xl overflow-hidden transition-all hover:shadow-[4px_4px_0px_#55CCA2,0_16px_32px_-8px_rgba(76,36,114,0.12)] flex flex-col justify-between group"
+            whileHover={shouldReduceMotion ? undefined : { y: -4, transition: { type: "spring", stiffness: 350, damping: 25 } }}
+            className="relative bg-white border-2 border-[#250d38] p-8 overflow-hidden transition-all shadow-[5px_5px_0px_#4c2472] hover:shadow-[7px_7px_0px_#55CCA2] hover:border-[#55CCA2] flex flex-col justify-between group"
           >
             {/* Giant Background Tamil Watermark Script with Zero Letter Spacing */}
             <div
@@ -402,7 +402,7 @@ export default function HomePage() {
               <motion.div
                 whileHover={shouldReduceMotion ? undefined : { scale: 1.1, rotate: 4 }}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                className="w-14 h-14 rounded-2xl bg-amber-100/80 text-[#b45309] flex items-center justify-center mb-5 border border-amber-200 shadow-sm"
+                className="w-12 h-12 border-2 border-[#250d38] bg-amber-100 text-[#b45309] flex items-center justify-center mb-5 shadow-[2px_2px_0px_#4c2472]"
               >
                 <KondatamFestGlyph size={28} className="text-[#b45309]" />
               </motion.div>
@@ -422,9 +422,9 @@ export default function HomePage() {
             <Link
               href="/join"
               onClick={playClick}
-              className="inline-flex items-center text-xs font-mono font-bold text-[#b45309] hover:text-[#4c2472] transition-colors hover:underline"
+              className="inline-flex items-center text-xs font-mono font-bold text-[#b45309] hover:text-[#4c2472] transition-colors hover:underline uppercase tracking-wider"
             >
-              <span>Join The Student Family</span>
+              <span>Join The Student Family →</span>
             </Link>
           </motion.div>
         </motion.div>
@@ -434,7 +434,7 @@ export default function HomePage() {
       <section className="relative py-16 px-4 sm:px-8 z-10 max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-purple-200 text-xs font-mono uppercase tracking-widest text-[#4c2472] font-semibold mb-2 shadow-sm">
+            <div className="box-badge shadow-[2px_2px_0px_#4c2472] mb-2">
               <Sparkles className="w-3.5 h-3.5 text-[#55CCA2]" />
               <span>Collegiate Photo Vault</span>
             </div>
@@ -447,7 +447,7 @@ export default function HomePage() {
             onClick={playClick}
             className="text-xs font-mono text-[#4c2472] hover:text-[#11694c] font-bold transition-colors"
           >
-            <span>{locale === "ta" ? "முழு தொகுப்பைக் காண்க" : "Explore All Vaults (100+ Photos)"}</span>
+            <span>{locale === "ta" ? "முழு தொகுப்பைக் காண்க" : "Explore All Vaults (100+ Photos) →"}</span>
           </Link>
         </div>
 
@@ -460,14 +460,14 @@ export default function HomePage() {
         >
           <motion.div
             variants={cardVariants}
-            whileHover={shouldReduceMotion ? undefined : { y: -6, transition: { type: "spring", stiffness: 350, damping: 25 } }}
+            whileHover={shouldReduceMotion ? undefined : { y: -4, transition: { type: "spring", stiffness: 350, damping: 25 } }}
           >
             <Link
               href="/gallery/berry-cute-picnic"
               onClick={playClick}
-              className="rounded-3xl bg-white border-2 border-purple-200/90 overflow-hidden shadow-md hover:shadow-xl hover:border-[#55CCA2] transition-all duration-300 group flex flex-col justify-between h-full"
+              className="border-2 border-[#250d38] bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] transition-all group flex flex-col justify-between h-full"
             >
-              <div className="relative w-full aspect-[4/3] overflow-hidden">
+              <div className="relative w-full aspect-[4/3] overflow-hidden border-b-2 border-[#250d38]">
                 <Image
                   src="https://lh3.googleusercontent.com/pw/AP1GczPxXus-6uP7LIoxTDLr2AgeSboBWSr6f-dGCHtPo9UEFq5ma-J6R-eGsQR9sQOwZ_GWUviWZQjfpzbVvN0wMwhe2GqjILtW8nThJrxg1IR2WY-MU_uL=w1200-h800-no"
                   alt="TS A Berry Cute Picnic"
@@ -475,15 +475,15 @@ export default function HomePage() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 100vw, 400px"
                 />
-                <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#250d38]/85 backdrop-blur-md text-[10px] font-mono text-[#55CCA2] font-bold uppercase">
+                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-[#55CCA2] font-bold uppercase border border-[#55CCA2]">
                   2024–2025
                 </div>
-                <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-[#250d38]/85 backdrop-blur-md text-[10px] font-mono text-white font-bold">
+                <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-white font-bold border border-white/40">
                   31 Photos
                 </div>
               </div>
-              <div className="p-5">
-                <h3 className="text-lg font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
+              <div className="p-4">
+                <h3 className="text-base font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
                   TS &quot;A Berry Cute Picnic&quot;
                 </h3>
                 <p className="text-xs text-purple-950/75 line-clamp-2 leading-relaxed font-body">
@@ -495,14 +495,14 @@ export default function HomePage() {
 
           <motion.div
             variants={cardVariants}
-            whileHover={shouldReduceMotion ? undefined : { y: -6, transition: { type: "spring", stiffness: 350, damping: 25 } }}
+            whileHover={shouldReduceMotion ? undefined : { y: -4, transition: { type: "spring", stiffness: 350, damping: 25 } }}
           >
             <Link
               href="/gallery/streetside-sapad"
               onClick={playClick}
-              className="rounded-3xl bg-white border-2 border-purple-200/90 overflow-hidden shadow-md hover:shadow-xl hover:border-[#55CCA2] transition-all duration-300 group flex flex-col justify-between h-full"
+              className="border-2 border-[#250d38] bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] transition-all group flex flex-col justify-between h-full"
             >
-              <div className="relative w-full aspect-[4/3] overflow-hidden">
+              <div className="relative w-full aspect-[4/3] overflow-hidden border-b-2 border-[#250d38]">
                 <Image
                   src="https://lh3.googleusercontent.com/pw/AP1GczMxKNKBGCOMDjAiZVwQ9oawnxmUPdX0DsEqbQrryf7fXP84JBPXMz_Oe4zM6Ze-w9lmIwkW7fj63L3Z-DX2KEWvlOIsXgCLc8rfTuZLPklMAp488qxt=w1200-h800-no"
                   alt="TS Streetside Sapad Event"
@@ -510,15 +510,15 @@ export default function HomePage() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 100vw, 400px"
                 />
-                <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#250d38]/85 backdrop-blur-md text-[10px] font-mono text-[#55CCA2] font-bold uppercase">
+                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-[#55CCA2] font-bold uppercase border border-[#55CCA2]">
                   2018–2019 Archive
                 </div>
-                <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-[#250d38]/85 backdrop-blur-md text-[10px] font-mono text-white font-bold">
+                <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-white font-bold border border-white/40">
                   31 Photos
                 </div>
               </div>
-              <div className="p-5">
-                <h3 className="text-lg font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
+              <div className="p-4">
+                <h3 className="text-base font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
                   TS Streetside Sapad Event
                 </h3>
                 <p className="text-xs text-purple-950/75 line-clamp-2 leading-relaxed font-body">
@@ -530,14 +530,14 @@ export default function HomePage() {
 
           <motion.div
             variants={cardVariants}
-            whileHover={shouldReduceMotion ? undefined : { y: -6, transition: { type: "spring", stiffness: 350, damping: 25 } }}
+            whileHover={shouldReduceMotion ? undefined : { y: -4, transition: { type: "spring", stiffness: 350, damping: 25 } }}
           >
             <Link
               href="/gallery/namma-jathara"
               onClick={playClick}
-              className="rounded-3xl bg-white border-2 border-purple-200/90 overflow-hidden shadow-md hover:shadow-xl hover:border-[#55CCA2] transition-all duration-300 group flex flex-col justify-between h-full"
+              className="border-2 border-[#250d38] bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] transition-all group flex flex-col justify-between h-full"
             >
-              <div className="relative w-full aspect-[4/3] overflow-hidden">
+              <div className="relative w-full aspect-[4/3] overflow-hidden border-b-2 border-[#250d38]">
                 <Image
                   src="https://lh3.googleusercontent.com/pw/AP1GczMckOLKN2caITiN5K1TOGffHjjgJrfgVuOLzMp4vuZ6J7kgf1CQB-PChurpUnPfiexScEG44wZkP-PWanuwwdRE3STuUUNN6LLQoe-ioZJ3MeSMpkCC=w1200-h800-no"
                   alt="TS x TT: Namma Jathara"
@@ -545,15 +545,15 @@ export default function HomePage() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 100vw, 400px"
                 />
-                <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#250d38]/85 backdrop-blur-md text-[10px] font-mono text-[#55CCA2] font-bold uppercase">
+                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-[#55CCA2] font-bold uppercase border border-[#55CCA2]">
                   2018–2019 Archive
                 </div>
-                <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-[#250d38]/85 backdrop-blur-md text-[10px] font-mono text-white font-bold">
+                <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-white font-bold border border-white/40">
                   31 Photos
                 </div>
               </div>
-              <div className="p-5">
-                <h3 className="text-lg font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
+              <div className="p-4">
+                <h3 className="text-base font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
                   TS x TT: Namma Jathara
                 </h3>
                 <p className="text-xs text-purple-950/75 line-clamp-2 leading-relaxed font-body">
@@ -565,10 +565,10 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* 7. Signature Moment: Filter Coffee Intermission Card */}
+      {/* 7. Signature Moment: Filter Coffee Intermission Pavilion Box */}
       <section className="relative py-16 px-4 sm:px-6 z-10 max-w-4xl mx-auto text-center">
-        <div className="p-8 sm:p-12 rounded-3xl bg-[#250d38] border-2 border-[#55CCA2]/50 shadow-2xl relative overflow-hidden text-white">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono tracking-widest bg-[#55CCA2]/20 text-[#55CCA2] border border-[#55CCA2]/40 mb-4 uppercase font-bold">
+        <div className="p-8 sm:p-12 bg-[#250d38] border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] relative overflow-hidden text-white">
+          <div className="box-badge-dark mb-4 text-xs font-mono font-bold tracking-widest uppercase">
             <FilterKaapiGlyph size={18} className="text-[#55CCA2]" />
             <span>இடைவேளை · INTERVAL</span>
           </div>
@@ -587,14 +587,14 @@ export default function HomePage() {
             <Link
               href="/join"
               onClick={playClick}
-              className="px-8 py-3.5 rounded-full btn-sangam-mint text-xs font-bold shadow-lg"
+              className="px-7 py-3.5 btn-sangam-mint text-xs font-mono font-bold uppercase tracking-wider"
             >
               Join the Student GroupMe
             </Link>
             <Link
               href="/about"
               onClick={playClick}
-              className="px-8 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-purple-300/30 text-white text-xs font-bold transition-colors"
+              className="px-7 py-3.5 btn-sangam-white text-xs font-mono font-bold uppercase tracking-wider"
             >
               Read Our Constitution & History
             </Link>

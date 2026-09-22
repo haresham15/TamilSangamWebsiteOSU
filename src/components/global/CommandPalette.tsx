@@ -155,14 +155,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/75 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/80 backdrop-blur-md animate-fadeIn">
       <div 
-        className="w-full max-w-2xl rounded-3xl glass-panel-elevated border border-[var(--border-strong)] shadow-2xl overflow-hidden text-left"
+        className="box-ticket w-full max-w-2xl bg-[#160d26] border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] overflow-hidden text-left"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input Bar */}
-        <div className="flex items-center px-6 py-4 border-b border-white/10 gap-3">
-          <Search className="w-5 h-5 text-[var(--accent-tint)]" />
+        <div className="flex items-center px-6 py-4 border-b-2 border-white/10 gap-3">
+          <Search className="w-5 h-5 text-[#55CCA2]" />
           <input
             ref={inputRef}
             type="text"
@@ -179,7 +179,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
               <X className="w-4 h-4" />
             </button>
           )}
-          <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300">
+          <span className="hidden sm:inline-block px-2 py-0.5 border border-white/20 text-[10px] font-mono bg-white/10 text-slate-300">
             ESC
           </span>
         </div>
@@ -189,7 +189,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
           {filteredItems.length === 0 ? (
             <div className="py-12 text-center text-slate-400">
               <p className="text-sm">{locale === "ta" ? "எந்த முடிவுகளும் கிடைக்கவில்லை" : "No matching results found."}</p>
-              <p className="text-xs text-slate-500 mt-1">Try searching &apos;pongal&apos;, &apos;dance&apos;, or &apos;board&apos;</p>
+              <p className="text-xs text-slate-500 mt-1 font-mono">Try searching &apos;pongal&apos;, &apos;dance&apos;, or &apos;board&apos;</p>
             </div>
           ) : (
             filteredItems.map((item, idx) => {
@@ -199,25 +199,25 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                   key={item.id}
                   onClick={() => handleSelect(item)}
                   onMouseEnter={() => setSelectedIndex(idx)}
-                  className={`flex items-center justify-between px-4 py-3 rounded-2xl cursor-pointer transition-all ${
-                    isSelected ? "bg-white/15 text-white shadow-md border border-white/10" : "text-slate-300 hover:bg-white/5"
+                  className={`flex items-center justify-between px-4 py-3 cursor-pointer border-2 transition-all ${
+                    isSelected ? "bg-[#250d38] border-[#55CCA2] shadow-[3px_3px_0px_#55CCA2] text-white" : "border-transparent text-slate-300 hover:bg-white/5"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="p-2 rounded-xl bg-white/10 shrink-0">
+                    <div className="w-8 h-8 flex items-center justify-center border border-white/20 bg-black/40 shrink-0 text-[#55CCA2]">
                       {item.icon}
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-semibold truncate">{item.title}</span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300 font-mono shrink-0">
+                        <span className="box-badge-dark text-[9px] font-mono text-slate-300 border border-white/20 shrink-0">
                           {item.category}
                         </span>
                       </div>
                       <p className="text-xs text-slate-400 truncate mt-0.5">{item.subtitle}</p>
                     </div>
                   </div>
-                  <ArrowRight className={`w-4 h-4 shrink-0 transition-opacity ${isSelected ? "opacity-100 text-[var(--accent-tint)]" : "opacity-0"}`} />
+                  <ArrowRight className={`w-4 h-4 shrink-0 transition-opacity ${isSelected ? "opacity-100 text-[#55CCA2]" : "opacity-0"}`} />
                 </div>
               );
             })

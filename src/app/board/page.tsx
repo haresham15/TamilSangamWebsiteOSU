@@ -87,10 +87,10 @@ export default function BoardPage() {
         </p>
       </div>
 
-      {/* View Switcher Tabs */}
-      <div className="flex flex-wrap items-center gap-2 mb-12 border-b border-white/10 pb-4">
+      {/* Architectural Ledger Console Tabs */}
+      <div className="box-tab-strip flex flex-wrap items-center justify-center gap-2 p-1.5 max-w-4xl mx-auto mb-12">
         {[
-          { id: "current" as const, label: locale === "ta" ? "நிர்வாகக் குழு (3D அட்டைகள்)" : "Executive Board (3D Cards)" },
+          { id: "current" as const, label: locale === "ta" ? "செயற்குழு 2025–26 (9)" : "Executive Board 2025–26 (9)" },
           { id: "liquid" as const, label: locale === "ta" ? "பெயர் அரங்கம் (Liquid Roster)" : "Liquid Roster (Editorial)" },
           { id: "subcommittee" as const, label: locale === "ta" ? "துணைக் குழு (Subcommittee)" : "Subcommittee Council (9)" },
           { id: "governance" as const, label: locale === "ta" ? "அரசியலமைப்பு & வாக்குரிமை" : "Governance & Voting Rights" },
@@ -102,10 +102,10 @@ export default function BoardPage() {
               playWoodClick();
               setActiveTab(tab.id);
             }}
-            className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+            className={`box-tab-item px-4 py-2 text-xs font-mono uppercase tracking-wider font-bold transition-all ${
               activeTab === tab.id
-                ? "bg-[var(--accent-tint)] text-black border-transparent shadow-md"
-                : "glass-panel text-slate-300 border-white/10 hover:border-white/20"
+                ? "box-tab-item-active"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             {tab.label}
@@ -117,9 +117,9 @@ export default function BoardPage() {
       {activeTab === "current" && (
         <div>
           <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-mono text-slate-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-tint)]" />
-              <span>Hover card to tilt foil sheen · Click card or flip button for committee portfolio</span>
+            <div className="box-badge-dark inline-flex items-center gap-2 px-3.5 py-1.5 border border-white/15 bg-white/5 text-xs font-mono text-slate-300">
+              <span className="w-1.5 h-1.5 bg-[#55CCA2]" />
+              <span>HOVER CARD TO TILT FOIL SHEEN · CLICK CARD OR FLIP BUTTON FOR PORTFOLIO</span>
             </div>
           </div>
           <motion.div
@@ -148,45 +148,42 @@ export default function BoardPage() {
         </div>
       )}
 
-      {/* 2. Signature Moment: Liquid Roster (Editorial Typography Hover Swap) */}
+      {/* 2. Liquid Roster View (Split-Screen Editorial Inspection) */}
       {activeTab === "liquid" && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center min-h-[500px]">
-          {/* Left Column: Oversized Typography Names List */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Vertical Interactive Officer List */}
           <div className="lg:col-span-7 space-y-3">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2">
-              Select officer name to view full bio
-            </span>
-            {CURRENT_BOARD.map((member, idx) => {
+            {CURRENT_BOARD.map((member) => {
               const isHovered = hoveredMember.id === member.id;
               return (
                 <div
                   key={member.id}
-                  onMouseEnter={() => {
+                  onMouseEnter={() => setHoveredMember(member)}
+                  onClick={() => {
                     playClick();
-                    setHoveredMember(member);
+                    setActiveModalCard(member);
                   }}
-                  onClick={() => setActiveModalCard(member)}
-                  className={`p-3.5 sm:p-4 rounded-2xl cursor-pointer transition-all border ${
+                  className={`p-4 sm:p-5 border-2 transition-all cursor-pointer text-left ${
                     isHovered
-                      ? "bg-white/10 border-[var(--accent-tint)] scale-[1.02]"
-                      : "border-transparent hover:bg-white/5"
+                      ? "bg-[#250d38] border-[#55CCA2] shadow-[4px_4px_0px_#55CCA2] translate-x-1"
+                      : "bg-[#160d26]/80 border-white/10 hover:border-white/25 shadow-[2px_2px_0px_rgba(0,0,0,0.4)]"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-baseline gap-3">
-                      <span className="text-xs font-mono text-[var(--accent-tint)] opacity-70">
-                        0{idx + 1}
+                    <div className="flex items-center gap-4">
+                      <span className="text-xs font-mono text-[#55CCA2] font-bold">
+                        0{CURRENT_BOARD.indexOf(member) + 1}
                       </span>
                       <div>
                         <h3 className="text-xl sm:text-2xl font-bold font-display text-white tracking-tight">
                           {member.nameEn}
                         </h3>
-                        <p className="text-xs text-[var(--accent-tint)] font-mono">
+                        <p className="text-xs text-[#55CCA2] font-mono">
                           {member.nameTa} · {member.roleEn} ({member.roleTa})
                         </p>
                       </div>
                     </div>
-                    <ArrowUpRight className={`w-4 h-4 transition-opacity ${isHovered ? "opacity-100 text-[var(--accent-tint)]" : "opacity-30"}`} />
+                    <ArrowUpRight className={`w-4 h-4 transition-opacity ${isHovered ? "opacity-100 text-[#55CCA2]" : "opacity-30"}`} />
                   </div>
                 </div>
               );
@@ -195,8 +192,8 @@ export default function BoardPage() {
 
           {/* Right Column: Dynamic Morphed Portrait Display */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-sm h-96 rounded-3xl overflow-hidden border border-white/20 glass-panel-elevated shadow-2xl p-6 flex flex-col justify-between">
-              <div className="relative w-full h-52 rounded-2xl overflow-hidden shadow-inner bg-[var(--surface-sunken)] flex items-center justify-center p-4">
+            <div className="box-ticket relative w-full max-w-sm bg-[#160d26] border-2 border-white/20 shadow-[6px_6px_0px_#4c2472] p-6 flex flex-col justify-between">
+              <div className="relative w-full h-52 overflow-hidden shadow-inner bg-black/40 border-2 border-white/10 flex items-center justify-center p-4">
                 <div className="relative w-24 h-24">
                   <Image
                     src={hoveredMember.photoUrl}
@@ -206,12 +203,12 @@ export default function BoardPage() {
                     sizes="96px"
                   />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface-sunken)] via-transparent to-transparent flex items-end p-4">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-4">
                   <div>
                     <span className="text-2xl font-display font-bold text-white block">
                       {hoveredMember.nameTa}
                     </span>
-                    <span className="text-xs text-[var(--accent-tint)] font-mono">
+                    <span className="text-xs text-[#55CCA2] font-mono">
                       {hoveredMember.roleTa}
                     </span>
                   </div>
@@ -238,8 +235,8 @@ export default function BoardPage() {
       {/* 3. Subcommittee Council (9 Dedicated Members) */}
       {activeTab === "subcommittee" && (
         <div className="space-y-8">
-          <div className="p-8 rounded-3xl glass-panel-elevated border border-white/10">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] mb-2">
+          <div className="box-architectural-dark p-8 border-2 border-white/20 shadow-[5px_5px_0px_#4c2472]">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#55CCA2] mb-2 font-bold">
               <Users className="w-4 h-4" />
               <span>The Operational Engine</span>
             </div>
@@ -263,24 +260,24 @@ export default function BoardPage() {
               <motion.div
                 key={sub.id}
                 variants={itemVariants}
-                className="glass-glow-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between"
+                className="box-ticket p-6 bg-[#160d26] border-2 border-white/15 hover:border-[#55CCA2] shadow-[4px_4px_0px_rgba(76,36,114,0.4)] hover:shadow-[5px_5px_0px_#55CCA2] transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-mono text-[var(--accent-tint)] tracking-wider">
+                    <span className="text-xs font-mono text-[#55CCA2] tracking-wider font-bold">
                       COUNCIL · 0{idx + 1}
                     </span>
-                    <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
+                    <span className="w-2 h-2 bg-emerald-400 border border-emerald-300" />
                   </div>
                   <h3 className="text-xl font-bold font-display text-white tracking-tight mb-1">
                     {sub.nameEn}
                   </h3>
-                  <p className="text-xs text-[var(--accent-tint)] font-tamil mb-4">
+                  <p className="text-xs text-[#55CCA2] font-tamil mb-4">
                     {sub.nameTa}
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-white/10">
+                <div className="pt-3 border-t-2 border-white/10">
                   <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-1">
                     Focus Domain
                   </span>
@@ -301,16 +298,16 @@ export default function BoardPage() {
       {activeTab === "governance" && (
         <div className="space-y-8">
           {/* Key Rule: 2 Meetings + 2 Events for Voting & Shadowing */}
-          <div className="p-8 sm:p-10 rounded-3xl glass-panel-elevated border border-[var(--color-temple-bronze)]/30 shadow-2xl relative overflow-hidden">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] mb-3">
+          <div className="box-ticket p-8 sm:p-10 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] relative overflow-hidden">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#55CCA2] mb-3 font-bold">
               <Award className="w-4 h-4" />
               <span>Official Constitutional Threshold</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-bold font-display text-white mb-4">
               {locale === "ta" ? "வாக்குரிமை & நிர்வாக வழிகாட்டல் தகுதிகள்" : "Voting Rights & Executive Board Shadowing"}
             </h2>
-            <div className="p-5 rounded-2xl bg-black/40 border border-white/10 mb-6 max-w-3xl">
-              <p className="text-sm sm:text-base font-semibold text-[var(--accent-tint)] leading-relaxed">
+            <div className="p-5 border-2 border-white/15 bg-black/50 mb-6 max-w-3xl shadow-[3px_3px_0px_rgba(0,0,0,0.4)]">
+              <p className="text-sm sm:text-base font-semibold text-[#55CCA2] leading-relaxed font-mono">
                 {locale === "ta"
                   ? MEMBERSHIP_GOVERNANCE.votingRequirementTa
                   : MEMBERSHIP_GOVERNANCE.votingRequirementEn}
@@ -323,7 +320,7 @@ export default function BoardPage() {
 
           {/* 4 Core Constitutional Pillars */}
           <div>
-            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#55CCA2] block mb-2 font-bold">
               Constitutional Mandate · நோக்கங்கள்
             </span>
             <h3 className="text-xl sm:text-2xl font-bold font-display text-white mb-6">
@@ -331,8 +328,8 @@ export default function BoardPage() {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {CLUB_PURPOSE.map((p, idx) => (
-                <div key={p.id} className="p-6 rounded-2xl glass-panel border border-white/10">
-                  <span className="text-[10px] font-mono text-[var(--accent-tint)] block mb-1">
+                <div key={p.id} className="box-architectural-dark p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472]">
+                  <span className="text-[10px] font-mono text-[#55CCA2] block mb-1 font-bold">
                     PURPOSE 0{idx + 1}
                   </span>
                   <h4 className="text-lg font-bold font-display text-white mb-2">
@@ -348,8 +345,8 @@ export default function BoardPage() {
 
           {/* Membership Demographics & Policy 1.15 Compliance */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-6 rounded-2xl glass-panel border border-white/10 space-y-3">
-              <span className="text-xs font-mono uppercase tracking-wider text-[var(--accent-tint)] block">
+            <div className="box-architectural-dark p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] space-y-3">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#55CCA2] block font-bold">
                 Student Quota & Year-Round Enrollment
               </span>
               <h4 className="text-base font-bold font-display text-white">
@@ -358,13 +355,13 @@ export default function BoardPage() {
               <p className="text-xs text-slate-300 leading-relaxed">
                 {locale === "ta" ? MEMBERSHIP_GOVERNANCE.studentQuotaTa : MEMBERSHIP_GOVERNANCE.studentQuotaEn}
               </p>
-              <p className="text-xs text-slate-400 leading-relaxed pt-2 border-t border-white/10">
+              <p className="text-xs text-slate-400 leading-relaxed pt-2 border-t-2 border-white/10">
                 {locale === "ta" ? MEMBERSHIP_GOVERNANCE.communityPolicyTa : MEMBERSHIP_GOVERNANCE.communityPolicyEn}
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl glass-panel border border-white/10 space-y-3">
-              <span className="text-xs font-mono uppercase tracking-wider text-rose-400 block">
+            <div className="box-architectural-dark p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] space-y-3">
+              <span className="text-xs font-mono uppercase tracking-wider text-rose-400 block font-bold">
                 Safety & University Compliance
               </span>
               <h4 className="text-base font-bold font-display text-white">
@@ -373,7 +370,7 @@ export default function BoardPage() {
               <p className="text-xs text-slate-300 leading-relaxed">
                 {locale === "ta" ? MEMBERSHIP_GOVERNANCE.policy115ComplianceTa : MEMBERSHIP_GOVERNANCE.policy115ComplianceEn}
               </p>
-              <p className="text-[11px] text-slate-400 leading-relaxed pt-2 border-t border-white/10">
+              <p className="text-[11px] text-slate-400 leading-relaxed pt-2 border-t-2 border-white/10">
                 Strict adherence to Ohio State guidelines ensures our club is an inclusive, welcoming sanctuary free from discrimination, harassment, or bias.
               </p>
             </div>
@@ -384,8 +381,8 @@ export default function BoardPage() {
       {/* 5. Get Involved in Leadership & Student Committees */}
       {activeTab === "join-board" && (
         <div className="space-y-8">
-          <div className="p-8 rounded-3xl glass-panel-elevated border border-white/10">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] mb-2">
+          <div className="box-architectural-dark p-8 border-2 border-white/20 shadow-[5px_5px_0px_#4c2472]">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#55CCA2] mb-2 font-bold">
               <ShieldCheck className="w-4 h-4" />
               <span>Student Leadership Pathways</span>
             </div>
@@ -401,7 +398,7 @@ export default function BoardPage() {
             <Link
               href="/join#performer"
               onClick={playClick}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-[var(--accent-tint)] text-black font-bold text-xs hover:opacity-95 transition-opacity shadow-md"
+              className="btn-sangam-mint inline-flex items-center gap-2 px-6 py-3 text-xs uppercase tracking-wider"
             >
               <span>Apply for Committee & Volunteer Roles</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -410,21 +407,21 @@ export default function BoardPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {committees.map((com, idx) => (
-              <div key={idx} className="p-6 rounded-2xl glass-panel border border-white/10 text-left">
-                <span className="text-[10px] font-mono uppercase text-[var(--accent-tint)] block mb-1">
+              <div key={idx} className="box-architectural-dark p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] text-left">
+                <span className="text-[10px] font-mono uppercase text-[#55CCA2] block mb-1 font-bold">
                   Pillar 0{idx + 1}
                 </span>
                 <h3 className="text-lg font-bold font-display text-white mb-2">
                   {com.titleEn}
                 </h3>
-                <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+                <p className="text-xs text-slate-300 mb-4 leading-relaxed">
                   {com.descriptionEn}
                 </p>
-                <div className="flex flex-wrap gap-2 pt-2 border-t border-white/10">
+                <div className="flex flex-wrap gap-2 pt-2 border-t-2 border-white/10">
                   {com.roles.map((role, rIdx) => (
                     <span
                       key={rIdx}
-                      className="px-2.5 py-1 rounded-full text-[10px] font-mono bg-white/5 border border-white/10 text-slate-300"
+                      className="box-badge-dark text-[10px] font-mono text-slate-300"
                     >
                       {role}
                     </span>
@@ -450,20 +447,20 @@ export default function BoardPage() {
             <motion.div
               layoutId={`board-card-container-${activeModalCard.id}`}
               transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="relative w-full max-w-lg rounded-3xl glass-panel-elevated border border-white/20 p-6 sm:p-8 text-left overflow-hidden shadow-2xl"
+              className="box-ticket relative w-full max-w-lg bg-[#160d26] border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] p-6 sm:p-8 text-left overflow-hidden"
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
               <button
                 type="button"
                 onClick={() => setActiveModalCard(null)}
-                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center border border-white/20 bg-white/10 hover:bg-white/20 text-white transition-colors"
                 aria-label="Close officer modal"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
 
               <div className="flex items-center gap-4 mb-6">
-                <div className="relative w-16 h-16 rounded-2xl bg-[var(--surface-sunken)] p-2 border border-white/10">
+                <div className="relative w-16 h-16 bg-black/40 p-2 border-2 border-white/15">
                   <Image
                     src={activeModalCard.photoUrl}
                     alt={activeModalCard.nameEn}
@@ -476,7 +473,7 @@ export default function BoardPage() {
                   <h2 className="text-2xl font-bold font-display text-white">
                     {activeModalCard.nameEn}
                   </h2>
-                  <p className="text-xs font-mono text-[var(--accent-tint)]">
+                  <p className="text-xs font-mono text-[#55CCA2]">
                     {activeModalCard.nameTa} · {activeModalCard.roleEn} ({activeModalCard.roleTa})
                   </p>
                 </div>
@@ -511,15 +508,15 @@ export default function BoardPage() {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-300">
+              <div className="pt-4 border-t-2 border-white/10 flex items-center justify-between text-xs font-mono text-slate-300">
                 <a
                   href={`mailto:${activeModalCard.email}`}
-                  className="flex items-center gap-1.5 text-[var(--accent-tint)] hover:underline"
+                  className="flex items-center gap-1.5 text-[#55CCA2] hover:underline"
                 >
                   <Mail className="w-4 h-4" />
                   <span>{activeModalCard.email}</span>
                 </a>
-                <span>{activeModalCard.term}</span>
+                <span className="text-[#55CCA2] font-bold">{activeModalCard.term}</span>
               </div>
             </motion.div>
           </motion.div>
