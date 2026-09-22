@@ -138,7 +138,7 @@ export default function EventInfoAndGalleryPage() {
             <Users className="w-4 h-4 text-[#55CCA2] shrink-0 mt-0.5" />
             <div>
               <span className="block text-[10px] font-mono uppercase font-bold text-purple-900/60">
-                Campus Turnout
+                Event Format
               </span>
               <span className="text-xs sm:text-sm font-bold text-[#250d38] font-mono">
                 {album.attendance}
@@ -150,10 +150,10 @@ export default function EventInfoAndGalleryPage() {
             <Camera className="w-4 h-4 text-[#55CCA2] shrink-0 mt-0.5" />
             <div>
               <span className="block text-[10px] font-mono uppercase font-bold text-purple-900/60">
-                Curated Showcase
+                Selected Photos
               </span>
               <span className="text-xs sm:text-sm font-bold text-[#250d38] font-mono">
-                5 Complete Event Photos
+                5 Curated Photos
               </span>
             </div>
           </div>
@@ -170,9 +170,9 @@ export default function EventInfoAndGalleryPage() {
             </p>
             <div className="p-4 bg-emerald-50/60 border-2 border-[#55CCA2] text-xs text-[#0e4835] leading-relaxed shadow-[2px_2px_0px_#55CCA2]">
               <span className="font-bold uppercase tracking-wider block mb-1 font-mono text-[#0b3c2c]">
-                Open Cultural Hub for Everyone
+                Open Student Community
               </span>
-              OSU Tamil Sangam brings together Buckeyes of all languages and backgrounds. Whether you came for the freshly grilled dosas, competitive Uno circles, or simply hanging out under the autumn sunshine, this event celebrated casual collegiate fellowship.
+              OSU Tamil Sangam brings together students of all backgrounds and languages. From campus picnics and street food dinners to Diwali celebrations and games, events are open to everyone.
             </div>
           </div>
 

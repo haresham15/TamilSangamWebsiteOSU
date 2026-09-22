@@ -46,9 +46,9 @@ export const EVENTS: SangamEvent[] = [
     status: "upcoming",
     academicYear: "2026-2027",
     descriptionEn:
-      "Our biggest social night of the fall, co-hosted with Tamil Thalaivas! Enjoy a delicious South Asian dinner feast, student dance teams, a live student band playing film and indie hits, and outdoor sparklers. Casual festive attire — open to students of all languages and backgrounds!",
+      "Our annual Diwali celebration co-hosted with Tamil Thalaivas, featuring dinner, student dance performances, a live student band, and sparklers on the Ohio Union Plaza. Open to all students!",
     descriptionTa:
-      "தமிழ் தலைவாஸுடன் இணைந்து வழங்கும் பிரம்மாண்டமான தீபாவளித் திருநாள். வண்ண விளக்குகள், திரையிசை நடனங்கள், நேரடி இசைக்குழு மற்றும் சுவையான உணவுகளுடன் கூடிய இரவு.",
+      "தமிழ் தலைவாஸுடன் இணைந்து வழங்கும் தீபாவளித் திருநாள். சுவையான உணவு, நடனம், இசை மற்றும் மத்தாப்புகளுடன் கூடிய இரவு.",
     dressCodeEn: "Festive Attire: Bright silks, sherwanis, lehengas, or smart casual",
     dressCodeTa: "பண்டிகை ஆடை: பட்டுச் சேலை, ஷெர்வானி, அல்லது எளிய ஆடை",
     schedule: [
@@ -67,7 +67,7 @@ export const EVENTS: SangamEvent[] = [
     slug: "berry-cute-picnic",
     titleEn: 'TS "A Berry Cute Picnic"',
     titleTa: "பெர்ரி க்யூட் பிக்னிக் (இலையுதிர் சங்கமம்)",
-    taglineEn: "Lawn blankets, fresh fruit, Uno battles, and campus kickbacks on the Oval.",
+    taglineEn: "Lawn blankets, fresh fruit, Uno, and casual kickbacks on the South Oval.",
     taglineTa: "ஓவல் புல்வெளியில் பழங்கள், விளையாட்டுகள் மற்றும் புதிய நட்பு.",
     date: "September 18, 2025",
     time: "3:30 PM - 6:30 PM EST",
@@ -80,9 +80,9 @@ export const EVENTS: SangamEvent[] = [
     status: "past",
     academicYear: "2025-2026",
     descriptionEn:
-      "Our annual fall welcome picnic on the South Oval! Kick back on checkered blankets with fresh strawberries and blueberries, pastries, card games, Uno, and friendly conversation. The easiest way to meet new friends and get connected on campus.",
+      "A casual fall semester welcome picnic on the South Oval with snacks, fresh berries, card games, and good conversation. A simple way to meet new friends on campus.",
     descriptionTa:
-      "புதிய மற்றும் மூத்த மாணவர்களை ஒன்றிணைக்கும் இலையுதிர்கால புல்வெளி பிக்னிக், பலகை விளையாட்டுக்கள், புதிய பழங்கள் மற்றும் தோழமை சங்கமம்.",
+      "புதிய மற்றும் மூத்த மாணவர்களை ஒன்றிணைக்கும் இலையுதிர்கால புல்வெளி பிக்னிக், விளையாட்டுகள், மற்றும் புதிய பழங்களுடன் கூடிய நட்பு சங்கமம்.",
     dressCodeEn: "Casual outdoor attire / cozy picnic wear",
     dressCodeTa: "எளிய பிக்னிக் ஆடை",
     schedule: [
@@ -100,7 +100,7 @@ export const EVENTS: SangamEvent[] = [
     slug: "pattas-tappas-2025",
     titleEn: "Pattas Tappas Diwali Celebration 2025",
     titleTa: "பட்டாஸ் தப்பாஸ் தீபாவளி 2025",
-    taglineEn: "High-octane performances, silk attire, live band, and midnight sparklers.",
+    taglineEn: "Student dance performances, live music, dinner, and sparklers on the plaza.",
     taglineTa: "வண்ண ஆடைகள், நடனங்கள், நேரடி இசை மற்றும் தீபாவளி விளக்குகள்.",
     date: "November 8, 2025",
     time: "6:00 PM - 10:30 PM EST",
@@ -113,9 +113,9 @@ export const EVENTS: SangamEvent[] = [
     status: "past",
     academicYear: "2025-2026",
     descriptionEn:
-      "Our flagship collaborative autumn celebration! Featuring dazzling traditional silk attire, student dance choreographies, live student band solos, full banquet dinner, and outdoor sparklers on the Ohio Union Plaza.",
+      "Our autumn Diwali celebration featuring traditional attire, dance choreographies, live student music, a banquet dinner, and sparklers outside on the Ohio Union Plaza.",
     descriptionTa:
-      "வண்ண ஆடைகள், அதிரடி நடனங்கள், நேரடி இசை மற்றும் தீபாவளி விளக்குகள் நிறைந்த அழகிய பெருவிழா.",
+      "வண்ண ஆடைகள், நடனங்கள், நேரடி இசை மற்றும் தீபாவளி விளக்குகள் நிறைந்த அழகிய பெருவிழா.",
     dressCodeEn: "Festive Attire: Silk Sarees, Kurtas, Sherwanis",
     dressCodeTa: "பண்டிகை ஆடை: பட்டுச் சேலை, குர்தா",
     schedule: [
@@ -134,7 +134,7 @@ export const EVENTS: SangamEvent[] = [
     slug: "streetside-sapad",
     titleEn: "TS Streetside Sapad Night",
     titleTa: "தெருவோரச் சாப்பாடு திருவிழா",
-    taglineEn: "Hot kothu parotta, crispy dosas, filter coffee, and campus fellowship.",
+    taglineEn: "Hot kothu parotta, crispy dosas, filter coffee, and casual dinner with friends.",
     taglineTa: "கொத்து பரோட்டா, மொறுமொறு தோசை, மற்றும் சுவையான தெருவோர உணவு.",
     date: "February 24, 2026",
     time: "6:30 PM - 9:00 PM EST",
@@ -147,9 +147,9 @@ export const EVENTS: SangamEvent[] = [
     status: "past",
     academicYear: "2025-2026",
     descriptionEn:
-      "An authentic South Indian street food night! Savor the live sizzle of spicy kothu parotta, hot crispy dosas, samosas, and filter kaapi with good music and lively conversations. A relaxed kickback for all food lovers on campus.",
+      "A South Indian street food dinner with hot kothu parotta, fresh dosas, and filter coffee. A casual evening of food and conversation open to everyone.",
     descriptionTa:
-      "கொத்து பரோட்டா, மொறுமொறு தோசை, நறுமண பில்டர் காபி மற்றும் மாணவர்கள் சங்கமித்த பாரம்பரிய தெருவோரச் சாப்பாடு திருவிழா.",
+      "கொத்து பரோட்டா, மொறுமொறு தோசை, மற்றும் பில்டர் காபியுடன் கூடிய தெருவோரச் சாப்பாடு மாலை.",
     dressCodeEn: "Casual everyday campus wear",
     dressCodeTa: "தினசரி எளிய ஆடை",
     schedule: [
@@ -167,7 +167,7 @@ export const EVENTS: SangamEvent[] = [
     slug: "namma-jathara",
     titleEn: "TS x TT: Namma Jathara Carnival",
     titleTa: "நம்ம ஜாதரா (பண்பாட்டு சங்கமம்)",
-    taglineEn: "Folk games, music stalls, street treats, and campus cross-cultural fun.",
+    taglineEn: "Outdoor games, street food, music, and campus fun with Telugu Thallulu.",
     taglineTa: "விளையாட்டுகள், இசை, மற்றும் நண்பர்களின் உற்சாகத் திருவிழா.",
     date: "March 26, 2026",
     time: "4:00 PM - 8:00 PM EST",
@@ -180,9 +180,9 @@ export const EVENTS: SangamEvent[] = [
     status: "past",
     academicYear: "2025-2026",
     descriptionEn:
-      "A high-energy outdoor campus carnival collaboration between OSU Tamil Sangam and Telugu Thallulu featuring folk games, challenges, regional food stalls, and collegiate solidarity.",
+      "A collaborative spring carnival hosted with Telugu Thallulu featuring games, food stalls, and an open dance circle on the plaza.",
     descriptionTa:
-      "ஓஹியோ ஸ்டேட் தமிழ் சங்கமும் தெலுங்கு தல்லுலு அமைப்பும் இணைந்து நடத்திய கண்கவர் 'நம்ம ஜாதரா' பண்பாட்டுத் திருவிழா.",
+      "ஓஹியோ ஸ்டேட் தமிழ் சங்கமும் தெலுங்கு தல்லுலு அமைப்பும் இணைந்து நடத்திய 'நம்ம ஜாதரா' வசந்தகால திருவிழா.",
     dressCodeEn: "Casual or Colorful Festive Wear",
     dressCodeTa: "எளிய அல்லது வண்ணமயமான ஆடை",
     schedule: [

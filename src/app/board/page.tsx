@@ -74,13 +74,13 @@ export default function BoardPage() {
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left font-body">
       {/* Header */}
       <div className="max-w-3xl mb-12">
-        <span className="text-xs font-mono uppercase tracking-widest text-[#55CCA2] block mb-2 font-bold">
+        <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] block mb-2 font-bold">
           The Ohio State University · Student Leadership
         </span>
-        <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-display mb-4">
+        <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
           {locale === "ta" ? "நிர்வாகக் குழு & தலைமைப் பொறுப்புகள்" : "Executive Board & Leadership"}
         </h1>
-        <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-body">
+        <p className="text-sm sm:text-base text-purple-950/80 leading-relaxed font-body font-medium">
           {locale === "ta"
             ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தை வழிநடத்தும் 9 முதன்மை நிர்வாகிகள், துணைக் குழு உறுப்பினர்கள், மற்றும் அதிகாரப்பூர்வ சட்டதிட்டங்கள்."
             : "Meet the 9 student executive officers, dedicated subcommittee leaders, and constitutional governance guiding The Ohio State University Tamil Sangam."}
@@ -105,7 +105,7 @@ export default function BoardPage() {
             className={`box-tab-item px-4 py-2 text-xs font-mono uppercase tracking-wider font-bold transition-all ${
               activeTab === tab.id
                 ? "box-tab-item-active"
-                : "text-slate-400 hover:text-white"
+                : "text-purple-900/70 hover:text-[#250d38]"
             }`}
           >
             {tab.label}
@@ -117,7 +117,7 @@ export default function BoardPage() {
       {activeTab === "current" && (
         <div>
           <div className="text-center mb-8">
-            <div className="box-badge-dark inline-flex items-center gap-2 px-3.5 py-1.5 border border-white/15 bg-white/5 text-xs font-mono text-slate-300">
+            <div className="box-badge-dark inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#55CCA2] bg-[#250d38] text-xs font-mono text-[#55CCA2] shadow-[2px_2px_0px_#55CCA2]">
               <span className="w-1.5 h-1.5 bg-[#55CCA2]" />
               <span>HOVER CARD TO TILT FOIL SHEEN · CLICK CARD OR FLIP BUTTON FOR PORTFOLIO</span>
             </div>

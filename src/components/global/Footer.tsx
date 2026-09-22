@@ -73,23 +73,14 @@ export const Footer: React.FC = () => {
     }
   };
 
-  const filmCredits = [
-    { roleEn: "Lead Web Engineering & Architecture", roleTa: "முதன்மை மென்பொருள் வடிவமைப்பு", name: "Haresh Murugesan (OSU CSE)" },
-    { roleEn: "Executive Board Leadership", roleTa: "முதன்மை தலைமை", name: "Meenakshi Varadarajan (President) & Shrinidhi Nagappan (VP)" },
-    { roleEn: "Visual Identity & Design Direction", roleTa: "காட்சி அடையாளம் & வடிவமைப்பு", name: "Sadhana Sunder (Design Lead)" },
-    { roleEn: "Creative Direction & Performing Arts", roleTa: "படைப்பாற்றல் இயக்கம் & கலைகள்", name: "Srinivas Sankaranarayanan & Aatam Troupe" },
-    { roleEn: "Festival Operations, Logistics & Finance", roleTa: "விழா ஒருங்கிணைப்பு & நிதி", name: "Anirudh Kamalakannan & Jerachand Senthilkumar" },
-    { roleEn: "Digital Media & Community Outreach", roleTa: "சமூக ஊடகம் & தொடர்பு", name: "Raghav Iyer, Ashwinameera Selvakumar & Monaasri Gopinath" },
-  ];
-
   return (
-    <footer className="relative bg-gradient-to-b from-[#351657] via-[#2a0f47] to-[#1c0830] border-t-2 border-purple-700/40 pt-20 pb-12 px-6 overflow-hidden text-white">
+    <footer className="relative bg-gradient-to-b from-[#351657] via-[#2a0f47] to-[#1c0830] border-t-2 border-purple-700/40 pt-16 pb-12 px-6 overflow-hidden text-white">
       {/* Decorative Mint Top Accent Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[2px] bg-gradient-to-r from-transparent via-[#55CCA2] to-transparent shadow-[0_0_12px_#55CCA2]" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Newsletter & Brand CTA */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pb-16 border-b border-purple-700/40">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pb-12 border-b border-purple-700/40">
           <div>
             <div className="flex items-center gap-4 mb-4">
               <div className="relative w-12 h-12 border-2 border-[#55CCA2] bg-[#250d38] p-1 shrink-0 shadow-[2px_2px_0px_#55CCA2]">
@@ -103,14 +94,14 @@ export const Footer: React.FC = () => {
               <div>
                 <h3 className="text-2xl font-bold text-white tracking-tight font-display">{t("brand.name")}</h3>
                 <p className="text-xs text-[#55CCA2] font-mono uppercase tracking-wider font-semibold">
-                  The Ohio State University · Est. Columbus, OH
+                  The Ohio State University · Columbus, OH
                 </p>
               </div>
             </div>
             <p className="text-sm text-purple-100/90 max-w-md leading-relaxed mb-6 font-body">
               {locale === "ta"
-                ? "ஆட்டம், பாட்டம், கொண்டாட்டம்! ஓஹியோ வளாகத்தில் தமிழ் மாணவர்கள் மற்றும் அனைத்து நண்பர்களையும் ஒன்றிணைக்கும் கலாச்சார மையம் — நல்ல உணவு, இசை மற்றும் தோழமையின் சங்கமம்."
-                : "Start the Aatam, Paatam, and Kondatam! A welcoming campus hub for Tamil students and friends of all backgrounds — connecting through good food, music, casual hangouts, and campus celebrations at Ohio State."}
+                ? "ஓஹியோ பல்கலைக்கழகத்தில் தமிழ் மாணவர்கள் மற்றும் அனைத்து நண்பர்களையும் ஒன்றிணைக்கும் மாணவர் அமைப்பு — நல்ல உணவு, இசை, மற்றும் நட்பின் சங்கமம்."
+                : "A student organization connecting Tamil students and friends of all backgrounds at Ohio State through social events, casual hangouts, food, and music."}
             </p>
             <div className="flex items-center gap-4 text-xs font-mono text-purple-200">
               <Link
@@ -120,7 +111,7 @@ export const Footer: React.FC = () => {
               >
                 <span className="w-2 h-2 bg-[#55CCA2] animate-pulse" />
                 <span className="text-[#55CCA2] font-bold uppercase tracking-wider">
-                  {locale === "ta" ? "அடுத்த பெருவிழா:" : "Next Flagship:"}
+                  {locale === "ta" ? "அடுத்த நிகழ்வு:" : "Next Event:"}
                 </span>
                 <span className="group-hover:text-white transition-colors">
                   {locale === "ta" ? EVENTS[0].titleTa : EVENTS[0].titleEn}
@@ -147,8 +138,8 @@ export const Footer: React.FC = () => {
 
             <p className="text-xs text-purple-200/85 mb-4 font-body leading-relaxed">
               {locale === "ta"
-                ? "நிகழ்வுகள், இலவச உணவுப் பதிவுகள், மற்றும் சங்கம சந்திப்புகள் பற்றிய நேரடி மின்னஞ்சல் செய்திகள்."
-                : "Get ticket drops, free food alerts (Streetside Sapad, Oval picnics), and chai social updates straight to your inbox."}
+                ? "நிகழ்வுகள், இலவச உணவுப் பதிவுகள், மற்றும் சந்திப்புகள் பற்றிய எளிய மின்னஞ்சல் செய்திகள்."
+                : "Get event announcements, food updates, and casual social reminders sent to your email."}
             </p>
 
             {status === "success" ? (
@@ -230,10 +221,10 @@ export const Footer: React.FC = () => {
                 )}
 
                 <div className="flex items-center justify-between text-[10px] font-mono text-purple-300/60 pt-0.5">
-                  <span>Open to all majors & backgrounds</span>
+                  <span>Open to all students</span>
                   {subscriberCount && (
                     <span className="text-[#55CCA2] font-bold">
-                      {subscriberCount} Buckeyes in loop
+                      {subscriberCount} in loop
                     </span>
                   )}
                 </div>
@@ -242,43 +233,20 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Rolling Film Credits Presentation */}
-        <div className="py-12 border-b border-purple-700/40">
-          <div className="text-center mb-8">
-            <p className="text-[11px] font-mono uppercase tracking-widest text-[#55CCA2] mb-1 font-semibold">
-              {locale === "ta" ? "நன்றியுரை & திரைக் குழு" : "Closing Credits & Acknowledgements"}
-            </p>
-            <h4 className="text-xl font-display font-bold text-white">
-              {locale === "ta" ? "நிர்வாகக் குழு மற்றும் பங்களிப்பாளர்கள் பட்டியல்" : "Student Leadership & Contributor Roll"}
-            </h4>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-center sm:text-left">
-            {filmCredits.map((credit, idx) => (
-              <div key={idx} className="p-3.5 bg-purple-900/40 border border-purple-700/40 border-l-4 border-l-purple-500 hover:border-l-[#55CCA2] hover:border-purple-400 transition-all shadow-sm">
-                <p className="text-[10px] uppercase tracking-wider text-[#55CCA2] font-mono mb-0.5 font-bold">
-                  {locale === "ta" ? credit.roleTa : credit.roleEn}
-                </p>
-                <p className="text-sm font-semibold text-white font-body">{credit.name}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Links & Legal Bottom Bar */}
+        {/* Links & Legal Bottom Bar (Keeping Board in its dedicated tab) */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-purple-200/80">
           <div className="flex flex-wrap items-center gap-6">
             <Link href="/" className="hover:text-[#55CCA2] transition-colors">{t("nav.home")}</Link>
             <Link href="/events" className="hover:text-[#55CCA2] transition-colors">{t("nav.events")}</Link>
             <Link href="/about" className="hover:text-[#55CCA2] transition-colors">{t("nav.about")}</Link>
-            <Link href="/board" className="hover:text-[#55CCA2] transition-colors">{t("nav.board")}</Link>
+            <Link href="/board" className="hover:text-[#55CCA2] font-semibold transition-colors">{t("nav.board")}</Link>
             <Link href="/gallery" className="hover:text-[#55CCA2] transition-colors">{t("nav.gallery")}</Link>
             <Link href="/join" className="hover:text-[#55CCA2] transition-colors">{t("nav.join")}</Link>
             <Link href="/links" className="text-[#55CCA2] font-semibold hover:underline transition-colors">Quick Links</Link>
           </div>
 
           <div className="text-center md:text-right font-mono text-[11px] space-y-1">
-            <p className="text-purple-100">© {new Date().getFullYear()} OSU Tamil Sangam. Crafted with pride in Columbus, OH.</p>
+            <p className="text-purple-100">© {new Date().getFullYear()} OSU Tamil Sangam. The Ohio State University.</p>
             <p className="text-purple-300/60 text-[10px]">
               Registered student organization at Ohio State. Not an official university entity.
             </p>

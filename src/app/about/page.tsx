@@ -27,54 +27,54 @@ export default function AboutPage() {
   const timelineEvents = [
     {
       year: "2021",
-      titleEn: "Re-imagining Tamil Sangam on Campus",
-      titleTa: "வளாகத்தில் தமிழ் சங்கத்தின் மறுதொடக்கம்",
-      descriptionEn: "A passionate group of undergraduate and graduate students re-ignited Tamil Sangam at OSU to provide a cultural sanctuary and home away from home.",
-      descriptionTa: "ஓஹியோ வளாகத்தில் தமிழ்க் கலாச்சாரத்தையும் மாணவர் நட்பையும் பேணிப் பாதுகாக்க சங்கம் மீண்டும் புத்துயிர் பெற்றது.",
+      titleEn: "Student Organization Founded",
+      titleTa: "மாணவர் அமைப்பு தொடக்கம்",
+      descriptionEn: "Ohio State students established the organization to provide a welcoming community space for Tamil culture, social gatherings, and student support on campus.",
+      descriptionTa: "வளாகத்தில் தமிழ் மாணவர்கள் ஒன்றிணைந்து பழகவும், பண்பாட்டைப் பகிர்ந்து கொள்ளவும் சங்கம் தொடங்கப்பட்டது.",
     },
     {
       year: "2023",
-      titleEn: "First Major Cultural Showcase in Ohio Union",
-      titleTa: "ஓஹியோ யூனியனில் முதல் பிரம்மாண்ட கலைவிழா",
-      descriptionEn: "Transitioned from small community rooms to the grand Performance Hall at the Ohio Union, welcoming over 350 students for classical arts and cultural banquets.",
-      descriptionTa: "350க்கும் மேற்பட்ட மாணவர்களுடன் ஓஹியோ யூனியனில் சங்கத்தின் முதல் பிரம்மாண்ட கலை மற்றும் கலாச்சார விழா கோலாகலமாகத் தொடங்கியது.",
+      titleEn: "Annual Cultural Celebrations",
+      titleTa: "ஆண்டு கலாச்சார விழாக்கள்",
+      descriptionEn: "Began hosting annual gatherings and dinners at the Ohio Union, bringing students and friends together for music, food, and student performances.",
+      descriptionTa: "மாணவர் கலை நிகழ்ச்சிகள் மற்றும் உணவுடன் கூடிய பெருவிழாக்கள் ஓஹியோ யூனியனில் தொடங்கப்பட்டன.",
     },
     {
       year: "2024",
-      titleEn: "Parai Attam & Folk Ensembles Founded",
-      titleTa: "பறை ஆட்டக் கலைக் குழு உருவாக்கம்",
-      descriptionEn: "Established the campus's first student-run folk percussion ensemble, bringing thunderous traditional parai rhythms to collegiate showcases across the Midwest.",
-      descriptionTa: "பாரம்பரிய நாட்டுப்புற இசைக்கலைகளை முன்னிறுத்தி வளாகத்தின் முதல் பறை ஆட்டக் குழு உருவானது.",
+      titleEn: "Collaborative Campus Events",
+      titleTa: "இணைந்த வளாக நிகழ்வுகள்",
+      descriptionEn: "Expanded collaborations with fellow multicultural student organizations, co-hosting community socials and cultural celebrations across campus.",
+      descriptionTa: "பிற கலாச்சார மாணவர் அமைப்புகளுடன் இணைந்து புதிய நிகழ்வுகள் முன்னெடுக்கப்பட்டன.",
     },
     {
-      year: "2026",
-      titleEn: "Community Expansion & Signature Milestones",
-      titleTa: "மாணவர் சமூக விரிவாக்கம் & புதிய சாதனைகள்",
-      descriptionEn: "Reaching over 500 active event attendees, 1,200+ Instagram followers, and a 450+ member student GroupMe connecting undergraduate and graduate Buckeyes.",
-      descriptionTa: "500க்கும் மேற்பட்ட மாணவர் பங்கேற்பாளர்கள் மற்றும் விரிவான சமூகக் கூட்டமைப்புடன் வளர்ந்து நிற்கும் சங்கம்.",
+      year: "2025–2026",
+      titleEn: "Ongoing Socials & Campus Fellowship",
+      titleTa: "தொடர் சந்திப்புகள் & மாணவர் தோழமை",
+      descriptionEn: "Hosting regular picnics, street food dinners, card games, and festive celebrations open to all Ohio State students.",
+      descriptionTa: "புல்வெளி சந்திப்புகள், தெருவோர உணவு மாலைகள், மற்றும் கொண்டாட்டங்கள் வழியே தொடர்ந்து செயல்படும் மாணவர் சங்கம்.",
     },
   ];
 
   const partners = [
     {
-      name: "Tamil Thalaivas (TT)",
+      name: "Telugu Thallulu (TT)",
       type: "Student Org Collaborator",
-      collaboration: "Co-host of Pattas Tappas Diwali showcase and cultural dance medleys at the Ohio Union.",
-    },
-    {
-      name: "Central Ohio Tamil Community",
-      type: "Community Alliance",
-      collaboration: "Connecting collegiate students with family networks, festival celebrations, and local mentors in Central Ohio.",
+      collaboration: "Collaborating on campus events such as the Namma Jathara spring carnival.",
     },
     {
       name: "The Ohio Union & Student Life",
-      type: "Campus Venue & Affiliation",
-      collaboration: "Hosting our annual gatherings in the Archie Griffin Ballroom and Performance Hall as a registered student org.",
+      type: "Campus Affiliation",
+      collaboration: "Hosting our general body meetings, dinners, and events as a registered student organization.",
     },
     {
-      name: "Local Business Sponsors & Patrons",
-      type: "Sponsorship Opportunities",
-      collaboration: "Columbus South Asian groceries, restaurants, and alumni patrons supporting our authentic student festival dinners.",
+      name: "Central Ohio Community",
+      type: "Community Network",
+      collaboration: "Connecting students with local festivals, community gatherings, and alumni in Columbus.",
+    },
+    {
+      name: "Columbus Local Dining",
+      type: "Local Catering",
+      collaboration: "Sourcing South Indian catering, dosas, and snacks for club events from local Columbus kitchens.",
     },
   ];
 

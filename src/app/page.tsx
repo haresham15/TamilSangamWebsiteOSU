@@ -447,7 +447,7 @@ export default function HomePage() {
             onClick={playClick}
             className="text-xs font-mono text-[#4c2472] hover:text-[#11694c] font-bold transition-colors"
           >
-            <span>{locale === "ta" ? "முழு தொகுப்பைக் காண்க" : "Explore All Vaults (100+ Photos) →"}</span>
+            <span>{locale === "ta" ? "முழு தொகுப்பைக் காண்க" : "Explore All Photo Archives →"}</span>
           </Link>
         </div>
 
@@ -487,7 +487,7 @@ export default function HomePage() {
                   TS &quot;A Berry Cute Picnic&quot;
                 </h3>
                 <p className="text-xs text-purple-950/75 line-clamp-2 leading-relaxed font-body">
-                  Fall semester kickoff picnic on the South Oval with fresh berry treats, blankets, and community bonding.
+                  Fall semester welcome picnic on the South Oval with snacks, card games, and good conversation.
                 </p>
               </div>
             </Link>
@@ -522,7 +522,7 @@ export default function HomePage() {
                   TS Streetside Sapad Event
                 </h3>
                 <p className="text-xs text-purple-950/75 line-clamp-2 leading-relaxed font-body">
-                  Authentic South Indian street food feast celebrating hot kothu parotta, crispy dosas, and filter kaapi.
+                  South Indian street food dinner featuring hot kothu parotta, fresh dosas, and filter coffee.
                 </p>
               </div>
             </Link>
@@ -557,7 +557,7 @@ export default function HomePage() {
                   TS x TT: Namma Jathara
                 </h3>
                 <p className="text-xs text-purple-950/75 line-clamp-2 leading-relaxed font-body">
-                  Historic cultural carnival with Telugu Thallulu featuring festive games, folk dance, and regional cuisine.
+                  A spring campus carnival hosted with Telugu Thallulu featuring outdoor games, music, and food stalls.
                 </p>
               </div>
             </Link>
