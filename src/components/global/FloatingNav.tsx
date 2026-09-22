@@ -39,6 +39,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
     { href: "/board", labelKey: "nav.board" },
     { href: "/gallery", labelKey: "nav.gallery" },
     { href: "/guide", labelKey: "nav.guide" },
+    { href: "/suggestions", labelKey: "nav.suggestions" },
     { href: "/join", labelKey: "nav.join" },
   ];
 

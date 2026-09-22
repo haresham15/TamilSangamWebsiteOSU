@@ -43,6 +43,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
     { id: "p-guide", category: "Page", title: "User Guide & FAQ / வழிகாட்டி", subtitle: "Handbook, Searchable FAQ & AI Knowledge Manager", href: "/guide", icon: <BookOpen className="w-4 h-4 text-[#55CCA2]" /> },
     { id: "p-nanba", category: "Page", title: "Ask Nanba / நண்பா (AI Guide)", subtitle: "Chat with Nanba or search verified club knowledge", href: "/guide", icon: <Bot className="w-4 h-4 text-[#55CCA2]" /> },
     { id: "p-join", category: "Page", title: "Join / இணைந்திடுங்கள்", subtitle: "GroupMe gateway & audition signups", href: "/join", icon: <Users className="w-4 h-4 text-[#10b981]" /> },
+    { id: "p-suggestions", category: "Page", title: "Suggestions / பரிந்துரைகள்", subtitle: "Blueprint reveal & community suggestion box", href: "/suggestions", icon: <Sparkles className="w-4 h-4 text-[#FFC526]" /> },
     { id: "p-links", category: "Page", title: "Quick Links (Bio Hub)", subtitle: "Mobile link-in-bio & social links", href: "/links", icon: <ArrowRight className="w-4 h-4 text-[#55CCA2]" /> },
 
     // Events

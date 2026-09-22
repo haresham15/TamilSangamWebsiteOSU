@@ -20,6 +20,7 @@ export const translations: Record<string, Record<Locale, string>> = {
   "nav.gallery": { en: "Gallery", ta: "நினைவுகள்" },
   "nav.board": { en: "Board", ta: "குழு" },
   "nav.join": { en: "Join", ta: "இணையுங்கள்" },
+  "nav.suggestions": { en: "Suggestions", ta: "பரிந்துரைகள்" },
   "nav.guide": { en: "Guide & FAQ", ta: "வழிகாட்டி" },
   "nav.cultureLab": { en: "Culture Lab", ta: "கலாச்சார அரங்கம்" },
   "nav.resources": { en: "Resources", ta: "வளங்கள்" },

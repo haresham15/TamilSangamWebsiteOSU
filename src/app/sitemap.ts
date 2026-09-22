@@ -62,6 +62,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: 0.85,
     },
+    {
+      url: `${baseUrl}/suggestions`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.85,
+    },
   ];
 
   // Dynamic event pages
