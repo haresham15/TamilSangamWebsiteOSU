@@ -469,7 +469,7 @@ export default function HomePage() {
             >
               <div className="relative w-full aspect-[4/3] overflow-hidden border-b-2 border-[#250d38]">
                 <Image
-                  src="https://lh3.googleusercontent.com/pw/AP1GczPxXus-6uP7LIoxTDLr2AgeSboBWSr6f-dGCHtPo9UEFq5ma-J6R-eGsQR9sQOwZ_GWUviWZQjfpzbVvN0wMwhe2GqjILtW8nThJrxg1IR2WY-MU_uL=w1200-h800-no"
+                  src="https://lh3.googleusercontent.com/pw/AP1GczPlVkHkFW39BMqHGdeuYa0EwT1OOXOGWweSVgrPMbn24CSvrUlwF8CS_x787kPudpRyXEgtSMteYmBp6Zbad4uzMgeqB6LfISOvbS0AO1-qHsPKtEoC=w1200-h800-no"
                   alt="TS A Berry Cute Picnic"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -504,7 +504,7 @@ export default function HomePage() {
             >
               <div className="relative w-full aspect-[4/3] overflow-hidden border-b-2 border-[#250d38]">
                 <Image
-                  src="https://lh3.googleusercontent.com/pw/AP1GczMxKNKBGCOMDjAiZVwQ9oawnxmUPdX0DsEqbQrryf7fXP84JBPXMz_Oe4zM6Ze-w9lmIwkW7fj63L3Z-DX2KEWvlOIsXgCLc8rfTuZLPklMAp488qxt=w1200-h800-no"
+                  src="https://lh3.googleusercontent.com/pw/AP1GczPoDEE5ppMuBlStSn71wmY-vnb9sbDehdzKVvxu_QvEJZfJ8hGCig4Bkxoe8Rx8-xpnXzZA02iZ2EZid-qciQ4V85WQKl44j_Ed6YLD25GTunQbulMG=w1200-h800-no"
                   alt="TS Streetside Sapad Event"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"

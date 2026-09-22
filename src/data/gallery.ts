@@ -40,7 +40,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
     location: "South Oval, The Ohio State University",
     attendance: "Outdoor Welcome Social",
     coverImage:
-      "https://lh3.googleusercontent.com/pw/AP1GczPxXus-6uP7LIoxTDLr2AgeSboBWSr6f-dGCHtPo9UEFq5ma-J6R-eGsQR9sQOwZ_GWUviWZQjfpzbVvN0wMwhe2GqjILtW8nThJrxg1IR2WY-MU_uL=w1200-h800-no",
+      "https://lh3.googleusercontent.com/pw/AP1GczPlVkHkFW39BMqHGdeuYa0EwT1OOXOGWweSVgrPMbn24CSvrUlwF8CS_x787kPudpRyXEgtSMteYmBp6Zbad4uzMgeqB6LfISOvbS0AO1-qHsPKtEoC=w1200-h800-no",
     photoCount: 5,
     googlePhotosUrl: "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7",
     descriptionEn:
@@ -62,7 +62,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         captionEn: "Students meeting up on the South Oval for the fall welcome picnic.",
         captionTa: "இலையுதிர்கால பிக்னிக்கிற்காக ஓவல் புல்வெளியில் திரண்ட மாணவர்கள்.",
         imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczPxXus-6uP7LIoxTDLr2AgeSboBWSr6f-dGCHtPo9UEFq5ma-J6R-eGsQR9sQOwZ_GWUviWZQjfpzbVvN0wMwhe2GqjILtW8nThJrxg1IR2WY-MU_uL=w1200-h800-no",
+          "https://lh3.googleusercontent.com/pw/AP1GczPlVkHkFW39BMqHGdeuYa0EwT1OOXOGWweSVgrPMbn24CSvrUlwF8CS_x787kPudpRyXEgtSMteYmBp6Zbad4uzMgeqB6LfISOvbS0AO1-qHsPKtEoC=w1200-h800-no",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Sep 18, 2025",
         tags: ["picnic", "oval", "community", "welcome"],
@@ -131,7 +131,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
     location: "Archie Griffin Ballroom, Ohio Union",
     attendance: "Diwali Celebration & Dinner",
     coverImage:
-      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80",
+      "https://lh3.googleusercontent.com/pw/AP1GczMSieqLN4zB-VkNLXZF2mGRrfnCcKscrn7OCTl6QWpmd2opp4kFpJDJ77pbumj5NTtQRlfaU4bqcN-4fN2tG3j3kkDbHUN4uxzKuvI4hJdC0OypqDPf=w1200-h800-no",
     photoCount: 5,
     googlePhotosUrl: "https://linktr.ee/osutamilsangam",
     descriptionEn:
@@ -223,7 +223,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
     location: "Campus Kitchen / Ohio Union",
     attendance: "Street Food Dinner",
     coverImage:
-      "https://lh3.googleusercontent.com/pw/AP1GczMxKNKBGCOMDjAiZVwQ9oawnxmUPdX0DsEqbQrryf7fXP84JBPXMz_Oe4zM6Ze-w9lmIwkW7fj63L3Z-DX2KEWvlOIsXgCLc8rfTuZLPklMAp488qxt=w1200-h800-no",
+      "https://lh3.googleusercontent.com/pw/AP1GczPoDEE5ppMuBlStSn71wmY-vnb9sbDehdzKVvxu_QvEJZfJ8hGCig4Bkxoe8Rx8-xpnXzZA02iZ2EZid-qciQ4V85WQKl44j_Ed6YLD25GTunQbulMG=w1200-h800-no",
     photoCount: 5,
     googlePhotosUrl: "https://photos.app.goo.gl/PnkceBh19PqytYQ89",
     descriptionEn:
@@ -246,7 +246,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         captionEn: "Students arriving for an evening of South Indian street food.",
         captionTa: "தெருவோர உணவு விருந்திற்கு வருகை தந்த மாணவர்கள்.",
         imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczMxKNKBGCOMDjAiZVwQ9oawnxmUPdX0DsEqbQrryf7fXP84JBPXMz_Oe4zM6Ze-w9lmIwkW7fj63L3Z-DX2KEWvlOIsXgCLc8rfTuZLPklMAp488qxt=w1200-h800-no",
+          "https://lh3.googleusercontent.com/pw/AP1GczPoDEE5ppMuBlStSn71wmY-vnb9sbDehdzKVvxu_QvEJZfJ8hGCig4Bkxoe8Rx8-xpnXzZA02iZ2EZid-qciQ4V85WQKl44j_Ed6YLD25GTunQbulMG=w1200-h800-no",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Feb 24, 2026",
         tags: ["food", "sapad", "welcome"],
