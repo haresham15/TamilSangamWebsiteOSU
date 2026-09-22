@@ -55,15 +55,15 @@ export default function EventsPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div className="max-w-2xl">
           <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] block mb-2 font-bold">
-            The Ohio State University · Annual Festivals & Showcases
+            The Ohio State University · Campus Community & Social Events
           </span>
           <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
-            {locale === "ta" ? "விழாக்கள் & சங்க நிகழ்வுகள்" : "Events & Cultural Showcases"}
+            {locale === "ta" ? "நிகழ்வுகள் & சந்திப்புகள்" : "Events & Campus Gatherings"}
           </h1>
           <p className="text-sm sm:text-base text-purple-950/80 leading-relaxed font-body font-medium">
             {locale === "ta"
-              ? "ஆட்டம், பாட்டம், மற்றும் கொண்டாட்டம்! ஓஹியோ யூனியனில் நடக்கும் பிரம்மாண்ட கலாச்சார விழாக்கள் முதல் வளாக சந்திப்புகள் வரை."
-              : "Start the Aatam, Paatam, and Kondatam! From our 400+ student flagship festivals and Diwali celebrations to semester chai socials and dance auditions."}
+              ? "ஆட்டம், பாட்டம், கொண்டாட்டம்! ஓவல் புல்வெளி பிக்னிக், தெருவோர உணவு திருவிழாக்கள் முதல் தீபாவளிக் கொண்டாட்டம் வரை — மொழி பேதமின்றி அனைவரும் ஒன்றிணையும் களம்."
+              : "Start the Aatam, Paatam, and Kondatam! From casual lawn picnics on the Oval and street food nights to our annual Diwali party — our events are relaxed, social, and open to all students regardless of language or background."}
           </p>
         </div>
 
@@ -84,25 +84,27 @@ export default function EventsPage() {
         </div>
       </div>
 
-      {/* 1. Tamil Calendar Overlay Highlight Banner: Dravidian Ledger Box */}
+      {/* 1. Welcoming Community Hub Banner: Open to All Languages */}
       <div className="p-6 bg-[#250d38] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] mb-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-white">
         <div>
           <span className="text-[10px] uppercase font-mono tracking-widest text-[#55CCA2] font-bold">
-            [TAMIL CALENDAR OVERLAY · தமிழ் பஞ்சாங்கம்]
+            [CAMPUS COMMUNITY · OPEN TO ALL LANGUAGES & MAJORS]
           </span>
-          <h3 className="text-lg font-bold text-white font-display mt-0.5" lang="ta" style={{ letterSpacing: 0 }}>
-            Current Season: தை மாதம் (Thai Month) · பராபவ ஆண்டு (Parabhava Year)
+          <h3 className="text-lg font-bold text-white font-display mt-0.5">
+            {locale === "ta" ? "அனைவரையும் அன்போடு வரவேற்கிறோம்!" : "A Casual Cultural Hub for Everyone"}
           </h3>
-          <p className="text-xs text-purple-200/90 mt-1 font-body">
-            Thai 1 marks renewed beginnings, cultural unity, and gratitude to nature.
+          <p className="text-xs text-purple-200/90 mt-1 font-body max-w-2xl">
+            {locale === "ta"
+              ? "எங்கள் நிகழ்வுகள் எப்போதும் எளிமையானவை மற்றும் உற்சாகமானவை. தமிழ் பேசுபவர்கள் மட்டுமின்றி, நல்ல உணவு, இசை மற்றும் நட்பை விரும்பும் அனைத்து மாணவர்களையும் மனதார வரவேற்கிறோம்!"
+              : "Our club is a welcoming social hub for Tamil students and friends from every walk of campus life. Whether you speak the language, want to learn, or just want to eat good food and hang out — you belong here!"}
           </p>
         </div>
         <Link
-          href="#hall-of-fame"
+          href="/join"
           onClick={playClick}
           className="px-5 py-2.5 btn-sangam-mint text-xs font-mono font-bold uppercase tracking-wider shrink-0"
         >
-          View Hall of Fame ↓
+          Join The Family →
         </Link>
       </div>
 

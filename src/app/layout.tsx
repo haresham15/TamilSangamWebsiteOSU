@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     template: "%s | OSU Tamil Sangam",
   },
   description:
-    "Official student organization for Tamil culture, performing arts, and community at The Ohio State University. Home of Pattas Tappas Diwali, collegiate dance, live music, and campus fellowship in Columbus.",
+    "Official student organization at The Ohio State University. A welcoming campus hub for Tamil culture, good food, casual hangouts, collegiate dance, and fellowship in Columbus — open to all students and languages.",
   applicationName: "OSU Tamil Sangam",
   keywords: [
     "OSU Tamil Sangam",

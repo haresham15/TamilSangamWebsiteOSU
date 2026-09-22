@@ -14,9 +14,9 @@ export const FAQS: FaqItem[] = [
     questionEn: "What is OSU Tamil Sangam?",
     questionTa: "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் என்றால் என்ன?",
     answerEn:
-      "OSU Tamil Sangam is the premier cultural organization at The Ohio State University dedicated to uniting the Tamil diaspora, encouraging Tamil language acquisition, promoting cultural integration, and raising awareness and funds for humanitarian causes centered in Tamil-speaking regions globally and across the United States.",
+      "OSU Tamil Sangam is a casual, student-run cultural organization at The Ohio State University. We are a campus hub for Tamil students and friends of all backgrounds to hang out, eat delicious South Indian food, listen to music, play games, and celebrate festivals like Diwali. No matter what language you speak or what your major is, you have a home with us!",
     answerTa:
-      "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் என்பது புலம்பெயர் தமிழர்களை ஒன்றிணைக்கவும், மொழி மற்றும் கலாச்சாரத்தை வளர்க்கவும், மற்றும் சமூக நலப்பணிகளுக்கு நிதி திரட்டவும் இயங்கும் ஓஹியோ பல்கலைக்கழகத்தின் முதன்மை மாணவர் அமைப்பாகும்.",
+      "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் என்பது மாணவர்கள் அனைவரும் ஒன்றிணைந்து தமிழ் பண்பாட்டை ரசிக்கவும், நல்ல உணவை ருசிக்கவும், மற்றும் நட்பை வளர்க்கவும் வழிகாட்டும் ஒரு மாணவர் அமைப்பாகும். மொழி பேதமின்றி அனைவரும் எங்கள் குடும்பத்தில் இணையலாம்!",
   },
   {
     id: "faq-02",
@@ -24,9 +24,9 @@ export const FAQS: FaqItem[] = [
     questionEn: "Do I have to speak Tamil or be Tamil to join?",
     questionTa: "நான் தமிழனாக இருக்க வேண்டுமா அல்லது தமிழ் பேச வேண்டுமா?",
     answerEn:
-      "Absolutely not! Our Sangam proudly embodies the ancient Sangam motto: 'யாதும் ஊரே யாவரும் கேளீர்' (To us all towns are our own, everyone our kin). We wholeheartedly welcome students of all ethnicities, linguistic backgrounds, and academic majors. Membership is open year-round to all interested individuals!",
+      "Definitely not! We are completely open to students of all languages, backgrounds, and majors. Many of our active members do not speak Tamil and simply love the friendly community, the delicious food, the music, and the fun social events. As the Tamil proverb goes: 'யாதும் ஊரே யாவரும் கேளீர்' (To us, everyone is kin)!",
     answerTa:
-      "கட்டாயமாகத் தேவையில்லை! 'யாதும் ஊரே யாவரும் கேளீர்' என்ற தத்துவத்தின்படி, எந்தவொரு கலாச்சாரப் பின்புலம் கொண்ட மாணவர்களும் எங்கள் சங்கத்தில் மகிழ்ச்சியுடன் இணையலாம். ஆண்டு முழுவதும் சேர்க்கை திறந்திருக்கும்.",
+      "கட்டாயமாகத் தேவையில்லை! எந்தவொரு மொழி பேசும் மாணவர்களும் எங்கள் சங்கத்தில் மகிழ்ச்சியுடன் இணையலாம். நல்ல உணவு, இசை மற்றும் தோழமையை விரும்பும் எவருக்கும் இங்கு இடமுண்டு.",
   },
   {
     id: "faq-03",
@@ -71,12 +71,12 @@ export const FAQS: FaqItem[] = [
   {
     id: "faq-07",
     category: "Performances",
-    questionEn: "How do I audition for dance (Aatam) or music (Paatam)?",
-    questionTa: "நடனம் அல்லது இசைப் பிரிவுகளில் எவ்வாறு தேர்வாகி பங்கேற்பது?",
+    questionEn: "How do I get involved with dance (Aatam) or music (Paatam)?",
+    questionTa: "நடனம் அல்லது இசைப் பிரிவுகளில் எவ்வாறு பங்கேற்பது?",
     answerEn:
-      "At the beginning of each Autumn and Spring semester, we hold open interest workshops and casual auditions. We welcome dancers from classical Bharatanatyam to freestyle Kuthu, as well as vocalists, instrumentalists, and Parai folk drummers. You can fill out the Performer Interest Form on our Join page at any time!",
+      "At the start of each semester, we hold open interest workshops and casual showcases. Whether you love dancing (energetic cinematic Kuthu, fusion, or classical), singing, or playing an instrument, all skill levels are welcome. You can fill out the Performer Interest Form on our Join page at any time!",
     answerTa:
-      "ஒவ்வொரு பருவத்தின் தொடக்கத்திலும் விருப்பமுள்ளவர்களுக்கான அறிமுகப் பட்டறைகள் நடைபெறும். பரதநாட்டியம் முதல் குத்து நடனம் வரை, பாட்டு முதல் பறை ஆட்டம் வரை அனைவரும் பங்கேற்கலாம். எங்கள் 'இணையுங்கள்' பக்கத்தில் விண்ணப்பிக்கலாம்.",
+      "ஒவ்வொரு பருவத்தின் தொடக்கத்திலும் விருப்பமுள்ளவர்களுக்கான எளிய அறிமுகப் பட்டறைகள் நடைபெறும். சினிமா குத்து, பாட்டு, வாத்தியங்கள் வாசித்தல் என ஆர்வம் உள்ள அனைவரும் பங்கேற்கலாம்.",
   },
   {
     id: "faq-08",
@@ -84,9 +84,9 @@ export const FAQS: FaqItem[] = [
     questionEn: "Where do Sangam events take place on campus?",
     questionTa: "நிகழ்ச்சிகள் வளாகத்தில் எங்கு நடைபெறும்?",
     answerEn:
-      "Major events like Pattas Tappas Diwali are hosted in the Ohio Union (Archie Griffin Ballroom and Performance Hall). General meetings, Tamil language workshops, and chai socials take place in Hagerty Hall, the RPAC, or the South Oval during pleasant weather.",
+      "Our annual collaborative Diwali celebration is hosted in the Ohio Union (Archie Griffin Ballroom). Our casual gatherings, street food nights, chai socials, and lawn game kickbacks take place on the South Oval, in the RPAC, or in student campus spaces.",
     answerTa:
-      "பெரிய திருவிழாக்கள் ஓஹியோ யூனியன் அரங்குகளில் நடைபெறும். சிறிய கூட்டங்கள், மொழிப் பட்டறைகள் மற்றும் சந்திப்புகள் ஹாகெர்ட்டி ஹால், RPAC அல்லது ஓவல் மைதானத்தில் நடைபெறும்.",
+      "தீபாவளிப் பெருவிழா ஓஹியோ யூனியன் அரங்கில் நடைபெறும். எளிய பிக்னிக், தெருவோர உணவு மற்றும் சந்திப்புகள் ஓவல் புல்வெளி அல்லது மாணவர் வளாக அரங்குகளில் நடைபெறும்.",
   },
   {
     id: "faq-09",

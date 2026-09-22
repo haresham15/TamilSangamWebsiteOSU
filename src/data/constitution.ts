@@ -9,43 +9,43 @@ export interface GovernanceRule {
 
 export const CLUB_PURPOSE: GovernanceRule[] = [
   {
-    id: "purpose-diaspora",
-    titleEn: "Uniting the Tamil Diaspora",
-    titleTa: "புலம்பெயர் தமிழர்களை ஒன்றிணைத்தல்",
+    id: "purpose-community",
+    titleEn: "Welcoming Campus Hub",
+    titleTa: "மாணவர் பண்பாட்டு மையம்",
     descriptionEn:
-      "Unites students, scholars, and community members of the Tamil diaspora across The Ohio State University and Central Ohio, creating an enduring cultural home away from home.",
+      "Serves as an inclusive, open, and friendly cultural hub for Tamil Buckeyes and students of all linguistic and cultural backgrounds, creating a warm home away from home.",
     descriptionTa:
-      "ஓஹியோ பல்கலைக்கழகம் மற்றும் மத்திய ஓஹியோவில் உள்ள புலம்பெயர் தமிழ் மாணவர்கள், அறிஞர்கள் மற்றும் சமூகத்தினரை ஒன்றிணைத்து கலாச்சார இல்லத்தை உருவாக்குதல்.",
+      "தமிழ் மாணவர்கள் மற்றும் அனைத்து கலாச்சார பின்புலம் கொண்ட மாணவர்களையும் ஒன்றிணைத்து, ஓஹியோ பல்கலைக்கழகத்தில் ஒரு குடும்ப உணர்வை உருவாக்குதல்.",
     category: "purpose",
   },
   {
-    id: "purpose-language",
-    titleEn: "Tamil Language Acquisition & Literacy",
-    titleTa: "தமிழ் மொழி கற்றல் & இலக்கிய விழிப்புணர்வு",
+    id: "purpose-exchange",
+    titleEn: "Cultural & Linguistic Inclusivity",
+    titleTa: "மொழி & கலாச்சார நல்லுறவு",
     descriptionEn:
-      "Encourages Tamil language acquisition, conversational fluency, and classical Sangam literary appreciation among heritage speakers, new learners, and allies.",
+      "Welcomes students of all languages to experience Tamil culture, music, phrases, and customs in a casual, supportive, and fun collegiate environment.",
     descriptionTa:
-      "புதிதாகக் கற்போர் மற்றும் மாணவர்களிடையே தமிழ் மொழிப் பேச்சு, எழுத்து, மற்றும் சங்க இலக்கிய வாசிப்பை ஊக்குவித்தல்.",
+      "அனைத்து மொழி பேசும் மாணவர்களுக்கும் தமிழ் பண்பாடு, இசை, மற்றும் மரபுகளை எளிய மற்றும் உற்சாகமான முறையில் அறிமுகப்படுத்துதல்.",
     category: "purpose",
   },
   {
-    id: "purpose-culture",
-    titleEn: "Promoting Cultural Integration",
-    titleTa: "கலாச்சார ஒருமைப்பாடு & விழிப்புணர்வு",
+    id: "purpose-fellowship",
+    titleEn: "Good Food, Music & Celebration",
+    titleTa: "உணவு, இசை & கொண்டாட்டம்",
     descriptionEn:
-      "Promotes inter-cultural integration on campus by sharing Tamil music, dance, cuisine, philosophy, and history with the broader Buckeye collegiate community.",
+      "Brings people together through casual lawn picnics, street food feasts, film music jams, dance, and annual celebrations like our collaborative Diwali party.",
     descriptionTa:
-      "தமிழ் இசை, நடனம், பாரம்பரிய உணவு மற்றும் வரலாற்று உன்னதங்களை அனைத்து மாணவர்களுடனும் பகிர்ந்து கலாச்சார பாலத்தை அமைத்தல்.",
+      "புல்வெளி பிக்னிக், தெருவோர உணவு திருவிழாக்கள், இசை மாலைகள் மற்றும் தீபாவளிக் கொண்டாட்டங்கள் மூலம் மாணவர் நட்பைப் பலப்படுத்துதல்.",
     category: "purpose",
   },
   {
     id: "purpose-philanthropy",
-    titleEn: "Awareness & Philanthropic Fundraising",
-    titleTa: "விழிப்புணர்வு & சமூக அறப்பணிகள்",
+    titleEn: "Peer Support & Campus Giving",
+    titleTa: "மாணவர் வழிகாட்டல் & சமூக சேவை",
     descriptionEn:
-      "Raises awareness and funds for humanitarian causes, disaster relief, and educational initiatives centered in both Tamil-speaking regions globally and local communities across the United States.",
+      "Fosters peer mentorship for incoming Buckeyes, study groups, community volunteering with Columbus food banks, and charitable initiatives.",
     descriptionTa:
-      "உலகளாவிய தமிழ்ப் பகுதிகள் மற்றும் அமெரிக்காவில் உள்ள மனிதநேய உதவிகள், கல்வி உதவித்தொகைகள் மற்றும் சமூக நலப்பணிகளுக்கு நிதி திரட்டுதல்.",
+      "புதிய மாணவர்களுக்கான வழிகாட்டல், படிப்பு வட்டங்கள், மற்றும் கொலம்பஸ் உள்ளூர் தொண்டு நிறுவனங்களுடன் இணைந்து சமூக சேவை ஆற்றுதல்.",
     category: "purpose",
   },
 ];
@@ -53,12 +53,12 @@ export const CLUB_PURPOSE: GovernanceRule[] = [
 export const CLUB_ACTIVITIES: GovernanceRule[] = [
   {
     id: "act-cultural",
-    titleEn: "Flagship Cultural Festivals",
-    titleTa: "முக்கிய கலாச்சார விழாக்கள்",
+    titleEn: "Campus Festivals & Celebrations",
+    titleTa: "வளாக விழாக்கள் & கொண்டாட்டங்கள்",
     descriptionEn:
-      "Hosts large-scale flagship cultural productions including Pattas Tappas Diwali celebrations, live music concerts, and cinematic showcases.",
+      "Hosts fun campus celebrations including our collaborative Pattas Tappas Diwali party, outdoor lawn picnics, and festive street food nights.",
     descriptionTa:
-      "தீபாவளி கொண்டாட்டங்கள், நேரடி இசை நிகழ்ச்சிகள் மற்றும் கலாச்சார மேடை நிகழ்வுகளை பிரம்மாண்டமாக நடத்துதல்.",
+      "பட்டாஸ் தப்பாஸ் தீபாவளி, ஓவல் புல்வெளி பிக்னிக், மற்றும் தெருவோர உணவு திருவிழாக்களை மகிழ்ச்சியுடன் நடத்துதல்.",
     category: "activities",
   },
   {

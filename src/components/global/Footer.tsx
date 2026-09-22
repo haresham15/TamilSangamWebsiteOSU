@@ -58,8 +58,8 @@ export const Footer: React.FC = () => {
             </div>
             <p className="text-sm text-purple-100/90 max-w-md leading-relaxed mb-6 font-body">
               {locale === "ta"
-                ? "ஆட்டம், பாட்டம், கொண்டாட்டம் என தமிழ்ப் பண்பாட்டின் உன்னதங்களை ஓஹியோ வளாகத்தில் இணைக்கும் கலாச்சாரப் பாலம்."
-                : "Start the Aatam, Paatam, and Kondatam! Bridging classical Tamil heritage with student dance, earthen pot feasts, and lifelong community at Ohio State."}
+                ? "ஆட்டம், பாட்டம், கொண்டாட்டம்! ஓஹியோ வளாகத்தில் தமிழ் மாணவர்கள் மற்றும் அனைத்து நண்பர்களையும் ஒன்றிணைக்கும் கலாச்சார மையம் — நல்ல உணவு, இசை மற்றும் தோழமையின் சங்கமம்."
+                : "Start the Aatam, Paatam, and Kondatam! A welcoming campus hub for Tamil students and friends of all backgrounds — connecting through good food, music, casual hangouts, and campus celebrations at Ohio State."}
             </p>
             <div className="flex items-center gap-4 text-xs font-mono text-purple-200">
               <Link

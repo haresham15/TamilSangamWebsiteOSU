@@ -50,16 +50,16 @@ export default function JoinPage() {
     <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left font-body">
       {/* Header */}
       <div className="max-w-3xl mb-12">
-        <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2">
-          Kurinji (குறிஞ்சி) · Mountain Highs, Stars & Belonging
+        <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2 font-bold">
+          The Ohio State University · Welcoming Student Hub
         </span>
         <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-display mb-4">
           {locale === "ta" ? "சங்கத்தில் இணையுங்கள்" : "Join the Sangam Family"}
         </h1>
         <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-body">
           {locale === "ta"
-            ? "நீங்கள் புதிய மாணவராக இருந்தாலும், பழைய மாணவராக இருந்தாலும் சரி — எங்களோடு இணைந்திருங்கள்; நட்பையும் கலைகளையும் கொண்டாடுங்கள்."
-            : "Whether you are an incoming freshman, graduate student, or community member, find your people. Open year-round, 100% free general membership, and everyone is welcome."}
+            ? "நீங்கள் எந்த மொழி பேசினாலும் சரி — எங்களோடு இணைந்திருங்கள்; நல்ல உணவு, இசை, மற்றும் நட்பைக் கொண்டாடுங்கள். அனைவரும் வரவேற்கப்படுகிறார்கள்!"
+            : "Whether you are an incoming freshman, transfer, graduate student, or friend who loves the culture — find your people. Open year-round, 100% free membership, and welcoming to students of all languages and backgrounds!"}
         </p>
       </div>
 

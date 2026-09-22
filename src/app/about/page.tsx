@@ -100,8 +100,8 @@ export default function AboutPage() {
         </h1>
         <p className="text-base sm:text-lg text-purple-950/85 leading-relaxed font-body font-medium">
           {locale === "ta"
-            ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் என்பது தமிழ்ப் பண்பாட்டின் உன்னதங்களை, கலை வடிவங்களை, மற்றும் நட்புணர்வை ஓஹியோ பல்கலைக்கழக வளாகத்தில் வளர்க்கும் முதன்மை மாணவர் அமைப்பாகும்."
-            : "The Ohio State University Tamil Sangam is dedicated to uniting the Tamil diaspora, encouraging language literacy, promoting cross-cultural integration, and fostering lifelong community fellowship on campus."}
+            ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் என்பது மாணவர்கள் அனைவரும் ஒன்றிணைந்து தமிழ் பண்பாட்டை ரசிக்கவும், நல்ல உணவை ருசிக்கவும், மற்றும் நட்பை வளர்க்கவும் வழிகாட்டும் திறந்த மனப்பான்மை கொண்ட மாணவர் அமைப்பாகும்."
+            : "The Ohio State University Tamil Sangam is an open, welcoming student-run cultural hub. We bring people of all backgrounds, cultures, and languages together to celebrate Tamil culture, eat incredible food, hang out, and build genuine collegiate friendships."}
         </p>
       </div>
 
@@ -110,19 +110,19 @@ export default function AboutPage() {
         <div className="max-w-3xl space-y-4">
           <div className="flex items-center gap-2 text-[#4c2472] font-mono text-xs uppercase tracking-widest font-bold">
             <BookOpen className="w-4 h-4 text-[#55CCA2]" />
-            <span>Classical Heritage · சங்க இலக்கிய மரபு</span>
+            <span>Community & Fellowship · மக்கள் சங்கமம்</span>
           </div>
 
           <h2 className="text-2xl sm:text-4xl font-bold text-[#250d38] font-display leading-tight">
-            {locale === "ta" ? "சங்கம் என்றால் என்ன?" : "What is a Sangam?"}
+            {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம் என்பது என்ன?" : "What is Tamil Sangam at OSU?"}
           </h2>
 
           <p className="text-sm sm:text-base text-purple-950/80 leading-relaxed font-body">
-            In antiquity, a <em className="text-[#4c2472] not-italic font-bold">Sangam</em> (சங்கம்) referred to the legendary literary academies and assemblies of poets, philosophers, and musicians convened across Tamilakam over two millennia ago. In these gatherings, bards sang of love, heroism, landscapes, justice, and human resilience.
+            In Tamil, the word <em className="text-[#4c2472] not-italic font-bold">Sangam</em> (சங்கம்) simply means an assembly, union, or community gathering where people come together. At The Ohio State University, our Sangam is an active, open, and casual student hub for Tamil Buckeyes and everyone in our campus community.
           </p>
 
           <p className="text-sm sm:text-base text-purple-950/80 leading-relaxed font-body">
-            At The Ohio State University, we carry this spirit forward into the diaspora. Our Sangam is an intellectual and cultural sanctuary where students gather over warm filter coffee, rehearse dynamic dance choreographies, converse in classical verse and modern dialect, and welcome every Buckeye with open arms.
+            Our events are relaxed and social — whether it&apos;s chilling on the South Oval with snacks, savoring hot kothu parotta at street food nights, jamming to film music, or celebrating at our annual Diwali party. You don&apos;t need to speak Tamil, and you don&apos;t need any specific cultural background: students of all languages, majors, and backgrounds are always welcome to hang out and find a home away from home!
           </p>
         </div>
       </div>

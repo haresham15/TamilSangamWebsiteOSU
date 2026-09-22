@@ -77,7 +77,7 @@ export default function HomePage() {
               {/* Collegiate Affiliation Badge: Inscription Block */}
               <div className="box-badge shadow-[2px_2px_0px_#4c2472]">
                 <span className="w-2 h-2 bg-[#55CCA2] animate-pulse" />
-                <span>The Ohio State University · Student Organization</span>
+                <span>The Ohio State University · Student Cultural Hub · Open to All Languages</span>
               </div>
 
               {/* Massive Full-Width Wordmark with Signature Mint 3D Extrusion */}
@@ -100,8 +100,8 @@ export default function HomePage() {
               {/* Concrete, Non-Generic Copy Grounded in Real Campus Life */}
               <p className="max-w-2xl text-base sm:text-lg text-purple-950/85 leading-relaxed font-body font-medium">
                 {locale === "ta"
-                  ? "ஓஹியோ பல்கலைக்கழகத்தில் தமிழ் மொழியையும், கலைகளையும், பண்பாட்டையும் பேணிப் பாதுகாக்கும் முதன்மை மாணவர் அமைப்பு. தீபாவளிப் பெருவிழா முதல் வளாக நடனம், இசை மற்றும் தோழமை வரை அனைவரையும் அன்போடு வரவேற்கிறோம்."
-                  : "We bring together students, language, and the living arts of Tamilakam at Ohio State — from festive Diwali banquets and live Parai drumming to collegiate dance teams and lifelong campus friendships in Columbus."}
+                  ? "ஓஹியோ பல்கலைக்கழகத்தில் தமிழ் மாணவர்கள் மற்றும் அனைத்து நண்பர்களையும் ஒன்றிணைக்கும் கலாச்சாரப் பாலம். நல்ல உணவு, இசை, மற்றும் கொண்டாட்டங்கள் வழியே அனைவரையும் அன்போடு வரவேற்கிறோம் — மொழி பேதமின்றி அனைவரும் இணையலாம்!"
+                  : "A welcoming campus hub for Tamil students and friends of all backgrounds at Ohio State. We're all about good food, great music, casual hangouts, and celebrating community together — from Oval picnics and street food nights to our annual Diwali party. People of all languages and majors are always welcome!"}
               </p>
 
               {/* Primary Action Buttons: Architectural Blocks with Real Physical Depth */}
@@ -320,12 +320,12 @@ export default function HomePage() {
                 தூண் 1 · Pillar One
               </span>
               <h3 className="text-2xl font-bold text-[#250d38] mt-1 mb-3 font-display">
-                {locale === "ta" ? "ஆட்டம் · Dance" : "Aatam · Dance & Motion"}
+                {locale === "ta" ? "ஆட்டம் · Dance" : "Aatam · Dance & Movement"}
               </h3>
               <p className="text-xs sm:text-sm text-purple-950/80 leading-relaxed mb-6 font-body">
                 {locale === "ta"
-                  ? "பாரம்பரிய பரதநாட்டியம் முதல் சினிமா குத்து மற்றும் ஃப்யூஷன் நடனங்கள் வரை மேடைகளை அதிரவைக்கும் நடனக் குழுக்கள்."
-                  : "From classical Bharatanatyam to explosive cinematic Kuthu and contemporary collegiate fusion, our student-choreographed dance teams perform at campus showcases and Midwest events."}
+                  ? "சினிமா குத்து, ஃப்யூஷன் மற்றும் கொண்டாட்ட நடனங்கள்! முன் அனுபவம் தேவையில்லை — மேடையை அதிரவைக்க விரும்பும் அனைவரும் பங்கேற்கலாம்."
+                  : "From high-energy cinematic Kuthu to collaborative fusion dance and open celebration circles. Dance teams are open to all skill levels — no prior experience required!"}
               </p>
             </div>
 
@@ -334,7 +334,7 @@ export default function HomePage() {
               onClick={playClick}
               className="inline-flex items-center text-xs font-mono font-bold text-[#4c2472] hover:text-[#11694c] transition-colors hover:underline uppercase tracking-wider"
             >
-              <span>Audition for Dance Troupe →</span>
+              <span>Dance With Us →</span>
             </Link>
           </motion.div>
 
@@ -365,12 +365,12 @@ export default function HomePage() {
                 தூண் 2 · Pillar Two
               </span>
               <h3 className="text-2xl font-bold text-[#250d38] mt-1 mb-3 font-display">
-                {locale === "ta" ? "பாட்டம் · Music" : "Paatam · Music & Rhythm"}
+                {locale === "ta" ? "பாட்டம் · Music" : "Paatam · Music & Jams"}
               </h3>
               <p className="text-xs sm:text-sm text-purple-950/80 leading-relaxed mb-6 font-body">
                 {locale === "ta"
-                  ? "இளையராஜா மற்றும் ரஹ்மானின் இன்னிசைகள், நேரடி இசைக்குழுக்கள் மற்றும் அக்யூஸ்டிக் கல்லூரிப் பாடல்கள்."
-                  : "Live acoustic jam sessions, Carnatic medleys, thunderous campus Parai drums, and vocalists uniting through celebrated Ilaiyaraaja, A.R. Rahman, and independent Tamil anthems."}
+                  ? "அக்யூஸ்டிக் கல்லூரிப் பாடல்கள், இளையராஜா மற்றும் ரஹ்மான் ஹிட்ஸ், மற்றும் நட்பு நிறைந்த இசை மாலைகள்."
+                  : "Casual acoustic jams, singing along to beloved Tamil cinema soundtracks, indie tracks, and live student band sets. Whether you play an instrument, sing, or just vibe to the tunes, pull up a chair!"}
               </p>
             </div>
 
@@ -379,7 +379,7 @@ export default function HomePage() {
               onClick={playClick}
               className="inline-flex items-center text-xs font-mono font-bold text-[#11694c] hover:text-[#4c2472] transition-colors hover:underline uppercase tracking-wider"
             >
-              <span>Play with Music Troupe →</span>
+              <span>Jam With Us →</span>
             </Link>
           </motion.div>
 
@@ -410,12 +410,12 @@ export default function HomePage() {
                 தூண் 3 · Pillar Three
               </span>
               <h3 className="text-2xl font-bold text-[#250d38] mt-1 mb-3 font-display">
-                {locale === "ta" ? "கொண்டாட்டம் · Fellowship" : "Kondatam · Celebration"}
+                {locale === "ta" ? "கொண்டாட்டம் · Fellowship" : "Kondatam · Community & Hangouts"}
               </h3>
               <p className="text-xs sm:text-sm text-purple-950/80 leading-relaxed mb-6 font-body">
                 {locale === "ta"
-                  ? "வாழை இலை விருந்து, தீபாவளி கொண்டாட்டங்கள், விளையாட்டுப் போட்டிகள் மற்றும் வாழ்நாள் நட்பு."
-                  : "Traditional banana-leaf festival feasts, Diwali celebrations, games on the Oval, and creating an inclusive cultural sanctuary for undergraduate and graduate Buckeyes."}
+                  ? "ஓவல் புல்வெளி பிக்னிக், தெருவோரச் சாப்பாடு, தீபாவளி கொண்டாட்டங்கள், விளையாட்டுப் போட்டிகள் மற்றும் வாழ்நாள் நட்பு."
+                  : "Relaxed lawn picnics on the Oval, authentic South Indian street food feasts, Diwali banquets, game nights, and a welcoming campus family for all Buckeyes."}
               </p>
             </div>
 

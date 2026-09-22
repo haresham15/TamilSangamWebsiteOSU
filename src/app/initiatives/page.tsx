@@ -19,16 +19,16 @@ export default function InitiativesPage() {
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left">
       {/* Header */}
       <div className="max-w-3xl mb-16">
-        <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2">
-          Paalai (பாலை) · Creative Journeys & Expressions
+        <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2 font-bold">
+          The Ohio State University · Student Expression & Community
         </span>
-        <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-serif mb-4">
-          {locale === "ta" ? "முன்னெடுப்புகள் · கலை & சமுதாயம்" : "Initiatives & Cultural Pillars"}
+        <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-display mb-4">
+          {locale === "ta" ? "முன்னெடுப்புகள் & கலைப்பிரிவுகள்" : "Initiatives & Campus Hubs"}
         </h1>
-        <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+        <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-body">
           {locale === "ta"
-            ? "ஆட்டம், பாட்டம், கொண்டாட்டம் என்ற மூன்று தூண்களின் வழியே ஓஹியோ வளாகத்தில் தமிழ்க் கலைகளையும் பண்பாட்டையும் முன்னெடுத்துச் செல்கிறோம்."
-            : "Anchored by our founding brand line — Aatam (Dance), Paatam (Music), and Kondatam (Celebration) — we empower student artists, preserve ancient traditions, and foster inclusive student community."}
+            ? "ஆட்டம், பாட்டம், கொண்டாட்டம் என்ற மூன்று தூண்களின் வழியே ஓஹியோ வளாகத்தில் மாணவர்கள் இணைந்து கலைகள், நல்ல உணவு மற்றும் நட்பை முன்னெடுத்துச் செல்கிறோம்."
+            : "Anchored by our core community spirit — Aatam (Dance), Paatam (Music), and Kondatam (Celebration) — we welcome students to explore movement, music, food, and inclusive campus fellowship."}
         </p>
       </div>
 
