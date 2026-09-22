@@ -189,7 +189,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
           {filteredItems.length === 0 ? (
             <div className="py-12 text-center text-slate-400">
               <p className="text-sm">{locale === "ta" ? "எந்த முடிவுகளும் கிடைக்கவில்லை" : "No matching results found."}</p>
-              <p className="text-xs text-slate-500 mt-1 font-mono">Try searching &apos;pongal&apos;, &apos;dance&apos;, or &apos;board&apos;</p>
+              <p className="text-xs text-slate-500 mt-1 font-mono">Try searching &apos;diwali&apos;, &apos;dance&apos;, or &apos;board&apos;</p>
             </div>
           ) : (
             filteredItems.map((item, idx) => {

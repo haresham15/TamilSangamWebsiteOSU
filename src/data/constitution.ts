@@ -56,9 +56,9 @@ export const CLUB_ACTIVITIES: GovernanceRule[] = [
     titleEn: "Flagship Cultural Festivals",
     titleTa: "முக்கிய கலாச்சார விழாக்கள்",
     descriptionEn:
-      "Hosts large-scale flagship cultural productions including Powerhouse Pongal, Diwali celebrations, live music concerts, and cinematic showcases.",
+      "Hosts large-scale flagship cultural productions including Pattas Tappas Diwali celebrations, live music concerts, and cinematic showcases.",
     descriptionTa:
-      "பொங்கல், தீபாவளி, நேரடி இசை நிகழ்ச்சிகள் மற்றும் கலாச்சார மேடை நிகழ்வுகளை பிரம்மாண்டமாக நடத்துதல்.",
+      "தீபாவளி கொண்டாட்டங்கள், நேரடி இசை நிகழ்ச்சிகள் மற்றும் கலாச்சார மேடை நிகழ்வுகளை பிரம்மாண்டமாக நடத்துதல்.",
     category: "activities",
   },
   {

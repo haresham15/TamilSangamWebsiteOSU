@@ -34,10 +34,10 @@ export default function AboutPage() {
     },
     {
       year: "2023",
-      titleEn: "Inaugural Powerhouse Pongal in Ohio Union",
-      titleTa: "முதல் பவர்ஹவுஸ் பொங்கல் பெருவிழா",
-      descriptionEn: "Transitioned from small community rooms to the grand Performance Hall at the Ohio Union, welcoming over 350 students with authentic earthen pot cooking.",
-      descriptionTa: "350க்கும் மேற்பட்ட மாணவர்களுடன் ஓஹியோ யூனியனில் மண்பானை பொங்கல் திருவிழா கோலாகலமாகத் தொடங்கியது.",
+      titleEn: "First Major Cultural Showcase in Ohio Union",
+      titleTa: "ஓஹியோ யூனியனில் முதல் பிரம்மாண்ட கலைவிழா",
+      descriptionEn: "Transitioned from small community rooms to the grand Performance Hall at the Ohio Union, welcoming over 350 students for classical arts and cultural banquets.",
+      descriptionTa: "350க்கும் மேற்பட்ட மாணவர்களுடன் ஓஹியோ யூனியனில் சங்கத்தின் முதல் பிரம்மாண்ட கலை மற்றும் கலாச்சார விழா கோலாகலமாகத் தொடங்கியது.",
     },
     {
       year: "2024",

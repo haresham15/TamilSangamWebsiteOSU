@@ -34,7 +34,7 @@ export const FAQS: FaqItem[] = [
     questionEn: "Are there any membership fees or dues?",
     questionTa: "உறுப்பினர் கட்டணம் ஏதேனும் உண்டா?",
     answerEn:
-      "General membership is 100% free! Anyone can attend our bi-weekly general body meetings, study nights, and open workshops without paying a cent. For ticketed flagship festivals (such as Powerhouse Pongal or Pattas Tappas), subsidized student-tier tickets are offered to BuckID holders.",
+      "General membership is 100% free! Anyone can attend our bi-weekly general body meetings, study nights, and open workshops without paying a cent. For ticketed flagship festivals (such as Pattas Tappas Diwali), subsidized student-tier tickets are offered to BuckID holders.",
     answerTa:
       "பொது உறுப்பினராக இணைய எந்தக் கட்டணமும் இல்லை! பொதுக் கூட்டங்கள், படிப்பு மாலைகள் மற்றும் பட்டறைகள் முற்றிலும் இலவசம். பெரிய விழாக்களுக்கு மட்டும் குறைந்த கட்டணத்தில் மாணவர் நுழைவுச்சீட்டுகள் வழங்கப்படுகின்றன.",
   },
@@ -84,7 +84,7 @@ export const FAQS: FaqItem[] = [
     questionEn: "Where do Sangam events take place on campus?",
     questionTa: "நிகழ்ச்சிகள் வளாகத்தில் எங்கு நடைபெறும்?",
     answerEn:
-      "Major events like Powerhouse Pongal and Pattas Tappas are hosted in the Ohio Union (Archie Griffin Ballroom and Performance Hall). General meetings, Tamil language workshops, and chai socials take place in Hagerty Hall, the RPAC, or the South Oval during pleasant weather.",
+      "Major events like Pattas Tappas Diwali are hosted in the Ohio Union (Archie Griffin Ballroom and Performance Hall). General meetings, Tamil language workshops, and chai socials take place in Hagerty Hall, the RPAC, or the South Oval during pleasant weather.",
     answerTa:
       "பெரிய திருவிழாக்கள் ஓஹியோ யூனியன் அரங்குகளில் நடைபெறும். சிறிய கூட்டங்கள், மொழிப் பட்டறைகள் மற்றும் சந்திப்புகள் ஹாகெர்ட்டி ஹால், RPAC அல்லது ஓவல் மைதானத்தில் நடைபெறும்.",
   },

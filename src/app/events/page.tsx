@@ -62,8 +62,8 @@ export default function EventsPage() {
           </h1>
           <p className="text-sm sm:text-base text-purple-950/80 leading-relaxed font-body font-medium">
             {locale === "ta"
-              ? "ஆட்டம், பாட்டம், மற்றும் கொண்டாட்டம்! ஓஹியோ யூனியனில் நடக்கும் பிரம்மாண்ட பொங்கல் பெருவிழா முதல் வளாக சந்திப்புகள் வரை."
-              : "Start the Aatam, Paatam, and Kondatam! From our 400+ student Powerhouse Pongal celebration to semester chai socials and dance auditions."}
+              ? "ஆட்டம், பாட்டம், மற்றும் கொண்டாட்டம்! ஓஹியோ யூனியனில் நடக்கும் பிரம்மாண்ட கலாச்சார விழாக்கள் முதல் வளாக சந்திப்புகள் வரை."
+              : "Start the Aatam, Paatam, and Kondatam! From our 400+ student flagship festivals and Diwali celebrations to semester chai socials and dance auditions."}
           </p>
         </div>
 
@@ -94,7 +94,7 @@ export default function EventsPage() {
             Current Season: தை மாதம் (Thai Month) · பராபவ ஆண்டு (Parabhava Year)
           </h3>
           <p className="text-xs text-purple-200/90 mt-1 font-body">
-            Thai 1 marks Pongal harvest, renewed beginnings, and gratitude to nature.
+            Thai 1 marks renewed beginnings, cultural unity, and gratitude to nature.
           </p>
         </div>
         <Link

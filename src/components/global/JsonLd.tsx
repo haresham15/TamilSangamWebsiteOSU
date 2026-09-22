@@ -40,7 +40,7 @@ export const OrganizationJsonLd: React.FC = () => {
     ],
     knowsAbout: [
       "Tamil Culture",
-      "Pongal Festival",
+      "Tamil Cultural Festivals",
       "Diwali Festival",
       "Bharatanatyam Dance",
       "Parai Attam Percussion",
@@ -61,17 +61,17 @@ export const EventJsonLd: React.FC = () => {
   const eventLd = {
     "@context": "https://schema.org",
     "@type": "Festival",
-    name: "Powerhouse Pongal 2027",
-    alternateName: "பவர்ஹவுஸ் பொங்கல் 2027",
+    name: "Pattas Tappas Diwali 2026",
+    alternateName: "பட்டாஸ் தப்பாஸ் தீபாவளி 2026",
     description:
-      "Join the Ohio State Tamil Sangam for our flagship harvest celebration! Featuring earthen pot cooking, live Parai percussion, classical and cinematic fusion dance, and traditional banana leaf harvest feasts.",
-    startDate: "2027-01-23T17:30:00-05:00",
-    endDate: "2027-01-23T22:00:00-05:00",
+      "Join the Ohio State Tamil Sangam for our flagship Diwali celebration! Featuring grand banquet dinner, live DJ, energetic dance showcases, and festive cultural celebrations in the Archie Griffin Ballroom.",
+    startDate: "2026-11-07T18:00:00-05:00",
+    endDate: "2026-11-07T22:30:00-05:00",
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: {
       "@type": "Place",
-      name: "Performance Hall, Ohio Union",
+      name: "Archie Griffin Grand Ballroom, Ohio Union",
       address: {
         "@type": "PostalAddress",
         streetAddress: "1739 N High St",
@@ -86,17 +86,14 @@ export const EventJsonLd: React.FC = () => {
       name: "OSU Tamil Sangam",
       url: "https://osutamilsangam.org",
     },
-    image: [
-      "https://lh3.googleusercontent.com/pw/AP1GczMd_Ca-bIl-USqHn_B4pu__WA4nAeb9pWcK56veZ3ojvKcEapqq5RkUOoqgjJAh7DCDzeGIDIh2zDdOlvSEuhj528GD2hsZKIzuAwP4gO91U7LUuKb3=w1200-h800-no",
-    ],
     offers: {
       "@type": "Offer",
       name: "Student General Admission",
-      price: "10.00",
+      price: "12.00",
       priceCurrency: "USD",
       availability: "https://schema.org/InStock",
-      url: "https://osutamilsangam.org/events/powerhouse-pongal-2027",
-      validFrom: "2026-11-01T00:00:00-05:00",
+      url: "https://osutamilsangam.org/events/pattas-tappas-diwali-2026",
+      validFrom: "2026-09-01T00:00:00-05:00",
     },
   };
 

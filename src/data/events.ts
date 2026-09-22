@@ -28,41 +28,6 @@ export interface SangamEvent {
 
 export const EVENTS: SangamEvent[] = [
   {
-    slug: "powerhouse-pongal-2027",
-    titleEn: "Powerhouse Pongal 2027",
-    titleTa: "பவர்ஹவுஸ் பொங்கல் 2027",
-    taglineEn: "The harvest festival brought to the heart of Ohio State.",
-    taglineTa: "ஓஹியோவின் மையத்தில் கொண்டாடப்படும் அறுவடைத் திருநாள்.",
-    date: "January 23, 2027",
-    time: "5:30 PM - 10:00 PM EST",
-    tamilDate: "தை 10, பராபவ ஆண்டு",
-    location: "Performance Hall, Ohio Union",
-    venueAddress: "1739 N High St, Columbus, OH 43210",
-    price: "$10 (Students with BuckID) / $15 (General)",
-    statusBadgeEn: "Upcoming Flagship Celebration",
-    statusBadgeTa: "முதன்மை அறுவடைப் பெருவிழா",
-    status: "upcoming",
-    academicYear: "2026-2027",
-    descriptionEn:
-      "Join the Ohio State Tamil Sangam for our flagship harvest celebration! Experience authentic sweet and ven pongal cooked in earthen pots, classical and cinematic fusion dances, live parai attam percussion, and our renowned traditional feast.",
-    descriptionTa:
-      "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் முதன்மை அறுவடைப் பெருவிழா! மண் பானையில் பொங்கும் வெண் பொங்கல், சர்க்கரைப் பொங்கல், பாரம்பரியப் பரதநாட்டியம், அதிரடிப் பறை ஆட்டம் மற்றும் தலைவாழை இலை விருந்துடன் கொண்டாடுங்கள்.",
-    dressCodeEn: "Traditional South Asian: Pattu Veshti / Kurta / Saree / Pattu Pavadai",
-    dressCodeTa: "பாரம்பரிய ஆடை: பட்டு வேஷ்டி, குர்தா, பட்டுப் புடவை",
-    schedule: [
-      { time: "5:30 PM", activityEn: "Doors Open & Welcome Kolam Floor Art", activityTa: "நுழைவு & வரவேற்பு கோலக் காட்சி" },
-      { time: "6:15 PM", activityEn: "Traditional Pongal Pot Boil-over Ceremony", activityTa: "மங்கலப் பானை பொங்கலிடுதல்" },
-      { time: "7:00 PM", activityEn: "Cultural Showcase (Dance, Parai, Song)", activityTa: "கலாச்சார கலை நிகழ்ச்சிகள்" },
-      { time: "8:30 PM", activityEn: "Authentic Banana Leaf Dinner", activityTa: "பாரம்பரிய தலைவாழை இலை விருந்து" },
-      { time: "9:15 PM", activityEn: "Gaana & Kuthu Open Dance Floor", activityTa: "கானா & குத்து நடனம்" },
-    ],
-    posterImage: "https://lh3.googleusercontent.com/pw/AP1GczMd_Ca-bIl-USqHn_B4pu__WA4nAeb9pWcK56veZ3ojvKcEapqq5RkUOoqgjJAh7DCDzeGIDIh2zDdOlvSEuhj528GD2hsZKIzuAwP4gO91U7LUuKb3=w1200-h800-no",
-    hoverImage: "https://lh3.googleusercontent.com/pw/AP1GczNF_2udq2E6IEtC1s-XVUq1UlKrrxNA-C9qkOWeup2hGMg4_Ko3Q9ht3_c1lkPum7Lgba0THDhb1XA0xYowvs8HWdckVTnrjuYhVIir9-CRqrRwocXs=w1200-h800-no",
-    ticketUrl: "https://linktr.ee/osutamilsangam",
-    interestFormUrl: "/join#performer",
-    tags: ["pongal", "harvest", "dance", "parai", "food"],
-  },
-  {
     slug: "pattas-tappas-diwali-2026",
     titleEn: "Pattas Tappas Diwali 2026",
     titleTa: "பட்டாஸ் தப்பாஸ் தீபாவளி 2026",

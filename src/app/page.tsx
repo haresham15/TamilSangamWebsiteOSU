@@ -100,8 +100,8 @@ export default function HomePage() {
               {/* Concrete, Non-Generic Copy Grounded in Real Campus Life */}
               <p className="max-w-2xl text-base sm:text-lg text-purple-950/85 leading-relaxed font-body font-medium">
                 {locale === "ta"
-                  ? "ஓஹியோ பல்கலைக்கழகத்தில் தமிழ் மொழியையும், கலைகளையும், பண்பாட்டையும் பேணிப் பாதுகாக்கும் முதன்மை மாணவர் அமைப்பு. மண்பானைப் பொங்கல் விருந்து முதல் வளாக நடனம், இசை மற்றும் தோழமை வரை அனைவரையும் அன்போடு வரவேற்கிறோம்."
-                  : "We bring together students, language, and the living arts of Tamilakam at Ohio State — from authentic earthen pot Pongal feasts and live Parai drumming to collegiate dance teams and lifelong campus friendships in Columbus."}
+                  ? "ஓஹியோ பல்கலைக்கழகத்தில் தமிழ் மொழியையும், கலைகளையும், பண்பாட்டையும் பேணிப் பாதுகாக்கும் முதன்மை மாணவர் அமைப்பு. தீபாவளிப் பெருவிழா முதல் வளாக நடனம், இசை மற்றும் தோழமை வரை அனைவரையும் அன்போடு வரவேற்கிறோம்."
+                  : "We bring together students, language, and the living arts of Tamilakam at Ohio State — from festive Diwali banquets and live Parai drumming to collegiate dance teams and lifelong campus friendships in Columbus."}
               </p>
 
               {/* Primary Action Buttons: Architectural Blocks with Real Physical Depth */}
@@ -112,7 +112,7 @@ export default function HomePage() {
                   className="px-7 py-3.5 btn-sangam text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2.5"
                 >
                   <Ticket className="w-4 h-4 text-[#55CCA2]" />
-                  <span>{locale === "ta" ? "பொங்கல் நுழைவுச்சீட்டு வாங்குக" : "Buy Pongal Tickets"}</span>
+                  <span>{locale === "ta" ? "விழா நுழைவுச்சீட்டு வாங்குக" : "Buy Event Tickets"}</span>
                 </Link>
 
                 <Link
@@ -175,7 +175,7 @@ export default function HomePage() {
         variant="mint"
       />
 
-      {/* 4. Flagship Festival Spotlight (Powerhouse Pongal) */}
+      {/* 4. Flagship Festival Spotlight */}
       <section className="relative py-20 px-4 sm:px-8 z-10 max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
           <div>
@@ -245,7 +245,7 @@ export default function HomePage() {
                 className="px-7 py-3 btn-sangam text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2"
               >
                 <Ticket className="w-4 h-4 text-[#55CCA2]" />
-                <span>{locale === "ta" ? "நுழைவுச்சீட்டு பெறுக" : `Buy Pongal Tickets (${nextEvent.price})`}</span>
+                <span>{locale === "ta" ? "நுழைவுச்சீட்டு பெறுக" : `Get Event Tickets (${nextEvent.price})`}</span>
               </Link>
 
               <Link
@@ -414,8 +414,8 @@ export default function HomePage() {
               </h3>
               <p className="text-xs sm:text-sm text-purple-950/80 leading-relaxed mb-6 font-body">
                 {locale === "ta"
-                  ? "வாழை இலை பொங்கல் விருந்து, தீபாவளி கொண்டாட்டங்கள், விளையாட்டுப் போட்டிகள் மற்றும் வாழ்நாள் நட்பு."
-                  : "Traditional banana-leaf Pongal harvest feasts, Diwali celebrations, games on the Oval, and creating an inclusive cultural sanctuary for undergraduate and graduate Buckeyes."}
+                  ? "வாழை இலை விருந்து, தீபாவளி கொண்டாட்டங்கள், விளையாட்டுப் போட்டிகள் மற்றும் வாழ்நாள் நட்பு."
+                  : "Traditional banana-leaf festival feasts, Diwali celebrations, games on the Oval, and creating an inclusive cultural sanctuary for undergraduate and graduate Buckeyes."}
               </p>
             </div>
 
