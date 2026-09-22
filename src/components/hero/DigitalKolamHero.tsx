@@ -386,8 +386,8 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         </svg>
       </div>
 
-      {/* 3. Subtle Mint Neon Architectural Contour of the Tamil Script */}
-      <div className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-85">
+      {/* 3. Soft Ambient Architectural Contour of the Tamil Script */}
+      <div className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-30">
         <svg
           viewBox={isMobile ? "0 0 500 400" : "0 0 1400 350"}
           className="w-full h-full object-contain"
@@ -402,7 +402,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
                 textAnchor="middle"
                 fill="none"
                 stroke="#55CCA2"
-                strokeWidth="2"
+                strokeWidth="1.2"
                 fontFamily="var(--font-mukta-malar), var(--font-tamil), sans-serif"
                 fontWeight="900"
                 fontSize="94"
@@ -422,7 +422,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
                 textAnchor="middle"
                 fill="none"
                 stroke="#55CCA2"
-                strokeWidth="2.5"
+                strokeWidth="1.5"
                 fontFamily="var(--font-mukta-malar), var(--font-tamil), sans-serif"
                 fontWeight="900"
                 fontSize="155"
@@ -436,7 +436,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         </svg>
       </div>
 
-      {/* 4. Foreground Interactive Content: Fades out as user scrolls into the vortex */}
+      {/* 4. Foreground Interactive Content: Fades out as user scrolls */}
       <div
         ref={foregroundRef}
         className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 pt-24 sm:pt-32 pb-8 flex flex-col justify-between h-full pointer-events-auto"
@@ -449,24 +449,23 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
           </div>
 
           <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-purple-200/70">
-            <Sparkles className="w-3.5 h-3.5 text-[#FFC526]" />
-            <span>GPU Vertex Shader · 60 FPS Engine</span>
+            <span>Columbus, OH · Est. 2026</span>
           </div>
         </div>
 
-        {/* Center Bilingual Inscription */}
-        <div className="my-auto py-4 space-y-3 text-center sm:text-left max-w-2xl">
+        {/* Center Bilingual Inscription: Protective Glass Scrim for Crisp Readability */}
+        <div className="my-auto py-6 sm:py-8 px-6 sm:px-8 space-y-3.5 text-center sm:text-left max-w-2xl bg-[#10061a]/85 backdrop-blur-md border border-purple-500/25 shadow-[6px_6px_0px_#250d38]">
           <p
             lang="ta"
             style={{ letterSpacing: 0 }}
-            className="text-base sm:text-xl font-bold text-[#55CCA2] font-tamil"
+            className="text-base sm:text-xl font-bold text-[#FFC526] font-tamil"
           >
             ஆட்டம் · பாட்டம் · கொண்டாட்டம்
           </p>
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold font-display tracking-tight text-white leading-[1.05]">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold font-display tracking-tight text-white leading-[1.06] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
             Start the Aatam, Paatam, and Kondatam!
           </h1>
-          <p className="text-xs sm:text-base text-purple-100/80 font-body leading-relaxed max-w-xl">
+          <p className="text-xs sm:text-base text-purple-100/90 font-body leading-relaxed max-w-xl drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
             {locale === "ta"
               ? "ஓஹியோ பல்கலைக்கழகத்தில் தமிழ் மாணவர்கள் மற்றும் அனைத்து நண்பர்களையும் ஒன்றிணைக்கும் கலாச்சாரப் பாலம். மொழி பேதமின்றி அனைவரும் அன்போடு வரவேற்கப்படுகிறீர்கள்!"
               : "A welcoming campus hub for Tamil culture, good food, casual hangouts, and collegiate celebration in Columbus. Open to all students, majors, and languages."}
@@ -504,9 +503,9 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
             </Link>
           </div>
 
-          {/* Scroll Down Indicator */}
+          {/* Scroll Indicator */}
           <div className="flex items-center gap-2 text-[11px] font-mono text-purple-300/60 uppercase tracking-widest">
-            <span>Scroll To Plunge Into Vortex</span>
+            <span>Scroll Down</span>
             <span className="w-1.5 h-1.5 bg-[#55CCA2] rounded-full animate-bounce" />
           </div>
         </div>

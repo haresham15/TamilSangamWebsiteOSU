@@ -527,17 +527,17 @@ export function GopuramZScroll() {
         )}
       </div>
 
-      {/* 2. Top Architectural Telemetry Header */}
+      {/* 2. Top Philosophical Header */}
       <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 pt-24 sm:pt-28 flex items-center justify-between pointer-events-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#250d38]/90 border border-[#b87333] text-[#FFC526] text-[10px] font-mono font-bold uppercase tracking-wider backdrop-blur-md shadow-[3px_3px_0px_#b87333]">
           <Sparkles className="w-3.5 h-3.5 text-[#FFC526]" />
-          <span>Dravidian Gopuram Parallax · ராஜகோபுரம்</span>
+          <span>Our Ethos & Heritage · பண்பாட்டு நோக்கு</span>
         </div>
 
         <div className="flex items-center gap-3 text-xs font-mono text-purple-200/80 bg-[#160a24]/80 px-3 py-1.5 border border-purple-500/30 backdrop-blur-md">
           <span className="flex items-center gap-1.5 text-[#55CCA2]">
             <Compass className="w-3.5 h-3.5" />
-            <span>Tala {activeTierIndex + 1} of 5</span>
+            <span>Pillar {activeTierIndex + 1} of 5</span>
           </span>
           <div className="w-20 sm:w-28 h-1.5 bg-white/10 rounded-full overflow-hidden border border-white/20">
             <div
@@ -599,16 +599,13 @@ export function GopuramZScroll() {
         })}
       </div>
 
-      {/* 4. Bottom Flight Telemetry Bar */}
+      {/* 4. Bottom Information Bar */}
       <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 pb-8 flex items-center justify-between text-[11px] font-mono text-purple-300/70 uppercase tracking-widest border-t border-purple-500/20 pt-4 pointer-events-auto">
-        <div className="flex items-center gap-2">
-          <Eye className="w-3.5 h-3.5 text-[#55CCA2]" />
-          <span>Camera Depth Z: {targetCameraZ.toFixed(1)}m</span>
-        </div>
+        <span className="text-[#55CCA2]">The Ohio State University Tamil Sangam</span>
 
         <div className="flex items-center gap-2">
-          <span className="hidden sm:inline">Scroll To Push Camera Through Gopuram Tiers</span>
-          <span className="w-2 h-2 bg-[#FFC526] rounded-full animate-ping" />
+          <span>Scroll To Explore</span>
+          <span className="w-1.5 h-1.5 bg-[#FFC526] rounded-full animate-bounce" />
         </div>
       </div>
     </div>

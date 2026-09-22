@@ -313,7 +313,7 @@ export function SilkHoverPillars() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#250d38] text-[#55CCA2] text-[10px] font-mono font-bold uppercase tracking-wider border border-[#55CCA2] shadow-[2px_2px_0px_#55CCA2] mb-3">
             <Sparkles className="w-3 h-3 text-[#FFC526]" />
-            <span>Kanchipuram Silk Fluid Reveals</span>
+            <span>Core Pillars · சங்கப் பண்பாடு</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display">
             {locale === "ta" ? "சங்கத்தின் நான்கு தூண்கள்" : "The Four Pillars of Sangam"}
@@ -322,7 +322,7 @@ export function SilkHoverPillars() {
         <p className="text-xs sm:text-sm font-mono text-purple-950/70 max-w-xs text-left sm:text-right">
           {locale === "ta"
             ? "கலை, இசை, கொண்டாட்டம் மற்றும் சமூகம் வழியே மாணவர்களை இணைக்கிறோம்."
-            : "Hover to unmask live collegiate performance media through iridescent silk ripples."}
+            : "Connecting Buckeyes through performing arts, music, celebratory gatherings, and community."}
         </p>
       </div>
 
