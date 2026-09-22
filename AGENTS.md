@@ -237,5 +237,32 @@ All complex animations MUST include conditional logic for `@media (max-width: 76
 
 ---
 
+## 14. Universal Development & AI Engineering Standards
 
+### 1. Agent Persona & Execution Logic
+- **Decouple Ideation from Execution**: Never modify code immediately upon receiving an ambiguous or high-level prompt. Always formulate a rigorous, multi-file implementation plan and wait for human architectural approval before modifying source files.
+- **Explicit over Implicit**: Strictly ban undocumented abstractions and clever "magic" one-liners. Write self-documenting code, practice strict DRY (Don't Repeat Yourself), and adhere to SOLID principles with small, single-responsibility components.
+- **Low-Cardinality Logging**: Structure all error logs using low-cardinality, indexed message templates with dedicated metadata objects (e.g., `logger.error({ err: error, context }, "Order transaction failed")`) rather than unbounded string interpolation.
 
+### 2. AI & Machine Learning Engineering Standards
+- **Deterministic Execution**: In all Python, PyTorch, NumPy, and Scikit-Learn pipelines, explicitly set random seeds (`torch.manual_seed(42)`, `np.random.seed(42)`, `random.seed(42)`) to ensure experiments, splits, and embedding vectors are fully reproducible.
+- **Defensive Tensor Operations**: Never assume tensor dimensions or batch shapes. Insert explicit assertions (e.g., `assert x.shape == (batch_size, channels, H, W)`) prior to feeding inputs into neural network layers or computer vision transforms.
+- **Resource Validation**: Implement device-agnostic execution checks (`torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")`) and call explicit garbage collection (`import gc; gc.collect(); torch.cuda.empty_cache()`) within intensive training or inference loops.
+
+### 3. Full-Stack & Frontend Guardrails
+- **The "Anti-Slop" UI Protocol**: Strictly eradicate AI UI Starter Pack aesthetics (pure `#000000` backgrounds, un-tinted grays, generic purple-to-indigo gradients, and nested identical `rounded-2xl` cards). Map all styling through Tailwind CSS v4 `@theme` directives and perceptually uniform OKLCH color palettes.
+- **Stateful Backend Security**: When performing database mutations (Supabase, PostgreSQL, DynamoDB, AWS), encapsulate operations within atomic transactions (`BEGIN ... COMMIT`) and enforce server-side security (Row Level Security, middleware authorization) over client-side filtering.
+
+### 4. Repeatable Workflow Trajectories
+- **`/deep-debug`**:
+  - *Step 1: Ingest & Analyze* — Read terminal logs, browser DevTools console errors, and stack traces to isolate root causes before altering code.
+  - *Step 2: Systematic Reproduction* — Construct a minimal reproduction hypothesis and place temporary diagnostic probes at critical boundaries.
+  - *Step 3: Verified Patching* — Implement a minimal surgical patch and verify with local test suites (`npx tsc --noEmit`, unit tests) before concluding.
+- **`/ml-experiment`**:
+  - *Step 1: Environment Integrity* — Maintain strictly pinned dependencies in `requirements.txt` or `environment.yml` to prevent environment rot.
+  - *Step 2: Dummy Data Verification* — Pass synthetic tensor batches through the pipeline to validate dimension math, gradients, and loss computations.
+  - *Step 3: Metrics Dashboard* — Provide real-time visualization tooling (Streamlit, W&B, TensorBoard) to trace losses, evaluation metrics, and API latency.
+- **`/autonomous-review`**:
+  - *Step 1: Accessibility & UI Audit* — Audit ARIA landmarks, semantic HTML structures, keyboard focusability, and color contrast.
+  - *Step 2: Security Sweep* — Perform automated secret audits, authorization middleware validation, and input sanitization checks.
+  - *Step 3: Architectural Summary* — Output high-density PR documentation breaking down problem, solution, verification proof, and technical debt risks.

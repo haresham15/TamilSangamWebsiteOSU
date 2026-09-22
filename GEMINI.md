@@ -41,11 +41,34 @@ This file sets project-specific runtime behavior for the Antigravity agent in `T
 - **Sequential Thinking MCP**: For multi-step architectures, refactoring, or algorithmic design, use the `sequential-thinking` server (`sequentialthinking` tool) to track stateful reasoning trees and revise invalidated assumptions.
 - **Cost-Efficiency Auditing**: Invoke `cost-efficiency-audit` to eliminate N+1 queries, un-cached API calls, unbounded LLM token usage, and serverless cold starts.
 
-## 6. Defensive Architecture & Enterprise Standards
+## 7. Universal Development & AI Engineering Constitution
 
-- **Data Loss Prevention**: The global `accidental-data-loss-prevention` skill strictly halts all un-scoped `DROP`, `TRUNCATE`, `DELETE`, or cloud `rm` commands, requiring affirmative human consent.
-- **Resource Attribution**: Mandatory Google Cloud metadata labeling via `enforcing-resource-attribution`.
-- **Python Isolation**: Virtual environment confinement via `managing-python-dependencies`.
-- **Pairwise LLM-as-a-Judge**: Pre-ship reviews must calibrate for verbosity, position, and comparison bias under the Bradley-Terry model.
-- **Columbus Enterprise Alignment**: Adhere to Fortune 500 zero-trust security postures and recruiter-ready case study documentation (`portfolio-documentation`).
+### 1. Agent Persona & Execution Logic
+- **Decouple Ideation from Execution**: The agent must never modify file logic immediately upon receiving a vague prompt. It must first generate a structured implementation plan and wait for human architectural approval before writing code.
+- **Explicit over Implicit**: Ban "magic" one-liners and undocumented abstractions. Strive for DRY (Don't Repeat Yourself) code and adhere strictly to SOLID principles, keeping components small, decoupled, and focused.
+- **Low-Cardinality Logging**: Mandate that all error handling includes robust, low-cardinality logging with stable message strings (e.g., `logger.error({ err: error }, "Failed to process transaction")`) rather than interpolated strings, ensuring optimal aggregation and debugging in APM tools.
+
+### 2. AI & Machine Learning Engineering Standards
+- **Deterministic Execution**: For all Python and AI model scripts, automatically set deterministic random seeds (`torch.manual_seed(42)`, `np.random.seed(42)`, `random.seed(42)`) to ensure model training, dataset partitioning, and vector embeddings are 100% reproducible.
+- **Defensive Tensor Operations**: Forbid assuming array or tensor shapes. Write explicit assertions (`assert x.shape == (batch_size, channels, H, W)`) before passing data through computer vision pipelines or neural network layers.
+- **Resource Validation**: Include device-agnostic execution checks (`torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")`) and implement memory-clearing garbage collection (`import gc; gc.collect(); torch.cuda.empty_cache()`) within iterative loops to prevent out-of-memory crashes.
+
+### 3. Full-Stack & Frontend Guardrails
+- **The "Anti-Slop" UI Protocol**: When scaffolding Next.js or React user interfaces, strictly forbid the AI Starter Pack aesthetics (pure black `#000000` backgrounds, generic indigo gradients `from-indigo-500 to-purple-600`, and oversized nested cards). Require CSS variables or Tailwind CSS `@theme` directives mapped to perceptually uniform OKLCH color spaces.
+- **Stateful Backend Security**: When generating database operations for platforms like Supabase, AWS, or PostgreSQL, wrap all multi-step mutations in atomic transactions (`BEGIN ... COMMIT`) and prioritize server-side protections (Row Level Security, Prisma middleware, verified JWT claims) over client-side filtering.
+
+### 4. Global Workflow Trajectories
+- **`/deep-debug`**:
+  - *Step 1 (Ingest & Analyze)*: Read terminal logs, console errors, and stack traces to isolate root cause before modifying code.
+  - *Step 2 (Systematic Reproduction)*: Formulate testable hypothesis and inject temporary logging statements to verify the exact failure point.
+  - *Step 3 (Verified Patching)*: Implement targeted, self-healing patch and execute local test suites/compilation checks before declaring fixed.
+- **`/ml-experiment`**:
+  - *Step 1 (Environment Integrity)*: Pin dependency versions in `requirements.txt` or `environment.yml` to prevent library drift.
+  - *Step 2 (Dummy Data Verification)*: Pass synthetic dummy batches through architecture to verify tensor shape compatibility and forward passes.
+  - *Step 3 (Metrics Dashboard)*: Stand up lightweight metrics visualization (Streamlit, Weights & Biases, or TensorBoard) to monitor losses and metrics.
+- **`/autonomous-review`**:
+  - *Step 1 (Accessibility & UI Audit)*: Audit ARIA labels, semantic HTML tags, keyboard focus rings, and contrast compliance.
+  - *Step 2 (Security Sweep)*: Scan for leaked secrets/API keys, missing authorization middleware, and un-sanitized database inputs.
+  - *Step 3 (Architectural Summary)*: Generate structured PR summary highlighting problem, approach, verification evidence, and debt assessment.
+
 

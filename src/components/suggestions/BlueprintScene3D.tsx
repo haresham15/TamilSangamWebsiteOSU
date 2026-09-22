@@ -106,12 +106,12 @@ function createBlueprintGroundTexture(): THREE.CanvasTexture | null {
   // Technical Title Stamp (South-East Corner)
   ctx.fillStyle = "rgba(248, 246, 240, 0.9)";
   ctx.font = "bold 22px monospace";
-  ctx.fillText("THE OHIO STATE UNIVERSITY · OHIO STADIUM ('THE SHOE')", 100, 130);
+  ctx.fillText("THE OHIO STATE UNIVERSITY · COMMUNITY BLUEPRINT ENGINE", 100, 130);
   ctx.font = "15px monospace";
   ctx.fillStyle = "rgba(255, 197, 38, 0.85)";
-  ctx.fillText("HORSESHOE ARCHITECTURAL WIREFRAME REPLICA · NORTH ROTUNDA & ARCADE ARCHES", 100, 158);
+  ctx.fillText("BUILDING OUR SANGAM LINE BY LINE · STUDENT VISION & SUGGESTION PLATFORM", 100, 158);
   ctx.fillStyle = "rgba(85, 204, 162, 0.85)";
-  ctx.fillText("OSU TAMIL SANGAM · SEC-04 BLUEPRINT CONSTRUCTION ENGINE · COLUMBUS, OH", 100, 182);
+  ctx.fillText("OSU TAMIL SANGAM · ARCHITECTURAL COMMUNITY METAPHOR · COLUMBUS, OH", 100, 182);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.wrapS = THREE.ClampToEdgeWrapping;
@@ -269,27 +269,26 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: number }
   );
 }
 
-// Steady Front-Angle Architectural Camera Controller
-function SteadyFrontCamera({ scrollProgress }: { scrollProgress: number }) {
+// Steady Axonometric / Isometric Architectural Camera Controller
+function SteadyIsometricCamera({ scrollProgress }: { scrollProgress: number }) {
   const { camera } = useThree();
 
-  // Fixed, steady front architectural perspective:
-  // Starts at front view looking into the open South end toward the North Rotunda.
-  // The camera stays steady while the lines rise up from the ground plane!
-  const basePos = useMemo(() => new THREE.Vector3(0.0, 4.4, 11.2), []);
-  const lookTarget = useMemo(() => new THREE.Vector3(0.0, 1.3, -1.2), []);
+  // Fixed, steady cinematic isometric architectural perspective (South-East 3/4 axonometric view):
+  // Positioned elevated and further out (X: 16.0, Y: 13.5, Z: 18.5) looking at stadium center (0.0, 1.4, -1.2).
+  // Delivers the classic 30° axonometric blueprint projection with monumental scale and spatial depth,
+  // revealing the entire horseshoe, outer Roman arches, tiered bowl, and North Rotunda in one steady frame.
+  const basePos = useMemo(() => new THREE.Vector3(16.0, 13.5, 18.5), []);
+  const lookTarget = useMemo(() => new THREE.Vector3(0.0, 1.4, -1.2), []);
 
   useFrame((state) => {
-    // Subtle, organic breathing parallax (max 0.2 units) to keep the frame alive,
-    // but the framing remains completely steady on The Shoe
-    const mouseX = state.mouse.x * 0.25;
-    const mouseY = state.mouse.y * 0.15;
-    const scrollDrift = (scrollProgress - 0.5) * 0.4;
+    // Subtle, organic breathing parallax to keep the scene alive
+    const mouseX = state.mouse.x * 0.35;
+    const mouseY = state.mouse.y * 0.20;
 
     const targetPos = new THREE.Vector3(
       basePos.x + mouseX,
       basePos.y + mouseY,
-      basePos.z + scrollDrift
+      basePos.z
     );
 
     camera.position.lerp(targetPos, 0.05);
@@ -536,7 +535,7 @@ export function BlueprintScene3D({
     <div className={`relative w-full h-full ${className}`}>
       <Canvas
         dpr={[1, 2]}
-        camera={{ position: [0, 4.4, 11.2], fov: 46 }}
+        camera={{ position: [16.0, 13.5, 18.5], fov: 32 }}
         gl={{
           antialias: true,
           alpha: false,
@@ -546,16 +545,16 @@ export function BlueprintScene3D({
       >
         {/* Deep Cyanotype Ink Sky Ground */}
         <color attach="background" args={["#0a0e22"]} />
-        <fog attach="fog" args={["#0a0e22", 14, 38]} />
+        <fog attach="fog" args={["#0a0e22", 32, 95]} />
 
         {/* Studio Architectural Lighting */}
-        <ambientLight intensity={1.2} color="#c8d6f5" />
-        <directionalLight position={[12, 16, 10]} intensity={2.2} color="#fff1d6" />
-        <directionalLight position={[-10, 12, -10]} intensity={1.1} color="#55CCA2" />
+        <ambientLight intensity={1.3} color="#c8d6f5" />
+        <directionalLight position={[20, 25, 15]} intensity={2.4} color="#fff1d6" />
+        <directionalLight position={[-15, 18, -15]} intensity={1.2} color="#55CCA2" />
 
         {/* 1. Large Cyanotype Blueprint Ground Plane (y = 0) */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-          <planeGeometry args={[26, 26]} />
+          <planeGeometry args={[56, 56]} />
           <meshStandardMaterial
             map={groundTexture || undefined}
             roughness={0.75}
@@ -580,8 +579,8 @@ export function BlueprintScene3D({
         {/* 5. Floating Luminescent Particles */}
         <FloatingParticles />
 
-        {/* 6. Steady Front-Angle Architectural Camera */}
-        <SteadyFrontCamera scrollProgress={scrollProgress} />
+        {/* 6. Steady Axonometric / Isometric Architectural Camera */}
+        <SteadyIsometricCamera scrollProgress={scrollProgress} />
       </Canvas>
     </div>
   );
