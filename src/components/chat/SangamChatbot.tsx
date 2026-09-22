@@ -243,19 +243,14 @@ export const SangamChatbot: React.FC = () => {
                 <div className="w-7 h-7 bg-[#4c2472] border border-[#55CCA2] flex items-center justify-center shrink-0">
                   <Bot className="w-4 h-4 text-[#55CCA2]" />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
+                  <div>
                     <h3 className="text-sm font-bold font-display text-white tracking-tight">
                       Nanba (நண்பா)
                     </h3>
-                    <span className="px-1.5 py-0.2 bg-emerald-950 border border-[#55CCA2] text-[9px] font-mono text-[#55CCA2] uppercase font-bold">
-                      Free Tier
-                    </span>
+                    <p className="text-[10px] font-mono text-purple-200/80">
+                      Your Sangam AI Friend · Verified Knowledge
+                    </p>
                   </div>
-                  <p className="text-[10px] font-mono text-purple-200/80">
-                    Your Sangam AI Friend · Verified Knowledge
-                  </p>
-                </div>
               </div>
 
               <div className="flex items-center gap-1.5">
