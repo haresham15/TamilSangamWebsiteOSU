@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Compass, Lightbulb, MapPin, X } from "lucide-react";
+import { Lightbulb, X } from "lucide-react";
 import { useLocale } from "@/context/LocaleContext";
 
 export interface BlueprintPin {
   id: string;
+  id2?: string;
   x: number;
   y: number;
   labelEn: string;
@@ -36,7 +37,7 @@ export const BLUEPRINT_PINS: BlueprintPin[] = [
     questionEn: "Have iconic photos, alumni memories, or architectural traditions you want documented under the rotunda? Tell us below.",
     questionTa: "புகைப்படங்கள், கல்லூரி நினைவுகள், அல்லது புதிய ஆவணப்படுத்தல் யோசனைகளைப் பகிரலாம்.",
     category: "Website feedback",
-  } as any,
+  },
   {
     id: "pin-pressbox",
     id2: "pin-union",
@@ -47,7 +48,7 @@ export const BLUEPRINT_PINS: BlueprintPin[] = [
     questionEn: "Propose new executive partnerships, cultural symposia, mentorship circles, or academic collaborations.",
     questionTa: "மாணவர் வழிகாட்டுதல், கல்வி உதவிகள், அல்லது புதிய கூட்டு முன்னெடுப்புகள் பற்றிப் பகிரலாம்.",
     category: "New initiative",
-  } as any,
+  },
 ];
 
 interface BlueprintSVGProps {

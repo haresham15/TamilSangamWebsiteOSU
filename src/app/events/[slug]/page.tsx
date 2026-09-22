@@ -5,7 +5,7 @@ import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { EVENTS } from "@/data/events";
-import { GALLERY_ALBUMS, PhotoItem } from "@/data/gallery";
+import { GALLERY_ALBUMS } from "@/data/gallery";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { 
@@ -14,16 +14,13 @@ import {
   MapPin, 
   Ticket, 
   Download, 
-  Check, 
   ArrowLeft, 
   ArrowRight,
   ExternalLink,
   Shirt, 
   Info,
   CheckCircle2,
-  Camera,
-  Eye,
-  Sparkles
+  Camera
 } from "lucide-react";
 
 export default function EventDetailPage() {

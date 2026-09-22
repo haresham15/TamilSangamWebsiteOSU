@@ -74,24 +74,19 @@ export function SuggestionForm({
 }: SuggestionFormProps) {
   const { locale } = useLocale();
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [prevCategoryProp, setPrevCategoryProp] = useState(initialCategory);
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [timestamp, setTimestamp] = useState<number>(0);
+  const [timestamp, setTimestamp] = useState<number>(() => (typeof window !== "undefined" ? Date.now() : 0));
+
+  // Sync category if prop changes from blueprint pin click (React recommended render-phase adjustment)
+  if (initialCategory !== prevCategoryProp) {
+    setPrevCategoryProp(initialCategory);
+    setSelectedCategory(initialCategory);
+  }
 
   const [state, formAction] = useActionState(submitSuggestion, initialState);
-
-  // Sync category if prop changes from blueprint pin click
-  useEffect(() => {
-    if (initialCategory) {
-      setSelectedCategory(initialCategory);
-    }
-  }, [initialCategory]);
-
-  // Set mount timestamp for anti-spam minimum fill time check
-  useEffect(() => {
-    setTimestamp(Date.now());
-  }, []);
 
   // Dispatch ephemeral pin to 3D scene when submission succeeds
   useEffect(() => {

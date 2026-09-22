@@ -158,7 +158,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search site command palette"
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+    >
       <div 
         className="box-ticket w-full max-w-2xl bg-[#160d26] border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] overflow-hidden text-left"
         onClick={(e) => e.stopPropagation()}
@@ -175,10 +181,15 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
               setSelectedIndex(0);
             }}
             placeholder={locale === "ta" ? "நிகழ்வுகள், குழு, பக்கங்கள் தேடுங்கள்..." : "Search events, people, pages, or FAQs..."}
+            aria-label="Search query"
             className="w-full bg-transparent text-white placeholder-slate-400 text-sm sm:text-base outline-none font-sans"
           />
           {query && (
-            <button onClick={() => setQuery("")} className="text-slate-400 hover:text-white p-1">
+            <button
+              onClick={() => setQuery("")}
+              aria-label="Clear search input"
+              className="text-slate-400 hover:text-white p-1"
+            >
               <X className="w-4 h-4" />
             </button>
           )}

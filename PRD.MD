@@ -1,4 +1,4 @@
-# Project Aintinai (ஐந்திணை) — OSU Tamil Sangam Website
+# (ஐந்திணை) — OSU Tamil Sangam Website
 
 **PRD v0.2 (Draft for board review)** · September 20, 2026 · Owner: Haresh
 **v0.2 change:** merges the strongest ideas from a second, Gemini-generated PRD (cinematic grading, magnetic/cursor UI, liquid-distortion roster, semantic photo search, cross-route image flights, UI sound design, and more). Full disposition of every idea, including what was changed or declined and why, is in **Appendix E**.

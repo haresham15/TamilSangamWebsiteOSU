@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useAudio } from "@/context/AudioContext";
@@ -100,6 +101,16 @@ const PILLARS: PillarItem[] = [
   },
 ];
 
+const subscribeTouch = (callback: () => void) => {
+  const mql = window.matchMedia("(hover: none)");
+  mql.addEventListener("change", callback);
+  return () => mql.removeEventListener("change", callback);
+};
+
+const getIsTouchSnapshot = () => {
+  return window.matchMedia("(hover: none)").matches;
+};
+
 function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
   const { locale } = useLocale();
   const { isLiteMode } = useLiteMode();
@@ -109,24 +120,20 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
   const mediaRef = useRef<HTMLDivElement>(null);
 
   const [isHovered, setIsHovered] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const isTouchDevice = useSyncExternalStore(
+    subscribeTouch,
+    getIsTouchSnapshot,
+    () => false
+  );
   const [inViewMobile, setInViewMobile] = useState(false);
 
   useEffect(() => {
-    // Phase 6 directive: detect touch devices (hover: none)
-    const touch = window.matchMedia("(hover: none)").matches;
-    setIsTouchDevice(touch);
-
-    if (touch && cardRef.current) {
+    if (isTouchDevice && cardRef.current) {
       // Mobile fallback: IntersectionObserver automatically fades in media as pillar scrolls into center
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              setInViewMobile(true);
-            } else {
-              setInViewMobile(false);
-            }
+            setInViewMobile(entry.isIntersecting);
           });
         },
         { threshold: 0.55 }
@@ -134,7 +141,7 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       observer.observe(cardRef.current);
       return () => observer.disconnect();
     }
-  }, []);
+  }, [isTouchDevice]);
 
   // Desktop cursor tracking math via GSAP quickTo
   useEffect(() => {
@@ -236,11 +243,12 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
           willChange: "clip-path, opacity",
         }}
       >
-        <img
+        <Image
           src={pillar.posterSrc}
           alt={pillar.titleEn}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
           className="w-full h-full object-cover scale-105 filter brightness-90 contrast-110"
-          loading="lazy"
         />
         {/* Iridescent Silk Color Wash Overlay */}
         <div

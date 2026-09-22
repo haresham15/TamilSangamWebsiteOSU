@@ -11,8 +11,6 @@ import {
   QrCode, 
   ArrowRight, 
   CheckCircle2,
-  Users,
-  Award,
   Scale,
   Loader2,
   AlertCircle

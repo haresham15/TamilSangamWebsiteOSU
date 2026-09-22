@@ -115,6 +115,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 onOpenSearch();
               }}
               title={t("control.search")}
+              aria-label="Open search command palette (⌘K)"
               className="w-9 h-9 border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[2px_2px_0px_#55CCA2] hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex items-center justify-center"
             >
               <Search className="w-4 h-4" />
@@ -127,6 +128,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 toggleLocale();
               }}
               title="Switch Language / மொழியை மாற்ற"
+              aria-label={locale === "en" ? "Switch language to Tamil" : "Switch language to English"}
               className="px-2.5 py-1.5 text-xs font-mono font-bold border-2 border-[#250d38] bg-white text-[#4c2472] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[2px_2px_0px_#55CCA2] transition-all flex items-center gap-1.5"
             >
               <span className="px-1 py-0.5 text-[10px] font-mono bg-[#250d38] text-[#55CCA2] font-bold">
@@ -145,6 +147,9 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                   setIsTinaiMenuOpen(!isTinaiMenuOpen);
                 }}
                 title={locale === "ta" ? meta.timeLabelTa : meta.timeLabelEn}
+                aria-label="Select Tamil landscape (Tinai) and time of day"
+                aria-expanded={isTinaiMenuOpen}
+                aria-haspopup="true"
                 className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-mono font-bold border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] transition-all"
               >
                 <span
@@ -225,6 +230,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
             <button
               onClick={toggleSound}
               title={isSoundEnabled ? t("control.soundOff") : t("control.soundOn")}
+              aria-label={isSoundEnabled ? "Mute interactive audio effects" : "Enable interactive audio effects"}
               className={`w-9 h-9 border-2 border-[#250d38] shadow-[2px_2px_0px_#4c2472] flex items-center justify-center transition-all ${
                 isSoundEnabled
                   ? "border-[#250d38] text-[#11694c] bg-[#55CCA2]"
@@ -240,6 +246,8 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 playClick();
                 setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
+              aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isMobileMenuOpen}
               className="lg:hidden w-9 h-9 border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] flex items-center justify-center transition-all"
             >
               {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}

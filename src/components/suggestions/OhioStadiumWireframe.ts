@@ -1,5 +1,3 @@
-import * as THREE from "three";
-
 /**
  * Procedural Wireframe Line Model of Ohio Stadium ("The Shoe") at The Ohio State University.
  * 
@@ -286,7 +284,6 @@ export function buildOhioStadiumLines(): StadiumGeometryData {
     // Semicircular arch curve (7 segments)
     const midX = (p1[0] + p2[0]) / 2;
     const midZ = (p1[2] + p2[2]) / 2;
-    const halfSpan = Math.hypot(p2[0] - p1[0], p2[2] - p1[2]) / 2;
     const archH = crownY - springY;
 
     const segs = 6;

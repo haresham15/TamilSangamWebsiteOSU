@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useMemo, useEffect, useState } from "react";
+import React, { useRef, useMemo, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
@@ -232,12 +232,17 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: number }
   const laserRingRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
+    const mesh = lineMeshRef.current;
+    if (!mesh) return;
+    const mat = mesh.material as THREE.ShaderMaterial;
+    if (!mat?.uniforms) return;
+
     const time = state.clock.getElapsedTime();
-    shaderMaterial.uniforms.uTime.value = time;
+    mat.uniforms.uTime.value = time;
     
     // Progress smoothly interpolates from 0 to 1 as user scrolls
     const p = Math.min(1, Math.max(0, scrollProgress));
-    shaderMaterial.uniforms.uProgress.value = p;
+    mat.uniforms.uProgress.value = p;
 
     // Move the laser construction scan plane to current elevation
     if (laserRingRef.current) {
@@ -270,7 +275,7 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: number }
 }
 
 // Steady Axonometric / Isometric Architectural Camera Controller
-function SteadyIsometricCamera({ scrollProgress }: { scrollProgress: number }) {
+function SteadyIsometricCamera() {
   const { camera } = useThree();
 
   // Fixed, steady cinematic isometric architectural perspective (South-East 3/4 axonometric view):
@@ -452,21 +457,36 @@ function NewlyDroppedPin({ pin }: { pin: EphemeralPin }) {
 }
 
 // Ambient Floating Luminescent Particles
+function generateFloatingParticles(count: number) {
+  let seed = 42;
+  const rand = () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
+  const pos = new Float32Array(count * 3);
+  const ph = new Float32Array(count);
+  for (let i = 0; i < count; i++) {
+    pos[i * 3] = (rand() - 0.5) * 14;
+    pos[i * 3 + 1] = rand() * 5 + 0.2;
+    pos[i * 3 + 2] = (rand() - 0.5) * 16 - 2;
+    ph[i] = rand() * Math.PI * 2;
+  }
+  return { positions: pos, phases: ph };
+}
+
+let cachedFloatingParticles: ReturnType<typeof generateFloatingParticles> | null = null;
+function getFloatingParticles(count: number) {
+  if (!cachedFloatingParticles) {
+    cachedFloatingParticles = generateFloatingParticles(count);
+  }
+  return cachedFloatingParticles;
+}
+
 function FloatingParticles() {
   const count = 100;
   const pointsRef = useRef<THREE.Points>(null);
 
-  const [positions, phases] = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const ph = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 14;
-      pos[i * 3 + 1] = Math.random() * 5 + 0.2;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 16 - 2;
-      ph[i] = Math.random() * Math.PI * 2;
-    }
-    return [pos, ph];
-  }, [count]);
+  const { positions, phases } = useMemo(() => getFloatingParticles(count), [count]);
 
   useFrame((state) => {
     if (!pointsRef.current) return;
@@ -496,6 +516,8 @@ function FloatingParticles() {
   );
 }
 
+const emptySubscribe = () => () => {};
+
 export function BlueprintScene3D({
   scrollProgress,
   isLiteMode = false,
@@ -503,12 +525,12 @@ export function BlueprintScene3D({
   onSelectPin,
   className = "",
 }: BlueprintScene3DProps) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
   const [hoveredPinId, setHoveredPinId] = useState<string | null>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const groundTexture = useMemo(() => {
     if (typeof window === "undefined") return null;
@@ -580,7 +602,7 @@ export function BlueprintScene3D({
         <FloatingParticles />
 
         {/* 6. Steady Axonometric / Isometric Architectural Camera */}
-        <SteadyIsometricCamera scrollProgress={scrollProgress} />
+        <SteadyIsometricCamera />
       </Canvas>
     </div>
   );

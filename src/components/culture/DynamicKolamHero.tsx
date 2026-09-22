@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 
 interface Point {
@@ -8,14 +8,16 @@ interface Point {
   y: number;
 }
 
+const emptySubscribe = () => () => {};
+
 export const DynamicKolamHero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState<Point>({ x: 0, y: 0 });
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;

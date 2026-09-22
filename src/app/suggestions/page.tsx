@@ -5,22 +5,17 @@ import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
-  Compass,
-  Sparkles,
   MapPin,
   ArrowDown,
   Layers,
-  Lightbulb,
-  Info,
   ShieldCheck,
-  CheckCircle2,
   Mail,
 } from "lucide-react";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { BlueprintScene3D } from "@/components/suggestions/BlueprintScene3D";
 import { SuggestionForm } from "@/components/suggestions/SuggestionForm";
-import { BlueprintPin, BLUEPRINT_PINS } from "@/components/suggestions/BlueprintSVG";
+import type { BlueprintPin } from "@/components/suggestions/BlueprintSVG";
 import { OFFICIAL_DISCLAIMER, CONTACT_EMAIL } from "@/lib/constants";
 
 export default function SuggestionsPage() {
@@ -59,10 +54,19 @@ export default function SuggestionsPage() {
           setScrollProgress(self.progress);
         },
       });
+
+      // Refresh ScrollTrigger and update Lenis limit for pin spacer
+      ScrollTrigger.refresh();
+      if (typeof window !== "undefined" && window.__lenis) {
+        window.__lenis.resize();
+      }
     }, containerRef);
 
     return () => {
       ctx.revert();
+      if (typeof window !== "undefined" && window.__lenis) {
+        window.__lenis.resize();
+      }
     };
   }, [isLiteMode]);
 
@@ -73,8 +77,8 @@ export default function SuggestionsPage() {
   };
 
   const scrollToForm = () => {
-    if (typeof window !== "undefined" && (window as any).__lenis) {
-      (window as any).__lenis.scrollTo(formSectionRef.current || "+=2400", {
+    if (typeof window !== "undefined" && window.__lenis) {
+      window.__lenis.scrollTo(formSectionRef.current || "+=2400", {
         offset: -40,
         duration: 1.2,
       });

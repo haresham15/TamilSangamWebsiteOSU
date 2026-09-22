@@ -2,6 +2,8 @@
 
 import React, { useEffect } from "react";
 
+import Link from "next/link";
+
 export default function GlobalError({
   error,
   reset,
@@ -33,12 +35,12 @@ export default function GlobalError({
             >
               Reload Application
             </button>
-            <a
+            <Link
               href="/"
               style={{ padding: "10px 18px", background: "#faf8f5", color: "#250d38", border: "2px solid #250d38", textDecoration: "none", fontWeight: "bold", fontSize: "12px", textTransform: "uppercase", display: "inline-block" }}
             >
               Go to Home
-            </a>
+            </Link>
           </div>
         </div>
       </body>

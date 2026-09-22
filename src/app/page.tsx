@@ -11,9 +11,6 @@ import { DigitalKolamHero } from "@/components/hero/DigitalKolamHero";
 import { SilkHoverPillars } from "@/components/home/SilkHoverPillars";
 import { WovenBorderMarquee } from "@/components/ui/WovenBorderMarquee";
 import {
-  AatamDanceGlyph,
-  PaatamMusicGlyph,
-  KondatamFestGlyph,
   FilterKaapiGlyph,
 } from "@/components/ui/KolamIcons";
 import { EVENTS } from "@/data/events";
@@ -21,13 +18,11 @@ import {
   Calendar, 
   MapPin, 
   Ticket, 
-  Users,
-  Sparkles,
-  ArrowRight
+  Sparkles
 } from "lucide-react";
 
 export default function HomePage() {
-  const { locale, t } = useLocale();
+  const { locale } = useLocale();
   const { playClick } = useAudio();
 
   // Highlight next flagship event

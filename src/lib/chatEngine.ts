@@ -1,4 +1,4 @@
-import { searchKnowledge, getKnowledgeBase } from "@/lib/knowledge";
+import { searchKnowledge } from "@/lib/knowledge";
 import { KnowledgeItem } from "@/data/knowledgeBase";
 
 export interface ChatMessage {

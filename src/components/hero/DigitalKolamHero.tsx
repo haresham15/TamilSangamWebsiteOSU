@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, { useRef, useEffect, useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useAudio } from "@/context/AudioContext";
-import { Ticket, Users, ArrowRight, Sparkles } from "lucide-react";
+import { Ticket, Users, ArrowRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
@@ -77,17 +77,22 @@ function generateKolamPoints(isMobile: boolean) {
     colors.push(c.r, c.g, c.b);
   }
 
-  // 3. Ambient Celestial Cosmic Dust Field
+  // 3. Ambient Celestial Cosmic Dust Field (Deterministic Seeded PRNG)
+  let seed = 42;
+  const rand = () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
   const remaining = baseCount - points.length / 3;
   for (let i = 0; i < remaining; i++) {
-    const r = Math.sqrt(Math.random()) * 9.5;
-    const theta = Math.random() * Math.PI * 2;
+    const r = Math.sqrt(rand()) * 9.5;
+    const theta = rand() * Math.PI * 2;
     const x = Math.cos(theta) * r;
     const y = Math.sin(theta) * r;
-    const z = (Math.random() - 0.5) * 4.0;
+    const z = (rand() - 0.5) * 4.0;
 
     points.push(x, y, z);
-    const c = Math.random() > 0.5 ? colorMint : colorGold;
+    const c = rand() > 0.5 ? colorMint : colorGold;
     colors.push(c.r, c.g, c.b);
   }
 
@@ -95,6 +100,15 @@ function generateKolamPoints(isMobile: boolean) {
     positions: new Float32Array(points),
     colors: new Float32Array(colors),
   };
+}
+
+const kolamPointsCache: Record<string, { positions: Float32Array; colors: Float32Array }> = {};
+function getKolamPoints(isMobile: boolean) {
+  const key = isMobile ? "mobile" : "desktop";
+  if (!kolamPointsCache[key]) {
+    kolamPointsCache[key] = generateKolamPoints(isMobile);
+  }
+  return kolamPointsCache[key];
 }
 
 // Custom GPU Vertex Shader (100% Hardware Accelerated, Zero CPU-to-GPU Re-upload Bottleneck)
@@ -141,25 +155,27 @@ const fragmentShader = `
   varying float vAlpha;
 
   void main() {
+    // Exact circular point rendering (Discard pixels outside r > 0.5)
     vec2 coord = gl_PointCoord - vec2(0.5);
     float dist = length(coord);
     if (dist > 0.5) discard;
 
-    float glow = smoothstep(0.5, 0.04, dist);
-    gl_FragColor = vec4(vColor, glow * vAlpha * 0.94);
+    // Soft radial falloff for natural silk glowing emissive look
+    float strength = pow(1.0 - (dist * 2.0), 1.6);
+    gl_FragColor = vec4(vColor, strength * vAlpha);
   }
 `;
 
 // GPU-Driven Shader Mesh Component
 function GPUKolamParticles({
-  scrollProgress,
+  scrollProgressRef,
   isMobile,
 }: {
-  scrollProgress: number;
+  scrollProgressRef: React.RefObject<number>;
   isMobile: boolean;
 }) {
   const pointsRef = useRef<THREE.Points>(null);
-  const data = useMemo(() => generateKolamPoints(isMobile), [isMobile]);
+  const data = useMemo(() => getKolamPoints(isMobile), [isMobile]);
 
   const uniforms = useMemo(
     () => ({
@@ -175,7 +191,7 @@ function GPUKolamParticles({
     if (pointsRef.current) {
       const mat = pointsRef.current.material as THREE.ShaderMaterial;
       mat.uniforms.uTime.value = clock.getElapsedTime();
-      mat.uniforms.uScrollProgress.value = scrollProgress;
+      mat.uniforms.uScrollProgress.value = scrollProgressRef.current;
     }
   });
 
@@ -206,16 +222,26 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
   const textGroupRef = useRef<SVGGElement>(null);
   const fullRevealRef = useRef<SVGRectElement>(null);
   const foregroundRef = useRef<HTMLDivElement>(null);
+  const contourRef = useRef<HTMLDivElement>(null);
 
-  const [scrollProgress, setScrollProgress] = useState<number>(0);
-  const [isMobile, setIsMobile] = useState<boolean>(false);
-  const [mounted, setMounted] = useState<boolean>(false);
+  const scrollProgressRef = useRef<number>(0);
+
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+
+  const isMobile = useSyncExternalStore(
+    (callback) => {
+      window.addEventListener("resize", callback);
+      return () => window.removeEventListener("resize", callback);
+    },
+    () => window.innerWidth < 768,
+    () => false
+  );
 
   useEffect(() => {
-    setMounted(true);
-    const mobileCheck = window.innerWidth < 768;
-    setIsMobile(mobileCheck);
-
     if (isLiteMode) return;
 
     gsap.registerPlugin(ScrollTrigger);
@@ -233,10 +259,23 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
           scrub: 1,
           anticipatePin: 1,
           onUpdate: (self) => {
-            setScrollProgress(self.progress);
+            scrollProgressRef.current = self.progress;
           },
         },
       });
+
+      // 0. Fade out soft ambient contour outline quickly (0 - 0.12)
+      if (contourRef.current) {
+        tl.to(
+          contourRef.current,
+          {
+            opacity: 0,
+            duration: 0.12,
+            ease: "power2.out",
+          },
+          0
+        );
+      }
 
       // 1. Fade out foreground UI elements quickly as scale begins (0 - 0.22)
       if (foregroundRef.current) {
@@ -256,8 +295,8 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
       // Focuses directly into the counter-space loop of the letter ம் in தமிழ்
       // Desktop: 'ம்' counter is centered at approx x=460, y=210 (in 1400x350 viewBox) -> ~33% 60%
       // Mobile: 'ழ்' counter is centered at approx x=250, y=160 -> 50% 40%
-      const originX = mobileCheck ? "50%" : "33%";
-      const originY = mobileCheck ? "40%" : "60%";
+      const originX = isMobile ? "50%" : "33%";
+      const originY = isMobile ? "40%" : "60%";
 
       tl.to(
         textGroupRef.current,
@@ -282,10 +321,21 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
           0.7
         );
       }
+
+      // Refresh ScrollTrigger and resize Lenis for the newly added pin spacer
+      ScrollTrigger.refresh();
+      if (typeof window !== "undefined" && window.__lenis) {
+        window.__lenis.resize();
+      }
     }, sectionRef);
 
-    return () => ctx.revert();
-  }, [isLiteMode]);
+    return () => {
+      ctx.revert();
+      if (typeof window !== "undefined" && window.__lenis) {
+        window.__lenis.resize();
+      }
+    };
+  }, [isLiteMode, isMobile]);
 
   return (
     <div
@@ -307,7 +357,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
             className="w-full h-full"
           >
             <ambientLight intensity={0.4} />
-            <GPUKolamParticles scrollProgress={scrollProgress} isMobile={isMobile} />
+            <GPUKolamParticles scrollProgressRef={scrollProgressRef} isMobile={isMobile} />
           </Canvas>
         )}
       </div>
@@ -387,13 +437,16 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
       </div>
 
       {/* 3. Soft Ambient Architectural Contour of the Tamil Script */}
-      <div className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-30">
+      <div
+        ref={contourRef}
+        className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-30"
+      >
         <svg
           viewBox={isMobile ? "0 0 500 400" : "0 0 1400 350"}
           className="w-full h-full object-contain"
           preserveAspectRatio="xMidYMid slice"
         >
-          <g style={{ opacity: Math.max(0, 1 - scrollProgress * 14) }}>
+          <g>
             {isMobile ? (
               <text
                 lang="ta"

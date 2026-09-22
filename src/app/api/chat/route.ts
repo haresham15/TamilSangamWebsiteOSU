@@ -50,17 +50,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    interface RawMessage {
+      role?: string;
+      content?: unknown;
+    }
+
     // Sanitize user message
-    const sanitizedMessages: ChatMessage[] = messages
+    const sanitizedMessages: ChatMessage[] = (messages as RawMessage[])
       .slice(-10)
       .filter(
-        (m: any) =>
-          m &&
-          typeof m.content === "string" &&
-          m.content.trim() &&
-          (m.role === "user" || m.role === "assistant" || m.role === "system")
+        (m): m is { role: "user" | "assistant" | "system"; content: string } =>
+          Boolean(
+            m &&
+            typeof m.content === "string" &&
+            m.content.trim() &&
+            (m.role === "user" || m.role === "assistant" || m.role === "system")
+          )
       )
-      .map((m: any) => ({
+      .map((m) => ({
         role: m.role,
         content: m.content.slice(0, 1000).trim(),
       }));

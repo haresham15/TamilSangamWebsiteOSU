@@ -5,27 +5,19 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { FAQS, FaqItem } from "@/data/faq";
+import { FAQS } from "@/data/faq";
 import { KnowledgeItem } from "@/data/knowledgeBase";
 import {
-  BookOpen,
-  HelpCircle,
   Search,
   ChevronDown,
   ChevronUp,
-  Sparkles,
   Users,
   Calendar,
   ShieldCheck,
   Music,
-  ExternalLink,
   PlusCircle,
-  Database,
   Trash2,
   CheckCircle2,
-  Bot,
-  Layers,
-  ArrowRight,
 } from "lucide-react";
 
 export default function UserGuideAndFaqPage() {
@@ -51,7 +43,7 @@ export default function UserGuideAndFaqPage() {
   const [kbStatus, setKbStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
 
   // Fetch live knowledge base from API
-  const fetchKnowledgeBase = async () => {
+  const refreshKnowledgeBase = async () => {
     try {
       const res = await fetch("/api/knowledge");
       const data = await res.json();
@@ -64,7 +56,22 @@ export default function UserGuideAndFaqPage() {
   };
 
   useEffect(() => {
-    fetchKnowledgeBase();
+    let ignore = false;
+    async function loadInitialKb() {
+      try {
+        const res = await fetch("/api/knowledge");
+        const data = await res.json();
+        if (!ignore && data.success && Array.isArray(data.items)) {
+          setKnowledgeList(data.items);
+        }
+      } catch (err) {
+        console.error("Failed to fetch knowledge base:", err);
+      }
+    }
+    loadInitialKb();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   const handleAddKnowledge = async (e: React.FormEvent) => {
@@ -93,7 +100,7 @@ export default function UserGuideAndFaqPage() {
         setNewContent("");
         setNewKeywords("");
         setIsAddingKb(false);
-        fetchKnowledgeBase();
+        refreshKnowledgeBase();
         setTimeout(() => setKbStatus("idle"), 3000);
       } else {
         setKbStatus("error");
@@ -113,7 +120,7 @@ export default function UserGuideAndFaqPage() {
       const data = await res.json();
       if (data.success) {
         playWoodClick();
-        fetchKnowledgeBase();
+        refreshKnowledgeBase();
       } else {
         alert(data.error || "Could not delete entry");
       }
@@ -468,7 +475,7 @@ export default function UserGuideAndFaqPage() {
                       </label>
                       <select
                         value={newCategory}
-                        onChange={(e) => setNewCategory(e.target.value as any)}
+                        onChange={(e) => setNewCategory(e.target.value as KnowledgeItem["category"])}
                         className="w-full px-3 py-2 bg-purple-50/50 border border-[#250d38] text-xs text-[#250d38]"
                       >
                         <option value="Events">Events</option>

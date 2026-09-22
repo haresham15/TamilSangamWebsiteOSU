@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLocale } from "@/context/LocaleContext";
@@ -8,28 +8,36 @@ import { useAudio } from "@/context/AudioContext";
 import { CheckCircle2, ArrowRight, Loader2, AlertCircle, ExternalLink } from "lucide-react";
 import { EVENTS } from "@/data/events";
 
+const getSavedEmail = () => {
+  if (typeof window === "undefined") return "";
+  try {
+    return localStorage.getItem("sangam_stay_subscribed") || "";
+  } catch {
+    return "";
+  }
+};
+
+const subscribeStorage = (callback: () => void) => {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+};
+
 export const Footer: React.FC = () => {
   const { locale, t } = useLocale();
   const { playClick, playBell } = useAudio();
+  const savedEmail = useSyncExternalStore(subscribeStorage, getSavedEmail, () => "");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [statusMessage, setStatusMessage] = useState("");
   const [isBuckeye, setIsBuckeye] = useState(false);
   const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
+  const [isDismissed, setIsDismissed] = useState(false);
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("sangam_stay_subscribed");
-      if (saved) {
-        setEmail(saved);
-        setStatus("success");
-        setStatusMessage("You're plugged into the Stay in Sangam loop!");
-        setIsBuckeye(saved.endsWith("@osu.edu") || saved.endsWith(".osu.edu"));
-      }
-    } catch {
-      // localStorage not accessible
-    }
-  }, []);
+  const isSubscribed = status === "success" || (status === "idle" && Boolean(savedEmail) && !isDismissed);
+  const activeStatusMessage =
+    statusMessage || (savedEmail ? "You're plugged into the Stay in Sangam loop!" : "");
+  const activeIsBuckeye =
+    status === "success" ? isBuckeye : (savedEmail.endsWith("@osu.edu") || savedEmail.endsWith(".osu.edu"));
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,14 +150,14 @@ export const Footer: React.FC = () => {
                 : "Get event announcements, food updates, and casual social reminders sent to your email."}
             </p>
 
-            {status === "success" ? (
+            {isSubscribed ? (
               <div className="p-3.5 bg-emerald-950/70 border-2 border-[#55CCA2] text-white space-y-2 shadow-[2px_2px_0px_#55CCA2]">
                 <div className="flex items-center gap-2 text-[#55CCA2] font-bold text-xs font-mono uppercase">
                   <CheckCircle2 className="w-4 h-4 shrink-0" />
-                  <span>{isBuckeye ? "Buckeye Verified · Connected" : "Subscribed · Welcome!"}</span>
+                  <span>{activeIsBuckeye ? "Buckeye Verified · Connected" : "Subscribed · Welcome!"}</span>
                 </div>
                 <p className="text-xs text-purple-100/90 font-body leading-relaxed">
-                  {statusMessage}
+                  {activeStatusMessage}
                 </p>
                 <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-emerald-800/60">
                   <a
@@ -164,6 +172,7 @@ export const Footer: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => {
+                      setIsDismissed(true);
                       setStatus("idle");
                       setEmail("");
                     }}

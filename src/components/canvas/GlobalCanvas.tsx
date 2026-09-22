@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState, Component, ErrorInfo } from "react";
-import dynamic from "next/dynamic";
+import React, { useRef, useSyncExternalStore, Component, ErrorInfo } from "react";
 import { useLiteMode } from "@/context/LiteModeContext";
 
 // Defensive WebGL Error Boundary to prevent crashes on unsupported devices
@@ -34,14 +33,16 @@ class CanvasErrorBoundary extends Component<
 import { Canvas } from "@react-three/fiber";
 import { View, Preload } from "@react-three/drei";
 
+const emptySubscribe = () => () => {};
+
 export function GlobalCanvas() {
   const { isLiteMode } = useLiteMode();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   if (!mounted || isLiteMode) return null;
 
@@ -68,7 +69,7 @@ export function GlobalCanvas() {
             alpha: true,
             powerPreference: "high-performance",
           }}
-          eventSource={typeof document !== "undefined" ? (document.body as any) : undefined}
+          eventSource={typeof document !== "undefined" ? (document.body as HTMLElement) : undefined}
           className="w-full h-full pointer-events-none"
           style={{ pointerEvents: "none" }}
         >

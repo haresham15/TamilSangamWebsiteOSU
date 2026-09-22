@@ -9,13 +9,11 @@ import { GopuramZScroll } from "@/components/about/GopuramZScroll";
 import { 
   BookOpen, 
   Heart, 
-  Users, 
   Search, 
   ChevronDown, 
   ChevronUp,
   Globe2,
-  Handshake,
-  ExternalLink
+  Handshake
 } from "lucide-react";
 
 export default function AboutPage() {

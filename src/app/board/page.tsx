@@ -4,12 +4,12 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS, BoardMember, SubcommitteeMember } from "@/data/board";
-import { CLUB_PURPOSE, CLUB_ACTIVITIES, MEMBERSHIP_GOVERNANCE } from "@/data/constitution";
+import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS, BoardMember } from "@/data/board";
+import { CLUB_PURPOSE, MEMBERSHIP_GOVERNANCE } from "@/data/constitution";
 import { HolographicCard } from "@/components/3d/HolographicCard";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { ArrowUpRight, ShieldCheck, Mail, ArrowRight, X, FileText, Users, Award, BookOpen } from "lucide-react";
+import { ArrowUpRight, ShieldCheck, Mail, ArrowRight, X, Users, Award } from "lucide-react";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },

@@ -1,24 +1,17 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import {
-  MessageSquare,
   X,
   Send,
-  Sparkles,
   Bot,
-  User,
   ArrowUpRight,
   PlusCircle,
   Database,
-  RefreshCw,
-  ExternalLink,
-  Info,
-  CheckCircle2,
 } from "lucide-react";
 
 interface ChatMessageUI {
@@ -79,7 +72,9 @@ export const SangamChatbot: React.FC = () => {
     }
   }, [messages, isOpen]);
 
-  const handleSendMessage = async (textToSend?: string) => {
+  const msgCounterRef = useRef(1);
+
+  const handleSendMessage = useCallback(async (textToSend?: string) => {
     const query = (textToSend || inputQuery).trim();
     if (!query || isLoading) return;
 
@@ -87,7 +82,7 @@ export const SangamChatbot: React.FC = () => {
     setInputQuery("");
 
     const userMessage: ChatMessageUI = {
-      id: `user-${Date.now()}`,
+      id: `user-${msgCounterRef.current++}`,
       role: "user",
       content: query,
       timestamp: "Just now",
@@ -113,7 +108,7 @@ export const SangamChatbot: React.FC = () => {
         setMessages((prev) => [
           ...prev,
           {
-            id: `assistant-${Date.now()}`,
+            id: `assistant-${msgCounterRef.current++}`,
             role: "assistant",
             content: data.message,
             citations: data.citations || [],
@@ -125,7 +120,7 @@ export const SangamChatbot: React.FC = () => {
         setMessages((prev) => [
           ...prev,
           {
-            id: `assistant-err-${Date.now()}`,
+            id: `assistant-err-${msgCounterRef.current++}`,
             role: "assistant",
             content:
               locale === "ta"
@@ -141,7 +136,7 @@ export const SangamChatbot: React.FC = () => {
       setMessages((prev) => [
         ...prev,
         {
-          id: `assistant-err-${Date.now()}`,
+          id: `assistant-err-${msgCounterRef.current++}`,
           role: "assistant",
           content:
             "Network error connecting to the knowledge engine. Please ensure your connection is active.",
@@ -151,7 +146,7 @@ export const SangamChatbot: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [inputQuery, isLoading, locale, messages, playClick]);
 
   const handleAddKnowledgeItem = async (e: React.FormEvent) => {
     e.preventDefault();

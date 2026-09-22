@@ -43,7 +43,7 @@ All palette colors are defined in native, perceptually uniform **OKLCH**, ensuri
 | `--color-sangam-lilac` | நீலாம்பரி (Soft Lilac) | `oklch(0.86 0.09 300)` | **Repeating Tamil script watermark** (`#e9d5ff`) |
 | `--color-sangam-cream` | வெண்முத்து (Warm Ivory) | `oklch(0.98 0.015 85)` | **Main lettering fill**; crisp ivory white (`#fffdf9`) |
 | `--color-sangam-gold` | பொன்மஞ்சள் (Solar Gold) | `oklch(0.82 0.18 85)` | Harvest radiance, festive Pongal celebration (`#f59e0b`) |
-| `--color-sangam-coral` | குங்குமச் சிவப்பு (Kumkumam Coral)| `oklch(0.62 0.22 25)` | Energetic dance accents, celebration red (`#f43f5e`) |
+| `--color-sangam-coral` | குங்குமச் சிவப்பு (Kumkumam Coral) | `oklch(0.62 0.22 25)` | Energetic dance accents, celebration red (`#f43f5e`) |
 
 ### The Five Landscape Themes (ஐந்திணை)
 

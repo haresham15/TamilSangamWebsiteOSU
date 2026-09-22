@@ -48,7 +48,7 @@ export const InteractiveEmblemMedallion: React.FC<InteractiveEmblemMedallionProp
     mouseY.set(0);
   };
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = () => {
     playBell(750);
     // Micro confetti burst anchored to click coordinates
     const rect = cardRef.current?.getBoundingClientRect();
@@ -93,7 +93,7 @@ export const InteractiveEmblemMedallion: React.FC<InteractiveEmblemMedallionProp
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          handleClick(e as unknown as React.MouseEvent);
+          handleClick();
         }
       }}
       role="button"

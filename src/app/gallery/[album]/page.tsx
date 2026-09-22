@@ -30,7 +30,7 @@ export default function EventInfoAndGalleryPage() {
   const params = useParams();
   const albumSlug = params?.album as string;
   const { locale } = useLocale();
-  const { playClick, playWoodClick } = useAudio();
+  const { playClick } = useAudio();
 
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
 

@@ -12,7 +12,6 @@ import {
   MapPin, 
   Clock, 
   Ticket, 
-  ArrowRight, 
   Star 
 } from "lucide-react";
 
@@ -36,6 +35,16 @@ const itemVariants: Variants = {
   },
 };
 
+import dynamic from "next/dynamic";
+
+const EventsArenaCanvas = dynamic(
+  () =>
+    import("@/components/events/EventsArenaCanvas").then(
+      (m) => m.EventsArenaCanvas
+    ),
+  { ssr: false }
+);
+
 export default function EventsPage() {
   const { locale } = useLocale();
   const { playClick } = useAudio();
@@ -50,9 +59,14 @@ export default function EventsPage() {
   const years = ["all", "2026-2027", "2025-2026"];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+    <div className="w-full text-left">
+      {/* 1. Procedural "Naa Ready" WebGL Arena (Events Section Hero) */}
+      <EventsArenaCanvas />
+
+      {/* 2. Events Catalogue Container */}
+      <div id="events-catalogue" className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-24 text-left">
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div className="max-w-2xl">
           <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] block mb-2 font-bold">
             The Ohio State University · Campus Community & Social Events
@@ -268,5 +282,6 @@ export default function EventsPage() {
         </div>
       </div>
     </div>
+  </div>
   );
 }

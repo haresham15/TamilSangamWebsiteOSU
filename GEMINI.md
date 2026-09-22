@@ -44,20 +44,24 @@ This file sets project-specific runtime behavior for the Antigravity agent in `T
 ## 7. Universal Development & AI Engineering Constitution
 
 ### 1. Agent Persona & Execution Logic
+
 - **Decouple Ideation from Execution**: The agent must never modify file logic immediately upon receiving a vague prompt. It must first generate a structured implementation plan and wait for human architectural approval before writing code.
 - **Explicit over Implicit**: Ban "magic" one-liners and undocumented abstractions. Strive for DRY (Don't Repeat Yourself) code and adhere strictly to SOLID principles, keeping components small, decoupled, and focused.
 - **Low-Cardinality Logging**: Mandate that all error handling includes robust, low-cardinality logging with stable message strings (e.g., `logger.error({ err: error }, "Failed to process transaction")`) rather than interpolated strings, ensuring optimal aggregation and debugging in APM tools.
 
 ### 2. AI & Machine Learning Engineering Standards
+
 - **Deterministic Execution**: For all Python and AI model scripts, automatically set deterministic random seeds (`torch.manual_seed(42)`, `np.random.seed(42)`, `random.seed(42)`) to ensure model training, dataset partitioning, and vector embeddings are 100% reproducible.
 - **Defensive Tensor Operations**: Forbid assuming array or tensor shapes. Write explicit assertions (`assert x.shape == (batch_size, channels, H, W)`) before passing data through computer vision pipelines or neural network layers.
 - **Resource Validation**: Include device-agnostic execution checks (`torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")`) and implement memory-clearing garbage collection (`import gc; gc.collect(); torch.cuda.empty_cache()`) within iterative loops to prevent out-of-memory crashes.
 
 ### 3. Full-Stack & Frontend Guardrails
+
 - **The "Anti-Slop" UI Protocol**: When scaffolding Next.js or React user interfaces, strictly forbid the AI Starter Pack aesthetics (pure black `#000000` backgrounds, generic indigo gradients `from-indigo-500 to-purple-600`, and oversized nested cards). Require CSS variables or Tailwind CSS `@theme` directives mapped to perceptually uniform OKLCH color spaces.
 - **Stateful Backend Security**: When generating database operations for platforms like Supabase, AWS, or PostgreSQL, wrap all multi-step mutations in atomic transactions (`BEGIN ... COMMIT`) and prioritize server-side protections (Row Level Security, Prisma middleware, verified JWT claims) over client-side filtering.
 
 ### 4. Global Workflow Trajectories
+
 - **`/deep-debug`**:
   - *Step 1 (Ingest & Analyze)*: Read terminal logs, console errors, and stack traces to isolate root cause before modifying code.
   - *Step 2 (Systematic Reproduction)*: Formulate testable hypothesis and inject temporary logging statements to verify the exact failure point.
@@ -70,5 +74,3 @@ This file sets project-specific runtime behavior for the Antigravity agent in `T
   - *Step 1 (Accessibility & UI Audit)*: Audit ARIA labels, semantic HTML tags, keyboard focus rings, and contrast compliance.
   - *Step 2 (Security Sweep)*: Scan for leaked secrets/API keys, missing authorization middleware, and un-sanitized database inputs.
   - *Step 3 (Architectural Summary)*: Generate structured PR summary highlighting problem, approach, verification evidence, and debt assessment.
-
-
