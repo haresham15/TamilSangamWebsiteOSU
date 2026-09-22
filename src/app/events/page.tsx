@@ -47,7 +47,7 @@ export default function EventsPage() {
     return evt.academicYear.includes(filterYear);
   });
 
-  const years = ["all", "2026-2027", "2025-2026", "2024-2025"];
+  const years = ["all", "2026-2027", "2025-2026"];
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left">
@@ -177,23 +177,33 @@ export default function EventsPage() {
                 </div>
               </div>
 
-              <div className="pt-4 flex flex-wrap items-center gap-4">
+              <div className="pt-4 flex flex-wrap items-center gap-3">
                 <Link
                   href={`/events/${evt.slug}`}
                   onClick={playClick}
-                  className="px-6 py-3 btn-sangam text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2"
+                  className="px-5 py-2.5 btn-sangam text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2"
                 >
                   <Ticket className="w-3.5 h-3.5 text-[#55CCA2]" />
-                  <span>{evt.status === "upcoming" ? `Get Tickets (${evt.price})` : "View Event Recap"}</span>
+                  <span>{evt.status === "upcoming" ? `Get Tickets (${evt.price})` : "Event Overview"}</span>
                 </Link>
 
-                <Link
-                  href={`/events/${evt.slug}`}
-                  onClick={playClick}
-                  className="px-5 py-3 btn-sangam-white text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5"
-                >
-                  <span>Full Schedule →</span>
-                </Link>
+                {evt.albumSlug ? (
+                  <Link
+                    href={`/gallery/${evt.albumSlug}`}
+                    onClick={playClick}
+                    className="px-5 py-2.5 btn-sangam-white text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5"
+                  >
+                    <span>Event Info & 5-Photo Story →</span>
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/events/${evt.slug}`}
+                    onClick={playClick}
+                    className="px-5 py-2.5 btn-sangam-white text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5"
+                  >
+                    <span>Full Schedule →</span>
+                  </Link>
+                )}
               </div>
             </div>
           </motion.div>

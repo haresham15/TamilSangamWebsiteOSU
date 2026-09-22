@@ -23,6 +23,8 @@ export interface SangamEvent {
   hoverImage: string;
   ticketUrl?: string;
   interestFormUrl?: string;
+  albumSlug?: string;
+  googlePhotosUrl?: string;
   tags: string[];
 }
 
@@ -67,16 +69,16 @@ export const EVENTS: SangamEvent[] = [
     titleTa: "பெர்ரி க்யூட் பிக்னிக் (இலையுதிர் சங்கமம்)",
     taglineEn: "Lawn blankets, fresh fruit, Uno battles, and campus kickbacks on the Oval.",
     taglineTa: "ஓவல் புல்வெளியில் பழங்கள், விளையாட்டுகள் மற்றும் புதிய நட்பு.",
-    date: "September 18, 2026",
+    date: "September 18, 2025",
     time: "3:30 PM - 6:30 PM EST",
-    tamilDate: "புரட்டாசி 2, பராபவ ஆண்டு",
-    location: "South Oval, OSU Campus",
+    tamilDate: "புரட்டாசி 2, விசுவாவசு ஆண்டு",
+    location: "South Oval, The Ohio State University",
     venueAddress: "South Oval, Columbus, OH 43210",
     price: "Free Admission (Open to all students)",
     statusBadgeEn: "Fall Welcome Kickback",
     statusBadgeTa: "இலையுதிர் கால வரவேற்பு",
-    status: "upcoming",
-    academicYear: "2026-2027",
+    status: "past",
+    academicYear: "2025-2026",
     descriptionEn:
       "Our annual fall welcome picnic on the South Oval! Kick back on checkered blankets with fresh strawberries and blueberries, pastries, card games, Uno, and friendly conversation. The easiest way to meet new friends and get connected on campus.",
     descriptionTa:
@@ -90,7 +92,43 @@ export const EVENTS: SangamEvent[] = [
     ],
     posterImage: "https://lh3.googleusercontent.com/pw/AP1GczPxXus-6uP7LIoxTDLr2AgeSboBWSr6f-dGCHtPo9UEFq5ma-J6R-eGsQR9sQOwZ_GWUviWZQjfpzbVvN0wMwhe2GqjILtW8nThJrxg1IR2WY-MU_uL=w1200-h800-no",
     hoverImage: "https://lh3.googleusercontent.com/pw/AP1GczOdehFuJLAxjkdIUuNU81_YAEVLVi6aCMMvZ_N__khC5gsOnJ4QG9IeoQ2y6T3r4VwEMSX4xHuoLD1nnOXfE-0JAL7sLvBUuQbucC4wHfd6byWzLyWF=w1200-h800-no",
+    albumSlug: "berry-cute-picnic",
+    googlePhotosUrl: "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7",
     tags: ["picnic", "oval", "free-food", "social", "casual", "games"],
+  },
+  {
+    slug: "pattas-tappas-2025",
+    titleEn: "Pattas Tappas Diwali Celebration 2025",
+    titleTa: "பட்டாஸ் தப்பாஸ் தீபாவளி 2025",
+    taglineEn: "High-octane performances, silk attire, live band, and midnight sparklers.",
+    taglineTa: "வண்ண ஆடைகள், நடனங்கள், நேரடி இசை மற்றும் தீபாவளி விளக்குகள்.",
+    date: "November 8, 2025",
+    time: "6:00 PM - 10:30 PM EST",
+    tamilDate: "ஐப்பசி 23, விசுவாவசு ஆண்டு",
+    location: "Archie Griffin Ballroom, Ohio Union",
+    venueAddress: "1739 N High St, Columbus, OH 43210",
+    price: "$10 (BuckID) / $15 (General)",
+    statusBadgeEn: "Co-hosted with Tamil Thalaivas",
+    statusBadgeTa: "கூட்டுத் தீபாவளித் திருவிழா",
+    status: "past",
+    academicYear: "2025-2026",
+    descriptionEn:
+      "Our flagship collaborative autumn celebration! Featuring dazzling traditional silk attire, student dance choreographies, live student band solos, full banquet dinner, and outdoor sparklers on the Ohio Union Plaza.",
+    descriptionTa:
+      "வண்ண ஆடைகள், அதிரடி நடனங்கள், நேரடி இசை மற்றும் தீபாவளி விளக்குகள் நிறைந்த அழகிய பெருவிழா.",
+    dressCodeEn: "Festive Attire: Silk Sarees, Kurtas, Sherwanis",
+    dressCodeTa: "பண்டிகை ஆடை: பட்டுச் சேலை, குர்தா",
+    schedule: [
+      { time: "6:00 PM", activityEn: "Red Carpet Welcome & Sweets", activityTa: "சிவப்புக் கம்பள வரவேற்பு" },
+      { time: "6:45 PM", activityEn: "Dance Choreographies & Live Band", activityTa: "நடனம் மற்றும் நேரடி இசை" },
+      { time: "8:00 PM", activityEn: "South Asian Banquet Feast", activityTa: "சுவையான இரவு விருந்து" },
+      { time: "9:15 PM", activityEn: "Sparklers on the Union Plaza", activityTa: "ஓஹியோ யூனியன் பிளாசாவில் மத்தாப்பு" },
+    ],
+    posterImage: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80",
+    hoverImage: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80",
+    albumSlug: "pattas-tappas-2025",
+    googlePhotosUrl: "https://linktr.ee/osutamilsangam",
+    tags: ["diwali", "dinner", "dance", "music", "party"],
   },
   {
     slug: "streetside-sapad",
@@ -121,6 +159,8 @@ export const EVENTS: SangamEvent[] = [
     ],
     posterImage: "https://lh3.googleusercontent.com/pw/AP1GczMxKNKBGCOMDjAiZVwQ9oawnxmUPdX0DsEqbQrryf7fXP84JBPXMz_Oe4zM6Ze-w9lmIwkW7fj63L3Z-DX2KEWvlOIsXgCLc8rfTuZLPklMAp488qxt=w1200-h800-no",
     hoverImage: "https://lh3.googleusercontent.com/pw/AP1GczNF_2udq2E6IEtC1s-XVUq1UlKrrxNA-C9qkOWeup2hGMg4_Ko3Q9ht3_c1lkPum7Lgba0THDhb1XA0xYowvs8HWdckVTnrjuYhVIir9-CRqrRwocXs=w1200-h800-no",
+    albumSlug: "streetside-sapad",
+    googlePhotosUrl: "https://photos.app.goo.gl/PnkceBh19PqytYQ89",
     tags: ["food", "sapad", "street-food", "chai", "social", "casual"],
   },
   {
@@ -129,16 +169,16 @@ export const EVENTS: SangamEvent[] = [
     titleTa: "நம்ம ஜாதரா (பண்பாட்டு சங்கமம்)",
     taglineEn: "Folk games, music stalls, street treats, and campus cross-cultural fun.",
     taglineTa: "விளையாட்டுகள், இசை, மற்றும் நண்பர்களின் உற்சாகத் திருவிழா.",
-    date: "March 26, 2025",
+    date: "March 26, 2026",
     time: "4:00 PM - 8:00 PM EST",
-    tamilDate: "பங்குனி 12, குரோதி ஆண்டு",
+    tamilDate: "பங்குனி 12, விசுவாவசு ஆண்டு",
     location: "RPAC Plaza / South Oval, OSU Campus",
     venueAddress: "337 Annie and John Glenn Ave, Columbus, OH 43210",
     price: "Free Admission (Open to all)",
     statusBadgeEn: "Inter-Club Carnival",
     statusBadgeTa: "கூட்டு கலாச்சாரத் திருவிழா",
     status: "past",
-    academicYear: "2024-2025",
+    academicYear: "2025-2026",
     descriptionEn:
       "A high-energy outdoor campus carnival collaboration between OSU Tamil Sangam and Telugu Thallulu featuring folk games, challenges, regional food stalls, and collegiate solidarity.",
     descriptionTa:
@@ -152,6 +192,8 @@ export const EVENTS: SangamEvent[] = [
     ],
     posterImage: "https://lh3.googleusercontent.com/pw/AP1GczMckOLKN2caITiN5K1TOGffHjjgJrfgVuOLzMp4vuZ6J7kgf1CQB-PChurpUnPfiexScEG44wZkP-PWanuwwdRE3STuUUNN6LLQoe-ioZJ3MeSMpkCC=w1200-h800-no",
     hoverImage: "https://lh3.googleusercontent.com/pw/AP1GczNuEGeshSWnp89wHaHufx1Bd8MRDPNdjflHj-6aJQfCxsJ5Hoi8E1RE19B2swHesxufteDymvuxItgG44_D9JVLj-sgjpJoTdLgrtXWIXRxe7GFKrKo=w1200-h800-no",
+    albumSlug: "namma-jathara",
+    googlePhotosUrl: "https://photos.app.goo.gl/NBTxg98ppmd9uhWX9",
     tags: ["carnival", "games", "collab", "outdoor", "free", "social"],
   },
 ];

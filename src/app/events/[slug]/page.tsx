@@ -5,6 +5,7 @@ import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { EVENTS } from "@/data/events";
+import { GALLERY_ALBUMS, PhotoItem } from "@/data/gallery";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { 
@@ -15,10 +16,14 @@ import {
   Download, 
   Check, 
   ArrowLeft, 
+  ArrowRight,
   ExternalLink,
   Shirt, 
   Info,
-  CheckCircle2
+  CheckCircle2,
+  Camera,
+  Eye,
+  Sparkles
 } from "lucide-react";
 
 export default function EventDetailPage() {
@@ -38,6 +43,10 @@ export default function EventDetailPage() {
   if (!event) {
     return notFound();
   }
+
+  const album = GALLERY_ALBUMS.find(
+    (a) => a.slug === event.albumSlug || a.eventSlug === event.slug
+  );
 
   const handleBookingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -230,7 +239,108 @@ END:VCALENDAR`;
         </div>
       </div>
 
-      {/* RSVP Notification & Group Rate Modal */}
+      {/* If Event has an Archive / Album: 5 Curated Photos Showcase */}
+      {album && album.photos.length > 0 && (
+        <div className="mt-8 mb-16 pt-12 border-t-2 border-white/10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-2 border-b-2 border-white/10">
+            <div>
+              <span className="text-xs font-mono uppercase font-bold text-[#55CCA2] flex items-center gap-1.5">
+                <Camera className="w-3.5 h-3.5" />
+                <span>{album.academicYear} Academic Year · Official Event Archive</span>
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white font-serif tracking-tight mt-1">
+                {locale === "ta" ? "நிகழ்ச்சி நினைவுகள் (5 புகைப்படக் கதை)" : "Event Memories · 5 Curated Moments"}
+              </h2>
+            </div>
+            <Link
+              href={`/gallery/${album.slug}`}
+              onClick={playClick}
+              className="text-xs font-mono font-bold text-[#55CCA2] hover:underline uppercase tracking-wider flex items-center gap-1.5 self-start sm:self-auto"
+            >
+              <span>Explore Dedicated Info Page</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          {/* 5-Photo Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
+            {album.photos.map((photo, idx) => (
+              <Link
+                key={photo.id}
+                href={`/gallery/${album.slug}`}
+                onClick={playClick}
+                className="group relative aspect-[4/3] border-2 border-white/20 overflow-hidden bg-black/40 shadow-[3px_3px_0px_rgba(85,204,162,0.3)] hover:border-[#55CCA2] hover:shadow-[4px_4px_0px_#55CCA2] transition-all"
+              >
+                <Image
+                  src={photo.imageUrl}
+                  alt={photo.titleEn}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  sizes="(max-width: 640px) 50vw, 200px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-between p-2 text-white">
+                  <div className="flex justify-end">
+                    <span className="p-1 bg-black/60 border border-white/30 text-[9px] font-mono text-[#55CCA2]">
+                      #{idx + 1}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono text-[#55CCA2] block truncate">
+                      {photo.titleEn}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Prominent Bottom Card: Google Photos Album Link */}
+      {(event.googlePhotosUrl || (album && album.googlePhotosUrl)) && (
+        <div className="box-ticket p-6 sm:p-8 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] mb-16 text-left">
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <span className="box-badge text-[10px] font-mono font-bold uppercase tracking-widest bg-[#55CCA2] text-[#1b0d28]">
+              COMPLETE EVENT ALBUM
+            </span>
+            <span className="text-xs font-mono text-slate-300">
+              {event.academicYear} Academic Year Archive
+            </span>
+          </div>
+
+          <h3 className="text-xl sm:text-3xl font-bold text-white font-serif mb-2">
+            Explore the Complete Photo Album on Google Photos
+          </h3>
+
+          <p className="text-xs sm:text-sm text-slate-300 mb-6 max-w-2xl leading-relaxed">
+            Looking for all photos from {event.titleEn}? All high-resolution captures, candid student portraits, and complete event memories are published in our official Google Photos album.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href={event.googlePhotosUrl || album?.googlePhotosUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={playClick}
+              className="inline-flex items-center gap-2 px-5 py-3 bg-[#55CCA2] text-[#1b0d28] font-mono font-bold text-xs uppercase tracking-wider border-2 border-[#1b0d28] shadow-[3px_3px_0px_#ffffff] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
+            >
+              <span>Open Google Photos Album</span>
+              <ExternalLink className="w-3.5 h-3.5 text-[#1b0d28]" />
+            </a>
+
+            {album && (
+              <Link
+                href={`/gallery/${album.slug}`}
+                onClick={playClick}
+                className="inline-flex items-center gap-2 px-5 py-3 bg-white/10 border-2 border-white/20 text-white font-mono font-bold text-xs uppercase tracking-wider hover:bg-white/20 transition-all"
+              >
+                <span>View Dedicated Event Info & Story Page</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
       {isRsvpOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
           <div className="box-ticket w-full max-w-md bg-[#160d26] p-6 sm:p-8 border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] relative text-left">

@@ -60,12 +60,10 @@ export default function GalleryPage() {
   // Extract all photos across albums
   const allPhotos = GALLERY_ALBUMS.flatMap((a) => a.photos);
 
-  // Academic Years
+  // Academic Years (All photo albums belong to 2025-2026 last academic year)
   const academicYears = [
-    { id: "all", labelEn: "All Archives", labelTa: "அனைத்து தொகுப்புகள்" },
-    { id: "2024-2025", labelEn: "2024–2025 (Berry Cute Picnic)", labelTa: "2024–2025 (பிக்னிக்)" },
-    { id: "2018-2019", labelEn: "2018–2019 (Sapad & Jathara)", labelTa: "2018–2019 (சாப்பாடு & ஜாதரா)" },
-    { id: "2025-2026", labelEn: "2025–2026 (Cultural Showcases)", labelTa: "2025–2026 (விழாக்கள்)" },
+    { id: "all", labelEn: "All Event Vaults", labelTa: "அனைத்து நிகழ்வுகள்" },
+    { id: "2025-2026", labelEn: "2025–2026 (Last Academic Year)", labelTa: "2025–2026 (கடந்த கல்வியாண்டு)" },
   ];
 
   // Tags
@@ -135,15 +133,15 @@ export default function GalleryPage() {
       {/* Header with High-Contrast Deep Plum Brand Typography */}
       <div className="max-w-3xl mb-12">
         <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold block mb-2">
-          The Ohio State University · Photo Archives
+          The Ohio State University · Event Info & Photo Vaults
         </span>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
-          {locale === "ta" ? "நினைவுகள் · வரலாற்று புகைப்படத் தொகுப்பு" : "Memories & Photo Archives"}
+          {locale === "ta" ? "நினைவுகள் · வரலாற்று புகைப்படத் தொகுப்பு" : "Memories & Event Info Pages"}
         </h1>
         <p className="text-base sm:text-lg text-purple-950/85 leading-relaxed font-body">
           {locale === "ta"
-            ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் வரலாற்றுத் திருவிழாக்கள், பிக்னிக், தெருவோரச் சாப்பாடு மற்றும் கலை நிகழ்ச்சிகளின் அசல் புகைப்படத் தொகுப்பு."
-            : "Explore our collegiate archive of past events at Ohio State — from the Fall Berry Cute Picnic and Streetside Sapad to Namma Jathara and flagship cultural festivals."}
+            ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் 2025–2026 கல்வியாண்டின் விழாக்கள், பிக்னிக், தெருவோரச் சாப்பாடு மற்றும் கலை நிகழ்ச்சிகளின் பிரத்யேக தகவல் பக்கங்கள் மற்றும் 5 புகைப்படக் கதைகள்."
+            : "Explore our collegiate archive of past events at Ohio State from the 2025–2026 academic year. Each event features a dedicated info page with 5 curated photographs capturing the full narrative, plus direct links to complete Google Photos albums."}
         </p>
       </div>
 
@@ -222,87 +220,111 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* 3. Featured Photo Albums Row */}
+      {/* 3. Featured Event Info & Photo Pages */}
       <div className="mb-16">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#250d38] font-display">
-            {locale === "ta" ? "சிறப்பு புகைப்படத் தொகுப்புகள்" : "Featured Photo Albums"}
-          </h2>
+          <div>
+            <span className="text-xs font-mono font-bold uppercase text-[#4c2472] block">
+              2025–2026 Academic Year Vaults
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#250d38] font-display">
+              {locale === "ta" ? "நிகழ்ச்சி தகவல் பக்கங்கள் & புகைப்படக் கதைகள்" : "Event Info Pages & Photo Stories"}
+            </h2>
+          </div>
           <span className="text-xs font-mono text-[#4c2472] font-bold">
-            [{filteredAlbums.length} {filteredAlbums.length === 1 ? "Album" : "Albums"}]
+            [{filteredAlbums.length} {filteredAlbums.length === 1 ? "Event" : "Events"}]
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredAlbums.map((album) => (
             <div
               key={album.slug}
-              className="border-2 border-[#250d38] bg-white p-5 flex flex-col justify-between group hover:border-[#55CCA2] hover:shadow-[6px_6px_0px_#55CCA2] transition-all duration-200 shadow-[4px_4px_0px_#4c2472]"
+              className="border-2 border-[#250d38] bg-white p-6 flex flex-col justify-between group hover:border-[#55CCA2] hover:shadow-[6px_6px_0px_#55CCA2] transition-all duration-200 shadow-[4px_4px_0px_#4c2472]"
             >
               <div>
+                {/* Album Header & Tags */}
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                  <span className="px-2.5 py-1 bg-[#250d38] text-[10px] font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
+                    {album.academicYear} Academic Year
+                  </span>
+                  <span className="text-[11px] font-mono font-bold text-purple-900/70">
+                    {album.eventDate}
+                  </span>
+                </div>
+
                 <Link
                   href={`/gallery/${album.slug}`}
                   onClick={playClick}
-                  className="block w-full h-48 relative border-2 border-[#250d38] overflow-hidden mb-4"
+                  className="block w-full h-52 relative border-2 border-[#250d38] overflow-hidden mb-3"
                 >
                   <Image
                     src={album.coverImage}
                     alt={album.titleEn}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, 400px"
+                    sizes="(max-width: 768px) 100vw, 500px"
                   />
-                  <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#250d38] border border-[#55CCA2] text-[10px] font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
-                    {album.academicYear}
-                  </div>
-                  <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-[#250d38] border border-white/40 text-[10px] font-mono text-white font-bold">
-                    {album.photoCount} Photos
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#250d38]/80 via-transparent to-transparent flex items-end p-3">
+                    <span className="text-xs font-mono text-white font-bold">
+                      {album.location.split(",")[0]} · {album.attendance}
+                    </span>
                   </div>
                 </Link>
 
-                <h3 className="text-lg font-bold text-[#250d38] font-display mb-1.5 group-hover:text-[#4c2472] transition-colors">
+                {/* 5-Photo Thumbnail Strip Preview */}
+                <div className="grid grid-cols-5 gap-1.5 mb-4">
+                  {album.photos.map((p, idx) => (
+                    <div
+                      key={p.id}
+                      className="relative aspect-[4/3] border border-[#250d38] overflow-hidden bg-purple-950/10"
+                    >
+                      <Image
+                        src={p.imageUrl}
+                        alt={p.titleEn}
+                        fill
+                        className="object-cover"
+                        sizes="80px"
+                      />
+                      <div className="absolute top-0.5 left-0.5 px-1 bg-[#250d38]/80 text-[8px] font-mono text-[#55CCA2] font-bold">
+                        {idx + 1}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <h3 className="text-xl font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
                   <Link href={`/gallery/${album.slug}`} onClick={playClick}>
                     {locale === "ta" ? album.titleTa : album.titleEn}
                   </Link>
                 </h3>
+                <p className="text-xs text-[#4c2472] font-tamil font-semibold mb-2">
+                  {album.titleTa}
+                </p>
                 <p className="text-xs text-purple-950/80 line-clamp-2 leading-relaxed mb-4 font-body">
                   {locale === "ta" ? album.descriptionTa : album.descriptionEn}
                 </p>
               </div>
 
-              <div className="pt-3 border-t-2 border-purple-200 flex items-center justify-between text-xs font-mono font-bold">
-                <div className="flex items-center gap-3">
-                  <Link
-                    href={`/gallery/${album.slug}`}
-                    onClick={playClick}
-                    className="text-[#4c2472] hover:text-[#250d38] hover:underline uppercase tracking-wider"
-                  >
-                    <span>Open Album →</span>
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      playWoodClick();
-                      setActiveAlbum(album.slug);
-                      const el = document.getElementById("photo-stream");
-                      if (el) el.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="text-[11px] text-[#11694c] hover:underline uppercase"
-                  >
-                    <span>Browse Stream</span>
-                  </button>
-                </div>
+              <div className="pt-4 border-t-2 border-purple-200 flex flex-wrap items-center justify-between gap-3 text-xs font-mono font-bold">
+                <Link
+                  href={`/gallery/${album.slug}`}
+                  onClick={playClick}
+                  className="px-4 py-2 bg-[#250d38] text-[#55CCA2] border border-[#250d38] hover:bg-[#3c1959] transition-colors uppercase tracking-wider flex items-center gap-1.5 shadow-[2px_2px_0px_#4c2472]"
+                >
+                  <span>View Event Info & Story →</span>
+                </Link>
 
                 {album.googlePhotosUrl && (
                   <a
                     href={album.googlePhotosUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[11px] text-purple-800/80 hover:text-[#4c2472] transition-colors"
+                    className="inline-flex items-center gap-1.5 text-purple-900 hover:text-[#250d38] hover:underline"
                     title="View on Google Photos"
                   >
                     <span>Google Photos</span>
-                    <ExternalLink className="w-3 h-3 text-[#55CCA2]" />
+                    <ExternalLink className="w-3.5 h-3.5 text-[#55CCA2]" />
                   </a>
                 )}
               </div>
