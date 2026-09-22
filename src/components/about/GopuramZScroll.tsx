@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
-import { Sparkles, Eye, Compass, Flame } from "lucide-react";
+import { Sparkles, Compass, Flame } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
@@ -18,7 +18,7 @@ const Canvas = dynamic(
 
 interface TierItem {
   id: string;
-  zPos: number;
+  talaIndex: number;
   subtitleEn: string;
   subtitleTa: string;
   titleEn: string;
@@ -31,7 +31,7 @@ interface TierItem {
 const TIERS: TierItem[] = [
   {
     id: "tier-1",
-    zPos: 0,
+    talaIndex: 0,
     subtitleEn: "Foundational Sangam Philosophy",
     subtitleTa: "சங்கத்தின் மூலக்கோட்பாடு",
     titleEn: "To Us All Towns Are Home, Everyone Our Kin",
@@ -44,7 +44,7 @@ const TIERS: TierItem[] = [
   },
   {
     id: "tier-2",
-    zPos: -15,
+    talaIndex: 1,
     subtitleEn: "Pillar of Belonging",
     subtitleTa: "நட்பின் அடையாளம்",
     titleEn: "A Campus Family Open to All Languages",
@@ -56,7 +56,7 @@ const TIERS: TierItem[] = [
   },
   {
     id: "tier-3",
-    zPos: -30,
+    talaIndex: 2,
     subtitleEn: "The Rhythm of Joy",
     subtitleTa: "உற்சாகத்தின் நடனம்",
     titleEn: "Aatam, Paatam, Kondatam",
@@ -68,7 +68,7 @@ const TIERS: TierItem[] = [
   },
   {
     id: "tier-4",
-    zPos: -45,
+    talaIndex: 3,
     subtitleEn: "Collegiate Fellowship",
     subtitleTa: "தோழமை & ஆதரவு",
     titleEn: "Lifelong Buckeye Community in Columbus",
@@ -80,7 +80,7 @@ const TIERS: TierItem[] = [
   },
   {
     id: "tier-5",
-    zPos: -60,
+    talaIndex: 4,
     subtitleEn: "Living Heritage",
     subtitleTa: "செம்மொழிச் செழுமை",
     titleEn: "Rooted in 2,500 Years of Classical Literature",
@@ -92,37 +92,172 @@ const TIERS: TierItem[] = [
   },
 ];
 
-// Architectural materials for Dravidian Temple PBR Rendering
-function useTempleMaterials() {
+// High-resolution procedural texture generator for Madurai Dravidian bas-relief carvings,
+// sacred Vels (வேல்), Lotus medallions (கமலம்), Trishulas, dentils, and column flutings.
+function createMaduraiReliefTexture(): THREE.CanvasTexture | null {
+  if (typeof document === "undefined") return null;
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 1024;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return null;
+
+  // Base stone tone (neutral grey for bump mapping)
+  ctx.fillStyle = "#808080";
+  ctx.fillRect(0, 0, 1024, 1024);
+
+  // 1. Horizontal Architectural Moldings (Pattika, Kumuda, and Frieze Bands)
+  for (let y = 0; y < 1024; y += 128) {
+    // Upper raised molding fillet
+    ctx.fillStyle = "#e0e0e0";
+    ctx.fillRect(0, y, 1024, 14);
+    // Lower recessed shadow groove
+    ctx.fillStyle = "#1e1e1e";
+    ctx.fillRect(0, y + 14, 1024, 10);
+
+    // Carved Dentil Blocks (miniature dental teeth moldings along cornices)
+    for (let x = 0; x < 1024; x += 32) {
+      ctx.fillStyle = "#c8c8c8";
+      ctx.fillRect(x + 3, y + 26, 24, 16);
+      ctx.fillStyle = "#2e2e2e";
+      ctx.fillRect(x + 27, y + 26, 5, 16);
+    }
+
+    // 2. Sacred Murugan Vel (வேல்) Carved Relief Symbols
+    for (let x = 48; x < 1024; x += 128) {
+      const vx = x;
+      const vy = y + 78;
+      // Vel Leaf Blade (இலை வடிவம்)
+      ctx.beginPath();
+      ctx.moveTo(vx, vy - 24); // Sharp apex point
+      ctx.bezierCurveTo(vx + 14, vy - 10, vx + 10, vy + 10, vx, vy + 16);
+      ctx.bezierCurveTo(vx - 10, vy + 10, vx - 14, vy - 10, vx, vy - 24);
+      ctx.fillStyle = "#f5f5f5";
+      ctx.fill();
+
+      // Vel Center Spine (மத்திய கோடு)
+      ctx.beginPath();
+      ctx.moveTo(vx, vy - 22);
+      ctx.lineTo(vx, vy + 16);
+      ctx.strokeStyle = "#333333";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Vel Shaft / Base Collar (தண்டு)
+      ctx.fillStyle = "#d0d0d0";
+      ctx.fillRect(vx - 3, vy + 16, 6, 14);
+    }
+
+    // 3. Sacred Lotus Rosettes / Medallions (கமலம் - 8 Petals)
+    for (let x = 112; x < 1024; x += 128) {
+      const lx = x;
+      const ly = y + 78;
+
+      // Outer petals
+      for (let p = 0; p < 8; p++) {
+        const angle = (p * Math.PI) / 4;
+        const px = lx + Math.cos(angle) * 14;
+        const py = ly + Math.sin(angle) * 14;
+        ctx.beginPath();
+        ctx.arc(px, py, 6, 0, Math.PI * 2);
+        ctx.fillStyle = "#dcdcdc";
+        ctx.fill();
+      }
+
+      // Center disc
+      ctx.beginPath();
+      ctx.arc(lx, ly, 7, 0, Math.PI * 2);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+
+      // Center cavity
+      ctx.beginPath();
+      ctx.arc(lx, ly, 3, 0, Math.PI * 2);
+      ctx.fillStyle = "#222222";
+      ctx.fill();
+    }
+  }
+
+  // 4. Vertical Architectural Column Fluting Grooves
+  for (let x = 0; x < 1024; x += 32) {
+    ctx.fillStyle = "#4a4a4a";
+    ctx.fillRect(x, 0, 4, 1024);
+    ctx.fillStyle = "#b0b0b0";
+    ctx.fillRect(x + 4, 0, 2, 1024);
+  }
+
+  // 5. Chiseled Stone Masonry Blocks
+  for (let row = 0; row < 16; row++) {
+    const ry = row * 64;
+    const shift = (row % 2) * 64;
+    for (let col = 0; col < 16; col++) {
+      const rx = col * 128 + shift;
+      ctx.strokeStyle = "#252525";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(rx, ry, 128, 64);
+    }
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(4, 4);
+  return texture;
+}
+
+// Architectural Materials matching the warm sunlit Madurai Meenakshi granite/sandstone Gopuram
+function useMaduraiMaterials() {
+  const reliefTexture = useMemo(() => createMaduraiReliefTexture(), []);
+
   return useMemo(() => {
-    // Dark weathered Dravidian temple granite (கருங்கல்)
-    const granite = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#1e1424"),
-      roughness: 0.88,
+    // Warm sunlit Dravidian golden sandstone (முக்கிய பொன்மணல் கல்)
+    const stoneSunlit = new THREE.MeshStandardMaterial({
+      color: new THREE.Color("#d8ad7a"),
+      roughness: 0.65,
+      metalness: 0.12,
+      bumpMap: reliefTexture || undefined,
+      bumpScale: 0.14,
+    });
+
+    // Weathered Dravidian granite body (கருங்கல் தளம்)
+    const stoneBody = new THREE.MeshStandardMaterial({
+      color: new THREE.Color("#b98e5e"),
+      roughness: 0.75,
+      metalness: 0.15,
+      bumpMap: reliefTexture || undefined,
+      bumpScale: 0.16,
+    });
+
+    // Deep aged relief crevices & shadow moldings (நிழல் பகுதி)
+    const stoneCrevice = new THREE.MeshStandardMaterial({
+      color: new THREE.Color("#6e4b2d"),
+      roughness: 0.92,
       metalness: 0.18,
+      bumpMap: reliefTexture || undefined,
+      bumpScale: 0.12,
     });
 
-    // Antique cast bronze (வெண்கலம்)
-    const bronze = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#6e3c1a"),
+    // Sacred temple copper / antique bronze (செப்பு வேலைப்பாடு)
+    const copperAccent = new THREE.MeshStandardMaterial({
+      color: new THREE.Color("#a35b2e"),
       roughness: 0.32,
-      metalness: 0.85,
+      metalness: 0.82,
     });
 
-    // Weathered sacred copper (செப்பு)
-    const copper = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#9b5123"),
-      roughness: 0.28,
-      metalness: 0.88,
-    });
-
-    // Gleaming polished gold leaf for Kalasams & Kudu crests (தங்கக் கலசம்)
+    // Gleaming 24k polished gold leaf for Kalasam spires & Kudu crests (தங்கக் கலசம்)
     const goldLeaf = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#FFC526"),
-      roughness: 0.18,
-      metalness: 0.95,
-      emissive: new THREE.Color("#553300"),
-      emissiveIntensity: 0.2,
+      color: new THREE.Color("#ffc83b"),
+      roughness: 0.14,
+      metalness: 0.96,
+      emissive: new THREE.Color("#664400"),
+      emissiveIntensity: 0.3,
+    });
+
+    // Dark interior niche cavity (வாசல் மற்றும் சாளர நிழல்)
+    const nicheInterior = new THREE.MeshStandardMaterial({
+      color: new THREE.Color("#1a100a"),
+      roughness: 0.95,
+      metalness: 0.05,
     });
 
     // Warm luminous diya oil flame
@@ -130,285 +265,571 @@ function useTempleMaterials() {
       color: new THREE.Color("#ffaa33"),
     });
 
-    return { granite, bronze, copper, goldLeaf, diyaGlow };
-  }, []);
+    return {
+      stoneSunlit,
+      stoneBody,
+      stoneCrevice,
+      copperAccent,
+      goldLeaf,
+      nicheInterior,
+      diyaGlow,
+    };
+  }, [reliefTexture]);
 }
 
-// Single Dravidian Tala (Architectural Story / Tier)
-function DravidianTala({
-  tierIndex,
-  zPos,
-  width,
-  height,
-  thickness,
-  isMobile,
+// 3D Carved Vel (வேல்) Sacred Emblem Plaque mounted on central torana lintels
+function VelEmblem({
+  position,
   materials,
 }: {
-  tierIndex: number;
-  zPos: number;
+  position: [number, number, number];
+  materials: ReturnType<typeof useMaduraiMaterials>;
+}) {
+  return (
+    <group position={position}>
+      {/* Stone backing medallion */}
+      <mesh material={materials.stoneCrevice}>
+        <cylinderGeometry args={[0.38, 0.38, 0.08, 16]} />
+      </mesh>
+      {/* Gold Rim */}
+      <mesh position={[0, 0, 0.04]} material={materials.copperAccent}>
+        <cylinderGeometry args={[0.34, 0.34, 0.04, 16]} />
+      </mesh>
+      {/* 3D Golden Vel Leaf Blade */}
+      <mesh position={[0, 0.06, 0.08]} rotation={[0, 0, 0]} material={materials.goldLeaf}>
+        <coneGeometry args={[0.16, 0.45, 4]} />
+      </mesh>
+      {/* Vel Shaft / Base Collar */}
+      <mesh position={[0, -0.16, 0.08]} material={materials.goldLeaf}>
+        <cylinderGeometry args={[0.04, 0.04, 0.22, 8]} />
+      </mesh>
+    </group>
+  );
+}
+
+// 3D Carved Lotus Medallion (கமலம்)
+function LotusMedallion({
+  position,
+  materials,
+  radius = 0.25,
+}: {
+  position: [number, number, number];
+  materials: ReturnType<typeof useMaduraiMaterials>;
+  radius?: number;
+}) {
+  return (
+    <group position={position}>
+      <mesh material={materials.stoneSunlit}>
+        <cylinderGeometry args={[radius, radius, 0.08, 16]} />
+      </mesh>
+      <mesh position={[0, 0, 0.04]} material={materials.goldLeaf}>
+        <cylinderGeometry args={[radius * 0.65, radius * 0.65, 0.05, 8]} />
+      </mesh>
+      <mesh position={[0, 0, 0.07]} material={materials.stoneCrevice}>
+        <sphereGeometry args={[radius * 0.25, 8, 8]} />
+      </mesh>
+    </group>
+  );
+}
+
+// 1. TALA 1: Colossal Entrance Gateway (Dvarashala / Base Tier)
+function MaduraiBaseTier({
+  width,
+  height,
+  depth,
+  materials,
+}: {
   width: number;
   height: number;
-  thickness: number;
-  isMobile: boolean;
-  materials: ReturnType<typeof useTempleMaterials>;
+  depth: number;
+  materials: ReturnType<typeof useMaduraiMaterials>;
 }) {
-  const diyaLightRef = useRef<THREE.PointLight>(null);
+  const diya1Ref = useRef<THREE.PointLight>(null);
+  const diya2Ref = useRef<THREE.PointLight>(null);
 
-  // Gentle procedural flame flicker
   useFrame(({ clock }) => {
-    if (diyaLightRef.current) {
-      const t = clock.getElapsedTime() * 6.0 + tierIndex * 1.5;
-      diyaLightRef.current.intensity = 1.6 + 0.35 * Math.sin(t) + 0.2 * Math.cos(t * 2.3);
-    }
+    const t = clock.getElapsedTime() * 5.0;
+    if (diya1Ref.current) diya1Ref.current.intensity = 1.8 + 0.3 * Math.sin(t);
+    if (diya2Ref.current) diya2Ref.current.intensity = 1.8 + 0.3 * Math.cos(t * 1.3);
   });
 
   const halfW = width / 2;
   const halfH = height / 2;
-  const colThickness = thickness * 1.1;
+  const portalW = width * 0.32;
+  const portalH = height * 0.85;
 
   return (
-    <group position={[0, 0, zPos]}>
-      {/* 1. ADHISTHANA (Plinth / Molded Base Beam) */}
-      <mesh position={[0, -halfH, 0]} material={materials.granite}>
-        <boxGeometry args={[width + thickness * 2.4, thickness * 1.4, thickness * 2.8]} />
+    <group position={[0, halfH, 0]}>
+      {/* A. Molded Stepped Adhisthana Plinth (அதிட்டானம்) */}
+      {/* Upana base terrace */}
+      <mesh position={[0, -halfH + 0.2, 0]} material={materials.stoneCrevice}>
+        <boxGeometry args={[width + 1.8, 0.4, depth + 1.6]} />
       </mesh>
-      {/* Stepped Base Cornice Molding */}
-      <mesh position={[0, -halfH + thickness * 0.9, 0]} material={materials.copper}>
-        <boxGeometry args={[width + thickness * 1.8, thickness * 0.5, thickness * 3.2]} />
+      {/* Jagati middle plinth */}
+      <mesh position={[0, -halfH + 0.6, 0]} material={materials.stoneSunlit}>
+        <boxGeometry args={[width + 1.2, 0.4, depth + 1.2]} />
       </mesh>
-
-      {/* 2. PRASTARA & KAPOTA (Overhanging Curved Eave Cornice at Top) */}
-      <mesh position={[0, halfH, 0]} material={materials.bronze}>
-        <boxGeometry args={[width + thickness * 3.2, thickness * 1.2, thickness * 3.4]} />
-      </mesh>
-      {/* Projecting Drip Eave (Kapota overhang) */}
-      <mesh position={[0, halfH - thickness * 0.7, 0]} material={materials.copper}>
-        <boxGeometry args={[width + thickness * 2.6, thickness * 0.4, thickness * 3.8]} />
+      {/* Kumuda rounded torus molding */}
+      <mesh position={[0, -halfH + 0.95, 0]} material={materials.stoneBody}>
+        <boxGeometry args={[width + 0.8, 0.3, depth + 0.9]} />
       </mesh>
 
-      {/* 3. STAMBHAS (Pilasters / Fluted Gateway Columns) */}
-      {/* Outer Left Pillar */}
-      <mesh position={[-halfW, 0, 0]} material={materials.granite}>
-        <boxGeometry args={[colThickness, height, thickness * 2.2]} />
+      {/* B. Main Gate Pylon Structure (இடது & வலது நுழைவாயில் கோபுர சுவர்) */}
+      {/* Left Gateway Pylon Wall */}
+      <mesh position={[-halfW + (halfW - portalW / 2) / 2, 0, 0]} material={materials.stoneSunlit}>
+        <boxGeometry args={[halfW - portalW / 2, height, depth]} />
       </mesh>
-      {/* Outer Right Pillar */}
-      <mesh position={[halfW, 0, 0]} material={materials.granite}>
-        <boxGeometry args={[colThickness, height, thickness * 2.2]} />
+      {/* Right Gateway Pylon Wall */}
+      <mesh position={[halfW - (halfW - portalW / 2) / 2, 0, 0]} material={materials.stoneSunlit}>
+        <boxGeometry args={[halfW - portalW / 2, height, depth]} />
       </mesh>
 
-      {/* Inner Portal Pilasters with Bodikai Corbel Capitals */}
+      {/* C. Deep Gateway Portal Arch & Recessed Tunnel (நுழைவு வாசல்) */}
+      {/* Recessed Dark Interior Ceiling/Back */}
+      <mesh position={[0, 0, -depth * 0.2]} material={materials.nicheInterior}>
+        <boxGeometry args={[portalW, portalH, depth * 0.7]} />
+      </mesh>
+
+      {/* Monumental Granite Door Jambs (துவார பாலகர் தூண்கள்) */}
+      <mesh position={[-portalW / 2 - 0.2, 0, depth / 2 + 0.1]} material={materials.stoneBody}>
+        <cylinderGeometry args={[0.3, 0.35, portalH, 16]} />
+      </mesh>
+      <mesh position={[portalW / 2 + 0.2, 0, depth / 2 + 0.1]} material={materials.stoneBody}>
+        <cylinderGeometry args={[0.3, 0.35, portalH, 16]} />
+      </mesh>
+
+      {/* Frontal Colonnade - 2 Additional Fluted Columns */}
+      <mesh position={[-halfW + 0.8, 0, depth / 2 + 0.2]} material={materials.stoneSunlit}>
+        <cylinderGeometry args={[0.26, 0.3, portalH, 16]} />
+      </mesh>
+      <mesh position={[halfW - 0.8, 0, depth / 2 + 0.2]} material={materials.stoneSunlit}>
+        <cylinderGeometry args={[0.26, 0.3, portalH, 16]} />
+      </mesh>
+
+      {/* Pushpapodikai Lotus Bud Bracket Capitals */}
+      {[-halfW + 0.8, -portalW / 2 - 0.2, portalW / 2 + 0.2, halfW - 0.8].map((colX, idx) => (
+        <group key={idx} position={[colX, portalH / 2 - 0.15, depth / 2 + 0.2]}>
+          <mesh material={materials.stoneSunlit}>
+            <boxGeometry args={[0.7, 0.3, 0.7]} />
+          </mesh>
+          <mesh position={[0, 0.2, 0.1]} material={materials.copperAccent}>
+            <coneGeometry args={[0.15, 0.25, 8]} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* Monumental Lintel Beam (உத்தராங்கம்) */}
+      <mesh position={[0, portalH / 2 + 0.3, depth / 2]} material={materials.stoneSunlit}>
+        <boxGeometry args={[portalW + 1.6, 0.6, 0.9]} />
+      </mesh>
+
+      {/* Sacred Vel (வேல்) Emblem mounted prominently above the main entrance! */}
+      <VelEmblem position={[0, portalH / 2 + 0.3, depth / 2 + 0.48]} materials={materials} />
+
+      {/* D. Overhanging Curved Cornice Eave (கபோதம் - Kapota) */}
+      <mesh position={[0, halfH, 0]} material={materials.stoneSunlit}>
+        <boxGeometry args={[width + 1.4, 0.5, depth + 1.2]} />
+      </mesh>
+      <mesh position={[0, halfH - 0.3, depth / 2 + 0.5]} material={materials.stoneCrevice}>
+        <boxGeometry args={[width + 1.2, 0.2, 0.4]} />
+      </mesh>
+
+      {/* E. Dual Sacred Brass Diyas flanking the entrance with warm light */}
+      {/* Left Diya */}
+      <group position={[-portalW / 2 - 0.9, -halfH + 1.2, depth / 2 + 0.4]}>
+        <mesh material={materials.copperAccent}>
+          <cylinderGeometry args={[0.26, 0.14, 0.22, 16]} />
+        </mesh>
+        <mesh position={[0, 0.16, 0]} material={materials.diyaGlow}>
+          <sphereGeometry args={[0.1, 12, 12]} />
+        </mesh>
+        <pointLight ref={diya1Ref} color="#FF9933" intensity={1.8} distance={18} position={[0, 0.25, 0]} />
+      </group>
+      {/* Right Diya */}
+      <group position={[portalW / 2 + 0.9, -halfH + 1.2, depth / 2 + 0.4]}>
+        <mesh material={materials.copperAccent}>
+          <cylinderGeometry args={[0.26, 0.14, 0.22, 16]} />
+        </mesh>
+        <mesh position={[0, 0.16, 0]} material={materials.diyaGlow}>
+          <sphereGeometry args={[0.1, 12, 12]} />
+        </mesh>
+        <pointLight ref={diya2Ref} color="#FF9933" intensity={1.8} distance={18} position={[0, 0.25, 0]} />
+      </group>
+    </group>
+  );
+}
+
+// 2. TALAS 2, 3, 4, 5: Stepped Architectural Tiers with Central Projecting Balconies & Shrines
+function MaduraiBalconyTier({
+  tierIndex,
+  yPos,
+  width,
+  height,
+  depth,
+  isMobile,
+  materials,
+}: {
+  tierIndex: number;
+  yPos: number;
+  width: number;
+  height: number;
+  depth: number;
+  isMobile: boolean;
+  materials: ReturnType<typeof useMaduraiMaterials>;
+}) {
+  const halfW = width / 2;
+  const halfH = height / 2;
+  const balconyW = width * 0.38;
+  const balconyH = height * 0.78;
+  const balconyD = depth * 0.35;
+
+  return (
+    <group position={[0, yPos + halfH, 0]}>
+      {/* A. Tier Base Molding (பிரஸ்தாரம் - Prastara) */}
+      <mesh position={[0, -halfH + 0.15, 0]} material={materials.stoneCrevice}>
+        <boxGeometry args={[width + 0.6, 0.3, depth + 0.6]} />
+      </mesh>
+      <mesh position={[0, -halfH + 0.4, 0]} material={materials.stoneSunlit}>
+        <boxGeometry args={[width + 0.4, 0.25, depth + 0.4]} />
+      </mesh>
+
+      {/* B. Main Wall Body (கர்ப்பக்கிருகம் சார்ந்த கோபுர உடல்) */}
+      <mesh position={[0, 0, 0]} material={materials.stoneBody}>
+        <boxGeometry args={[width, height, depth]} />
+      </mesh>
+
+      {/* C. CENTRAL PROJECTING BALCONY / WINDOW ALCOVE (As seen in the Madurai reference photo!) */}
+      <group position={[0, 0, depth / 2 + balconyD / 2]}>
+        {/* Balcony Cantilever Floor Shelf */}
+        <mesh position={[0, -halfH + 0.35, 0]} material={materials.stoneSunlit}>
+          <boxGeometry args={[balconyW + 0.4, 0.3, balconyD + 0.3]} />
+        </mesh>
+
+        {/* Recessed Window Opening / Niche Cavity */}
+        <mesh position={[0, 0.1, -balconyD * 0.3]} material={materials.nicheInterior}>
+          <boxGeometry args={[balconyW * 0.68, balconyH, balconyD * 0.6]} />
+        </mesh>
+
+        {/* Twin Colonnade Pillars Supporting the Balcony Arch */}
+        <mesh position={[-balconyW * 0.42, 0, balconyD * 0.35]} material={materials.stoneSunlit}>
+          <cylinderGeometry args={[0.18, 0.22, balconyH, 16]} />
+        </mesh>
+        <mesh position={[balconyW * 0.42, 0, balconyD * 0.35]} material={materials.stoneSunlit}>
+          <cylinderGeometry args={[0.18, 0.22, balconyH, 16]} />
+        </mesh>
+
+        {/* Balcony Balustrade in front of window with Lotus Medallion */}
+        <mesh position={[0, -halfH + 0.75, balconyD * 0.38]} material={materials.stoneBody}>
+          <boxGeometry args={[balconyW * 0.88, 0.55, 0.16]} />
+        </mesh>
+        <LotusMedallion position={[0, -halfH + 0.75, balconyD * 0.38 + 0.1]} materials={materials} radius={0.16} />
+
+        {/* Horseshoe Chaitya Torana Arch (கூடு - Kudu Arch) crowning the balcony */}
+        <mesh
+          position={[0, balconyH / 2 + 0.15, balconyD * 0.2]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          material={materials.stoneSunlit}
+        >
+          <cylinderGeometry
+            args={[balconyW * 0.36, balconyW * 0.36, 0.25, 20, 1, false, -Math.PI / 2, Math.PI]}
+          />
+        </mesh>
+
+        {/* Carved 3D Gold Lotus Sun Medallion in Arch Tympanum */}
+        <mesh
+          position={[0, balconyH / 2 + 0.15 + balconyW * 0.18, balconyD * 0.2 + 0.14]}
+          material={materials.goldLeaf}
+        >
+          <cylinderGeometry args={[0.22, 0.22, 0.08, 16]} />
+        </mesh>
+
+        {/* Miniature Gold Kalasam on the Balcony Peak */}
+        <mesh
+          position={[0, balconyH / 2 + 0.15 + balconyW * 0.38 + 0.18, balconyD * 0.2]}
+          material={materials.goldLeaf}
+        >
+          <coneGeometry args={[0.09, 0.35, 10]} />
+        </mesh>
+      </group>
+
+      {/* D. Overhanging Sloped Kapota Eave Cornice with Undercut Dentil Molding */}
+      <mesh position={[0, halfH - 0.15, 0]} material={materials.stoneSunlit}>
+        <boxGeometry args={[width + 1.1, 0.4, depth + 1.1]} />
+      </mesh>
+      <mesh position={[0, halfH - 0.4, depth / 2 + 0.45]} material={materials.stoneCrevice}>
+        <boxGeometry args={[width + 0.9, 0.18, 0.3]} />
+      </mesh>
+
+      {/* E. Row of Miniature Kudu Chaitya Dormer Arches along the upper cornice */}
       {!isMobile && (
-        <>
-          {/* Inner Left Pilaster */}
-          <mesh position={[-halfW * 0.5, 0, 0]} material={materials.bronze}>
-            <boxGeometry args={[colThickness * 0.7, height, thickness * 1.8]} />
-          </mesh>
-          {/* Inner Right Pilaster */}
-          <mesh position={[halfW * 0.5, 0, 0]} material={materials.bronze}>
-            <boxGeometry args={[colThickness * 0.7, height, thickness * 1.8]} />
-          </mesh>
-
-          {/* Bodikai Capital Brackets (Cantilever lotus corbels supporting eave) */}
-          <mesh position={[-halfW, halfH - thickness * 0.8, thickness * 0.9]} material={materials.copper}>
-            <boxGeometry args={[colThickness * 1.4, thickness * 0.8, thickness * 1.2]} />
-          </mesh>
-          <mesh position={[halfW, halfH - thickness * 0.8, thickness * 0.9]} material={materials.copper}>
-            <boxGeometry args={[colThickness * 1.4, thickness * 0.8, thickness * 1.2]} />
-          </mesh>
-        </>
-      )}
-
-      {/* 4. KUDU / NASIKA (Horseshoe Chaitya Dormer Arches along Cornice) */}
-      {!isMobile && (
-        <group position={[0, halfH + thickness * 0.8, thickness * 1.1]}>
-          {[-halfW * 0.65, -halfW * 0.22, halfW * 0.22, halfW * 0.65].map((kX, kIdx) => (
+        <group position={[0, halfH + 0.12, depth / 2 + 0.3]}>
+          {[-halfW * 0.8, -halfW * 0.52, halfW * 0.52, halfW * 0.8].map((kX, kIdx) => (
             <group key={kIdx} position={[kX, 0, 0]}>
-              {/* Horseshoe Arch Frame */}
-              <mesh material={materials.copper}>
-                <cylinderGeometry args={[0.32, 0.32, 0.22, 16, 1, false, 0, Math.PI]} />
+              <mesh rotation={[-Math.PI / 2, 0, 0]} material={materials.stoneSunlit}>
+                <cylinderGeometry
+                  args={[0.22, 0.22, 0.16, 14, 1, false, -Math.PI / 2, Math.PI]}
+                />
               </mesh>
-              {/* Gold Finial Crest on Arch */}
-              <mesh position={[0, 0.42, 0]} material={materials.goldLeaf}>
-                <coneGeometry args={[0.12, 0.35, 12]} />
+              <mesh position={[0, 0.32, 0]} material={materials.goldLeaf}>
+                <coneGeometry args={[0.07, 0.24, 8]} />
               </mesh>
             </group>
           ))}
         </group>
       )}
 
-      {/* 5. KUTA (Corner Miniature Shrines on Eave) */}
-      <group position={[-halfW - thickness * 0.8, halfH + thickness * 0.9, 0]}>
-        <mesh material={materials.granite}>
-          <boxGeometry args={[thickness * 1.6, thickness * 1.6, thickness * 1.6]} />
+      {/* F. FLANKING AEDICULAR SHRINES (கோபுர சிற்றாலயங்கள்: Kutas & Salas) */}
+      {/* 1. Left Intermediate Sala Shrine Bay */}
+      <group position={[-halfW * 0.68, 0, depth / 2 + 0.15]}>
+        <mesh material={materials.stoneBody}>
+          <boxGeometry args={[width * 0.16, height * 0.8, 0.35]} />
         </mesh>
-        <mesh position={[0, thickness * 1.2, 0]} material={materials.goldLeaf}>
-          <coneGeometry args={[thickness * 0.8, thickness * 1.2, 8]} />
+        {/* Sala Barrel Vault Roof */}
+        <mesh position={[0, height * 0.45, 0]} rotation={[0, 0, Math.PI / 2]} material={materials.copperAccent}>
+          <cylinderGeometry args={[0.24, 0.24, width * 0.18, 14, 1, false, 0, Math.PI]} />
         </mesh>
-      </group>
-      <group position={[halfW + thickness * 0.8, halfH + thickness * 0.9, 0]}>
-        <mesh material={materials.granite}>
-          <boxGeometry args={[thickness * 1.6, thickness * 1.6, thickness * 1.6]} />
-        </mesh>
-        <mesh position={[0, thickness * 1.2, 0]} material={materials.goldLeaf}>
-          <coneGeometry args={[thickness * 0.8, thickness * 1.2, 8]} />
+        <mesh position={[0, height * 0.45 + 0.32, 0]} material={materials.goldLeaf}>
+          <coneGeometry args={[0.07, 0.28, 8]} />
         </mesh>
       </group>
 
-      {/* 6. TEMPLE DIYA TORCH & FLICKERING LIGHT */}
-      <group position={[-halfW - 0.4, 0, thickness + 0.3]}>
-        {/* Diya Bowl */}
-        <mesh material={materials.bronze}>
-          <cylinderGeometry args={[0.22, 0.12, 0.18, 12]} />
+      {/* 2. Right Intermediate Sala Shrine Bay */}
+      <group position={[halfW * 0.68, 0, depth / 2 + 0.15]}>
+        <mesh material={materials.stoneBody}>
+          <boxGeometry args={[width * 0.16, height * 0.8, 0.35]} />
         </mesh>
-        {/* Flame Glow Mesh */}
-        <mesh position={[0, 0.14, 0]} material={materials.diyaGlow}>
-          <sphereGeometry args={[0.08, 10, 10]} />
+        {/* Sala Barrel Vault Roof */}
+        <mesh position={[0, height * 0.45, 0]} rotation={[0, 0, Math.PI / 2]} material={materials.copperAccent}>
+          <cylinderGeometry args={[0.24, 0.24, width * 0.18, 14, 1, false, 0, Math.PI]} />
         </mesh>
-        {/* Flickering Light source */}
-        <pointLight
-          ref={diyaLightRef}
-          color="#FF9933"
-          intensity={1.8}
-          distance={14}
-          decay={2}
-          position={[0, 0.2, 0]}
-        />
+        <mesh position={[0, height * 0.45 + 0.32, 0]} material={materials.goldLeaf}>
+          <coneGeometry args={[0.07, 0.28, 8]} />
+        </mesh>
       </group>
+
+      {/* 3. Four Corner Kuta Shrines with Domical Roofs & Golden Kalasams */}
+      {[-halfW - 0.25, halfW + 0.25].map((cX, cIdx) => (
+        <group key={cIdx} position={[cX, halfH + 0.35, depth * 0.3]}>
+          {/* Stepped Shrine Base */}
+          <mesh material={materials.stoneBody}>
+            <boxGeometry args={[0.65, 0.6, 0.65]} />
+          </mesh>
+          {/* Curved Cupola Domical Roof */}
+          <mesh position={[0, 0.45, 0]} material={materials.stoneSunlit}>
+            <coneGeometry args={[0.42, 0.55, 8]} />
+          </mesh>
+          {/* Golden Finial Kalasam */}
+          <mesh position={[0, 0.85, 0]} material={materials.goldLeaf}>
+            <coneGeometry args={[0.09, 0.35, 10]} />
+          </mesh>
+        </group>
+      ))}
     </group>
   );
 }
 
-// Topmost Pinnacle Tala: Barrel-Vaulted Shikhara with 5 Brass Kalasam Spire Urns
-function ShikharaApex({
-  zPos,
+// 3. TOPMOST PINNACLE APEX: Barrel-Vaulted Sala Shikhara with Madurai Swept Horns & 7 Golden Kalasams
+function MaduraiShikharaApex({
+  yPos,
   width,
-  height,
+  depth,
   materials,
 }: {
-  zPos: number;
+  yPos: number;
   width: number;
-  height: number;
-  materials: ReturnType<typeof useTempleMaterials>;
+  depth: number;
+  materials: ReturnType<typeof useMaduraiMaterials>;
 }) {
+  const halfW = width / 2;
+
+  // 7 Sacred Golden Kalasams along the crest ridge (ஏழு பொற்கலசங்கள்)
   const kalasamPositions = useMemo(() => {
-    const count = 5;
-    const spacing = (width * 0.8) / (count - 1);
-    const startX = -((width * 0.8) / 2);
+    const count = 7;
+    const span = width * 0.82;
+    const spacing = span / (count - 1);
+    const startX = -(span / 2);
     return Array.from({ length: count }, (_, i) => startX + i * spacing);
   }, [width]);
 
   return (
-    <group position={[0, 0, zPos]}>
-      {/* Barrel-Vaulted Sala Shikhara Roof Ridge */}
-      <mesh position={[0, height / 2 + 0.6, 0]} rotation={[0, 0, Math.PI / 2]} material={materials.bronze}>
-        <cylinderGeometry args={[1.1, 1.1, width * 0.95, 24, 1, false, 0, Math.PI]} />
+    <group position={[0, yPos, 0]}>
+      {/* A. Molded Architrave Lintel Plinth */}
+      <mesh position={[0, 0.25, 0]} material={materials.stoneSunlit}>
+        <boxGeometry args={[width + 0.6, 0.5, depth + 0.5]} />
       </mesh>
 
-      {/* Gilded Ridge Bar */}
-      <mesh position={[0, height / 2 + 1.72, 0]} material={materials.copper}>
-        <boxGeometry args={[width * 0.9, 0.22, 0.6]} />
+      {/* B. Monumental Barrel-Vaulted Sala Shikhara Roof (வளைந்த சிகர முகடு) */}
+      <mesh position={[0, 1.45, 0]} rotation={[0, 0, Math.PI / 2]} material={materials.stoneBody}>
+        <cylinderGeometry args={[1.35, 1.35, width * 0.98, 28, 1, false, 0, Math.PI]} />
       </mesh>
 
-      {/* Five Sacred Golden Kalasams (தங்கக் கலசங்கள்) */}
+      {/* C. SWEPT-BACK ORNAMENTAL SHIKHARA HORNS (சிகர நாசி கொம்புகள் - As seen in the reference Madurai photo!) */}
+      {/* Left Winged Horn (இடது கொம்பு) */}
+      <group position={[-halfW * 0.98, 1.55, 0]}>
+        {/* Swept Curved Horn Body */}
+        <mesh rotation={[0, 0, 0.5]} material={materials.stoneSunlit}>
+          <coneGeometry args={[0.42, 2.0, 16]} />
+        </mesh>
+        {/* Swept Crest Wing */}
+        <mesh position={[-0.45, 1.05, 0]} rotation={[0, 0, -0.65]} material={materials.goldLeaf}>
+          <coneGeometry args={[0.2, 0.85, 12]} />
+        </mesh>
+      </group>
+
+      {/* Right Winged Horn (வலது கொம்பு) */}
+      <group position={[halfW * 0.98, 1.55, 0]}>
+        {/* Swept Curved Horn Body */}
+        <mesh rotation={[0, 0, -0.5]} material={materials.stoneSunlit}>
+          <coneGeometry args={[0.42, 2.0, 16]} />
+        </mesh>
+        {/* Swept Crest Wing */}
+        <mesh position={[0.45, 1.05, 0]} rotation={[0, 0, 0.65]} material={materials.goldLeaf}>
+          <coneGeometry args={[0.2, 0.85, 12]} />
+        </mesh>
+      </group>
+
+      {/* D. Frontal Monumental Horseshoe Chaitya Gable Arch (மகா நாசிகை) */}
+      <mesh
+        position={[0, 1.45, depth / 2 + 0.1]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        material={materials.stoneSunlit}
+      >
+        <cylinderGeometry args={[0.95, 0.95, 0.35, 24, 1, false, -Math.PI / 2, Math.PI]} />
+      </mesh>
+      {/* Golden Sun Medallion in Gable Center */}
+      <mesh
+        position={[0, 1.45 + 0.45, depth / 2 + 0.3]}
+        material={materials.goldLeaf}
+      >
+        <cylinderGeometry args={[0.42, 0.42, 0.12, 24]} />
+      </mesh>
+
+      {/* E. Top Ridge Beam holding the 7 Golden Kalasams */}
+      <mesh position={[0, 2.82, 0]} material={materials.copperAccent}>
+        <boxGeometry args={[width * 0.88, 0.22, 0.5]} />
+      </mesh>
+
+      {/* F. SEVEN SACRED GOLDEN KALASAMS (ஏழு தங்கக் கலசங்கள்) */}
       {kalasamPositions.map((kX, idx) => (
-        <group key={idx} position={[kX, height / 2 + 1.85, 0]}>
-          {/* Kalasa Peetam (Lotus base) */}
+        <group key={idx} position={[kX, 2.95, 0]}>
+          {/* Kalasa Peetam (Lotus Pedestal Base) */}
           <mesh material={materials.goldLeaf}>
-            <cylinderGeometry args={[0.26, 0.32, 0.18, 16]} />
+            <cylinderGeometry args={[0.22, 0.28, 0.18, 16]} />
           </mesh>
-          {/* Kumbha (Sacred Golden Pot / Urn) */}
+          {/* Kumbha (Sacred Golden Vessel) */}
           <mesh position={[0, 0.26, 0]} material={materials.goldLeaf}>
-            <sphereGeometry args={[0.24, 16, 16]} />
+            <sphereGeometry args={[0.22, 16, 16]} />
           </mesh>
-          {/* Griva (Urn Neck) */}
+          {/* Griva (Slender Fluted Neck) */}
           <mesh position={[0, 0.48, 0]} material={materials.goldLeaf}>
-            <cylinderGeometry args={[0.12, 0.16, 0.2, 14]} />
+            <cylinderGeometry args={[0.1, 0.14, 0.22, 14]} />
           </mesh>
-          {/* Shikha (Sharp Needle Finial Spire reaching heavenward) */}
-          <mesh position={[0, 0.82, 0]} material={materials.goldLeaf}>
-            <coneGeometry args={[0.16, 0.65, 16]} />
+          {/* Shikha (Sharp Needle Finial Spire Pointing to Sky) */}
+          <mesh position={[0, 0.84, 0]} material={materials.goldLeaf}>
+            <coneGeometry args={[0.13, 0.7, 16]} />
           </mesh>
-          {/* Pinnacle Tip Point */}
-          <mesh position={[0, 1.2, 0]} material={materials.goldLeaf}>
+          {/* Pinnacle Jewel Highlight */}
+          <mesh position={[0, 1.22, 0]} material={materials.goldLeaf}>
             <sphereGeometry args={[0.04, 8, 8]} />
           </mesh>
         </group>
       ))}
 
-      {/* Apex Celestial Spotlight */}
-      <pointLight color="#FFE8A3" intensity={2.8} distance={20} position={[0, height / 2 + 3, 2]} />
+      {/* Apex Celestial Spotlight shining upon the golden Kalasams */}
+      <pointLight color="#FFE5A3" intensity={3.5} distance={26} position={[0, 5.5, 4]} />
     </group>
   );
 }
 
-// Complete 3D Dravidian Gopuram Fractal Hierarchy
-function DravidianGopuramScene({
-  isMobile,
-}: {
-  isMobile: boolean;
-}) {
-  const materials = useTempleMaterials();
+// Complete 3D Madurai Raja Gopuram Monument (Towering Dravidian Stepped Architecture)
+function MaduraiGopuramMonument({ isMobile }: { isMobile: boolean }) {
+  const materials = useMaduraiMaterials();
 
-  // 6 Tiered Fractal Proportions adhering to classical Dravidian Agamic proportions
-  const talaConfigs = [
-    { z: 0, w: 9.6, h: 7.2, t: 0.42 },   // Tier 1: Gateway Torana
-    { z: -15, w: 8.2, h: 6.2, t: 0.38 }, // Tier 2
-    { z: -30, w: 6.8, h: 5.2, t: 0.34 }, // Tier 3
-    { z: -45, w: 5.4, h: 4.2, t: 0.30 }, // Tier 4
-    { z: -60, w: 4.0, h: 3.2, t: 0.26 }, // Tier 5
-    { z: -75, w: 2.8, h: 2.2, t: 0.22 }, // Tier 6: Shikhara Base
-  ];
-
+  // Tier Heights and Dimensional Proportions
+  // Tala 1 (Base): y = 0 to 4.2
+  // Tala 2: y = 4.2 to 7.8
+  // Tala 3: y = 7.8 to 11.1
+  // Tala 4: y = 11.1 to 14.1
+  // Tala 5: y = 14.1 to 16.7
+  // Apex Shikhara: y = 16.7+
   return (
-    <group>
-      {talaConfigs.map((cfg, idx) => (
-        <DravidianTala
-          key={idx}
-          tierIndex={idx}
-          zPos={cfg.z}
-          width={cfg.w}
-          height={cfg.h}
-          thickness={cfg.t}
-          isMobile={isMobile}
-          materials={materials}
-        />
-      ))}
+    <group position={[isMobile ? 0 : 3.5, 0, 0]}>
+      {/* 1. Base Entrance Gateway (Tala 1) */}
+      <MaduraiBaseTier width={10.8} height={4.2} depth={4.8} materials={materials} />
 
-      {/* Apex Tala Crown with 5 Brass Kalasams */}
-      <ShikharaApex
-        zPos={talaConfigs[5].z}
-        width={talaConfigs[5].w}
-        height={talaConfigs[5].h}
+      {/* 2. Tier 2 (Tala 2 - Lower Balcony & Aedicules) */}
+      <MaduraiBalconyTier
+        tierIndex={1}
+        yPos={4.2}
+        width={9.4}
+        height={3.6}
+        depth={4.2}
+        isMobile={isMobile}
         materials={materials}
       />
 
-      {/* Floating Sacred Golden Embers Field */}
+      {/* 3. Tier 3 (Tala 3 - Middle Tala & Sculptural Friezes) */}
+      <MaduraiBalconyTier
+        tierIndex={2}
+        yPos={7.8}
+        width={8.0}
+        height={3.3}
+        depth={3.6}
+        isMobile={isMobile}
+        materials={materials}
+      />
+
+      {/* 4. Tier 4 (Tala 4 - Upper Balcony & Alcoves) */}
+      <MaduraiBalconyTier
+        tierIndex={3}
+        yPos={11.1}
+        width={6.6}
+        height={3.0}
+        depth={3.0}
+        isMobile={isMobile}
+        materials={materials}
+      />
+
+      {/* 5. Tier 5 (Tala 5 - Sub-Apex Tala) */}
+      <MaduraiBalconyTier
+        tierIndex={4}
+        yPos={14.1}
+        width={5.4}
+        height={2.6}
+        depth={2.5}
+        isMobile={isMobile}
+        materials={materials}
+      />
+
+      {/* 6. Apex Shikhara Crown with Swept Horns & 7 Golden Kalasams */}
+      <MaduraiShikharaApex yPos={16.7} width={5.2} depth={2.4} materials={materials} />
+
+      {/* 7. Sacred Temple Golden Embers Field floating in the sky */}
       <TempleEmbers isMobile={isMobile} />
     </group>
   );
 }
 
-// Floating Sacred Golden Embers in Temple Depth
+// Floating Sacred Golden Embers drifting through the lavender purple twilight sky
 function TempleEmbers({ isMobile }: { isMobile: boolean }) {
   const pointsRef = useRef<THREE.Points>(null);
-  const count = isMobile ? 220 : 650;
+  const count = isMobile ? 180 : 500;
 
   const positions = useMemo(() => {
     const pts = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      pts[i * 3] = (Math.random() - 0.5) * 18;
-      pts[i * 3 + 1] = (Math.random() - 0.5) * 14;
-      pts[i * 3 + 2] = (Math.random() - 0.5) * 95 - 35;
+      pts[i * 3] = (Math.random() - 0.5) * 26;
+      pts[i * 3 + 1] = Math.random() * 24 - 1;
+      pts[i * 3 + 2] = (Math.random() - 0.5) * 22 + 4;
     }
     return pts;
   }, [count]);
 
-  // Subtle floating ember drift
   useFrame(({ clock }) => {
     if (pointsRef.current) {
-      const t = clock.getElapsedTime() * 0.15;
-      pointsRef.current.rotation.z = Math.sin(t) * 0.05;
-      pointsRef.current.rotation.y = Math.cos(t * 0.7) * 0.04;
+      const t = clock.getElapsedTime() * 0.18;
+      pointsRef.current.rotation.y = Math.sin(t) * 0.04;
+      pointsRef.current.position.y = Math.sin(t * 0.8) * 0.15;
     }
   });
 
@@ -418,10 +839,10 @@ function TempleEmbers({ isMobile }: { isMobile: boolean }) {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={isMobile ? 0.045 : 0.035}
-        color="#FFC526"
+        size={isMobile ? 0.05 : 0.038}
+        color="#FFD15C"
         transparent
-        opacity={0.75}
+        opacity={0.85}
         depthWrite={false}
         blending={THREE.AdditiveBlending}
       />
@@ -429,21 +850,45 @@ function TempleEmbers({ isMobile }: { isMobile: boolean }) {
   );
 }
 
-// Active Camera Flight Rig with smooth interpolation and natural breathing sway
-function CameraFlightRig({ targetZ }: { targetZ: number }) {
+// Dynamic Cinematic Camera Controller that ascends the towering Madurai Gopuram from Base to Apex
+function AscendingGopuramCamera({
+  scrollProgress,
+  isMobile,
+}: {
+  scrollProgress: number;
+  isMobile: boolean;
+}) {
   const { camera } = useThree();
 
   useFrame((_, delta) => {
-    // Smooth camera Z lerp (damped across frame delta to eliminate all frame judder)
-    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 4.5, delta);
+    // Target camera positions corresponding to the 5 Talas:
+    // Progress 0.0 -> Tala 1 (Base Gateway): Y ≈ 2.5, Z ≈ 12.8
+    // Progress 0.25 -> Tala 2 (Lower Balcony): Y ≈ 6.0, Z ≈ 12.0
+    // Progress 0.50 -> Tala 3 (Middle Tala): Y ≈ 9.5, Z ≈ 11.4
+    // Progress 0.75 -> Tala 4 (Upper Balcony): Y ≈ 13.0, Z ≈ 10.8
+    // Progress 1.00 -> Tala 5 & Apex (Shikhara Crest): Y ≈ 17.2, Z ≈ 10.2
 
-    // Subtle natural temple flight sway
-    const currentZ = camera.position.z;
-    camera.position.x = Math.sin(currentZ * 0.06) * 0.22;
-    camera.position.y = Math.cos(currentZ * 0.06) * 0.14;
+    const targetY = 2.4 + scrollProgress * 14.8;
+    const targetZ = 14.5 - scrollProgress * 3.2;
 
-    // Look straight down the temple corridor towards apex
-    camera.lookAt(0, 0, currentZ - 18);
+    // Horizontal framing: Camera stays slightly left (x = 0.2) while Gopuram is at x = 3.5,
+    // positioning the entire Gopuram tower majestically on the right half with zero text overlap!
+    const targetX = isMobile ? 0 : 0.2;
+
+    // LookAt target follows the active tier with smooth lead
+    const lookAtY = targetY + 0.6;
+    const lookAtX = isMobile ? 0 : 0.5;
+
+    // Smooth delta-damped interpolation (completely immune to frame rate drops)
+    camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 4.0, delta);
+    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 4.0, delta);
+    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 4.0, delta);
+
+    // Natural subtle temple breeze sway
+    const swayTime = camera.position.y * 0.4;
+    camera.position.x += Math.sin(swayTime) * 0.06;
+
+    camera.lookAt(lookAtX, lookAtY, 0);
   });
 
   return null;
@@ -458,14 +903,13 @@ export function GopuramZScroll() {
   const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // Map scroll progress to camera Z (-80 at 1, +10 at 0)
-  const targetCameraZ = 10 - scrollProgress * 90;
-
   useEffect(() => {
     setMounted(true);
-    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
-    if (isLiteMode) return;
+    if (isLiteMode) return () => window.removeEventListener("resize", handleResize);
 
     gsap.registerPlugin(ScrollTrigger);
 
@@ -475,9 +919,9 @@ export function GopuramZScroll() {
       ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top top",
-        end: "+=2400",
+        end: "+=2600",
         pin: true,
-        scrub: 1,
+        scrub: 1.2,
         anticipatePin: 1,
         onUpdate: (self) => {
           setScrollProgress(self.progress);
@@ -485,10 +929,13 @@ export function GopuramZScroll() {
       });
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      ctx.revert();
+    };
   }, [isLiteMode]);
 
-  // Find active tier index based on camera Z depth
+  // Find active tier index based on scroll progress
   const activeTierIndex = Math.min(
     TIERS.length - 1,
     Math.max(0, Math.floor(scrollProgress * TIERS.length))
@@ -497,49 +944,55 @@ export function GopuramZScroll() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[100dvh] overflow-hidden bg-[#10071a] text-white flex flex-col justify-between select-none"
+      className="relative w-full h-[100dvh] overflow-hidden bg-gradient-to-b from-[#462863] via-[#633c8b] to-[#7f51a8] text-white flex flex-col justify-between select-none"
       style={{ minHeight: "100dvh" }}
     >
-      {/* 1. 3D Dravidian Temple Gopuram Z-Axis Fly-Through Canvas */}
+      {/* 1. 3D Madurai Temple Raja Gopuram Ascending Camera Canvas */}
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         {mounted && !isLiteMode && (
           <Canvas
-            dpr={[1, 2]} // Capped DPR for mobile efficiency
-            camera={{ position: [0, 0, 10], fov: 58 }}
+            dpr={[1, 2]} // Capped DPR for maximum mobile/desktop efficiency
+            camera={{ position: [isMobile ? 0 : 0.2, 2.4, 14.5], fov: 50 }}
             gl={{
               antialias: true,
-              alpha: true,
+              alpha: false,
               powerPreference: "high-performance",
             }}
             className="w-full h-full"
           >
-            {/* Atmospheric Lighting */}
-            <ambientLight intensity={0.45} color="#d8c5e8" />
-            <directionalLight position={[8, 14, 12]} intensity={1.4} color="#ffe5c4" />
-            <directionalLight position={[-6, -4, -10]} intensity={0.6} color="#8a5da8" />
+            {/* Ethereal Lavender Purple Twilight Sky Background & Atmospheric Depth Fog */}
+            <color attach="background" args={["#6a458c"]} />
+            <fog attach="fog" args={["#6a458c", 16, 56]} />
 
-            {/* Dravidian Temple Gopuram Architecture */}
-            <DravidianGopuramScene isMobile={isMobile} />
+            {/* Warm Sunlight hitting the golden sandstone Gopuram from an upper angle */}
+            <directionalLight position={[18, 24, 16]} intensity={3.0} color="#ffe5b4" />
+            {/* Lavender Purple Ambient Fill Light illuminating the shadows */}
+            <ambientLight intensity={1.2} color="#dcbef8" />
+            {/* Subtle cool lavender rim light from the back */}
+            <directionalLight position={[-14, 12, -10]} intensity={0.9} color="#ba93e3" />
 
-            {/* Smooth Camera Flight Controller */}
-            <CameraFlightRig targetZ={targetCameraZ} />
+            {/* Full Madurai Raja Gopuram Architectural Tower */}
+            <MaduraiGopuramMonument isMobile={isMobile} />
+
+            {/* Dynamic Camera Flight Controller that ascends the Gopuram tiers */}
+            <AscendingGopuramCamera scrollProgress={scrollProgress} isMobile={isMobile} />
           </Canvas>
         )}
       </div>
 
       {/* 2. Top Philosophical Header */}
-      <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 pt-24 sm:pt-28 flex items-center justify-between pointer-events-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#250d38]/90 border border-[#b87333] text-[#FFC526] text-[10px] font-mono font-bold uppercase tracking-wider backdrop-blur-md shadow-[3px_3px_0px_#b87333]">
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pt-24 sm:pt-28 flex items-center justify-between pointer-events-auto">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#2c1642]/90 border border-[#b87333] text-[#FFC526] text-[10px] font-mono font-bold uppercase tracking-wider backdrop-blur-md shadow-[3px_3px_0px_#b87333]">
           <Sparkles className="w-3.5 h-3.5 text-[#FFC526]" />
           <span>Our Ethos & Heritage · பண்பாட்டு நோக்கு</span>
         </div>
 
-        <div className="flex items-center gap-3 text-xs font-mono text-purple-200/80 bg-[#160a24]/80 px-3 py-1.5 border border-purple-500/30 backdrop-blur-md">
+        <div className="flex items-center gap-3 text-xs font-mono text-purple-100/95 bg-[#26133b]/90 px-3 py-1.5 border border-purple-300/40 backdrop-blur-md shadow-sm">
           <span className="flex items-center gap-1.5 text-[#55CCA2]">
             <Compass className="w-3.5 h-3.5" />
             <span>Pillar {activeTierIndex + 1} of 5</span>
           </span>
-          <div className="w-20 sm:w-28 h-1.5 bg-white/10 rounded-full overflow-hidden border border-white/20">
+          <div className="w-20 sm:w-28 h-1.5 bg-white/15 rounded-full overflow-hidden border border-white/25">
             <div
               className="h-full bg-gradient-to-r from-[#55CCA2] to-[#FFC526] transition-all duration-300"
               style={{ width: `${(scrollProgress * 100).toFixed(0)}%` }}
@@ -548,60 +1001,63 @@ export function GopuramZScroll() {
         </div>
       </div>
 
-      {/* 3. Suspended 3D Depth-of-Field DOM Text Statements */}
-      <div className="relative z-20 w-full max-w-4xl mx-auto px-6 sm:px-12 my-auto text-center pointer-events-auto">
-        {TIERS.map((tier, idx) => {
-          // Calculate distance from camera to tier
-          const tierProgress = idx / (TIERS.length - 1);
-          const diff = Math.abs(scrollProgress - tierProgress);
-          const isCurrent = diff < 0.22;
-          const blurAmount = Math.min(16, diff * 32);
-          const opacity = Math.max(0, 1 - diff * 4.2);
+      {/* 3. Split-Rail Suspended Ethos Cards (Positioned on Left so the 3D Madurai Gopuram is clearly visible on the Right) */}
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 my-auto pointer-events-auto flex items-center">
+        <div className="w-full lg:w-5/12 max-w-lg text-left">
+          {TIERS.map((tier, idx) => {
+            const tierProgress = idx / (TIERS.length - 1);
+            const diff = Math.abs(scrollProgress - tierProgress);
+            const isCurrent = diff < 0.22;
+            const blurAmount = Math.min(16, diff * 32);
+            const opacity = Math.max(0, 1 - diff * 4.2);
 
-          return (
-            <div
-              key={tier.id}
-              className="transition-all duration-300 transform"
-              style={{
-                display: isCurrent ? "block" : "none",
-                filter: `blur(${blurAmount}px)`,
-                opacity: opacity,
-              }}
-            >
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#b87333]/25 border border-[#b87333] text-[#FFC526] text-[11px] font-mono font-bold uppercase tracking-widest mb-4">
-                <Flame className="w-3 h-3 text-[#FFC526]" />
-                <span>{locale === "ta" ? tier.subtitleTa : tier.subtitleEn}</span>
-              </div>
-
-              <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold font-display tracking-tight text-white mb-3 leading-[1.08]">
-                {locale === "ta" ? tier.titleTa : tier.titleEn}
-              </h2>
-
-              <p
-                lang="ta"
-                style={{ letterSpacing: 0 }}
-                className="text-xl sm:text-3xl font-bold text-[#55CCA2] font-tamil mb-4"
+            return (
+              <div
+                key={tier.id}
+                className="transition-all duration-300 transform"
+                style={{
+                  display: isCurrent ? "block" : "none",
+                  filter: `blur(${blurAmount}px)`,
+                  opacity: opacity,
+                }}
               >
-                {tier.titleTa}
-              </p>
+                <div className="p-6 sm:p-8 bg-[#221036]/90 backdrop-blur-md border border-purple-300/35 shadow-[6px_6px_0px_#180826]">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#b87333]/30 border border-[#b87333] text-[#FFC526] text-[11px] font-mono font-bold uppercase tracking-widest mb-4">
+                    <Flame className="w-3 h-3 text-[#FFC526]" />
+                    <span>{locale === "ta" ? tier.subtitleTa : tier.subtitleEn}</span>
+                  </div>
 
-              {tier.kuralQuote && (
-                <div className="text-xs font-mono text-[#FFC526] font-bold tracking-wider mb-4">
-                  {tier.kuralQuote}
+                  <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold font-display tracking-tight text-white mb-2 leading-[1.1] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+                    {locale === "ta" ? tier.titleTa : tier.titleEn}
+                  </h2>
+
+                  <p
+                    lang="ta"
+                    style={{ letterSpacing: 0 }}
+                    className="text-lg sm:text-2xl font-bold text-[#55CCA2] font-tamil mb-3"
+                  >
+                    {tier.titleTa}
+                  </p>
+
+                  {tier.kuralQuote && (
+                    <div className="text-xs font-mono text-[#FFC526] font-bold tracking-wider mb-3">
+                      {tier.kuralQuote}
+                    </div>
+                  )}
+
+                  <p className="text-sm sm:text-base text-purple-100/90 font-body leading-relaxed">
+                    {locale === "ta" ? tier.descTa : tier.descEn}
+                  </p>
                 </div>
-              )}
-
-              <p className="max-w-2xl mx-auto text-sm sm:text-lg text-purple-100/90 font-body leading-relaxed">
-                {locale === "ta" ? tier.descTa : tier.descEn}
-              </p>
-            </div>
-          );
-        })}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* 4. Bottom Information Bar */}
-      <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 pb-8 flex items-center justify-between text-[11px] font-mono text-purple-300/70 uppercase tracking-widest border-t border-purple-500/20 pt-4 pointer-events-auto">
-        <span className="text-[#55CCA2]">The Ohio State University Tamil Sangam</span>
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pb-8 flex items-center justify-between text-[11px] font-mono text-purple-200/90 uppercase tracking-widest border-t border-purple-300/30 pt-4 pointer-events-auto">
+        <span className="text-[#55CCA2] font-bold">The Ohio State University Tamil Sangam</span>
 
         <div className="flex items-center gap-2">
           <span>Scroll To Explore</span>
