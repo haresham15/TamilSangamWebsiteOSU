@@ -163,4 +163,79 @@ All styling in this project is anchored by Tailwind v4 CSS-first `@theme` and th
   - `motion-engineer`: Orchestrates hardware-accelerated Framer Motion variants and GSAP timelines.
   - `critique-agent` & `a11y-auditor`: Enforces strict WCAG AA/AAA compliance and anti-slop verification.
 
+---
+
+## 13. Cinematic Sangam Architecture: 3D WebGL, GSAP Scroll-Jacking & Mobile Degradation
+
+All agents operating in this codebase MUST adhere strictly to the following 3D abstraction, motion choreography, and graceful degradation directives:
+
+### The Three Core Concepts
+
+1. **The "Digital Kolam" Particle Vortex & Mask Reveal (Hero)**:
+   - **Visual Language**: Traditional pulli (dot) Kolam rendered as a 3D, physics-driven particle simulation via React Three Fiber.
+   - **The Text Mask Scale**: Loaded behind a massive, bold inline SVG clip-path reading `TAMIL SANGAM`. As the user scrolls, GSAP ScrollTrigger scales the text mask aggressively (~10,000% / scale: 50+) with `transformOrigin` pinned so the negative space of a specific letter (such as 'A') swallows the viewport.
+   - **The Vortex Plunge**: Once the text scale passes the camera, the user plunges into the full-screen 3D particle vortex, which morphs from a 2D Kolam into a 3D topographic terrain before dissipating to reveal subsequent content.
+
+2. **The "Kanchipuram Silk" Fluid Hover Reveals (Pillars)**:
+   - **Visual Language**: Iridescent, metallic Kanchipuram silk ripples in dark space using WebGL fluid math.
+   - **Kinetic Typography & Cursor Unmasking**: Large bilingual kinetic typography (`DANCE` / `நடனம்`, `MUSIC` / `இசை`, `COMMUNITY` / `சமூகம்`). On cursor hover, high-octane color-graded video clips dynamically unmask via expanding circular clip-paths (`clip-path: circle(...)`) tracking the cursor with GSAP `quickTo` and 3D velocity perspective tilt (`perspective(1000px) rotateX(...) rotateY(...)`).
+
+3. **The "Gopuram" Z-Axis Parallax (About / Mission)**:
+   - **Visual Language**: Abstract, tiered fractal geometry inspired by Dravidian temple architecture.
+   - **Z-Axis Camera Push**: Vertical scrolling drives camera position along the Z-axis through 5–7 floating dark brushed bronze geometric rings (`metalness: 0.8`, `roughness: 0.2`).
+   - **Depth-of-Field DOM Text**: Drei `<Html>` components suspend mission statements between tiers. As the camera flies past each tier, text fades out with depth-of-field blur (`filter: blur(10px)`, `opacity: 0`).
+
+---
+
+### Implementation Architecture (Phases 1–5)
+
+- **Phase 1: Core Engine & Physics Setup**:
+  - Smooth scroll orchestration via Lenis (`lerp: 0.05`, `smoothWheel: true`).
+  - Single persistent background `<Canvas>` with Drei `View` rendering or coordinate-synced overlay passes. Avoid multiple independent canvases.
+- **Phase 2: Digital Kolam Hero**:
+  - 100dvh pinned section with SVG clip-path mask.
+  - Three.js / R3F `Points` mesh with custom vertex turbulence shader (breathing sine-wave offset).
+  - GSAP ScrollTrigger timeline pinning the hero section with scrubbed scale.
+- **Phase 3: Silk Hover Reveals**:
+  - Bilingual kinetic typography container.
+  - CSS/SVG expanding circular mask following cursor coordinates with GSAP `quickTo` and velocity tilt.
+  - Fallback to InstancedMesh if custom shader fails compilation.
+- **Phase 4: Z-Axis Gopuram Scroll**:
+  - Drei `useScroll` or ScrollTrigger camera Z mapping (`THREE.MathUtils.lerp`).
+  - Tiered bronze rings spaced along negative Z.
+  - Drei `<Html>` depth blur on scroll pass.
+- **Phase 5: Anti-Slop Safeguards**:
+  - **No Flat CSS**: Strictly forbid generic `transform: translateY` for scroll animations; bind all scroll kinematics to Lenis/GSAP ScrollTrigger or R3F `useFrame`.
+  - **Asset Optimization**: Video loops must be heavily compressed `.webm` files with zero audio tracks.
+  - **Shader Fallback**: If custom vertex shaders encounter WebGL context loss or compile failures, gracefully degrade to `THREE.InstancedMesh` with procedural math.
+
+---
+
+### Phase 6: Mobile Responsiveness & Graceful Degradation (Strict Mandate)
+
+All complex animations MUST include conditional logic for `@media (max-width: 768px)` and `window.matchMedia("(hover: none)")`:
+
+1. **Viewport & Scroll Normalization**:
+   - **The `100dvh` Mandate**: Strictly forbidden from using `100vh` for full-screen sections. Exclusively use `100dvh` (Dynamic Viewport Height) to prevent mobile browser toolbar layout thrashing.
+   - **Lenis Touch Management**: Set `smoothTouch: false` on touch devices to prevent fighting native iOS/Android momentum scrolling, while keeping GSAP ScrollTrigger synchronized with native scroll.
+
+2. **Hover-to-Touch Conversion (Silk Video Reveals)**:
+   - Check `window.matchMedia("(hover: none)")`. On touch devices, disable cursor tracking.
+   - Use an `IntersectionObserver` to automatically fade in the background video as each pillar scrolls into the viewport center, adjusting text opacity to preserve high contrast and legibility.
+
+3. **WebGL Performance Scaling (Kolam & Gopuram)**:
+   - **Pixel Ratio Throttling**: Cap device pixel ratio to a maximum of 2 (`dpr={[1, 2]}`).
+   - **Particle Reduction**: When `isMobile` is detected, reduce particle count by 60% and simplify vertex shader turbulence math.
+   - **Visibility Culling**: Implement aggressive frustum culling and pause rendering loops when the canvas is off-screen or the browser tab is hidden (`document.hidden`).
+
+4. **Hero Mask Re-Calculation**:
+   - On portrait mobile viewports, provide an adapted SVG clip-path (stacked lockup or emblem) with recalculated `transformOrigin` centered on the largest negative space so the fly-through clears the viewport without clipping edges.
+
+5. **Tap-Friendly UI (Safety Layer)**:
+   - **Hitboxes**: Interactive elements (navigation triggers, links, photo albums) must maintain a minimum touch target size of 48px × 48px.
+   - **Un-closable Modals**: Any modal or photo lightbox must feature a prominent, fixed top-right Close button (`<button aria-label="Close">`) rather than relying solely on backdrop taps.
+
+---
+
+
 
