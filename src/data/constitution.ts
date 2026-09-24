@@ -56,9 +56,9 @@ export const CLUB_ACTIVITIES: GovernanceRule[] = [
     titleEn: "Campus Festivals & Celebrations",
     titleTa: "வளாக விழாக்கள் & கொண்டாட்டங்கள்",
     descriptionEn:
-      "Hosts fun campus celebrations including our collaborative Pattas Tappas Diwali party, outdoor lawn picnics, and festive street food nights.",
+      "Hosts fun campus celebrations including cultural showcases, outdoor lawn picnics, and festive street food nights.",
     descriptionTa:
-      "பட்டாஸ் தப்பாஸ் தீபாவளி, ஓவல் புல்வெளி பிக்னிக், மற்றும் தெருவோர உணவு திருவிழாக்களை மகிழ்ச்சியுடன் நடத்துதல்.",
+      "கலாச்சார நிகழ்வுகள், ஓவல் புல்வெளி பிக்னிக், மற்றும் தெருவோர உணவு திருவிழாக்களை மகிழ்ச்சியுடன் நடத்துதல்.",
     category: "activities",
   },
   {

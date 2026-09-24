@@ -146,23 +146,24 @@ function TierText({ tier, position, isMobile, locale }: { tier: TierItem, positi
 
     // Parallax push on Y and dynamic scale instead of blur
     const yOffset = dist * 0.5;
-    textRef.current.style.transform = `translate3d(0, calc(-50% + ${yOffset}px), 0) scale(${scale})`;
+    const yCenter = isMobile ? "-28%" : "-50%";
+    textRef.current.style.transform = `translate3d(0, calc(${yCenter} + ${yOffset}px), 0) scale(${scale})`;
   });
 
   return (
     <Html position={position} center zIndexRange={[100, 0]} transform={false}>
       <div
         ref={textRef}
-        className="w-[85vw] max-w-2xl flex flex-col items-start pointer-events-none"
+        className="w-[88vw] sm:w-[85vw] max-w-2xl flex flex-col items-start pointer-events-none"
         style={{ marginLeft: isMobile ? 0 : '10vw' }}
       >
-        <div className="p-6 sm:p-8 bg-[#221036]/80 backdrop-blur-md border border-purple-300/35 shadow-[6px_6px_0px_#180826]">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#b87333]/30 border border-[#b87333] text-[#FFC526] text-[11px] font-mono font-bold uppercase tracking-widest mb-4">
+        <div className="p-4 sm:p-8 bg-[#221036]/85 backdrop-blur-md border border-purple-300/35 shadow-[4px_4px_0px_#180826] sm:shadow-[6px_6px_0px_#180826]">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 bg-[#b87333]/30 border border-[#b87333] text-[#FFC526] text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-widest mb-3 sm:mb-4">
             <Flame className="w-3 h-3 text-[#FFC526]" />
             <span>{locale === "ta" ? tier.subtitleTa : tier.subtitleEn}</span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold font-display tracking-tight text-white mb-2 leading-[1.1] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+          <h2 className="text-xl sm:text-4xl md:text-5xl font-extrabold font-display tracking-tight text-white mb-2 leading-[1.15] sm:leading-[1.1] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
             {locale === "ta" ? tier.titleTa : tier.titleEn}
           </h2>
 
@@ -326,7 +327,7 @@ export function GopuramZScroll() {
                 />
                 <TierText
                   tier={tier}
-                  position={[0, 0, -idx * 15 + 2]}
+                  position={[0, isMobile ? -0.85 : 0, -idx * 15 + 2]}
                   isMobile={isMobile}
                   locale={locale}
                 />
@@ -338,7 +339,7 @@ export function GopuramZScroll() {
         )}
       </div>
 
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pt-24 sm:pt-28 flex items-center justify-between pointer-events-auto">
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pt-16 sm:pt-28 flex items-center justify-between pointer-events-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#2c1642]/90 border border-[#b87333] text-[#FFC526] text-[10px] font-mono font-bold uppercase tracking-wider backdrop-blur-md shadow-[3px_3px_0px_#b87333]">
           <Sparkles className="w-3.5 h-3.5 text-[#FFC526]" />
           <span>Our Ethos & Heritage · பண்பாட்டு நோக்கு</span>

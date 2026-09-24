@@ -7,13 +7,13 @@ import { getScrollProgress } from "./useScrollCinematic";
 import { PerspectiveCamera } from "@react-three/drei";
 
 // Define the camera scroll choreography keyframes
-// Keeps the coin comfortably framed without zooming in too close or panning down awkwardly
+// Keeps the coin comfortably framed and zoomed out at all times without plunging close to the medallion
 const keyframes = [
-  { p: 0.0, pos: new THREE.Vector3(0, 7.8, 14.0), target: new THREE.Vector3(0, 2.5, 0), fov: 38 },
-  { p: 0.3, pos: new THREE.Vector3(1.4, 5.8, 11.5), target: new THREE.Vector3(0, 2.5, 0), fov: 38 },
-  { p: 0.6, pos: new THREE.Vector3(-0.8, 4.4, 9.8), target: new THREE.Vector3(0, 2.5, 0), fov: 39 },
-  { p: 0.85, pos: new THREE.Vector3(0.4, 3.4, 8.6), target: new THREE.Vector3(0, 2.5, 0), fov: 39 },
-  { p: 1.0, pos: new THREE.Vector3(0, 2.9, 8.0), target: new THREE.Vector3(0, 2.5, 0), fov: 40 },
+  { p: 0.0, pos: new THREE.Vector3(0, 7.0, 19.5), target: new THREE.Vector3(0, 3.4, 0), fov: 38 },
+  { p: 0.3, pos: new THREE.Vector3(0.6, 6.8, 19.7), target: new THREE.Vector3(0, 3.4, 0), fov: 38 },
+  { p: 0.6, pos: new THREE.Vector3(-0.5, 6.5, 19.9), target: new THREE.Vector3(0, 3.3, 0), fov: 38 },
+  { p: 0.85, pos: new THREE.Vector3(0.3, 6.2, 20.1), target: new THREE.Vector3(0, 3.2, 0), fov: 38 },
+  { p: 1.0, pos: new THREE.Vector3(0, 6.0, 20.4), target: new THREE.Vector3(0, 3.0, 0), fov: 38 },
 ];
 
 function easeInOutCubic(x: number): number {
@@ -79,8 +79,8 @@ export function CameraChoreography() {
     <PerspectiveCamera
       ref={cameraRef}
       makeDefault
-      position={[0, 12, 18]}
-      fov={34}
+      position={[0, 7.5, 15.5]}
+      fov={36}
       near={0.1}
       far={100}
     />

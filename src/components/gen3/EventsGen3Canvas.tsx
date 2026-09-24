@@ -12,6 +12,7 @@ import { VolumetricCones } from "./VolumetricCones";
 import { PhoneTorches } from "./PhoneTorches";
 import { DustCloud } from "./DustCloud";
 import { LeoFactoryEnvironment } from "./LeoFactoryEnvironment";
+import { JumpingCrowdSilhouettes } from "./JumpingCrowdSilhouettes";
 
 // The strict blueprint mandate: magenta error state on failure, no silent fallbacks.
 class CanvasErrorBoundary extends Component<
@@ -91,8 +92,8 @@ export function EventsGen3Canvas() {
           }}
           shadows
         >
-          <color attach="background" args={["#0e0d12"]} />
-          <fogExp2 attach="fog" args={["#16131c", 0.018]} />
+          <color attach="background" args={["#0c0a08"]} />
+          <fogExp2 attach="fog" args={["#14100c", 0.016]} />
           
           <DepthTextureProvider>
             <React.Suspense fallback={null}>
@@ -103,6 +104,7 @@ export function EventsGen3Canvas() {
               <SceneLighting />
               <MinimalPlatform />
               <SangamLogo3D />
+              <JumpingCrowdSilhouettes />
             </React.Suspense>
           </DepthTextureProvider>
         </Canvas>

@@ -25,7 +25,7 @@ interface ChatMessageUI {
 
 const QUICK_PROMPTS = [
   "How do I join the club?",
-  "When is Pattas Tappas Diwali?",
+  "What campus events do you host?",
   "Do I have to speak Tamil?",
   "Are there membership fees or dues?",
   "How do voting rights work?",
@@ -230,7 +230,7 @@ export const SangamChatbot: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.96 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] as const }}
-            className="fixed bottom-20 right-4 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[420px] max-h-[620px] h-[80vh] flex flex-col bg-[#fffdfa] border-2 border-[#250d38] shadow-[8px_8px_0px_#250d38] overflow-hidden text-left"
+            className="fixed bottom-16 sm:bottom-20 right-3 sm:right-6 z-50 w-[calc(100vw-24px)] sm:w-[420px] max-h-[calc(100dvh-80px)] sm:max-h-[620px] h-[75dvh] sm:h-[80vh] flex flex-col bg-[#fffdfa] border-2 border-[#250d38] shadow-[6px_6px_0px_#250d38] sm:shadow-[8px_8px_0px_#250d38] overflow-hidden text-left"
           >
             {/* Header */}
             <div className="p-3.5 bg-[#250d38] border-b-2 border-[#55CCA2] flex items-center justify-between text-white shrink-0">
@@ -252,6 +252,7 @@ export const SangamChatbot: React.FC = () => {
                 <button
                   onClick={() => setIsEditorOpen(!isEditorOpen)}
                   title="Edit Knowledge Base"
+                  aria-label="Toggle Knowledge Base Editor"
                   className={`p-1.5 border text-xs font-mono font-bold transition-all ${
                     isEditorOpen
                       ? "bg-[#55CCA2] text-[#250d38] border-[#55CCA2]"
@@ -262,6 +263,7 @@ export const SangamChatbot: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setIsOpen(false)}
+                  aria-label="Close Chat"
                   className="p-1.5 bg-[#361352] border border-purple-400/40 text-purple-200 hover:text-white hover:border-red-400 transition-colors"
                 >
                   <X className="w-3.5 h-3.5" />

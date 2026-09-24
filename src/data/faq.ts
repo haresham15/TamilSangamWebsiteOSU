@@ -34,7 +34,7 @@ export const FAQS: FaqItem[] = [
     questionEn: "Are there any membership fees or dues?",
     questionTa: "உறுப்பினர் கட்டணம் ஏதேனும் உண்டா?",
     answerEn:
-      "General membership is 100% free! Anyone can attend our bi-weekly general body meetings, study nights, and open workshops without paying a cent. For ticketed flagship festivals (such as Pattas Tappas Diwali), subsidized student-tier tickets are offered to BuckID holders.",
+      "General membership is 100% free! Anyone can attend our bi-weekly general body meetings, study nights, and open workshops without paying a cent. For ticketed flagship celebrations, subsidized student-tier tickets are offered to BuckID holders.",
     answerTa:
       "பொது உறுப்பினராக இணைய எந்தக் கட்டணமும் இல்லை! பொதுக் கூட்டங்கள், படிப்பு மாலைகள் மற்றும் பட்டறைகள் முற்றிலும் இலவசம். பெரிய விழாக்களுக்கு மட்டும் குறைந்த கட்டணத்தில் மாணவர் நுழைவுச்சீட்டுகள் வழங்கப்படுகின்றன.",
   },

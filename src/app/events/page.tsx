@@ -57,13 +57,15 @@ export default function EventsPage() {
     return evt.academicYear.includes(filterYear);
   });
 
-  const years = ["all", "2026-2027", "2025-2026"];
+  const years = ["all", "2025-2026"];
 
   return (
     <div className="w-full text-left">
       {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene (PRD Overhaul) */}
       <div id="events-hero-trigger" className="w-full h-[100dvh] relative z-0">
         <EventsGen3Canvas />
+        {/* Cinematic bottom shadow vignette over crowd base */}
+        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-72 bg-gradient-to-t from-[#0c0a08] via-[#0c0a08]/85 to-transparent z-10" />
       </div>
 
       {/* 2. Events Catalogue Container */}
@@ -80,8 +82,8 @@ export default function EventsPage() {
           </h1>
           <p className="text-sm sm:text-base text-[#250d38] font-medium leading-relaxed font-body">
             {locale === "ta"
-              ? "ஆட்டம், பாட்டம், கொண்டாட்டம்! ஓவல் புல்வெளி பிக்னிக், தெருவோர உணவு திருவிழாக்கள் முதல் தீபாவளிக் கொண்டாட்டம் வரை — மொழி பேதமின்றி அனைவரும் ஒன்றிணையும் களம்."
-              : "Start the Aatam, Paatam, and Kondatam! From casual lawn picnics on the Oval and street food nights to our annual Diwali party — our events are relaxed, social, and open to all students regardless of language or background."}
+              ? "ஆட்டம், பாட்டம், கொண்டாட்டம்! ஓவல் புல்வெளி பிக்னிக், தெருவோர உணவு திருவிழாக்கள் முதல் நம்ம ஜாதரா வசந்தகால விழா வரை — மொழி பேதமின்றி அனைவரும் ஒன்றிணையும் களம்."
+              : "Start the Aatam, Paatam, and Kondatam! From casual lawn picnics on the Oval and street food nights to spring cultural carnivals — our events are relaxed, social, and open to all students regardless of language or background."}
           </p>
         </div>
 

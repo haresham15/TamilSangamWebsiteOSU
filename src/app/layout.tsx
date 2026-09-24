@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     "OSU Tamil Sangam",
     "Ohio State University",
     "Tamil Sangam OSU",
-    "Pattas Tappas Diwali",
+    "Tamil Cultural Festivals",
     "Tamil Students Ohio",
     "Buckeyes",
     "Columbus Tamil",

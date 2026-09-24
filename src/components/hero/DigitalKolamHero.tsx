@@ -505,15 +505,15 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         </div>
 
         {/* Center Bilingual Inscription: Protective Glass Scrim for Crisp Readability */}
-        <div className="my-auto py-6 sm:py-8 px-6 sm:px-8 space-y-3.5 text-center sm:text-left max-w-2xl bg-[#10061a]/85 backdrop-blur-md border border-purple-500/25 shadow-[6px_6px_0px_#250d38]">
+        <div className="my-auto py-4 sm:py-8 px-4 sm:px-8 space-y-2.5 sm:space-y-3.5 text-center sm:text-left max-w-2xl bg-[#10061a]/85 backdrop-blur-md border border-purple-500/25 shadow-[4px_4px_0px_#250d38] sm:shadow-[6px_6px_0px_#250d38]">
           <p
             lang="ta"
             style={{ letterSpacing: 0 }}
-            className="text-base sm:text-xl font-bold text-[#FFC526] font-tamil"
+            className="text-sm sm:text-xl font-bold text-[#FFC526] font-tamil"
           >
             ஆட்டம் · பாட்டம் · கொண்டாட்டம்
           </p>
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold font-display tracking-tight text-white leading-[1.06] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+          <h1 className="text-2xl sm:text-5xl md:text-6xl font-extrabold font-display tracking-tight text-white leading-[1.1] sm:leading-[1.06] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
             Start the Aatam, Paatam, and Kondatam!
           </h1>
           <p className="text-xs sm:text-base text-purple-100/90 font-body leading-relaxed max-w-xl drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
@@ -524,8 +524,8 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         </div>
 
         {/* Bottom CTA Action Bar */}
-        <div className="pt-4 border-t border-purple-500/20 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-3">
+        <div className="pt-3 sm:pt-4 border-t border-purple-500/20 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
             <PalagaiButton
               href={`/events/${nextEventSlug}`}
               variant="mint"
@@ -534,6 +534,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
               secondaryText={locale === "ta" ? "Get Event Tickets" : "நுழைவுச்சீட்டு"}
               icon={<Ticket className="w-4 h-4 text-[#250d38]" />}
               iconPosition="left"
+              className="w-full sm:w-auto justify-center"
             />
 
             <PalagaiButton
@@ -544,6 +545,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
               secondaryText={locale === "ta" ? "Join The Club" : "இணையுங்கள்"}
               icon={<Users className="w-4 h-4 text-[#55CCA2]" />}
               iconPosition="left"
+              className="w-full sm:w-auto justify-center"
             />
 
             <PalagaiButton
@@ -554,11 +556,12 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
               secondaryText={locale === "ta" ? "Meet The Board" : "நிர்வாகக் குழு"}
               icon={<ArrowRight className="w-3.5 h-3.5 text-[#55CCA2]" />}
               iconPosition="right"
+              className="w-full sm:w-auto justify-center"
             />
           </div>
 
           {/* Scroll Indicator */}
-          <div className="flex items-center gap-2 text-[11px] font-mono text-purple-300/60 uppercase tracking-widest">
+          <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-purple-300/60 uppercase tracking-widest">
             <span>Scroll Down</span>
             <span className="w-1.5 h-1.5 bg-[#55CCA2] rounded-full animate-bounce" />
           </div>

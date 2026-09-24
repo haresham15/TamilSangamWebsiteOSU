@@ -88,7 +88,7 @@ export const BASELINE_KNOWLEDGE: KnowledgeItem[] = [
     titleEn: "Is membership free? Are there dues?",
     titleTa: "உறுப்பினர் கட்டணம் உண்டா?",
     contentEn:
-      "Yes, general membership in OSU Tamil Sangam is 100% completely free! We do not charge any dues or sign-up fees. Any student can attend our picnics, general body meetings, street food dinners, study nights, and open workshops without paying. Subsidized student-tier tickets are only required for our large annual banquet festivals like Pattas Tappas Diwali.",
+      "Yes, general membership in OSU Tamil Sangam is 100% completely free! We do not charge any dues or sign-up fees. Any student can attend our picnics, general body meetings, street food dinners, study nights, and open workshops without paying. Subsidized student-tier tickets are only required for large annual banquets and special celebrations.",
     contentTa:
       "பொது உறுப்பினராக இணைய எந்தக் கட்டணமும் இல்லை! கூட்டங்கள், பிக்னிக் மற்றும் பட்டறைகள் முற்றிலும் இலவசம்.",
     keywords: [
@@ -146,26 +146,24 @@ export const BASELINE_KNOWLEDGE: KnowledgeItem[] = [
 
   // 3. Events
   {
-    id: "kb-event-diwali-2026",
+    id: "kb-event-campus-gatherings",
     category: "Events",
-    titleEn: "Next Flagship: Pattas Tappas Diwali 2026",
-    titleTa: "பட்டாஸ் தப்பாஸ் தீபாவளி 2026",
+    titleEn: "Campus Gatherings & Annual Festivals",
+    titleTa: "வளாக நிகழ்வுகள் & திருவிழாக்கள்",
     contentEn:
-      "Pattas Tappas Diwali Celebration 2026 is scheduled for Saturday, November 7, 2026 from 6:00 PM to 10:30 PM EST at the Archie Griffin Ballroom inside the Ohio Union. Features traditional festive attire, student dance choreographies, live student acoustic & fusion music, a South Asian banquet dinner, and outdoor sparklers on the South Plaza. Tickets will drop on our website in early autumn 2026.",
+      "OSU Tamil Sangam hosts welcoming social gatherings throughout the academic year, including casual lawn picnics on the Oval with fresh fruits and games, South Indian streetside food dinners, and spring cultural carnivals. All students and friends are welcome regardless of background.",
     contentTa:
-      "பட்டாஸ் தப்பாஸ் தீபாவளி 2026 நவம்பர் 7 அன்று ஓஹியோ யூனியன் அரங்கில் நடைபெறும். பாரம்பரிய ஆடை, நடனம், நேரடி இசை, மற்றும் சுவையான விருந்து உண்டு.",
+      "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் ஆண்டு முழுவதும் ஓவல் புல்வெளி பிக்னிக், தெருவோரச் சாப்பாடு மாலைகள், மற்றும் பண்பாட்டுத் திருவிழாக்களை நடத்துகிறது.",
     keywords: [
-      "diwali",
-      "pattas tappas",
-      "next event",
-      "archie griffin",
-      "ohio union",
-      "november 7",
-      "dinner",
-      "tickets",
-      "sparklers",
+      "events",
+      "festivals",
+      "gatherings",
+      "picnics",
+      "food nights",
+      "oval",
+      "campus",
     ],
-    route: "/events/pattas-tappas-diwali-2026",
+    route: "/events",
   },
   {
     id: "kb-event-picnic",

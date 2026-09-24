@@ -56,12 +56,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/tickets",
-        destination: "/events/pattas-tappas-diwali-2026",
+        destination: "/events",
         permanent: false,
       },
       {
         source: "/diwali",
-        destination: "/events/pattas-tappas-diwali-2026",
+        destination: "/events",
         permanent: false,
       },
       {

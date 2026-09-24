@@ -56,14 +56,14 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
 
   return (
     <>
-      <header className="fixed top-4 left-0 right-0 z-50 px-4 sm:px-6 pointer-events-none">
+      <header className="fixed top-3 sm:top-4 left-0 right-0 z-50 px-3 sm:px-6 pointer-events-none">
         <div className="max-w-7xl mx-auto flex items-center justify-between pointer-events-auto">
           {/* Logo & Brand Title */}
           {/* Brand Logo Module: Architectural Stone Inscription Box */}
           <Link
             href="/"
             onClick={playClick}
-            className="group flex items-center gap-3 px-3.5 py-2 border-2 border-[#250d38] bg-white shadow-[3px_3px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[3px_3px_0px_#55CCA2] transition-all"
+            className="group flex items-center gap-2 sm:gap-3 px-2.5 sm:px-3.5 py-1.5 sm:py-2 border-2 border-[#250d38] bg-white shadow-[2px_2px_0px_#4c2472] sm:shadow-[3px_3px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[3px_3px_0px_#55CCA2] transition-all"
           >
             <div className="relative w-8 h-8 border-2 border-[#55CCA2] bg-[#4c2472] overflow-hidden shrink-0 shadow-sm">
               <Image
@@ -76,10 +76,10 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               />
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-sm font-bold tracking-tight text-[#250d38] group-hover:text-[#4c2472] transition-colors font-display">
+              <span className="text-xs sm:text-sm font-bold tracking-tight text-[#250d38] group-hover:text-[#4c2472] transition-colors font-display">
                 {t("brand.name")}
               </span>
-              <span className="text-[10px] text-[#6b478d] tracking-wider uppercase font-mono font-bold">
+              <span className="hidden xs:inline-block sm:inline-block text-[9px] sm:text-[10px] text-[#6b478d] tracking-wider uppercase font-mono font-bold">
                 {locale === "ta" ? "ஓஹியோ மாநிலப் பல்கலைக்கழகம்" : "The Ohio State University"}
               </span>
             </div>
@@ -116,7 +116,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               }}
               title={t("control.search")}
               aria-label="Open search command palette (⌘K)"
-              className="w-9 h-9 border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[2px_2px_0px_#55CCA2] hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex items-center justify-center"
+              className="w-9 h-9 min-w-[38px] min-h-[38px] border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[2px_2px_0px_#55CCA2] hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex items-center justify-center"
             >
               <Search className="w-4 h-4" />
             </button>
@@ -129,7 +129,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               }}
               title="Switch Language / மொழியை மாற்ற"
               aria-label={locale === "en" ? "Switch language to Tamil" : "Switch language to English"}
-              className="px-2.5 py-1.5 text-xs font-mono font-bold border-2 border-[#250d38] bg-white text-[#4c2472] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[2px_2px_0px_#55CCA2] transition-all flex items-center gap-1.5"
+              className="px-2 sm:px-2.5 py-1.5 min-h-[38px] text-xs font-mono font-bold border-2 border-[#250d38] bg-white text-[#4c2472] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[2px_2px_0px_#55CCA2] transition-all flex items-center gap-1 sm:gap-1.5"
             >
               <span className="px-1 py-0.5 text-[10px] font-mono bg-[#250d38] text-[#55CCA2] font-bold">
                 {locale === "en" ? "TA" : "EN"}
@@ -231,7 +231,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               onClick={toggleSound}
               title={isSoundEnabled ? t("control.soundOff") : t("control.soundOn")}
               aria-label={isSoundEnabled ? "Mute interactive audio effects" : "Enable interactive audio effects"}
-              className={`w-9 h-9 border-2 border-[#250d38] shadow-[2px_2px_0px_#4c2472] flex items-center justify-center transition-all ${
+              className={`w-9 h-9 min-w-[38px] min-h-[38px] border-2 border-[#250d38] shadow-[2px_2px_0px_#4c2472] flex items-center justify-center transition-all ${
                 isSoundEnabled
                   ? "border-[#250d38] text-[#11694c] bg-[#55CCA2]"
                   : "bg-white text-[#4c2472] hover:border-[#55CCA2]"
@@ -248,7 +248,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               }}
               aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMobileMenuOpen}
-              className="lg:hidden w-9 h-9 border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] flex items-center justify-center transition-all"
+              className="lg:hidden w-9 h-9 min-w-[38px] min-h-[38px] border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] flex items-center justify-center transition-all"
             >
               {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -258,7 +258,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
 
       {/* Mobile Drawer Navigation: Architectural Ledger Panel */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-white/95 backdrop-blur-2xl lg:hidden flex flex-col pt-24 px-6 pb-10 justify-between overflow-y-auto border-b-4 border-[#250d38] shadow-2xl">
+        <div className="fixed inset-0 z-40 bg-white/95 backdrop-blur-2xl lg:hidden flex flex-col pt-24 px-5 sm:px-6 pb-28 justify-between overflow-y-auto border-b-4 border-[#250d38] shadow-2xl">
           <div className="space-y-3">
             <p className="text-xs uppercase font-mono tracking-widest text-[#250d38] px-1 font-bold border-l-4 border-[#55CCA2] pl-2">
               {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"} · Navigation Index

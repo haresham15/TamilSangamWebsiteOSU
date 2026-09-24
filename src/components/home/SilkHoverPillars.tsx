@@ -118,6 +118,7 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
   const mediaRef = useRef<HTMLDivElement>(null);
 
   const [isHovered, setIsHovered] = useState(false);
+  const [touchToggled, setTouchToggled] = useState(false);
   const isTouchDevice = useSyncExternalStore(
     subscribeTouch,
     getIsTouchSnapshot,
@@ -226,13 +227,18 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
     });
   }, [isHovered, isTouchDevice, isLiteMode]);
 
-  const activeMedia = isTouchDevice ? inViewMobile : isHovered;
+  const activeMedia = isTouchDevice ? (inViewMobile || touchToggled) : isHovered;
 
   return (
     <div
       ref={cardRef}
+      onClick={() => {
+        if (isTouchDevice) {
+          setTouchToggled((prev) => !prev);
+        }
+      }}
       style={{ perspective: 1000, transformStyle: "preserve-3d", willChange: "transform" }}
-      className="relative w-full rounded-none border-2 border-[#250d38] bg-[#1a0b2e] text-white p-8 sm:p-10 overflow-hidden shadow-[6px_6px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[8px_8px_0px_#55CCA2] transition-colors duration-300 flex flex-col justify-between min-h-[360px] group select-none"
+      className="relative w-full rounded-none border-2 border-[#250d38] bg-[#1a0b2e] text-white p-6 sm:p-10 overflow-hidden shadow-[4px_4px_0px_#4c2472] sm:shadow-[6px_6px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[8px_8px_0px_#55CCA2] transition-colors duration-300 flex flex-col justify-between min-h-[320px] sm:min-h-[360px] group select-none cursor-pointer sm:cursor-default"
     >
       {/* 1. Iridescent Kanchipuram Silk Sheen Underlay */}
       <div

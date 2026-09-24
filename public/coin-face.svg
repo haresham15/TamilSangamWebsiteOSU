@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <!-- Deep Burnished Bronze & Radiant Temple Gold Radial Gradient -->
+    <radialGradient id="coinBronzeGlow" cx="48%" cy="42%" r="58%">
+      <stop offset="0%" stop-color="#6b441f" />
+      <stop offset="40%" stop-color="#3d230d" />
+      <stop offset="75%" stop-color="#241305" />
+      <stop offset="100%" stop-color="#120802" />
+    </radialGradient>
+
+    <!-- Beveled Coin Highlight Gradient -->
+    <linearGradient id="goldBevelGleam" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe082" />
+      <stop offset="35%" stop-color="#f59e0b" />
+      <stop offset="70%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+
+    <!-- Inner Radial Highlight -->
+    <radialGradient id="innerGleam" cx="50%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="#ffd54f" stop-opacity="0.25" />
+      <stop offset="60%" stop-color="#f59e0b" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Coin Face Clip Path -->
+    <clipPath id="coinFaceClip">
+      <circle cx="250" cy="250" r="236" />
+    </clipPath>
+
+    <!-- Watermarked Repeating Tamil Script Texture in Warm Antique Gold -->
+    <pattern id="tamilScriptGold" width="120" height="42" patternUnits="userSpaceOnUse">
+      <text x="6" y="16" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#f59e0b" opacity="0.32" letter-spacing="2">தமிழ்</text>
+      <text x="66" y="16" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#f59e0b" opacity="0.32" letter-spacing="2">தமிழ்</text>
+      <text x="36" y="37" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#f59e0b" opacity="0.32" letter-spacing="2">தமிழ்</text>
+      <text x="96" y="37" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#f59e0b" opacity="0.32" letter-spacing="2">தமிழ்</text>
+    </pattern>
+  </defs>
+
+  <!-- Outer Minted Gold Beveled Rim Ring -->
+  <circle cx="250" cy="250" r="244" fill="none" stroke="url(#goldBevelGleam)" stroke-width="4.5" opacity="0.9" />
+
+  <!-- Base Circle with Clip -->
+  <g clip-path="url(#coinFaceClip)">
+    <!-- Deep Warm Bronze Metallic Background -->
+    <circle cx="250" cy="250" r="236" fill="url(#coinBronzeGlow)" />
+
+    <!-- Watermarked Repeating Tamil Script Pattern -->
+    <rect x="0" y="0" width="500" height="500" fill="url(#tamilScriptGold)" />
+
+    <!-- Inner Radial Lighting Flare -->
+    <circle cx="250" cy="250" r="236" fill="url(#innerGleam)" />
+
+    <!-- Concentric Minted Milling Beaded Rim -->
+    <circle cx="250" cy="250" r="226" fill="none" stroke="#f59e0b" stroke-width="2.0" stroke-dasharray="3.5, 4" opacity="0.75" />
+    <circle cx="250" cy="250" r="218" fill="none" stroke="#d97706" stroke-width="1.2" opacity="0.45" />
+
+    <!-- Vignette / Burnished Shadow Edge -->
+    <circle cx="250" cy="250" r="236" fill="none" stroke="#0e0702" stroke-width="24" opacity="0.65" />
+
+    <!-- Top Inscription: TAMIL SANGAM in Tamil -->
+    <text x="250" y="145" text-anchor="middle" font-family="'Mukta Malar', 'Noto Sans Tamil', sans-serif" font-size="16" font-weight="bold" fill="#f59e0b" letter-spacing="3" opacity="0.9">தமிழ் சங்கம் · EST. 2024</text>
+
+    <!-- Central Typography: TAMIL -->
+    <!-- Extrusion Shadow Layer in Deep Burnished Gold -->
+    <text x="257" y="235" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="92" font-weight="900" fill="#78350f" letter-spacing="6">TAMIL</text>
+    <text x="255" y="233" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="92" font-weight="900" fill="#92400e" letter-spacing="6">TAMIL</text>
+    <text x="253" y="231" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="92" font-weight="900" fill="#b45309" letter-spacing="6">TAMIL</text>
+    <text x="251" y="229" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="92" font-weight="900" fill="#d97706" letter-spacing="6">TAMIL</text>
+    <!-- Foreground Radiant Warm Minted Gold -->
+    <text x="250" y="228" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="92" font-weight="900" fill="#FFFDF0" letter-spacing="6">TAMIL</text>
+
+    <!-- Central Typography: SANGAM -->
+    <!-- Extrusion Shadow Layer in Deep Burnished Gold -->
+    <text x="257" y="320" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="84" font-weight="900" fill="#78350f" letter-spacing="6">SANGAM</text>
+    <text x="255" y="318" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="84" font-weight="900" fill="#92400e" letter-spacing="6">SANGAM</text>
+    <text x="253" y="316" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="84" font-weight="900" fill="#b45309" letter-spacing="6">SANGAM</text>
+    <text x="251" y="314" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="84" font-weight="900" fill="#d97706" letter-spacing="6">SANGAM</text>
+    <!-- Foreground Radiant Warm Minted Gold -->
+    <text x="250" y="313" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="84" font-weight="900" fill="#FFFDF0" letter-spacing="6">SANGAM</text>
+
+    <!-- Subtitle Arch Inscription: THE OHIO STATE UNIVERSITY -->
+    <text x="250" y="375" text-anchor="middle" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#f59e0b" letter-spacing="4" opacity="0.9">THE OHIO STATE UNIVERSITY</text>
+  </g>
+</svg>

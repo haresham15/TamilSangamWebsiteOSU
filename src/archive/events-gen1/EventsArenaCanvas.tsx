@@ -191,7 +191,7 @@ export function EventsArenaCanvas() {
   };
 
   const handleTransitionComplete = () => {
-    router.push("/events/pattas-tappas-diwali-2026");
+    router.push("/events");
   };
 
   const scrollToGround = () => {

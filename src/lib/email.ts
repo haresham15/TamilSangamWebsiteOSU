@@ -261,7 +261,7 @@ export function generateWelcomeEmailHtml(params: {
 You are officially connected to the OSU Tamil Sangam family!
 
 What to expect:
-- Early bird tickets for flagship events like Pattas Tappas Diwali
+- Early bird tickets for flagship campus showcases and celebrations
 - Free food & chai alerts (Streetside Sapad, Oval picnics)
 - Casual student meetups, Uno games, and cultural celebrations
 - Open and welcoming to students of all languages and backgrounds

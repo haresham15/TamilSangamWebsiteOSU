@@ -131,13 +131,14 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="pt-4 flex flex-wrap items-center gap-4">
+            <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
               <PalagaiButton
                 href={`/events/${nextEvent.slug}`}
                 primaryText={locale === "ta" ? "நுழைவுச்சீட்டு பெறுக" : `Get Event Tickets (${nextEvent.price})`}
                 secondaryText={locale === "ta" ? `Get Event Tickets (${nextEvent.price})` : "நுழைவுச்சீட்டு பெறுக"}
                 variant="primary"
                 icon={<Ticket className="w-4 h-4 text-[#55CCA2]" />}
+                className="w-full sm:w-auto justify-center"
               />
 
               <PalagaiButton
@@ -145,6 +146,7 @@ export default function HomePage() {
                 primaryText={locale === "ta" ? "நிகழ்ச்சி நிரல் & உடை" : "Schedule & Dress Code"}
                 secondaryText={locale === "ta" ? "Schedule & Dress Code" : "நிகழ்ச்சி நிரல் & உடை"}
                 variant="white"
+                className="w-full sm:w-auto justify-center"
               />
             </div>
           </div>

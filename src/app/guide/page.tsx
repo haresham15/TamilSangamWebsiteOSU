@@ -257,10 +257,10 @@ export default function UserGuideAndFaqPage() {
 
               <div className="p-4 bg-purple-50/70 border border-[#250d38]">
                 <h3 className="font-bold text-[#250d38] font-display text-base mb-1">
-                  Annual Diwali Showcase (Pattas Tappas)
+                  Cultural Carnivals & Festive Showcases
                 </h3>
                 <p className="leading-relaxed">
-                  Hosted inside the Ohio Union Archie Griffin Ballroom. Attendees wear traditional festive attire (kurtas, sarees, lehengas, or formal dress). Subsidized student tickets drop online in early autumn.
+                  Collaborative events like <em>Namma Jathara</em> feature outdoor challenges, music circles, food stalls, and festive celebrations on campus plazas. Open to all students with free admission!
                 </p>
               </div>
             </div>

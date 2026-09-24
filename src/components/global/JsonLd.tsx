@@ -1,4 +1,5 @@
 import React from "react";
+import { EVENTS } from "@/data/events";
 
 export const OrganizationJsonLd: React.FC = () => {
   const jsonLd = {
@@ -58,23 +59,24 @@ export const OrganizationJsonLd: React.FC = () => {
 };
 
 export const EventJsonLd: React.FC = () => {
+  const upcomingEvent = EVENTS.find((e) => e.status === "upcoming");
+  if (!upcomingEvent) return null;
+
   const eventLd = {
     "@context": "https://schema.org",
     "@type": "Festival",
-    name: "Pattas Tappas Diwali 2026",
-    alternateName: "பட்டாஸ் தப்பாஸ் தீபாவளி 2026",
-    description:
-      "Join the Ohio State Tamil Sangam for our flagship Diwali celebration! Featuring grand banquet dinner, live DJ, energetic dance showcases, and festive cultural celebrations in the Archie Griffin Ballroom.",
-    startDate: "2026-11-07T18:00:00-05:00",
-    endDate: "2026-11-07T22:30:00-05:00",
+    name: upcomingEvent.titleEn,
+    alternateName: upcomingEvent.titleTa,
+    description: upcomingEvent.descriptionEn,
+    startDate: upcomingEvent.date,
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: {
       "@type": "Place",
-      name: "Archie Griffin Grand Ballroom, Ohio Union",
+      name: upcomingEvent.location,
       address: {
         "@type": "PostalAddress",
-        streetAddress: "1739 N High St",
+        streetAddress: upcomingEvent.venueAddress,
         addressLocality: "Columbus",
         addressRegion: "OH",
         postalCode: "43210",
@@ -88,12 +90,11 @@ export const EventJsonLd: React.FC = () => {
     },
     offers: {
       "@type": "Offer",
-      name: "Student General Admission",
-      price: "12.00",
+      name: "General Admission",
+      price: upcomingEvent.price,
       priceCurrency: "USD",
       availability: "https://schema.org/InStock",
-      url: "https://osutamilsangam.org/events/pattas-tappas-diwali-2026",
-      validFrom: "2026-09-01T00:00:00-05:00",
+      url: `https://osutamilsangam.org/events#${upcomingEvent.slug}`,
     },
   };
 
