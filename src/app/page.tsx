@@ -13,6 +13,7 @@ import { WovenBorderMarquee } from "@/components/ui/WovenBorderMarquee";
 import {
   FilterKaapiGlyph,
 } from "@/components/ui/KolamIcons";
+import { PalagaiButton } from "@/components/ui/PalagaiButton";
 import { EVENTS } from "@/data/events";
 import { 
   Calendar, 
@@ -115,7 +116,7 @@ export default function HomePage() {
               {locale === "ta" ? nextEvent.titleTa : nextEvent.titleEn}
             </h3>
 
-            <p className="text-sm sm:text-base text-purple-950/80 leading-relaxed font-body">
+            <p className="text-sm sm:text-base text-[#250d38] font-medium leading-relaxed font-body">
               {locale === "ta" ? nextEvent.descriptionTa : nextEvent.descriptionEn}
             </p>
 
@@ -131,22 +132,20 @@ export default function HomePage() {
             </div>
 
             <div className="pt-4 flex flex-wrap items-center gap-4">
-              <Link
+              <PalagaiButton
                 href={`/events/${nextEvent.slug}`}
-                onClick={playClick}
-                className="px-7 py-3 btn-sangam text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2"
-              >
-                <Ticket className="w-4 h-4 text-[#55CCA2]" />
-                <span>{locale === "ta" ? "நுழைவுச்சீட்டு பெறுக" : `Get Event Tickets (${nextEvent.price})`}</span>
-              </Link>
+                primaryText={locale === "ta" ? "நுழைவுச்சீட்டு பெறுக" : `Get Event Tickets (${nextEvent.price})`}
+                secondaryText={locale === "ta" ? `Get Event Tickets (${nextEvent.price})` : "நுழைவுச்சீட்டு பெறுக"}
+                variant="primary"
+                icon={<Ticket className="w-4 h-4 text-[#55CCA2]" />}
+              />
 
-              <Link
+              <PalagaiButton
                 href={`/events/${nextEvent.slug}`}
-                onClick={playClick}
-                className="px-6 py-3 btn-sangam-white text-xs font-mono font-bold uppercase tracking-wider"
-              >
-                <span>Event Schedule & Dress Code</span>
-              </Link>
+                primaryText={locale === "ta" ? "நிகழ்ச்சி நிரல் & உடை" : "Schedule & Dress Code"}
+                secondaryText={locale === "ta" ? "Schedule & Dress Code" : "நிகழ்ச்சி நிரல் & உடை"}
+                variant="white"
+              />
             </div>
           </div>
 
@@ -221,7 +220,7 @@ export default function HomePage() {
                 <h3 className="text-base font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
                   TS &quot;A Berry Cute Picnic&quot;
                 </h3>
-                <p className="text-xs text-purple-950/75 line-clamp-2 leading-relaxed font-body">
+                <p className="text-xs text-[#250d38] font-medium line-clamp-2 leading-relaxed font-body">
                   Fall semester welcome picnic on the South Oval with snacks, card games, and good conversation.
                 </p>
               </div>
@@ -256,7 +255,7 @@ export default function HomePage() {
                 <h3 className="text-base font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
                   TS Streetside Sapad Event
                 </h3>
-                <p className="text-xs text-purple-950/75 line-clamp-2 leading-relaxed font-body">
+                <p className="text-xs text-[#250d38] font-medium line-clamp-2 leading-relaxed font-body">
                   South Indian street food dinner featuring hot kothu parotta, fresh dosas, and filter coffee.
                 </p>
               </div>
@@ -291,7 +290,7 @@ export default function HomePage() {
                 <h3 className="text-base font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
                   TS x TT: Namma Jathara
                 </h3>
-                <p className="text-xs text-purple-950/75 line-clamp-2 leading-relaxed font-body">
+                <p className="text-xs text-[#250d38] font-medium line-clamp-2 leading-relaxed font-body">
                   A spring campus carnival hosted with Telugu Thallulu featuring outdoor games, music, and food stalls.
                 </p>
               </div>
@@ -319,20 +318,20 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link
+            <PalagaiButton
               href="/join"
-              onClick={playClick}
-              className="px-7 py-3.5 btn-sangam-mint text-xs font-mono font-bold uppercase tracking-wider"
-            >
-              Join the Student GroupMe
-            </Link>
-            <Link
+              primaryText={locale === "ta" ? "மாணவர் குழுவில் இணைக" : "Join the Student GroupMe"}
+              secondaryText={locale === "ta" ? "Join the Student GroupMe" : "மாணவர் குழுவில் இணைக"}
+              variant="mint"
+              size="lg"
+            />
+            <PalagaiButton
               href="/about"
-              onClick={playClick}
-              className="px-7 py-3.5 btn-sangam-white text-xs font-mono font-bold uppercase tracking-wider"
-            >
-              Read Our Constitution & History
-            </Link>
+              primaryText={locale === "ta" ? "எங்கள் வரலாறு & நோக்கம்" : "Our Ethos & Constitution"}
+              secondaryText={locale === "ta" ? "Our Ethos & Constitution" : "எங்கள் வரலாறு & நோக்கம்"}
+              variant="white"
+              size="lg"
+            />
           </div>
         </div>
       </section>

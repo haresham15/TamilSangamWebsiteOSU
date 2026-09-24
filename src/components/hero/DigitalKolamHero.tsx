@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useRef, useEffect, useMemo, useSyncExternalStore } from "react";
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
-import { useAudio } from "@/context/AudioContext";
 import { Ticket, Users, ArrowRight } from "lucide-react";
+import { PalagaiButton } from "@/components/ui/PalagaiButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
@@ -216,7 +215,6 @@ function GPUKolamParticles({
 export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
   const { locale } = useLocale();
   const { isLiteMode } = useLiteMode();
-  const { playClick } = useAudio();
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const textGroupRef = useRef<SVGGElement>(null);
@@ -256,7 +254,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
           start: "top top",
           end: "+=1600",
           pin: true,
-          scrub: 1,
+          scrub: true,
           anticipatePin: 1,
           onUpdate: (self) => {
             scrollProgressRef.current = self.progress;
@@ -528,32 +526,35 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         {/* Bottom CTA Action Bar */}
         <div className="pt-4 border-t border-purple-500/20 flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3">
-            <Link
+            <PalagaiButton
               href={`/events/${nextEventSlug}`}
-              onClick={playClick}
-              className="min-h-[48px] px-6 py-3 bg-[#55CCA2] text-[#160824] hover:bg-white text-xs font-mono font-extrabold uppercase tracking-wider border-2 border-[#55CCA2] shadow-[4px_4px_0px_#250d38] transition-all flex items-center gap-2"
-            >
-              <Ticket className="w-4 h-4" />
-              <span>{locale === "ta" ? "நுழைவுச்சீட்டு" : "Get Event Tickets"}</span>
-            </Link>
+              variant="mint"
+              size="md"
+              primaryText={locale === "ta" ? "நுழைவுச்சீட்டு" : "Get Event Tickets"}
+              secondaryText={locale === "ta" ? "Get Event Tickets" : "நுழைவுச்சீட்டு"}
+              icon={<Ticket className="w-4 h-4 text-[#250d38]" />}
+              iconPosition="left"
+            />
 
-            <Link
+            <PalagaiButton
               href="/join"
-              onClick={playClick}
-              className="min-h-[48px] px-6 py-3 bg-[#250d38] hover:bg-[#34144e] text-white text-xs font-mono font-bold uppercase tracking-wider border-2 border-[#55CCA2] shadow-[4px_4px_0px_#55CCA2] transition-all flex items-center gap-2"
-            >
-              <Users className="w-4 h-4 text-[#55CCA2]" />
-              <span>{locale === "ta" ? "இணையுங்கள்" : "Join The Club"}</span>
-            </Link>
+              variant="dark"
+              size="md"
+              primaryText={locale === "ta" ? "இணையுங்கள்" : "Join The Club"}
+              secondaryText={locale === "ta" ? "Join The Club" : "இணையுங்கள்"}
+              icon={<Users className="w-4 h-4 text-[#55CCA2]" />}
+              iconPosition="left"
+            />
 
-            <Link
+            <PalagaiButton
               href="/board"
-              onClick={playClick}
-              className="min-h-[48px] px-5 py-3 text-purple-200 hover:text-white text-xs font-mono font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5"
-            >
-              <span>{locale === "ta" ? "நிர்வாகக் குழு" : "Meet The Board"}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#55CCA2]" />
-            </Link>
+              variant="white"
+              size="md"
+              primaryText={locale === "ta" ? "நிர்வாகக் குழு" : "Meet The Board"}
+              secondaryText={locale === "ta" ? "Meet The Board" : "நிர்வாகக் குழு"}
+              icon={<ArrowRight className="w-3.5 h-3.5 text-[#55CCA2]" />}
+              iconPosition="right"
+            />
           </div>
 
           {/* Scroll Indicator */}

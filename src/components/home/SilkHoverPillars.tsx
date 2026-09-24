@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useRef, useEffect, useState, useSyncExternalStore } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
-import { useAudio } from "@/context/AudioContext";
 import { Sparkles, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
+import { PalagaiButton } from "@/components/ui/PalagaiButton";
 
 interface PillarItem {
   id: string;
@@ -114,7 +113,6 @@ const getIsTouchSnapshot = () => {
 function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
   const { locale } = useLocale();
   const { isLiteMode } = useLiteMode();
-  const { playClick } = useAudio();
 
   const cardRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
@@ -150,9 +148,7 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
     const card = cardRef.current;
     const media = mediaRef.current;
 
-    // quickTo setters for 60-120fps cursor chasing
-    const setClipX = gsap.quickTo(media, "--mask-x", { duration: 0.22, ease: "power2.out" });
-    const setClipY = gsap.quickTo(media, "--mask-y", { duration: 0.22, ease: "power2.out" });
+    // 3D card tilt quickTo setters
     const setRotX = gsap.quickTo(card, "rotationX", { duration: 0.3, ease: "power2.out" });
     const setRotY = gsap.quickTo(card, "rotationY", { duration: 0.3, ease: "power2.out" });
 
@@ -166,11 +162,11 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       const x = pendingX - cachedRect.left;
       const y = pendingY - cachedRect.top;
 
-      const normX = (x / cachedRect.width) * 100;
-      const normY = (y / cachedRect.height) * 100;
+      const normX = Math.max(0, Math.min(100, (x / cachedRect.width) * 100));
+      const normY = Math.max(0, Math.min(100, (y / cachedRect.height) * 100));
 
-      setClipX(normX);
-      setClipY(normY);
+      media.style.setProperty("--mask-x", `${normX.toFixed(1)}%`);
+      media.style.setProperty("--mask-y", `${normY.toFixed(1)}%`);
 
       // 3D Perspective Tilt Math based on mouse position
       const tiltX = (y / cachedRect.height - 0.5) * -10;
@@ -191,8 +187,14 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       }
     };
 
-    const handleMouseEnter = () => {
+    const handleMouseEnter = (e: MouseEvent) => {
       cachedRect = card.getBoundingClientRect();
+      const x = e.clientX - cachedRect.left;
+      const y = e.clientY - cachedRect.top;
+      const normX = Math.max(0, Math.min(100, (x / cachedRect.width) * 100));
+      const normY = Math.max(0, Math.min(100, (y / cachedRect.height) * 100));
+      media.style.setProperty("--mask-x", `${normX.toFixed(1)}%`);
+      media.style.setProperty("--mask-y", `${normY.toFixed(1)}%`);
       setIsHovered(true);
     };
 
@@ -213,6 +215,16 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       card.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, [isTouchDevice, isLiteMode]);
+
+  // Smoothly expand or collapse the circular unmasking radius via GSAP
+  useEffect(() => {
+    if (isTouchDevice || isLiteMode || !mediaRef.current) return;
+    gsap.to(mediaRef.current, {
+      "--mask-radius": isHovered ? "42%" : "0%",
+      duration: isHovered ? 0.38 : 0.28,
+      ease: isHovered ? "power2.out" : "power2.in",
+    });
+  }, [isHovered, isTouchDevice, isLiteMode]);
 
   const activeMedia = isTouchDevice ? inViewMobile : isHovered;
 
@@ -238,8 +250,8 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
           opacity: activeMedia ? 1 : 0,
           clipPath: isTouchDevice
             ? "circle(100% at 50% 50%)"
-            : `circle(${isHovered ? "38%" : "0%"} at var(--mask-x, 50%) var(--mask-y, 50%))`,
-          transition: "opacity 0.35s ease, clip-path 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+            : `circle(var(--mask-radius, 0%) at var(--mask-x, 50%) var(--mask-y, 50%))`,
+          transition: "opacity 0.35s ease",
           willChange: "clip-path, opacity",
         }}
       >
@@ -261,7 +273,7 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       <div
         lang="ta"
         style={{ letterSpacing: 0 }}
-        className="absolute right-4 bottom-2 text-7xl sm:text-9xl font-bold font-tamil text-white/5 group-hover:text-white/10 select-none pointer-events-none transition-colors duration-500 z-10"
+        className="absolute right-4 bottom-2 text-7xl sm:text-9xl font-bold font-tamil text-white/15 group-hover:text-white/25 select-none pointer-events-none transition-colors duration-500 z-10"
       >
         {pillar.tamilScript}
       </div>
@@ -291,21 +303,21 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
           </p>
         </div>
 
-        <p className="text-xs sm:text-sm text-purple-100/80 font-body leading-relaxed max-w-md">
+        <p className="text-xs sm:text-sm text-purple-100 font-body leading-relaxed max-w-md">
           {locale === "ta" ? pillar.descTa : pillar.descEn}
         </p>
       </div>
 
-      {/* 5. Action Link Button (Safety Layer: Minimum 48px Touch Target) */}
+      {/* 5. Action Link Button with Kinetic Bilingual Roll & Artisanal Depth */}
       <div className="relative z-20 pt-6">
-        <Link
+        <PalagaiButton
           href={pillar.href}
-          onClick={playClick}
-          className="inline-flex items-center gap-2 min-h-[48px] px-4 py-2 bg-white/10 hover:bg-white text-white hover:text-[#1a0b2e] border border-white/20 hover:border-[#55CCA2] text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200"
-        >
-          <span>{locale === "ta" ? pillar.ctaTa : pillar.ctaEn}</span>
-          <ArrowUpRight className="w-4 h-4 text-[#55CCA2] group-hover:text-[#1a0b2e]" />
-        </Link>
+          primaryText={locale === "ta" ? pillar.ctaTa : pillar.ctaEn}
+          secondaryText={locale === "ta" ? pillar.ctaEn : pillar.ctaTa}
+          variant="mint"
+          size="sm"
+          icon={<ArrowUpRight className="w-4 h-4 text-[#240e36]" />}
+        />
       </div>
     </div>
   );
@@ -327,7 +339,7 @@ export function SilkHoverPillars() {
             {locale === "ta" ? "சங்கத்தின் நான்கு தூண்கள்" : "The Four Pillars of Sangam"}
           </h2>
         </div>
-        <p className="text-xs sm:text-sm font-mono text-purple-950/70 max-w-xs text-left sm:text-right">
+        <p className="text-xs sm:text-sm font-mono text-[#250d38] font-medium max-w-xs text-left sm:text-right">
           {locale === "ta"
             ? "கலை, இசை, கொண்டாட்டம் மற்றும் சமூகம் வழியே மாணவர்களை இணைக்கிறோம்."
             : "Connecting Buckeyes through performing arts, music, celebratory gatherings, and community."}

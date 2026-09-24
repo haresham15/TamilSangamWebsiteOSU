@@ -48,7 +48,7 @@ export default function SuggestionsPage() {
         start: "top top",
         end: "+=2200",
         pin: true,
-        scrub: 1.0,
+        scrub: true,
         anticipatePin: 1,
         onUpdate: (self) => {
           setScrollProgress(self.progress);

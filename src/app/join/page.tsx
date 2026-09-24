@@ -15,6 +15,7 @@ import {
   Loader2,
   AlertCircle
 } from "lucide-react";
+import { PalagaiButton } from "@/components/ui/PalagaiButton";
 
 export default function JoinPage() {
   const { locale } = useLocale();
@@ -83,13 +84,13 @@ export default function JoinPage() {
     <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left font-body">
       {/* Header */}
       <div className="max-w-3xl mb-12">
-        <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2 font-bold">
+        <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] block mb-2 font-bold">
           The Ohio State University · Welcoming Student Hub
         </span>
-        <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-display mb-4">
+        <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
           {locale === "ta" ? "சங்கத்தில் இணையுங்கள்" : "Join the Sangam Family"}
         </h1>
-        <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-body">
+        <p className="text-sm sm:text-base text-[#250d38] font-medium leading-relaxed font-body">
           {locale === "ta"
             ? "நீங்கள் எந்த மொழி பேசினாலும் சரி — எங்களோடு இணைந்திருங்கள்; நல்ல உணவு, இசை, மற்றும் நட்பைக் கொண்டாடுங்கள். அனைவரும் வரவேற்கப்படுகிறார்கள்!"
             : "Whether you are an incoming freshman, transfer, graduate student, or friend who loves the culture — find your people. Open year-round, 100% free membership, and welcoming to students of all languages and backgrounds!"}
@@ -158,16 +159,15 @@ export default function JoinPage() {
           </p>
 
           <div className="pt-2 flex flex-wrap items-center gap-3">
-            <a
+            <PalagaiButton
               href={groupMeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={playClick}
-              className="btn-sangam-mint px-6 py-3 text-xs uppercase tracking-wider inline-flex items-center gap-2"
-            >
-              <span>Open GroupMe in App</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </a>
+              primaryText={locale === "ta" ? "குரூப்மீயில் இணைக" : "Open GroupMe in App"}
+              secondaryText={locale === "ta" ? "Open GroupMe in App" : "குரூப்மீயில் இணைக"}
+              variant="mint"
+              icon={<ArrowRight className="w-3.5 h-3.5" />}
+            />
 
             <button
               onClick={handleCopyGroupMe}
@@ -302,22 +302,15 @@ export default function JoinPage() {
               </div>
             )}
 
-            <button
+            <PalagaiButton
               type="submit"
               disabled={isSubmitting}
-              className="btn-sangam-mint px-6 py-3.5 text-xs uppercase tracking-wider flex items-center gap-2 disabled:opacity-60"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Submitting & Dispatching Welcome Email...</span>
-                </>
-              ) : (
-                <>
-                  <span>Submit Application →</span>
-                </>
-              )}
-            </button>
+              primaryText={isSubmitting ? "Submitting Application..." : (locale === "ta" ? "விண்ணப்பத்தை அனுப்புக →" : "Submit Application →")}
+              secondaryText={isSubmitting ? "அனுப்பப்படுகிறது..." : (locale === "ta" ? "Submit Application →" : "விண்ணப்பத்தை அனுப்புக →")}
+              variant="mint"
+              size="md"
+              icon={isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : undefined}
+            />
           </form>
         ) : (
           <div className="py-12 text-center space-y-4 max-w-md mx-auto">

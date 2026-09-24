@@ -2,6 +2,7 @@
 
 import React, { useRef, useSyncExternalStore, Component, ErrorInfo } from "react";
 import { useLiteMode } from "@/context/LiteModeContext";
+import { usePathname } from "next/navigation";
 
 // Defensive WebGL Error Boundary to prevent crashes on unsupported devices
 class CanvasErrorBoundary extends Component<
@@ -44,7 +45,9 @@ export function GlobalCanvas() {
   );
   const containerRef = useRef<HTMLDivElement>(null);
 
-  if (!mounted || isLiteMode) return null;
+  const pathname = usePathname();
+
+  if (!mounted || isLiteMode || pathname === "/events") return null;
 
   return (
     <CanvasErrorBoundary>

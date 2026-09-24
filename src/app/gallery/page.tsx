@@ -136,7 +136,7 @@ export default function GalleryPage() {
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
           {locale === "ta" ? "நினைவுகள் · வரலாற்று புகைப்படத் தொகுப்பு" : "Memories & Event Info Pages"}
         </h1>
-        <p className="text-base sm:text-lg text-purple-950/85 leading-relaxed font-body">
+        <p className="text-base sm:text-lg text-[#250d38] font-medium leading-relaxed font-body">
           {locale === "ta"
             ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் 2025–2026 கல்வியாண்டின் விழாக்கள், பிக்னிக், தெருவோரச் சாப்பாடு மற்றும் கலை நிகழ்ச்சிகளின் பிரத்யேக தகவல் பக்கங்கள் மற்றும் 5 புகைப்படக் கதைகள்."
             : "Explore our collegiate archive of past events at Ohio State from the 2025–2026 academic year. Each event features a dedicated info page with 5 curated photographs capturing the full narrative, plus direct links to complete Google Photos albums."}
@@ -194,7 +194,7 @@ export default function GalleryPage() {
 
         {/* Quick Tag Ledger Chips */}
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-mono text-purple-950/70 mr-1 flex items-center gap-1 font-bold">
+          <span className="text-xs font-mono text-[#250d38] mr-1 flex items-center gap-1 font-bold">
             <Filter className="w-3.5 h-3.5 text-[#55CCA2]" />
             <span>Tag:</span>
           </span>
@@ -299,7 +299,7 @@ export default function GalleryPage() {
                 <p className="text-xs text-[#4c2472] font-tamil font-semibold mb-2">
                   {album.titleTa}
                 </p>
-                <p className="text-xs text-purple-950/80 line-clamp-2 leading-relaxed mb-4 font-body">
+                <p className="text-xs text-[#250d38] line-clamp-2 leading-relaxed mb-4 font-body">
                   {locale === "ta" ? album.descriptionTa : album.descriptionEn}
                 </p>
               </div>
@@ -337,11 +337,11 @@ export default function GalleryPage() {
           <h2 className="text-xl sm:text-2xl font-extrabold text-[#250d38] font-display">
             {locale === "ta" ? "புகைப்பட தொகுப்பு திரை" : "Seamless Photo Stream"}
           </h2>
-          <p className="text-xs text-purple-950/70 font-mono mt-0.5">
+          <p className="text-xs text-[#250d38] font-mono mt-0.5">
             Edge-to-edge photo archive · Click any photo for full lightbox view
           </p>
         </div>
-        <span className="text-xs font-mono text-purple-950/70 font-bold self-start sm:self-auto">
+        <span className="text-xs font-mono text-[#250d38] font-bold self-start sm:self-auto">
           Showing {Math.min(visibleCount, filteredPhotos.length)} of {filteredPhotos.length}
         </span>
       </div>

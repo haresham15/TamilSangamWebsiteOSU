@@ -128,26 +128,25 @@ function TierText({ tier, position, isMobile, locale }: { tier: TierItem, positi
     const dist = state.camera.position.z - position[2];
 
     let opacity = 0;
-    let blur = 10;
+    let scale = 0.8;
 
     if (dist > 0 && dist < 20) {
       // Approaching
       const factor = 1 - Math.pow(dist / 20, 2);
       opacity = factor;
-      blur = (1 - factor) * 10;
+      scale = 0.8 + (factor * 0.2);
     } else if (dist <= 0 && dist > -5) {
       // Passed through
-      const factor = 1 - Math.abs(dist / 5);
+      const factor = Math.max(0, 1 - Math.abs(dist / 5));
       opacity = factor;
-      blur = (1 - factor) * 20;
+      scale = 1.0 + ((1 - factor) * 0.2); // expand slightly as it fades out
     }
 
     textRef.current.style.opacity = opacity.toString();
-    textRef.current.style.filter = `blur(${blur}px)`;
 
-    // Parallax push on Y
+    // Parallax push on Y and dynamic scale instead of blur
     const yOffset = dist * 0.5;
-    textRef.current.style.transform = `translate3d(0, calc(-50% + ${yOffset}px), 0)`;
+    textRef.current.style.transform = `translate3d(0, calc(-50% + ${yOffset}px), 0) scale(${scale})`;
   });
 
   return (
@@ -208,9 +207,9 @@ function AscendingGopuramCamera({
     const targetX = isMobile ? 0 : -2;
     const targetY = 0;
 
-    camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 4.0, delta);
-    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 4.0, delta);
-    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 4.0, delta);
+    camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 15.0, delta);
+    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 15.0, delta);
+    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 15.0, delta);
 
     // Natural subtle temple breeze sway
     const swayTime = camera.position.z * 0.1;
@@ -262,7 +261,7 @@ export function GopuramZScroll() {
         start: "top top",
         end: "+=3500",
         pin: true,
-        scrub: 1.2,
+        scrub: true, // Let Lenis handle the smoothing natively without GSAP delay math
         anticipatePin: 1,
         onUpdate: (self) => {
           scrollProgressRef.current = self.progress;

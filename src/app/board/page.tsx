@@ -80,7 +80,7 @@ export default function BoardPage() {
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
           {locale === "ta" ? "நிர்வாகக் குழு & தலைமைப் பொறுப்புகள்" : "Executive Board & Leadership"}
         </h1>
-        <p className="text-sm sm:text-base text-purple-950/80 leading-relaxed font-body font-medium">
+        <p className="text-sm sm:text-base text-[#250d38] font-medium leading-relaxed font-body">
           {locale === "ta"
             ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தை வழிநடத்தும் 9 முதன்மை நிர்வாகிகள், துணைக் குழு உறுப்பினர்கள், மற்றும் அதிகாரப்பூர்வ சட்டதிட்டங்கள்."
             : "Meet the 9 student executive officers, dedicated subcommittee leaders, and constitutional governance guiding The Ohio State University Tamil Sangam."}

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Mukta_Malar, JetBrains_Mono } from "next/font/google";
+import { Mukta_Malar, JetBrains_Mono, Anek_Tamil, Halant, Rozha_One } from "next/font/google";
 import "./globals.css";
 
 import { LocaleProvider } from "@/context/LocaleContext";
@@ -20,6 +20,25 @@ const muktaMalar = Mukta_Malar({
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
+});
+
+// Cultural Tamil & Indic Display Typefaces (replaces cold futuristic fonts)
+const anekTamil = Anek_Tamil({
+  variable: "--font-anek-tamil",
+  subsets: ["latin", "tamil"],
+  weight: ["500", "600", "700", "800"],
+});
+
+const halant = Halant({
+  variable: "--font-halant",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
+const rozhaOne = Rozha_One({
+  variable: "--font-rozha",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const viewport: Viewport = {
@@ -122,7 +141,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${muktaMalar.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${muktaMalar.variable} ${jetbrainsMono.variable} ${anekTamil.variable} ${halant.variable} ${rozhaOne.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans bg-[var(--bg-base)] text-[var(--text-primary)]">

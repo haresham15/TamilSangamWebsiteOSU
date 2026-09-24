@@ -18,7 +18,7 @@ This project enforces disciplined, agentic design engineering to eradicate AI-ge
 
 Generative LLMs default to the statistical median of their training data, producing predictable, homogenized interfaces. You are strictly forbidden from outputting the following anti-patterns:
 
-- ❌ **Banned Typography**: Never default to unstyled `Inter`, `Roboto`, `Arial`, or generic system sans-serif. All display headings MUST use **Clash Display** (`var(--font-display)`). All body text, captions, and Tamil typography MUST use **Mukta Malar** (`var(--font-body)` / `var(--font-tamil)`).
+- ❌ **Banned Typography**: Never default to unstyled `Inter`, `Roboto`, `Arial`, or generic system sans-serif, and never use cold futuristic/brutalist fonts. All display headings MUST use **Anek Tamil** / **Halant** (`var(--font-display)` / `var(--font-serif)`). All body text, captions, and Tamil typography MUST use **Mukta Malar** (`var(--font-body)` / `var(--font-tamil)`).
 - ❌ **Banned Colors**: Never use pure black (`#000000`, `rgb(0,0,0)`), flat `#FFFFFF` backgrounds, un-tinted dead grays, or default purple-to-indigo Tailwind gradients (`from-indigo-500 to-purple-600`). All colors must be perceptually uniform OKLCH rooted in Kanchipuram silk and Dravidian temple architecture.
 - ❌ **Banned Components**: Never wrap every element inside identical `p-6 rounded-2xl border border-gray-200 shadow-md` cards with 0.1 opacity black drop shadows. Vary container density, utilize split-rails, full-bleed backgrounds, and asymmetric editorial grids.
 - ❌ **Banned Motion**: Never use generic `transition: all 0.3s ease` or `transition-all duration-300`. Animate discrete properties with intentional spring physics or custom cubic-bezier tweens.
@@ -129,7 +129,7 @@ All styling in this project is anchored by Tailwind v4 CSS-first `@theme` and th
 ## 10. Project-Specific Identity & Ground Truth
 
 - **Brand Voice**: Reverent, energetic, collegiate, and culturally grounded in classical Tamil civilization (Sangam literature, Dravidian architecture, festive Kanchipuram silk).
-- **Display Typography**: **Clash Display** (`var(--font-display)`).
+- **Display Typography**: **Anek Tamil** / **Halant** (`var(--font-display)` / `var(--font-serif)`).
 - **Body & Script Typography**: **Mukta Malar** (`var(--font-body)` / `var(--font-tamil)`).
 - **Metadata / Monospace**: **JetBrains Mono** (`var(--font-mono)`).
 - **Ground Truth Design Tokens**: Codified in [`design/tokens.json`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/design/tokens.json) and mirrored in [`src/app/globals.css`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/globals.css) via `@theme`.

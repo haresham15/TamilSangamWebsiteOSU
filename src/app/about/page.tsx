@@ -101,7 +101,7 @@ export default function AboutPage() {
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display leading-[1.08] mb-4">
           {locale === "ta" ? "யாதும் ஊரே யாவரும் கேளீர்" : "To Us All Towns Are Home, Everyone Our Kin"}
         </h1>
-        <p className="text-base sm:text-lg text-purple-950/85 leading-relaxed font-body font-medium">
+        <p className="text-base sm:text-lg text-[#250d38] font-medium leading-relaxed font-body">
           {locale === "ta"
             ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் என்பது மாணவர்கள் அனைவரும் ஒன்றிணைந்து தமிழ் பண்பாட்டை ரசிக்கவும், நல்ல உணவை ருசிக்கவும், மற்றும் நட்பை வளர்க்கவும் வழிகாட்டும் திறந்த மனப்பான்மை கொண்ட மாணவர் அமைப்பாகும்."
             : "The Ohio State University Tamil Sangam is an open, welcoming student-run cultural hub. We bring people of all backgrounds, cultures, and languages together to celebrate Tamil culture, eat incredible food, hang out, and build genuine collegiate friendships."}
@@ -120,11 +120,11 @@ export default function AboutPage() {
             {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம் என்பது என்ன?" : "What is Tamil Sangam at OSU?"}
           </h2>
 
-          <p className="text-sm sm:text-base text-purple-950/80 leading-relaxed font-body">
+          <p className="text-sm sm:text-base text-[#250d38] leading-relaxed font-body">
             In Tamil, the word <em className="text-[#4c2472] not-italic font-bold">Sangam</em> (சங்கம்) simply means an assembly, union, or community gathering where people come together. At The Ohio State University, our Sangam is an active, open, and casual student hub for Tamil Buckeyes and everyone in our campus community.
           </p>
 
-          <p className="text-sm sm:text-base text-purple-950/80 leading-relaxed font-body">
+          <p className="text-sm sm:text-base text-[#250d38] leading-relaxed font-body">
             Our events are relaxed and social — whether it&apos;s chilling on the South Oval with snacks, savoring hot kothu parotta at street food nights, jamming to film music, or celebrating at our annual Diwali party. You don&apos;t need to speak Tamil, and you don&apos;t need any specific cultural background: students of all languages, majors, and backgrounds are always welcome to hang out and find a home away from home!
           </p>
         </div>
@@ -150,7 +150,7 @@ export default function AboutPage() {
                 <h3 className="text-xl font-bold text-[#250d38] mb-2 font-display">
                   {locale === "ta" ? p.titleTa : p.titleEn}
                 </h3>
-                <p className="text-xs sm:text-sm text-purple-950/80 leading-relaxed font-body">
+                <p className="text-xs sm:text-sm text-[#250d38] leading-relaxed font-body">
                   {locale === "ta" ? p.descriptionTa : p.descriptionEn}
                 </p>
               </div>
@@ -182,7 +182,7 @@ export default function AboutPage() {
                 <h3 className="text-lg sm:text-xl font-bold text-[#250d38] font-display">
                   {locale === "ta" ? evt.titleTa : evt.titleEn}
                 </h3>
-                <p className="text-xs sm:text-sm text-purple-950/80 leading-relaxed font-body">
+                <p className="text-xs sm:text-sm text-[#250d38] leading-relaxed font-body">
                   {locale === "ta" ? evt.descriptionTa : evt.descriptionEn}
                 </p>
               </div>
@@ -210,7 +210,7 @@ export default function AboutPage() {
               <h3 className="text-xl font-bold text-[#250d38] mb-2 font-display">
                 {pt.name}
               </h3>
-              <p className="text-xs sm:text-sm text-purple-950/80 leading-relaxed font-body">
+              <p className="text-xs sm:text-sm text-[#250d38] leading-relaxed font-body">
                 {pt.collaboration}
               </p>
             </div>
@@ -270,7 +270,7 @@ export default function AboutPage() {
                 </button>
 
                 {isExpanded && (
-                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-purple-950/80 leading-relaxed border-t-2 border-purple-100 font-body">
+                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-[#250d38] leading-relaxed border-t-2 border-purple-100 font-body">
                     {locale === "ta" ? faq.answerTa : faq.answerEn}
                   </div>
                 )}

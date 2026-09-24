@@ -402,31 +402,40 @@ function StadiumCalloutPins({
 
 // Newly Dropped Suggestion Pin with Spring Bounce
 function NewlyDroppedPin({ pin }: { pin: EphemeralPin }) {
-  const [altitude, setAltitude] = useState(6.0);
-  const [velocity, setVelocity] = useState(0);
+  const groupRef = useRef<THREE.Group>(null);
+  const ringRef = useRef<THREE.Mesh>(null);
+  const altitudeRef = useRef(6.0);
+  const velocityRef = useRef(0);
 
   // Normalize coords onto the Ohio Stadium field
   const posX = (pin.x / 6) * 1.6;
   const posZ = (pin.y / 4) * 3.5;
 
   useFrame((_, delta) => {
-    if (altitude > 0.05 || Math.abs(velocity) > 0.05) {
+    if (altitudeRef.current > 0.05 || Math.abs(velocityRef.current) > 0.05) {
       const gravity = 18;
-      const nextVel = velocity - gravity * delta;
-      let nextAlt = altitude + nextVel * delta;
+      const nextVel = velocityRef.current - gravity * delta;
+      let nextAlt = altitudeRef.current + nextVel * delta;
 
       if (nextAlt <= 0) {
         nextAlt = 0;
-        setVelocity(-nextVel * 0.42);
+        velocityRef.current = -nextVel * 0.42;
       } else {
-        setVelocity(nextVel);
+        velocityRef.current = nextVel;
       }
-      setAltitude(nextAlt);
+      altitudeRef.current = nextAlt;
+
+      if (groupRef.current) {
+        groupRef.current.position.y = nextAlt;
+      }
+      if (ringRef.current) {
+        ringRef.current.position.y = -nextAlt + 0.02;
+      }
     }
   });
 
   return (
-    <group position={[posX, altitude, posZ]}>
+    <group ref={groupRef} position={[posX, 6.0, posZ]}>
       {/* Golden Pin Head */}
       <mesh position={[0, 1.0, 0]} rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[0.18, 0.5, 16]} />
@@ -448,7 +457,7 @@ function NewlyDroppedPin({ pin }: { pin: EphemeralPin }) {
       <pointLight color="#FFC526" intensity={3.0} distance={5} position={[0, 1.2, 0]} />
 
       {/* Ripple ring on ground */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -altitude + 0.02, 0]}>
+      <mesh ref={ringRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -6.0 + 0.02, 0]}>
         <ringGeometry args={[0.35, 0.5, 32]} />
         <meshBasicMaterial color="#FFC526" transparent opacity={0.8} />
       </mesh>

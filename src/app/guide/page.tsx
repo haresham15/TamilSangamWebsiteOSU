@@ -165,7 +165,7 @@ export default function UserGuideAndFaqPage() {
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
           {locale === "ta" ? "பயனர் வழிகாட்டி & கேள்வி-பதில்" : "User Guide & FAQ"}
         </h1>
-        <p className="text-sm sm:text-base text-purple-950/80 leading-relaxed font-body font-medium">
+        <p className="text-sm sm:text-base text-[#250d38] font-medium leading-relaxed font-body">
           {locale === "ta"
             ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் செயல்பாடுகள், நிகழ்வுகள், மற்றும் வழிகாட்டுதல்கள் பற்றிய விரிவான தகவல்கள். எமது AI வழிகாட்டி நண்பாவும் (Nanba) இந்த அறிவுத் தளத்தைக் கொண்டே பதிலளிக்கிறது."
             : "Everything you need to know about participating in OSU Tamil Sangam — from membership and event logistics to voting rights and our Nanba-powered knowledge engine."}
@@ -210,7 +210,7 @@ export default function UserGuideAndFaqPage() {
             <h2 className="text-2xl sm:text-3xl font-bold text-[#250d38] font-display mb-4">
               Joining the Club is 100% Free
             </h2>
-            <div className="space-y-3 text-xs sm:text-sm text-purple-950/85 leading-relaxed font-body">
+            <div className="space-y-3 text-xs sm:text-sm text-[#250d38] leading-relaxed font-body">
               <p>
                 <strong>No Dues or Hidden Fees:</strong> General membership in OSU Tamil Sangam is completely free for all Ohio State students. You do not need to pay dues to attend our meetings, lawn kickbacks, street food nights, or general workshops.
               </p>
@@ -245,7 +245,7 @@ export default function UserGuideAndFaqPage() {
             <h2 className="text-2xl sm:text-3xl font-bold text-[#250d38] font-display mb-4">
               Campus Events & What to Expect
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm text-purple-950/85">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm text-[#250d38]">
               <div className="p-4 bg-purple-50/70 border border-[#250d38]">
                 <h3 className="font-bold text-[#250d38] font-display text-base mb-1">
                   Casual Hangouts & Food Nights
@@ -275,7 +275,7 @@ export default function UserGuideAndFaqPage() {
             <h2 className="text-2xl sm:text-3xl font-bold text-[#250d38] font-display mb-4">
               Get Involved in Performance & Production
             </h2>
-            <div className="space-y-3 text-xs sm:text-sm text-purple-950/85 leading-relaxed">
+            <div className="space-y-3 text-xs sm:text-sm text-[#250d38] leading-relaxed">
               <p>
                 <strong>Aatam (Dance):</strong> We host beginner-friendly and performance choreography rehearsals for cinematic Kuthu, fusion, and festival routines. No prior dance experience is required!
               </p>
@@ -297,7 +297,7 @@ export default function UserGuideAndFaqPage() {
             <h2 className="text-2xl sm:text-3xl font-bold text-[#250d38] font-display mb-4">
               Constitutional Voting & Board Shadowing
             </h2>
-            <div className="space-y-3 text-xs sm:text-sm text-purple-950/85 leading-relaxed">
+            <div className="space-y-3 text-xs sm:text-sm text-[#250d38] leading-relaxed">
               <p>
                 To qualify for active voting rights in officer elections or to qualify for Executive Board shadowing, members must meet the constitutional threshold:
               </p>

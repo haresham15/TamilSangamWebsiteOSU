@@ -14,6 +14,7 @@ import {
   Ticket, 
   Star 
 } from "lucide-react";
+import { PalagaiButton } from "@/components/ui/PalagaiButton";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -37,10 +38,10 @@ const itemVariants: Variants = {
 
 import dynamic from "next/dynamic";
 
-const EventsArenaCanvas = dynamic(
+const EventsGen3Canvas = dynamic(
   () =>
-    import("@/components/events/EventsArenaCanvas").then(
-      (m) => m.EventsArenaCanvas
+    import("@/components/gen3/EventsGen3Canvas").then(
+      (m) => m.EventsGen3Canvas
     ),
   { ssr: false }
 );
@@ -60,11 +61,14 @@ export default function EventsPage() {
 
   return (
     <div className="w-full text-left">
-      {/* 1. Procedural "Naa Ready" WebGL Arena (Events Section Hero) */}
-      <EventsArenaCanvas />
+      {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene (PRD Overhaul) */}
+      <div id="events-hero-trigger" className="w-full h-[100dvh] relative z-0">
+        <EventsGen3Canvas />
+      </div>
 
       {/* 2. Events Catalogue Container */}
-      <div id="events-catalogue" className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-24 text-left">
+      <div className="relative z-10 w-full bg-white">
+        <div id="events-catalogue" className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-24 text-left">
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div className="max-w-2xl">
@@ -74,7 +78,7 @@ export default function EventsPage() {
           <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
             {locale === "ta" ? "நிகழ்வுகள் & சந்திப்புகள்" : "Events & Campus Gatherings"}
           </h1>
-          <p className="text-sm sm:text-base text-purple-950/80 leading-relaxed font-body font-medium">
+          <p className="text-sm sm:text-base text-[#250d38] font-medium leading-relaxed font-body">
             {locale === "ta"
               ? "ஆட்டம், பாட்டம், கொண்டாட்டம்! ஓவல் புல்வெளி பிக்னிக், தெருவோர உணவு திருவிழாக்கள் முதல் தீபாவளிக் கொண்டாட்டம் வரை — மொழி பேதமின்றி அனைவரும் ஒன்றிணையும் களம்."
               : "Start the Aatam, Paatam, and Kondatam! From casual lawn picnics on the Oval and street food nights to our annual Diwali party — our events are relaxed, social, and open to all students regardless of language or background."}
@@ -113,13 +117,14 @@ export default function EventsPage() {
               : "Our club is a welcoming social hub for Tamil students and friends from every walk of campus life. Whether you speak the language, want to learn, or just want to eat good food and hang out — you belong here!"}
           </p>
         </div>
-        <Link
+        <PalagaiButton
           href="/join"
-          onClick={playClick}
-          className="px-5 py-2.5 btn-sangam-mint text-xs font-mono font-bold uppercase tracking-wider shrink-0"
-        >
-          Join The Family →
-        </Link>
+          primaryText={locale === "ta" ? "குடும்பத்தில் இணைக →" : "Join The Family →"}
+          secondaryText={locale === "ta" ? "Join The Family →" : "குடும்பத்தில் இணைக →"}
+          variant="mint"
+          size="sm"
+          className="shrink-0"
+        />
       </div>
 
       {/* 2. Events Main Feed with Parent Variant Sequencing */}
@@ -172,7 +177,7 @@ export default function EventsPage() {
                 {locale === "ta" ? evt.titleTa : evt.titleEn}
               </h2>
 
-              <p className="text-xs sm:text-sm text-purple-950/80 leading-relaxed font-body line-clamp-3">
+              <p className="text-xs sm:text-sm text-[#250d38] leading-relaxed font-body line-clamp-3">
                 {locale === "ta" ? evt.descriptionTa : evt.descriptionEn}
               </p>
 
@@ -192,32 +197,22 @@ export default function EventsPage() {
               </div>
 
               <div className="pt-4 flex flex-wrap items-center gap-3">
-                <Link
+                <PalagaiButton
                   href={`/events/${evt.slug}`}
-                  onClick={playClick}
-                  className="px-5 py-2.5 btn-sangam text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2"
-                >
-                  <Ticket className="w-3.5 h-3.5 text-[#55CCA2]" />
-                  <span>{evt.status === "upcoming" ? `Get Tickets (${evt.price})` : "Event Overview"}</span>
-                </Link>
+                  primaryText={evt.status === "upcoming" ? `Get Tickets (${evt.price})` : "Event Overview"}
+                  secondaryText={evt.status === "upcoming" ? "நுழைவுச்சீட்டு பெறுக" : "நிகழ்வு விவரம்"}
+                  variant="primary"
+                  size="sm"
+                  icon={<Ticket className="w-3.5 h-3.5 text-[#55CCA2]" />}
+                />
 
-                {evt.albumSlug ? (
-                  <Link
-                    href={`/gallery/${evt.albumSlug}`}
-                    onClick={playClick}
-                    className="px-5 py-2.5 btn-sangam-white text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5"
-                  >
-                    <span>Event Info & 5-Photo Story →</span>
-                  </Link>
-                ) : (
-                  <Link
-                    href={`/events/${evt.slug}`}
-                    onClick={playClick}
-                    className="px-5 py-2.5 btn-sangam-white text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5"
-                  >
-                    <span>Full Schedule →</span>
-                  </Link>
-                )}
+                <PalagaiButton
+                  href={evt.albumSlug ? `/gallery/${evt.albumSlug}` : `/events/${evt.slug}`}
+                  primaryText={evt.albumSlug ? "5-Photo Story →" : "Full Schedule →"}
+                  secondaryText={evt.albumSlug ? "புகைப்படத் தொகுப்பு →" : "முழு அட்டவணை →"}
+                  variant="white"
+                  size="sm"
+                />
               </div>
             </div>
           </motion.div>
@@ -234,7 +229,7 @@ export default function EventsPage() {
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#250d38] font-display tracking-tight">
             {locale === "ta" ? "புகழ் அரங்கம் · Events Hall of Fame" : "Events Hall of Fame"}
           </h2>
-          <p className="text-xs sm:text-sm text-purple-950/75 mt-1 font-body">
+          <p className="text-xs sm:text-sm text-[#250d38] font-medium mt-1 font-body">
             Rest shows official festival artwork, hover seamlessly swaps to crowd photography.
           </p>
         </div>
@@ -280,6 +275,7 @@ export default function EventsPage() {
             </Link>
           ))}
         </div>
+      </div>
       </div>
     </div>
   </div>
