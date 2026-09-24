@@ -453,10 +453,10 @@ export default function BoardPage() {
               <button
                 type="button"
                 onClick={() => setActiveModalCard(null)}
-                className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center border border-white/20 bg-white/10 hover:bg-white/20 text-white transition-colors"
+                className="absolute top-6 right-6 w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center border-2 border-[#55CCA2] bg-[#250d38] hover:bg-[#34144e] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-[background-color,transform] duration-150 active:scale-95 cursor-pointer shadow-[2px_2px_0px_#55CCA2]"
                 aria-label="Close officer modal"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5 text-[#55CCA2]" />
               </button>
 
               <div className="flex items-center gap-4 mb-6">
@@ -474,7 +474,7 @@ export default function BoardPage() {
                     {activeModalCard.nameEn}
                   </h2>
                   <p className="text-xs font-mono text-[#55CCA2]">
-                    {activeModalCard.nameTa} · {activeModalCard.roleEn} ({activeModalCard.roleTa})
+                    <span lang="ta" style={{ letterSpacing: 0 }}>{activeModalCard.nameTa}</span> · {activeModalCard.roleEn} (<span lang="ta" style={{ letterSpacing: 0 }}>{activeModalCard.roleTa}</span>)
                   </p>
                 </div>
               </div>
@@ -485,7 +485,9 @@ export default function BoardPage() {
                     Committee Leadership
                   </span>
                   <p className="font-semibold text-white">{activeModalCard.committeeEn}</p>
-                  <p className="text-slate-400 font-tamil mt-0.5">{activeModalCard.committeeTa}</p>
+                  <p className="text-slate-400 font-tamil mt-0.5" lang="ta" style={{ letterSpacing: 0 }}>
+                    {activeModalCard.committeeTa}
+                  </p>
                 </div>
 
                 <div>
@@ -493,7 +495,9 @@ export default function BoardPage() {
                     Responsibilities & Mission
                   </span>
                   <p>{activeModalCard.bioEn}</p>
-                  <p className="font-tamil text-slate-400 mt-1">{activeModalCard.bioTa}</p>
+                  <p className="font-tamil text-slate-400 mt-1" lang="ta" style={{ letterSpacing: 0 }}>
+                    {activeModalCard.bioTa}
+                  </p>
                 </div>
 
                 <div>
@@ -511,7 +515,7 @@ export default function BoardPage() {
               <div className="pt-4 border-t-2 border-white/10 flex items-center justify-between text-xs font-mono text-slate-300">
                 <a
                   href={`mailto:${activeModalCard.email}`}
-                  className="flex items-center gap-1.5 text-[#55CCA2] hover:underline"
+                  className="flex items-center gap-1.5 text-[#55CCA2] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2]"
                 >
                   <Mail className="w-4 h-4" />
                   <span>{activeModalCard.email}</span>

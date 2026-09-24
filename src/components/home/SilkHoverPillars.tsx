@@ -237,8 +237,11 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
           setTouchToggled((prev) => !prev);
         }
       }}
+      tabIndex={0}
+      role="article"
+      aria-label={pillar.titleEn}
       style={{ perspective: 1000, transformStyle: "preserve-3d", willChange: "transform" }}
-      className="relative w-full rounded-none border-2 border-[#250d38] bg-[#1a0b2e] text-white p-6 sm:p-10 overflow-hidden shadow-[4px_4px_0px_#4c2472] sm:shadow-[6px_6px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[8px_8px_0px_#55CCA2] transition-colors duration-300 flex flex-col justify-between min-h-[320px] sm:min-h-[360px] group select-none cursor-pointer sm:cursor-default"
+      className="relative w-full rounded-none border-2 border-[#250d38] bg-[#1a0b2e] text-white p-6 sm:p-10 overflow-hidden shadow-[4px_4px_0px_#4c2472] sm:shadow-[6px_6px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[8px_8px_0px_#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,box-shadow] duration-300 ease-out flex flex-col justify-between min-h-[320px] sm:min-h-[360px] group select-none cursor-pointer sm:cursor-default"
     >
       {/* 1. Iridescent Kanchipuram Silk Sheen Underlay */}
       <div
@@ -341,11 +344,11 @@ export function SilkHoverPillars() {
             <Sparkles className="w-3 h-3 text-[#FFC526]" />
             <span>Core Pillars · சங்கப் பண்பாடு</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
             {locale === "ta" ? "சங்கத்தின் நான்கு தூண்கள்" : "The Four Pillars of Sangam"}
           </h2>
         </div>
-        <p className="text-xs sm:text-sm font-mono text-[#250d38] font-medium max-w-xs text-left sm:text-right">
+        <p className="text-xs sm:text-sm font-mono text-[#250d38] font-medium max-w-xs text-left sm:text-right" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
           {locale === "ta"
             ? "கலை, இசை, கொண்டாட்டம் மற்றும் சமூகம் வழியே மாணவர்களை இணைக்கிறோம்."
             : "Connecting Buckeyes through performing arts, music, celebratory gatherings, and community."}

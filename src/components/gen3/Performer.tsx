@@ -11,9 +11,14 @@ import { KTX2Loader } from "three-stdlib";
 // Human deliverable required for this to load successfully.
 const MODEL_URL = "/models/performer.glb";
 
+interface GLTFLoaderWithExtensions {
+  dracoLoader?: { setDecoderPath: (path: string) => void };
+  setKTX2Loader: (loader: KTX2Loader) => void;
+}
+
 // Preload configuration with Draco and KTX2 decoders explicitly pointing to public/decoders
 useGLTF.preload(MODEL_URL, true, true, (loader) => {
-  const gltfLoader = loader as any;
+  const gltfLoader = loader as unknown as GLTFLoaderWithExtensions;
   
   // Set Draco decoder path
   if (gltfLoader.dracoLoader) {
@@ -35,7 +40,7 @@ export function Performer() {
 
   // If the file is missing, this will throw, and the CanvasErrorBoundary will catch it and render magenta.
   const { scene, animations } = useGLTF(MODEL_URL, true, true, (loader) => {
-    const gltfLoader = loader as any;
+    const gltfLoader = loader as unknown as GLTFLoaderWithExtensions;
     if (gltfLoader.dracoLoader) {
       gltfLoader.dracoLoader.setDecoderPath("/decoders/draco/");
     }
@@ -82,7 +87,7 @@ export function Performer() {
 
   useFrame(() => {
     const isDebug = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug") === "1";
-    let progress = getScrollProgress();
+    const progress = getScrollProgress();
     
     let blendFactor = 0.0;
     if (isDebug) {

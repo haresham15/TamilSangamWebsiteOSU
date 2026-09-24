@@ -63,7 +63,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
           <Link
             href="/"
             onClick={playClick}
-            className="group flex items-center gap-2 sm:gap-3 px-2.5 sm:px-3.5 py-1.5 sm:py-2 border-2 border-[#250d38] bg-white shadow-[2px_2px_0px_#4c2472] sm:shadow-[3px_3px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[3px_3px_0px_#55CCA2] transition-all"
+            className="group flex items-center gap-2 sm:gap-3 px-2.5 sm:px-3.5 py-1.5 sm:py-2 border-2 border-[#250d38] bg-white shadow-[2px_2px_0px_#4c2472] sm:shadow-[3px_3px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[box-shadow,border-color,transform] duration-150"
           >
             <div className="relative w-8 h-8 border-2 border-[#55CCA2] bg-[#4c2472] overflow-hidden shrink-0 shadow-sm">
               <Image
@@ -94,7 +94,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                   key={item.href}
                   href={item.href}
                   onClick={playClick}
-                  className={`px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 ${
+                  className={`px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-[background-color,color,border-color] duration-150 ${
                     isActive
                       ? "bg-[#250d38] text-[#55CCA2] border-b-2 border-b-[#55CCA2] shadow-sm"
                       : "text-[#3c1959] hover:text-[#250d38] hover:bg-purple-100/70"
@@ -116,7 +116,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               }}
               title={t("control.search")}
               aria-label="Open search command palette (⌘K)"
-              className="w-9 h-9 min-w-[38px] min-h-[38px] border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[2px_2px_0px_#55CCA2] hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex items-center justify-center"
+              className="w-10 h-10 min-w-[42px] min-h-[42px] sm:min-w-[44px] sm:min-h-[44px] border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[box-shadow,border-color,transform,background-color] duration-150 flex items-center justify-center cursor-pointer"
             >
               <Search className="w-4 h-4" />
             </button>
@@ -129,12 +129,12 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               }}
               title="Switch Language / மொழியை மாற்ற"
               aria-label={locale === "en" ? "Switch language to Tamil" : "Switch language to English"}
-              className="px-2 sm:px-2.5 py-1.5 min-h-[38px] text-xs font-mono font-bold border-2 border-[#250d38] bg-white text-[#4c2472] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[2px_2px_0px_#55CCA2] transition-all flex items-center gap-1 sm:gap-1.5"
+              className="px-2.5 sm:px-3 py-1.5 min-h-[42px] sm:min-h-[44px] text-xs font-mono font-bold border-2 border-[#250d38] bg-white text-[#4c2472] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[box-shadow,border-color,transform,background-color] duration-150 flex items-center gap-1.5 cursor-pointer"
             >
               <span className="px-1 py-0.5 text-[10px] font-mono bg-[#250d38] text-[#55CCA2] font-bold">
                 {locale === "en" ? "TA" : "EN"}
               </span>
-              <span className="font-tamil font-bold" style={{ letterSpacing: 0 }}>
+              <span className="font-tamil font-bold" lang={locale === "en" ? "ta" : "en"} style={{ letterSpacing: 0 }}>
                 {locale === "en" ? "தமிழ்" : "English"}
               </span>
             </button>
@@ -150,7 +150,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 aria-label="Select Tamil landscape (Tinai) and time of day"
                 aria-expanded={isTinaiMenuOpen}
                 aria-haspopup="true"
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-mono font-bold border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] transition-all"
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 min-h-[42px] sm:min-h-[44px] text-xs font-mono font-bold border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[box-shadow,border-color,transform] duration-150 cursor-pointer"
               >
                 <span
                   className="w-2 h-2 border border-black/40 animate-pulse"
@@ -185,7 +185,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                         <button
                           key={key}
                           onClick={() => handleTinaiSelect(key)}
-                          className={`w-full flex items-center justify-between px-3 py-2 text-xs font-mono text-left transition-all border ${
+                          className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-mono text-left border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-[background-color,border-color,box-shadow] duration-150 cursor-pointer ${
                             isSelected
                               ? "bg-[#250d38] text-white font-bold border-[#55CCA2] shadow-[2px_2px_0px_#55CCA2]"
                               : "border-transparent text-[#250d38] hover:bg-purple-50 hover:border-purple-200"
@@ -217,7 +217,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                         resetToLiveTime();
                         setIsTinaiMenuOpen(false);
                       }}
-                      className="w-full mt-2 py-1.5 text-center text-[11px] font-mono font-bold text-[#4c2472] hover:text-[#11694c] border-t-2 border-purple-200 pt-2 transition-colors uppercase tracking-wider"
+                      className="w-full mt-2 py-1.5 text-center text-[11px] font-mono font-bold text-[#4c2472] hover:text-[#11694c] border-t-2 border-purple-200 pt-2 transition-colors uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2]"
                     >
                       {locale === "ta" ? "நேரடி நேரத்திற்கு மீட்டமை" : "Reset to Live Clock"}
                     </button>
@@ -231,7 +231,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               onClick={toggleSound}
               title={isSoundEnabled ? t("control.soundOff") : t("control.soundOn")}
               aria-label={isSoundEnabled ? "Mute interactive audio effects" : "Enable interactive audio effects"}
-              className={`w-9 h-9 min-w-[38px] min-h-[38px] border-2 border-[#250d38] shadow-[2px_2px_0px_#4c2472] flex items-center justify-center transition-all ${
+              className={`w-10 h-10 min-w-[42px] min-h-[42px] sm:min-w-[44px] sm:min-h-[44px] border-2 border-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 flex items-center justify-center transition-[box-shadow,border-color,transform,background-color] duration-150 cursor-pointer ${
                 isSoundEnabled
                   ? "border-[#250d38] text-[#11694c] bg-[#55CCA2]"
                   : "bg-white text-[#4c2472] hover:border-[#55CCA2]"
@@ -248,7 +248,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               }}
               aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMobileMenuOpen}
-              className="lg:hidden w-9 h-9 min-w-[38px] min-h-[38px] border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] flex items-center justify-center transition-all"
+              className="lg:hidden w-10 h-10 min-w-[42px] min-h-[42px] sm:min-w-[44px] sm:min-h-[44px] border-2 border-[#250d38] bg-white text-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 flex items-center justify-center transition-[box-shadow,border-color,transform] duration-150 cursor-pointer"
             >
               {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -271,7 +271,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                     key={item.href}
                     href={item.href}
                     onClick={handleLinkClick}
-                    className={`flex items-center justify-between px-4 py-3 border-2 border-[#250d38] text-sm font-mono font-bold uppercase tracking-wider transition-all ${
+                    className={`flex items-center justify-between px-4 py-3 min-h-[48px] border-2 border-[#250d38] text-sm font-mono font-bold uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] active:translate-x-[2px] transition-[background-color,box-shadow,transform] duration-150 ${
                       isActive
                         ? "bg-[#250d38] text-[#55CCA2] shadow-[3px_3px_0px_#55CCA2]"
                         : "bg-purple-50/70 text-[#250d38] hover:bg-purple-100 shadow-[2px_2px_0px_#4c2472]"

@@ -77,10 +77,10 @@ export default function EventsPage() {
           <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] block mb-2 font-bold">
             The Ohio State University · Campus Community & Social Events
           </span>
-          <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
+          <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
             {locale === "ta" ? "நிகழ்வுகள் & சந்திப்புகள்" : "Events & Campus Gatherings"}
           </h1>
-          <p className="text-sm sm:text-base text-[#250d38] font-medium leading-relaxed font-body">
+          <p className="text-sm sm:text-base text-[#250d38] font-medium leading-relaxed font-body" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
             {locale === "ta"
               ? "ஆட்டம், பாட்டம், கொண்டாட்டம்! ஓவல் புல்வெளி பிக்னிக், தெருவோர உணவு திருவிழாக்கள் முதல் நம்ம ஜாதரா வசந்தகால விழா வரை — மொழி பேதமின்றி அனைவரும் ஒன்றிணையும் களம்."
               : "Start the Aatam, Paatam, and Kondatam! From casual lawn picnics on the Oval and street food nights to spring cultural carnivals — our events are relaxed, social, and open to all students regardless of language or background."}
@@ -110,10 +110,10 @@ export default function EventsPage() {
           <span className="text-[10px] uppercase font-mono tracking-widest text-[#55CCA2] font-bold">
             [CAMPUS COMMUNITY · OPEN TO ALL LANGUAGES & MAJORS]
           </span>
-          <h3 className="text-lg font-bold text-white font-display mt-0.5">
+          <h3 className="text-lg font-bold text-white font-display mt-0.5" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
             {locale === "ta" ? "அனைவரையும் அன்போடு வரவேற்கிறோம்!" : "A Casual Cultural Hub for Everyone"}
           </h3>
-          <p className="text-xs text-purple-200/90 mt-1 font-body max-w-2xl">
+          <p className="text-xs text-purple-200/90 mt-1 font-body max-w-2xl" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
             {locale === "ta"
               ? "எங்கள் நிகழ்வுகள் எப்போதும் எளிமையானவை மற்றும் உற்சாகமானவை. தமிழ் பேசுபவர்கள் மட்டுமின்றி, நல்ல உணவு, இசை மற்றும் நட்பை விரும்பும் அனைத்து மாணவர்களையும் மனதார வரவேற்கிறோம்!"
               : "Our club is a welcoming social hub for Tamil students and friends from every walk of campus life. Whether you speak the language, want to learn, or just want to eat good food and hang out — you belong here!"}
@@ -141,7 +141,7 @@ export default function EventsPage() {
             key={evt.slug}
             variants={itemVariants}
             layout
-            className="border-2 border-[#250d38] bg-white p-6 sm:p-8 shadow-[5px_5px_0px_#4c2472] hover:shadow-[7px_7px_0px_#55CCA2] hover:border-[#55CCA2] transition-all grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left"
+            className="border-2 border-[#250d38] bg-white p-6 sm:p-8 shadow-[5px_5px_0px_#4c2472] hover:shadow-[7px_7px_0px_#55CCA2] hover:border-[#55CCA2] transition-[border-color,box-shadow] duration-200 ease-out grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left"
           >
             {/* Event Poster / Visual: Architectural Frame */}
             <div className="lg:col-span-5 relative h-64 sm:h-72 border-2 border-[#250d38] overflow-hidden shadow-[3px_3px_0px_#4c2472] group">
@@ -175,11 +175,11 @@ export default function EventsPage() {
                 </span>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#250d38] font-display tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#250d38] font-display tracking-tight" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
                 {locale === "ta" ? evt.titleTa : evt.titleEn}
               </h2>
 
-              <p className="text-xs sm:text-sm text-[#250d38] leading-relaxed font-body line-clamp-3">
+              <p className="text-xs sm:text-sm text-[#250d38] leading-relaxed font-body line-clamp-3" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
                 {locale === "ta" ? evt.descriptionTa : evt.descriptionEn}
               </p>
 
@@ -242,7 +242,7 @@ export default function EventsPage() {
               key={evt.slug}
               href={`/events/${evt.slug}`}
               onClick={playClick}
-              className="group relative h-80 overflow-hidden border-2 border-[#250d38] shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] transition-all block"
+              className="group relative h-80 overflow-hidden border-2 border-[#250d38] shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,box-shadow] duration-200 ease-out block"
             >
               {/* Base Poster at rest */}
               <Image
@@ -267,7 +267,7 @@ export default function EventsPage() {
                 <span className="text-[10px] font-mono text-[#55CCA2] uppercase font-bold">
                   {evt.date}
                 </span>
-                <h4 className="text-base font-bold text-white tracking-tight font-display">
+                <h4 className="text-base font-bold text-white tracking-tight font-display" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
                   {locale === "ta" ? evt.titleTa : evt.titleEn}
                 </h4>
                 <p className="text-[11px] text-purple-200/90 line-clamp-1 mt-0.5 font-body">

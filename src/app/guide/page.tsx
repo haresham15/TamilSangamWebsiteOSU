@@ -162,10 +162,10 @@ export default function UserGuideAndFaqPage() {
         <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold block mb-2">
           The Ohio State University · Student Resources & Operations
         </span>
-        <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
+        <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
           {locale === "ta" ? "பயனர் வழிகாட்டி & கேள்வி-பதில்" : "User Guide & FAQ"}
         </h1>
-        <p className="text-sm sm:text-base text-[#250d38] font-medium leading-relaxed font-body">
+        <p className="text-sm sm:text-base text-[#250d38] font-medium leading-relaxed font-body" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
           {locale === "ta"
             ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் செயல்பாடுகள், நிகழ்வுகள், மற்றும் வழிகாட்டுதல்கள் பற்றிய விரிவான தகவல்கள். எமது AI வழிகாட்டி நண்பாவும் (Nanba) இந்த அறிவுத் தளத்தைக் கொண்டே பதிலளிக்கிறது."
             : "Everything you need to know about participating in OSU Tamil Sangam — from membership and event logistics to voting rights and our Nanba-powered knowledge engine."}
@@ -185,7 +185,7 @@ export default function UserGuideAndFaqPage() {
               playWoodClick();
               setActiveTab(tab.id);
             }}
-            className={`box-tab-item px-5 py-2.5 text-xs font-mono uppercase tracking-wider font-bold transition-all ${
+            className={`box-tab-item min-h-[44px] px-5 py-2.5 text-xs font-mono uppercase tracking-wider font-bold transition-[border-color,background-color,color,box-shadow] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 active:translate-x-[1px] active:translate-y-[1px] ${
               activeTab === tab.id
                 ? "box-tab-item-active"
                 : "text-purple-900/70 hover:text-[#250d38]"
@@ -221,14 +221,14 @@ export default function UserGuideAndFaqPage() {
                 <Link
                   href="/join"
                   onClick={playClick}
-                  className="px-4 py-2 btn-sangam-mint text-xs font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1.5"
+                  className="px-4 py-2 min-h-[44px] btn-sangam-mint text-xs font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2"
                 >
                   <span>Fill Membership Form →</span>
                 </Link>
                 <a
                   href="#stay-in-sangam"
                   onClick={playWoodClick}
-                  className="px-4 py-2 border-2 border-[#250d38] bg-white text-xs font-mono font-bold uppercase tracking-wider text-[#250d38] hover:bg-purple-50"
+                  className="px-4 py-2 min-h-[44px] inline-flex items-center border-2 border-[#250d38] bg-white text-xs font-mono font-bold uppercase tracking-wider text-[#250d38] hover:bg-purple-50 shadow-[2px_2px_0px_#4c2472] active:translate-x-[1px] active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[background-color,box-shadow,transform] duration-150"
                 >
                   Join Email Loop in Footer ↓
                 </a>
@@ -322,8 +322,11 @@ export default function UserGuideAndFaqPage() {
             <div className="relative">
               <Search className="w-4 h-4 text-purple-900/50 absolute left-3.5 top-3.5" />
               <input
+                id="guide-faq-search-input"
+                name="faq_search"
                 type="text"
                 placeholder="Search FAQs (e.g. dues, language, diwali, voting, food)..."
+                aria-label="Search FAQs"
                 value={faqSearch}
                 onChange={(e) => setFaqSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 bg-white border-2 border-[#250d38] text-sm text-[#250d38] placeholder-purple-900/40 focus:outline-none focus:border-[#55CCA2] shadow-[3px_3px_0px_#4c2472]"
@@ -338,10 +341,10 @@ export default function UserGuideAndFaqPage() {
                     playClick();
                     setSelectedCategory(cat);
                   }}
-                  className={`px-3 py-1 text-xs font-mono font-bold uppercase transition-all ${
+                  className={`min-h-[40px] px-3.5 py-1.5 text-xs font-mono font-bold uppercase transition-[background-color,border-color,color,box-shadow] duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-1 ${
                     selectedCategory === cat
-                      ? "bg-[#250d38] text-[#55CCA2] border border-[#55CCA2]"
-                      : "bg-white text-purple-900/70 border border-[#250d38] hover:bg-purple-50"
+                      ? "bg-[#250d38] text-[#55CCA2] border-2 border-[#55CCA2] shadow-[2px_2px_0px_#55CCA2]"
+                      : "bg-white text-purple-900/70 border-2 border-[#250d38] hover:bg-purple-50 shadow-[2px_2px_0px_#4c2472]"
                   }`}
                 >
                   {cat}
@@ -365,20 +368,22 @@ export default function UserGuideAndFaqPage() {
                 return (
                   <div
                     key={faq.id}
-                    className="border-2 border-[#250d38] bg-white shadow-[3px_3px_0px_#4c2472] overflow-hidden transition-all"
+                    className="border-2 border-[#250d38] bg-white shadow-[3px_3px_0px_#4c2472] overflow-hidden"
                   >
                     <button
                       onClick={() => {
                         playWoodClick();
                         setExpandedFaqId(isOpen ? null : faq.id);
                       }}
-                      className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 hover:bg-purple-50/50 transition-colors"
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-answer-${faq.id}`}
+                      className="w-full min-h-[52px] p-4 sm:p-5 text-left flex items-center justify-between gap-4 hover:bg-purple-50/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-1"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="px-2 py-0.5 bg-purple-100 border border-purple-300 text-[10px] font-mono text-[#4c2472] font-bold uppercase">
+                        <span className="px-2 py-0.5 bg-purple-100 border border-purple-300 text-[10px] font-mono text-[#4c2472] font-bold uppercase shrink-0">
                           {faq.category}
                         </span>
-                        <h3 className="text-sm sm:text-base font-bold text-[#250d38] font-display">
+                        <h3 className="text-sm sm:text-base font-bold text-[#250d38] font-display" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
                           {locale === "ta" ? faq.questionTa : faq.questionEn}
                         </h3>
                       </div>
@@ -392,12 +397,14 @@ export default function UserGuideAndFaqPage() {
                     <AnimatePresence>
                       {isOpen && (
                         <motion.div
+                          id={`faq-answer-${faq.id}`}
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          className="px-4 sm:px-5 pb-5 pt-1 border-t border-purple-100 text-xs sm:text-sm text-purple-950/85 leading-relaxed"
+                          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                          className="px-4 sm:px-5 pb-5 pt-1 border-t border-purple-100 text-xs sm:text-sm text-purple-950/85 leading-relaxed overflow-hidden"
                         >
-                          <p>{locale === "ta" ? faq.answerTa : faq.answerEn}</p>
+                          <p {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>{locale === "ta" ? faq.answerTa : faq.answerEn}</p>
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -433,7 +440,7 @@ export default function UserGuideAndFaqPage() {
                   playClick();
                   setIsAddingKb(!isAddingKb);
                 }}
-                className="px-4 py-2.5 btn-sangam-mint text-xs font-mono font-bold uppercase tracking-wider shrink-0 flex items-center gap-1.5"
+                className="px-4 py-2.5 min-h-[44px] btn-sangam-mint text-xs font-mono font-bold uppercase tracking-wider shrink-0 flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2"
               >
                 <PlusCircle className="w-4 h-4 text-[#250d38]" />
                 <span>{isAddingKb ? "Close Form" : "Add Knowledge Fact"}</span>
@@ -460,8 +467,11 @@ export default function UserGuideAndFaqPage() {
                         Title / Question
                       </label>
                       <input
+                        id="guide-new-title-input"
+                        name="title"
                         type="text"
                         placeholder="e.g. Samosa & Chai Study Hours"
+                        aria-label="Title or Question"
                         value={newTitle}
                         onChange={(e) => setNewTitle(e.target.value)}
                         required
@@ -508,8 +518,11 @@ export default function UserGuideAndFaqPage() {
                       Search Keywords (comma separated)
                     </label>
                     <input
+                      id="guide-new-keywords-input"
+                      name="keywords"
                       type="text"
                       placeholder="e.g. study, chai, thompson library, finals"
+                      aria-label="Search Keywords"
                       value={newKeywords}
                       onChange={(e) => setNewKeywords(e.target.value)}
                       className="w-full px-3 py-2 bg-purple-50/50 border border-[#250d38] text-xs text-[#250d38]"
@@ -520,7 +533,7 @@ export default function UserGuideAndFaqPage() {
                     <button
                       type="submit"
                       disabled={kbStatus === "saving"}
-                      className="px-6 py-2.5 btn-sangam text-xs font-mono font-bold uppercase tracking-wider"
+                      className="px-6 py-2.5 min-h-[44px] btn-sangam text-xs font-mono font-bold uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2"
                     >
                       {kbStatus === "saving" ? "Saving Entry..." : "Save and Index to Knowledge Base"}
                     </button>
@@ -539,8 +552,11 @@ export default function UserGuideAndFaqPage() {
           <div className="mb-6 relative">
             <Search className="w-4 h-4 text-purple-900/50 absolute left-3.5 top-3.5" />
             <input
+              id="guide-kb-search-input"
+              name="kb_search"
               type="text"
               placeholder="Search indexed knowledge chunks..."
+              aria-label="Search indexed knowledge chunks"
               value={kbSearch}
               onChange={(e) => setKbSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 bg-white border-2 border-[#250d38] text-xs text-[#250d38] focus:outline-none focus:border-[#55CCA2] shadow-[3px_3px_0px_#4c2472]"
@@ -567,7 +583,8 @@ export default function UserGuideAndFaqPage() {
                         <button
                           onClick={() => handleDeleteKnowledge(item.id)}
                           title="Delete custom fact"
-                          className="text-red-500 hover:text-red-700 p-1 transition-colors"
+                          aria-label="Delete custom fact"
+                          className="text-red-500 hover:text-red-700 p-1 min-w-[36px] min-h-[36px] flex items-center justify-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 transition-colors"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>

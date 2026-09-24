@@ -427,14 +427,103 @@ function buildInstancedAttributes(instances: InstanceData[]) {
   return { count, matrices, speeds, phases };
 }
 
+// Module-scoped shader uniform for 128 BPM concert jumps
+const crowdUniforms = {
+  uTime: { value: 0 },
+};
+
+// Materials with percussive 128 BPM Kuthu bounce, view-space billboarding, and vertical shadow mask
+function createCrowdMaterial(texture: THREE.Texture | null) {
+  const mat = new THREE.MeshBasicMaterial({
+    color: new THREE.Color("#0c0907"),
+    map: texture || undefined,
+    transparent: true,
+    toneMapped: false,
+    depthWrite: true,
+  });
+
+  mat.onBeforeCompile = (shader) => {
+    shader.uniforms.uTime = crowdUniforms.uTime;
+
+    shader.vertexShader =
+      `
+      attribute float aSpeed;
+      attribute float aPhase;
+      uniform float uTime;
+      varying vec2 vCrowdUv;
+    ` + shader.vertexShader;
+
+    shader.vertexShader = shader.vertexShader.replace(
+      "#include <begin_vertex>",
+      `
+      #include <begin_vertex>
+      vCrowdUv = uv;
+
+      // 128 BPM percussive Kuthu bounce (~13.4 rad/s)
+      float bpm = 13.4;
+      float cycle = sin(uTime * bpm * aSpeed + aPhase);
+      // Parabolic ballistic jump curve: quick bounce, hang-time at apex
+      float jump = pow(max(0.0, cycle), 1.6) * 0.24;
+      float swayX = sin(uTime * 3.4 + aPhase) * 0.035;
+      float swayZ = cos(uTime * 3.4 + aPhase) * 0.035;
+
+      transformed.y += jump;
+      transformed.x += swayX;
+      transformed.z += swayZ;
+      `
+    );
+
+    shader.vertexShader = shader.vertexShader.replace(
+      "#include <project_vertex>",
+      `
+      // Spherical view-space billboarding for InstancedMesh
+      float scaleX = length(vec3(instanceMatrix[0][0], instanceMatrix[1][0], instanceMatrix[2][0]));
+      float scaleY = length(vec3(instanceMatrix[0][1], instanceMatrix[1][1], instanceMatrix[2][1]));
+      vec3 instancePos = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
+      vec4 mvPosition = modelViewMatrix * vec4(instancePos, 1.0);
+      mvPosition.xy += transformed.xy * vec2(scaleX, scaleY);
+      gl_Position = projectionMatrix * mvPosition;
+      `
+    );
+
+    shader.fragmentShader =
+      `
+      varying vec2 vCrowdUv;
+    ` + shader.fragmentShader;
+
+    shader.fragmentShader = shader.fragmentShader.replace(
+      "#include <dithering_fragment>",
+      `
+      #include <dithering_fragment>
+
+      // 1. Vertical shadow cutoff: completely discard bottom legs/flat base below y = 0.38
+      float bodyFade = smoothstep(0.38, 0.65, vCrowdUv.y);
+      gl_FragColor.a *= bodyFade;
+
+      // Discard transparent lower pixels
+      if (gl_FragColor.a < 0.06) discard;
+
+      // 2. Vertical height illumination: bottom is pure silhouette shadow, top catches light
+      float heightLight = smoothstep(0.48, 0.88, vCrowdUv.y);
+      vec3 deepShadow = vec3(0.005, 0.004, 0.003);
+
+      // 3. Warm sodium-vapor amber rim highlight only on the upper shoulders, head, and waving hands
+      float edgeDist = min(vCrowdUv.x, 1.0 - vCrowdUv.x);
+      float rim = pow(1.0 - smoothstep(0.0, 0.20, edgeDist), 2.2) * 0.48 * heightLight;
+      vec3 amberRim = vec3(0.98, 0.62, 0.14);
+
+      gl_FragColor.rgb = mix(deepShadow, amberRim, rim);
+      `
+    );
+  };
+
+  return mat;
+}
+
 export function JumpingCrowdSilhouettes() {
   const soloMeshRef = useRef<THREE.InstancedMesh>(null);
   const duoMeshRef = useRef<THREE.InstancedMesh>(null);
   const trioMeshRef = useRef<THREE.InstancedMesh>(null);
-
-  const uniformsRef = useRef({
-    uTime: { value: 0 },
-  });
 
   // High-detail organic procedural silhouette textures
   const soloTexture = useMemo(() => createOrganicSoloTexture(), []);
@@ -476,94 +565,6 @@ export function JumpingCrowdSilhouettes() {
     return g;
   }, [trioData]);
 
-  // Materials with percussive 128 BPM Kuthu bounce, view-space billboarding, and vertical shadow mask
-  const createCrowdMaterial = (texture: THREE.Texture | null) => {
-    const mat = new THREE.MeshBasicMaterial({
-      color: new THREE.Color("#0c0907"),
-      map: texture || undefined,
-      transparent: true,
-      toneMapped: false,
-      depthWrite: true,
-    });
-
-    mat.onBeforeCompile = (shader) => {
-      shader.uniforms.uTime = uniformsRef.current.uTime;
-
-      shader.vertexShader =
-        `
-        attribute float aSpeed;
-        attribute float aPhase;
-        uniform float uTime;
-        varying vec2 vCrowdUv;
-      ` + shader.vertexShader;
-
-      shader.vertexShader = shader.vertexShader.replace(
-        "#include <begin_vertex>",
-        `
-        #include <begin_vertex>
-        vCrowdUv = uv;
-
-        // 128 BPM percussive Kuthu bounce (~13.4 rad/s)
-        float bpm = 13.4;
-        float cycle = sin(uTime * bpm * aSpeed + aPhase);
-        // Parabolic ballistic jump curve: quick bounce, hang-time at apex
-        float jump = pow(max(0.0, cycle), 1.6) * 0.24;
-        float swayX = sin(uTime * 3.4 + aPhase) * 0.035;
-        float swayZ = cos(uTime * 3.4 + aPhase) * 0.035;
-
-        transformed.y += jump;
-        transformed.x += swayX;
-        transformed.z += swayZ;
-        `
-      );
-
-      shader.vertexShader = shader.vertexShader.replace(
-        "#include <project_vertex>",
-        `
-        // Spherical view-space billboarding for InstancedMesh
-        float scaleX = length(vec3(instanceMatrix[0][0], instanceMatrix[1][0], instanceMatrix[2][0]));
-        float scaleY = length(vec3(instanceMatrix[0][1], instanceMatrix[1][1], instanceMatrix[2][1]));
-        vec3 instancePos = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
-        vec4 mvPosition = modelViewMatrix * vec4(instancePos, 1.0);
-        mvPosition.xy += transformed.xy * vec2(scaleX, scaleY);
-        gl_Position = projectionMatrix * mvPosition;
-        `
-      );
-
-      shader.fragmentShader =
-        `
-        varying vec2 vCrowdUv;
-      ` + shader.fragmentShader;
-
-      shader.fragmentShader = shader.fragmentShader.replace(
-        "#include <dithering_fragment>",
-        `
-        #include <dithering_fragment>
-
-        // 1. Vertical shadow cutoff: completely discard bottom legs/flat base below y = 0.38
-        float bodyFade = smoothstep(0.38, 0.65, vCrowdUv.y);
-        gl_FragColor.a *= bodyFade;
-
-        // Discard transparent lower pixels
-        if (gl_FragColor.a < 0.06) discard;
-
-        // 2. Vertical height illumination: bottom is pure silhouette shadow, top catches light
-        float heightLight = smoothstep(0.48, 0.88, vCrowdUv.y);
-        vec3 deepShadow = vec3(0.005, 0.004, 0.003);
-
-        // 3. Warm sodium-vapor amber rim highlight only on the upper shoulders, head, and waving hands
-        float edgeDist = min(vCrowdUv.x, 1.0 - vCrowdUv.x);
-        float rim = pow(1.0 - smoothstep(0.0, 0.20, edgeDist), 2.2) * 0.48 * heightLight;
-        vec3 amberRim = vec3(0.98, 0.62, 0.14);
-
-        gl_FragColor.rgb = mix(deepShadow, amberRim, rim);
-        `
-      );
-    };
-
-    return mat;
-  };
-
   const soloMaterial = useMemo(() => createCrowdMaterial(soloTexture), [soloTexture]);
   const duoMaterial = useMemo(() => createCrowdMaterial(duoTexture), [duoTexture]);
   const trioMaterial = useMemo(() => createCrowdMaterial(trioTexture), [trioTexture]);
@@ -575,8 +576,35 @@ export function JumpingCrowdSilhouettes() {
     if (trioMeshRef.current) trioMeshRef.current.instanceMatrix.needsUpdate = true;
   }, []);
 
+  // Dispose geometries, materials, and procedural textures on unmount
+  React.useEffect(() => {
+    return () => {
+      soloTexture?.dispose();
+      duoTexture?.dispose();
+      trioTexture?.dispose();
+
+      soloGeom.dispose();
+      duoGeom.dispose();
+      trioGeom.dispose();
+
+      soloMaterial.dispose();
+      duoMaterial.dispose();
+      trioMaterial.dispose();
+    };
+  }, [
+    soloTexture,
+    duoTexture,
+    trioTexture,
+    soloGeom,
+    duoGeom,
+    trioGeom,
+    soloMaterial,
+    duoMaterial,
+    trioMaterial,
+  ]);
+
   useFrame((state) => {
-    uniformsRef.current.uTime.value = state.clock.elapsedTime;
+    crowdUniforms.uTime.value = state.clock.elapsedTime;
   });
 
   return (

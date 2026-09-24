@@ -20,10 +20,6 @@ function easeInOutCubic(x: number): number {
   return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 }
 
-function lerpVector(v1: THREE.Vector3, v2: THREE.Vector3, alpha: number): THREE.Vector3 {
-  return new THREE.Vector3().copy(v1).lerp(v2, alpha);
-}
-
 function lerp(start: number, end: number, alpha: number): number {
   return start + (end - start) * alpha;
 }
@@ -32,6 +28,7 @@ export function CameraChoreography() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const targetPos = useRef(new THREE.Vector3());
   const lookPos = useRef(new THREE.Vector3());
+  const { size } = useThree();
 
   useFrame(() => {
     if (!cameraRef.current) return;
@@ -68,10 +65,20 @@ export function CameraChoreography() {
     lookPos.current.lerpVectors(startFrame.target, endFrame.target, localAlpha);
     const targetFov = lerp(startFrame.fov, endFrame.fov, localAlpha);
 
+    // Responsive portrait mobile adjustment
+    const isPortrait = size.width < size.height;
+    if (isPortrait) {
+      // In portrait phone orientation, center camera X on 0 and step back slightly for optimal framing
+      targetPos.current.x = 0;
+      targetPos.current.z = targetPos.current.z * 1.18;
+      targetPos.current.y = 5.2;
+      lookPos.current.y = 3.65;
+    }
+
     // Apply to camera
     cameraRef.current.position.copy(targetPos.current);
     cameraRef.current.lookAt(lookPos.current);
-    cameraRef.current.fov = targetFov;
+    cameraRef.current.fov = targetFov * (isPortrait ? 1.15 : 1.0);
     cameraRef.current.updateProjectionMatrix();
   });
   

@@ -57,18 +57,18 @@ export function SangamLogo3D() {
   const targetRef = useRef<THREE.Object3D>(null);
 
   // Load the minted gold & bronze medallion texture
-  const logoTexture = useTexture("/coin-face.svg");
-  
-  useEffect(() => {
-    logoTexture.anisotropy = 16;
-    logoTexture.colorSpace = THREE.SRGBColorSpace;
-    logoTexture.minFilter = THREE.LinearMipmapLinearFilter;
-    logoTexture.magFilter = THREE.LinearFilter;
-    logoTexture.center.set(0.5, 0.5);
-    // Standard 1:1 mapping on CircleGeometry ensures TAMIL is at top, right-side-up, and horizontal!
-    logoTexture.repeat.set(1, 1);
-    logoTexture.rotation = 0;
-  }, [logoTexture]);
+  const logoTexture = useTexture("/coin-face.svg", (texture) => {
+    if (texture instanceof THREE.Texture) {
+      texture.anisotropy = 16;
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.minFilter = THREE.LinearMipmapLinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      texture.center.set(0.5, 0.5);
+      // Standard 1:1 mapping on CircleGeometry ensures TAMIL is at top, right-side-up, and horizontal!
+      texture.repeat.set(1, 1);
+      texture.rotation = 0;
+    }
+  });
 
   // Procedural brushed medal bump texture
   const bumpTexture = useMemo(() => {
@@ -140,6 +140,18 @@ export function SangamLogo3D() {
       orbitalRing2Material: ring2,
     };
   }, [logoTexture, bumpTexture]);
+
+  // Dispose materials and bump texture on unmount
+  useEffect(() => {
+    return () => {
+      bumpTexture?.dispose();
+      faceMaterial.dispose();
+      edgeMaterial.dispose();
+      rimBezelMaterial.dispose();
+      orbitalRing1Material.dispose();
+      orbitalRing2Material.dispose();
+    };
+  }, [bumpTexture, faceMaterial, edgeMaterial, rimBezelMaterial, orbitalRing1Material, orbitalRing2Material]);
 
   // Setup spotlight target
   useEffect(() => {

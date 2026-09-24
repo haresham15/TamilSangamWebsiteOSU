@@ -1,9 +1,9 @@
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo } from "react";
 
 /**
  * Injects a cinematic Fresnel rim light into a standard/physical material.
- * Returns a configured material instance.
+ * Returns a configured material instance with lifecycle disposal.
  */
 export function useRimShaderMaterial(
   baseColor: THREE.ColorRepresentation = 0x250d38,
@@ -11,9 +11,7 @@ export function useRimShaderMaterial(
   roughness: number = 0.65,
   metalness: number = 0.1
 ) {
-  const materialRef = useRef<THREE.MeshPhysicalMaterial | null>(null);
-
-  if (!materialRef.current) {
+  const material = useMemo(() => {
     const mat = new THREE.MeshPhysicalMaterial({
       color: baseColor,
       roughness,
@@ -72,17 +70,14 @@ export function useRimShaderMaterial(
       );
     };
 
-    materialRef.current = mat;
-  }
+    return mat;
+  }, [baseColor, rimColor, roughness, metalness]);
 
-  // Cleanup? Not strictly necessary for a single global use, but good practice.
   useEffect(() => {
     return () => {
-      if (materialRef.current) {
-        materialRef.current.dispose();
-      }
+      material.dispose();
     };
-  }, []);
+  }, [material]);
 
-  return materialRef.current;
+  return material;
 }

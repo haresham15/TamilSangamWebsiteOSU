@@ -20,7 +20,8 @@ import {
   Shirt, 
   Info,
   CheckCircle2,
-  Camera
+  Camera,
+  X
 } from "lucide-react";
 
 export default function EventDetailPage() {
@@ -207,7 +208,7 @@ END:VCALENDAR`;
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={playClick}
-                className="w-full py-3.5 px-4 bg-[#55CCA2] text-[#1b0d28] font-bold text-xs uppercase tracking-wider border-2 border-[#1b0d28] shadow-[3px_3px_0px_#1b0d28] hover:translate-x-0.5 hover:translate-y-0.5 transition-all flex items-center justify-center gap-2 text-center"
+                className="w-full py-3.5 px-4 btn-sangam-mint text-xs uppercase tracking-wider flex items-center justify-center gap-2 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2"
               >
                 <ExternalLink className="w-4 h-4" />
                 <span>Official Ticketing Portal</span>
@@ -218,7 +219,7 @@ END:VCALENDAR`;
                   playClick();
                   setIsRsvpOpen(true);
                 }}
-                className="w-full py-3 px-4 bg-white/5 border-2 border-white/20 text-white font-semibold text-xs uppercase tracking-wider hover:bg-white/10 hover:border-[#55CCA2] shadow-[3px_3px_0px_rgba(0,0,0,0.5)] transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-[#250d38] border-2 border-[#55CCA2] text-[#55CCA2] font-semibold text-xs uppercase tracking-wider hover:bg-[#34144e] shadow-[3px_3px_0px_#55CCA2] active:translate-x-0.5 active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[background-color,box-shadow,transform] duration-150 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Ticket className="w-4 h-4 text-[#55CCA2]" />
                 <span>RSVP for Group Rates</span>
@@ -226,7 +227,7 @@ END:VCALENDAR`;
 
               <button
                 onClick={handleDownloadIcs}
-                className="w-full py-2.5 px-4 bg-transparent border-2 border-white/10 text-slate-300 text-xs font-mono uppercase tracking-wider hover:text-white hover:border-white/30 transition-all flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 px-4 bg-transparent border-2 border-white/20 text-slate-200 text-xs font-mono uppercase tracking-wider hover:text-white hover:border-[#55CCA2] hover:bg-white/5 active:translate-x-0.5 active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,color,background-color,transform] duration-150 flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5 text-[#55CCA2]" />
                 <span>Add to Calendar (.ics)</span>
@@ -343,9 +344,10 @@ END:VCALENDAR`;
           <div className="box-ticket w-full max-w-md bg-[#160d26] p-6 sm:p-8 border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] relative text-left">
             <button
               onClick={() => setIsRsvpOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white text-xs font-mono uppercase tracking-wider"
+              className="absolute top-4 right-4 w-9 h-9 min-w-[36px] min-h-[36px] flex items-center justify-center border-2 border-[#55CCA2] bg-[#250d38] hover:bg-[#34144e] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-colors cursor-pointer"
+              aria-label="Close RSVP modal"
             >
-              [✕ Close]
+              <X className="w-4 h-4 text-[#55CCA2]" />
             </button>
 
             {!isConfirmed ? (
@@ -359,10 +361,12 @@ END:VCALENDAR`;
 
                 <form onSubmit={handleBookingSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-mono uppercase text-slate-300 mb-1">
+                    <label htmlFor="ticket-full-name" className="block text-xs font-mono uppercase text-slate-300 mb-1">
                       Full Name
                     </label>
                     <input
+                      id="ticket-full-name"
+                      name="ticket_name"
                       type="text"
                       required
                       value={ticketName}
@@ -373,10 +377,12 @@ END:VCALENDAR`;
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-slate-300 mb-1">
+                    <label htmlFor="ticket-email" className="block text-xs font-mono uppercase text-slate-300 mb-1">
                       BuckeyeMail or Personal Email
                     </label>
                     <input
+                      id="ticket-email"
+                      name="ticket_email"
                       type="email"
                       required
                       value={ticketEmail}
@@ -387,10 +393,12 @@ END:VCALENDAR`;
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-slate-300 mb-1">
+                    <label htmlFor="ticket-count-select" className="block text-xs font-mono uppercase text-slate-300 mb-1">
                       Number of Attendees
                     </label>
                     <select
+                      id="ticket-count-select"
+                      name="ticket_count"
                       value={ticketCount}
                       onChange={(e) => setTicketCount(e.target.value)}
                       className="w-full px-4 py-2.5 bg-[#0f0b18] border-2 border-white/20 text-white text-xs outline-none focus:border-[#55CCA2] font-sans"

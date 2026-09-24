@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { seededRandom } from "@/lib/prng";
 
 // ---------------------------------------------------------------------------
 // 4K High-Detail Procedural Texture for Leo / Naa Ready Factory Back Wall
@@ -1314,11 +1315,11 @@ function FactorySparks({ count = 140 }) {
     const spd = new Float32Array(count);
     const ph = new Float32Array(count);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 16;
-      pos[i * 3 + 1] = Math.random() * 8;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 14;
-      spd[i] = 0.8 + Math.random() * 1.5;
-      ph[i] = Math.random() * Math.PI * 2;
+      pos[i * 3] = (seededRandom(i * 5 + 1) - 0.5) * 16;
+      pos[i * 3 + 1] = seededRandom(i * 5 + 2) * 8;
+      pos[i * 3 + 2] = (seededRandom(i * 5 + 3) - 0.5) * 14;
+      spd[i] = 0.8 + seededRandom(i * 5 + 4) * 1.5;
+      ph[i] = seededRandom(i * 5 + 5) * Math.PI * 2;
     }
     return { positions: pos, speeds: spd, phases: ph };
   }, [count]);
@@ -1374,6 +1375,17 @@ export function LeoFactoryEnvironment() {
   const crateTexture = useMemo(() => createCrateTexture(), []);
   const leftWallTexture = useMemo(() => createSideWallTexture("left"), []);
   const rightWallTexture = useMemo(() => createSideWallTexture("right"), []);
+
+  // Dispose procedural canvas textures on unmount to prevent GPU accumulation
+  useEffect(() => {
+    return () => {
+      backWallTexture?.dispose();
+      floorTexture?.dispose();
+      crateTexture?.dispose();
+      leftWallTexture?.dispose();
+      rightWallTexture?.dispose();
+    };
+  }, [backWallTexture, floorTexture, crateTexture, leftWallTexture, rightWallTexture]);
 
   return (
     <group name="leo-factory-environment">

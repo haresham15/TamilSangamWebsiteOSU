@@ -145,6 +145,12 @@ body {
   font-family: var(--font-body);
 }
 
+/* Accessible High-Contrast Focus Indicators (WCAG 2.1 AA) */
+:focus-visible {
+  outline: 2px solid var(--sangam-mint, #55CCA2);
+  outline-offset: 2px;
+}
+
 h1, h2, h3, h4, .font-display, .font-serif {
   font-family: var(--font-display), var(--font-body);
 }
@@ -261,6 +267,9 @@ h1, h2, h3, h4, .font-display, .font-serif {
   border: 2px solid #4c2472;
   border-radius: 0px;
   box-shadow: 4px 4px 0px #55CCA2;
+  transition-property: transform, box-shadow, border-color;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Chiseled Metadata Inscription Badge (replaces bubbly pills) */
@@ -301,14 +310,26 @@ h1, h2, h3, h4, .font-display, .font-serif {
 }
 
 .box-tab-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
   padding: 0.375rem 0.875rem;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 700;
   color: #4c2472;
   border: 1px solid transparent;
-  transition-property: background-color, color, border-color, box-shadow;
+  cursor: pointer;
+  user-select: none;
+  transition-property: background-color, color, border-color, box-shadow, transform;
   transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.box-tab-item:focus-visible {
+  outline: 2px solid #55CCA2;
+  outline-offset: 2px;
 }
 
 .box-tab-item-active {
@@ -321,6 +342,10 @@ h1, h2, h3, h4, .font-display, .font-serif {
 .box-tab-item:hover:not(.box-tab-item-active) {
   background: rgba(76, 36, 114, 0.1);
   color: #250d38;
+}
+
+.box-tab-item:active {
+  transform: translateY(1px);
 }
 
 .glass-glow-card {

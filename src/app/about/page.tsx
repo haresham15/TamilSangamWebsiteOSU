@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { FAQS } from "@/data/faq";
@@ -234,10 +235,13 @@ export default function AboutPage() {
           <div className="relative w-full sm:w-72">
             <Search className="w-4 h-4 text-purple-600 absolute left-3 top-3.5" />
             <input
+              id="faq-search-input"
+              name="faq_search"
               type="text"
               value={faqSearch}
               onChange={(e) => setFaqSearch(e.target.value)}
               placeholder="Search questions..."
+              aria-label="Search frequently asked questions"
               className="w-full pl-9 pr-4 py-2.5 bg-white border-2 border-[#250d38] shadow-[3px_3px_0px_#4c2472] text-[#250d38] placeholder-purple-400 text-xs outline-none focus:border-[#55CCA2] font-body"
             />
           </div>
@@ -249,15 +253,18 @@ export default function AboutPage() {
             return (
               <div
                 key={faq.id}
-                className="bg-white border-2 border-[#250d38] shadow-[3px_3px_0px_#4c2472] hover:shadow-[4px_4px_0px_#55CCA2] overflow-hidden transition-all"
+                className="bg-white border-2 border-[#250d38] shadow-[3px_3px_0px_#4c2472] hover:shadow-[4px_4px_0px_#55CCA2] overflow-hidden transition-[box-shadow,border-color] duration-200"
               >
                 <button
                   type="button"
+                  id={`faq-question-${faq.id}`}
+                  aria-expanded={isExpanded}
+                  aria-controls={`faq-answer-${faq.id}`}
                   onClick={() => {
                     playWoodClick();
                     setExpandedFaq(isExpanded ? null : faq.id);
                   }}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 focus:outline-none"
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] cursor-pointer hover:bg-purple-50/50 transition-colors"
                 >
                   <span className="text-sm sm:text-base font-bold text-[#250d38] font-display">
                     {locale === "ta" ? faq.questionTa : faq.questionEn}
@@ -269,11 +276,24 @@ export default function AboutPage() {
                   )}
                 </button>
 
-                {isExpanded && (
-                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-[#250d38] leading-relaxed border-t-2 border-purple-100 font-body">
-                    {locale === "ta" ? faq.answerTa : faq.answerEn}
-                  </div>
-                )}
+                <AnimatePresence initial={false}>
+                  {isExpanded && (
+                    <motion.div
+                      id={`faq-answer-${faq.id}`}
+                      role="region"
+                      aria-labelledby={`faq-question-${faq.id}`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden border-t-2 border-purple-100"
+                    >
+                      <div className="px-5 pb-5 pt-3 text-xs sm:text-sm text-[#250d38] leading-relaxed font-body">
+                        {locale === "ta" ? faq.answerTa : faq.answerEn}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}

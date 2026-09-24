@@ -96,7 +96,9 @@ function VideoShaderMaterial() {
     const texture = new THREE.VideoTexture(video);
     texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
-    setVideoTexture(texture);
+    queueMicrotask(() => {
+      setVideoTexture(texture);
+    });
 
     const handleMouseMove = (e: MouseEvent) => {
       targetMouse.current.x = e.clientX / window.innerWidth;

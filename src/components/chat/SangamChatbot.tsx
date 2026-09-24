@@ -209,7 +209,7 @@ export const SangamChatbot: React.FC = () => {
             setIsOpen(!isOpen);
           }}
           aria-label="Ask Nanba - OSU Tamil Sangam AI Bot"
-          className="relative group p-3.5 sm:px-4 sm:py-3 bg-[#250d38] text-white border-2 border-[#55CCA2] shadow-[4px_4px_0px_#55CCA2] hover:shadow-[6px_6px_0px_#55CCA2] flex items-center gap-2.5 transition-all"
+          className="relative group p-3.5 sm:px-4 sm:py-3 min-h-[44px] bg-[#250d38] text-white border-2 border-[#55CCA2] shadow-[4px_4px_0px_#55CCA2] hover:shadow-[6px_6px_0px_#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 flex items-center gap-2.5 transition-[box-shadow,background-color,border-color] duration-150 cursor-pointer"
         >
           <div className="relative">
             <Bot className="w-5 h-5 text-[#55CCA2]" />
@@ -253,7 +253,7 @@ export const SangamChatbot: React.FC = () => {
                   onClick={() => setIsEditorOpen(!isEditorOpen)}
                   title="Edit Knowledge Base"
                   aria-label="Toggle Knowledge Base Editor"
-                  className={`p-1.5 border text-xs font-mono font-bold transition-all ${
+                  className={`p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center border text-xs font-mono font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-[background-color,border-color,color] duration-150 cursor-pointer ${
                     isEditorOpen
                       ? "bg-[#55CCA2] text-[#250d38] border-[#55CCA2]"
                       : "bg-[#361352] text-purple-200 border-purple-400/40 hover:text-white hover:border-[#55CCA2]"
@@ -319,8 +319,11 @@ export const SangamChatbot: React.FC = () => {
                         <option value="Custom">Custom Fact</option>
                       </select>
                       <input
+                        id="editor-keywords-input"
+                        name="keywords"
                         type="text"
                         placeholder="Keywords (comma-separated)"
+                        aria-label="Fact Keywords"
                         value={newKeywords}
                         onChange={(e) => setNewKeywords(e.target.value)}
                         className="px-2.5 py-1.5 bg-white border border-[#250d38] text-xs text-[#250d38] placeholder-purple-900/40"
@@ -328,8 +331,11 @@ export const SangamChatbot: React.FC = () => {
                     </div>
                     <div>
                       <textarea
+                        id="editor-content-input"
+                        name="content"
                         rows={2}
                         placeholder="Exact fact or description (e.g. We meet every Wednesday at 6 PM at the Union)..."
+                        aria-label="Fact Description"
                         value={newContent}
                         onChange={(e) => setNewContent(e.target.value)}
                         required
@@ -431,6 +437,8 @@ export const SangamChatbot: React.FC = () => {
                 className="flex items-center gap-2"
               >
                 <input
+                  id="sangam-chat-input"
+                  name="chat_message"
                   type="text"
                   value={inputQuery}
                   onChange={(e) => setInputQuery(e.target.value)}
@@ -439,12 +447,14 @@ export const SangamChatbot: React.FC = () => {
                       ? "நண்பாவிடம் கேளுங்கள் (நிகழ்வுகள், சேர்க்கை)..."
                       : "Ask Nanba about events, joining, tickets, board..."
                   }
+                  aria-label="Ask Nanba AI Assistant"
                   className="flex-1 px-3 py-2 text-xs bg-[#faf8f5] border-2 border-[#250d38] text-[#250d38] placeholder-purple-900/40 focus:outline-none focus:border-[#55CCA2] font-body"
                 />
                 <button
                   type="submit"
                   disabled={!inputQuery.trim() || isLoading}
-                  className="p-2 bg-[#250d38] text-white border-2 border-[#55CCA2] shadow-[2px_2px_0px_#55CCA2] hover:shadow-[3px_3px_0px_#55CCA2] disabled:opacity-40 transition-all"
+                  aria-label="Send message to Nanba"
+                  className="p-2 min-w-[42px] min-h-[42px] flex items-center justify-center bg-[#250d38] text-white border-2 border-[#55CCA2] shadow-[2px_2px_0px_#55CCA2] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 disabled:opacity-40 transition-[box-shadow,transform,opacity] duration-150 cursor-pointer"
                 >
                   <Send className="w-4 h-4 text-[#55CCA2]" />
                 </button>

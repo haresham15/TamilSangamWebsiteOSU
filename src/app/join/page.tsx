@@ -171,7 +171,7 @@ export default function JoinPage() {
 
             <button
               onClick={handleCopyGroupMe}
-              className="px-4 py-3 border-2 border-white/20 bg-white/5 text-white text-xs font-mono uppercase tracking-wider hover:bg-white/10 hover:border-[#55CCA2] transition-all flex items-center gap-2"
+              className="px-4 py-3 border-2 border-white/20 bg-white/5 text-white text-xs font-mono uppercase tracking-wider hover:bg-white/10 hover:border-[#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 active:translate-x-0.5 active:translate-y-0.5 transition-[border-color,background-color,transform] duration-150 flex items-center gap-2 cursor-pointer"
             >
               {copiedGroupMe ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
               <span>{copiedGroupMe ? "Copied Link!" : "Copy Invite Link"}</span>
@@ -236,10 +236,12 @@ export default function JoinPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-mono uppercase text-slate-300 mb-1">
+              <label htmlFor="join-full-name" className="block text-xs font-mono uppercase text-slate-300 mb-1">
                 Full Name
               </label>
               <input
+                id="join-full-name"
+                name="full_name"
                 type="text"
                 required
                 value={name}
@@ -250,10 +252,12 @@ export default function JoinPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-mono uppercase text-slate-300 mb-1">
+              <label htmlFor="join-email" className="block text-xs font-mono uppercase text-slate-300 mb-1">
                 BuckeyeMail or Email
               </label>
               <input
+                id="join-email"
+                name="email"
                 type="email"
                 required
                 value={email}
@@ -264,10 +268,12 @@ export default function JoinPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-mono uppercase text-slate-300 mb-1">
+              <label htmlFor="join-major" className="block text-xs font-mono uppercase text-slate-300 mb-1">
                 Academic Major & Standing
               </label>
               <input
+                id="join-major"
+                name="major"
                 type="text"
                 value={major}
                 onChange={(e) => setMajor(e.target.value)}

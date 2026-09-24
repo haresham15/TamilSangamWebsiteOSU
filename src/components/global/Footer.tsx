@@ -195,18 +195,22 @@ export const Footer: React.FC = () => {
 
                 <div className="flex gap-2">
                   <input
+                    id="footer-newsletter-email"
+                    name="email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name.#@buckeyemail.osu.edu"
+                    aria-label="OSU Buckeye Email Address"
+                    autoComplete="email"
                     required
                     disabled={status === "loading"}
-                    className="w-full px-3.5 py-2.5 bg-purple-900/60 border-2 border-purple-500 text-white placeholder-purple-300/60 text-xs outline-none focus:border-[#55CCA2] transition-all font-mono disabled:opacity-50"
+                    className="w-full px-3.5 py-2.5 bg-purple-900/60 border-2 border-purple-500 text-white placeholder-purple-300/60 text-xs outline-none focus:border-[#55CCA2] transition-[border-color,background-color] duration-150 font-mono disabled:opacity-50"
                   />
                   <button
                     type="submit"
                     disabled={status === "loading"}
-                    className="px-5 py-2.5 btn-sangam-mint text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-60"
+                    className="px-5 py-2.5 btn-sangam-mint text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-1.5 shrink-0 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 focus-visible:ring-offset-[#250d38] cursor-pointer"
                   >
                     {status === "loading" ? (
                       <>

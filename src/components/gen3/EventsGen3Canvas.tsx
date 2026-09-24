@@ -9,7 +9,6 @@ import { SangamLogo3D } from "./SangamLogo3D";
 import { CameraChoreography } from "./CameraChoreography";
 import { useScrollCinematic } from "./useScrollCinematic";
 import { VolumetricCones } from "./VolumetricCones";
-import { PhoneTorches } from "./PhoneTorches";
 import { DustCloud } from "./DustCloud";
 import { LeoFactoryEnvironment } from "./LeoFactoryEnvironment";
 import { JumpingCrowdSilhouettes } from "./JumpingCrowdSilhouettes";
@@ -69,9 +68,13 @@ function DepthTextureProvider({ children }: { children: React.ReactNode }) {
     return target;
   }, [size, gl]);
 
-  // Make it globally accessible for custom materials, or pass it via Context.
-  // For now, we attach it to the window or a global store if needed, but context is cleaner.
-  // We will build the RenderSequenceOwner in Phase 6 to actually *render* to this target.
+  // Dispose WebGL render target and depth texture to prevent GPU memory accumulation
+  React.useEffect(() => {
+    return () => {
+      depthTarget.dispose();
+      depthTarget.depthTexture?.dispose();
+    };
+  }, [depthTarget]);
 
   return <DepthContext.Provider value={depthTarget}>{children}</DepthContext.Provider>;
 }
@@ -90,7 +93,7 @@ export function EventsGen3Canvas() {
             powerPreference: "high-performance",
             toneMappingExposure: 1.15,
           }}
-          shadows
+          shadows={{ type: THREE.PCFShadowMap }}
         >
           <color attach="background" args={["#0c0a08"]} />
           <fogExp2 attach="fog" args={["#14100c", 0.016]} />

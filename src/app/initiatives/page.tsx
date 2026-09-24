@@ -116,7 +116,7 @@ export default function InitiativesPage() {
             <Link
               href="/gallery"
               onClick={playClick}
-              className="px-5 py-3 border-2 border-white/20 bg-white/5 text-white text-xs font-mono uppercase tracking-wider hover:bg-white/10 hover:border-[#55CCA2] transition-all"
+              className="px-5 py-3 border-2 border-white/20 bg-white/5 text-white text-xs font-mono uppercase tracking-wider hover:bg-white/10 hover:border-[#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 active:translate-x-0.5 active:translate-y-0.5 transition-[border-color,background-color,transform] duration-150 inline-flex items-center justify-center"
             >
               View Performance Photos
             </Link>

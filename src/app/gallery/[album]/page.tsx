@@ -421,23 +421,23 @@ export default function EventInfoAndGalleryPage() {
               {/* Close Button */}
               <button
                 onClick={() => setSelectedPhoto(null)}
-                className="absolute top-4 right-4 w-8 h-8 border border-white/40 bg-white/10 hover:bg-white/25 text-white z-20 transition-colors flex items-center justify-center"
+                className="absolute top-4 right-4 w-10 h-10 min-w-[40px] min-h-[40px] border-2 border-[#55CCA2] bg-[#250d38] hover:bg-[#34144e] text-white z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-[background-color,transform] duration-150 active:scale-95 flex items-center justify-center cursor-pointer shadow-[2px_2px_0px_#55CCA2]"
                 aria-label="Close album photo modal"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5 text-[#55CCA2]" />
               </button>
 
               {/* Prev / Next Navigation Buttons */}
               <button
                 onClick={handlePrevPhoto}
-                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/80 hover:bg-[#250d38] text-white border-2 border-[#55CCA2] z-20 transition-all flex items-center justify-center shadow-[2px_2px_0px_#55CCA2]"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-11 h-11 min-w-[44px] min-h-[44px] bg-[#250d38] hover:bg-[#34144e] text-white border-2 border-[#55CCA2] z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] active:scale-95 transition-[background-color,transform,box-shadow] duration-150 flex items-center justify-center shadow-[3px_3px_0px_#55CCA2] cursor-pointer"
                 aria-label="Previous photo"
               >
                 <ChevronLeft className="w-5 h-5 text-[#55CCA2]" />
               </button>
               <button
                 onClick={handleNextPhoto}
-                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/80 hover:bg-[#250d38] text-white border-2 border-[#55CCA2] z-20 transition-all flex items-center justify-center shadow-[2px_2px_0px_#55CCA2]"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-11 h-11 min-w-[44px] min-h-[44px] bg-[#250d38] hover:bg-[#34144e] text-white border-2 border-[#55CCA2] z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] active:scale-95 transition-[background-color,transform,box-shadow] duration-150 flex items-center justify-center shadow-[3px_3px_0px_#55CCA2] cursor-pointer"
                 aria-label="Next photo"
               >
                 <ChevronRight className="w-5 h-5 text-[#55CCA2]" />

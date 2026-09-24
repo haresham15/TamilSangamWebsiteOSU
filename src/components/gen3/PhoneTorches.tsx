@@ -3,6 +3,7 @@
 import React, { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { seededRandom } from "@/lib/prng";
 
 export function PhoneTorches({ count = 300 }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
@@ -14,14 +15,14 @@ export function PhoneTorches({ count = 300 }) {
     const ph = [];
     for (let i = 0; i < count; i++) {
       // Crowd shape: an arc or stadium seating behind the camera view
-      const angle = (Math.random() - 0.5) * Math.PI * 1.5;
-      const radius = 4 + Math.random() * 15;
+      const angle = (seededRandom(i * 4 + 1) - 0.5) * Math.PI * 1.5;
+      const radius = 4 + seededRandom(i * 4 + 2) * 15;
       const x = Math.sin(angle) * radius;
       const z = Math.cos(angle) * radius - 2; // Offset center
-      const y = (radius - 4) * 0.3 + Math.random() * 0.5; // Stadium slope
+      const y = (radius - 4) * 0.3 + seededRandom(i * 4 + 3) * 0.5; // Stadium slope
       
       pos.push(new THREE.Vector3(x, y, z));
-      ph.push(Math.random() * Math.PI * 2);
+      ph.push(seededRandom(i * 4 + 4) * Math.PI * 2);
     }
     return [pos, ph];
   }, [count]);

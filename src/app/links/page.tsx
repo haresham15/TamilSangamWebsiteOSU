@@ -115,7 +115,8 @@ export default function BioHubPage() {
             href="https://instagram.com/osutamilsangam"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-10 h-10 border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] transition-all flex items-center justify-center"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,color,box-shadow,transform] duration-150 flex items-center justify-center cursor-pointer"
+            aria-label="Instagram profile"
             title="Instagram"
           >
             <InstagramIcon className="w-4 h-4" />
@@ -124,7 +125,8 @@ export default function BioHubPage() {
             href="https://groupme.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-10 h-10 border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] transition-all flex items-center justify-center"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,color,box-shadow,transform] duration-150 flex items-center justify-center cursor-pointer"
+            aria-label="GroupMe chat"
             title="GroupMe"
           >
             <MessageSquare className="w-4 h-4" />
@@ -132,7 +134,8 @@ export default function BioHubPage() {
           <button
             type="button"
             onClick={() => handleCopy("email", "president.osutamilsangam@gmail.com")}
-            className="w-10 h-10 border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] transition-all flex items-center justify-center relative"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,color,box-shadow,transform] duration-150 flex items-center justify-center cursor-pointer relative"
+            aria-label="Copy Contact Email"
             title="Copy Contact Email"
           >
             {copiedItem === "email" ? (
@@ -149,7 +152,7 @@ export default function BioHubPage() {
             const IconComponent = link.icon;
             const content = (
               <div
-                className={`w-full p-4 border-2 transition-all text-left flex items-center justify-between ${
+                className={`w-full p-4 border-2 transition-[border-color,box-shadow,transform] duration-150 active:translate-x-[1px] active:translate-y-[1px] text-left flex items-center justify-between ${
                   link.isFeatured
                     ? "bg-[#250d38] border-[#55CCA2] shadow-[4px_4px_0px_#55CCA2]"
                     : "bg-[#160d26] border-white/15 hover:border-[#55CCA2] shadow-[3px_3px_0px_#4c2472] hover:shadow-[4px_4px_0px_#55CCA2]"
@@ -182,12 +185,12 @@ export default function BioHubPage() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block"
+                className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d0914]"
               >
                 {content}
               </a>
             ) : (
-              <Link key={link.id} href={link.href} className="block">
+              <Link key={link.id} href={link.href} className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d0914]">
                 {content}
               </Link>
             );

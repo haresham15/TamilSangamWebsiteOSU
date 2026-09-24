@@ -82,7 +82,7 @@ export default function HomePage() {
           <Link
             href="/events"
             onClick={playClick}
-            className="text-xs font-mono text-[#4c2472] hover:text-[#11694c] font-bold transition-colors"
+            className="text-xs font-mono text-[#4c2472] hover:text-[#11694c] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-colors"
           >
             <span>{locale === "ta" ? "அனைத்து நிகழ்வுகளையும் காண்க" : "See Every Event"}</span>
           </Link>
@@ -181,7 +181,7 @@ export default function HomePage() {
           <Link
             href="/gallery"
             onClick={playClick}
-            className="text-xs font-mono text-[#4c2472] hover:text-[#11694c] font-bold transition-colors"
+            className="text-xs font-mono text-[#4c2472] hover:text-[#11694c] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-colors"
           >
             <span>{locale === "ta" ? "முழு தொகுப்பைக் காண்க" : "Explore All Photo Archives →"}</span>
           </Link>
@@ -201,7 +201,7 @@ export default function HomePage() {
             <Link
               href="/gallery/berry-cute-picnic"
               onClick={playClick}
-              className="border-2 border-[#250d38] bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] transition-all group flex flex-col justify-between h-full"
+              className="border-2 border-[#250d38] bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[box-shadow,border-color] duration-200 ease-out group flex flex-col justify-between h-full"
             >
               <div className="relative w-full aspect-[4/3] overflow-hidden border-b-2 border-[#250d38]">
                 <Image
@@ -236,7 +236,7 @@ export default function HomePage() {
             <Link
               href="/gallery/streetside-sapad"
               onClick={playClick}
-              className="border-2 border-[#250d38] bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] transition-all group flex flex-col justify-between h-full"
+              className="border-2 border-[#250d38] bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[box-shadow,border-color] duration-200 ease-out group flex flex-col justify-between h-full"
             >
               <div className="relative w-full aspect-[4/3] overflow-hidden border-b-2 border-[#250d38]">
                 <Image
@@ -271,7 +271,7 @@ export default function HomePage() {
             <Link
               href="/gallery/namma-jathara"
               onClick={playClick}
-              className="border-2 border-[#250d38] bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] transition-all group flex flex-col justify-between h-full"
+              className="border-2 border-[#250d38] bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[box-shadow,border-color] duration-200 ease-out group flex flex-col justify-between h-full"
             >
               <div className="relative w-full aspect-[4/3] overflow-hidden border-b-2 border-[#250d38]">
                 <Image

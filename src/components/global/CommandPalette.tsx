@@ -166,6 +166,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/80 backdrop-blur-md animate-fadeIn"
     >
       <div 
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search and command palette"
         className="box-ticket w-full max-w-2xl bg-[#160d26] border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] overflow-hidden text-left"
         onClick={(e) => e.stopPropagation()}
       >
@@ -174,7 +177,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
           <Search className="w-5 h-5 text-[#55CCA2]" />
           <input
             ref={inputRef}
+            id="command-palette-input"
+            name="command_search"
             type="text"
+            role="combobox"
+            aria-expanded={filteredItems.length > 0}
+            aria-controls="command-palette-results"
+            aria-autocomplete="list"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -188,7 +197,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
             <button
               onClick={() => setQuery("")}
               aria-label="Clear search input"
-              className="text-slate-400 hover:text-white p-1"
+              className="text-slate-400 hover:text-white p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2]"
             >
               <X className="w-4 h-4" />
             </button>
@@ -199,7 +208,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         </div>
 
         {/* Results List */}
-        <div className="max-h-[60vh] overflow-y-auto p-2 space-y-1">
+        <div id="command-palette-results" role="listbox" aria-label="Search suggestions" className="max-h-[60vh] overflow-y-auto p-2 space-y-1">
           {filteredItems.length === 0 ? (
             <div className="py-12 text-center text-slate-400">
               <p className="text-sm">{locale === "ta" ? "எந்த முடிவுகளும் கிடைக்கவில்லை" : "No matching results found."}</p>
@@ -211,10 +220,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
               return (
                 <div
                   key={item.id}
+                  role="option"
+                  aria-selected={isSelected}
                   onClick={() => handleSelect(item)}
                   onMouseEnter={() => setSelectedIndex(idx)}
-                  className={`flex items-center justify-between px-4 py-3 cursor-pointer border-2 transition-all ${
-                    isSelected ? "bg-[#250d38] border-[#55CCA2] shadow-[3px_3px_0px_#55CCA2] text-white" : "border-transparent text-slate-300 hover:bg-white/5"
+                  className={`flex items-center justify-between px-4 py-3 cursor-pointer border-2 transition-[background-color,border-color,box-shadow,color] duration-150 ease-out ${
+                    isSelected ? "bg-[#250d38] border-[#55CCA2] shadow-[3px_3px_0px_#55CCA2] text-white" : "border-transparent text-white/90 hover:bg-white/5"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -223,12 +234,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold truncate">{item.title}</span>
-                        <span className="box-badge-dark text-[9px] font-mono text-slate-300 border border-white/20 shrink-0">
+                        <span className="text-sm font-semibold truncate text-white">{item.title}</span>
+                        <span className="box-badge-dark text-[9px] font-mono text-slate-200 border border-white/20 shrink-0">
                           {item.category}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400 truncate mt-0.5">{item.subtitle}</p>
+                      <p className="text-xs text-purple-200/80 truncate mt-0.5">{item.subtitle}</p>
                     </div>
                   </div>
                   <ArrowRight className={`w-4 h-4 shrink-0 transition-opacity ${isSelected ? "opacity-100 text-[#55CCA2]" : "opacity-0"}`} />
@@ -239,13 +250,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         </div>
 
         {/* Footer shortcuts */}
-        <div className="px-6 py-3 border-t border-white/10 bg-black/40 flex items-center justify-between text-[11px] text-slate-400 font-mono">
+        <div className="px-6 py-3 border-t border-white/10 bg-black/60 flex items-center justify-between text-[11px] text-slate-200 font-mono">
           <div className="flex items-center gap-3">
             <span>↑↓ Navigate</span>
             <span>↵ Select</span>
             <span>ESC Close</span>
           </div>
-          <span className="text-[var(--accent-tint)]">OSU Tamil Sangam</span>
+          <span className="text-[#55CCA2] font-bold">OSU Tamil Sangam</span>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import React, { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { seededRandom } from "@/lib/prng";
 
 export function DustCloud({ count = 200 }) {
   const pointsRef = useRef<THREE.Points>(null);
@@ -13,13 +14,13 @@ export function DustCloud({ count = 200 }) {
     const sp = new Float32Array(count);
     
     for (let i = 0; i < count; i++) {
-      // Localized around the light shaft
-      pos[i * 3 + 0] = (Math.random() - 0.5) * 8; // x
-      pos[i * 3 + 1] = Math.random() * 12;        // y
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 8 - 3; // z
+      // Localized around the light shaft with deterministic seeding
+      pos[i * 3 + 0] = (seededRandom(i * 3 + 1) - 0.5) * 8; // x
+      pos[i * 3 + 1] = seededRandom(i * 3 + 2) * 12;        // y
+      pos[i * 3 + 2] = (seededRandom(i * 3 + 3) - 0.5) * 8 - 3; // z
       
-      ph[i] = Math.random() * Math.PI * 2;
-      sp[i] = 0.1 + Math.random() * 0.3;
+      ph[i] = seededRandom(i * 3 + 4) * Math.PI * 2;
+      sp[i] = 0.1 + seededRandom(i * 3 + 5) * 0.3;
     }
     return [pos, ph, sp];
   }, [count]);
