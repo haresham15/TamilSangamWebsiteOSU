@@ -17,82 +17,132 @@ const Canvas = dynamic(
   { ssr: false }
 );
 
-// High-Performance Mathematical Tamil Sikku & Pulli Kolam Generator
+// Authentic Mathematical Tamil Pulli & Sikku Kamalam Kolam Generator
 function generateKolamPoints(isMobile: boolean) {
   const points: number[] = [];
   const colors: number[] = [];
-  const baseCount = isMobile ? 1800 : 4800; // Scaled for density
 
+  const colorWhite = new THREE.Color("#ffffff");
   const colorMint = new THREE.Color("#55CCA2");
   const colorGold = new THREE.Color("#FFC526");
-  const colorPurple = new THREE.Color("#a855f7");
-  const colorRose = new THREE.Color("#f43f5e");
-  const colorWhite = new THREE.Color("#ffffff");
+  const colorRose = new THREE.Color("#fb7185");
 
-  // 1. Authentic 8-Fold Interlocking Sikku / Brahma Mudi Kolam Lattice
-  const rings = isMobile ? 10 : 20;
-  const dotsPerRing = isMobile ? 16 : 32;
+  const addPoint = (x: number, y: number, z: number, color: THREE.Color) => {
+    points.push(x, y, z);
+    colors.push(color.r, color.g, color.b);
+  };
 
-  for (let r = 1; r <= rings; r++) {
-    const radius = (r / rings) * 6.2;
-    const numDots = dotsPerRing * (r % 2 === 0 ? 1 : 2);
-    for (let d = 0; d < numDots; d++) {
-      const theta = (d / numDots) * Math.PI * 2;
-      // Traditional Tamil Lotus / Sikku lobe modulation
-      const rMod = radius * (1.0 + 0.22 * Math.sin(theta * 8.0) + 0.1 * Math.cos(theta * 16.0));
-      const x = Math.cos(theta) * rMod;
-      const y = Math.sin(theta) * rMod;
-      const z = (Math.sin(r * 1.8) + Math.cos(theta * 4.0)) * 0.3;
+  // 1. PULLI (The Foundation Dot Grid) - Authentic 13-to-1 Isometric Sandhu Pulli Diamond
+  // In classical Tamil culture, dots are placed first with white rice flour (Arisi Maavu)
+  const pulliSpacing = isMobile ? 0.48 : 0.52;
+  const maxN = isMobile ? 6 : 8;
+  for (let row = -maxN; row <= maxN; row++) {
+    const colsInRow = (maxN * 2 + 1) - Math.abs(row) * 2;
+    for (let c = 0; c < colsInRow; c++) {
+      const col = -(colsInRow - 1) / 2 + c;
+      const px = col * pulliSpacing;
+      const py = row * (pulliSpacing * 0.866); // 60-degree isometric lattice
 
-      points.push(x, y, z);
+      // Tight cluster of particles for each pulli dot to render crisp circular rice flour marks
+      const dotDensity = isMobile ? 4 : 6;
+      for (let p = 0; p < dotDensity; p++) {
+        const angle = (p / dotDensity) * Math.PI * 2;
+        const rad = p === 0 ? 0 : 0.042;
+        const x = px + Math.cos(angle) * rad;
+        const y = py + Math.sin(angle) * rad;
+        const z = 0.02;
 
-      // Kanchipuram silk-inspired chromatic gradation (Gold -> Mint -> Rose -> Royal Purple)
-      const ratio = r / rings;
-      const c = new THREE.Color();
-      if (ratio < 0.25) {
-        c.copy(colorGold).lerp(colorMint, ratio / 0.25);
-      } else if (ratio < 0.6) {
-        c.copy(colorMint).lerp(colorRose, (ratio - 0.25) / 0.35);
-      } else if (ratio < 0.85) {
-        c.copy(colorRose).lerp(colorPurple, (ratio - 0.6) / 0.25);
-      } else {
-        c.copy(colorPurple).lerp(colorWhite, (ratio - 0.85) / 0.15);
+        const distFromCenter = Math.sqrt(px * px + py * py);
+        const dotColor = distFromCenter < 0.8 ? colorGold : colorWhite;
+        addPoint(x, y, z, dotColor);
       }
-      colors.push(c.r, c.g, c.b);
     }
   }
 
-  // 2. Interlacing Brahma Mudi Knots (Geometric Crossing Points)
-  const knotCount = isMobile ? 300 : 900;
-  for (let k = 0; k < knotCount; k++) {
-    const t = (k / knotCount) * Math.PI * 4;
-    const r = 2.5 * Math.sin(t * 3.0) + 3.0;
-    const x = r * Math.cos(t * 2.0);
-    const y = r * Math.sin(t * 2.0);
-    const z = Math.sin(t * 6.0) * 0.5;
-
-    points.push(x, y, z);
-    const c = k % 2 === 0 ? colorMint : colorGold;
-    colors.push(c.r, c.g, c.b);
+  // 2. INNER KAMALAM (8-Petal Sacred Lotus Weave)
+  const innerSteps = isMobile ? 600 : 1200;
+  for (let i = 0; i <= innerSteps; i++) {
+    const t = (i / innerSteps) * Math.PI * 2;
+    // 8-petal modulated rose with sharp lotus petal cusps
+    const r = 1.38 * (0.68 + 0.32 * Math.cos(8 * t)) * (1.0 + 0.12 * Math.sin(16 * t));
+    const x = r * Math.cos(t);
+    const y = r * Math.sin(t);
+    const z = Math.sin(t * 8) * 0.06;
+    addPoint(x, y, z, colorMint);
   }
 
-  // 3. Ambient Celestial Cosmic Dust Field (Deterministic Seeded PRNG)
+  // 3. MID-TIER SIKKU RIBBONS (Continuous Loops Weaving Around the Pulli)
+  const sikkuSteps = isMobile ? 800 : 1600;
+  for (let i = 0; i <= sikkuSteps; i++) {
+    const t = (i / sikkuSteps) * Math.PI * 2;
+
+    // Primary 8-fold ribbon looping between dots
+    const r1 = 2.65 * (0.84 + 0.24 * Math.sin(4 * t + Math.PI / 4) + 0.14 * Math.cos(8 * t));
+    const x1 = r1 * Math.cos(t);
+    const y1 = r1 * Math.sin(t);
+    const z1 = Math.cos(t * 4) * 0.08;
+    const c1 = new THREE.Color().copy(colorMint).lerp(colorWhite, 0.45);
+    addPoint(x1, y1, z1, c1);
+
+    // Complementary cross-weave ribbon (offset by 45 degrees, Brahma Mudi knot)
+    const r2 = 2.65 * (0.84 + 0.24 * Math.cos(4 * t) + 0.14 * Math.sin(8 * t));
+    const x2 = r2 * Math.cos(t);
+    const y2 = r2 * Math.sin(t);
+    const z2 = -Math.cos(t * 4) * 0.08;
+    const c2 = new THREE.Color().copy(colorGold).lerp(colorWhite, 0.35);
+    addPoint(x2, y2, z2, c2);
+  }
+
+  // 4. OUTER 16-LOBE THIRAI & ALANKARAM BORDER (Scalloped Framing Garland)
+  const outerSteps = isMobile ? 700 : 1500;
+  for (let i = 0; i <= outerSteps; i++) {
+    const t = (i / outerSteps) * Math.PI * 2;
+    const r = 4.25 * (0.91 + 0.15 * Math.sin(16 * t) + 0.07 * Math.cos(8 * t));
+    const x = r * Math.cos(t);
+    const y = r * Math.sin(t);
+    const z = Math.sin(t * 16) * 0.05;
+
+    const colorRatio = (Math.sin(t * 4) + 1) * 0.5;
+    const c = new THREE.Color().copy(colorMint).lerp(colorRose, colorRatio * 0.45);
+    addPoint(x, y, z, c);
+  }
+
+  // 5. FOUR CARDINAL GOPURAM STEP FINIALS (Traditional Temple Altar Points)
+  const cardinalAngles = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2];
+  const finialSteps = isMobile ? 25 : 45;
+  cardinalAngles.forEach((baseAngle) => {
+    for (let f = 1; f <= 3; f++) {
+      const dist = 4.45 + f * 0.4;
+      const width = (4 - f) * 0.22;
+      for (let s = 0; s <= finialSteps; s++) {
+        const u = (s / finialSteps) * 2 - 1;
+        const offset = u * width;
+        const cosB = Math.cos(baseAngle);
+        const sinB = Math.sin(baseAngle);
+        const lx = dist;
+        const ly = offset;
+        const x = lx * cosB - ly * sinB;
+        const y = lx * sinB + ly * cosB;
+        addPoint(x, y, 0.03, colorGold);
+      }
+    }
+  });
+
+  // 6. AMBIENT RICE FLOUR DUST PARTICLES (Subtle Micro-Sparkles)
   let seed = 42;
   const rand = () => {
     seed = (seed * 9301 + 49297) % 233280;
     return seed / 233280;
   };
-  const remaining = baseCount - points.length / 3;
-  for (let i = 0; i < remaining; i++) {
-    const r = Math.sqrt(rand()) * 9.5;
+  const dustCount = isMobile ? 250 : 600;
+  for (let i = 0; i < dustCount; i++) {
+    const rad = 0.4 + Math.sqrt(rand()) * 5.4;
     const theta = rand() * Math.PI * 2;
-    const x = Math.cos(theta) * r;
-    const y = Math.sin(theta) * r;
-    const z = (rand() - 0.5) * 4.0;
-
-    points.push(x, y, z);
-    const c = rand() > 0.5 ? colorMint : colorGold;
-    colors.push(c.r, c.g, c.b);
+    const x = Math.cos(theta) * rad;
+    const y = Math.sin(theta) * rad;
+    const z = (rand() - 0.5) * 0.7;
+    const c = rand() > 0.6 ? colorMint : (rand() > 0.3 ? colorWhite : colorGold);
+    addPoint(x, y, z, c);
   }
 
   return {
@@ -110,7 +160,7 @@ function getKolamPoints(isMobile: boolean) {
   return kolamPointsCache[key];
 }
 
-// Custom GPU Vertex Shader (100% Hardware Accelerated, Zero CPU-to-GPU Re-upload Bottleneck)
+// Custom GPU Vertex Shader (Maintains Kolam Geometry at Rest, Lifts into 3D on Scroll)
 const vertexShader = `
   uniform float uTime;
   uniform float uScrollProgress;
@@ -126,15 +176,16 @@ const vertexShader = `
 
     float dist = length(pos.xy);
 
-    // 100% GPU Parallel Turbulence Math (No CPU Loops)
-    float breath = sin(dist * 2.0 - uTime * 2.2) * 0.25;
-    float vortex = uScrollProgress * sin(dist * 2.8 - uTime * 3.0) * 3.5;
-    float twist = sin(atan(pos.y, pos.x) * 8.0 + uTime * 0.8) * 0.18;
+    // Serene living respiration preserving geometric integrity at rest
+    float breath = sin(dist * 2.2 - uTime * 1.4) * 0.07;
+    // On scroll: dynamic 3D vortex expansion into the letter portal
+    float vortex = uScrollProgress * sin(dist * 2.2 - uTime * 2.6) * 2.8;
+    float twist = sin(atan(pos.y, pos.x) * 8.0 + uTime * 0.6) * (0.05 + uScrollProgress * 0.25);
 
     pos.z += breath + vortex + twist;
 
-    // GPU Rotation on Scroll
-    float angle = uScrollProgress * 2.2;
+    // Smooth GPU Rotation on Scroll
+    float angle = uScrollProgress * 1.8;
     float cosA = cos(angle);
     float sinA = sin(angle);
     pos.xy = mat2(cosA, -sinA, sinA, cosA) * pos.xy;
@@ -142,25 +193,24 @@ const vertexShader = `
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mvPosition;
 
-    // Perspective-attenuated point size
-    gl_PointSize = (uPointSize / -mvPosition.z) * (1.0 + uScrollProgress * 0.75);
-    vAlpha = smoothstep(20.0, 2.0, -mvPosition.z);
+    // Perspective point attenuation for crisp rice-flour particle clarity
+    gl_PointSize = (uPointSize / -mvPosition.z) * (1.0 + uScrollProgress * 0.65);
+    vAlpha = smoothstep(22.0, 1.5, -mvPosition.z);
   }
 `;
 
-// Custom Fragment Shader for Soft Glowing Circular Discs
+// Custom Fragment Shader for Soft Emissive Rice Flour Particles
 const fragmentShader = `
   varying vec3 vColor;
   varying float vAlpha;
 
   void main() {
-    // Exact circular point rendering (Discard pixels outside r > 0.5)
     vec2 coord = gl_PointCoord - vec2(0.5);
     float dist = length(coord);
     if (dist > 0.5) discard;
 
-    // Soft radial falloff for natural silk glowing emissive look
-    float strength = pow(1.0 - (dist * 2.0), 1.6);
+    // Soft radial falloff for natural rice flour glow
+    float strength = pow(1.0 - (dist * 2.0), 1.5);
     gl_FragColor = vec4(vColor, strength * vAlpha);
   }
 `;
@@ -218,6 +268,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const textGroupRef = useRef<SVGGElement>(null);
+  const contourGroupRef = useRef<SVGGElement>(null);
   const fullRevealRef = useRef<SVGRectElement>(null);
   const foregroundRef = useRef<HTMLDivElement>(null);
   const contourRef = useRef<HTMLDivElement>(null);
@@ -262,20 +313,40 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         },
       });
 
-      // 0. Fade out soft ambient contour outline quickly (0 - 0.12)
-      if (contourRef.current) {
+      // Desktop: 'ம்' counter is centered at approx x=460, y=210 (in 1400x350 viewBox) -> ~33% 60%
+      // Mobile: 'ழ்' counter is centered at approx x=250, y=160 -> 50% 40%
+      const originX = isMobile ? "50%" : "33%";
+      const originY = isMobile ? "40%" : "60%";
+
+      // 0. Synchronize teal contour scaling in exact parity with text cutout mask
+      // Keeps the outer teal shading hugging the letter boundaries throughout the zoom
+      if (contourGroupRef.current) {
         tl.to(
-          contourRef.current,
+          contourGroupRef.current,
           {
-            opacity: 0,
-            duration: 0.12,
-            ease: "power2.out",
+            scale: 65,
+            transformOrigin: `${originX} ${originY}`,
+            duration: 0.85,
+            ease: "power2.in",
           },
           0
         );
       }
 
-      // 1. Fade out foreground UI elements quickly as scale begins (0 - 0.22)
+      // 1. Keep teal outer shading visible throughout the zoom, fading only when the letter opening swallows the viewport (0.65 - 0.85)
+      if (contourRef.current) {
+        tl.to(
+          contourRef.current,
+          {
+            opacity: 0,
+            duration: 0.2,
+            ease: "power1.inOut",
+          },
+          0.65
+        );
+      }
+
+      // 2. Fade out foreground UI elements quickly as scale begins (0 - 0.22)
       if (foregroundRef.current) {
         tl.to(
           foregroundRef.current,
@@ -289,13 +360,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         );
       }
 
-      // 2. Scale up authentic Tamil text mask ~10,000% (scale 65)
-      // Focuses directly into the counter-space loop of the letter ம் in தமிழ்
-      // Desktop: 'ம்' counter is centered at approx x=460, y=210 (in 1400x350 viewBox) -> ~33% 60%
-      // Mobile: 'ழ்' counter is centered at approx x=250, y=160 -> 50% 40%
-      const originX = isMobile ? "50%" : "33%";
-      const originY = isMobile ? "40%" : "60%";
-
+      // 3. Scale up authentic Tamil text mask ~10,000% (scale 65)
       tl.to(
         textGroupRef.current,
         {
@@ -307,7 +372,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         0
       );
 
-      // 3. Once the letter counter swallows viewport, blossom into 100% full screen
+      // 4. Once the letter counter swallows viewport, blossom into 100% full screen
       if (fullRevealRef.current) {
         tl.to(
           fullRevealRef.current,
@@ -434,17 +499,23 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         </svg>
       </div>
 
-      {/* 3. Soft Ambient Architectural Contour of the Tamil Script */}
+      {/* 3. Soft Ambient Architectural Contour of the Tamil Script with Radiant Outer Teal Shading */}
       <div
         ref={contourRef}
-        className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-30"
+        className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-90"
       >
         <svg
           viewBox={isMobile ? "0 0 500 400" : "0 0 1400 350"}
-          className="w-full h-full object-contain"
+          className="w-full h-full object-contain overflow-visible"
           preserveAspectRatio="xMidYMid slice"
         >
-          <g>
+          <defs>
+            <filter id="teal-title-glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#55CCA2" floodOpacity="0.85" />
+              <feDropShadow dx="0" dy="0" stdDeviation="15" floodColor="#55CCA2" floodOpacity="0.45" />
+            </filter>
+          </defs>
+          <g ref={contourGroupRef} filter="url(#teal-title-glow)">
             {isMobile ? (
               <text
                 lang="ta"
@@ -453,7 +524,9 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
                 textAnchor="middle"
                 fill="none"
                 stroke="#55CCA2"
-                strokeWidth="1.2"
+                strokeWidth="2.5"
+                strokeLinejoin="round"
+                strokeLinecap="round"
                 fontFamily="var(--font-mukta-malar), var(--font-tamil), sans-serif"
                 fontWeight="900"
                 fontSize="94"
@@ -473,7 +546,9 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
                 textAnchor="middle"
                 fill="none"
                 stroke="#55CCA2"
-                strokeWidth="1.5"
+                strokeWidth="3.2"
+                strokeLinejoin="round"
+                strokeLinecap="round"
                 fontFamily="var(--font-mukta-malar), var(--font-tamil), sans-serif"
                 fontWeight="900"
                 fontSize="155"
@@ -513,7 +588,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
           >
             ஆட்டம் · பாட்டம் · கொண்டாட்டம்
           </p>
-          <h1 className="text-2xl sm:text-5xl md:text-6xl font-extrabold font-display tracking-tight text-white leading-[1.1] sm:leading-[1.06] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+          <h1 className="text-2xl sm:text-5xl md:text-6xl font-extrabold font-display tracking-tight text-white leading-[1.1] sm:leading-[1.06] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] [text-shadow:0_0_24px_rgba(85,204,162,0.4)]">
             Start the Aatam, Paatam, and Kondatam!
           </h1>
           <p className="text-xs sm:text-base text-purple-100/90 font-body leading-relaxed max-w-xl drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
