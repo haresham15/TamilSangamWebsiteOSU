@@ -213,11 +213,9 @@ export const SangamChatbot: React.FC = () => {
         >
           <div className="relative">
             <Bot className="w-5 h-5 text-[#55CCA2]" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#55CCA2] animate-ping" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#55CCA2]" />
           </div>
           <span className="hidden sm:inline text-xs font-mono font-bold uppercase tracking-wider text-white">
-            Ask Nanba!
+            Ask Nanba
           </span>
         </motion.button>
       </div>
@@ -243,7 +241,7 @@ export const SangamChatbot: React.FC = () => {
                       Nanba (நண்பா)
                     </h3>
                     <p className="text-[10px] font-mono text-purple-200/80">
-                      Your Sangam AI Friend · Verified Knowledge
+                      Sangam Student Assistant
                     </p>
                   </div>
               </div>

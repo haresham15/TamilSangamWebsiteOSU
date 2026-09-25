@@ -15,6 +15,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { BlueprintScene3D } from "@/components/suggestions/BlueprintScene3D";
 import { SuggestionForm } from "@/components/suggestions/SuggestionForm";
+import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 import type { BlueprintPin } from "@/components/suggestions/BlueprintSVG";
 import { OFFICIAL_DISCLAIMER, CONTACT_EMAIL } from "@/lib/constants";
 
@@ -189,6 +190,9 @@ export default function SuggestionsPage() {
         </div>
       </section>
 
+      {/* Color Gradient Transition from 3D Blueprint (#0b1026) to Form Section (#0a0e22) */}
+      <HeroGradientTransition variant="suggestions" className="-mt-14 sm:-mt-20 z-10" />
+
       {/* 2. Interactive Suggestion Box Section */}
       <section
         ref={formSectionRef}
@@ -248,10 +252,9 @@ export default function SuggestionsPage() {
 
         {/* Official Governance & University Entity Disclaimer */}
         <div className="p-6 sm:p-8 bg-[#0a0e24] border-2 border-[#2d3b66] space-y-3">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#FFC526] font-bold">
-            <ShieldCheck className="w-4 h-4 text-[#FFC526]" />
-            <span>Official University Disclosure</span>
-          </div>
+          <h4 className="text-sm font-bold text-white font-display">
+            University Disclosure
+          </h4>
 
           <p className="text-xs sm:text-sm text-slate-300 font-body leading-relaxed">
             {OFFICIAL_DISCLAIMER}

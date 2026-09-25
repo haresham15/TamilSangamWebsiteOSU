@@ -240,10 +240,10 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
 
   // 3B. Left Middle Register: Machine Specification & Safety Mandates (Behind Left Crowd)
   const lmx = 850;
-  ctx.strokeStyle = "rgba(245, 158, 11, 0.75)";
+  ctx.strokeStyle = "rgba(200, 130, 10, 0.45)";
   ctx.lineWidth = 3.5;
   ctx.strokeRect(lmx - 450, 1340, 900, 370);
-  ctx.fillStyle = "rgba(245, 158, 11, 0.08)";
+  ctx.fillStyle = "rgba(200, 130, 10, 0.04)";
   ctx.fillRect(lmx - 450, 1340, 900, 370);
 
   ctx.textAlign = "left";
@@ -271,10 +271,10 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
 
   // 3C. Right Middle Register: Armory Division & Tamil Pride (Behind Right Crowd)
   const rmx = 3240;
-  ctx.strokeStyle = "rgba(220, 38, 38, 0.75)";
+  ctx.strokeStyle = "rgba(180, 30, 30, 0.45)";
   ctx.lineWidth = 3.5;
   ctx.strokeRect(rmx - 450, 1340, 900, 370);
-  ctx.fillStyle = "rgba(220, 38, 38, 0.08)";
+  ctx.fillStyle = "rgba(180, 30, 30, 0.04)";
   ctx.fillRect(rmx - 450, 1340, 900, 370);
 
   ctx.textAlign = "left";
@@ -307,10 +307,10 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
 
   // Stenciled Zone Header Box
   ctx.textAlign = "center";
-  ctx.strokeStyle = "rgba(245, 158, 11, 0.75)";
+  ctx.strokeStyle = "rgba(200, 130, 10, 0.45)";
   ctx.lineWidth = 4;
   ctx.strokeRect(lx - 460, 480, 920, 110);
-  ctx.fillStyle = "rgba(245, 158, 11, 0.12)";
+  ctx.fillStyle = "rgba(200, 130, 10, 0.05)";
   ctx.fillRect(lx - 460, 480, 920, 110);
 
   ctx.font = "900 48px 'Impact', sans-serif";
@@ -337,10 +337,10 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
   });
 
   // High Voltage Warning Plate
-  ctx.strokeStyle = "rgba(220, 38, 38, 0.85)";
+  ctx.strokeStyle = "rgba(180, 30, 30, 0.55)";
   ctx.lineWidth = 4;
   ctx.strokeRect(lx - 440, 920, 880, 120);
-  ctx.fillStyle = "rgba(220, 38, 38, 0.14)";
+  ctx.fillStyle = "rgba(180, 30, 30, 0.08)";
   ctx.fillRect(lx - 440, 920, 880, 120);
 
   ctx.textAlign = "center";
@@ -381,10 +381,10 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
 
   // Stenciled Production Board Header
   ctx.textAlign = "center";
-  ctx.strokeStyle = "rgba(245, 158, 11, 0.75)";
+  ctx.strokeStyle = "rgba(200, 130, 10, 0.45)";
   ctx.lineWidth = 4;
   ctx.strokeRect(rx - 460, 480, 920, 110);
-  ctx.fillStyle = "rgba(245, 158, 11, 0.12)";
+  ctx.fillStyle = "rgba(200, 130, 10, 0.05)";
   ctx.fillRect(rx - 460, 480, 920, 110);
 
   ctx.font = "900 48px 'Impact', sans-serif";
@@ -411,10 +411,10 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
   });
 
   // Emergency Steam Cutoff Valve Decal
-  ctx.strokeStyle = "rgba(245, 158, 11, 0.85)";
+  ctx.strokeStyle = "rgba(200, 130, 10, 0.45)";
   ctx.lineWidth = 4;
   ctx.strokeRect(rx - 440, 920, 880, 120);
-  ctx.fillStyle = "rgba(245, 158, 11, 0.14)";
+  ctx.fillStyle = "rgba(200, 130, 10, 0.05)";
   ctx.fillRect(rx - 440, 920, 880, 120);
 
   ctx.textAlign = "center";
@@ -501,6 +501,27 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
   ctx.font = "900 34px 'Courier New', monospace";
   ctx.fillStyle = "rgba(255, 215, 80, 0.85)";
   ctx.fillText("⚠ KEEP CLEAR OF TURNTABLE PLATFORM · எப்போதும் ஒதுங்கி நிற்கவும் · TAMIL SANGAM 2026 ⚠", cx, 1835);
+
+  // 8. Soft edge vignette falloff to dissolve corner signage and outer edges into darkness
+  const leftEdgeGrad = ctx.createLinearGradient(0, 0, 950, 0);
+  leftEdgeGrad.addColorStop(0, "rgba(6, 5, 7, 0.95)");
+  leftEdgeGrad.addColorStop(0.5, "rgba(6, 5, 7, 0.5)");
+  leftEdgeGrad.addColorStop(1, "transparent");
+  ctx.fillStyle = leftEdgeGrad;
+  ctx.fillRect(0, 0, 950, 2048);
+
+  const rightEdgeGrad = ctx.createLinearGradient(4096, 0, 4096 - 950, 0);
+  rightEdgeGrad.addColorStop(0, "rgba(6, 5, 7, 0.95)");
+  rightEdgeGrad.addColorStop(0.5, "rgba(6, 5, 7, 0.5)");
+  rightEdgeGrad.addColorStop(1, "transparent");
+  ctx.fillStyle = rightEdgeGrad;
+  ctx.fillRect(4096 - 950, 0, 950, 2048);
+
+  const topEdgeGrad = ctx.createLinearGradient(0, 0, 0, 450);
+  topEdgeGrad.addColorStop(0, "rgba(6, 5, 7, 0.95)");
+  topEdgeGrad.addColorStop(1, "transparent");
+  ctx.fillStyle = topEdgeGrad;
+  ctx.fillRect(0, 0, 4096, 450);
 
   ctx.restore();
 
@@ -626,6 +647,23 @@ function createSideWallTexture(side: "left" | "right"): THREE.CanvasTexture | nu
     ctx.closePath();
     ctx.fill();
   }
+
+  // Soft edge vignette falloff to dissolve side wall edges into darkness
+  const sideGrad = ctx.createLinearGradient(0, 0, 2048, 0);
+  sideGrad.addColorStop(0, "rgba(8, 6, 8, 0.95)");
+  sideGrad.addColorStop(0.25, "transparent");
+  sideGrad.addColorStop(0.75, "transparent");
+  sideGrad.addColorStop(1, "rgba(8, 6, 8, 0.95)");
+  ctx.fillStyle = sideGrad;
+  ctx.fillRect(0, 0, 2048, 1024);
+
+  const topBottomGrad = ctx.createLinearGradient(0, 0, 0, 1024);
+  topBottomGrad.addColorStop(0, "rgba(8, 6, 8, 0.95)");
+  topBottomGrad.addColorStop(0.2, "transparent");
+  topBottomGrad.addColorStop(0.8, "transparent");
+  topBottomGrad.addColorStop(1, "rgba(8, 6, 8, 0.95)");
+  ctx.fillStyle = topBottomGrad;
+  ctx.fillRect(0, 0, 2048, 1024);
 
   ctx.restore();
 
@@ -915,7 +953,7 @@ function WallBulkheadLamp({
         <meshStandardMaterial color="#111" wireframe metalness={0.95} />
       </mesh>
       {/* Warm Ambient Pool on Wall */}
-      <pointLight color="#FF9922" intensity={3.5} distance={10} decay={1.5} position={[0, 0, 0.2]} />
+      <pointLight color="#FF9922" intensity={1.8} distance={6.0} decay={2.0} position={[0, 0, 0.2]} />
     </group>
   );
 }
@@ -1301,7 +1339,7 @@ function IndustrialPendantLamp({
         <sphereGeometry args={[0.12, 16, 16]} />
         <meshBasicMaterial color="#FFB84D" />
       </mesh>
-      <pointLight color="#FFA834" intensity={2.8} distance={10} decay={1.5} position={[0, -0.2, 0]} />
+      <pointLight color="#FFA834" intensity={1.8} distance={6.5} decay={2.0} position={[0, -0.2, 0]} />
     </group>
   );
 }
@@ -1391,11 +1429,11 @@ export function LeoFactoryEnvironment() {
     <group name="leo-factory-environment">
       {/* 1. Large Factory Floor Plane */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
-        <planeGeometry args={[38, 38]} />
+        <planeGeometry args={[44, 44]} />
         <meshStandardMaterial
           map={floorTexture || undefined}
-          color="#222026"
-          roughness={0.45}
+          color="#161318"
+          roughness={0.62}
           metalness={0.25}
         />
       </mesh>
@@ -1452,26 +1490,26 @@ export function LeoFactoryEnvironment() {
         <planeGeometry args={[32, 18]} />
         <meshStandardMaterial
           map={leftWallTexture || undefined}
-          color="#ffffff"
-          roughness={0.7}
-          metalness={0.2}
+          color="#1e1c22"
+          roughness={0.92}
+          metalness={0.1}
         />
       </mesh>
       {/* Factory Window 1 (Left) */}
       <group position={[-15.8, 5.5, -4]} rotation={[0, Math.PI / 2, 0]}>
         <mesh>
           <planeGeometry args={[5, 4]} />
-          <meshBasicMaterial color="#FF9922" transparent opacity={0.3} />
+          <meshBasicMaterial color="#FF9922" transparent opacity={0.12} />
         </mesh>
-        <pointLight color="#FF9500" intensity={4.5} distance={16} decay={1.4} />
+        <pointLight color="#FF9500" intensity={0.4} distance={4.5} decay={2.2} />
       </group>
       {/* Factory Window 2 (Left) */}
       <group position={[-15.8, 5.5, 4]} rotation={[0, Math.PI / 2, 0]}>
         <mesh>
           <planeGeometry args={[5, 4]} />
-          <meshBasicMaterial color="#FF9922" transparent opacity={0.3} />
+          <meshBasicMaterial color="#FF9922" transparent opacity={0.12} />
         </mesh>
-        <pointLight color="#FF9500" intensity={4.5} distance={16} decay={1.4} />
+        <pointLight color="#FF9500" intensity={0.4} distance={4.5} decay={2.2} />
       </group>
 
       {/* 5. Right Wall with Bay 02 Stencil Texture */}
@@ -1479,9 +1517,9 @@ export function LeoFactoryEnvironment() {
         <planeGeometry args={[32, 18]} />
         <meshStandardMaterial
           map={rightWallTexture || undefined}
-          color="#ffffff"
-          roughness={0.7}
-          metalness={0.2}
+          color="#1e1c22"
+          roughness={0.92}
+          metalness={0.1}
         />
       </mesh>
 

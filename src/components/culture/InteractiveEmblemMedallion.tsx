@@ -152,18 +152,6 @@ export const InteractiveEmblemMedallion: React.FC<InteractiveEmblemMedallionProp
             className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white to-transparent pointer-events-none mix-blend-overlay"
           />
         </div>
-
-        {/* Floating Mini Audio Prompt Inscription Block */}
-        <motion.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: isHovered ? 1 : 0.9, y: 0 }}
-          className="box-badge absolute -bottom-3.5 left-1/2 -translate-x-1/2 text-[10px] font-mono tracking-wider font-bold text-[#250d38] bg-white border-2 border-[#250d38] shadow-[3px_3px_0px_#4c2472] flex items-center gap-1.5 whitespace-nowrap pointer-events-none"
-        >
-          <span className="w-1.5 h-1.5 bg-[#55CCA2] border border-[#250d38]" />
-          <span lang="ta" style={{ letterSpacing: 0 }} className="font-tamil font-bold">
-            வளர்க தமிழ்
-          </span>
-        </motion.div>
       </motion.div>
     </div>
   );

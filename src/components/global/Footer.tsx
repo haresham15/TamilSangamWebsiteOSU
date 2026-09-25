@@ -130,18 +130,10 @@ export const Footer: React.FC = () => {
 
           {/* Stay in Sangam Dispatch Console */}
           <div className="p-6 bg-purple-950/90 border-2 border-purple-600/70 max-w-md shadow-[5px_5px_0px_#55CCA2] text-left">
-            <div className="border-b border-purple-700/60 pb-2 mb-3 flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-mono text-[#55CCA2] font-bold uppercase tracking-widest block">
-                  [STAY IN SANGAM]
-                </span>
-                <h4 className="text-base font-bold text-white font-display uppercase tracking-wider">
-                  {locale === "ta" ? "சங்கச் செய்திகளைப் பெறுங்கள்" : "Stay in the Sangam Loop"}
-                </h4>
-              </div>
-              <span className="box-badge-dark text-[9px] font-mono text-[#55CCA2] font-bold uppercase border border-[#55CCA2]/40">
-                ACTIVE DISPATCH
-              </span>
+            <div className="border-b border-purple-700/60 pb-2 mb-3">
+              <h4 className="text-base font-bold text-white font-display uppercase tracking-wider">
+                {locale === "ta" ? "சங்கச் செய்திகளைப் பெறுங்கள்" : "Stay in the Sangam Loop"}
+              </h4>
             </div>
 
             <p className="text-xs text-purple-200/85 mb-4 font-body leading-relaxed">

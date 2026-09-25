@@ -12,6 +12,7 @@ import { VolumetricCones } from "./VolumetricCones";
 import { DustCloud } from "./DustCloud";
 import { LeoFactoryEnvironment } from "./LeoFactoryEnvironment";
 import { JumpingCrowdSilhouettes } from "./JumpingCrowdSilhouettes";
+import { EffectComposer, Vignette } from "@react-three/postprocessing";
 
 // The strict blueprint mandate: magenta error state on failure, no silent fallbacks.
 class CanvasErrorBoundary extends Component<
@@ -96,7 +97,7 @@ export function EventsGen3Canvas() {
           shadows={{ type: THREE.PCFShadowMap }}
         >
           <color attach="background" args={["#0c0a08"]} />
-          <fogExp2 attach="fog" args={["#14100c", 0.016]} />
+          <fogExp2 attach="fog" args={["#0c0a08", 0.024]} />
           
           <DepthTextureProvider>
             <React.Suspense fallback={null}>
@@ -108,6 +109,11 @@ export function EventsGen3Canvas() {
               <MinimalPlatform />
               <SangamLogo3D />
               <JumpingCrowdSilhouettes />
+
+              {/* Vignette post-processing applied after local lights to crush corner bleeding */}
+              <EffectComposer multisampling={0}>
+                <Vignette eskil={false} offset={0.25} darkness={0.76} />
+              </EffectComposer>
             </React.Suspense>
           </DepthTextureProvider>
         </Canvas>

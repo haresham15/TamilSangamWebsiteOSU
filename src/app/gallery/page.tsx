@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { GALLERY_ALBUMS, PhotoItem } from "@/data/gallery";
 import { GlyphMosaicImage } from "@/components/ui/GlyphMosaicImage";
+import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import {
@@ -19,7 +21,26 @@ import {
   ChevronLeft,
   ChevronRight,
   Maximize2,
+  Music,
 } from "lucide-react";
+
+// Dynamically load 3D Vaaranam Aayiram ECR Acoustic Hero without SSR
+const GalleryHeroCanvas = dynamic(
+  () => import("@/components/gallery/GalleryHeroCanvas").then((m) => m.GalleryHeroCanvas),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[70dvh] bg-[#FF9D5C] flex flex-col items-center justify-center text-[#2A1005] font-mono text-xs gap-3 border-b border-[#C4511F]/30">
+        <div className="flex items-center gap-2">
+          <Music className="w-4 h-4 text-[#2A1005] animate-pulse" />
+          <span className="tracking-widest uppercase">
+            TUNING 6 ACOUSTIC GUITAR STRINGS · ECR GOLDEN HOUR...
+          </span>
+        </div>
+      </div>
+    ),
+  }
+);
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -127,12 +148,23 @@ export default function GalleryPage() {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left font-body">
-      {/* Header with High-Contrast Deep Plum Brand Typography */}
+    <div className="w-full bg-[#fbf9f5] min-h-screen text-left font-body">
+      {/* 3D Vaaranam Aayiram ECR Acoustic Hero */}
+      <GalleryHeroCanvas
+        onFinaleComplete={() => {
+          const vault = document.getElementById("gallery-vault-content");
+          if (vault) {
+            vault.scrollIntoView({ behavior: "smooth" });
+          }
+        }}
+      />
+
+      {/* Color Gradient Transition from 3D ECR Sunset (#1F0A05) to Warm Cream Archive (#fbf9f5) */}
+      <HeroGradientTransition variant="gallery" className="-mt-16 sm:-mt-24 z-10" />
+
+      <div id="gallery-vault-content" className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-24 text-left font-body">
+        {/* Header with High-Contrast Deep Plum Brand Typography */}
       <div className="max-w-3xl mb-12">
-        <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold block mb-2">
-          The Ohio State University · Event Info & Photo Vaults
-        </span>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
           {locale === "ta" ? "நினைவுகள் · வரலாற்று புகைப்படத் தொகுப்பு" : "Memories & Event Info Pages"}
         </h1>
@@ -145,10 +177,10 @@ export default function GalleryPage() {
 
       {/* 1. Academic Year Filter: Architectural Console Strip */}
       <div className="flex flex-wrap items-center gap-2 mb-8">
-        <div className="box-badge mr-1">
+        <span className="text-xs font-mono font-bold text-[#250d38] mr-1 flex items-center gap-1.5">
           <Calendar className="w-3.5 h-3.5 text-[#55CCA2]" />
           <span>Timeline Era:</span>
-        </div>
+        </span>
         <div className="box-tab-strip">
           {academicYears.map((year) => (
             <button
@@ -174,7 +206,7 @@ export default function GalleryPage() {
             <span>Search Photo Vault</span>
           </div>
           <span className="text-purple-900/80 font-mono text-xs font-bold">
-            [{filteredPhotos.length} {filteredPhotos.length === 1 ? "photo" : "photos"} matched]
+            {filteredPhotos.length} {filteredPhotos.length === 1 ? "photo" : "photos"} matched
           </span>
         </div>
 
@@ -225,15 +257,12 @@ export default function GalleryPage() {
       <div className="mb-16">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <span className="text-xs font-mono font-bold uppercase text-[#4c2472] block">
-              2025–2026 Academic Year Vaults
-            </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#250d38] font-display">
               {locale === "ta" ? "நிகழ்ச்சி தகவல் பக்கங்கள் & புகைப்படக் கதைகள்" : "Event Info Pages & Photo Stories"}
             </h2>
           </div>
           <span className="text-xs font-mono text-[#4c2472] font-bold">
-            [{filteredAlbums.length} {filteredAlbums.length === 1 ? "Event" : "Events"}]
+            {filteredAlbums.length} {filteredAlbums.length === 1 ? "Event" : "Events"}
           </span>
         </div>
 
@@ -520,7 +549,7 @@ export default function GalleryPage() {
                 </div>
 
                 <div className="lg:col-span-4 space-y-4 text-white">
-                  <div className="box-badge-dark text-[10px] font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
+                  <div className="text-xs font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
                     Photo {currentPhotoIndex + 1} of {filteredPhotos.length}
                   </div>
 
@@ -628,6 +657,7 @@ export default function GalleryPage() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

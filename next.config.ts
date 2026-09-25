@@ -64,11 +64,6 @@ const nextConfig: NextConfig = {
         destination: "/events",
         permanent: false,
       },
-      {
-        source: "/faq",
-        destination: "/guide",
-        permanent: true,
-      },
     ];
   },
 };

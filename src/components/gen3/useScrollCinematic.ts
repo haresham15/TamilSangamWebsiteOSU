@@ -1,8 +1,6 @@
 import { useEffect, useSyncExternalStore } from "react";
-import { addEffect } from "@react-three/fiber";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { getLenisSnapshot } from "../scroll/SmoothScrollProvider";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -56,20 +54,8 @@ export function useScrollCinematic(triggerId: string = "events-hero-trigger") {
       },
     });
 
-    // 4. Implement 3-step global execution pipeline within addEffect
-    const unsubscribeEffect = addEffect((time) => {
-      const lenis = getLenisSnapshot();
-      if (lenis) {
-        // Step 1: ScrollTrigger already calculated state snapshot (via Lenis scroll event to ScrollTrigger.update)
-        // Step 2: lenis.raf(time) explicitly within R3F environment
-        lenis.raf(time * 1000); 
-        // Step 3: resulting scroll value is already written to data bus via ScrollTrigger onUpdate
-      }
-    });
-
     return () => {
       tl.kill();
-      unsubscribeEffect();
     };
   }, [triggerId]);
 

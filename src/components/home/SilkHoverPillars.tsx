@@ -149,14 +149,20 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
     const card = cardRef.current;
     const media = mediaRef.current;
 
-    // 3D card tilt quickTo setters
-    const setRotX = gsap.quickTo(card, "rotationX", { duration: 0.3, ease: "power2.out" });
-    const setRotY = gsap.quickTo(card, "rotationY", { duration: 0.3, ease: "power2.out" });
+    // 3D card tilt quickTo setters with buttery spring-like damping
+    const setRotX = gsap.quickTo(card, "rotationX", { duration: 0.35, ease: "power2.out" });
+    const setRotY = gsap.quickTo(card, "rotationY", { duration: 0.35, ease: "power2.out" });
 
     let cachedRect: DOMRect | null = null;
     let rafPending = false;
     let pendingX = 0;
     let pendingY = 0;
+
+    const refreshRect = () => {
+      if (card) {
+        cachedRect = card.getBoundingClientRect();
+      }
+    };
 
     const updateTilt = () => {
       if (!cachedRect) return;
@@ -189,14 +195,17 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
     };
 
     const handleMouseEnter = (e: MouseEvent) => {
-      cachedRect = card.getBoundingClientRect();
-      const x = e.clientX - cachedRect.left;
-      const y = e.clientY - cachedRect.top;
-      const normX = Math.max(0, Math.min(100, (x / cachedRect.width) * 100));
-      const normY = Math.max(0, Math.min(100, (y / cachedRect.height) * 100));
-      media.style.setProperty("--mask-x", `${normX.toFixed(1)}%`);
-      media.style.setProperty("--mask-y", `${normY.toFixed(1)}%`);
+      refreshRect();
+      if (cachedRect) {
+        const x = e.clientX - cachedRect.left;
+        const y = e.clientY - cachedRect.top;
+        const normX = Math.max(0, Math.min(100, (x / cachedRect.width) * 100));
+        const normY = Math.max(0, Math.min(100, (y / cachedRect.height) * 100));
+        media.style.setProperty("--mask-x", `${normX.toFixed(1)}%`);
+        media.style.setProperty("--mask-y", `${normY.toFixed(1)}%`);
+      }
       setIsHovered(true);
+      window.addEventListener("scroll", refreshRect, { passive: true });
     };
 
     const handleMouseLeave = () => {
@@ -204,6 +213,7 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       setRotX(0);
       setRotY(0);
       cachedRect = null;
+      window.removeEventListener("scroll", refreshRect);
     };
 
     card.addEventListener("mousemove", handleMouseMove, { passive: true });
@@ -214,6 +224,7 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       card.removeEventListener("mousemove", handleMouseMove);
       card.removeEventListener("mouseenter", handleMouseEnter);
       card.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("scroll", refreshRect);
     };
   }, [isTouchDevice, isLiteMode]);
 
@@ -221,9 +232,9 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
   useEffect(() => {
     if (isTouchDevice || isLiteMode || !mediaRef.current) return;
     gsap.to(mediaRef.current, {
-      "--mask-radius": isHovered ? "42%" : "0%",
-      duration: isHovered ? 0.38 : 0.28,
-      ease: isHovered ? "power2.out" : "power2.in",
+      "--mask-radius": isHovered ? "44%" : "0%",
+      duration: isHovered ? 0.42 : 0.32,
+      ease: isHovered ? "power3.out" : "power3.in",
     });
   }, [isHovered, isTouchDevice, isLiteMode]);
 
@@ -241,7 +252,7 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       role="article"
       aria-label={pillar.titleEn}
       style={{ perspective: 1000, transformStyle: "preserve-3d", willChange: "transform" }}
-      className="relative w-full rounded-none border-2 border-[#250d38] bg-[#1a0b2e] text-white p-6 sm:p-10 overflow-hidden shadow-[4px_4px_0px_#4c2472] sm:shadow-[6px_6px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[8px_8px_0px_#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,box-shadow] duration-300 ease-out flex flex-col justify-between min-h-[320px] sm:min-h-[360px] group select-none cursor-pointer sm:cursor-default"
+      className="relative w-full rounded-none border-2 border-[#250d38] bg-[#1a0b2e] text-white p-6 sm:p-10 overflow-hidden shadow-[4px_4px_0px_#4c2472] sm:shadow-[6px_6px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[8px_8px_0px_#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,box-shadow] duration-300 ease-out flex flex-col justify-between min-h-[320px] sm:min-h-[360px] group select-none cursor-pointer sm:cursor-default transform-gpu"
     >
       {/* 1. Iridescent Kanchipuram Silk Sheen Underlay */}
       <div
@@ -254,13 +265,13 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       {/* 2. Unmasking Media Layer (Cursor Following on Desktop, InView on Touch) */}
       <div
         ref={mediaRef}
-        className="absolute inset-0 z-10 pointer-events-none overflow-hidden"
+        className="absolute inset-0 z-10 pointer-events-none overflow-hidden transform-gpu"
         style={{
           opacity: activeMedia ? 1 : 0,
           clipPath: isTouchDevice
             ? "circle(100% at 50% 50%)"
             : `circle(var(--mask-radius, 0%) at var(--mask-x, 50%) var(--mask-y, 50%))`,
-          transition: "opacity 0.35s ease",
+          transition: "opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
           willChange: "clip-path, opacity",
         }}
       >
@@ -289,10 +300,7 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
 
       {/* 4. Foreground Kinetic Typography Content */}
       <div className="relative z-20 space-y-4">
-        <div className="flex items-center justify-between">
-          <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#55CCA2] px-2.5 py-1 bg-[#250d38]/80 border border-[#55CCA2]">
-            {locale === "ta" ? pillar.pillarNumTa : pillar.pillarNum}
-          </span>
+        <div className="flex items-center justify-end">
           <div
             className="w-3 h-3 rounded-full border border-white/40"
             style={{ backgroundColor: pillar.accentColor }}
@@ -340,10 +348,6 @@ export function SilkHoverPillars() {
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#250d38] text-[#55CCA2] text-[10px] font-mono font-bold uppercase tracking-wider border border-[#55CCA2] shadow-[2px_2px_0px_#55CCA2] mb-3">
-            <Sparkles className="w-3 h-3 text-[#FFC526]" />
-            <span>Core Pillars · சங்கப் பண்பாடு</span>
-          </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
             {locale === "ta" ? "சங்கத்தின் நான்கு தூண்கள்" : "The Four Pillars of Sangam"}
           </h2>

@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useMemo, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
-import { Ticket, Users, ArrowRight } from "lucide-react";
+import { Users, ArrowRight } from "lucide-react";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -565,19 +565,8 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
       {/* 4. Foreground Interactive Content: Fades out as user scrolls */}
       <div
         ref={foregroundRef}
-        className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 pt-24 sm:pt-32 pb-8 flex flex-col justify-between h-full pointer-events-auto"
+        className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 pt-24 sm:pt-32 pb-8 flex flex-col justify-end h-full pointer-events-auto"
       >
-        {/* Top Inscription Badge */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-[#250d38]/90 border border-[#55CCA2] text-[#55CCA2] text-[11px] font-mono font-bold uppercase tracking-wider backdrop-blur-md shadow-[3px_3px_0px_#55CCA2]">
-            <span className="w-2 h-2 rounded-full bg-[#55CCA2] animate-pulse" />
-            <span>The Ohio State University · Student Cultural Hub</span>
-          </div>
-
-          <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-purple-200/70">
-            <span>Columbus, OH · Est. 2026</span>
-          </div>
-        </div>
 
         {/* Center Bilingual Inscription: Protective Glass Scrim for Crisp Readability */}
         <div className="my-auto py-4 sm:py-8 px-4 sm:px-8 space-y-2.5 sm:space-y-3.5 text-center sm:text-left max-w-2xl bg-[#10061a]/85 backdrop-blur-md border border-purple-500/25 shadow-[4px_4px_0px_#250d38] sm:shadow-[6px_6px_0px_#250d38]">
@@ -602,23 +591,12 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         <div className="pt-3 sm:pt-4 border-t border-purple-500/20 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
             <PalagaiButton
-              href={`/events/${nextEventSlug}`}
-              variant="mint"
-              size="md"
-              primaryText={locale === "ta" ? "நுழைவுச்சீட்டு" : "Get Event Tickets"}
-              secondaryText={locale === "ta" ? "Get Event Tickets" : "நுழைவுச்சீட்டு"}
-              icon={<Ticket className="w-4 h-4 text-[#250d38]" />}
-              iconPosition="left"
-              className="w-full sm:w-auto justify-center"
-            />
-
-            <PalagaiButton
               href="/join"
-              variant="dark"
+              variant="mint"
               size="md"
               primaryText={locale === "ta" ? "இணையுங்கள்" : "Join The Club"}
               secondaryText={locale === "ta" ? "Join The Club" : "இணையுங்கள்"}
-              icon={<Users className="w-4 h-4 text-[#55CCA2]" />}
+              icon={<Users className="w-4 h-4 text-[#250d38]" />}
               iconPosition="left"
               className="w-full sm:w-auto justify-center"
             />
@@ -629,16 +607,10 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
               size="md"
               primaryText={locale === "ta" ? "நிர்வாகக் குழு" : "Meet The Board"}
               secondaryText={locale === "ta" ? "Meet The Board" : "நிர்வாகக் குழு"}
-              icon={<ArrowRight className="w-3.5 h-3.5 text-[#55CCA2]" />}
+              icon={<ArrowRight className="w-3.5 h-3.5 text-[#250d38]" />}
               iconPosition="right"
               className="w-full sm:w-auto justify-center"
             />
-          </div>
-
-          {/* Scroll Indicator */}
-          <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-purple-300/60 uppercase tracking-widest">
-            <span>Scroll Down</span>
-            <span className="w-1.5 h-1.5 bg-[#55CCA2] rounded-full animate-bounce" />
           </div>
         </div>
       </div>

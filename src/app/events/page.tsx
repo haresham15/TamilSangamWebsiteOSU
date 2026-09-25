@@ -11,10 +11,10 @@ import {
   Calendar, 
   MapPin, 
   Clock, 
-  Ticket, 
   Star 
 } from "lucide-react";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
+import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -68,15 +68,15 @@ export default function EventsPage() {
         <div className="pointer-events-none absolute bottom-0 left-0 w-full h-72 bg-gradient-to-t from-[#0c0a08] via-[#0c0a08]/85 to-transparent z-10" />
       </div>
 
+      {/* Color Gradient Transition from 3D Sodium Amber Concert (#0c0a08) to White Catalogue */}
+      <HeroGradientTransition variant="events" className="-mt-16 sm:-mt-24 z-10" />
+
       {/* 2. Events Catalogue Container */}
-      <div className="relative z-10 w-full bg-white">
+      <div className="relative z-10 w-full bg-white -mt-1">
         <div id="events-catalogue" className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-24 text-left">
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div className="max-w-2xl">
-          <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] block mb-2 font-bold">
-            The Ohio State University · Campus Community & Social Events
-          </span>
           <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
             {locale === "ta" ? "நிகழ்வுகள் & சந்திப்புகள்" : "Events & Campus Gatherings"}
           </h1>
@@ -107,9 +107,6 @@ export default function EventsPage() {
       {/* 1. Welcoming Community Hub Banner: Open to All Languages */}
       <div className="p-6 bg-[#250d38] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] mb-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-white">
         <div>
-          <span className="text-[10px] uppercase font-mono tracking-widest text-[#55CCA2] font-bold">
-            [CAMPUS COMMUNITY · OPEN TO ALL LANGUAGES & MAJORS]
-          </span>
           <h3 className="text-lg font-bold text-white font-display mt-0.5" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
             {locale === "ta" ? "அனைவரையும் அன்போடு வரவேற்கிறோம்!" : "A Casual Cultural Hub for Everyone"}
           </h3>
@@ -153,11 +150,7 @@ export default function EventsPage() {
                 sizes="(max-width: 1024px) 100vw, 500px"
               />
               <div className="absolute top-2 left-2 flex flex-wrap gap-1.5">
-                <span className={`px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider border ${
-                  evt.status === "upcoming"
-                    ? "bg-[#250d38] text-[#55CCA2] border-[#55CCA2] shadow-[2px_2px_0px_#55CCA2]"
-                    : "bg-black/80 text-white border-white/40"
-                }`}>
+                <span className="px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider bg-[#250d38] text-[#55CCA2] border border-[#55CCA2]">
                   {evt.status === "upcoming" ? "Upcoming" : "Past Celebration"}
                 </span>
               </div>
@@ -165,12 +158,12 @@ export default function EventsPage() {
 
             {/* Event Details */}
             <div className="lg:col-span-7 space-y-4">
-              <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-purple-900/80 font-bold">
-                <span className="box-badge text-[#11694c] border-l-[#55CCA2]" lang="ta" style={{ letterSpacing: 0 }}>
+              <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-bold">
+                <span className="text-[#11694c]" lang="ta" style={{ letterSpacing: 0 }}>
                   {evt.tamilDate}
                 </span>
-                <span>•</span>
-                <span className="px-2 py-0.5 border border-purple-300 bg-purple-50 text-[#4c2472]">
+                <span className="text-purple-300">·</span>
+                <span className="text-[#4c2472]">
                   {evt.academicYear}
                 </span>
               </div>
@@ -201,11 +194,10 @@ export default function EventsPage() {
               <div className="pt-4 flex flex-wrap items-center gap-3">
                 <PalagaiButton
                   href={`/events/${evt.slug}`}
-                  primaryText={evt.status === "upcoming" ? `Get Tickets (${evt.price})` : "Event Overview"}
-                  secondaryText={evt.status === "upcoming" ? "நுழைவுச்சீட்டு பெறுக" : "நிகழ்வு விவரம்"}
+                  primaryText={evt.status === "upcoming" ? "Event Details & Schedule" : "Event Overview"}
+                  secondaryText={evt.status === "upcoming" ? "நிகழ்வு விவரங்கள் & அட்டவணை" : "நிகழ்வு விவரம்"}
                   variant="primary"
                   size="sm"
-                  icon={<Ticket className="w-3.5 h-3.5 text-[#55CCA2]" />}
                 />
 
                 <PalagaiButton
@@ -224,10 +216,6 @@ export default function EventsPage() {
       {/* 3. Signature Feature: Events Hall of Fame (Hover Swap Poster-to-Photo Grid) */}
       <div id="hall-of-fame" className="pt-12 border-t-2 border-purple-200">
         <div className="max-w-2xl mb-10">
-          <div className="box-badge shadow-[2px_2px_0px_#4c2472] mb-2">
-            <Star className="w-3.5 h-3.5 text-[#55CCA2]" />
-            <span>Interactive Gallery</span>
-          </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#250d38] font-display tracking-tight">
             {locale === "ta" ? "புகழ் அரங்கம் · Events Hall of Fame" : "Events Hall of Fame"}
           </h2>

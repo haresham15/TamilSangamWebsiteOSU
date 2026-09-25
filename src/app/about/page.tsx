@@ -7,14 +7,11 @@ import { useAudio } from "@/context/AudioContext";
 import { FAQS } from "@/data/faq";
 import { CLUB_PURPOSE } from "@/data/constitution";
 import { GopuramZScroll } from "@/components/about/GopuramZScroll";
+import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 import { 
-  BookOpen, 
-  Heart, 
   Search, 
   ChevronDown, 
-  ChevronUp,
-  Globe2,
-  Handshake
+  ChevronUp
 } from "lucide-react";
 
 export default function AboutPage() {
@@ -93,12 +90,12 @@ export default function AboutPage() {
       {/* Cinematic 3D Gopuram Z-Axis Mission Fly-Through */}
       <GopuramZScroll />
 
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-24">
+      {/* Color Gradient Transition from 3D Gopuram (#120a1f) to Content Below (#fffdfa) */}
+      <HeroGradientTransition variant="about" className="-mt-16 sm:-mt-24 z-10" />
+
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-24">
         {/* Page Header with High Contrast Typography */}
       <div className="max-w-3xl mb-16">
-        <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold block mb-2">
-          {locale === "ta" ? "எங்களைப் பற்றி" : "About the Sangam"}
-        </span>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display leading-[1.08] mb-4">
           {locale === "ta" ? "யாதும் ஊரே யாவரும் கேளீர்" : "To Us All Towns Are Home, Everyone Our Kin"}
         </h1>
@@ -112,11 +109,6 @@ export default function AboutPage() {
       {/* 1. What is a Sangam? Essay Card */}
       <div className="box-architectural p-8 sm:p-12 border-2 border-[#250d38] shadow-[6px_6px_0px_#4c2472] mb-16 relative overflow-hidden">
         <div className="max-w-3xl space-y-4">
-          <div className="flex items-center gap-2 text-[#4c2472] font-mono text-xs uppercase tracking-widest font-bold">
-            <BookOpen className="w-4 h-4 text-[#55CCA2]" />
-            <span>Community & Fellowship · மக்கள் சங்கமம்</span>
-          </div>
-
           <h2 className="text-2xl sm:text-4xl font-bold text-[#250d38] font-display leading-tight">
             {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம் என்பது என்ன?" : "What is Tamil Sangam at OSU?"}
           </h2>
@@ -133,21 +125,14 @@ export default function AboutPage() {
 
       {/* 2. Official Core Mission & Purpose (The 4 Pillars) */}
       <div className="mb-20">
-        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold mb-2">
-          <Globe2 className="w-4 h-4 text-[#55CCA2]" />
-          <span>Constitution & Mandate · அடிப்படை நோக்கங்கள்</span>
-        </div>
         <h2 className="text-2xl sm:text-4xl font-extrabold text-[#250d38] mb-8 font-display leading-tight">
           {locale === "ta" ? "சங்கத்தின் முதன்மை நோக்கங்கள்" : "Core Mission & Purpose"}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {CLUB_PURPOSE.map((p, idx) => (
+          {CLUB_PURPOSE.map((p) => (
             <div key={p.id} className="box-ticket p-6 sm:p-8 bg-white border-2 border-[#250d38] shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] flex flex-col justify-between transition-all">
               <div>
-                <span className="text-xs font-mono text-[#11694c] font-bold uppercase tracking-wider block mb-2">
-                  Mandate 0{idx + 1}
-                </span>
                 <h3 className="text-xl font-bold text-[#250d38] mb-2 font-display">
                   {locale === "ta" ? p.titleTa : p.titleEn}
                 </h3>
@@ -162,10 +147,6 @@ export default function AboutPage() {
 
       {/* 3. Timeline & Campus Milestones */}
       <div className="mb-20">
-        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold mb-2">
-          <Heart className="w-4 h-4 text-[#55CCA2]" />
-          <span>Milestones · வரலாறு</span>
-        </div>
         <h2 className="text-2xl sm:text-4xl font-extrabold text-[#250d38] mb-8 font-display leading-tight">
           {locale === "ta" ? "வளர்ச்சிப் படிகள்" : "Our Journey at Ohio State"}
         </h2>
@@ -194,10 +175,6 @@ export default function AboutPage() {
 
       {/* 4. Campus Alliances & Community Partners */}
       <div className="mb-20">
-        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold mb-2">
-          <Handshake className="w-4 h-4 text-[#55CCA2]" />
-          <span>Alliances & Support · கூட்டாண்மை</span>
-        </div>
         <h2 className="text-2xl sm:text-4xl font-extrabold text-[#250d38] mb-8 font-display leading-tight">
           {locale === "ta" ? "கூட்டமைப்புகள் & ஆதரவாளர்கள்" : "Campus Alliances & Community Partners"}
         </h2>
@@ -205,7 +182,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {partners.map((pt, idx) => (
             <div key={idx} className="box-architectural p-6 sm:p-8 border-2 border-[#250d38] shadow-[4px_4px_0px_#4c2472] transition-all">
-              <span className="box-badge text-xs font-mono font-bold uppercase tracking-wider inline-block mb-3 bg-[#55CCA2] text-[#1b0d28] border border-[#1b0d28]">
+              <span className="text-xs font-semibold text-[#11694c] uppercase tracking-wider block mb-2">
                 {pt.type}
               </span>
               <h3 className="text-xl font-bold text-[#250d38] mb-2 font-display">
@@ -223,9 +200,6 @@ export default function AboutPage() {
       <div id="faq" className="scroll-mt-32">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
-            <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold block mb-1">
-              FAQ · அடிக்கடி கேட்கப்படும் கேள்விகள்
-            </span>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-[#250d38] font-display leading-tight">
               {locale === "ta" ? "பொதுவான வினாக்கள்" : "Frequently Asked Questions"}
             </h2>

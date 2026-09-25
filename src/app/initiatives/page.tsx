@@ -19,9 +19,6 @@ export default function InitiativesPage() {
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left">
       {/* Header */}
       <div className="max-w-3xl mb-16">
-        <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-tint)] block mb-2 font-bold">
-          The Ohio State University · Student Expression & Community
-        </span>
         <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-display mb-4">
           {locale === "ta" ? "முன்னெடுப்புகள் & கலைப்பிரிவுகள்" : "Initiatives & Campus Hubs"}
         </h1>
@@ -71,16 +68,6 @@ export default function InitiativesPage() {
       {/* Active Pillar Deep Dive Showcase */}
       <div className="box-ticket p-8 sm:p-12 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] mb-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div className="lg:col-span-7 space-y-6">
-          <div className="flex items-center gap-2">
-            <span
-              className="w-3 h-3 border border-white/30"
-              style={{ backgroundColor: activePillar.accentColor }}
-            />
-            <span className="text-xs font-mono uppercase tracking-widest text-[#55CCA2] font-bold">
-              Pillar Focus
-            </span>
-          </div>
-
           <h2 className="text-3xl sm:text-4xl font-bold text-white font-serif tracking-tight">
             {locale === "ta" ? activePillar.titleTa : activePillar.titleEn}
           </h2>
@@ -137,9 +124,6 @@ export default function InitiativesPage() {
       {/* 2. Traditional Art Forms Explainer Section */}
       <div>
         <div className="max-w-2xl mb-10">
-          <span className="text-xs font-mono uppercase tracking-widest text-[#55CCA2] block mb-2 font-bold">
-            Living Heritage
-          </span>
           <h2 className="text-2xl sm:text-4xl font-bold text-white font-serif tracking-tight">
             {locale === "ta" ? "பாரம்பரிய கலை வடிவங்கள்" : "Traditional Tamil Art Forms"}
           </h2>
@@ -162,13 +146,13 @@ export default function InitiativesPage() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 1024px) 100vw, 400px"
                 />
-                <span className="box-badge-dark absolute top-3 left-3 text-[10px] font-mono bg-black/75 text-[#55CCA2] border border-white/20">
-                  {art.category}
-                </span>
               </div>
 
               <div className="p-6 flex-1 flex flex-col justify-between space-y-3">
                 <div>
+                  <span className="text-[11px] font-mono text-[#55CCA2] uppercase tracking-wider block mb-1">
+                    {art.category}
+                  </span>
                   <h3 className="text-lg font-bold text-white mb-1 font-display">
                     {locale === "ta" ? art.nameTa : art.nameEn}
                   </h3>

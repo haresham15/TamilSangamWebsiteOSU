@@ -5,13 +5,11 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { MEMBERSHIP_GOVERNANCE } from "@/data/constitution";
 import { 
-  MessageCircle, 
   Check, 
   Copy, 
   QrCode, 
   ArrowRight, 
   CheckCircle2,
-  Scale,
   Loader2,
   AlertCircle
 } from "lucide-react";
@@ -84,9 +82,6 @@ export default function JoinPage() {
     <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left font-body">
       {/* Header */}
       <div className="max-w-3xl mb-12">
-        <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] block mb-2 font-bold">
-          The Ohio State University · Welcoming Student Hub
-        </span>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
           {locale === "ta" ? "சங்கத்தில் இணையுங்கள்" : "Join the Sangam Family"}
         </h1>
@@ -99,10 +94,6 @@ export default function JoinPage() {
 
       {/* 1. Official Membership & Governance Rules Card */}
       <div className="box-architectural-dark p-6 sm:p-8 border-2 border-white/20 shadow-[5px_5px_0px_#4c2472] mb-12">
-        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#55CCA2] mb-3 font-bold">
-          <Scale className="w-4 h-4" />
-          <span>Constitutional Membership Requirements</span>
-        </div>
         <h2 className="text-xl sm:text-2xl font-bold text-white font-display mb-4">
           {locale === "ta" ? "உறுப்பினர் விதிகள் & தகுதிகள்" : "Membership Guidelines & Voting Rights"}
         </h2>
@@ -143,11 +134,6 @@ export default function JoinPage() {
       {/* 2. GroupMe Interstitial & Gateway Panel */}
       <div className="box-ticket p-8 sm:p-12 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] mb-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div className="lg:col-span-8 space-y-4">
-          <div className="box-badge-dark inline-flex items-center gap-2 text-xs font-mono bg-sky-500/20 text-sky-400 border border-sky-500/40">
-            <MessageCircle className="w-4 h-4" />
-            <span>Official Chat Hub</span>
-          </div>
-
           <h2 className="text-2xl sm:text-3xl font-bold text-white font-display">
             {locale === "ta" ? "குரூப்மீயில் இணைந்திருங்கள்" : "Connect on our Official GroupMe"}
           </h2>

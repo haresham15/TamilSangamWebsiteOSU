@@ -83,16 +83,8 @@ export const PalagaiButton: React.FC<PalagaiButtonProps> = ({
 
   const content = (
     <span className="relative z-10 flex items-center gap-2 font-mono font-bold uppercase tracking-wider select-none">
-      {/* Kolam Top-Left Corner Flourish */}
-      <span
-        aria-hidden="true"
-        className="absolute -top-1 -left-1 text-[8px] leading-none opacity-40 group-hover:opacity-100 transition-opacity font-mono text-current"
-      >
-        +
-      </span>
-
       {icon && iconPosition === "left" && (
-        <span className="shrink-0 transition-transform duration-200 group-hover:-translate-x-0.5">
+        <span className="shrink-0 transition-transform duration-200 ease-out group-hover:-translate-x-0.5 transform-gpu">
           {icon}
         </span>
       )}
@@ -100,7 +92,7 @@ export const PalagaiButton: React.FC<PalagaiButtonProps> = ({
       {/* Kinetic Text Track: If secondaryText is provided, roll on hover */}
       {altLabel ? (
         <span className="relative block h-[1.35em] overflow-hidden leading-tight">
-          <span className="block transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-full">
+          <span className="block transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-full transform-gpu will-change-transform">
             <span className="block h-[1.35em] flex items-center">{mainLabel}</span>
             <span
               className="block h-[1.35em] flex items-center font-tamil text-[1.05em] normal-case"
@@ -116,18 +108,10 @@ export const PalagaiButton: React.FC<PalagaiButtonProps> = ({
       )}
 
       {icon && iconPosition === "right" && (
-        <span className="shrink-0 transition-transform duration-200 group-hover:translate-x-1">
+        <span className="shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1 transform-gpu">
           {icon}
         </span>
       )}
-
-      {/* Kolam Bottom-Right Corner Flourish */}
-      <span
-        aria-hidden="true"
-        className="absolute -bottom-1 -right-1 text-[8px] leading-none opacity-40 group-hover:opacity-100 transition-opacity font-mono text-current"
-      >
-        +
-      </span>
     </span>
   );
 

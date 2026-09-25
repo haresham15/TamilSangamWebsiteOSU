@@ -75,14 +75,9 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 priority
               />
             </div>
-            <div className="flex flex-col text-left">
-              <span className="text-xs sm:text-sm font-bold tracking-tight text-[#250d38] group-hover:text-[#4c2472] transition-colors font-display">
-                {t("brand.name")}
-              </span>
-              <span className="hidden xs:inline-block sm:inline-block text-[9px] sm:text-[10px] text-[#6b478d] tracking-wider uppercase font-mono font-bold">
-                {locale === "ta" ? "ஓஹியோ மாநிலப் பல்கலைக்கழகம்" : "The Ohio State University"}
-              </span>
-            </div>
+            <span className="text-xs sm:text-sm font-bold tracking-tight text-[#250d38] group-hover:text-[#4c2472] transition-colors font-display">
+              {t("brand.name")}
+            </span>
           </Link>
 
           {/* Desktop Navigation Console: Segmented Ledger Bar */}
@@ -159,8 +154,8 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 <span className="text-[#250d38] font-bold">
                   {locale === "ta" ? meta.nameTa : meta.nameEn}
                 </span>
-                <span className="text-[10px] text-purple-700/80 font-mono">
-                  [{isManualPin ? "PIN" : "LIVE"}]
+                <span className="text-[10px] text-[#4c2472] font-mono font-medium">
+                  {isManualPin ? "Pinned" : "Live"}
                 </span>
               </button>
 

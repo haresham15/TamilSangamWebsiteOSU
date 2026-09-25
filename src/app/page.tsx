@@ -14,12 +14,11 @@ import {
   FilterKaapiGlyph,
 } from "@/components/ui/KolamIcons";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
+import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 import { EVENTS } from "@/data/events";
 import { 
   Calendar, 
-  MapPin, 
-  Ticket, 
-  Sparkles
+  MapPin 
 } from "lucide-react";
 
 export default function HomePage() {
@@ -61,6 +60,9 @@ export default function HomePage() {
       {/* 2. Hero Section: Digital Kolam 3D Particle Vortex & Text Mask Reveal */}
       <DigitalKolamHero nextEventSlug={nextEvent.slug} />
 
+      {/* 2.5 Color Gradient Transition: 3D Cosmic Plum -> Sangam Royal Purple -> Warm Ivory */}
+      <HeroGradientTransition variant="home" className="-mt-14 sm:-mt-20 z-10" />
+
       {/* 3. Woven Temple Border Marquee Divider */}
       <WovenBorderMarquee
         text="ஆட்டம் · பாட்டம் · கொண்டாட்டம் · AATAM · PAATAM · KONDATAM · OHIO STATE TAMIL SANGAM"
@@ -72,9 +74,6 @@ export default function HomePage() {
       <section className="relative py-20 px-4 sm:px-8 z-10 max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
           <div>
-            <span className="text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold block mb-1">
-              Annual Cultural Milestone
-            </span>
             <h2 className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display">
               {locale === "ta" ? "அடுத்த முக்கிய நிகழ்வு" : "Next Flagship Festival"}
             </h2>
@@ -96,18 +95,20 @@ export default function HomePage() {
           <div className="hidden lg:block absolute left-[58.33%] -bottom-3 -translate-x-1/2 w-6 h-6 bg-[#fffdfa] border-2 border-[#250d38] rotate-45 z-20 pointer-events-none" />
 
           <div className="lg:col-span-7 space-y-4 text-left">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="box-badge text-[#11694c] border-l-[#55CCA2]">
-                ● {locale === "ta" ? nextEvent.statusBadgeTa : nextEvent.statusBadgeEn}
+            <div className="flex flex-wrap items-center gap-3 text-xs font-mono font-bold">
+              <span className="text-[#11694c]">
+                {locale === "ta" ? nextEvent.statusBadgeTa : nextEvent.statusBadgeEn}
               </span>
+              <span className="text-[#6b478d]">·</span>
               <span
                 lang="ta"
                 style={{ letterSpacing: 0 }}
-                className="px-2.5 py-1 text-xs font-mono bg-purple-100 text-[#4c2472] font-bold border border-purple-300"
+                className="text-[#4c2472]"
               >
                 {nextEvent.tamilDate}
               </span>
-              <span className="px-2.5 py-1 text-xs font-mono bg-slate-100 text-slate-700 font-semibold border border-slate-300">
+              <span className="text-[#6b478d]">·</span>
+              <span className="text-slate-600 font-medium">
                 {nextEvent.academicYear}
               </span>
             </div>
@@ -134,18 +135,9 @@ export default function HomePage() {
             <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
               <PalagaiButton
                 href={`/events/${nextEvent.slug}`}
-                primaryText={locale === "ta" ? "நுழைவுச்சீட்டு பெறுக" : `Get Event Tickets (${nextEvent.price})`}
-                secondaryText={locale === "ta" ? `Get Event Tickets (${nextEvent.price})` : "நுழைவுச்சீட்டு பெறுக"}
+                primaryText={locale === "ta" ? "நிகழ்ச்சி விவரங்கள் & அட்டவணை" : "View Event Details & Schedule"}
+                secondaryText={locale === "ta" ? "View Event Details & Schedule" : "நிகழ்ச்சி விவரங்கள் & அட்டவணை"}
                 variant="primary"
-                icon={<Ticket className="w-4 h-4 text-[#55CCA2]" />}
-                className="w-full sm:w-auto justify-center"
-              />
-
-              <PalagaiButton
-                href={`/events/${nextEvent.slug}`}
-                primaryText={locale === "ta" ? "நிகழ்ச்சி நிரல் & உடை" : "Schedule & Dress Code"}
-                secondaryText={locale === "ta" ? "Schedule & Dress Code" : "நிகழ்ச்சி நிரல் & உடை"}
-                variant="white"
                 className="w-full sm:w-auto justify-center"
               />
             </div>
@@ -170,10 +162,6 @@ export default function HomePage() {
       <section className="relative py-16 px-4 sm:px-8 z-10 max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
           <div>
-            <div className="box-badge shadow-[2px_2px_0px_#4c2472] mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#55CCA2]" />
-              <span>Collegiate Photo Vault</span>
-            </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#250d38] tracking-tight font-display">
               {locale === "ta" ? "நினைவுகள் & புகைப்படத் தொகுப்பு" : "Memories & Photo Archives"}
             </h2>
@@ -304,9 +292,8 @@ export default function HomePage() {
       {/* 7. Signature Moment: Filter Coffee Intermission Pavilion Box */}
       <section className="relative py-16 px-4 sm:px-6 z-10 max-w-4xl mx-auto text-center">
         <div className="p-8 sm:p-12 bg-[#250d38] border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] relative overflow-hidden text-white">
-          <div className="box-badge-dark mb-4 text-xs font-mono font-bold tracking-widest uppercase">
-            <FilterKaapiGlyph size={18} className="text-[#55CCA2]" />
-            <span>இடைவேளை · INTERVAL</span>
+          <div className="flex justify-center mb-4">
+            <FilterKaapiGlyph size={28} className="text-[#55CCA2]" />
           </div>
 
           <h3 className="text-3xl sm:text-4xl font-display font-extrabold text-white mb-3">

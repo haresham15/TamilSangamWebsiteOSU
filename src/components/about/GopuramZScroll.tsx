@@ -158,11 +158,6 @@ function TierText({ tier, position, isMobile, locale }: { tier: TierItem, positi
         style={{ marginLeft: isMobile ? 0 : '10vw' }}
       >
         <div className="p-4 sm:p-8 bg-[#221036]/85 backdrop-blur-md border border-purple-300/35 shadow-[4px_4px_0px_#180826] sm:shadow-[6px_6px_0px_#180826]">
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 bg-[#b87333]/30 border border-[#b87333] text-[#FFC526] text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-widest mb-3 sm:mb-4">
-            <Flame className="w-3 h-3 text-[#FFC526]" />
-            <span>{locale === "ta" ? tier.subtitleTa : tier.subtitleEn}</span>
-          </div>
-
           <h2 className="text-xl sm:text-4xl md:text-5xl font-extrabold font-display tracking-tight text-white mb-2 leading-[1.15] sm:leading-[1.1] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
             {locale === "ta" ? tier.titleTa : tier.titleEn}
           </h2>
@@ -339,12 +334,7 @@ export function GopuramZScroll() {
         )}
       </div>
 
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pt-16 sm:pt-28 flex items-center justify-between pointer-events-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#2c1642]/90 border border-[#b87333] text-[#FFC526] text-[10px] font-mono font-bold uppercase tracking-wider backdrop-blur-md shadow-[3px_3px_0px_#b87333]">
-          <Sparkles className="w-3.5 h-3.5 text-[#FFC526]" />
-          <span>Our Ethos & Heritage · பண்பாட்டு நோக்கு</span>
-        </div>
-
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pt-16 sm:pt-28 flex items-center justify-end pointer-events-auto">
         <div className="flex items-center gap-3 text-xs font-mono text-purple-100/95 bg-[#26133b]/90 px-3 py-1.5 border border-purple-300/40 backdrop-blur-md shadow-sm">
           <span className="flex items-center gap-1.5 text-[#55CCA2]">
             <Compass className="w-3.5 h-3.5" />
@@ -357,15 +347,6 @@ export function GopuramZScroll() {
               style={{ width: "0%" }}
             />
           </div>
-        </div>
-      </div>
-
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pb-8 flex items-center justify-between text-[11px] font-mono text-purple-200/90 uppercase tracking-widest border-t border-purple-300/30 pt-4 pointer-events-auto">
-        <span className="text-[#55CCA2] font-bold">The Ohio State University Tamil Sangam</span>
-
-        <div className="flex items-center gap-2">
-          <span>Scroll To Explore</span>
-          <span className="w-1.5 h-1.5 bg-[#FFC526] rounded-full animate-bounce" />
         </div>
       </div>
     </div>

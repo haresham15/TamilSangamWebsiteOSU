@@ -83,23 +83,14 @@ export default function EventInfoAndGalleryPage() {
         </Link>
 
         <div className="flex items-center gap-2">
-          <span className="box-badge-dark text-[11px] font-mono font-bold uppercase tracking-wider text-[#55CCA2] shadow-[2px_2px_0px_#55CCA2]">
+          <span className="text-xs font-mono font-bold text-[#4c2472]">
             {album.academicYear} Academic Year
-          </span>
-          <span className="box-badge text-[11px] font-mono text-[#250d38] font-bold shadow-[2px_2px_0px_#4c2472]">
-            Official Event Recap
           </span>
         </div>
       </div>
 
       {/* Main Event Header */}
       <div className="mb-12">
-        <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#4c2472]">
-            The Ohio State University · Event Information & Photo Story
-          </span>
-        </div>
-
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#250d38] font-display tracking-tight mb-3">
           {locale === "ta" ? album.titleTa : album.titleEn}
         </h1>
@@ -198,16 +189,10 @@ export default function EventInfoAndGalleryPage() {
       <div className="mb-16">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-2 border-b-2 border-[#250d38]">
           <div>
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#4c2472]">
-              Visual Narrative · Exactly 5 Curated Captures
-            </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#250d38] font-display">
               {locale === "ta" ? "நிகழ்ச்சி புகைப்படக் கதை" : "Curated Event Photo Story"}
             </h2>
           </div>
-          <span className="text-xs font-mono text-purple-950/70 font-bold">
-            [Click any image to view in high resolution]
-          </span>
         </div>
 
         {/* Hero Photo: The Main Event Feature / Kickoff */}
@@ -298,8 +283,8 @@ export default function EventInfoAndGalleryPage() {
         <div className="box-ticket p-6 sm:p-10 bg-[#250d38] text-white border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] mb-16 relative overflow-hidden">
           <div className="relative z-10 max-w-3xl">
             <div className="flex flex-wrap items-center gap-2 mb-3">
-              <span className="box-badge text-[10px] font-mono font-bold uppercase tracking-widest bg-[#55CCA2] text-[#1b0d28] border border-[#1b0d28]">
-                ORIGINAL HIGH-RESOLUTION ARCHIVE
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#55CCA2]">
+                Complete High-Resolution Archive
               </span>
               <span className="text-xs font-mono text-purple-200">
                 Google Photos Vault
@@ -456,7 +441,7 @@ export default function EventInfoAndGalleryPage() {
                 </div>
 
                 <div className="lg:col-span-4 space-y-4 text-white">
-                  <div className="box-badge-dark text-[10px] font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
+                  <div className="text-xs font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
                     Photo {currentPhotoIndex + 1} of {album.photos.length}
                   </div>
 

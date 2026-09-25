@@ -235,7 +235,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-semibold truncate text-white">{item.title}</span>
-                        <span className="box-badge-dark text-[9px] font-mono text-slate-200 border border-white/20 shrink-0">
+                        <span className="text-[10px] font-mono text-slate-400 shrink-0">
                           {item.category}
                         </span>
                       </div>

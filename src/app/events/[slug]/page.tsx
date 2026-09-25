@@ -83,10 +83,10 @@ END:VCALENDAR`;
       <Link
         href="/events"
         onClick={playClick}
-        className="box-badge-dark inline-flex items-center gap-2 text-xs font-mono text-slate-300 hover:text-[#55CCA2] hover:border-[#55CCA2] mb-8 transition-colors"
+        className="inline-flex items-center gap-2 text-xs font-mono text-slate-300 hover:text-[#55CCA2] mb-8 transition-colors"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
-        <span>BACK TO EVENTS CALENDAR</span>
+        <span>Back to Events Calendar</span>
       </Link>
 
       {/* Hero Poster Banner */}
@@ -101,10 +101,10 @@ END:VCALENDAR`;
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#090b14] via-black/50 to-transparent flex flex-col justify-end p-6 sm:p-10">
           <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="box-badge text-xs font-mono font-bold uppercase bg-[#55CCA2] text-[#1b0d28] border-2 border-[#1b0d28] shadow-[2px_2px_0px_#1b0d28]">
+            <span className="px-2.5 py-1 text-xs font-mono font-bold uppercase bg-[#55CCA2] text-[#1b0d28]">
               {locale === "ta" ? event.statusBadgeTa : event.statusBadgeEn}
             </span>
-            <span className="box-badge-dark text-xs font-mono bg-black/70 backdrop-blur-md text-white border border-white/20">
+            <span className="px-2.5 py-1 text-xs font-mono bg-black/70 backdrop-blur-md text-white border border-white/20">
               {event.tamilDate}
             </span>
           </div>
@@ -181,8 +181,8 @@ END:VCALENDAR`;
         <div className="lg:col-span-4 space-y-6">
           <div className="box-ticket p-6 sm:p-7 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] space-y-6">
             <div className="border-b-2 border-white/10 pb-4">
-              <span className="text-[10px] font-mono text-[#55CCA2] uppercase tracking-widest block font-bold">
-                ADMISSION PASS
+              <span className="text-xs font-mono text-[#55CCA2] font-semibold block">
+                Admission
               </span>
               <p className="text-3xl font-bold text-white font-mono mt-1">{event.price}</p>
             </div>
@@ -298,8 +298,8 @@ END:VCALENDAR`;
       {(event.googlePhotosUrl || (album && album.googlePhotosUrl)) && (
         <div className="box-ticket p-6 sm:p-8 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] mb-16 text-left">
           <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className="box-badge text-[10px] font-mono font-bold uppercase tracking-widest bg-[#55CCA2] text-[#1b0d28]">
-              COMPLETE EVENT ALBUM
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#55CCA2]">
+              Complete Event Album
             </span>
             <span className="text-xs font-mono text-slate-300">
               {event.academicYear} Academic Year Archive

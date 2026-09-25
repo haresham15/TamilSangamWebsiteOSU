@@ -8,7 +8,7 @@ import {
   Mail, 
   Check, 
   ChevronRight,
-  Ticket,
+  Calendar,
   Users,
   Camera,
   Sparkles,
@@ -35,12 +35,11 @@ export default function BioHubPage() {
 
   const bioLinks = [
     {
-      id: "tickets",
-      index: "01",
-      title: `${nextEvent.titleEn} Tickets`,
-      subtitle: `${nextEvent.location} · Reserved student admission`,
+      id: "event",
+      title: `${nextEvent.titleEn} RSVP & Schedule`,
+      subtitle: `${nextEvent.location} · Free student admission`,
       href: `/events/${nextEvent.slug}`,
-      icon: Ticket,
+      icon: Calendar,
       isFeatured: true,
     },
     {
@@ -164,13 +163,7 @@ export default function BioHubPage() {
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono text-slate-400 uppercase font-bold">{link.index}</span>
                       <p className="text-sm font-bold text-white font-display truncate">{link.title}</p>
-                      {link.badge && (
-                        <span className="box-badge-dark text-[9px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-                          {link.badge}
-                        </span>
-                      )}
                     </div>
                     <p className="text-xs text-slate-400 truncate mt-0.5">{link.subtitle}</p>
                   </div>

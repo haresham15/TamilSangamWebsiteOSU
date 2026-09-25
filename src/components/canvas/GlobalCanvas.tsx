@@ -47,7 +47,7 @@ export function GlobalCanvas() {
 
   const pathname = usePathname();
 
-  if (!mounted || isLiteMode || pathname === "/events") return null;
+  if (!mounted || isLiteMode || pathname === "/events" || pathname === "/guide" || pathname === "/board" || pathname === "/gallery") return null;
 
   return (
     <CanvasErrorBoundary>
