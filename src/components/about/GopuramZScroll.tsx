@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState, useSyncExternalStore } from "react"
 import dynamic from "next/dynamic";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
-import { Sparkles, Compass, Flame } from "lucide-react";
+import { Compass } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
@@ -93,59 +93,87 @@ const TIERS: TierItem[] = [
   },
 ];
 
-// Replaces 1000 lines of Roblox-style primitives with elegant abstract cinematic Bronze Rings
-function BronzeRing({ position, scale = 1, rotation = [0, 0, 0] as [number, number, number] }: { position: [number, number, number], scale?: number, rotation?: [number, number, number] }) {
+// Optimized abstract cinematic Bronze Rings with lightweight geometry
+function BronzeRing({
+  position,
+  scale = 1,
+  rotation = [0, 0, 0] as [number, number, number],
+}: {
+  position: [number, number, number];
+  scale?: number;
+  rotation?: [number, number, number];
+}) {
   const meshRef = useRef<THREE.Group>(null);
 
   useFrame(({ clock }) => {
     if (meshRef.current) {
-      meshRef.current.rotation.z = clock.getElapsedTime() * 0.1 * (scale % 2 === 0 ? 1 : -1);
+      meshRef.current.rotation.z = clock.getElapsedTime() * 0.08 * (scale % 2 === 0 ? 1 : -1);
     }
   });
 
   return (
     <group position={position} rotation={rotation} ref={meshRef}>
-      {/* Outer Torus */}
+      {/* Outer Torus with optimized radial/tubular segments */}
       <mesh>
-        <torusGeometry args={[scale * 4, scale * 0.15, 32, 128]} />
+        <torusGeometry args={[scale * 4, scale * 0.15, 20, 64]} />
         <meshStandardMaterial color="#b87333" metalness={0.8} roughness={0.2} />
       </mesh>
-      {/* Inner Decorative Fractal Knot */}
+      {/* Inner Decorative Knot */}
       <mesh rotation={[0, 0, Math.PI / 4]}>
-        <torusKnotGeometry args={[scale * 3.5, scale * 0.05, 256, 16, 3, 8]} />
+        <torusKnotGeometry args={[scale * 3.5, scale * 0.05, 96, 12, 3, 8]} />
         <meshStandardMaterial color="#8b5a2b" metalness={0.85} roughness={0.15} />
       </mesh>
     </group>
   );
 }
 
-// Suspended Mission Statement Text with Depth-of-Field blur calculated based on Camera Z proximity
-function TierText({ tier, position, isMobile, locale }: { tier: TierItem, position: [number, number, number], isMobile: boolean, locale: string }) {
+// Suspended Mission Statement Text with Distance-Culling for zero DOM thrashing
+function TierText({
+  tier,
+  position,
+  isMobile,
+  locale,
+}: {
+  tier: TierItem;
+  position: [number, number, number];
+  isMobile: boolean;
+  locale: string;
+}) {
   const textRef = useRef<HTMLDivElement>(null);
 
   useFrame((state) => {
     if (!textRef.current) return;
     const dist = state.camera.position.z - position[2];
 
+    // Distance culling: hide tiers outside active range to eliminate DOM updates
+    if (dist < -6 || dist > 24) {
+      if (textRef.current.style.display !== "none") {
+        textRef.current.style.display = "none";
+      }
+      return;
+    }
+
+    if (textRef.current.style.display !== "block") {
+      textRef.current.style.display = "block";
+    }
+
     let opacity = 0;
     let scale = 0.8;
 
-    if (dist > 0 && dist < 20) {
+    if (dist > 0 && dist < 18) {
       // Approaching
-      const factor = 1 - Math.pow(dist / 20, 2);
+      const factor = 1 - Math.pow(dist / 18, 2);
       opacity = factor;
-      scale = 0.8 + (factor * 0.2);
+      scale = 0.8 + factor * 0.2;
     } else if (dist <= 0 && dist > -5) {
       // Passed through
       const factor = Math.max(0, 1 - Math.abs(dist / 5));
       opacity = factor;
-      scale = 1.0 + ((1 - factor) * 0.2); // expand slightly as it fades out
+      scale = 1.0 + (1 - factor) * 0.15;
     }
 
     textRef.current.style.opacity = opacity.toString();
-
-    // Parallax push on Y and dynamic scale instead of blur
-    const yOffset = dist * 0.5;
+    const yOffset = dist * 0.4;
     const yCenter = isMobile ? "-28%" : "-50%";
     textRef.current.style.transform = `translate3d(0, calc(${yCenter} + ${yOffset}px), 0) scale(${scale})`;
   });
@@ -155,7 +183,7 @@ function TierText({ tier, position, isMobile, locale }: { tier: TierItem, positi
       <div
         ref={textRef}
         className="w-[88vw] sm:w-[85vw] max-w-2xl flex flex-col items-start pointer-events-none"
-        style={{ marginLeft: isMobile ? 0 : '10vw' }}
+        style={{ marginLeft: isMobile ? 0 : "10vw", willChange: "transform, opacity" }}
       >
         <div className="p-4 sm:p-8 bg-[#221036]/85 backdrop-blur-md border border-purple-300/35 shadow-[4px_4px_0px_#180826] sm:shadow-[6px_6px_0px_#180826]">
           <h2 className="text-xl sm:text-4xl md:text-5xl font-extrabold font-display tracking-tight text-white mb-2 leading-[1.15] sm:leading-[1.1] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
@@ -185,7 +213,7 @@ function TierText({ tier, position, isMobile, locale }: { tier: TierItem, positi
   );
 }
 
-// Cinematic Camera Controller that flies through the Z-Axis rings
+// Cinematic Camera Controller with smooth damping
 function AscendingGopuramCamera({
   scrollProgressRef,
   isMobile,
@@ -203,14 +231,14 @@ function AscendingGopuramCamera({
     const targetX = isMobile ? 0 : -2;
     const targetY = 0;
 
-    camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 15.0, delta);
-    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 15.0, delta);
-    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 15.0, delta);
+    camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 16.0, delta);
+    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 16.0, delta);
+    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 16.0, delta);
 
-    // Natural subtle temple breeze sway
-    const swayTime = camera.position.z * 0.1;
-    camera.position.x += Math.sin(swayTime) * 0.04;
-    camera.position.y += Math.cos(swayTime * 1.5) * 0.04;
+    // Natural subtle breeze sway
+    const swayTime = camera.position.z * 0.08;
+    camera.position.x += Math.sin(swayTime) * 0.03;
+    camera.position.y += Math.cos(swayTime * 1.4) * 0.03;
 
     camera.lookAt(targetX, targetY, targetZ - 10);
   });
@@ -228,6 +256,7 @@ export function GopuramZScroll() {
   const progressBarRef = useRef<HTMLDivElement>(null);
   const scrollProgressRef = useRef(0);
   const [activeTierIndex, setActiveTierIndex] = useState(0);
+  const [isSectionVisible, setIsSectionVisible] = useState(true);
 
   const mounted = useSyncExternalStore(
     emptySubscribe,
@@ -244,6 +273,19 @@ export function GopuramZScroll() {
     () => false
   );
 
+  // Culling observer to suspend rendering when scrolled off-screen
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSectionVisible(entry.isIntersecting);
+      },
+      { threshold: 0.02 }
+    );
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     if (isLiteMode) return;
 
@@ -255,9 +297,9 @@ export function GopuramZScroll() {
       ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top top",
-        end: "+=3500",
+        end: "+=2200", // Snappy, punchy flight duration without dragging
         pin: true,
-        scrub: true, // Let Lenis handle the smoothing natively without GSAP delay math
+        scrub: 0.5, // 0.5s smooth inertia prevents jerky stepping
         anticipatePin: 1,
         onUpdate: (self) => {
           scrollProgressRef.current = self.progress;
@@ -296,7 +338,8 @@ export function GopuramZScroll() {
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         {mounted && !isLiteMode && (
           <Canvas
-            dpr={[1, 2]}
+            dpr={[1, 1.5]}
+            frameloop={isSectionVisible ? "always" : "demand"}
             camera={{ position: [0, 0, 12], fov: 50 }}
             gl={{
               antialias: true,
@@ -317,7 +360,7 @@ export function GopuramZScroll() {
               <React.Fragment key={tier.id}>
                 <BronzeRing
                   position={[0, 0, -idx * 15]}
-                  scale={1 + (idx * 0.1)}
+                  scale={1 + idx * 0.1}
                   rotation={[0, 0, (idx * Math.PI) / 4]}
                 />
                 <TierText

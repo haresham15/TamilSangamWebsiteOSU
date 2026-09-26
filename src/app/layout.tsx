@@ -7,7 +7,7 @@ import { TinaiProvider } from "@/context/TinaiContext";
 import { AudioProvider } from "@/context/AudioContext";
 import { LiteModeProvider } from "@/context/LiteModeContext";
 import { AppShell } from "@/components/global/AppShell";
-import { OrganizationJsonLd, EventJsonLd } from "@/components/global/JsonLd";
+import { OrganizationJsonLd, EventJsonLd, WebSiteJsonLd } from "@/components/global/JsonLd";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { GlobalCanvas } from "@/components/canvas/GlobalCanvas";
 
@@ -59,17 +59,39 @@ export const metadata: Metadata = {
   applicationName: "OSU Tamil Sangam",
   keywords: [
     "OSU Tamil Sangam",
+    "The Ohio State University Tamil Sangam",
     "Ohio State University",
     "Tamil Sangam OSU",
-    "Tamil Cultural Festivals",
-    "Tamil Students Ohio",
-    "Buckeyes",
+    "Tamil student organization Ohio State",
+    "OSU South Asian student organizations",
+    "Columbus Tamil Sangam",
     "Columbus Tamil",
+    "Tamil Students Ohio",
+    "Buckeye Tamil",
     "Aatam Paatam Kondatam",
-    "South Asian Student Orgs OSU",
+    "Aatam Paatam Kondatam Ohio State",
+    "OSU Diwali",
+    "OSU Pongal",
+    "Ohio Union cultural events",
     "Bharatanatyam Columbus",
-    "Ohio Union Events",
+    "Gaana dance team OSU",
+    "South Asian student orgs OSU",
+    "Tamil culture Columbus Ohio",
+    "Tamil diaspora Midwest",
+    "Midwest collegiate Tamil Sangam",
+    "Thirukkural study Ohio State",
+    "Kanchipuram silk exhibition",
+    "Tamil movies Ohio State",
+    "OSU Indian student freshman guide",
+    "Columbus Indian grocery guide",
+    "தமிழ் சங்கம்",
+    "ஓஹியோ தமிழ் சங்கம்",
+    "ஓஹியோ ஸ்டேட் பல்கலைக்கழகம்",
+    "கொலம்பஸ் தமிழ்",
   ],
+  category: "culture",
+  classification: "Collegiate Cultural Student Organization",
+  referrer: "origin-when-cross-origin",
   authors: [{ name: "OSU Tamil Sangam Executive Board", url: "https://osutamilsangam.org/board" }],
   creator: "The Ohio State University Tamil Sangam",
   publisher: "OSU Tamil Sangam",
@@ -80,6 +102,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://osutamilsangam.org",
+    types: {
+      "application/rss+xml": "https://osutamilsangam.org/feed.xml",
+    },
     languages: {
       "en-US": "https://osutamilsangam.org",
       "ta-IN": "https://osutamilsangam.org",
@@ -146,6 +171,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans bg-[var(--bg-base)] text-[var(--text-primary)]">
         {/* Structured Data for Search Engine Crawlers */}
+        <WebSiteJsonLd />
         <OrganizationJsonLd />
         <EventJsonLd />
 

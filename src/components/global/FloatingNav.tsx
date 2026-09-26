@@ -35,12 +35,12 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
   const navLinks = [
     { href: "/", labelKey: "nav.home" },
     { href: "/events", labelKey: "nav.events" },
+    { href: "/join", labelKey: "nav.join" },
     { href: "/about", labelKey: "nav.about" },
     { href: "/board", labelKey: "nav.board" },
-    { href: "/gallery", labelKey: "nav.gallery" },
     { href: "/guide", labelKey: "nav.guide" },
+    { href: "/gallery", labelKey: "nav.gallery" },
     { href: "/suggestions", labelKey: "nav.suggestions" },
-    { href: "/join", labelKey: "nav.join" },
   ];
 
   const handleLinkClick = () => {
@@ -84,14 +84,17 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
           <nav className="hidden lg:flex items-center gap-1 p-1 bg-white border-2 border-[#250d38] shadow-[3px_3px_0px_#4c2472]">
             {navLinks.map((item) => {
               const isActive = pathname === item.href;
+              const isJoin = item.href === "/join";
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={playClick}
-                  className={`px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-[background-color,color,border-color] duration-150 ${
+                  className={`px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-[background-color,color,border-color,box-shadow] duration-150 ${
                     isActive
                       ? "bg-[#250d38] text-[#55CCA2] border-b-2 border-b-[#55CCA2] shadow-sm"
+                      : isJoin
+                      ? "bg-[#55CCA2]/20 text-[#11694c] hover:bg-[#55CCA2] hover:text-[#250d38] border border-[#55CCA2]/50 font-semibold"
                       : "text-[#3c1959] hover:text-[#250d38] hover:bg-purple-100/70"
                   }`}
                 >
@@ -261,6 +264,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
             <div className="grid grid-cols-1 gap-2">
               {navLinks.map((item) => {
                 const isActive = pathname === item.href;
+                const isJoin = item.href === "/join";
                 return (
                   <Link
                     key={item.href}
@@ -269,11 +273,13 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                     className={`flex items-center justify-between px-4 py-3 min-h-[48px] border-2 border-[#250d38] text-sm font-mono font-bold uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] active:translate-x-[2px] transition-[background-color,box-shadow,transform] duration-150 ${
                       isActive
                         ? "bg-[#250d38] text-[#55CCA2] shadow-[3px_3px_0px_#55CCA2]"
+                        : isJoin
+                        ? "bg-[#55CCA2] text-[#250d38] hover:bg-[#45BA92] shadow-[3px_3px_0px_#250d38]"
                         : "bg-purple-50/70 text-[#250d38] hover:bg-purple-100 shadow-[2px_2px_0px_#4c2472]"
                     }`}
                   >
-                    <span>{t(item.labelKey)}</span>
-                    <span className="text-xs opacity-60">→</span>
+                    <span className={isJoin && !isActive ? "font-black tracking-widest" : ""}>{t(item.labelKey)}</span>
+                    <span className="text-xs opacity-80">{isJoin ? "★ →" : "→"}</span>
                   </Link>
                 );
               })}

@@ -243,11 +243,11 @@ export const Footer: React.FC = () => {
           <div className="flex flex-wrap items-center gap-6">
             <Link href="/" className="hover:text-[#55CCA2] transition-colors">{t("nav.home")}</Link>
             <Link href="/events" className="hover:text-[#55CCA2] transition-colors">{t("nav.events")}</Link>
+            <Link href="/join" className="hover:text-[#55CCA2] font-semibold text-[#55CCA2] transition-colors">{t("nav.join")}</Link>
             <Link href="/about" className="hover:text-[#55CCA2] transition-colors">{t("nav.about")}</Link>
             <Link href="/board" className="hover:text-[#55CCA2] font-semibold transition-colors">{t("nav.board")}</Link>
-            <Link href="/gallery" className="hover:text-[#55CCA2] transition-colors">{t("nav.gallery")}</Link>
             <Link href="/guide" className="hover:text-[#55CCA2] transition-colors">{t("nav.guide")}</Link>
-            <Link href="/join" className="hover:text-[#55CCA2] transition-colors">{t("nav.join")}</Link>
+            <Link href="/gallery" className="hover:text-[#55CCA2] transition-colors">{t("nav.gallery")}</Link>
             <Link href="/suggestions" className="hover:text-[#55CCA2] transition-colors">{t("nav.suggestions")}</Link>
             <Link href="/links" className="text-[#55CCA2] font-semibold hover:underline transition-colors">Quick Links</Link>
           </div>

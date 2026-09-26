@@ -44,10 +44,22 @@ export function GlobalCanvas() {
     () => false
   );
   const containerRef = useRef<HTMLDivElement>(null);
-
   const pathname = usePathname();
 
-  if (!mounted || isLiteMode || pathname === "/events" || pathname === "/guide" || pathname === "/board" || pathname === "/gallery") return null;
+  // Prevent mounting redundant WebGL contexts on pages that feature their own dedicated 3D canvas
+  if (
+    !mounted ||
+    isLiteMode ||
+    pathname === "/" ||
+    pathname === "/about" ||
+    pathname === "/suggestions" ||
+    pathname === "/events" ||
+    pathname === "/guide" ||
+    pathname === "/board" ||
+    pathname === "/gallery"
+  ) {
+    return null;
+  }
 
   return (
     <CanvasErrorBoundary>

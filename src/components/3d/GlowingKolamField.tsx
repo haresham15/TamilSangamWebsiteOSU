@@ -15,21 +15,11 @@ export const GlowingKolamField: React.FC = () => {
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    let width = (canvas.width = canvas.clientWidth);
-    let height = (canvas.height = canvas.clientHeight);
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
-    let isVisible = true;
     let isTabActive = !document.hidden;
-    const mouse = { x: -1000, y: -1000, radius: 140, active: false };
-
-    // Pause rendering when canvas is outside viewport
-    const observer = new IntersectionObserver(
-      (entries) => {
-        isVisible = entries[0]?.isIntersecting ?? false;
-      },
-      { rootMargin: "100px" }
-    );
-    observer.observe(canvas);
+    const mouse = { x: -1000, y: -1000, radius: 130, active: false };
 
     // Pause rendering when tab is hidden
     const handleVisibilityChange = () => {
@@ -47,12 +37,9 @@ export const GlowingKolamField: React.FC = () => {
       if (!mouseMovePending) {
         mouseMovePending = true;
         requestAnimationFrame(() => {
-          if (canvas) {
-            const rect = canvas.getBoundingClientRect();
-            mouse.x = lastClientX - rect.left;
-            mouse.y = lastClientY - rect.top;
-            mouse.active = true;
-          }
+          mouse.x = lastClientX;
+          mouse.y = lastClientY;
+          mouse.active = true;
           mouseMovePending = false;
         });
       }
@@ -69,70 +56,76 @@ export const GlowingKolamField: React.FC = () => {
 
     const handleResize = () => {
       if (!canvas) return;
-      width = canvas.width = canvas.clientWidth;
-      height = canvas.height = canvas.clientHeight;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
     };
     window.addEventListener("resize", handleResize, { passive: true });
 
-    const spacing = 48;
+    const spacing = 52;
     let animationFrameId: number;
+    let lastFrameTime = 0;
 
-    const render = () => {
+    const render = (timeMs: number) => {
       animationFrameId = requestAnimationFrame(render);
 
-      // Only draw when element is visible in the viewport and tab is active
-      if (!isVisible || !isTabActive) return;
+      // Throttle to 60fps max to save GPU battery/overhead on 120-144Hz monitors
+      if (timeMs - lastFrameTime < 16.5) return;
+      lastFrameTime = timeMs;
+
+      // Only draw when tab is active
+      if (!isTabActive) return;
 
       ctx.clearRect(0, 0, width, height);
 
-      const time = Date.now() * 0.001;
+      const time = timeMs * 0.001;
 
       for (let x = spacing / 2; x < width; x += spacing) {
         for (let y = spacing / 2; y < height; y += spacing) {
           const dx = mouse.x - x;
           const dy = mouse.y - y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+          const distSq = dx * dx + dy * dy;
+          const radiusSq = mouse.radius * mouse.radius;
 
-          let r = 1.6;
-          let alpha = 0.15;
-          let glow = 0;
-
-          if (dist < mouse.radius) {
+          if (distSq < radiusSq) {
+            const dist = Math.sqrt(distSq);
             const factor = 1 - dist / mouse.radius;
-            r = 1.6 + factor * 3.5;
-            alpha = 0.2 + factor * 0.8;
-            glow = factor * 10;
+            const r = 1.6 + factor * 3.2;
 
             // Connect lines to nearby dots in active radius (drawing kolam lines)
             ctx.beginPath();
             ctx.moveTo(x, y);
             ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `rgba(242, 183, 5, ${factor * 0.25})`;
+            ctx.strokeStyle = `rgba(242, 183, 5, ${factor * 0.22})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
-          } else {
-            // Ambient gentle shimmer
-            alpha = 0.12 + Math.sin(time + x * 0.05 + y * 0.05) * 0.05;
-          }
 
-          ctx.beginPath();
-          ctx.arc(x, y, r, 0, Math.PI * 2);
-          ctx.fillStyle = dist < mouse.radius ? meta.accentColor : `rgba(243, 231, 211, ${alpha})`;
-          if (glow > 0) {
-            ctx.shadowBlur = glow;
-            ctx.shadowColor = meta.accentColor;
+            // Hardware-accelerated soft outer glow ring (eliminates slow CPU shadowBlur)
+            ctx.beginPath();
+            ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(85, 204, 162, ${factor * 0.28})`;
+            ctx.fill();
+
+            // Inner crisp accent dot
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fillStyle = meta.accentColor;
+            ctx.fill();
+          } else {
+            // Ambient gentle shimmer with lightweight sine math
+            const alpha = 0.11 + Math.sin(time + x * 0.04 + y * 0.04) * 0.04;
+            ctx.beginPath();
+            ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(243, 231, 211, ${alpha})`;
+            ctx.fill();
           }
-          ctx.fill();
-          ctx.shadowBlur = 0;
         }
       }
     };
 
-    render();
+    animationFrameId = requestAnimationFrame(render);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      observer.disconnect();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
@@ -145,7 +138,16 @@ export const GlowingKolamField: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-60"
+      className="fixed inset-0 w-full h-[100dvh] pointer-events-none z-0 opacity-60"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100dvh",
+        pointerEvents: "none",
+        zIndex: 0,
+      }}
     />
   );
 };

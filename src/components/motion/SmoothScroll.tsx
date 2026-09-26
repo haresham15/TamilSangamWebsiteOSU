@@ -48,16 +48,16 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Initialize Lenis with gold-standard cinematic exponential deceleration easing
+    // Initialize Lenis with high-performance responsive deceleration
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 0.82,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       syncTouch: false, // Don't fight native touch momentum scrolling (Phase 6 mandate)
-      touchMultiplier: 1.5,
-      wheelMultiplier: 1.0,
+      touchMultiplier: 1.25,
+      wheelMultiplier: 1.15,
       autoRaf: false,
     });
 
@@ -78,8 +78,8 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     };
 
     gsap.ticker.add(tickerCallback);
-    // lagSmoothing(0) ensures GSAP ticker delta adjustments do not cause Lenis jumps or stutter
-    gsap.ticker.lagSmoothing(0);
+    // Smooth frame delta spikes so micro-hiccups never cause violent scroll jumps
+    gsap.ticker.lagSmoothing(500, 33);
 
     return () => {
       gsap.ticker.remove(tickerCallback);

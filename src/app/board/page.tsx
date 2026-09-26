@@ -8,7 +8,8 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS, BoardMember } from "@/data/board";
 import { CLUB_PURPOSE, MEMBERSHIP_GOVERNANCE } from "@/data/constitution";
 import { HolographicCard } from "@/components/3d/HolographicCard";
-import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
+import { BottomFadeOverlay } from "@/components/shared/BottomFadeOverlay";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { ArrowUpRight, Mail, ArrowRight, X, Crown } from "lucide-react";
@@ -95,7 +96,7 @@ export default function BoardPage() {
       {/* ========================================================================= */}
       {/* 1. CINEMATIC 3D HERO: PONNIYIN SELVAN CHOLA DARBAR CRANE CORRIDOR         */}
       {/* ========================================================================= */}
-      <section id="chola-darbar-hero" className="relative w-full">
+      <section id="chola-darbar-hero" className="relative w-full overflow-hidden">
         <BoardHeroCanvas
           onFinaleComplete={() => {
             const roster = document.getElementById("board-editorial-roster");
@@ -104,36 +105,40 @@ export default function BoardPage() {
             }
           }}
         />
-      </section>
 
-      {/* Color Gradient Transition from 3D Stone Mandapam (#1C120A) to Imperial Chola Obsidian (#120A06) */}
-      <HeroGradientTransition variant="board" className="-mt-16 sm:-mt-24 z-10" />
+        {/* Phase 2: In-canvas bottom fade to fixed #1C120A */}
+        <BottomFadeOverlay fadeColor="#1C120A" heightPct={28} />
+
+        {/* Phase 3: Token-driven Oklab DOM bridge to #F7F0E4 */}
+        <HeroToContentBridge fadeColor="#1C120A" contentBg="#F7F0E4" heightPct={24} />
+      </section>
 
       {/* ========================================================================= */}
       {/* 2. EDITORIAL ROSTER GRID & ARCHITECTURAL LEDGER                           */}
       {/* ========================================================================= */}
-      <div
-        id="board-editorial-roster"
-        className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-24 text-left font-body"
-      >
-        {/* Header */}
-        <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1c1008] border border-[#4a321f] text-[#D4AF37] text-xs font-mono tracking-wider uppercase mb-4 shadow-inner">
-            <Crown className="w-3.5 h-3.5" />
-            <span>CHOLA DARBAR · EXECUTIVE SENATE ROSTER</span>
-            <span className="text-[#8f755a]">·</span>
-            <span className="font-tamil">நிர்வாக அவை</span>
-          </div>
+      <div className="relative z-20 w-full bg-[#F7F0E4] text-[#1C120A] pt-12 pb-24">
+        <div
+          id="board-editorial-roster"
+          className="w-full max-w-6xl mx-auto px-4 sm:px-6 text-left font-body"
+        >
+          {/* Header */}
+          <div className="max-w-3xl mb-12">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1c1008] border border-[#4a321f] text-[#D4AF37] text-xs font-mono tracking-wider uppercase mb-4 shadow-inner">
+              <Crown className="w-3.5 h-3.5" />
+              <span>CHOLA DARBAR · EXECUTIVE SENATE ROSTER</span>
+              <span className="text-[#8f755a]">·</span>
+              <span className="font-tamil">நிர்வாக அவை</span>
+            </div>
 
-          <h1 className="text-4xl sm:text-6xl font-extrabold text-[#faf5ed] tracking-tight font-display mb-4">
-            {locale === "ta" ? "நிர்வாகக் குழு & தலைமைப் பொறுப்புகள்" : "Executive Board & Leadership"}
-          </h1>
-          <p className="text-sm sm:text-base text-[#d4af37] font-medium leading-relaxed font-body">
-            {locale === "ta"
-              ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தை வழிநடத்தும் 9 முதன்மை நிர்வாகிகள், துணைக் குழு உறுப்பினர்கள், மற்றும் அதிகாரப்பூர்வ சட்டதிட்டங்கள்."
-              : "Meet the 9 student executive officers, dedicated subcommittee leaders, and constitutional governance guiding The Ohio State University Tamil Sangam."}
-          </p>
-        </div>
+            <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
+              {locale === "ta" ? "நிர்வாகக் குழு & தலைமைப் பொறுப்புகள்" : "Executive Board & Leadership"}
+            </h1>
+            <p className="text-sm sm:text-base text-[#7c2d12] font-medium leading-relaxed font-body">
+              {locale === "ta"
+                ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தை வழிநடத்தும் 9 முதன்மை நிர்வாகிகள், துணைக் குழு உறுப்பினர்கள், மற்றும் அதிகாரப்பூர்வ சட்டதிட்டங்கள்."
+                : "Meet the 9 student executive officers, dedicated subcommittee leaders, and constitutional governance guiding The Ohio State University Tamil Sangam."}
+            </p>
+          </div>
 
         {/* Architectural Ledger Console Tabs */}
         <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 max-w-4xl mx-auto mb-12 rounded-2xl bg-[#1c1008] border border-[#3d2714] shadow-xl">
@@ -541,6 +546,7 @@ export default function BoardPage() {
           </motion.div>
         )}
       </AnimatePresence>
+        </div>
       </div>
     </main>
   );

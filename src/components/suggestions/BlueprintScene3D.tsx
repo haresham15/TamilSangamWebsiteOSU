@@ -565,7 +565,7 @@ export function BlueprintScene3D({
   return (
     <div className={`relative w-full h-full ${className}`}>
       <Canvas
-        dpr={[1, 2]}
+        dpr={[1, 1.5]}
         camera={{ position: [16.0, 13.5, 18.5], fov: 32 }}
         gl={{
           antialias: true,

@@ -7,7 +7,8 @@ import Image from "next/image";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { GALLERY_ALBUMS, PhotoItem } from "@/data/gallery";
 import { GlyphMosaicImage } from "@/components/ui/GlyphMosaicImage";
-import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
+import { BottomFadeOverlay } from "@/components/shared/BottomFadeOverlay";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import {
@@ -148,19 +149,24 @@ export default function GalleryPage() {
   };
 
   return (
-    <div className="w-full bg-[#fbf9f5] min-h-screen text-left font-body">
-      {/* 3D Vaaranam Aayiram ECR Acoustic Hero */}
-      <GalleryHeroCanvas
-        onFinaleComplete={() => {
-          const vault = document.getElementById("gallery-vault-content");
-          if (vault) {
-            vault.scrollIntoView({ behavior: "smooth" });
-          }
-        }}
-      />
+    <div className="w-full bg-[#FFFDF8] min-h-screen text-left font-body">
+      {/* 3D Vaaranam Aayiram ECR Acoustic Hero Container */}
+      <div className="relative w-full overflow-hidden">
+        <GalleryHeroCanvas
+          onFinaleComplete={() => {
+            const vault = document.getElementById("gallery-vault-content");
+            if (vault) {
+              vault.scrollIntoView({ behavior: "smooth" });
+            }
+          }}
+        />
 
-      {/* Color Gradient Transition from 3D ECR Sunset (#1F0A05) to Warm Cream Archive (#fbf9f5) */}
-      <HeroGradientTransition variant="gallery" className="-mt-16 sm:-mt-24 z-10" />
+        {/* Phase 2: In-canvas bottom fade to fixed #FFF6E8 (§3) */}
+        <BottomFadeOverlay fadeColor="#FFF6E8" heightPct={20} />
+
+        {/* Phase 3: Token-driven Oklab DOM bridge to #FFFDF8 with subtle 16% height (§3/§6) */}
+        <HeroToContentBridge fadeColor="#FFF6E8" contentBg="#FFFDF8" heightPct={16} />
+      </div>
 
       <div id="gallery-vault-content" className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-24 text-left font-body">
         {/* Header with High-Contrast Deep Plum Brand Typography */}

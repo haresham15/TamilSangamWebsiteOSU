@@ -70,20 +70,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Dynamic event pages
+  // Dynamic event pages with images for Google Image Search
   const eventPages = EVENTS.map((event) => ({
     url: `${baseUrl}/events/${event.slug}`,
     lastModified: now,
     changeFrequency: "weekly" as const,
-    priority: event.status === "upcoming" ? 0.9 : 0.7,
+    priority: event.status === "upcoming" ? 0.95 : 0.75,
+    images: event.posterImage ? [event.posterImage] : [`${baseUrl}/emblem.svg`],
   }));
 
-  // Dynamic gallery album pages
+  // Dynamic gallery album pages with photo URLs for Google Images
   const galleryPages = GALLERY_ALBUMS.map((album) => ({
     url: `${baseUrl}/gallery/${album.slug}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
-    priority: 0.75,
+    priority: 0.8,
+    images: [
+      album.coverImage,
+      ...album.photos.slice(0, 4).map((p) => p.imageUrl),
+    ].filter(Boolean),
   }));
 
   return [...staticPages, ...eventPages, ...galleryPages];

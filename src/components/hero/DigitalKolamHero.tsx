@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useMemo, useSyncExternalStore } from "react";
+import React, { useRef, useEffect, useState, useMemo, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
@@ -290,6 +290,20 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
     () => false
   );
 
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsHeroVisible(entry.isIntersecting);
+      },
+      { threshold: 0.02 }
+    );
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     if (isLiteMode) return;
 
@@ -298,14 +312,14 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
     const ctx = gsap.context(() => {
       if (!sectionRef.current || !textGroupRef.current) return;
 
-      // GSAP ScrollTrigger timeline pinning hero section (100dvh)
+      // GSAP ScrollTrigger timeline pinning hero section (100dvh) with silky momentum scrub
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "+=1600",
+          end: "+=1400",
           pin: true,
-          scrub: true,
+          scrub: 0.5, // 0.5s smoothing eliminates jerky stepped mousewheel jumps
           anticipatePin: 1,
           onUpdate: (self) => {
             scrollProgressRef.current = self.progress;
@@ -319,7 +333,6 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
       const originY = isMobile ? "40%" : "60%";
 
       // 0. Synchronize teal contour scaling in exact parity with text cutout mask
-      // Keeps the outer teal shading hugging the letter boundaries throughout the zoom
       if (contourGroupRef.current) {
         tl.to(
           contourGroupRef.current,
@@ -328,12 +341,13 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
             transformOrigin: `${originX} ${originY}`,
             duration: 0.85,
             ease: "power2.in",
+            force3D: true,
           },
           0
         );
       }
 
-      // 1. Keep teal outer shading visible throughout the zoom, fading only when the letter opening swallows the viewport (0.65 - 0.85)
+      // 1. Fade out contour as letter expands so browser never composites off-screen edges
       if (contourRef.current) {
         tl.to(
           contourRef.current,
@@ -342,7 +356,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
             duration: 0.2,
             ease: "power1.inOut",
           },
-          0.65
+          0.35
         );
       }
 
@@ -352,7 +366,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
           foregroundRef.current,
           {
             opacity: 0,
-            y: -40,
+            y: -30,
             duration: 0.22,
             ease: "power2.out",
           },
@@ -360,7 +374,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
         );
       }
 
-      // 3. Scale up authentic Tamil text mask ~10,000% (scale 65)
+      // 3. Scale up authentic Tamil text mask ~10,000% (scale 65) with hardware transform
       tl.to(
         textGroupRef.current,
         {
@@ -368,6 +382,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
           transformOrigin: `${originX} ${originY}`,
           duration: 0.85,
           ease: "power2.in",
+          force3D: true,
         },
         0
       );
@@ -410,7 +425,8 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         {mounted && !isLiteMode && (
           <Canvas
-            dpr={[1, 2]} // Capped device pixel ratio (Phase 6 rule)
+            dpr={[1, 1.5]} // Capped at 1.5x for 44% fill-rate performance boost on Retina/4K
+            frameloop={isHeroVisible ? "always" : "demand"}
             camera={{ position: [0, 0, 7.5], fov: 50 }}
             gl={{
               antialias: true,
@@ -438,7 +454,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
               <rect width="100%" height="100%" fill="black" />
 
               {/* White text: punches open the window into the 3D Kolam simulation in AUTHENTIC TAMIL SCRIPT */}
-              <g ref={textGroupRef}>
+              <g ref={textGroupRef} style={{ willChange: "transform" }}>
                 {isMobile ? (
                   // Mobile stacked layout adhering to tamil-text skill
                   <text
@@ -502,20 +518,14 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
       {/* 3. Soft Ambient Architectural Contour of the Tamil Script with Radiant Outer Teal Shading */}
       <div
         ref={contourRef}
-        className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-90"
+        className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-90 drop-shadow-[0_0_12px_rgba(85,204,162,0.85)] drop-shadow-[0_0_24px_rgba(85,204,162,0.45)]"
       >
         <svg
           viewBox={isMobile ? "0 0 500 400" : "0 0 1400 350"}
           className="w-full h-full object-contain overflow-visible"
           preserveAspectRatio="xMidYMid slice"
         >
-          <defs>
-            <filter id="teal-title-glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#55CCA2" floodOpacity="0.85" />
-              <feDropShadow dx="0" dy="0" stdDeviation="15" floodColor="#55CCA2" floodOpacity="0.45" />
-            </filter>
-          </defs>
-          <g ref={contourGroupRef} filter="url(#teal-title-glow)">
+          <g ref={contourGroupRef} style={{ willChange: "transform" }}>
             {isMobile ? (
               <text
                 lang="ta"
@@ -579,6 +589,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
           </p>
           <h1 className="text-2xl sm:text-5xl md:text-6xl font-extrabold font-display tracking-tight text-white leading-[1.1] sm:leading-[1.06] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] [text-shadow:0_0_24px_rgba(85,204,162,0.4)]">
             Start the Aatam, Paatam, and Kondatam!
+            <span className="sr-only"> — OSU Tamil Sangam at The Ohio State University</span>
           </h1>
           <p className="text-xs sm:text-base text-purple-100/90 font-body leading-relaxed max-w-xl drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
             {locale === "ta"

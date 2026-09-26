@@ -26,7 +26,8 @@ import {
   Database,
   ArrowUp,
 } from "lucide-react";
-import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
+import { BottomFadeOverlay } from "@/components/shared/BottomFadeOverlay";
 
 // Dynamically load 3D split-flap hero canvas without SSR to prevent hydration mismatch
 const HeroSplitFlapCanvas = dynamic(
@@ -322,20 +323,24 @@ export default function UserGuideAndFaqPage() {
       {/* ========================================================================= */}
       {/* 1. TOP CINEMATIC 3D HERO: ALAIPAYUTHEY MECHANICAL SPLIT-FLAP CANVAS       */}
       {/* ========================================================================= */}
-      <section id="alaipayuthey-splitflap-hero" className="relative w-full">
+      <section id="alaipayuthey-splitflap-hero" className="relative w-full overflow-hidden">
         <HeroSplitFlapCanvas
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
         />
-      </section>
 
-      {/* Color Gradient Transition from 3D Split-Flap Station (#0c0907) to Knowledge Console (#070504) */}
-      <HeroGradientTransition variant="guide" className="-mt-14 sm:-mt-20 z-10" />
+        {/* Phase 2: In-canvas bottom fade to fixed #0C0704 */}
+        <BottomFadeOverlay fadeColor="#0C0704" heightPct={28} />
+
+        {/* Phase 3: Token-driven Oklab DOM bridge to #FAF6EE */}
+        <HeroToContentBridge fadeColor="#0C0704" contentBg="#FAF6EE" heightPct={24} />
+      </section>
 
       {/* ========================================================================= */}
       {/* 2. EDITORIAL CONSOLE: UNIFIED USER GUIDE, SEARCHABLE FAQ & KNOWLEDGE BASE */}
       {/* ========================================================================= */}
-      <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-32">
+      <div className="relative z-20 w-full bg-[#FAF6EE] text-[#1c1008] pt-12 pb-32">
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Railway Station Dispatch Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#17110c] border border-[#38281a] text-[#f59e0b] text-xs font-mono tracking-wider uppercase mb-4 shadow-inner">
@@ -346,7 +351,7 @@ export default function UserGuideAndFaqPage() {
           </div>
 
           <h1
-            className="text-3xl sm:text-5xl font-extrabold text-[#fdfaf5] tracking-tight font-display mb-3"
+            className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display mb-3"
             {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}
           >
             {locale === "ta"
@@ -354,14 +359,14 @@ export default function UserGuideAndFaqPage() {
               : "User Guide & Frequently Asked Questions"}
           </h1>
           <p
-            className="text-sm sm:text-base text-[#d4af37] font-tamil font-medium mb-3"
+            className="text-sm sm:text-base text-[#b45309] font-tamil font-medium mb-3"
             {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}
           >
             {locale === "ta"
               ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் விதிமுறைகள், உறுப்புரிமை, மற்றும் அறிவுத் தளம்"
               : "Interactive Southern Railway split-flap engine connected live to OSU Tamil Sangam guidelines"}
           </p>
-          <p className="max-w-2xl mx-auto text-xs sm:text-sm text-[#a89985] leading-relaxed">
+          <p className="max-w-2xl mx-auto text-xs sm:text-sm text-[#4c3828] leading-relaxed">
             Select any question, guide chapter, or knowledge topic below to broadcast its verified policy
             directly to the 3D mechanical departure board above.
           </p>
@@ -972,6 +977,7 @@ export default function UserGuideAndFaqPage() {
             </div>
           </div>
         )}
+        </div>
       </div>
     </main>
   );

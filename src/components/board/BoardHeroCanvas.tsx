@@ -87,7 +87,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
         start: "top top",
         end: "+=1600",
         pin: true,
-        scrub: true,
+        scrub: 0.5,
         anticipatePin: 1,
         onUpdate: (self) => {
           const p = self.progress;
@@ -200,7 +200,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
         {/* ========================================================================= */}
         <div className="relative flex-1 w-full h-full">
           <Canvas
-            dpr={[1, 2]}
+            dpr={[1, 1.5]}
             camera={{ position: [0, 1.6, 30], fov: 32 }}
             frameloop={inView ? "always" : "demand"}
             gl={{
@@ -221,8 +221,8 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
               intensity={1.2}
               color="#FFE8C2"
               castShadow
-              shadow-mapSize-width={1024}
-              shadow-mapSize-height={1024}
+              shadow-mapSize-width={512}
+              shadow-mapSize-height={512}
             />
 
             {/* Crane Camera Rig with spring-lag inertia (§6) */}

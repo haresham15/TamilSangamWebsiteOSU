@@ -14,7 +14,8 @@ import {
   Star 
 } from "lucide-react";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
-import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
+import { BottomFadeOverlay } from "@/components/shared/BottomFadeOverlay";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -62,17 +63,18 @@ export default function EventsPage() {
   return (
     <div className="w-full text-left">
       {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene (PRD Overhaul) */}
-      <div id="events-hero-trigger" className="w-full h-[100dvh] relative z-0">
+      <div id="events-hero-trigger" className="w-full h-[100dvh] relative z-0 overflow-hidden">
         <EventsGen3Canvas />
-        {/* Cinematic bottom shadow vignette over crowd base */}
-        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-72 bg-gradient-to-t from-[#0c0a08] via-[#0c0a08]/85 to-transparent z-10" />
+
+        {/* Phase 2: In-canvas bottom fade to fixed #0C0704 */}
+        <BottomFadeOverlay fadeColor="#0C0704" heightPct={28} />
+
+        {/* Phase 3: Token-driven Oklab DOM bridge to #FAF6EE */}
+        <HeroToContentBridge fadeColor="#0C0704" contentBg="#FAF6EE" heightPct={24} />
       </div>
 
-      {/* Color Gradient Transition from 3D Sodium Amber Concert (#0c0a08) to White Catalogue */}
-      <HeroGradientTransition variant="events" className="-mt-16 sm:-mt-24 z-10" />
-
-      {/* 2. Events Catalogue Container */}
-      <div className="relative z-10 w-full bg-white -mt-1">
+      {/* 2. Events Catalogue Container with Warm Cream Background (#FAF6EE) */}
+      <div className="relative z-10 w-full bg-[#FAF6EE]">
         <div id="events-catalogue" className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-24 text-left">
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">

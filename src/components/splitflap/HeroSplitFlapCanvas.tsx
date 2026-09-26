@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable react-compiler/react-compiler */
 
 import React, { Suspense, useState, useEffect, useRef, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
@@ -7,10 +8,16 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitFlapBoard, SplitFlapBoardHandle } from "./SplitFlapBoard";
 import { useFaqStore } from "@/store/faqStore";
-import { Clock, Train, Sparkles, Terminal, Activity, Eye, Search } from "lucide-react";
+import { Clock, Train, Terminal, Search } from "lucide-react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
+}
+
+// Deterministic pseudo-random number generator to ensure render purity and stability
+function pseudoRandom(seed: number): number {
+  const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+  return x - Math.floor(x);
 }
 
 // ---------------------------------------------------------------------------
@@ -23,10 +30,10 @@ function DustMotes({ count = 100 }: { count?: number }) {
     const pos = new Float32Array(count * 3);
     const speeds = new Float32Array(count);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 22;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 10;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 14 + 4;
-      speeds[i] = 0.05 + Math.random() * 0.12;
+      pos[i * 3] = (pseudoRandom(i * 4 + 1) - 0.5) * 22;
+      pos[i * 3 + 1] = (pseudoRandom(i * 4 + 2) - 0.5) * 10;
+      pos[i * 3 + 2] = (pseudoRandom(i * 4 + 3) - 0.5) * 14 + 4;
+      speeds[i] = 0.05 + pseudoRandom(i * 4 + 4) * 0.12;
     }
     return [pos, speeds];
   }, [count]);
@@ -42,7 +49,7 @@ function DustMotes({ count = 100 }: { count?: number }) {
       // Wrap when floating past top of platform
       if (array[i * 3 + 1] > 6.0) {
         array[i * 3 + 1] = -4.0;
-        array[i * 3] = (Math.random() - 0.5) * 22;
+        array[i * 3] = (pseudoRandom(i * 17 + 13) - 0.5) * 22;
       }
     }
     posAttr.needsUpdate = true;
@@ -73,10 +80,10 @@ function DustMotes({ count = 100 }: { count?: number }) {
 // ---------------------------------------------------------------------------
 interface OverheadLampProps {
   position: [number, number, number];
-  camState: { lampEmissive: number };
+  camStateRef: React.RefObject<{ lampEmissive: number }>;
 }
 
-function OverheadLamp({ position, camState }: OverheadLampProps) {
+function OverheadLamp({ position, camStateRef }: OverheadLampProps) {
   const bulbRef = useRef<THREE.Mesh>(null);
   const lightRef = useRef<THREE.PointLight>(null);
 
@@ -88,6 +95,8 @@ function OverheadLamp({ position, camState }: OverheadLampProps) {
   }, []);
 
   useFrame(() => {
+    const camState = camStateRef.current;
+    if (!camState) return;
     if (bulbRef.current && bulbRef.current.material) {
       (bulbRef.current.material as THREE.MeshStandardMaterial).emissiveIntensity =
         camState.lampEmissive * 3.6;
@@ -173,21 +182,25 @@ function StationPlatformBackdrop() {
 // 4. CAMERA CHOREOGRAPHY & FOG SYNCHRONIZER (§1 Table)
 // ---------------------------------------------------------------------------
 interface CameraChoreographyProps {
-  camState: {
+  camStateRef: React.RefObject<{
     x: number;
     y: number;
     z: number;
     fov: number;
     fog: number;
     lampEmissive: number;
-  };
+  }>;
 }
 
-function CameraChoreography({ camState }: CameraChoreographyProps) {
-  const { camera, scene } = useThree();
-  const fpsRef = useRef({ frames: 0, lastTime: performance.now() });
+function CameraChoreography({ camStateRef }: CameraChoreographyProps) {
+  const fpsRef = useRef({ frames: 0, lastTime: 0 });
 
-  useFrame(() => {
+  useFrame((state) => {
+    const camState = camStateRef.current;
+    if (!camState) return;
+    const camera = state.camera;
+    const scene = state.scene;
+
     // 1. Camera kinematics & target tracking
     camera.position.set(camState.x, camState.y, camState.z);
     camera.lookAt(0, 0.4, 0);
@@ -203,13 +216,15 @@ function CameraChoreography({ camState }: CameraChoreographyProps) {
     }
 
     if (typeof window !== "undefined") {
-      (window as any).__THREE_DEBUG__ = { camera, scene, camState };
+      (window as Window & { __THREE_DEBUG__?: unknown }).__THREE_DEBUG__ = { camera, scene, camState };
     }
 
     // 3. FPS tracking for ?debug=1 HUD
     fpsRef.current.frames++;
     const now = performance.now();
-    if (now - fpsRef.current.lastTime >= 1000) {
+    if (fpsRef.current.lastTime === 0) {
+      fpsRef.current.lastTime = now;
+    } else if (now - fpsRef.current.lastTime >= 1000) {
       const currentFps = Math.round(
         (fpsRef.current.frames * 1000) / (now - fpsRef.current.lastTime)
       );
@@ -240,8 +255,18 @@ export function HeroSplitFlapCanvas({
   const hasTriggeredBootRef = useRef(false);
 
   const [inView, setInView] = useState(true);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [debugActive, setDebugActive] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
+    return false;
+  });
+  const [debugActive] = useState(() => {
+    if (typeof window !== "undefined") {
+      return new URLSearchParams(window.location.search).get("debug") === "1";
+    }
+    return false;
+  });
   const [timeStr, setTimeStr] = useState<string>("18:45:00 EST");
 
   // Read active Zustand properties for HUD and accessible shadow DOM
@@ -262,18 +287,18 @@ export function HeroSplitFlapCanvas({
     lampEmissive: 0.0,
   });
 
-  // Check URL for ?debug=1 and system for prefers-reduced-motion
+  // Sync debugMode and listen to prefers-reduced-motion changes
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("debug") === "1") {
-        setDebugActive(true);
-        useFaqStore.getState().setDebugMode(true);
-      }
-      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-      setReducedMotion(mediaQuery.matches);
+    if (debugActive) {
+      useFaqStore.getState().setDebugMode(true);
     }
-  }, []);
+    if (typeof window !== "undefined") {
+      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+      mediaQuery.addEventListener("change", handler);
+      return () => mediaQuery.removeEventListener("change", handler);
+    }
+  }, [debugActive]);
 
   // Live Railway Clock in header
   useEffect(() => {
@@ -333,7 +358,7 @@ export function HeroSplitFlapCanvas({
           end: "bottom bottom",
           pin: stickyContainerRef.current,
           pinSpacing: false,
-          scrub: true,
+          scrub: 0.5,
           onUpdate: (self) => {
             const p = self.progress;
             useFaqStore.getState().setScrollProgress(p);
@@ -505,7 +530,7 @@ export function HeroSplitFlapCanvas({
         {/* ========================================================================= */}
         <div className="relative flex-1 w-full h-full">
           <Canvas
-            dpr={[1, 2]}
+            dpr={[1, 1.5]}
             camera={{ position: [0, 2.4, 13], fov: 40 }}
             frameloop={inView ? "always" : "demand"}
             gl={{
@@ -513,7 +538,7 @@ export function HeroSplitFlapCanvas({
               powerPreference: "high-performance",
               toneMappingExposure: 1.3,
             }}
-            shadows
+            shadows={{ type: THREE.PCFShadowMap }}
           >
             {/* FogExp2 configured per §1 Table (density 0.024 -> 0.028) */}
             <fogExp2 attach="fog" args={["#0c0907", 0.024]} />
@@ -525,21 +550,21 @@ export function HeroSplitFlapCanvas({
               intensity={4.5}
               color="#FFF4DE"
               castShadow
-              shadow-mapSize-width={1024}
-              shadow-mapSize-height={1024}
+              shadow-mapSize-width={512}
+              shadow-mapSize-height={512}
             />
             <pointLight position={[-8, 2, 4]} intensity={2.2} color="#FFAA44" distance={16} decay={2} />
             <pointLight position={[8, 2, 4]} intensity={2.2} color="#FFAA44" distance={16} decay={2} />
 
             {/* Camera kinematics controller */}
-            <CameraChoreography camState={camStateRef.current} />
+            <CameraChoreography camStateRef={camStateRef} />
 
             {/* Overhead Tungsten Lamps (§6) */}
             {[-9, -3, 3, 9].map((x, i) => (
               <OverheadLamp
                 key={i}
                 position={[x, 3.8, 2.0]}
-                camState={camStateRef.current}
+                camStateRef={camStateRef}
               />
             ))}
 
