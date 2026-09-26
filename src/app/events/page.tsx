@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
 import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
-import { BottomFadeOverlay } from "@/components/shared/BottomFadeOverlay";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -63,14 +62,20 @@ export default function EventsPage() {
   return (
     <div className="w-full text-left">
       {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene (PRD Overhaul) */}
-      <div id="events-hero-trigger" className="w-full h-[100dvh] relative z-0 overflow-hidden">
+      <div
+        id="events-hero-trigger"
+        className="w-full h-[100dvh] relative z-0 overflow-hidden"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
+        }}
+      >
         <EventsGen3Canvas />
 
-        {/* Phase 2: In-canvas bottom fade to fixed #0C0704 */}
-        <BottomFadeOverlay fadeColor="#0C0704" heightPct={28} />
-
-        {/* Phase 3: Token-driven Oklab DOM bridge to #FAF6EE */}
-        <HeroToContentBridge fadeColor="#0C0704" contentBg="#FAF6EE" heightPct={24} />
+        {/* Phase 3: Token-driven OKLCH DOM bridge to #FAF6EE */}
+        <HeroToContentBridge theme="events" heightPct={28} />
       </div>
 
       {/* 2. Events Catalogue Container with Warm Cream Background (#FAF6EE) */}

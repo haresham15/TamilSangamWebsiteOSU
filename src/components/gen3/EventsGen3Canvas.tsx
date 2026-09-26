@@ -13,6 +13,8 @@ import { DustCloud } from "./DustCloud";
 import { LeoFactoryEnvironment } from "./LeoFactoryEnvironment";
 import { JumpingCrowdSilhouettes } from "./JumpingCrowdSilhouettes";
 import { EffectComposer, Vignette } from "@react-three/postprocessing";
+import { Environment } from "@react-three/drei";
+import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 
 // The strict blueprint mandate: magenta error state on failure, no silent fallbacks.
 class CanvasErrorBoundary extends Component<
@@ -84,6 +86,14 @@ export function EventsGen3Canvas() {
   // Initialize scroll tracking (does not cause react re-renders inside useFrame)
   useScrollCinematic("events-hero-trigger");
 
+  // Bespoke scene-matched environment reflections (§1.1b PRD Mandate)
+  const bespokeEnv = useMemo(() => createBespokeEnvironmentTexture("arena-concert"), []);
+  React.useEffect(() => {
+    return () => {
+      bespokeEnv?.dispose();
+    };
+  }, [bespokeEnv]);
+
   return (
     <div className="w-full h-full min-h-[100dvh] absolute top-0 left-0 bg-[#050200]">
       <CanvasErrorBoundary>
@@ -92,12 +102,16 @@ export function EventsGen3Canvas() {
           gl={{
             antialias: true,
             powerPreference: "high-performance",
+            toneMapping: THREE.ACESFilmicToneMapping,
             toneMappingExposure: 1.15,
           }}
           shadows={{ type: THREE.PCFShadowMap }}
         >
           <color attach="background" args={["#0c0a08"]} />
           <fogExp2 attach="fog" args={["#0c0a08", 0.024]} />
+
+          {/* Bespoke Scene-Matched Concert Arena Environment Map */}
+          {bespokeEnv && <Environment map={bespokeEnv} background={false} />}
           
           <DepthTextureProvider>
             <React.Suspense fallback={null}>

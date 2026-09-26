@@ -15,6 +15,8 @@ import { PostFX } from "./PostFX";
 import { useScrollPluck } from "./useScrollPluck";
 import { useGalleryHeroStore } from "@/store/galleryHeroStore";
 import { Music, Camera, Terminal, Compass } from "lucide-react";
+import { Environment } from "@react-three/drei";
+import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -39,8 +41,19 @@ function GalleryScene({
   // §8: Scroll velocity to damped string amplitude hook
   const amplitudeRef = useScrollPluck();
 
+  // Bespoke scene-matched environment reflections (§1.1b PRD Mandate)
+  const bespokeEnv = React.useMemo(() => createBespokeEnvironmentTexture("acoustic-gallery"), []);
+  React.useEffect(() => {
+    return () => {
+      bespokeEnv?.dispose();
+    };
+  }, [bespokeEnv]);
+
   return (
     <>
+      {/* Bespoke Scene-Matched Acoustic Gallery Environment Map */}
+      {bespokeEnv && <Environment map={bespokeEnv} background={false} />}
+
       {/* 1. Camera Rig with Idle Motion & Finale Dolly (§10) */}
       <AcousticCameraRig scrollProgress={scrollProgress} />
 

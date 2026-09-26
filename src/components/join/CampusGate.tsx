@@ -5,6 +5,8 @@ import * as THREE from "three";
 import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
+import { createBrickTexture, createStoneBumpTexture, createIronBumpTexture } from "./textureUtils";
+
 interface CampusGateProps {
   gateProgressRef: React.RefObject<number>;
 }
@@ -16,6 +18,19 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
   // Load straight-alpha matched leaf textures
   const leftTexture = useTexture("/join/lattice-leaf-left.png");
   const rightTexture = useTexture("/join/lattice-leaf-right.png");
+
+  // Procedural PBR surface detail maps
+  const brickTexture = useMemo(() => createBrickTexture(), []);
+  const stoneBumpTexture = useMemo(() => createStoneBumpTexture(), []);
+  const ironBumpTexture = useMemo(() => createIronBumpTexture(), []);
+
+  React.useEffect(() => {
+    return () => {
+      brickTexture?.dispose();
+      stoneBumpTexture?.dispose();
+      ironBumpTexture?.dispose();
+    };
+  }, [brickTexture, stoneBumpTexture, ironBumpTexture]);
 
   useMemo(() => {
     [leftTexture, rightTexture].forEach((tex) => {
@@ -84,11 +99,13 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
   const ironMaterial = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: "#221c18",
-        roughness: 0.35,
-        metalness: 0.85,
+        color: "#181412",
+        roughness: 0.28,
+        metalness: 0.88,
+        bumpMap: ironBumpTexture ?? undefined,
+        bumpScale: 0.012,
       }),
-    []
+    [ironBumpTexture]
   );
 
   const leftLatticeMaterial = useMemo(
@@ -96,13 +113,15 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
       new THREE.MeshStandardMaterial({
         map: leftTexture,
         transparent: true,
-        alphaTest: 0.08,
+        alphaTest: 0.06,
         depthWrite: true,
         side: THREE.DoubleSide,
-        roughness: 0.38,
-        metalness: 0.78,
+        roughness: 0.32,
+        metalness: 0.82,
+        bumpMap: ironBumpTexture ?? undefined,
+        bumpScale: 0.015,
       }),
-    [leftTexture]
+    [leftTexture, ironBumpTexture]
   );
 
   const rightLatticeMaterial = useMemo(
@@ -110,33 +129,40 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
       new THREE.MeshStandardMaterial({
         map: rightTexture,
         transparent: true,
-        alphaTest: 0.08,
+        alphaTest: 0.06,
         depthWrite: true,
         side: THREE.DoubleSide,
-        roughness: 0.38,
-        metalness: 0.78,
+        roughness: 0.32,
+        metalness: 0.82,
+        bumpMap: ironBumpTexture ?? undefined,
+        bumpScale: 0.015,
       }),
-    [rightTexture]
+    [rightTexture, ironBumpTexture]
   );
 
   const brickMaterial = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: "#5c241c", // Collegiate Ohio red brick
-        roughness: 0.88,
-        metalness: 0.08,
+        color: "#6b2318",
+        map: brickTexture ?? undefined,
+        roughness: 0.92,
+        metalness: 0.04,
+        bumpMap: brickTexture ?? undefined,
+        bumpScale: 0.035,
       }),
-    []
+    [brickTexture]
   );
 
   const stoneCapMaterial = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: "#d4cbba", // Ohio limestone cap
-        roughness: 0.78,
-        metalness: 0.12,
+        color: "#cfc4b0",
+        roughness: 0.72,
+        metalness: 0.14,
+        bumpMap: stoneBumpTexture ?? undefined,
+        bumpScale: 0.025,
       }),
-    []
+    [stoneBumpTexture]
   );
 
   return (

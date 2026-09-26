@@ -27,7 +27,6 @@ import {
   ArrowUp,
 } from "lucide-react";
 import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
-import { BottomFadeOverlay } from "@/components/shared/BottomFadeOverlay";
 
 // Dynamically load 3D split-flap hero canvas without SSR to prevent hydration mismatch
 const HeroSplitFlapCanvas = dynamic(
@@ -323,17 +322,23 @@ export default function UserGuideAndFaqPage() {
       {/* ========================================================================= */}
       {/* 1. TOP CINEMATIC 3D HERO: ALAIPAYUTHEY MECHANICAL SPLIT-FLAP CANVAS       */}
       {/* ========================================================================= */}
-      <section id="alaipayuthey-splitflap-hero" className="relative w-full overflow-hidden">
+      <section
+        id="alaipayuthey-splitflap-hero"
+        className="relative w-full overflow-hidden"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
+        }}
+      >
         <HeroSplitFlapCanvas
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
         />
 
-        {/* Phase 2: In-canvas bottom fade to fixed #0C0704 */}
-        <BottomFadeOverlay fadeColor="#0C0704" heightPct={28} />
-
-        {/* Phase 3: Token-driven Oklab DOM bridge to #FAF6EE */}
-        <HeroToContentBridge fadeColor="#0C0704" contentBg="#FAF6EE" heightPct={24} />
+        {/* Phase 3: Token-driven OKLCH DOM bridge to #FAF6EE */}
+        <HeroToContentBridge theme="guide" heightPct={28} />
       </section>
 
       {/* ========================================================================= */}

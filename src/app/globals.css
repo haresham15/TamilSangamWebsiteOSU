@@ -38,10 +38,17 @@
   --color-surface-overlay: oklch(0.99 0.008 300 / 0.92);
   --color-border-subtle: oklch(0.38 0.22 305 / 0.12);
   --color-border-strong: oklch(0.38 0.22 305 / 0.25);
-  --color-border-mint: oklch(0.78 0.16 168 / 0.6);
   --color-text-primary: oklch(0.20 0.10 305);
   --color-text-secondary: oklch(0.36 0.09 305);
   --color-text-muted: oklch(0.55 0.06 305);
+
+  /* Hero-to-Content DTCG Semantic Transitions */
+  --color-surface-hero-join: oklch(0.975 0.015 85);
+  --color-surface-hero-board: oklch(0.18 0.04 45);
+  --color-surface-hero-events: oklch(0.14 0.03 285);
+  --color-surface-hero-gallery: oklch(0.96 0.018 75);
+  --color-surface-hero-guide: oklch(0.16 0.02 260);
+  --color-surface-hero-about: oklch(0.15 0.02 55);
 }
 
 @layer base {
@@ -76,6 +83,14 @@
     --accent-glow: oklch(0.78 0.16 168 / 0.35);
     --accent-gradient: linear-gradient(135deg, oklch(0.38 0.22 305) 0%, oklch(0.78 0.16 168) 100%);
     --sky-gradient: linear-gradient(180deg, oklch(0.96 0.02 300) 0%, oklch(0.98 0.01 300) 60%, oklch(0.95 0.03 168) 100%);
+
+    /* Hero-to-Content DTCG Transition Tokens */
+    --surface-hero-join: oklch(0.975 0.015 85);
+    --surface-hero-board: oklch(0.18 0.04 45);
+    --surface-hero-events: oklch(0.14 0.03 285);
+    --surface-hero-gallery: oklch(0.96 0.018 75);
+    --surface-hero-guide: oklch(0.16 0.02 260);
+    --surface-hero-about: oklch(0.15 0.02 55);
   }
 
   /* 5 Classical Landscapes (Tinai) Tinting with Bright, Colorful Harmony */

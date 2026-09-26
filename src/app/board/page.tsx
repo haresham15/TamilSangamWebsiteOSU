@@ -9,7 +9,6 @@ import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS, BoardMember } from "@/data/board";
 import { CLUB_PURPOSE, MEMBERSHIP_GOVERNANCE } from "@/data/constitution";
 import { HolographicCard } from "@/components/3d/HolographicCard";
 import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
-import { BottomFadeOverlay } from "@/components/shared/BottomFadeOverlay";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { ArrowUpRight, Mail, ArrowRight, X, Crown } from "lucide-react";
@@ -96,7 +95,16 @@ export default function BoardPage() {
       {/* ========================================================================= */}
       {/* 1. CINEMATIC 3D HERO: PONNIYIN SELVAN CHOLA DARBAR CRANE CORRIDOR         */}
       {/* ========================================================================= */}
-      <section id="chola-darbar-hero" className="relative w-full overflow-hidden">
+      <section
+        id="chola-darbar-hero"
+        className="relative w-full overflow-hidden"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
+        }}
+      >
         <BoardHeroCanvas
           onFinaleComplete={() => {
             const roster = document.getElementById("board-editorial-roster");
@@ -106,11 +114,8 @@ export default function BoardPage() {
           }}
         />
 
-        {/* Phase 2: In-canvas bottom fade to fixed #1C120A */}
-        <BottomFadeOverlay fadeColor="#1C120A" heightPct={28} />
-
-        {/* Phase 3: Token-driven Oklab DOM bridge to #F7F0E4 */}
-        <HeroToContentBridge fadeColor="#1C120A" contentBg="#F7F0E4" heightPct={24} />
+        {/* Phase 3: Token-driven OKLCH DOM bridge to editorial roster */}
+        <HeroToContentBridge theme="board" heightPct={28} />
       </section>
 
       {/* ========================================================================= */}

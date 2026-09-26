@@ -9,6 +9,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitFlapBoard, SplitFlapBoardHandle } from "./SplitFlapBoard";
 import { useFaqStore } from "@/store/faqStore";
 import { Clock, Train, Terminal, Search } from "lucide-react";
+import { Environment } from "@react-three/drei";
+import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -268,6 +270,14 @@ export function HeroSplitFlapCanvas({
     return false;
   });
   const [timeStr, setTimeStr] = useState<string>("18:45:00 EST");
+
+  // Bespoke scene-matched environment reflections (§1.1b PRD Mandate)
+  const bespokeEnv = useMemo(() => createBespokeEnvironmentTexture("transit-solari"), []);
+  useEffect(() => {
+    return () => {
+      bespokeEnv?.dispose();
+    };
+  }, [bespokeEnv]);
 
   // Read active Zustand properties for HUD and accessible shadow DOM
   const scrollProgress = useFaqStore((s) => s.scrollProgress);
@@ -536,12 +546,16 @@ export function HeroSplitFlapCanvas({
             gl={{
               antialias: true,
               powerPreference: "high-performance",
-              toneMappingExposure: 1.3,
+              toneMapping: THREE.ACESFilmicToneMapping,
+              toneMappingExposure: 1.15,
             }}
             shadows={{ type: THREE.PCFShadowMap }}
           >
             {/* FogExp2 configured per §1 Table (density 0.024 -> 0.028) */}
             <fogExp2 attach="fog" args={["#0c0907", 0.024]} />
+
+            {/* Bespoke Scene-Matched Transit Solari Environment Map */}
+            {bespokeEnv && <Environment map={bespokeEnv} background={false} />}
 
             {/* Atmosphere Lighting */}
             <ambientLight intensity={1.2} color="#3d2c1e" />

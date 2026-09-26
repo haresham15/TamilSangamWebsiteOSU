@@ -5,12 +5,14 @@ import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Environment } from "@react-three/drei";
 import { CraneCameraRig } from "./CraneCameraRig";
 import { CorridorTreadmill } from "./CorridorTreadmill";
 import { EmblemFinale } from "./EmblemFinale";
 import { PostFX } from "./PostFX";
 import { useBoardHeroStore } from "@/store/boardHeroStore";
 import { Crown, Sparkles, Terminal } from "lucide-react";
+import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -32,6 +34,14 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
     }
     return false;
   });
+
+  // Bespoke scene-matched environment reflections (§1.1b PRD Mandate)
+  const bespokeEnv = React.useMemo(() => createBespokeEnvironmentTexture("chola-darbar"), []);
+  useEffect(() => {
+    return () => {
+      bespokeEnv?.dispose();
+    };
+  }, [bespokeEnv]);
   const [debugActive] = useState(() => {
     if (typeof window !== "undefined") {
       return new URLSearchParams(window.location.search).get("debug") === "1";
@@ -213,6 +223,9 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
           >
             {/* World-Space FogExp2 per §2 & §5 Table */}
             <fogExp2 attach="fog" args={["#1C120A", 0.045]} />
+
+            {/* Bespoke Scene-Matched Chola Darbar Environment Map */}
+            {bespokeEnv && <Environment map={bespokeEnv} background={false} />}
 
             {/* Ambient & Rim Lighting (Moody torchlight balance, max 0.6 luminance) */}
             <ambientLight intensity={0.45} color="#40281b" />

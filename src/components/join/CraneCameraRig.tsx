@@ -9,16 +9,11 @@ interface CraneCameraRigProps {
 }
 
 export function CraneCameraRig({ scrollProgressRef }: CraneCameraRigProps) {
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const p = scrollProgressRef.current ?? 0;
     const camera = state.camera;
 
-    // Kinematic Camera Track:
-    // p = 0.0 -> z = 10.5 (approaching exterior)
-    // p = 0.75 -> z = 1.8 (gate already 100% open, clear threshold)
-    // p = 0.85 -> z = 0.0 (passing through the gate opening)
-    // p = 1.0 -> z = -2.8 (inside campus, bathed in dawn sunlight)
-
+    // Kinematic Camera Track (§1.3 PRD Mandate: Gates finish open at p=0.75, final 25% is threshold & handoff)
     let targetZ = 12.2;
     let targetY = 2.4;
     let targetLookY = 2.8;
@@ -36,24 +31,26 @@ export function CraneCameraRig({ scrollProgressRef }: CraneCameraRigProps) {
       targetY = THREE.MathUtils.lerp(2.3, 2.2, t);
       targetLookY = THREE.MathUtils.lerp(2.9, 2.6, t);
     } else {
-      // Phase 3: Passing threshold with clearance margin and entering campus
+      // Phase 3: Passing threshold with clearance margin and entering campus (gate motion complete)
       const t = (p - 0.75) / 0.25;
       targetZ = THREE.MathUtils.lerp(2.0, -2.8, t);
       targetY = THREE.MathUtils.lerp(2.2, 2.1, t);
       targetLookY = THREE.MathUtils.lerp(2.6, 2.4, t);
     }
 
-    // Subtle gentle crane glide (smooth interpolation)
+    // Frame-rate independent damped inertia (§1.3)
+    const smoothDelta = Math.min(delta, 0.1);
     camera.position.x = 0;
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.12);
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.12);
+    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 4.8, smoothDelta);
+    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 4.8, smoothDelta);
 
     camera.lookAt(0, targetLookY, -6);
 
     if ("fov" in camera) {
       const targetFov = THREE.MathUtils.lerp(42, 46, p);
-      (camera as THREE.PerspectiveCamera).fov = targetFov;
-      camera.updateProjectionMatrix();
+      const persCamera = camera as THREE.PerspectiveCamera;
+      persCamera.fov = THREE.MathUtils.damp(persCamera.fov, targetFov, 4.0, smoothDelta);
+      persCamera.updateProjectionMatrix();
     }
   });
 

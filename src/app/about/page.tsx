@@ -7,7 +7,7 @@ import { useAudio } from "@/context/AudioContext";
 import { FAQS } from "@/data/faq";
 import { CLUB_PURPOSE } from "@/data/constitution";
 import { GopuramZScroll } from "@/components/about/GopuramZScroll";
-import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
 import { 
   Search, 
   ChevronDown, 
@@ -88,10 +88,18 @@ export default function AboutPage() {
   return (
     <div className="w-full text-left font-body bg-[#fffdfa]">
       {/* Cinematic 3D Gopuram Z-Axis Mission Fly-Through */}
-      <GopuramZScroll />
-
-      {/* Color Gradient Transition from 3D Gopuram (#120a1f) to Content Below (#fffdfa) */}
-      <HeroGradientTransition variant="about" className="-mt-16 sm:-mt-24 z-10" />
+      <div
+        className="relative w-full overflow-hidden"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 0%, black 75%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to bottom, black 0%, black 75%, transparent 100%)",
+        }}
+      >
+        <GopuramZScroll />
+        <HeroToContentBridge theme="about" heightPct={24} />
+      </div>
 
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-24">
         {/* Page Header with High Contrast Typography */}

@@ -9,7 +9,6 @@ import { LiteModeProvider } from "@/context/LiteModeContext";
 import { AppShell } from "@/components/global/AppShell";
 import { OrganizationJsonLd, EventJsonLd, WebSiteJsonLd } from "@/components/global/JsonLd";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
-import { GlobalCanvas } from "@/components/canvas/GlobalCanvas";
 
 const muktaMalar = Mukta_Malar({
   variable: "--font-mukta-malar",
@@ -180,7 +179,6 @@ export default function RootLayout({
             <AudioProvider>
               <LiteModeProvider>
                 <SmoothScroll>
-                  <GlobalCanvas />
                   <AppShell>{children}</AppShell>
                 </SmoothScroll>
               </LiteModeProvider>
