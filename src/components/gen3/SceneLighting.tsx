@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 
@@ -10,16 +10,16 @@ export function SceneLighting() {
   const sweepSpot2Ref = useRef<THREE.SpotLight>(null);
 
   // Cinematic floor sweep targets moving smoothly across the arena floor
-  const sweepTarget1 = useMemo(() => {
-    const obj = new THREE.Object3D();
-    obj.position.set(0, 0, 0);
-    return obj;
-  }, []);
+  const sweepTarget1Ref = useRef<THREE.Object3D>(null);
+  const sweepTarget2Ref = useRef<THREE.Object3D>(null);
 
-  const sweepTarget2 = useMemo(() => {
-    const obj = new THREE.Object3D();
-    obj.position.set(0, 0, 0);
-    return obj;
+  useEffect(() => {
+    if (sweepSpot1Ref.current && sweepTarget1Ref.current) {
+      sweepSpot1Ref.current.target = sweepTarget1Ref.current;
+    }
+    if (sweepSpot2Ref.current && sweepTarget2Ref.current) {
+      sweepSpot2Ref.current.target = sweepTarget2Ref.current;
+    }
   }, []);
 
   useFrame(({ clock }) => {
@@ -30,21 +30,25 @@ export function SceneLighting() {
     }
 
     // Sweep 1: Glides in smooth Lissajous figure across left & right wings
-    sweepTarget1.position.x = Math.sin(time * 0.45) * 9.2;
-    sweepTarget1.position.z = Math.cos(time * 0.35) * 5.2 - 2.5;
-    sweepTarget1.position.y = 0;
+    if (sweepTarget1Ref.current) {
+      sweepTarget1Ref.current.position.x = Math.sin(time * 0.45) * 9.2;
+      sweepTarget1Ref.current.position.z = Math.cos(time * 0.35) * 5.2 - 2.5;
+      sweepTarget1Ref.current.position.y = 0;
+    }
 
     // Sweep 2: Counter-sweeps the rear amphitheater and corner bays
-    sweepTarget2.position.x = -Math.sin(time * 0.38) * 8.8;
-    sweepTarget2.position.z = -Math.cos(time * 0.28) * 4.8 - 3.5;
-    sweepTarget2.position.y = 0;
+    if (sweepTarget2Ref.current) {
+      sweepTarget2Ref.current.position.x = -Math.sin(time * 0.38) * 8.8;
+      sweepTarget2Ref.current.position.z = -Math.cos(time * 0.28) * 4.8 - 3.5;
+      sweepTarget2Ref.current.position.y = 0;
+    }
   });
 
   return (
     <>
       {/* Moving sweep targets for the floor searchlights */}
-      <primitive object={sweepTarget1} />
-      <primitive object={sweepTarget2} />
+      <object3D ref={sweepTarget1Ref} />
+      <object3D ref={sweepTarget2Ref} />
 
       {/* Deep, moody ambient fill to keep the scene cinematic */}
       <ambientLight intensity={0.18} color="#161018" />
@@ -82,7 +86,6 @@ export function SceneLighting() {
       {/* Primary Cinematic Sweeping Floor SpotLight (Amber Moving Head) */}
       <spotLight
         ref={sweepSpot1Ref}
-        target={sweepTarget1}
         position={[-4, 11.5, -1.0]}
         intensity={34.0}
         color="#FFA618"
@@ -95,7 +98,6 @@ export function SceneLighting() {
       {/* Secondary Counter-Sweeping Floor SpotLight (Warm Golden Moving Head) */}
       <spotLight
         ref={sweepSpot2Ref}
-        target={sweepTarget2}
         position={[4, 11.5, -1.0]}
         intensity={28.0}
         color="#FFBD38"

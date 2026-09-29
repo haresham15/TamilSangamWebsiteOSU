@@ -168,6 +168,15 @@ export default function JoinPage() {
 
   return (
     <main className="min-h-screen bg-[#050201] text-white selection:bg-[#55CCA2] selection:text-[#050201]">
+      {/* WCAG AA 2.4.1 Bypass Blocks: Accessible skip link for keyboard & assistive tech */}
+      <a
+        href="#membership-form"
+        onClick={handleSkipToForm}
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#55CCA2] focus:text-[#050201] focus:font-semibold focus:rounded-md focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-white"
+      >
+        {locale === "ta" ? "விண்ணப்ப படிவத்திற்கு நேரடியாக தாவவும்" : "Skip directly to membership form"}
+      </a>
+
       {/* ========================================================================= */}
       {/* PHASE 1: 70dvh HYBRID HERO WRAPPER & SEAMLESS GRADIENT HANDOFF            */}
       {/* ========================================================================= */}
@@ -175,12 +184,12 @@ export default function JoinPage() {
         aria-label="Nanban Campus Gates 3D Viewport"
         className="relative w-full overflow-hidden bg-[#050201]"
       >
-        {/* Crucial CSS Blend: WebkitMaskImage linear-gradient fades out canvas at bottom */}
+        {/* Crucial CSS Blend: WebkitMaskImage linear-gradient fades out canvas at bottom (Strict 65% handoff) */}
         <div
           className="w-full h-full"
           style={{
-            WebkitMaskImage: "linear-gradient(to bottom, black 82%, transparent 100%)",
-            maskImage: "linear-gradient(to bottom, black 82%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 65%, transparent 100%)",
+            maskImage: "linear-gradient(to bottom, black 65%, transparent 100%)",
           }}
         >
           <JoinHeroCanvas />
@@ -191,12 +200,12 @@ export default function JoinPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* PHASE 1: FORM DOM (min-h-screen Tailwind CSS Membership Form)             */}
+      {/* PHASE 1: FORM DOM (min-h-screen Brutalist Console Membership Form)        */}
       {/* ========================================================================= */}
       <div id="membership-form" className="min-h-screen relative z-20 w-full max-w-4xl mx-auto px-4 sm:px-6 pt-8 pb-28">
         {/* Section Headline */}
         <header className="mb-10 text-center sm:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-none border border-amber-500/40 bg-[#120a06] text-amber-300 text-xs font-mono uppercase tracking-widest mb-4">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span>{locale === "ta" ? "100% இலவச உறுப்பினர் சேர்க்கை" : "100% Free Membership · No Dues"}</span>
           </div>
@@ -210,10 +219,10 @@ export default function JoinPage() {
           </p>
         </header>
 
-        {/* Multi-Step Card Container */}
-        <div className="rounded-2xl border border-neutral-800 bg-[#0d0907]/90 backdrop-blur-xl shadow-2xl p-6 sm:p-10">
+        {/* Multi-Step Card Container: Sharp Brutalist Architectural Block */}
+        <div className="rounded-none border-2 border-white/20 bg-[#050201] p-6 sm:p-10 shadow-[6px_6px_0px_#250d38]">
           {/* Step Indicator Bar */}
-          <div className="flex items-center justify-between mb-8 pb-6 border-b border-neutral-800">
+          <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
             {[
               { num: 1, label: locale === "ta" ? "தனிப்பட்ட விவரங்கள்" : "Identity" },
               { num: 2, label: locale === "ta" ? "கல்வி & பாதை" : "Academic & Track" },
@@ -221,19 +230,19 @@ export default function JoinPage() {
             ].map((s) => (
               <div key={s.num} className="flex items-center gap-2 sm:gap-3">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center font-mono text-xs font-bold transition-colors ${
+                  className={`w-7 h-7 rounded-none flex items-center justify-center font-mono text-xs font-bold transition-colors ${
                     currentStep === s.num
-                      ? "bg-[#55CCA2] text-[#050201] ring-4 ring-[#55CCA2]/20"
+                      ? "bg-[#55CCA2] text-[#050201] border-2 border-[#55CCA2] shadow-[2px_2px_0px_#ffffff]"
                       : currentStep > s.num
-                      ? "bg-amber-500/30 text-amber-200 border border-amber-400/50"
-                      : "bg-neutral-800 text-neutral-500"
+                      ? "bg-amber-500/20 text-amber-300 border border-amber-400/50"
+                      : "bg-[#141211] text-neutral-500 border border-neutral-700"
                   }`}
                 >
-                  {currentStep > s.num ? <Check className="w-4 h-4" /> : s.num}
+                  {currentStep > s.num ? <Check className="w-3.5 h-3.5" /> : s.num}
                 </div>
                 <span
-                  className={`text-xs font-medium hidden sm:inline ${
-                    currentStep === s.num ? "text-white font-semibold" : "text-neutral-400"
+                  className={`text-xs font-medium font-mono hidden sm:inline ${
+                    currentStep === s.num ? "text-white font-bold" : "text-neutral-400"
                   }`}
                 >
                   {s.label}
@@ -245,8 +254,8 @@ export default function JoinPage() {
           {/* Submission Success State */}
           {submitted ? (
             <div className="py-12 text-center flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-[#55CCA2]/20 border border-[#55CCA2] flex items-center justify-center text-[#55CCA2] mb-6">
-                <CheckCircle2 className="w-8 h-8" />
+              <div className="w-14 h-14 rounded-none border-2 border-[#55CCA2] bg-[#55CCA2]/10 flex items-center justify-center text-[#55CCA2] mb-6 shadow-[4px_4px_0px_#55CCA2]">
+                <CheckCircle2 className="w-7 h-7" />
               </div>
               <h3 className="text-2xl font-bold font-display text-white mb-2">
                 {locale === "ta" ? "வரவேற்கிறோம்! உங்கள் விண்ணப்பம் பெறப்பட்டது" : "Welcome to Tamil Sangam!"}
@@ -265,7 +274,7 @@ export default function JoinPage() {
                   setEmail("");
                   setMajor("");
                 }}
-                className="px-6 py-2.5 rounded-lg bg-neutral-800 text-neutral-200 text-xs font-mono uppercase tracking-wider hover:bg-neutral-700 transition-colors"
+                className="px-6 py-2.5 rounded-none border border-neutral-700 bg-neutral-900 text-neutral-200 text-xs font-mono uppercase tracking-wider hover:bg-neutral-800 transition-colors cursor-pointer"
               >
                 {locale === "ta" ? "மற்றொரு பதிவு சமர்ப்பிக்கவும்" : "Submit Another Application"}
               </button>
@@ -273,7 +282,7 @@ export default function JoinPage() {
           ) : (
             <form onSubmit={handleFormSubmit} noValidate>
               {stepError && (
-                <div className="mb-6 p-4 rounded-xl bg-red-950/40 border border-red-500/50 text-red-200 text-xs flex items-center gap-2">
+                <div className="mb-6 p-4 rounded-none bg-red-950/40 border border-red-500/50 text-red-200 text-xs flex items-center gap-2 font-mono">
                   <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
                   <span>{stepError}</span>
                 </div>
@@ -296,7 +305,7 @@ export default function JoinPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Brinda Murugan"
-                      className="w-full px-4 py-3 rounded-xl bg-neutral-900/90 border border-neutral-700 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-[#55CCA2] focus:ring-1 focus:ring-[#55CCA2] transition-colors"
+                      className="w-full px-4 py-3 rounded-none bg-[#090b14] border border-white/20 text-white placeholder-neutral-500 text-xs font-mono focus:outline-none focus:border-[#55CCA2] transition-colors"
                     />
                   </div>
 
@@ -314,7 +323,7 @@ export default function JoinPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="name.#@osu.edu or user@gmail.com"
-                      className="w-full px-4 py-3 rounded-xl bg-neutral-900/90 border border-neutral-700 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-[#55CCA2] focus:ring-1 focus:ring-[#55CCA2] transition-colors"
+                      className="w-full px-4 py-3 rounded-none bg-[#090b14] border border-white/20 text-white placeholder-neutral-500 text-xs font-mono focus:outline-none focus:border-[#55CCA2] transition-colors"
                     />
                   </div>
                 </div>
@@ -338,7 +347,7 @@ export default function JoinPage() {
                         value={major}
                         onChange={(e) => setMajor(e.target.value)}
                         placeholder="e.g. Computer Science & Engineering"
-                        className="w-full px-4 py-3 rounded-xl bg-neutral-900/90 border border-neutral-700 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-[#55CCA2] focus:ring-1 focus:ring-[#55CCA2] transition-colors"
+                        className="w-full px-4 py-3 rounded-none bg-[#090b14] border border-white/20 text-white placeholder-neutral-500 text-xs font-mono focus:outline-none focus:border-[#55CCA2] transition-colors"
                       />
                     </div>
 
@@ -353,7 +362,7 @@ export default function JoinPage() {
                         id="student-year"
                         value={gradYear}
                         onChange={(e) => setGradYear(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl bg-neutral-900/90 border border-neutral-700 text-white text-sm focus:outline-none focus:border-[#55CCA2] focus:ring-1 focus:ring-[#55CCA2] transition-colors"
+                        className="w-full px-4 py-3 rounded-none bg-[#090b14] border border-white/20 text-white text-xs font-mono focus:outline-none focus:border-[#55CCA2] transition-colors"
                       >
                         <option value="2025">2025 (Senior)</option>
                         <option value="2026">2026 (Junior)</option>
@@ -395,14 +404,14 @@ export default function JoinPage() {
                           key={t.id}
                           type="button"
                           onClick={() => setMembershipType(t.id as "general" | "performer" | "committee")}
-                          className={`p-4 rounded-xl text-left border transition-all ${
+                          className={`p-4 rounded-none text-left border transition-all cursor-pointer ${
                             membershipType === t.id
-                              ? "bg-[#55CCA2]/10 border-[#55CCA2] text-white ring-2 ring-[#55CCA2]/30"
-                              : "bg-neutral-900/60 border-neutral-800 text-neutral-400 hover:border-neutral-700"
+                              ? "bg-[#55CCA2]/10 border-[#55CCA2] text-white shadow-[3px_3px_0px_#55CCA2]"
+                              : "bg-[#090b14] border-white/15 text-neutral-400 hover:border-white/30"
                           }`}
                         >
-                          <p className="font-semibold text-sm mb-1 text-white">{t.title}</p>
-                          <p className="text-xs text-neutral-400">{t.desc}</p>
+                          <p className="font-bold text-sm mb-1 text-white font-display">{t.title}</p>
+                          <p className="text-xs text-neutral-400 font-body">{t.desc}</p>
                         </button>
                       ))}
                     </div>
@@ -422,7 +431,7 @@ export default function JoinPage() {
                         id="performer-discipline"
                         value={performerDiscipline}
                         onChange={(e) => setPerformerDiscipline(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl bg-neutral-900/90 border border-neutral-700 text-white text-sm focus:outline-none focus:border-[#55CCA2] focus:ring-1 focus:ring-[#55CCA2] transition-colors"
+                        className="w-full px-4 py-3 rounded-none bg-[#090b14] border border-white/20 text-white text-xs font-mono focus:outline-none focus:border-[#55CCA2] transition-colors"
                       >
                         <option value="Aatam (Dance)">Aatam (Tamil Cinematic / Hip-Hop Dance Team)</option>
                         <option value="Classical Bharatanatyam">Classical Bharatanatyam / Carnatic Vocal</option>
@@ -453,10 +462,10 @@ export default function JoinPage() {
                             key={comm}
                             type="button"
                             onClick={() => toggleCommittee(comm)}
-                            className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all ${
+                            className={`px-3.5 py-2 rounded-none text-xs font-mono transition-all cursor-pointer border ${
                               active
-                                ? "bg-[#55CCA2] text-[#050201] font-bold shadow-[0_0_12px_rgba(85,204,162,0.4)]"
-                                : "bg-neutral-900 border border-neutral-700 text-neutral-300 hover:border-neutral-500"
+                                ? "bg-[#55CCA2] text-[#050201] font-bold border-[#55CCA2] shadow-[2px_2px_0px_#ffffff]"
+                                : "bg-[#090b14] border-white/20 text-neutral-300 hover:border-white/50"
                             }`}
                           >
                             {active ? `✓ ${comm}` : `+ ${comm}`}
@@ -476,12 +485,12 @@ export default function JoinPage() {
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
                       placeholder="Tell us what you are most excited about..."
-                      className="w-full px-4 py-3 rounded-xl bg-neutral-900/90 border border-neutral-700 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-[#55CCA2] focus:ring-1 focus:ring-[#55CCA2] transition-colors resize-none"
+                      className="w-full px-4 py-3 rounded-none bg-[#090b14] border border-white/20 text-white placeholder-neutral-500 text-xs font-mono focus:outline-none focus:border-[#55CCA2] transition-colors resize-none"
                     />
                   </div>
 
                   {submitError && (
-                    <div className="p-4 rounded-xl bg-red-950/40 border border-red-500/50 text-red-200 text-xs flex items-center gap-2">
+                    <div className="p-4 rounded-none bg-red-950/40 border border-red-500/50 text-red-200 text-xs flex items-center gap-2 font-mono">
                       <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
                       <span>{submitError}</span>
                     </div>
@@ -490,12 +499,12 @@ export default function JoinPage() {
               )}
 
               {/* Form Navigation Controls */}
-              <div className="flex items-center justify-between pt-8 mt-8 border-t border-neutral-800">
+              <div className="flex items-center justify-between pt-8 mt-8 border-t border-white/10">
                 {currentStep > 1 ? (
                   <button
                     type="button"
                     onClick={handlePrevStep}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-neutral-700 text-neutral-300 text-xs font-mono uppercase tracking-wider hover:bg-neutral-800 transition-colors"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-none border border-white/20 text-neutral-300 text-xs font-mono uppercase tracking-wider hover:bg-white/5 transition-colors cursor-pointer"
                   >
                     <ArrowLeft className="w-4 h-4" />
                     <span>{locale === "ta" ? "முந்தைய படி" : "Back"}</span>
@@ -508,7 +517,7 @@ export default function JoinPage() {
                   <button
                     type="button"
                     onClick={handleNextStep}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#6ee7b7] focus:outline-none focus:ring-2 focus:ring-[#55CCA2] transition-colors"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-none bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#6ee7b7] focus:outline-none focus:ring-2 focus:ring-white transition-all cursor-pointer shadow-[3px_3px_0px_#ffffff] hover:translate-x-0.5 hover:translate-y-0.5"
                   >
                     <span>{locale === "ta" ? "அடுத்த படி" : "Next Step"}</span>
                     <ArrowRight className="w-4 h-4" />
@@ -517,7 +526,7 @@ export default function JoinPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#6ee7b7] focus:outline-none focus:ring-2 focus:ring-[#55CCA2] transition-all disabled:opacity-50 shadow-[0_0_24px_rgba(85,204,162,0.4)]"
+                    className="inline-flex items-center gap-2 px-8 py-3 rounded-none bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#6ee7b7] focus:outline-none focus:ring-2 focus:ring-white transition-all disabled:opacity-50 cursor-pointer shadow-[4px_4px_0px_#ffffff] hover:translate-x-0.5 hover:translate-y-0.5"
                   >
                     {isSubmitting ? (
                       <>

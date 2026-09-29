@@ -145,7 +145,7 @@ END:VCALENDAR`;
                   <span className="text-xs font-mono font-bold text-[#55CCA2] w-24">
                     {item.time}
                   </span>
-                  <span className="text-xs sm:text-sm text-white font-medium flex-1 text-left font-sans">
+                  <span className="text-xs sm:text-sm text-white font-medium flex-1 text-left font-body">
                     {locale === "ta" ? item.activityTa : item.activityEn}
                   </span>
                 </div>
@@ -372,7 +372,7 @@ END:VCALENDAR`;
                       value={ticketName}
                       onChange={(e) => setTicketName(e.target.value)}
                       placeholder="Your Full Name"
-                      className="w-full px-4 py-2.5 bg-black/50 border-2 border-white/20 text-white text-xs outline-none focus:border-[#55CCA2] font-sans"
+                      className="w-full px-4 py-2.5 bg-black/50 border-2 border-white/20 text-white text-xs outline-none focus:border-[#55CCA2] font-mono"
                     />
                   </div>
 
@@ -388,7 +388,7 @@ END:VCALENDAR`;
                       value={ticketEmail}
                       onChange={(e) => setTicketEmail(e.target.value)}
                       placeholder="name.#@buckeyemail.osu.edu"
-                      className="w-full px-4 py-2.5 bg-black/50 border-2 border-white/20 text-white text-xs outline-none focus:border-[#55CCA2] font-sans"
+                      className="w-full px-4 py-2.5 bg-black/50 border-2 border-white/20 text-white text-xs outline-none focus:border-[#55CCA2] font-mono"
                     />
                   </div>
 
@@ -401,7 +401,7 @@ END:VCALENDAR`;
                       name="ticket_count"
                       value={ticketCount}
                       onChange={(e) => setTicketCount(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-[#0f0b18] border-2 border-white/20 text-white text-xs outline-none focus:border-[#55CCA2] font-sans"
+                      className="w-full px-4 py-2.5 bg-[#0f0b18] border-2 border-white/20 text-white text-xs outline-none focus:border-[#55CCA2] font-mono"
                     >
                       <option value="1">1 Person (Individual)</option>
                       <option value="2">2 People</option>

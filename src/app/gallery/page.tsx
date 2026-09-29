@@ -24,23 +24,7 @@ import {
   Music,
 } from "lucide-react";
 
-// Dynamically load 3D Vaaranam Aayiram ECR Acoustic Hero without SSR
-const GalleryHeroCanvas = dynamic(
-  () => import("@/components/gallery/GalleryHeroCanvas").then((m) => m.GalleryHeroCanvas),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-[70dvh] bg-[#FF9D5C] flex flex-col items-center justify-center text-[#2A1005] font-mono text-xs gap-3 border-b border-[#C4511F]/30">
-        <div className="flex items-center gap-2">
-          <Music className="w-4 h-4 text-[#2A1005] animate-pulse" />
-          <span className="tracking-widest uppercase">
-            TUNING 6 ACOUSTIC GUITAR STRINGS · ECR GOLDEN HOUR...
-          </span>
-        </div>
-      </div>
-    ),
-  }
-);
+import { GalleryHeroCanvas } from "@/components/gallery/GalleryHeroCanvas";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -149,28 +133,26 @@ export default function GalleryPage() {
 
   return (
     <div className="w-full bg-[#FFFDF8] min-h-screen text-left font-body">
-      {/* 3D Vaaranam Aayiram ECR Acoustic Hero Container */}
-      <div
-        className="relative w-full overflow-hidden"
-        style={{
-          WebkitMaskImage:
-            "linear-gradient(to bottom, black 0%, black 75%, transparent 100%)",
-          maskImage:
-            "linear-gradient(to bottom, black 0%, black 75%, transparent 100%)",
+      {/* 3D Vaaranam Aayiram ECR Acoustic Hero */}
+      <GalleryHeroCanvas
+        onSelectMemory={(mem) => {
+          playClick();
+          const match = allPhotos.find(
+            (p) => p.albumSlug === mem.albumSlug || p.titleEn.toLowerCase().includes(mem.event.toLowerCase())
+          );
+          if (match) {
+            setSelectedPhoto(match);
+          } else if (allPhotos.length > 0) {
+            setSelectedPhoto(allPhotos[0]);
+          }
         }}
-      >
-        <GalleryHeroCanvas
-          onFinaleComplete={() => {
-            const vault = document.getElementById("gallery-vault-content");
-            if (vault) {
-              vault.scrollIntoView({ behavior: "smooth" });
-            }
-          }}
-        />
-
-        {/* Phase 3: Token-driven OKLCH DOM bridge to #FFFDF8 with seamless 28% height */}
-        <HeroToContentBridge theme="gallery" heightPct={28} />
-      </div>
+        onFinaleComplete={() => {
+          const vault = document.getElementById("gallery-vault-content");
+          if (vault) {
+            vault.scrollIntoView({ behavior: "smooth" });
+          }
+        }}
+      />
 
       <div id="gallery-vault-content" className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-24 text-left font-body">
         {/* Header with High-Contrast Deep Plum Brand Typography */}

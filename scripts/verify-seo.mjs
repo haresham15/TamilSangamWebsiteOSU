@@ -14,7 +14,7 @@ async function checkPage(path) {
       try {
         const parsed = JSON.parse(match[1]);
         schemas.push(parsed["@type"]);
-      } catch (e) {
+      } catch {
         schemas.push(`JSON_PARSE_ERROR`);
       }
     }

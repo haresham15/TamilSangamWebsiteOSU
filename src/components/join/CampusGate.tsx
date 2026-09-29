@@ -24,13 +24,7 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
   const stoneBumpTexture = useMemo(() => createStoneBumpTexture(), []);
   const ironBumpTexture = useMemo(() => createIronBumpTexture(), []);
 
-  React.useEffect(() => {
-    return () => {
-      brickTexture?.dispose();
-      stoneBumpTexture?.dispose();
-      ironBumpTexture?.dispose();
-    };
-  }, [brickTexture, stoneBumpTexture, ironBumpTexture]);
+
 
   useMemo(() => {
     [leftTexture, rightTexture].forEach((tex) => {
@@ -164,6 +158,32 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
       }),
     [stoneBumpTexture]
   );
+
+  React.useEffect(() => {
+    return () => {
+      brickTexture?.dispose();
+      stoneBumpTexture?.dispose();
+      ironBumpTexture?.dispose();
+      leftLeafGeo?.dispose();
+      rightLeafGeo?.dispose();
+      ironMaterial?.dispose();
+      leftLatticeMaterial?.dispose();
+      rightLatticeMaterial?.dispose();
+      brickMaterial?.dispose();
+      stoneCapMaterial?.dispose();
+    };
+  }, [
+    brickTexture,
+    stoneBumpTexture,
+    ironBumpTexture,
+    leftLeafGeo,
+    rightLeafGeo,
+    ironMaterial,
+    leftLatticeMaterial,
+    rightLatticeMaterial,
+    brickMaterial,
+    stoneCapMaterial,
+  ]);
 
   return (
     <group position={[0, 0, 0]}>

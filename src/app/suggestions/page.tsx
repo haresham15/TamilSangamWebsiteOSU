@@ -8,7 +8,6 @@ import {
   MapPin,
   ArrowDown,
   Layers,
-  ShieldCheck,
   Mail,
 } from "lucide-react";
 import { useLocale } from "@/context/LocaleContext";
@@ -91,7 +90,7 @@ export default function SuggestionsPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#0a0e22] text-[#f8f6f0] selection:bg-[#FFC526] selection:text-[#12183c]">
+    <div className="relative min-h-screen bg-[#0F050A] text-[#f8f6f0] selection:bg-[#FFB84D] selection:text-[#150914]">
       {/* 1. Sticky Hero Container with 3D Blueprint Extrusion */}
       <section
         ref={containerRef}
@@ -120,10 +119,10 @@ export default function SuggestionsPage() {
             pointerEvents: scrollProgress > 0.15 ? "none" : "auto",
           }}
         >
-          <div className="w-full bg-[#0b1026]/80 border border-[#3b4c74]/70 px-5 py-3.5 sm:px-6 sm:py-4 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.6)] text-center space-y-1.5">
+          <div className="w-full bg-[#150914]/85 border border-[#4A2038]/70 px-5 py-3.5 sm:px-6 sm:py-4 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.6)] text-center space-y-1.5">
             {/* Eyebrow Badge */}
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-[#141b3a]/90 border border-[#55CCA2]/60 text-[#55CCA2] text-[10px] font-mono font-bold uppercase tracking-wider mx-auto">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#55CCA2] animate-pulse" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-[#241021]/90 border border-[#FFB84D]/60 text-[#FFB84D] text-[10px] font-mono font-bold uppercase tracking-wider mx-auto">
+              <span className="w-1.5 h-1.5 rounded-none bg-[#FFB84D] animate-pulse" />
               <span>{locale === "ta" ? "சமூக வரைபடம் · ஓஹியோ தமிழ்ச் சங்கம்" : "Community Blueprint · OSU Tamil Sangam"}</span>
             </div>
 
@@ -132,11 +131,11 @@ export default function SuggestionsPage() {
               {locale === "ta" ? "ஓஹியோவில் நம் சமூகம் படைப்போம்" : "Building Our Community at Ohio State"}
             </h1>
 
-            {/* Metaphor Subtitle & How Users Can Help With Suggestions */}
+            {/* Metaphor Subtitle */}
             <p className="text-xs text-slate-300 font-body leading-relaxed max-w-md mx-auto">
               {locale === "ta"
-                ? "ஒரு வரைபடம் போல, உங்கள் கருத்துக்களாலேயே நம் சமூகம் உருவாகிறது. கீழே பரிந்துரைகளைப் பகிருங்கள்."
-                : "Just as an iconic structure rises line by line, our community is built by your voices. Scroll to construct · Share ideas below."}
+                ? "ஒரு வரைபடம் போல, உங்கள் கருத்துக்களாலேயே நம் சமூகம் உருவாகிறது."
+                : "Just as an iconic structure rises line by line, our community is built by your voices and ideas."}
             </p>
           </div>
         </div>
@@ -144,9 +143,9 @@ export default function SuggestionsPage() {
         {/* Active Pin Callout Card Overlay (if a pin is clicked or active) */}
         {activePin && (
           <div className="relative z-30 max-w-md mx-auto my-auto px-4 pointer-events-auto animate-in fade-in zoom-in-95 duration-200">
-            <div className="bg-[#12183c]/95 border-2 border-[#FFC526] p-5 shadow-[6px_6px_0px_#FFC526] backdrop-blur-lg">
-              <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#2d3b66]">
-                <div className="inline-flex items-center gap-2 text-xs font-mono font-bold text-[#FFC526]">
+            <div className="bg-[#150914]/95 border-2 border-[#FFB84D] p-5 shadow-[6px_6px_0px_#8B5A2B] backdrop-blur-lg">
+              <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#4A2038]">
+                <div className="inline-flex items-center gap-2 text-xs font-mono font-bold text-[#FFB84D]">
                   <MapPin className="w-3.5 h-3.5" />
                   <span>{locale === "ta" ? activePin.labelTa : activePin.labelEn}</span>
                 </div>
@@ -164,7 +163,7 @@ export default function SuggestionsPage() {
               <button
                 type="button"
                 onClick={scrollToForm}
-                className="w-full py-2 bg-[#55CCA2] hover:bg-[#6be4b8] text-[#12183c] font-mono text-xs font-bold uppercase tracking-wider transition-colors"
+                className="w-full py-2 bg-[#FFB84D] hover:bg-[#ffc978] text-[#150914] font-mono text-xs font-bold uppercase tracking-wider transition-colors"
               >
                 Draft Suggestion for this Location →
               </button>
@@ -172,17 +171,13 @@ export default function SuggestionsPage() {
           </div>
         )}
 
-        {/* Bottom Scroll Indicator & Jump-to-Form Trigger */}
-        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pb-8 flex items-center justify-between pointer-events-auto">
-          <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#0b1026]/95 border-2 border-[#3b4c74] text-[11px] font-mono text-slate-200 backdrop-blur-xl shadow-[4px_4px_0px_rgba(10,14,34,0.9)]">
-            <Layers className="w-4 h-4 text-[#55CCA2]" />
-            <span>{locale === "ta" ? "முப்பரிமாணக் கூட்டு வரைபடம் · உருட்டிப் பார்க்கவும்" : "Interactive 3D Community Blueprint · Scroll to construct · Click pins to explore"}</span>
-          </div>
+        {/* Bottom Jump-to-Form Trigger */}
+        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pb-8 flex items-center justify-end pointer-events-auto">
 
           <button
             type="button"
             onClick={scrollToForm}
-            className="ml-auto mb-16 sm:mb-0 inline-flex items-center gap-2 px-4 py-2 bg-[#0b1026]/95 hover:bg-[#141b3a] border-2 border-[#FFC526] text-[#FFC526] text-xs font-mono font-bold uppercase tracking-wider backdrop-blur-xl transition-all cursor-pointer shadow-[4px_4px_0px_#FFC526]"
+            className="ml-auto mb-16 sm:mb-0 inline-flex items-center gap-2 px-4 py-2 bg-[#150914]/95 hover:bg-[#241021] border-2 border-[#FFB84D] text-[#FFB84D] text-xs font-mono font-bold uppercase tracking-wider backdrop-blur-xl transition-all cursor-pointer shadow-[4px_4px_0px_#8B5A2B]"
           >
             <span>Jump to Suggestion Box</span>
             <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
@@ -190,7 +185,7 @@ export default function SuggestionsPage() {
         </div>
       </section>
 
-      {/* Color Gradient Transition from 3D Blueprint (#0b1026) to Form Section (#0a0e22) */}
+      {/* Color Gradient Transition from 3D Blueprint (#0F050A) to Form Section (#0F050A) */}
       <HeroGradientTransition variant="suggestions" className="-mt-14 sm:-mt-20 z-10" />
 
       {/* 2. Interactive Suggestion Box Section */}
@@ -200,8 +195,8 @@ export default function SuggestionsPage() {
       >
         {/* Editorial Explainer Banner */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 bg-[#0f1536] border-2 border-[#2d3b66] space-y-2 shadow-[4px_4px_0px_#12183c]">
-            <div className="w-8 h-8 bg-[#55CCA2]/20 border border-[#55CCA2] text-[#55CCA2] flex items-center justify-center font-mono font-bold text-xs">
+          <div className="p-6 bg-[#150914] border-2 border-[#4A2038] space-y-2 shadow-[4px_4px_0px_#0F050A]">
+            <div className="w-8 h-8 bg-[#FFB84D]/20 border border-[#FFB84D] text-[#FFB84D] flex items-center justify-center font-mono font-bold text-xs">
               01
             </div>
             <h4 className="text-base font-bold font-display text-white">
@@ -212,8 +207,8 @@ export default function SuggestionsPage() {
             </p>
           </div>
 
-          <div className="p-6 bg-[#0f1536] border-2 border-[#2d3b66] space-y-2 shadow-[4px_4px_0px_#12183c]">
-            <div className="w-8 h-8 bg-[#FFC526]/20 border border-[#FFC526] text-[#FFC526] flex items-center justify-center font-mono font-bold text-xs">
+          <div className="p-6 bg-[#150914] border-2 border-[#4A2038] space-y-2 shadow-[4px_4px_0px_#0F050A]">
+            <div className="w-8 h-8 bg-[#FFB84D]/20 border border-[#FFB84D] text-[#FFB84D] flex items-center justify-center font-mono font-bold text-xs">
               02
             </div>
             <h4 className="text-base font-bold font-display text-white">
@@ -221,12 +216,12 @@ export default function SuggestionsPage() {
             </h4>
             <p className="text-xs text-slate-300 font-body leading-relaxed">
               Your submission routes directly to{" "}
-              <span className="font-mono text-[#FFC526]">{CONTACT_EMAIL}</span> and is discussed at our weekly executive meeting.
+              <span className="font-mono text-[#FFB84D]">{CONTACT_EMAIL}</span> and is discussed at our weekly executive meeting.
             </p>
           </div>
 
-          <div className="p-6 bg-[#0f1536] border-2 border-[#2d3b66] space-y-2 shadow-[4px_4px_0px_#12183c]">
-            <div className="w-8 h-8 bg-sky-500/20 border border-sky-400 text-sky-400 flex items-center justify-center font-mono font-bold text-xs">
+          <div className="p-6 bg-[#150914] border-2 border-[#4A2038] space-y-2 shadow-[4px_4px_0px_#0F050A]">
+            <div className="w-8 h-8 bg-[#8B5A2B]/25 border border-[#8B5A2B] text-[#FFB84D] flex items-center justify-center font-mono font-bold text-xs">
               03
             </div>
             <h4 className="text-base font-bold font-display text-white">
@@ -251,7 +246,7 @@ export default function SuggestionsPage() {
         />
 
         {/* Official Governance & University Entity Disclaimer */}
-        <div className="p-6 sm:p-8 bg-[#0a0e24] border-2 border-[#2d3b66] space-y-3">
+        <div className="p-6 sm:p-8 bg-[#150914] border-2 border-[#4A2038] space-y-3">
           <h4 className="text-sm font-bold text-white font-display">
             University Disclosure
           </h4>
@@ -260,14 +255,14 @@ export default function SuggestionsPage() {
             {OFFICIAL_DISCLAIMER}
           </p>
 
-          <div className="pt-2 flex flex-wrap items-center gap-6 text-xs font-mono text-slate-400 border-t border-[#1e2954]">
+          <div className="pt-2 flex flex-wrap items-center gap-6 text-xs font-mono text-slate-400 border-t border-[#3D1B2E]">
             <span className="flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-[#55CCA2]" />
+              <Mail className="w-3.5 h-3.5 text-[#FFB84D]" />
               <span>Contact: {CONTACT_EMAIL}</span>
             </span>
             <Link
               href="/about"
-              className="text-[#55CCA2] hover:underline"
+              className="text-[#FFB84D] hover:underline"
             >
               Learn about our constitution & mission →
             </Link>

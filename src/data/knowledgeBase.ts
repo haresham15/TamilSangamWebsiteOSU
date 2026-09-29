@@ -212,13 +212,14 @@ export const BASELINE_KNOWLEDGE: KnowledgeItem[] = [
     titleEn: "TS x TT: Namma Jathara Carnival",
     titleTa: "நம்ம ஜாதரா வசந்தகால திருவிழா",
     contentEn:
-      "A joint spring campus carnival held in March in collaboration with Telugu Thallulu (TT) on the RPAC Plaza and South Oval. Features traditional carnival games, ring toss, food stalls, and an open dance circle to popular Tamil and Telugu tracks.",
+      "A joint spring campus carnival held in March in collaboration with Telugu Tamasha at OSU on the RPAC Plaza and South Oval. Features traditional carnival games, ring toss, food stalls, and an open dance circle to popular Tamil and Telugu tracks.",
     contentTa:
-      "தெலுங்கு தல்லுலு அமைப்போடு இணைந்து நடத்திய வசந்தகால திருவிழா, விளையாட்டுகள் மற்றும் நடன வட்டம்.",
+      "தெலுங்கு தமாஷா அமைப்போடு இணைந்து நடத்திய வசந்தகால திருவிழா, விளையாட்டுகள் மற்றும் நடன வட்டம்.",
     keywords: [
       "jathara",
       "carnival",
-      "telugu thallulu",
+      "telugu tamasha at osu",
+      "telugu tamasha",
       "rpac plaza",
       "games",
       "spring",

@@ -36,14 +36,6 @@ export function EventsSketchfabCanvas() {
       {/* Cinematic Vignette Overlay to blend the iframe edges into our dark background */}
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-[#050200] via-transparent to-[#050200]" />
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#050200] via-transparent to-[#050200]" />
-
-      {/* Notice Overlay */}
-      <div className="absolute bottom-8 left-8 p-4 bg-[#110e0c]/90 text-amber-100 font-mono text-sm border border-amber-500/40 rounded backdrop-blur z-50 max-w-sm pointer-events-none">
-        <p className="text-amber-400 font-bold mb-1">SKETCHFAB EMBED ACTIVE</p>
-        <p className="text-amber-200/80 text-xs">
-          Because this is an iframe, we cannot apply custom 3D lighting, particle physics, or scroll-based camera movements. It acts as an interactive 3D window rather than a native part of the website&apos;s WebGL canvas.
-        </p>
-      </div>
     </div>
   );
 }

@@ -1,12 +1,11 @@
 "use client";
-/* eslint-disable react-compiler/react-compiler */
 
 import React, { Suspense, useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Environment } from "@react-three/drei";
+import { Environment, BakeShadows } from "@react-three/drei";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { useLocale } from "@/context/LocaleContext";
 import { CampusGate } from "./CampusGate";
@@ -29,7 +28,9 @@ export function JoinHeroCanvas() {
   const pinWrapperRef = useRef<HTMLDivElement>(null);
 
   const [inView, setInView] = useState(true);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(() => 
+    typeof window !== "undefined" ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false
+  );
 
   // Synchronized scroll kinematics
   const scrollProgressRef = useRef(0);
@@ -45,13 +46,11 @@ export function JoinHeroCanvas() {
 
   // Listen to prefers-reduced-motion
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-      setReducedMotion(mediaQuery.matches);
-      const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-      mediaQuery.addEventListener("change", handler);
-      return () => mediaQuery.removeEventListener("change", handler);
-    }
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
   }, []);
 
   // IntersectionObserver for frameloop culling
@@ -138,8 +137,8 @@ export function JoinHeroCanvas() {
       <div className="absolute top-20 sm:top-24 left-0 right-0 z-30 px-3 sm:px-6 pointer-events-none">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-2 pointer-events-auto">
           {/* Live Gateway Emblem */}
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#140b08]/85 border border-amber-500/30 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md shrink min-w-0">
-            <span className="w-2 h-2 rounded-full bg-[#55CCA2] animate-pulse shrink-0" />
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#140b08]/85 border border-amber-500/40 rounded-none shadow-[2px_2px_0px_#250d38] backdrop-blur-md shrink min-w-0">
+            <span className="w-2 h-2 rounded-none bg-[#55CCA2] animate-pulse shrink-0" />
             <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-amber-200 truncate">
               {locale === "ta" ? "நண்பன் வாயில் · 2026–2027" : "Nanban Campus Arch · 2026–2027"}
             </span>
@@ -150,7 +149,7 @@ export function JoinHeroCanvas() {
             id="hero-skip-link"
             href="#membership-form"
             onClick={handleSkipToForm}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider rounded-lg shadow-[0_0_20px_rgba(85,204,162,0.35)] hover:bg-[#6ee7b7] active:translate-x-0.5 active:translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-white transition-all cursor-pointer shrink-0 min-h-[44px]"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider rounded-none border-2 border-white shadow-[3px_3px_0px_#ffffff] hover:bg-[#6ee7b7] hover:translate-x-0.5 hover:translate-y-0.5 active:translate-x-1 active:translate-y-1 focus:outline-none focus:ring-2 focus:ring-white transition-all cursor-pointer shrink-0 min-h-[44px]"
           >
             <span>{locale === "ta" ? "இப்போதே இணையுங்கள் ↓" : "Join Now ↓"}</span>
             <span className="text-[10px] opacity-75 font-body hidden md:inline">
@@ -165,7 +164,7 @@ export function JoinHeroCanvas() {
       {/* ================================================================= */}
       <div className="relative w-full h-full">
         <Canvas
-          dpr={[1, 1.5]}
+          dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
           camera={{ position: [0, 2.4, 12.2], fov: 44 }}
           frameloop={inView ? "always" : "demand"}
           gl={{
@@ -223,6 +222,7 @@ export function JoinHeroCanvas() {
           <CraneCameraRig scrollProgressRef={scrollProgressRef} />
 
           <Suspense fallback={null}>
+            <BakeShadows />
             {/* Stone Walkway & Dynamic Gate Shadow Lattice */}
             <ShadowLatticeDecal gateProgressRef={gateProgressRef} />
 
@@ -251,14 +251,6 @@ export function JoinHeroCanvas() {
             </EffectComposer>
           </Suspense>
         </Canvas>
-      </div>
-
-      {/* Scroll Indicator Prompt (fades on scroll) */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-none flex flex-col items-center gap-1.5 opacity-80 text-center">
-        <span className="text-[11px] font-mono uppercase tracking-widest text-amber-200 bg-[#160e0a]/80 px-3 py-1 border border-amber-500/30 rounded-full font-medium shadow-sm backdrop-blur-sm">
-          {locale === "ta" ? "வாயில் வழியாக நுழைய கீழே உருட்டவும்" : "Scroll to step through the gates"}
-        </span>
-        <span className="text-xs text-amber-300 animate-bounce">↓</span>
       </div>
     </div>
   );

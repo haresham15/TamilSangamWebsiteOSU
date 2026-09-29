@@ -2,7 +2,7 @@ import React from "react";
 import { EVENTS, SangamEvent } from "@/data/events";
 import { FAQS } from "@/data/faq";
 import { CURRENT_BOARD } from "@/data/board";
-import { GALLERY_ALBUMS, GalleryAlbum } from "@/data/gallery";
+import { GalleryAlbum } from "@/data/gallery";
 
 /**
  * WebSite Structured Data with Google Sitelinks SearchBox

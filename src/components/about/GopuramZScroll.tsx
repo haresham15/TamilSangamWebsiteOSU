@@ -4,7 +4,6 @@ import React, { useRef, useEffect, useState, useSyncExternalStore } from "react"
 import dynamic from "next/dynamic";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
-import { Compass } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
@@ -93,7 +92,52 @@ const TIERS: TierItem[] = [
   },
 ];
 
-// Optimized abstract cinematic Bronze Rings with lightweight geometry
+// Parametric 3D Sikku Kolam (Brahma Mudi) Curve with wide, gentle, flowing turns
+class KolamKnotCurve extends THREE.Curve<THREE.Vector3> {
+  radius: number;
+  amplitude: number;
+  p: number;
+  q: number;
+  depth: number;
+
+  constructor(radius = 3.0, amplitude = 0.25, p = 3, q = 8, depth = 0.45) {
+    super();
+    this.radius = radius;
+    this.amplitude = amplitude; // Gentle radial oscillation ensures rounded, flowing bends without sharp hairpins
+    this.p = p;
+    this.q = q;
+    this.depth = depth;
+  }
+
+  getPoint(t: number, optionalTarget = new THREE.Vector3()) {
+    // Closed knot loops over p * 2 * PI
+    const u = t * this.p * Math.PI * 2;
+    const quOverP = (this.q / this.p) * u;
+    const cs = Math.cos(quOverP);
+    
+    // Smooth harmonic radial modulation forming 8 lotus-petal loops
+    const r = this.radius * (1 + this.amplitude * cs);
+    const x = r * Math.cos(u);
+    const y = r * Math.sin(u);
+    const z = this.depth * Math.sin(quOverP);
+
+    return optionalTarget.set(x, y, z);
+  }
+}
+
+// Shared memoized geometries and materials for Bronze Kolam rings across all tiers
+// 720 tubular segments & 32 radial segments guarantee silky, mathematically continuous curves with 0 faceting
+const sharedKolamCurve = new KolamKnotCurve(3.0, 0.25, 3, 8, 0.45);
+const sharedKolamGeo = new THREE.TubeGeometry(sharedKolamCurve, 720, 0.07, 32, true);
+const sharedTorusGeo = new THREE.TorusGeometry(4.0, 0.12, 32, 200);
+const sharedInnerRingGeo = new THREE.TorusGeometry(1.85, 0.04, 24, 120);
+const sharedCenterDotGeo = new THREE.SphereGeometry(0.22, 32, 24);
+
+const sharedRingMat = new THREE.MeshStandardMaterial({ color: "#b87333", metalness: 0.8, roughness: 0.2 });
+const sharedKolamMat = new THREE.MeshStandardMaterial({ color: "#c68642", metalness: 0.85, roughness: 0.18 });
+const sharedGoldMat = new THREE.MeshStandardMaterial({ color: "#e6a147", metalness: 0.9, roughness: 0.12 });
+
+// Optimized abstract cinematic Bronze Rings with lightweight shared geometry
 function BronzeRing({
   position,
   scale = 1,
@@ -113,16 +157,30 @@ function BronzeRing({
 
   return (
     <group position={position} rotation={rotation} ref={meshRef}>
-      {/* Outer Torus with optimized radial/tubular segments */}
-      <mesh>
-        <torusGeometry args={[scale * 4, scale * 0.15, 20, 64]} />
-        <meshStandardMaterial color="#b87333" metalness={0.8} roughness={0.2} />
-      </mesh>
-      {/* Inner Decorative Knot */}
-      <mesh rotation={[0, 0, Math.PI / 4]}>
-        <torusKnotGeometry args={[scale * 3.5, scale * 0.05, 96, 12, 3, 8]} />
-        <meshStandardMaterial color="#8b5a2b" metalness={0.85} roughness={0.15} />
-      </mesh>
+      {/* Outer Thiruvachi Torus with shared geometry and uniform scale */}
+      <mesh
+        geometry={sharedTorusGeo}
+        material={sharedRingMat}
+        scale={[scale, scale, scale]}
+      />
+      {/* Inner Concentric Halo */}
+      <mesh
+        geometry={sharedInnerRingGeo}
+        material={sharedRingMat}
+        scale={[scale, scale, scale]}
+      />
+      {/* Central Sacred Pulli Dot (Bindu) */}
+      <mesh
+        geometry={sharedCenterDotGeo}
+        material={sharedGoldMat}
+        scale={[scale, scale, scale]}
+      />
+      {/* Flowing 8-Petal Sikku Kolam 3D Knot with silky-smooth bends */}
+      <mesh
+        geometry={sharedKolamGeo}
+        material={sharedKolamMat}
+        scale={[scale, scale, scale]}
+      />
     </group>
   );
 }
@@ -253,9 +311,7 @@ export function GopuramZScroll() {
   const { isLiteMode } = useLiteMode();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const progressBarRef = useRef<HTMLDivElement>(null);
   const scrollProgressRef = useRef(0);
-  const [activeTierIndex, setActiveTierIndex] = useState(0);
   const [isSectionVisible, setIsSectionVisible] = useState(true);
 
   const mounted = useSyncExternalStore(
@@ -303,14 +359,6 @@ export function GopuramZScroll() {
         anticipatePin: 1,
         onUpdate: (self) => {
           scrollProgressRef.current = self.progress;
-          const newTier = Math.min(
-            TIERS.length - 1,
-            Math.max(0, Math.floor(self.progress * TIERS.length))
-          );
-          setActiveTierIndex((prev) => (prev !== newTier ? newTier : prev));
-          if (progressBarRef.current) {
-            progressBarRef.current.style.width = `${(self.progress * 100).toFixed(1)}%`;
-          }
         },
       });
 
@@ -338,7 +386,7 @@ export function GopuramZScroll() {
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         {mounted && !isLiteMode && (
           <Canvas
-            dpr={[1, 1.5]}
+            dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
             frameloop={isSectionVisible ? "always" : "demand"}
             camera={{ position: [0, 0, 12], fov: 50 }}
             gl={{
@@ -375,22 +423,6 @@ export function GopuramZScroll() {
             <AscendingGopuramCamera scrollProgressRef={scrollProgressRef} isMobile={isMobile} />
           </Canvas>
         )}
-      </div>
-
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pt-16 sm:pt-28 flex items-center justify-end pointer-events-auto">
-        <div className="flex items-center gap-3 text-xs font-mono text-purple-100/95 bg-[#26133b]/90 px-3 py-1.5 border border-purple-300/40 backdrop-blur-md shadow-sm">
-          <span className="flex items-center gap-1.5 text-[#55CCA2]">
-            <Compass className="w-3.5 h-3.5" />
-            <span>Pillar {activeTierIndex + 1} of 5</span>
-          </span>
-          <div className="w-20 sm:w-28 h-1.5 bg-white/15 rounded-full overflow-hidden border border-white/25">
-            <div
-              ref={progressBarRef}
-              className="h-full bg-gradient-to-r from-[#55CCA2] to-[#FFC526]"
-              style={{ width: "0%" }}
-            />
-          </div>
-        </div>
       </div>
     </div>
   );

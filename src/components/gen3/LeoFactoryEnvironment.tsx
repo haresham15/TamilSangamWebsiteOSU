@@ -1344,11 +1344,43 @@ function IndustrialPendantLamp({
   );
 }
 
-// Drifting Forge Sparks & Embers
+const sparkVertexShader = `
+uniform float uTime;
+attribute float aSpeed;
+attribute float aPhase;
+varying float vAlpha;
+
+void main() {
+  vec3 pos = position;
+  float yLift = mod(pos.y + uTime * aSpeed * 0.9, 9.0);
+  pos.y = yLift;
+  pos.x += sin(yLift * 1.5 + aPhase) * 0.25;
+  pos.z += cos(yLift * 1.2 + aPhase) * 0.15;
+
+  vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+  gl_Position = projectionMatrix * mvPosition;
+  gl_PointSize = (20.0 / -mvPosition.z);
+  vAlpha = smoothstep(0.0, 1.0, yLift) * smoothstep(9.0, 7.5, yLift);
+}
+`;
+
+const sparkFragmentShader = `
+varying float vAlpha;
+
+void main() {
+  vec2 coord = gl_PointCoord - vec2(0.5);
+  float dist = length(coord);
+  if (dist > 0.5) discard;
+  float strength = pow(1.0 - dist * 2.0, 1.8);
+  gl_FragColor = vec4(vec3(1.0, 0.65, 0.2), strength * vAlpha * 0.9);
+}
+`;
+
+// Drifting Forge Sparks & Embers (GPU-accelerated GLSL shader)
 function FactorySparks({ count = 140 }) {
   const pointsRef = useRef<THREE.Points>(null);
 
-  const { positions, speeds, phases } = useMemo(() => {
+  const { geometry, material } = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const spd = new Float32Array(count);
     const ph = new Float32Array(count);
@@ -1359,47 +1391,39 @@ function FactorySparks({ count = 140 }) {
       spd[i] = 0.8 + seededRandom(i * 5 + 4) * 1.5;
       ph[i] = seededRandom(i * 5 + 5) * Math.PI * 2;
     }
-    return { positions: pos, speeds: spd, phases: ph };
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute("aSpeed", new THREE.BufferAttribute(spd, 1));
+    geo.setAttribute("aPhase", new THREE.BufferAttribute(ph, 1));
+
+    const mat = new THREE.ShaderMaterial({
+      vertexShader: sparkVertexShader,
+      fragmentShader: sparkFragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+      },
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+
+    return { geometry: geo, material: mat };
   }, [count]);
 
-  useFrame((_, delta) => {
-    if (!pointsRef.current) return;
-    const posAttr = pointsRef.current.geometry.attributes.position;
-    const array = posAttr.array as Float32Array;
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+      material.dispose();
+    };
+  }, [geometry, material]);
 
-    for (let i = 0; i < count; i++) {
-      // Rise upward
-      array[i * 3 + 1] += speeds[i] * delta;
-      // Drift sideways
-      array[i * 3] += Math.sin(array[i * 3 + 1] * 2.0 + phases[i]) * 0.015;
-
-      // Loop back to ground when reaching ceiling
-      if (array[i * 3 + 1] > 9.0) {
-        array[i * 3 + 1] = 0.1;
-        array[i * 3] = (Math.random() - 0.5) * 16;
-        array[i * 3 + 2] = (Math.random() - 0.5) * 14;
-      }
-    }
-    posAttr.needsUpdate = true;
+  useFrame((state) => {
+    material.uniforms.uTime.value = state.clock.getElapsedTime();
   });
 
   return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.065}
-        color="#FFAA33"
-        transparent
-        opacity={0.85}
-        blending={THREE.AdditiveBlending}
-        depthWrite={false}
-      />
-    </points>
+    <points ref={pointsRef} geometry={geometry} material={material} />
   );
 }
 

@@ -281,7 +281,7 @@ export default function HomePage() {
                   TS x TT: Namma Jathara
                 </h3>
                 <p className="text-xs text-[#250d38] font-medium line-clamp-2 leading-relaxed font-body">
-                  A spring campus carnival hosted with Telugu Thallulu featuring outdoor games, music, and food stalls.
+                  A spring campus carnival hosted with Telugu Tamasha at OSU featuring outdoor games, music, and food stalls.
                 </p>
               </div>
             </Link>

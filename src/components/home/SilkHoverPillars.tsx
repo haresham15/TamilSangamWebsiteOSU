@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState, useSyncExternalStore } from "react"
 import Image from "next/image";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
-import { Sparkles, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
 
@@ -302,7 +302,7 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       <div className="relative z-20 space-y-4">
         <div className="flex items-center justify-end">
           <div
-            className="w-3 h-3 rounded-full border border-white/40"
+            className="w-3 h-3 rounded-none border border-white/40"
             style={{ backgroundColor: pillar.accentColor }}
           />
         </div>

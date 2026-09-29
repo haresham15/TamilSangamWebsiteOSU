@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,17 +8,14 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { FAQS, FaqItem } from "@/data/faq";
 import { KnowledgeItem } from "@/data/knowledgeBase";
-import { DEFAULT_BOARD_LINES } from "@/components/splitflap/SplitFlapBoard";
 import { useFaqStore } from "@/store/faqStore";
 import {
   Search,
   ChevronDown,
-  ChevronUp,
   PlusCircle,
   Trash2,
   CheckCircle2,
   Train,
-  ArrowUpRight,
   Sparkles,
   Tag,
   BookOpen,
@@ -27,105 +24,9 @@ import {
   ArrowUp,
 } from "lucide-react";
 import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
+import { SplitFlapMiniHeader } from "@/components/splitflap/SplitFlapMiniHeader";
 
-// Dynamically load 3D split-flap hero canvas without SSR to prevent hydration mismatch
-const HeroSplitFlapCanvas = dynamic(
-  () =>
-    import("@/components/splitflap/HeroSplitFlapCanvas").then(
-      (m) => m.HeroSplitFlapCanvas
-    ),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-[65dvh] bg-[#070504] flex flex-col items-center justify-center text-[#d4af37] font-mono text-xs gap-3 border-b border-[#261d15]">
-        <div className="flex items-center gap-2">
-          <Train className="w-4 h-4 animate-bounce text-[#f59e0b]" />
-          <span className="tracking-widest uppercase">
-            INITIALIZING ALAIPAYUTHEY MECHANICAL SPLIT-FLAP MATRIX...
-          </span>
-        </div>
-      </div>
-    ),
-  }
-);
-
-// ---------------------------------------------------------------------------
-// Text Matrix Utilities for the 10x50 Character Split-Flap Board
-// ---------------------------------------------------------------------------
-
-function wrapText(text: string, maxLen: number): string[] {
-  const words = text.split(" ");
-  const lines: string[] = [];
-  let cur = "";
-  for (const w of words) {
-    if ((cur + (cur ? " " : "") + w).length <= maxLen) {
-      cur += (cur ? " " : "") + w;
-    } else {
-      if (cur) lines.push(cur);
-      cur = w.slice(0, maxLen);
-    }
-  }
-  if (cur) lines.push(cur);
-  return lines;
-}
-
-function formatFaqForBoard(faq: FaqItem): string[] {
-  const cleanQ = faq.questionEn.toUpperCase().replace(/[^A-Z0-9\s.,:!?/'-]/g, "");
-  const cleanA = faq.answerEn.toUpperCase().replace(/[^A-Z0-9\s.,:!?/'-]/g, "");
-
-  const qLines = wrapText(cleanQ, 46);
-  const aLines = wrapText(cleanA, 46);
-
-  return [
-    "★ SOUTHERN RAILWAY · ALAIPAYUTHEY EXPRESS ★",
-    `STATUS: DISPATCH    PLATFORM: 04    CODE: ${faq.id.toUpperCase()}`,
-    "==================================================",
-    `CATEGORY: ${faq.category.toUpperCase().padEnd(38, " ")}`,
-    `Q: ${(qLines[0] || "").slice(0, 47)}`,
-    `   ${(qLines[1] || "").slice(0, 47)}`,
-    "--------------------------------------------------",
-    `A: ${(aLines[0] || "").slice(0, 47)}`,
-    `   ${(aLines[1] || "").slice(0, 47)}`,
-    "==================================================",
-  ];
-}
-
-function formatGuideChapterForBoard(title: string, summary: string): string[] {
-  const cleanT = title.toUpperCase().replace(/[^A-Z0-9\s.,:!?/'-]/g, "");
-  const cleanS = summary.toUpperCase().replace(/[^A-Z0-9\s.,:!?/'-]/g, "");
-
-  const tLines = wrapText(cleanT, 46);
-  const sLines = wrapText(cleanS, 46);
-
-  return [
-    "★ SOUTHERN RAILWAY · ALAIPAYUTHEY EXPRESS ★",
-    "STATUS: DISPATCH    PLATFORM: 04    SECTION: GUIDE",
-    "==================================================",
-    `CHAPTER: ${(tLines[0] || "").slice(0, 41)}`,
-    `         ${(tLines[1] || "").slice(0, 41)}`,
-    "--------------------------------------------------",
-    `INFO: ${(sLines[0] || "").slice(0, 44)}`,
-    `      ${(sLines[1] || "").slice(0, 44)}`,
-    `      ${(sLines[2] || "").slice(0, 44)}`,
-    "==================================================",
-  ];
-}
-
-function formatSearchForBoard(query: string, matchCount: number): string[] {
-  const cleanQ = query.toUpperCase().replace(/[^A-Z0-9\s.,:!?/'-]/g, "");
-  return [
-    "★ SOUTHERN RAILWAY · ALAIPAYUTHEY EXPRESS ★",
-    `STATUS: SEARCH      PLATFORM: 04    MATCHES: ${String(matchCount).padStart(2, "0")}`,
-    "==================================================",
-    `QUERY: "${cleanQ.slice(0, 40)}"`,
-    "FILTERING SANGAM FAQ ARCHIVE & USER GUIDE...",
-    "--------------------------------------------------",
-    "SELECT ANY MATCHING QUESTION OR CHAPTER BELOW",
-    "TO INSPECT VERIFIED POLICY AND DETAILED ANSWER.",
-    "NANBA AI IS ALSO STANDING BY FOR LIVE ASSISTANCE.",
-    "==================================================",
-  ];
-}
+import HeroSplitFlapCanvas from "@/components/splitflap/HeroSplitFlapCanvas";
 
 const FAQ_CATEGORIES = [
   "All",
@@ -139,13 +40,17 @@ const FAQ_CATEGORIES = [
 export default function UserGuideAndFaqPage() {
   const { locale } = useLocale();
   const { playClick, playWoodClick, playBell } = useAudio();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Active guide section tab
   const [activeTab, setActiveTab] = useState<"guide" | "faq" | "knowledge">("faq");
 
   // 3D Split-Flap Board State
   const [activeFaq, setActiveFaq] = useState<FaqItem>(FAQS[0]);
-  const [boardLines, setBoardLines] = useState<string[]>(DEFAULT_BOARD_LINES);
   const [searchQuery, setSearchQuery] = useState("");
 
   // FAQ Filter state
@@ -197,7 +102,7 @@ export default function UserGuideAndFaqPage() {
   // Synchronize board with selected FAQ via ref-based Zustand action (§5)
   const handleSelectFaq = useCallback((faq: FaqItem) => {
     setActiveFaq(faq);
-    useFaqStore.getState().setActiveFaq(faq.id, faq.questionEn, faq.answerEn);
+    useFaqStore.getState().setActiveFaq(faq.id, faq.questionEn, faq.answerEn, faq.flapLabel);
   }, []);
 
   // Broadcast a guide chapter to the 3D board
@@ -219,6 +124,39 @@ export default function UserGuideAndFaqPage() {
     setSearchQuery(query);
     useFaqStore.getState().setSearchQuery(query);
   }, []);
+
+  // Phase 5: Debounced board flipping on search (PRD §7).
+  // Don't flip the board on every keystroke — debounce 600ms, then flip
+  // to the first matching FAQ's flapLabel, or 'ASK NANBA' if no results.
+  const searchDebounceRef = useRef<NodeJS.Timeout | null>(null);
+  useEffect(() => {
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    if (!searchQuery.trim()) return;
+
+    searchDebounceRef.current = setTimeout(() => {
+      const q = searchQuery.toLowerCase().trim();
+      const match = FAQS.find((faq) => {
+        return (
+          faq.questionEn.toLowerCase().includes(q) ||
+          faq.questionTa.toLowerCase().includes(q) ||
+          faq.answerEn.toLowerCase().includes(q) ||
+          faq.tags.some((t) => t.toLowerCase().includes(q)) ||
+          faq.category.toLowerCase().includes(q)
+        );
+      });
+
+      if (match) {
+        useFaqStore.getState().setActiveFaq(match.id, match.questionEn, match.answerEn, match.flapLabel);
+      } else {
+        // No match: board flips to 'ASK NANBA' (PRD §7)
+        useFaqStore.getState().setActiveFaq("no-match", "No results found", "", "ASK NANBA");
+      }
+    }, 600);
+
+    return () => {
+      if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    };
+  }, [searchQuery]);
 
   // Synchronize search query changes between console input and DOM filter
   useEffect(() => {
@@ -298,7 +236,8 @@ export default function UserGuideAndFaqPage() {
         f.questionTa.toLowerCase().includes(q) ||
         f.answerEn.toLowerCase().includes(q) ||
         f.answerTa.toLowerCase().includes(q) ||
-        f.category.toLowerCase().includes(q)
+        f.category.toLowerCase().includes(q) ||
+        f.tags.some((t) => t.toLowerCase().includes(q))
       );
     });
   }, [selectedFaqCategory, searchQuery]);
@@ -324,22 +263,37 @@ export default function UserGuideAndFaqPage() {
       {/* ========================================================================= */}
       <section
         id="alaipayuthey-splitflap-hero"
-        className="relative w-full overflow-hidden"
-        style={{
-          WebkitMaskImage:
-            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
-          maskImage:
-            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
-        }}
+        className="relative w-full"
       >
-        <HeroSplitFlapCanvas
-          searchQuery={searchQuery}
-          onSearchChange={handleSearchChange}
-        />
+        {mounted ? (
+          <HeroSplitFlapCanvas
+            searchQuery={searchQuery}
+            onSearchChange={handleSearchChange}
+          />
+        ) : (
+          <div className="w-full h-[65dvh] bg-[#070504] flex flex-col items-center justify-center text-[#d4af37] font-mono text-xs gap-3 border-b border-[#261d15]">
+            <div className="flex items-center gap-2">
+              <Train className="w-4 h-4 animate-bounce text-[#f59e0b]" />
+              <span className="tracking-widest uppercase">
+                INITIALIZING ALAIPAYUTHEY MECHANICAL SPLIT-FLAP MATRIX...
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Phase 3: Token-driven OKLCH DOM bridge to #FAF6EE */}
         <HeroToContentBridge theme="guide" heightPct={28} />
       </section>
+
+      {/* ========================================================================= */}
+      {/* 2. STICKY MINI-HEADER STRIP (Phase 3c & 4b: Appears below floating nav)  */}
+      {/* ========================================================================= */}
+      <SplitFlapMiniHeader
+        onSearchFocus={() => {
+          const searchInput = document.getElementById("guide-faq-search-input");
+          searchInput?.focus();
+        }}
+      />
 
       {/* ========================================================================= */}
       {/* 2. EDITORIAL CONSOLE: UNIFIED USER GUIDE, SEARCHABLE FAQ & KNOWLEDGE BASE */}
@@ -348,7 +302,7 @@ export default function UserGuideAndFaqPage() {
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Railway Station Dispatch Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#17110c] border border-[#38281a] text-[#f59e0b] text-xs font-mono tracking-wider uppercase mb-4 shadow-inner">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-none bg-[#17110c] border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-mono tracking-wider uppercase mb-4 shadow-[3px_3px_0px_#261d15]">
             <Train className="w-3.5 h-3.5" />
             <span>SOUTHERN RAILWAY · SANGAM DISPATCH & USER GUIDE</span>
             <span className="text-[#8f755a]">·</span>
@@ -378,7 +332,7 @@ export default function UserGuideAndFaqPage() {
         </div>
 
         {/* Console Nav Tabs: Guide vs FAQ vs Knowledge Base */}
-        <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 max-w-2xl mx-auto mb-10 rounded-2xl bg-[#110d0a] border border-[#261d15] shadow-lg">
+        <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 max-w-2xl mx-auto mb-10 rounded-none bg-[#110d0a] border border-[#261d15] shadow-[4px_4px_0px_#261d15]">
           {[
             {
               id: "faq" as const,
@@ -411,10 +365,10 @@ export default function UserGuideAndFaqPage() {
                 playWoodClick();
                 setActiveTab(tab.id);
               }}
-              className={`min-h-[44px] px-5 py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider font-bold transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] active:scale-[0.98] ${
+              className={`min-h-[44px] px-5 py-2.5 rounded-none text-xs font-mono uppercase tracking-wider font-bold transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] active:scale-[0.98] ${
                 activeTab === tab.id
-                  ? "bg-[#d4af37] text-[#0d0a08] shadow-md shadow-[#d4af37]/20"
-                  : "text-[#a89985] hover:text-[#fdfaf5] hover:bg-[#1a140f]"
+                  ? "bg-[#d4af37] text-[#0d0a08] shadow-[2px_2px_0px_#261d15]"
+                  : "text-[#a89985] hover:text-[#fdfaf5] hover:bg-[#1a140f] border border-transparent"
               }`}
             >
               {tab.icon}
@@ -440,7 +394,7 @@ export default function UserGuideAndFaqPage() {
                   aria-label="Search FAQs"
                   value={searchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
-                  className="w-full pl-11 pr-20 py-3.5 rounded-xl bg-[#110d0a] border border-[#2b2017] text-[#f5eedf] placeholder-[#6e5d4d] text-sm focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] shadow-inner transition-all"
+                  className="w-full pl-11 pr-20 py-3.5 rounded-none bg-[#110d0a] border border-[#2b2017] text-[#f5eedf] placeholder-[#6e5d4d] text-sm font-mono focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition-all"
                 />
                 {searchQuery && (
                   <button
@@ -463,9 +417,9 @@ export default function UserGuideAndFaqPage() {
                         playClick();
                         setSelectedFaqCategory(cat);
                       }}
-                      className={`min-h-[38px] px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider whitespace-nowrap transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] ${
+                      className={`min-h-[38px] px-3.5 py-1.5 rounded-none text-xs font-mono tracking-wider whitespace-nowrap transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] ${
                         isActive
-                          ? "bg-[#d4af37] text-[#0d0a08] font-bold shadow-md shadow-[#d4af37]/20"
+                          ? "bg-[#d4af37] text-[#0d0a08] font-bold shadow-[2px_2px_0px_#261d15]"
                           : "bg-[#140f0c] text-[#a89985] hover:text-[#fdfaf5] hover:bg-[#1f1712] border border-[#261d15]"
                       }`}
                     >
@@ -476,20 +430,59 @@ export default function UserGuideAndFaqPage() {
               </div>
             </div>
 
+            {/* No-JS Baseline Fallback (§8) */}
+            <noscript>
+              <div className="p-6 bg-[#110d0a] border border-[#2b2017] text-[#f5eedf] mb-6 space-y-4">
+                <h2 className="text-lg font-bold font-display text-[#d4af37]">
+                  FAQ & Student Guidelines (JavaScript-Free Mode)
+                </h2>
+                <div className="space-y-3">
+                  {FAQS.map((faq) => (
+                    <details key={faq.id} className="p-4 bg-[#0c0907] border border-[#261d15]">
+                      <summary className="font-bold text-[#faf5ed] cursor-pointer">
+                        {faq.questionEn} · {faq.questionTa}
+                      </summary>
+                      <p className="mt-2 text-sm text-[#ded4c5]">{faq.answerEn}</p>
+                      <p className="mt-1 text-sm text-[#e0b968] font-tamil">{faq.answerTa}</p>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            </noscript>
+
             {/* FAQ Accordion List with Live Split-Flap Integration */}
             <div className="space-y-3.5">
               {filteredFaqs.length === 0 ? (
-                <div className="p-8 text-center rounded-2xl bg-[#0f0b09] border border-[#241a13] text-[#8f755a]">
+                <div className="p-8 text-center rounded-none bg-[#0f0b09] border border-[#241a13] text-[#8f755a]">
                   <p className="font-mono text-sm">NO QUESTIONS MATCHED YOUR QUERY</p>
-                  <button
-                    onClick={() => {
-                      handleSearchChange("");
-                      setSelectedFaqCategory("All");
-                    }}
-                    className="mt-3 text-xs text-[#d4af37] hover:underline"
-                  >
-                    Reset search filters
-                  </button>
+                  <p className="mt-2 text-xs text-[#6e5d4d]">
+                    Try a different keyword, or ask Nanba directly.
+                  </p>
+                  <div className="mt-4 flex items-center justify-center gap-3">
+                    <button
+                      onClick={() => {
+                        handleSearchChange("");
+                        setSelectedFaqCategory("All");
+                      }}
+                      className="text-xs text-[#d4af37] hover:underline font-mono"
+                    >
+                      Reset filters
+                    </button>
+                    <span className="text-[#3b2c1d]">|</span>
+                    <button
+                      onClick={() => {
+                        // Open the Ask Nanba chatbot widget (PRD §7)
+                        const btn = document.querySelector(
+                          'button[aria-label*="Ask Nanba"]'
+                        ) as HTMLButtonElement | null;
+                        btn?.click();
+                      }}
+                      className="inline-flex items-center gap-1.5 text-xs font-mono text-[#55CCA2] hover:underline"
+                    >
+                      <Sparkles className="w-3 h-3" />
+                      ASK NANBA
+                    </button>
+                  </div>
                 </div>
               ) : (
                 filteredFaqs.map((faq, index) => {
@@ -499,35 +492,37 @@ export default function UserGuideAndFaqPage() {
                   return (
                     <div
                       key={faq.id}
-                      className={`rounded-2xl transition-all duration-200 border ${
+                      className={`rounded-none transition-all duration-200 border ${
                         isExpanded
-                          ? "bg-[#120e0b] border-[#4a3a29] shadow-xl"
+                          ? "bg-[#120e0b] border-[#4a3a29] shadow-[4px_4px_0px_#1f1711]"
                           : "bg-[#0b0806] border-[#1f1711] hover:border-[#33251a]"
                       }`}
                     >
                       {/* Accordion Question Trigger Header */}
                       <button
+                        id={`faq-trigger-${faq.id}`}
+                        aria-controls={`faq-panel-${faq.id}`}
+                        aria-expanded={isExpanded}
                         onClick={() => {
                           playWoodClick();
                           const nextId = isExpanded ? null : faq.id;
                           setExpandedFaqId(nextId);
                           handleSelectFaq(faq);
                         }}
-                        className="w-full p-5 text-left flex items-start justify-between gap-4 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] rounded-2xl"
-                        aria-expanded={isExpanded}
+                        className="w-full p-5 text-left flex items-start justify-between gap-4 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] rounded-none"
                       >
                         <div className="space-y-1.5 flex-1">
                           <div className="flex items-center gap-2">
                             <span className="font-mono text-[11px] text-[#8f755a]">
                               [#{String(index + 1).padStart(2, "0")}]
                             </span>
-                            <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-[#d4af37] px-2 py-0.5 rounded bg-[#1f1711] border border-[#3b2c1d]">
+                            <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-[#d4af37] px-2 py-0.5 rounded-none bg-[#1f1711] border border-[#3b2c1d]">
                               <Tag className="w-2.5 h-2.5" />
                               {faq.category}
                             </span>
                             {isBoardActive && (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-1.5 py-0.5 rounded">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                              <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-1.5 py-0.5 rounded-none">
+                                <span className="w-1.5 h-1.5 rounded-none bg-emerald-400 animate-pulse" />
                                 LIVE ON FLAP BOARD
                               </span>
                             )}
@@ -547,7 +542,7 @@ export default function UserGuideAndFaqPage() {
                           )}
                         </div>
 
-                        <div className="mt-1 flex items-center justify-center w-8 h-8 rounded-full bg-[#1a140f] border border-[#2e2116] text-[#c59b27] shrink-0">
+                        <div className="mt-1 flex items-center justify-center w-8 h-8 rounded-none bg-[#1a140f] border border-[#2e2116] text-[#c59b27] shrink-0">
                           <ChevronDown
                             className={`w-4 h-4 transition-transform duration-300 ${
                               isExpanded ? "rotate-180 text-[#d4af37]" : ""
@@ -560,6 +555,9 @@ export default function UserGuideAndFaqPage() {
                       <AnimatePresence>
                         {isExpanded && (
                           <motion.div
+                            id={`faq-panel-${faq.id}`}
+                            role="region"
+                            aria-labelledby={`faq-trigger-${faq.id}`}
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
@@ -571,7 +569,7 @@ export default function UserGuideAndFaqPage() {
                             </div>
 
                             {faq.answerTa && (
-                              <div className="p-3.5 rounded-xl bg-[#0a0705] border border-[#231a12] text-xs sm:text-sm text-[#e0b968] font-tamil leading-relaxed">
+                              <div className="p-3.5 rounded-none bg-[#0a0705] border border-[#231a12] text-xs sm:text-sm text-[#e0b968] font-tamil leading-relaxed">
                                 {faq.answerTa}
                               </div>
                             )}
@@ -592,7 +590,7 @@ export default function UserGuideAndFaqPage() {
                                     hero.scrollIntoView({ behavior: "smooth" });
                                   }
                                 }}
-                                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#211810] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono tracking-wider text-[#d4af37] transition-all hover:border-[#d4af37] active:scale-[0.98]"
+                                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-none bg-[#211810] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono tracking-wider text-[#d4af37] transition-all hover:border-[#d4af37] active:scale-[0.98]"
                               >
                                 <Sparkles className="w-3.5 h-3.5" />
                                 <span>SPELL OUT ON BOARD</span>
@@ -616,7 +614,7 @@ export default function UserGuideAndFaqPage() {
         {activeTab === "guide" && (
           <div className="space-y-8">
             {/* Chapter 1: Joining & Membership */}
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-xl transition-all">
+            <div className="p-6 sm:p-8 rounded-none bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-[4px_4px_0px_#2e2217] transition-all">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <div>
                   <span className="text-[11px] font-mono text-[#d4af37] uppercase tracking-wider font-bold">
@@ -633,7 +631,7 @@ export default function UserGuideAndFaqPage() {
                       "NO DUES OR FEES FOR OSU STUDENTS. OPEN TO ALL LANGUAGES & MAJORS."
                     )
                   }
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1f1711] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono text-[#d4af37] transition-all shrink-0 hover:border-[#d4af37]"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-none bg-[#1f1711] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono text-[#d4af37] transition-all shrink-0 hover:border-[#d4af37]"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>BROADCAST CHAPTER ↑</span>
@@ -651,14 +649,14 @@ export default function UserGuideAndFaqPage() {
                   <Link
                     href="/join"
                     onClick={playClick}
-                    className="px-5 py-2.5 min-h-[44px] rounded-xl bg-[#55CCA2] hover:bg-[#48b68f] text-black text-xs font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1.5 shadow-md transition-all active:scale-[0.98]"
+                    className="px-5 py-2.5 min-h-[44px] rounded-none bg-[#55CCA2] hover:bg-[#48b68f] text-black text-xs font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1.5 shadow-[3px_3px_0px_#110d0a] transition-all active:scale-[0.98]"
                   >
                     <span>Fill Membership Form →</span>
                   </Link>
                   <Link
                     href="/links"
                     onClick={playWoodClick}
-                    className="px-5 py-2.5 min-h-[44px] rounded-xl bg-[#1c1510] hover:bg-[#281e17] border border-[#3b2c1d] text-xs font-mono font-bold uppercase tracking-wider text-[#d4af37] inline-flex items-center gap-1.5 transition-all active:scale-[0.98]"
+                    className="px-5 py-2.5 min-h-[44px] rounded-none bg-[#1c1510] hover:bg-[#281e17] border border-[#3b2c1d] text-xs font-mono font-bold uppercase tracking-wider text-[#d4af37] inline-flex items-center gap-1.5 transition-all active:scale-[0.98]"
                   >
                     <span>Join GroupMe Loop ↗</span>
                   </Link>
@@ -667,7 +665,7 @@ export default function UserGuideAndFaqPage() {
             </div>
 
             {/* Chapter 2: Attending Events */}
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-xl transition-all">
+            <div className="p-6 sm:p-8 rounded-none bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-[4px_4px_0px_#2e2217] transition-all">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <div>
                   <span className="text-[11px] font-mono text-[#d4af37] uppercase tracking-wider font-bold">
@@ -684,7 +682,7 @@ export default function UserGuideAndFaqPage() {
                       "SOUTH OVAL PICNICS, FOOD NIGHTS, FLIPBOARD REVEALS, FREE TO ALL."
                     )
                   }
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1f1711] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono text-[#d4af37] transition-all shrink-0 hover:border-[#d4af37]"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-none bg-[#1f1711] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono text-[#d4af37] transition-all shrink-0 hover:border-[#d4af37]"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>BROADCAST CHAPTER ↑</span>
@@ -692,7 +690,7 @@ export default function UserGuideAndFaqPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm text-[#ded4c5]">
-                <div className="p-4 rounded-xl bg-[#0c0907] border border-[#241a13]">
+                <div className="p-4 rounded-none bg-[#0c0907] border border-[#241a13]">
                   <h3 className="font-bold text-[#f5eedf] font-display text-base mb-1">
                     Casual Hangouts & Food Nights
                   </h3>
@@ -701,7 +699,7 @@ export default function UserGuideAndFaqPage() {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-[#0c0907] border border-[#241a13]">
+                <div className="p-4 rounded-none bg-[#0c0907] border border-[#241a13]">
                   <h3 className="font-bold text-[#f5eedf] font-display text-base mb-1">
                     Cultural Carnivals & Festive Showcases
                   </h3>
@@ -713,7 +711,7 @@ export default function UserGuideAndFaqPage() {
             </div>
 
             {/* Chapter 3: Creative Tracks (Aatam & Paatam) */}
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-xl transition-all">
+            <div className="p-6 sm:p-8 rounded-none bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-[4px_4px_0px_#2e2217] transition-all">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <div>
                   <span className="text-[11px] font-mono text-[#d4af37] uppercase tracking-wider font-bold">
@@ -730,7 +728,7 @@ export default function UserGuideAndFaqPage() {
                       "AATAM DANCE REHEARSALS, PAATAM MUSIC JAMS, PHOTO & MEDIA PRODUCTION."
                     )
                   }
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1f1711] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono text-[#d4af37] transition-all shrink-0 hover:border-[#d4af37]"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-none bg-[#1f1711] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono text-[#d4af37] transition-all shrink-0 hover:border-[#d4af37]"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>BROADCAST CHAPTER ↑</span>
@@ -751,7 +749,7 @@ export default function UserGuideAndFaqPage() {
             </div>
 
             {/* Chapter 4: Governance & Voting Rights */}
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-xl transition-all">
+            <div className="p-6 sm:p-8 rounded-none bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-[4px_4px_0px_#2e2217] transition-all">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <div>
                   <span className="text-[11px] font-mono text-[#d4af37] uppercase tracking-wider font-bold">
@@ -768,7 +766,7 @@ export default function UserGuideAndFaqPage() {
                       "ATTEND AT LEAST 2 MEETINGS AND 2 EVENTS PER SEMESTER FOR VOTING."
                     )
                   }
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1f1711] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono text-[#d4af37] transition-all shrink-0 hover:border-[#d4af37]"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-none bg-[#1f1711] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono text-[#d4af37] transition-all shrink-0 hover:border-[#d4af37]"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>BROADCAST CHAPTER ↑</span>
@@ -779,7 +777,7 @@ export default function UserGuideAndFaqPage() {
                 <p>
                   To qualify for active voting rights in officer elections or to qualify for Executive Board shadowing, members must meet the constitutional threshold:
                 </p>
-                <div className="p-4 rounded-xl bg-[#091510] border border-[#1b3d2f] text-xs text-[#55CCA2] font-semibold leading-relaxed">
+                <div className="p-4 rounded-none bg-[#091510] border border-[#1b3d2f] text-xs text-[#55CCA2] font-semibold leading-relaxed">
                   Attend at least two general body meetings and two official club events per academic semester. At least 90% of voting members must be current OSU students.
                 </div>
                 <p>
@@ -795,7 +793,7 @@ export default function UserGuideAndFaqPage() {
         {/* ======================================================== */}
         {activeTab === "knowledge" && (
           <div className="space-y-6">
-            <div className="p-6 rounded-2xl bg-[#110d0a] border border-[#2b2017] shadow-xl text-white">
+            <div className="p-6 rounded-none bg-[#110d0a] border border-[#2b2017] shadow-[4px_4px_0px_#2b2017] text-white">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 text-xs font-mono text-[#55CCA2] uppercase font-bold mb-1">
@@ -815,7 +813,7 @@ export default function UserGuideAndFaqPage() {
                     playClick();
                     setIsAddingKb(!isAddingKb);
                   }}
-                  className="px-4 py-2.5 rounded-xl bg-[#d4af37] hover:bg-[#e2c154] text-black text-xs font-mono font-bold uppercase tracking-wider inline-flex items-center gap-2 shrink-0 transition-all active:scale-[0.98]"
+                  className="px-4 py-2.5 rounded-none bg-[#d4af37] hover:bg-[#e2c154] text-black text-xs font-mono font-bold uppercase tracking-wider inline-flex items-center gap-2 shrink-0 transition-all active:scale-[0.98]"
                 >
                   <PlusCircle className="w-4 h-4" />
                   <span>{isAddingKb ? "Close Form" : "Add Fact to KB"}</span>
@@ -844,7 +842,7 @@ export default function UserGuideAndFaqPage() {
                           value={newTitle}
                           onChange={(e) => setNewTitle(e.target.value)}
                           placeholder="e.g. Diya Night 2026 Ticket Release Policy"
-                          className="w-full px-3.5 py-2.5 rounded-lg bg-[#0a0705] border border-[#2e2116] text-xs text-[#f5eedf] focus:outline-none focus:border-[#d4af37]"
+                          className="w-full px-3.5 py-2.5 rounded-none bg-[#0a0705] border border-[#2e2116] text-xs font-mono text-[#f5eedf] focus:outline-none focus:border-[#d4af37]"
                         />
                       </div>
                       <div>
@@ -856,7 +854,7 @@ export default function UserGuideAndFaqPage() {
                           onChange={(e) =>
                             setNewCategory(e.target.value as KnowledgeItem["category"])
                           }
-                          className="w-full px-3.5 py-2.5 rounded-lg bg-[#0a0705] border border-[#2e2116] text-xs text-[#f5eedf] focus:outline-none focus:border-[#d4af37]"
+                          className="w-full px-3.5 py-2.5 rounded-none bg-[#0a0705] border border-[#2e2116] text-xs font-mono text-[#f5eedf] focus:outline-none focus:border-[#d4af37]"
                         >
                           <option value="Events">Events</option>
                           <option value="Membership">Membership</option>
@@ -877,7 +875,7 @@ export default function UserGuideAndFaqPage() {
                         value={newContent}
                         onChange={(e) => setNewContent(e.target.value)}
                         placeholder="Detail the exact dates, policy rules, or requirements..."
-                        className="w-full px-3.5 py-2.5 rounded-lg bg-[#0a0705] border border-[#2e2116] text-xs text-[#f5eedf] focus:outline-none focus:border-[#d4af37]"
+                        className="w-full px-3.5 py-2.5 rounded-none bg-[#0a0705] border border-[#2e2116] text-xs font-mono text-[#f5eedf] focus:outline-none focus:border-[#d4af37]"
                       />
                     </div>
 
@@ -890,7 +888,7 @@ export default function UserGuideAndFaqPage() {
                         value={newKeywords}
                         onChange={(e) => setNewKeywords(e.target.value)}
                         placeholder="tickets, diwali, fee, union, registration"
-                        className="w-full px-3.5 py-2.5 rounded-lg bg-[#0a0705] border border-[#2e2116] text-xs text-[#f5eedf] focus:outline-none focus:border-[#d4af37]"
+                        className="w-full px-3.5 py-2.5 rounded-none bg-[#0a0705] border border-[#2e2116] text-xs font-mono text-[#f5eedf] focus:outline-none focus:border-[#d4af37]"
                       />
                     </div>
 
@@ -898,7 +896,7 @@ export default function UserGuideAndFaqPage() {
                       <button
                         type="submit"
                         disabled={kbStatus === "saving"}
-                        className="px-5 py-2 rounded-lg bg-[#55CCA2] hover:bg-[#48b68f] text-black text-xs font-mono font-bold uppercase transition-all"
+                        className="px-5 py-2 rounded-none bg-[#55CCA2] hover:bg-[#48b68f] text-black text-xs font-mono font-bold uppercase transition-all shadow-[2px_2px_0px_#110d0a]"
                       >
                         {kbStatus === "saving" ? "Indexing..." : "Save to Knowledge Base"}
                       </button>
@@ -927,24 +925,24 @@ export default function UserGuideAndFaqPage() {
                   placeholder="Filter knowledge entries by title, keyword, or text..."
                   value={kbSearch}
                   onChange={(e) => setKbSearch(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-[#110d0a] border border-[#2b2017] text-xs text-[#f5eedf] placeholder-[#6e5d4d] focus:outline-none focus:border-[#d4af37]"
+                  className="w-full pl-11 pr-4 py-3 rounded-none bg-[#110d0a] border border-[#2b2017] text-xs font-mono text-[#f5eedf] placeholder-[#6e5d4d] focus:outline-none focus:border-[#d4af37]"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filteredKb.length === 0 ? (
-                  <div className="col-span-full p-8 text-center rounded-2xl bg-[#0f0b09] border border-[#241a13] text-[#8f755a]">
+                  <div className="col-span-full p-8 text-center rounded-none bg-[#0f0b09] border border-[#241a13] text-[#8f755a]">
                     <p className="font-mono text-sm">NO KNOWLEDGE ENTRIES FOUND</p>
                   </div>
                 ) : (
                   filteredKb.map((item) => (
                     <div
                       key={item.id}
-                      className="p-5 rounded-2xl bg-[#0c0907] border border-[#231a13] hover:border-[#38281a] flex flex-col justify-between transition-all"
+                      className="p-5 rounded-none bg-[#0c0907] border border-[#231a13] hover:border-[#38281a] flex flex-col justify-between transition-all"
                     >
                       <div>
                         <div className="flex items-center justify-between gap-2 mb-2">
-                          <span className="text-[10px] font-mono uppercase tracking-wider text-[#d4af37] px-2 py-0.5 rounded bg-[#1f1711] border border-[#3b2c1d]">
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-[#d4af37] px-2 py-0.5 rounded-none bg-[#1f1711] border border-[#3b2c1d]">
                             {item.category}
                           </span>
                           <button
@@ -968,7 +966,7 @@ export default function UserGuideAndFaqPage() {
                           {item.keywords.map((kw) => (
                             <span
                               key={kw}
-                              className="text-[9px] font-mono text-[#6e5d4d] bg-[#140f0c] px-1.5 py-0.5 rounded"
+                              className="text-[9px] font-mono text-[#6e5d4d] bg-[#140f0c] px-1.5 py-0.5 rounded-none"
                             >
                               #{kw}
                             </span>

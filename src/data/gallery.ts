@@ -227,12 +227,12 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
     photoCount: 5,
     googlePhotosUrl: "https://photos.app.goo.gl/NBTxg98ppmd9uhWX9",
     descriptionEn:
-      "A collaborative spring carnival hosted with Telugu Thallulu featuring games, food stalls, and an open dance circle on the plaza.",
+      "A collaborative spring carnival hosted with Telugu Tamasha at OSU featuring games, food stalls, and an open dance circle on the plaza.",
     descriptionTa:
-      "ஓஹியோ ஸ்டேட் தமிழ் சங்கமும் தெலுங்கு தல்லுலு அமைப்பும் இணைந்து நடத்திய 'நம்ம ஜாதரா' வசந்தகால திருவிழா.",
+      "ஓஹியோ ஸ்டேட் தமிழ் சங்கமும் தெலுங்கு தமாஷா அமைப்பும் இணைந்து நடத்திய 'நம்ம ஜாதரா' வசந்தகால திருவிழா.",
     highlights: [
       "Outdoor carnival games and ring toss",
-      "Joint event with Telugu Thallulu",
+      "Joint event with Telugu Tamasha at OSU",
       "Regional food stalls and snacks",
       "Open dance circle",
     ],
@@ -255,7 +255,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         albumSlug: "namma-jathara",
         titleEn: "Joint Campus Collaboration",
         titleTa: "இணைந்த கூட்டணி",
-        captionEn: "Tamil Sangam and Telugu Thallulu partnering for a campus festival.",
+        captionEn: "Tamil Sangam and Telugu Tamasha at OSU partnering for a campus festival.",
         captionTa: "தமிழ் சங்கமும் தெலுங்கு அமைப்பும் இணைந்து நடத்திய நிகழ்வு.",
         imageUrl:
           "https://lh3.googleusercontent.com/pw/AP1GczNuEGeshSWnp89wHaHufx1Bd8MRDPNdjflHj-6aJQfCxsJ5Hoi8E1RE19B2swHesxufteDymvuxItgG44_D9JVLj-sgjpJoTdLgrtXWIXRxe7GFKrKo=w1200-h800-no",

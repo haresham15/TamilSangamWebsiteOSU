@@ -27,10 +27,15 @@ export function CraneCameraRig({ scrollProgress }: CraneCameraRigProps) {
     const p = Math.min(1.0, Math.max(0.0, scrollProgress));
     const easedP = easeInOutCubic(p);
 
-    // 1. Compute physical crane target position with subtle handheld sway (§6)
+    // 1. Compute physical crane target position with noble entrance glide over the crown
     const targetZ = THREE.MathUtils.lerp(30, 0.8, easedP);
-    const swayX = Math.sin(p * 6.0) * 0.15;
-    const swayY = 1.6 + Math.sin(p * 4.0) * 0.03;
+    const swayX = Math.sin(p * 6.0) * 0.12;
+
+    // Camera cranes from an elevated 2.22m vantage point to glide above the Chola crown
+    // before settling to 1.62m eye-level colonnade cruise once through the entrance
+    const craneDescend = p < 0.28 ? Math.pow(p / 0.28, 1.5) : 1.0;
+    const baseY = THREE.MathUtils.lerp(2.22, 1.62, craneDescend);
+    const swayY = baseY + Math.sin(p * 4.0) * 0.025;
     targetPos.set(swayX, swayY, targetZ);
 
     // 2. Spring-follow crane inertia (frame-rate independent damping, clamped alpha in [0, 1])
@@ -45,8 +50,9 @@ export function CraneCameraRig({ scrollProgress }: CraneCameraRigProps) {
       persCamera.updateProjectionMatrix();
     }
 
-    // 4. Look ahead along the center aisle toward the emblem
-    camera.lookAt(0, 1.7, targetPos.z - 8.0);
+    // 4. Look ahead along the center aisle, gazing slightly downward over the crown at entrance
+    const lookY = p < 0.28 ? THREE.MathUtils.lerp(1.38, 1.65, p / 0.28) : 1.65;
+    camera.lookAt(0, lookY, targetPos.z - 8.0);
 
     // 5. Scroll-driven FogExp2 density schedule (§5 Table)
     let targetFog = 0.045;

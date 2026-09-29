@@ -13,7 +13,7 @@ import { DustCloud } from "./DustCloud";
 import { LeoFactoryEnvironment } from "./LeoFactoryEnvironment";
 import { JumpingCrowdSilhouettes } from "./JumpingCrowdSilhouettes";
 import { EffectComposer, Vignette } from "@react-three/postprocessing";
-import { Environment } from "@react-three/drei";
+import { Environment, BakeShadows } from "@react-three/drei";
 import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 
 // The strict blueprint mandate: magenta error state on failure, no silent fallbacks.
@@ -95,19 +95,21 @@ export function EventsGen3Canvas() {
   }, [bespokeEnv]);
 
   return (
-    <div className="w-full h-full min-h-[100dvh] absolute top-0 left-0 bg-[#050200]">
+    <div className="w-full h-full min-h-[100dvh] absolute top-0 left-0 bg-transparent">
       <CanvasErrorBoundary>
         <Canvas
-          dpr={[1, 2]}
+          dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
           gl={{
             antialias: true,
+            alpha: true,
             powerPreference: "high-performance",
             toneMapping: THREE.ACESFilmicToneMapping,
             toneMappingExposure: 1.15,
           }}
           shadows={{ type: THREE.PCFShadowMap }}
         >
-          <color attach="background" args={["#0c0a08"]} />
+          {/* We rely on the HTML gradient behind the Canvas for the background color, keeping alpha: true */}
+          {/* Fog remains so distant meshes blend into the dark top of the HTML gradient */}
           <fogExp2 attach="fog" args={["#0c0a08", 0.024]} />
 
           {/* Bespoke Scene-Matched Concert Arena Environment Map */}
@@ -115,6 +117,7 @@ export function EventsGen3Canvas() {
           
           <DepthTextureProvider>
             <React.Suspense fallback={null}>
+              <BakeShadows />
               <CameraChoreography />
               <LeoFactoryEnvironment />
               <VolumetricCones />

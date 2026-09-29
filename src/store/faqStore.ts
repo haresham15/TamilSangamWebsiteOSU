@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { FAQS } from "@/data/faq";
 
 export interface FaqStoreState {
   // Search & Filter
@@ -7,6 +8,8 @@ export interface FaqStoreState {
   activeQuestion: string;
   activeAnswer: string;
   activeTeaser: string;
+  /** Short EN keyword the split-flap board spells (PRD §4.3 / §6). */
+  activeFlapLabel: string;
 
   // Cinematic Split-Flap Engine State
   scrollProgress: number;
@@ -17,7 +20,9 @@ export interface FaqStoreState {
 
   // Actions
   setSearchQuery: (query: string) => void;
-  setActiveFaq: (id: string, question: string, answer: string) => void;
+  setActiveFaq: (id: string, question: string, answer: string, flapLabel?: string) => void;
+  /** Board → DOM direction: selects a FAQ by ID, sets flapLabel, triggers accordion expansion. */
+  selectFaqFromBoard: (id: string) => void;
   setScrollProgress: (p: number) => void;
   setBootState: (state: "pending" | "playing" | "settled") => void;
   setIdleCountdown: (sec: number) => void;
@@ -47,6 +52,7 @@ export const useFaqStore = create<FaqStoreState>((set) => ({
   activeQuestion: "What is OSU Tamil Sangam?",
   activeAnswer: "OSU Tamil Sangam is a casual student-run cultural organization at Ohio State. We are open to all backgrounds!",
   activeTeaser: truncateToTeaser("OSU Tamil Sangam is a casual student-run cultural organization at Ohio State. We are open to all backgrounds!", 50),
+  activeFlapLabel: "TAMIL SANGAM",
 
   scrollProgress: 0,
   bootState: "pending",
@@ -55,16 +61,29 @@ export const useFaqStore = create<FaqStoreState>((set) => ({
   debugMode: false,
 
   setSearchQuery: (query: string) => set({ searchQuery: query }),
-  setActiveFaq: (id: string, question: string, answer: string) =>
+  setActiveFaq: (id: string, question: string, answer: string, flapLabel?: string) =>
     set({
       activeFaqId: id,
       activeQuestion: question,
       activeAnswer: answer,
       activeTeaser: truncateToTeaser(answer, 50),
+      ...(flapLabel ? { activeFlapLabel: flapLabel } : {}),
     }),
+  selectFaqFromBoard: (id: string) => {
+    const faq = FAQS.find((f) => f.id === id);
+    if (!faq) return;
+    set({
+      activeFaqId: id,
+      activeQuestion: faq.questionEn,
+      activeAnswer: faq.answerEn,
+      activeTeaser: truncateToTeaser(faq.answerEn, 50),
+      activeFlapLabel: faq.flapLabel,
+    });
+  },
   setScrollProgress: (p: number) => set({ scrollProgress: p }),
   setBootState: (bootState) => set({ bootState }),
   setIdleCountdown: (idleCountdown) => set({ idleCountdown }),
   setFps: (fps) => set({ fps }),
   setDebugMode: (debugMode) => set({ debugMode }),
 }));
+

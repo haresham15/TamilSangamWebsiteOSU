@@ -99,7 +99,7 @@ export const EVENTS: SangamEvent[] = [
     slug: "namma-jathara",
     titleEn: "TS x TT: Namma Jathara Carnival",
     titleTa: "நம்ம ஜாதரா (பண்பாட்டு சங்கமம்)",
-    taglineEn: "Outdoor games, street food, music, and campus fun with Telugu Thallulu.",
+    taglineEn: "Outdoor games, street food, music, and campus fun with Telugu Tamasha at OSU.",
     taglineTa: "விளையாட்டுகள், இசை, மற்றும் நண்பர்களின் உற்சாகத் திருவிழா.",
     date: "March 26, 2026",
     time: "4:00 PM - 8:00 PM EST",
@@ -112,9 +112,9 @@ export const EVENTS: SangamEvent[] = [
     status: "past",
     academicYear: "2025-2026",
     descriptionEn:
-      "A collaborative spring carnival hosted with Telugu Thallulu featuring games, food stalls, and an open dance circle on the plaza.",
+      "A collaborative spring carnival hosted with Telugu Tamasha at OSU featuring games, food stalls, and an open dance circle on the plaza.",
     descriptionTa:
-      "ஓஹியோ ஸ்டேட் தமிழ் சங்கமும் தெலுங்கு தல்லுலு அமைப்பும் இணைந்து நடத்திய 'நம்ம ஜாதரா' வசந்தகால திருவிழா.",
+      "ஓஹியோ ஸ்டேட் தமிழ் சங்கமும் தெலுங்கு தமாஷா அமைப்பும் இணைந்து நடத்திய 'நம்ம ஜாதரா' வசந்தகால திருவிழா.",
     dressCodeEn: "Casual or Colorful Festive Wear",
     dressCodeTa: "எளிய அல்லது வண்ணமயமான ஆடை",
     schedule: [

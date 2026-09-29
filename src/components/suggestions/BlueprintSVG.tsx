@@ -86,17 +86,17 @@ export function BlueprintSVG({
             height="24"
             patternUnits="userSpaceOnUse"
           >
-            <circle cx="12" cy="12" r="1.2" fill="#55CCA2" fillOpacity="0.25" />
+            <circle cx="12" cy="12" r="1.2" fill="#FFB84D" fillOpacity="0.25" />
             <path
               d="M12 4L20 12L12 20L4 12Z"
-              stroke="#9bb0d8"
+              stroke="#8B5A2B"
               strokeWidth="0.4"
               strokeDasharray="1 3"
-              strokeOpacity="0.15"
+              strokeOpacity="0.25"
             />
           </pattern>
 
-          {/* Cyanotype Paper Texture Gradient */}
+          {/* Kaththi War Room Bruised Plum Void Gradient */}
           <radialGradient
             id="cyanotype-bg"
             cx="50%"
@@ -105,20 +105,20 @@ export function BlueprintSVG({
             fx="50%"
             fy="45%"
           >
-            <stop offset="0%" stopColor="#1a2456" />
-            <stop offset="60%" stopColor="#12183c" />
-            <stop offset="100%" stopColor="#0b0f26" />
+            <stop offset="0%" stopColor="#241021" />
+            <stop offset="60%" stopColor="#150914" />
+            <stop offset="100%" stopColor="#0F050A" />
           </radialGradient>
 
           {/* Golden Zari Dimension Line Gradient */}
           <linearGradient id="zari-gold" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#FFC526" stopOpacity="0.4" />
-            <stop offset="50%" stopColor="#FFD875" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#FFC526" stopOpacity="0.4" />
+            <stop offset="0%" stopColor="#FFB84D" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="#FFD066" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#FFB84D" stopOpacity="0.4" />
           </linearGradient>
         </defs>
 
-        {/* 1. Blueprint Deep Cyanotype Background */}
+        {/* 1. Blueprint Deep Void Background */}
         <rect width="1000" height="700" fill="url(#cyanotype-bg)" />
 
         {/* 2. Kolam Dot-Grid Ground Matrix */}
@@ -128,7 +128,7 @@ export function BlueprintSVG({
           width="940"
           height="640"
           fill="url(#kolam-grid-pattern)"
-          stroke="#415682"
+          stroke="#4A2038"
           strokeWidth="1.2"
           strokeDasharray="4 6"
         />
@@ -379,7 +379,7 @@ export function BlueprintSVG({
                 cx={pin.x}
                 cy={pin.y}
                 r="12"
-                stroke="#FFC526"
+                stroke="#FFB84D"
                 strokeWidth="1.2"
                 strokeDasharray="2 2"
               />
@@ -388,7 +388,7 @@ export function BlueprintSVG({
                 cx={pin.x}
                 cy={pin.y}
                 r="5"
-                fill={isActive ? "#FFC526" : "#55CCA2"}
+                fill={isActive ? "#FFB84D" : "#8B5A2B"}
               />
 
               {/* Pin Tag Label */}
@@ -397,8 +397,8 @@ export function BlueprintSVG({
                 y={pin.y - 12}
                 width="135"
                 height="22"
-                fill="#12183c"
-                stroke="#55CCA2"
+                fill="#150914"
+                stroke="#FFB84D"
                 strokeWidth="1"
                 rx="2"
               />
@@ -427,21 +427,21 @@ export function BlueprintSVG({
             transform: "translate(-50%, -125%)",
           }}
         >
-          <div className="relative p-4 bg-[#12183c]/95 border-2 border-[#55CCA2] shadow-[6px_6px_0px_#250d38] backdrop-blur-md rounded-lg text-white">
+          <div className="relative p-4 bg-[#150914]/95 border-2 border-[#FFB84D] shadow-[6px_6px_0px_#8B5A2B] backdrop-blur-md rounded-lg text-white">
             <button
               onClick={() => setActivePin(null)}
-              className="absolute top-2 right-2 text-purple-300 hover:text-white"
+              className="absolute top-2 right-2 text-amber-200/60 hover:text-white"
               aria-label="Close callout"
             >
               <X className="w-3.5 h-3.5" />
             </button>
 
-            <div className="flex items-center gap-1.5 text-[#FFC526] text-[10px] font-mono font-bold uppercase tracking-wider mb-1.5">
+            <div className="flex items-center gap-1.5 text-[#FFB84D] text-[10px] font-mono font-bold uppercase tracking-wider mb-1.5">
               <Lightbulb className="w-3.5 h-3.5" />
               <span>{locale === "ta" ? activePin.labelTa : activePin.labelEn}</span>
             </div>
 
-            <p className="text-xs font-body text-purple-100 leading-relaxed mb-3">
+            <p className="text-xs font-body text-slate-200 leading-relaxed mb-3">
               {locale === "ta" ? activePin.questionTa : activePin.questionEn}
             </p>
 
@@ -452,13 +452,13 @@ export function BlueprintSVG({
                 const formEl = document.getElementById("suggestion-form-box");
                 if (formEl) formEl.scrollIntoView({ behavior: "smooth" });
               }}
-              className="w-full text-center py-1.5 px-3 bg-[#55CCA2] hover:bg-[#45b78f] text-[#12183c] text-[11px] font-mono font-bold uppercase tracking-wider transition-colors"
+              className="w-full text-center py-1.5 px-3 bg-[#FFB84D] hover:bg-[#ffc978] text-[#150914] text-[11px] font-mono font-bold uppercase tracking-wider transition-colors"
             >
               {locale === "ta" ? "யோசனையை எழுத" : "Suggest for this area →"}
             </button>
 
             {/* Circular Roundel Lens Accent Dot at bottom */}
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#12183c] border-b-2 border-r-2 border-[#55CCA2] rotate-45" />
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#150914] border-b-2 border-r-2 border-[#FFB84D] rotate-45" />
           </div>
         </div>
       )}

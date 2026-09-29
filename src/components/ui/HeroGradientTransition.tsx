@@ -78,13 +78,13 @@ const GRADIENT_CONFIGS: Record<
     lineAccent: "border-t border-[#f59e0b]/20",
   },
 
-  // 7. Suggestions: 3D Architectural Blueprint (#0b1026) -> Cyan Grid Shimmer -> Midnight Base (#0a0e22)
+  // 7. Suggestions: 3D Kaththi War Room Blueprint (#0F050A) -> Bruised Plum (#150914) -> Amber Shimmer
   suggestions: {
     gradientClass:
-      "bg-gradient-to-b from-[#0b1026] via-[#101738] via-50% to-[#0a0e22]",
+      "bg-gradient-to-b from-[#0F050A] via-[#120710] to-[#0F050A]",
     ambientGlow:
-      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(85,204,162,0.22) 0%, rgba(16,23,56,0.35) 50%, transparent 80%)",
-    lineAccent: "border-t border-[#55CCA2]/25",
+      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,184,77,0.12) 0%, rgba(21,9,20,0.25) 50%, transparent 80%)",
+    lineAccent: "",
   },
 };
 

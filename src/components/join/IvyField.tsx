@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 
@@ -56,6 +56,16 @@ function PillarIvy({ pillarX }: IvyClusterProps) {
 
     return { matrices: mats, colors: cols };
   }, [pillarX, count]);
+
+  useEffect(() => {
+    if (!meshRef.current) return;
+    for (let i = 0; i < count; i++) {
+      if (matrices[i]) meshRef.current.setMatrixAt(i, matrices[i]);
+      if (colors[i]) meshRef.current.setColorAt(i, colors[i]);
+    }
+    meshRef.current.instanceMatrix.needsUpdate = true;
+    if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
+  }, [matrices, colors, count]);
 
   useFrame((state) => {
     if (!meshRef.current) return;

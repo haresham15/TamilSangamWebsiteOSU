@@ -54,7 +54,7 @@ export default function AboutPage() {
 
   const partners = [
     {
-      name: "Telugu Thallulu (TT)",
+      name: "Telugu Tamasha at OSU",
       type: "Student Org Collaborator",
       collaboration: "Collaborating on campus events such as the Namma Jathara spring carnival.",
     },

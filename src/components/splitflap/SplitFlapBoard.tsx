@@ -49,14 +49,15 @@ export const DEFAULT_BOARD_LINES = [
   "",
 ];
 
-// Ambient Idle Lines for Rows 3-10 (§4)
+// Idle cycle labels: genuinely useful short content, not arbitrary flavor text.
+// Each is displayed via the flap engine's cascading wave. — PRD §5 (0–15%).
 const AMBIENT_IDLE_LINES = [
-  "PLATFORM 04 : ALAIPAYUTHEY EXPRESS : ON TIME",
-  "YADHUM OORE YAVARUM KELIR · PURANANURU 192",
-  "UPCOMING: CHITHIRAI THIRUVIZHA · SPRING FESTIVAL",
-  "COLUMBUS HUB ⇄ CHENNAI CENTRAL DISPATCH",
-  "MEMBERSHIP IS 100% FREE · ALL MAJORS WELCOME",
-  "NANBA AI : 24/7 INTERACTIVE CAMPUS KNOWLEDGE",
+  "TAMIL SANGAM",
+  "EVENTS",
+  "MEMBERSHIP",
+  "DANCE · MUSIC",
+  "FREE · NO DUES",
+  "DIWALI 2026",
 ];
 
 export interface SplitFlapBoardHandle {
@@ -64,6 +65,7 @@ export interface SplitFlapBoardHandle {
   triggerTeaserSequence: (teaser: string) => void;
   resetToBlank: () => void;
   setSettledImmediately: () => void;
+  updateLiveClock: (timeStr: string) => void;
 }
 
 interface SplitFlapBoardProps {
@@ -74,6 +76,8 @@ interface SplitFlapBoardProps {
 export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFlapBoardProps) {
   const backingMeshRef = useRef<THREE.InstancedMesh>(null);
   const flapMeshRef = useRef<THREE.InstancedMesh>(null);
+  /** Root group ref for board-wide micro-shake on word lock (PRD §4.2). */
+  const boardGroupRef = useRef<THREE.Group>(null);
 
   // Per-instance current and target characters stored in memory
   const boardCharsRef = useRef<string[]>(new Array(TOTAL_FLAPS).fill(" "));
@@ -82,23 +86,20 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isBootedRef = useRef(false);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      (window as any).__BOARD_DEBUG__ = {
-        boardChars: boardCharsRef.current,
-        isBooted: () => isBootedRef.current,
-        triggerBoot: () => triggerBootSequence(),
-        setSettled: () => setSettledImmediately(),
-      };
-    }
-  }, []);
-
   // Float arrays for instanced buffer attributes stored in stable useRef containers
-  const flipProgressRef = useRef<Float32Array>(new Float32Array(TOTAL_FLAPS));
-  const backingUvTopRef = useRef<Float32Array>(new Float32Array(TOTAL_FLAPS * 2));
-  const backingUvBottomRef = useRef<Float32Array>(new Float32Array(TOTAL_FLAPS * 2));
-  const flapUvCurrentRef = useRef<Float32Array>(new Float32Array(TOTAL_FLAPS * 2));
-  const flapUvNextRef = useRef<Float32Array>(new Float32Array(TOTAL_FLAPS * 2));
+  const { flipProgressArray, backingUvTopArray, backingUvBottomArray, flapUvCurrentArray, flapUvNextArray } = useMemo(() => ({
+    flipProgressArray: new Float32Array(TOTAL_FLAPS),
+    backingUvTopArray: new Float32Array(TOTAL_FLAPS * 2),
+    backingUvBottomArray: new Float32Array(TOTAL_FLAPS * 2),
+    flapUvCurrentArray: new Float32Array(TOTAL_FLAPS * 2),
+    flapUvNextArray: new Float32Array(TOTAL_FLAPS * 2),
+  }), []);
+
+  const flipProgressRef = useRef<Float32Array>(flipProgressArray);
+  const backingUvTopRef = useRef<Float32Array>(backingUvTopArray);
+  const backingUvBottomRef = useRef<Float32Array>(backingUvBottomArray);
+  const flapUvCurrentRef = useRef<Float32Array>(flapUvCurrentArray);
+  const flapUvNextRef = useRef<Float32Array>(flapUvNextArray);
 
   // 1. Texture Atlas
   const atlasTexture = useMemo(() => createSplitFlapTextureAtlas(), []);
@@ -157,11 +158,11 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
     geo.setIndex(indices);
 
     // Add instanced attributes
-    geo.setAttribute("aUvTop", new THREE.InstancedBufferAttribute(backingUvTopRef.current, 2));
-    geo.setAttribute("aUvBottom", new THREE.InstancedBufferAttribute(backingUvBottomRef.current, 2));
+    geo.setAttribute("aUvTop", new THREE.InstancedBufferAttribute(backingUvTopArray, 2));
+    geo.setAttribute("aUvBottom", new THREE.InstancedBufferAttribute(backingUvBottomArray, 2));
 
     return geo;
-  }, []);
+  }, [backingUvBottomArray, backingUvTopArray]);
 
   // 4. Rotating Flap Geometry: Dual-plane pair (front plane facing +Z, back plane facing -Z)
   // Pre-translated so the hinge sits at local y = 0 with zero end-cap obstruction
@@ -205,12 +206,12 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
     geo.setIndex(indices);
 
     // Add instanced attributes
-    geo.setAttribute("aFlipProgress", new THREE.InstancedBufferAttribute(flipProgressRef.current, 1));
-    geo.setAttribute("aUvCurrent", new THREE.InstancedBufferAttribute(flapUvCurrentRef.current, 2));
-    geo.setAttribute("aUvNext", new THREE.InstancedBufferAttribute(flapUvNextRef.current, 2));
+    geo.setAttribute("aFlipProgress", new THREE.InstancedBufferAttribute(flipProgressArray, 1));
+    geo.setAttribute("aUvCurrent", new THREE.InstancedBufferAttribute(flapUvCurrentArray, 2));
+    geo.setAttribute("aUvNext", new THREE.InstancedBufferAttribute(flapUvNextArray, 2));
 
     return geo;
-  }, []);
+  }, [flapUvCurrentArray, flapUvNextArray, flipProgressArray]);
 
   // Set instance matrices for the 10 rows x 50 columns grid
   useEffect(() => {
@@ -245,10 +246,7 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
   }, []);
 
   // Frame tick: update GPU attributes if GSAP tweens modified them
-  useFrame(({ scene }) => {
-    if (typeof window !== "undefined") {
-      (window as any).__SPLIT_BOARD_SCENE__ = scene;
-    }
+  useFrame(() => {
     if (hasUpdatesRef.current) {
       const flapProgressAttr = flapGeometry.getAttribute("aFlipProgress") as THREE.InstancedBufferAttribute;
       const flapCurrentAttr = flapGeometry.getAttribute("aUvCurrent") as THREE.InstancedBufferAttribute;
@@ -321,12 +319,14 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
       const toC = fullSequence[s + 1];
       const proxy = { p: 0 };
 
+      // Final flip gets a "mechanical snap" overshoot ease (PRD §4.2)
+      const isLastFlip = s === fullSequence.length - 2;
       tl.to(
         proxy,
         {
           p: 1,
-          duration: 0.11 + Math.random() * 0.03, // Slight mechanical jitter
-          ease: "power1.inOut",
+          duration: isLastFlip ? 0.14 : 0.11 + Math.random() * 0.03,
+          ease: isLastFlip ? "back.out(1.7)" : "power1.inOut",
           onStart: () => {
             const [fromU, fromV] = getCharUvOffset(fromC);
             const [toU, toV] = getCharUvOffset(toC);
@@ -386,6 +386,26 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
     }
   }, [setSlotInstant]);
 
+  // Update Row 9 (bottom row) with a live clock
+  const updateLiveClock = useCallback((timeStr: string) => {
+    if (!isBootedRef.current || useFaqStore.getState().bootState !== "settled") return;
+    
+    // Right-align the time string
+    const prefix = "LOCAL TIME · ";
+    const fullStr = (prefix + timeStr).padStart(BOARD_COLS, " ");
+    const line = padGraphemes(fullStr, BOARD_COLS);
+    
+    const row = 9;
+    for (let c = 0; c < BOARD_COLS; c++) {
+      const index = row * BOARD_COLS + c;
+      const targetChar = line[c] || " ";
+      if (boardCharsRef.current[index] !== targetChar) {
+         // Pass empty intermediate chars so it flips exactly once
+         sequenceSlotSteps(index, [], targetChar);
+      }
+    }
+  }, [sequenceSlotSteps]);
+
   // §3: The Boot Sequence (Scroll-driven at p=0.35 -> 0.65)
   // Cascade left to right across columns with stagger 0.025s
   const triggerBootSequence = useCallback(() => {
@@ -439,6 +459,9 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
     const teaser = padGraphemes(truncateToTeaser(rawTeaser, 50), BOARD_COLS);
     const randomJunk = ["A", "9", "P", "R", "5", "★", "Q"];
 
+    // Count how many columns actually need to flip
+    let lastFlippingCol = 0;
+
     // Drive Row 2 to spell the teaser
     for (let c = 0; c < BOARD_COLS; c++) {
       const targetChar = teaser[c] || " ";
@@ -446,6 +469,7 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
       const currentChar = boardCharsRef.current[index];
 
       if (currentChar !== targetChar) {
+        lastFlippingCol = c;
         const delay = c * 0.015;
         gsap.delayedCall(delay, () => {
           const rand1 = randomJunk[Math.floor(Math.random() * randomJunk.length)];
@@ -453,7 +477,35 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
         });
       }
     }
-  }, [sequenceSlotSteps]);
+
+    // Subtle board-wide micro-shake on word lock (PRD §4.2)
+    // Gated behind prefers-reduced-motion — cut entirely, not just softened.
+    if (!reducedMotion && boardGroupRef.current) {
+      const shakeDelay = lastFlippingCol * 0.015 + 0.25; // After last column settles
+      gsap.delayedCall(shakeDelay, () => {
+        if (!boardGroupRef.current) return;
+        gsap.to(boardGroupRef.current.position, {
+          x: "+=0.008",
+          duration: 0.04,
+          yoyo: true,
+          repeat: 3,
+          ease: "power2.inOut",
+        });
+      });
+    }
+  }, [sequenceSlotSteps, reducedMotion]);
+
+  // Expose global debug handle safely
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      (window as unknown as Record<string, unknown>).__BOARD_DEBUG__ = {
+        boardChars: boardCharsRef.current,
+        isBooted: () => isBootedRef.current,
+        triggerBoot: () => triggerBootSequence(),
+        setSettled: () => setSettledImmediately(),
+      };
+    }
+  }, [triggerBootSequence, setSettledImmediately]);
 
   // §4: Idle "Live" Mode
   // Every 6-10s, pick 1-2 unused rows (rows 3 to 10) and flip through ambient content
@@ -505,11 +557,11 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
     };
   }, [reducedMotion, sequenceSlotSteps]);
 
-  // Subscribe to Zustand store for FAQ selection (§5 Bridge)
+  // Subscribe to Zustand store for FAQ selection (§5 Bridge → Board spells flapLabel)
   useEffect(() => {
     const unsub = useFaqStore.subscribe((state, prevState) => {
-      if (state.activeTeaser && state.activeTeaser !== prevState.activeTeaser) {
-        triggerTeaserSequence(state.activeTeaser);
+      if (state.activeFlapLabel && state.activeFlapLabel !== prevState.activeFlapLabel) {
+        triggerTeaserSequence(state.activeFlapLabel);
       }
     });
     return unsub;
@@ -532,50 +584,94 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
         triggerTeaserSequence,
         resetToBlank,
         setSettledImmediately,
+        updateLiveClock,
       });
     }
-  }, [onHandleReady, triggerBootSequence, triggerTeaserSequence, resetToBlank, setSettledImmediately]);
+  }, [onHandleReady, triggerBootSequence, triggerTeaserSequence, resetToBlank, setSettledImmediately, updateLiveClock]);
 
   const boardWidth = BOARD_COLS * STEP_X + 0.6;
   const boardHeight = BOARD_ROWS * STEP_Y + 1.2;
 
+  // Memoized shared geometries and materials for casing, LEDs, and rails
+  const backplateGeo = useMemo(() => new THREE.BoxGeometry(boardWidth, boardHeight, 0.08), [boardWidth, boardHeight]);
+  const backplateMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#0c0a09", roughness: 0.9, metalness: 0.4 }), []);
+  const bezelGeo = useMemo(() => new THREE.BoxGeometry(boardWidth + 0.35, boardHeight + 0.35, 0.05), [boardWidth, boardHeight]);
+  const bezelMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#1a1614", roughness: 0.8, metalness: 0.7 }), []);
+  const headerPlateGeo = useMemo(() => new THREE.BoxGeometry(boardWidth, 0.75, 0.04), [boardWidth]);
+  const headerPlateMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#211a14", roughness: 0.7, metalness: 0.5 }), []);
+  const trimGeo = useMemo(() => new THREE.BoxGeometry(boardWidth - 0.2, 0.6, 0.01), [boardWidth]);
+  const trimMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#3d2c18", roughness: 0.4, metalness: 0.85 }), []);
+  const ledGeo = useMemo(() => new THREE.CylinderGeometry(0.06, 0.06, 0.04, 16), []);
+  const ledAmberMat = useMemo(() => new THREE.MeshBasicMaterial({ color: "#FFB84D" }), []);
+  const ledGreenMat = useMemo(() => new THREE.MeshBasicMaterial({ color: "#4ade80" }), []);
+  const railGeo = useMemo(() => new THREE.BoxGeometry(BOARD_COLS * STEP_X + 0.1, 0.01, 0.004), []);
+  const railMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#1f1813", roughness: 0.8, metalness: 0.6 }), []);
+
+  // Complete unmount lifecycle disposal
+  useEffect(() => {
+    return () => {
+      atlasTexture.dispose();
+      backingMaterial.dispose();
+      flapMaterial.dispose();
+      backingGeometry.dispose();
+      flapGeometry.dispose();
+      backplateGeo.dispose();
+      backplateMat.dispose();
+      bezelGeo.dispose();
+      bezelMat.dispose();
+      headerPlateGeo.dispose();
+      headerPlateMat.dispose();
+      trimGeo.dispose();
+      trimMat.dispose();
+      ledGeo.dispose();
+      ledAmberMat.dispose();
+      ledGreenMat.dispose();
+      railGeo.dispose();
+      railMat.dispose();
+    };
+  }, [
+    atlasTexture,
+    backingMaterial,
+    flapMaterial,
+    backingGeometry,
+    flapGeometry,
+    backplateGeo,
+    backplateMat,
+    bezelGeo,
+    bezelMat,
+    headerPlateGeo,
+    headerPlateMat,
+    trimGeo,
+    trimMat,
+    ledGeo,
+    ledAmberMat,
+    ledGreenMat,
+    railGeo,
+    railMat,
+  ]);
+
   return (
-    <group position={[0, 0, 0]}>
+    <group ref={boardGroupRef} position={[0, 0, 0]}>
       {/* ========================================================================= */}
       {/* VINTAGE SOUTH INDIAN RAILWAY CASING & FRAME (Alaipayuthey Aesthetic)      */}
       {/* ========================================================================= */}
 
       {/* Main Cast Iron Backplate */}
-      <mesh position={[0, 0, -0.06]}>
-        <boxGeometry args={[boardWidth, boardHeight, 0.08]} />
-        <meshStandardMaterial color="#0c0a09" roughness={0.9} metalness={0.4} />
-      </mesh>
+      <mesh position={[0, 0, -0.06]} geometry={backplateGeo} material={backplateMat} />
 
       {/* Exterior Heavy Steel Rim Bezel */}
-      <mesh position={[0, 0, -0.02]}>
-        <boxGeometry args={[boardWidth + 0.35, boardHeight + 0.35, 0.05]} />
-        <meshStandardMaterial color="#1a1614" roughness={0.8} metalness={0.7} />
-      </mesh>
+      <mesh position={[0, 0, -0.02]} geometry={bezelGeo} material={bezelMat} />
 
       {/* Top Header Plate: "SOUTHERN RAILWAY · தெற்கு இரயில்வே" */}
-      <mesh position={[0, boardHeight / 2 + 0.55, 0.04]}>
-        <boxGeometry args={[boardWidth, 0.75, 0.04]} />
-        <meshStandardMaterial color="#211a14" roughness={0.7} metalness={0.5} />
-      </mesh>
+      <mesh position={[0, boardHeight / 2 + 0.55, 0.04]} geometry={headerPlateGeo} material={headerPlateMat} />
 
       {/* Brass Decorative Plate Trim */}
-      <mesh position={[0, boardHeight / 2 + 0.55, 0.07]}>
-        <boxGeometry args={[boardWidth - 0.2, 0.6, 0.01]} />
-        <meshStandardMaterial color="#3d2c18" roughness={0.4} metalness={0.85} />
-      </mesh>
+      <mesh position={[0, boardHeight / 2 + 0.55, 0.07]} geometry={trimGeo} material={trimMat} />
 
       {/* Indicator LED Bulbs along top rim */}
       {[-8, -4, 0, 4, 8].map((x, i) => (
         <group key={i} position={[x, boardHeight / 2 + 0.55, 0.1]}>
-          <mesh rotation={[Math.PI / 2, 0, 0]}>
-            <cylinderGeometry args={[0.06, 0.06, 0.04, 16]} />
-            <meshBasicMaterial color={i % 2 === 0 ? "#FFB84D" : "#4ade80"} />
-          </mesh>
+          <mesh rotation={[Math.PI / 2, 0, 0]} geometry={ledGeo} material={i % 2 === 0 ? ledAmberMat : ledGreenMat} />
           <pointLight
             color={i % 2 === 0 ? "#FF9922" : "#22c55e"}
             intensity={0.4}
@@ -590,10 +686,7 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
         const startY = ((BOARD_ROWS - 1) * STEP_Y) / 2;
         const y = startY - r * STEP_Y + STEP_Y / 2;
         return (
-          <mesh key={r} position={[0, y, -0.005]}>
-            <boxGeometry args={[BOARD_COLS * STEP_X + 0.1, 0.01, 0.004]} />
-            <meshStandardMaterial color="#1f1813" roughness={0.8} metalness={0.6} />
-          </mesh>
+          <mesh key={r} position={[0, y, -0.005]} geometry={railGeo} material={railMat} />
         );
       })}
 

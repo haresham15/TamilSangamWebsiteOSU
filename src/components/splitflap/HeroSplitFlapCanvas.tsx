@@ -1,16 +1,17 @@
 "use client";
-/* eslint-disable react-compiler/react-compiler */
 
 import React, { Suspense, useState, useEffect, useRef, useMemo } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitFlapBoard, SplitFlapBoardHandle } from "./SplitFlapBoard";
 import { useFaqStore } from "@/store/faqStore";
-import { Clock, Train, Terminal, Search } from "lucide-react";
-import { Environment } from "@react-three/drei";
+import { Terminal } from "lucide-react";
+import { Environment, BakeShadows } from "@react-three/drei";
 import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
+import { useLiteMode } from "@/context/LiteModeContext";
+import { SplitFlapLiteHero } from "./SplitFlapLiteHero";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -22,59 +23,85 @@ function pseudoRandom(seed: number): number {
   return x - Math.floor(x);
 }
 
+const dustMotesVertexShader = `
+uniform float uTime;
+attribute float aSpeed;
+attribute float aSeed;
+varying float vAlpha;
+
+void main() {
+  vec3 pos = position;
+  // GPU-driven upward drift with periodic modulo wrap
+  float yOffset = mod(pos.y + uTime * aSpeed * 1.5 + 4.0, 10.0) - 4.0;
+  pos.y = yOffset;
+  pos.x += sin(uTime * 0.8 + aSeed) * 0.15;
+  
+  vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+  gl_Position = projectionMatrix * mvPosition;
+  gl_PointSize = (45.0 / -mvPosition.z);
+  vAlpha = smoothstep(-4.0, -2.0, pos.y) * smoothstep(6.0, 4.0, pos.y) * 0.35;
+}
+`;
+
+const dustMotesFragmentShader = `
+varying float vAlpha;
+
+void main() {
+  vec2 coord = gl_PointCoord - vec2(0.5);
+  float dist = length(coord);
+  if (dist > 0.5) discard;
+  float strength = pow(1.0 - (dist * 2.0), 1.5);
+  gl_FragColor = vec4(vec3(1.0, 0.88, 0.7), strength * vAlpha);
+}
+`;
+
 // ---------------------------------------------------------------------------
-// 1. DUST MOTES (§6: 100 additive points drifting upward)
+// 1. DUST MOTES (GPU Vertex Shader with 0 CPU array mutations per frame)
 // ---------------------------------------------------------------------------
 function DustMotes({ count = 100 }: { count?: number }) {
-  const pointsRef = useRef<THREE.Points>(null);
-
-  const [positions, initialSpeeds] = useMemo(() => {
+  const { geometry, material } = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const speeds = new Float32Array(count);
+    const seeds = new Float32Array(count);
     for (let i = 0; i < count; i++) {
       pos[i * 3] = (pseudoRandom(i * 4 + 1) - 0.5) * 22;
       pos[i * 3 + 1] = (pseudoRandom(i * 4 + 2) - 0.5) * 10;
       pos[i * 3 + 2] = (pseudoRandom(i * 4 + 3) - 0.5) * 14 + 4;
       speeds[i] = 0.05 + pseudoRandom(i * 4 + 4) * 0.12;
+      seeds[i] = pseudoRandom(i * 4 + 5) * Math.PI * 2;
     }
-    return [pos, speeds];
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute("aSpeed", new THREE.BufferAttribute(speeds, 1));
+    geo.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 1));
+
+    const mat = new THREE.ShaderMaterial({
+      vertexShader: dustMotesVertexShader,
+      fragmentShader: dustMotesFragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+      },
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+
+    return { geometry: geo, material: mat };
   }, [count]);
 
-  useFrame((_, delta) => {
-    if (!pointsRef.current) return;
-    const geo = pointsRef.current.geometry;
-    const posAttr = geo.getAttribute("position") as THREE.BufferAttribute;
-    const array = posAttr.array as Float32Array;
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+      material.dispose();
+    };
+  }, [geometry, material]);
 
-    for (let i = 0; i < count; i++) {
-      array[i * 3 + 1] += initialSpeeds[i] * delta * 1.5;
-      // Wrap when floating past top of platform
-      if (array[i * 3 + 1] > 6.0) {
-        array[i * 3 + 1] = -4.0;
-        array[i * 3] = (pseudoRandom(i * 17 + 13) - 0.5) * 22;
-      }
-    }
-    posAttr.needsUpdate = true;
+  useFrame((state) => {
+    material.uniforms.uTime.value = state.clock.getElapsedTime();
   });
 
-  return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.06}
-        color="#FFE0B2"
-        transparent
-        opacity={0.35}
-        blending={THREE.AdditiveBlending}
-        depthWrite={false}
-      />
-    </points>
-  );
+  return <points geometry={geometry} material={material} />;
 }
 
 // ---------------------------------------------------------------------------
@@ -256,6 +283,7 @@ export function HeroSplitFlapCanvas({
   const boardHandleRef = useRef<SplitFlapBoardHandle | null>(null);
   const hasTriggeredBootRef = useRef(false);
 
+  const { isLiteMode } = useLiteMode();
   const [inView, setInView] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(() => {
     if (typeof window !== "undefined") {
@@ -287,14 +315,14 @@ export function HeroSplitFlapCanvas({
   const activeQuestion = useFaqStore((s) => s.activeQuestion);
   const fps = useFaqStore((s) => s.fps);
 
-  // Synchronized camera & scene values (§1 Table)
+  // Synchronized camera & scene values (§1 Table: starts in crisp focus, recedes on scroll)
   const camStateRef = useRef({
     x: 0,
-    y: 2.4,
-    z: 13,
-    fov: 40,
-    fog: 0.024,
-    lampEmissive: 0.0,
+    y: 1.6,
+    z: 5.8,
+    fov: 42,
+    fog: 0.026,
+    lampEmissive: 1.0,
   });
 
   // Sync debugMode and listen to prefers-reduced-motion changes
@@ -310,18 +338,21 @@ export function HeroSplitFlapCanvas({
     }
   }, [debugActive]);
 
-  // Live Railway Clock in header
+  // Live Railway Clock in header & on the physical 3D board
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      setTimeStr(
-        now.toLocaleTimeString("en-US", {
-          hour12: false,
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        }) + " EST"
-      );
+      const formattedTime = now.toLocaleTimeString("en-US", {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }) + " EST";
+      setTimeStr(formattedTime);
+      
+      if (boardHandleRef.current) {
+        boardHandleRef.current.updateLiveClock(formattedTime);
+      }
     };
     updateTime();
     const timer = setInterval(updateTime, 1000);
@@ -384,80 +415,52 @@ export function HeroSplitFlapCanvas({
         },
       });
 
-      // p: 0.00 -> 0.20: Overhead lamps flicker on (emissive 0->1), camera (0, 2.4, 13) -> (0, 2.0, 10)
+      // Phase 3a: 0.00 -> 0.15: Idle hold — full clear board face (0, 1.6, 5.8), fov 42, warm lamps active
       tl.to(
         target,
         {
           x: 0,
-          y: 2.0,
-          z: 10,
-          fov: 39,
+          y: 1.6,
+          z: 5.8,
+          fov: 42,
           fog: 0.026,
           lampEmissive: 1.0,
-          duration: 0.2,
+          duration: 0.15,
           ease: "none",
         },
         0
       );
 
-      // p: 0.20 -> 0.35: Camera approaches platform (0, 1.8, 8), fov 40, fog 0.027
+      // Phase 3b: 0.15 -> 0.70: Cinematic recede / scale-down — camera pulls back (0, 2.8, 9.8), fov 36, fog 0.028
       tl.to(
         target,
         {
           x: 0,
-          y: 1.8,
-          z: 8,
-          fov: 40,
-          fog: 0.027,
-          duration: 0.15,
-          ease: "none",
+          y: 2.8,
+          z: 9.8,
+          fov: 36,
+          fog: 0.028,
+          lampEmissive: 1.0,
+          duration: 0.55,
+          ease: "power1.inOut",
         },
-        0.2
+        0.15
       );
 
-      // p: 0.35 -> 0.65: Boot wave completes — camera (0, 1.7, 6.5), fov 41, fog 0.028
+      // Phase 3c: 0.70 -> 1.00: Settle into wide station perspective as scroll approaches content bridge (0, 3.2, 11.2)
       tl.to(
         target,
         {
           x: 0,
-          y: 1.7,
-          z: 6.5,
-          fov: 41,
-          fog: 0.028,
-          duration: 0.3,
+          y: 3.2,
+          z: 11.2,
+          fov: 34,
+          fog: 0.030,
+          lampEmissive: 1.0,
+          duration: 0.30,
           ease: "none",
         },
-        0.35
-      );
-
-      // p: 0.65 -> 0.85: Camera holds; sharp focus on board face (0, 1.6, 5.6), fov 42
-      tl.to(
-        target,
-        {
-          x: 0,
-          y: 1.6,
-          z: 5.6,
-          fov: 42,
-          fog: 0.028,
-          duration: 0.2,
-          ease: "none",
-        },
-        0.65
-      );
-
-      // p: 0.85 -> 1.00: Pin releases to (0, 1.6, 5.4) -> idle "live" mode begins
-      tl.to(
-        target,
-        {
-          x: 0,
-          y: 1.6,
-          z: 5.4,
-          fov: 42,
-          fog: 0.028,
-          duration: 0.15,
-          ease: "none",
-        },
-        0.85
+        0.70
       );
 
       ScrollTrigger.refresh();
@@ -474,74 +477,33 @@ export function HeroSplitFlapCanvas({
     };
   }, [reducedMotion]);
 
+  // Early return for Tier C / Lite Mode (§9)
+  if (isLiteMode) {
+    return (
+      <div id="alaipayuthey-splitflap-hero" className="w-full">
+        <SplitFlapLiteHero onSearchFocus={() => onSearchChange?.("")} />
+      </div>
+    );
+  }
+
   return (
     <div
       ref={pinWrapperRef}
       className={`relative w-full ${
-        reducedMotion ? "h-[85dvh]" : "h-[230vh]" // 100dvh sticky viewport + 130vh pinned scroll length
+        reducedMotion ? "h-[85dvh]" : "h-[200vh]" // 100dvh sticky viewport + 100vh pinned scroll length
       }`}
     >
       <div
         ref={stickyContainerRef}
-        className="sticky top-0 z-10 w-full h-[100dvh] overflow-hidden bg-[#070504] border-b border-[#261d15] shadow-2xl flex flex-col justify-between"
+        className="sticky top-0 z-10 w-full h-[100dvh] overflow-hidden bg-[#070504] border-b border-[#261d15] flex flex-col justify-between"
       >
         {/* ========================================================================= */}
-        {/* 1. TOP RAILWAY STATION HUD (Alaipayuthey Vintage Station Atmosphere)      */}
+        {/* R3F 3D VIEWPORT WITH PHYSICAL CAMERA & ATMOSPHERE (Clean Cinematic Scene) */}
         {/* ========================================================================= */}
-        <div className="relative z-20 w-full pt-16 sm:pt-20 px-4 sm:px-8 pb-3 bg-gradient-to-b from-[#0a0705] via-[#0d0a08]/95 to-[#0d0a08]/80 backdrop-blur-md border-b border-[#231b14] flex flex-wrap items-center justify-between gap-3 text-xs font-mono tracking-wider text-[#d4af37]">
-          {/* Left: Station Identity */}
-          <div className="flex items-center gap-2.5">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded bg-[#231a12] border border-[#4a3b2c] text-[#f59e0b] shadow-inner">
-              <Train className="w-4 h-4" />
-            </span>
-            <div>
-              <span className="font-bold text-[#faf5ed] uppercase tracking-widest text-[11px] sm:text-xs">
-                SOUTHERN RAILWAY · தெற்கு இரயில்வே
-              </span>
-              <span className="hidden sm:inline-block ml-2 text-[#9a8670]">
-                [ MAS CHENNAI CENTRAL ⇄ COLUMBUS HUB ]
-              </span>
-            </div>
-          </div>
-
-          {/* Center: Search & Filter Input (§5: Real visible keyboard-focusable input) */}
-          <div className="flex-1 max-w-xs sm:max-w-md mx-2">
-            <div className="relative flex items-center">
-              <Search className="absolute left-3 w-3.5 h-3.5 text-[#f59e0b] pointer-events-none" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => {
-                  if (onSearchChange) onSearchChange(e.target.value);
-                  useFaqStore.getState().setSearchQuery(e.target.value);
-                }}
-                placeholder="Search guide & FAQs..."
-                aria-label="Filter Sangam FAQ & User Guide"
-                className="w-full pl-9 pr-3 py-1.5 text-xs font-mono bg-[#140e0a] border border-[#423122] rounded-md text-[#fef3c7] placeholder-[#8a7662] focus:outline-none focus:border-[#f59e0b] focus:ring-1 focus:ring-[#f59e0b] transition-colors"
-              />
-            </div>
-          </div>
-
-          {/* Right: Station Platform Status & Live Clock */}
-          <div className="flex items-center gap-3 text-[#e6c280]">
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#17110c] border border-[#3b2a1a]">
-              <Clock className="w-3 h-3 text-[#f59e0b]" />
-              <span className="font-bold tracking-widest">{timeStr}</span>
-            </div>
-            <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#17110c] border border-[#3b2a1a]">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[#a89985]">PLATFORM 04 : ON TIME</span>
-            </div>
-          </div>
-        </div>
-
-        {/* ========================================================================= */}
-        {/* 2. R3F 3D VIEWPORT WITH PHYSICAL CAMERA & ATMOSPHERE                      */}
-        {/* ========================================================================= */}
-        <div className="relative flex-1 w-full h-full">
+        <div className="relative flex-1 w-full h-full" aria-hidden="true">
           <Canvas
-            dpr={[1, 1.5]}
-            camera={{ position: [0, 2.4, 13], fov: 40 }}
+            dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
+            camera={{ position: [0, 1.6, 5.8], fov: 42 }}
             frameloop={inView ? "always" : "demand"}
             gl={{
               antialias: true,
@@ -551,19 +513,22 @@ export function HeroSplitFlapCanvas({
             }}
             shadows={{ type: THREE.PCFShadowMap }}
           >
+            <BakeShadows />
             {/* FogExp2 configured per §1 Table (density 0.024 -> 0.028) */}
-            <fogExp2 attach="fog" args={["#0c0907", 0.024]} />
+            <fogExp2 attach="fog" args={["#0c0907", 0.026]} />
 
             {/* Bespoke Scene-Matched Transit Solari Environment Map */}
             {bespokeEnv && <Environment map={bespokeEnv} background={false} />}
 
-            {/* Atmosphere Lighting */}
+            {/* INTENTIONAL: This page's lighting is fixed, NOT driven by the global
+                tinai/time-of-day system. The platform atmosphere is a signature hero.
+                Do not "fix" it to match the global system. — PRD §3.1 */}
             <ambientLight intensity={1.2} color="#3d2c1e" />
             <directionalLight
               position={[0, 6, 8]}
               intensity={4.5}
               color="#FFF4DE"
-              castShadow
+              castShadow={fps >= 30 || fps === 0}
               shadow-mapSize-width={512}
               shadow-mapSize-height={512}
             />
@@ -593,9 +558,15 @@ export function HeroSplitFlapCanvas({
               <SplitFlapBoard
                 onHandleReady={(handle) => {
                   boardHandleRef.current = handle;
-                  if (useFaqStore.getState().scrollProgress >= 0.35 && !hasTriggeredBootRef.current) {
+                  if (!hasTriggeredBootRef.current) {
                     hasTriggeredBootRef.current = true;
-                    handle.triggerBootSequence();
+                    if (reducedMotion) {
+                      handle.setSettledImmediately();
+                    } else {
+                      setTimeout(() => {
+                        handle.triggerBootSequence();
+                      }, 350);
+                    }
                   }
                 }}
                 reducedMotion={reducedMotion}
@@ -611,7 +582,7 @@ export function HeroSplitFlapCanvas({
         {/* 3. ?debug=1 ENGINEERING HUD (§8 Verification)                             */}
         {/* ========================================================================= */}
         {debugActive && (
-          <div className="absolute top-24 left-6 z-30 p-3 rounded-lg bg-[#0e0a07]/90 border border-[#f59e0b]/40 backdrop-blur-md font-mono text-[11px] text-[#fef3c7] shadow-2xl flex flex-col gap-1.5 pointer-events-none">
+          <div className="absolute top-24 left-6 z-30 p-3 rounded-none bg-[#0e0a07]/90 border border-[#f59e0b]/40 backdrop-blur-md font-mono text-[11px] text-[#fef3c7] shadow-[4px_4px_0px_#261d15] flex flex-col gap-1.5 pointer-events-none">
             <div className="flex items-center gap-2 pb-1 border-b border-[#3b2b1d] text-[#f59e0b] font-bold">
               <Terminal className="w-3.5 h-3.5" />
               <span>SPLIT-FLAP KINEMATIC ENGINE HUD</span>
@@ -666,3 +637,5 @@ export function HeroSplitFlapCanvas({
     </div>
   );
 }
+
+export default HeroSplitFlapCanvas;

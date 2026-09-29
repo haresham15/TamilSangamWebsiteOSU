@@ -5,6 +5,12 @@ export interface FaqItem {
   questionTa: string;
   answerEn: string;
   answerTa: string;
+  /** Short EN keyword for the split-flap board to spell. ≤14 chars, uppercase.
+   *  Tamil NEVER appears on flap cells — it lives in static chrome and DOM only.
+   *  See guide-split-flap PRD §4.3 / §6. */
+  flapLabel: string;
+  /** Search tags: EN, Tamil, and Tanglish keywords for the search overlay. */
+  tags: string[];
 }
 
 export const FAQS: FaqItem[] = [
@@ -17,6 +23,8 @@ export const FAQS: FaqItem[] = [
       "OSU Tamil Sangam is a casual, student-run cultural organization at The Ohio State University. We are a campus hub for Tamil students and friends of all backgrounds to hang out, eat delicious South Indian food, listen to music, play games, and celebrate festivals like Diwali. No matter what language you speak or what your major is, you have a home with us!",
     answerTa:
       "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் என்பது மாணவர்கள் அனைவரும் ஒன்றிணைந்து தமிழ் பண்பாட்டை ரசிக்கவும், நல்ல உணவை ருசிக்கவும், மற்றும் நட்பை வளர்க்கவும் வழிகாட்டும் ஒரு மாணவர் அமைப்பாகும். மொழி பேதமின்றி அனைவரும் எங்கள் குடும்பத்தில் இணையலாம்!",
+    flapLabel: "TAMIL SANGAM",
+    tags: ["sangam", "tamil", "osu", "ohio state", "club", "organization", "what is", "சங்கம்", "என்ன"],
   },
   {
     id: "faq-02",
@@ -27,6 +35,8 @@ export const FAQS: FaqItem[] = [
       "Definitely not! We are completely open to students of all languages, backgrounds, and majors. Many of our active members do not speak Tamil and simply love the friendly community, the delicious food, the music, and the fun social events. As the Tamil proverb goes: 'யாதும் ஊரே யாவரும் கேளீர்' (To us, everyone is kin)!",
     answerTa:
       "கட்டாயமாகத் தேவையில்லை! எந்தவொரு மொழி பேசும் மாணவர்களும் எங்கள் சங்கத்தில் மகிழ்ச்சியுடன் இணையலாம். நல்ல உணவு, இசை மற்றும் தோழமையை விரும்பும் எவருக்கும் இங்கு இடமுண்டு.",
+    flapLabel: "ALL WELCOME",
+    tags: ["join", "language", "tamil speaking", "inclusive", "open", "யாதும் ஊரே", "இணைய", "non-tamil"],
   },
   {
     id: "faq-03",
@@ -37,6 +47,8 @@ export const FAQS: FaqItem[] = [
       "General membership is 100% free! Anyone can attend our bi-weekly general body meetings, study nights, and open workshops without paying a cent. For ticketed flagship celebrations, subsidized student-tier tickets are offered to BuckID holders.",
     answerTa:
       "பொது உறுப்பினராக இணைய எந்தக் கட்டணமும் இல்லை! பொதுக் கூட்டங்கள், படிப்பு மாலைகள் மற்றும் பட்டறைகள் முற்றிலும் இலவசம். பெரிய விழாக்களுக்கு மட்டும் குறைந்த கட்டணத்தில் மாணவர் நுழைவுச்சீட்டுகள் வழங்கப்படுகின்றன.",
+    flapLabel: "FREE · NO DUES",
+    tags: ["fees", "dues", "cost", "money", "free", "tickets", "BuckID", "கட்டணம்", "இலவசம்", "payment"],
   },
   {
     id: "faq-04",
@@ -47,6 +59,8 @@ export const FAQS: FaqItem[] = [
       "Under our official constitution, to obtain voting rights, present formal ideas, or qualify for Executive Board shadowing, members must attend at least two meetings and two events per academic semester. Additionally, at least 90% of active voting members must be current OSU students.",
     answerTa:
       "சங்கத்தின் அரசியல் சாசனத்தின்படி, வாக்களிக்கும் உரிமை, அதிகாரப்பூர்வ யோசனைகளை முன்வைக்கும் தகுதி, அல்லது நிர்வாகக் குழு வழிகாட்டல் பெற, உறுப்பினர்கள் ஒரு பருவத்தில் குறைந்தது 2 கூட்டங்களிலும் 2 நிகழ்வுகளிலும் கலந்துகொள்ள வேண்டும். மேலும் 90% உறுப்பினர்கள் நடப்பு மாணவர்களாக இருத்தல் வேண்டும்.",
+    flapLabel: "VOTING RIGHTS",
+    tags: ["voting", "vote", "shadow", "board", "constitution", "qualify", "வாக்குரிமை", "நிர்வாகம்", "eligibility"],
   },
   {
     id: "faq-05",
@@ -57,6 +71,8 @@ export const FAQS: FaqItem[] = [
       "Yes! Non-student community members and families across Columbus and Ohio are warmly welcomed to attend our public cultural festivals, community seminars, and celebrations. However, under university student organization rules, non-student community members do not hold voting rights or creative directorship privileges.",
     answerTa:
       "நிச்சயமாக! கொலம்பஸ் மற்றும் ஓஹியோ வாழ் தமிழ் குடும்பங்களும் சமூகத்தினரும் எங்கள் கலாச்சார விழாக்கள் மற்றும் கருத்தரங்குகளில் பங்கேற்க எப்போதும் வரவேற்கப்படுகிறார்கள். எனினும், அவர்களுக்கு வாக்குரிமையோ நிர்வாக முடிவெடுக்கும் உரிமையோ கிடையாது.",
+    flapLabel: "COMMUNITY",
+    tags: ["community", "non-student", "family", "Columbus", "Ohio", "public", "சமூகம்", "குடும்பம்", "alumni"],
   },
   {
     id: "faq-06",
@@ -67,6 +83,8 @@ export const FAQS: FaqItem[] = [
       "OSU Tamil Sangam strictly complies with university non-discrimination guidelines and University Policy 1.15 regarding sexual misconduct. We maintain an unconditional zero-tolerance policy against discrimination, harassment, assault, and retaliation, guaranteeing a safe, dignified, and inclusive environment for all.",
     answerTa:
       "ஓஹியோ பல்கலைக்கழகத்தின் பாகுபாடின்மை வழிகாட்டுதல்கள் மற்றும் பல்கலைக்கழக விதி 1.15 (பாலியல் முறைகேடு தடுப்பு) ஆகியவற்றை சங்கம் மிகக் கண்டிப்புடன் பின்பற்றுகிறது. அனைவருக்கும் பாதுகாப்பான மற்றும் சமத்துவமான சூழல் உறுதி செய்யப்படுகிறது.",
+    flapLabel: "ZERO TOLERANCE",
+    tags: ["safety", "discrimination", "harassment", "policy", "inclusive", "பாதுகாப்பு", "பாகுபாடின்மை", "1.15"],
   },
   {
     id: "faq-07",
@@ -77,6 +95,8 @@ export const FAQS: FaqItem[] = [
       "At the start of each semester, we hold open interest workshops and casual showcases. Whether you love dancing (energetic cinematic Kuthu, fusion, or classical), singing, or playing an instrument, all skill levels are welcome. You can fill out the Performer Interest Form on our Join page at any time!",
     answerTa:
       "ஒவ்வொரு பருவத்தின் தொடக்கத்திலும் விருப்பமுள்ளவர்களுக்கான எளிய அறிமுகப் பட்டறைகள் நடைபெறும். சினிமா குத்து, பாட்டு, வாத்தியங்கள் வாசித்தல் என ஆர்வம் உள்ள அனைவரும் பங்கேற்கலாம்.",
+    flapLabel: "DANCE · MUSIC",
+    tags: ["dance", "music", "aatam", "paatam", "kuthu", "classical", "perform", "நடனம்", "இசை", "audition"],
   },
   {
     id: "faq-08",
@@ -87,6 +107,8 @@ export const FAQS: FaqItem[] = [
       "Our annual collaborative Diwali celebration is hosted in the Ohio Union (Archie Griffin Ballroom). Our casual gatherings, street food nights, chai socials, and lawn game kickbacks take place on the South Oval, in the RPAC, or in student campus spaces.",
     answerTa:
       "தீபாவளிப் பெருவிழா ஓஹியோ யூனியன் அரங்கில் நடைபெறும். எளிய பிக்னிக், தெருவோர உணவு மற்றும் சந்திப்புகள் ஓவல் புல்வெளி அல்லது மாணவர் வளாக அரங்குகளில் நடைபெறும்.",
+    flapLabel: "OHIO UNION",
+    tags: ["location", "venue", "ohio union", "south oval", "RPAC", "diwali", "campus", "நிகழ்ச்சி", "இடம்"],
   },
   {
     id: "faq-09",
@@ -97,5 +119,7 @@ export const FAQS: FaqItem[] = [
       "We adhere to strict privacy practices. We do not run facial recognition or name-tagging. Every photo in our gallery has a visible 'Request Removal' option that alerts the executive board to swiftly unpublish or blur any photo within 48 hours upon request.",
     answerTa:
       "நாங்கள் முக அங்கீகார தொழில்நுட்பங்களைப் பயன்படுத்துவதில்லை. புகைப்படத் தொகுப்பில் உள்ள ஒவ்வொரு படத்திலும் 'நீக்கக் கோருதல்' பட்டன் உள்ளது. கோரிக்கை வரப்பெற்ற 48 மணி நேரத்திற்குள் அப் படம் நீக்கப்படும்.",
+    flapLabel: "PHOTO PRIVACY",
+    tags: ["photo", "privacy", "gallery", "removal", "facial recognition", "புகைப்படம்", "தனியுரிமை", "நீக்கம்"],
   },
 ];

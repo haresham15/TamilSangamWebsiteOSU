@@ -26,7 +26,6 @@ interface PostFXProps {
  * - ToneMapping: ACES Filmic.
  */
 export function PostFX({
-  bokehScale = 3.5,
   bloomIntensity = 0.85,
 }: PostFXProps) {
   return (

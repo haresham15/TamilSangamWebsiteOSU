@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     "Sangam literature university",
     "OSU Tamil Sangam constitution",
     "Ohio State student organization governance",
-    "Telugu Thallulu collaboration",
+    "Telugu Tamasha at OSU collaboration",
     "South Asian student orgs Ohio State",
     "Tamil culture Columbus",
   ],

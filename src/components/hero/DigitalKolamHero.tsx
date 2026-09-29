@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState, useMemo, useSyncExternalStore } fro
 import dynamic from "next/dynamic";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
-import { Users, ArrowRight } from "lucide-react";
+import { Users, ArrowRight, Calendar } from "lucide-react";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -244,6 +244,21 @@ function GPUKolamParticles({
     }
   });
 
+  // Complete unmount lifecycle disposal for particle geometry and material
+  useEffect(() => {
+    const currentPoints = pointsRef.current;
+    return () => {
+      if (currentPoints) {
+        currentPoints.geometry.dispose();
+        if (Array.isArray(currentPoints.material)) {
+          currentPoints.material.forEach((m) => m.dispose());
+        } else {
+          currentPoints.material.dispose();
+        }
+      }
+    };
+  }, []);
+
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
@@ -262,7 +277,7 @@ function GPUKolamParticles({
   );
 }
 
-export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
+export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) {
   const { locale } = useLocale();
   const { isLiteMode } = useLiteMode();
 
@@ -425,7 +440,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         {mounted && !isLiteMode && (
           <Canvas
-            dpr={[1, 1.5]} // Capped at 1.5x for 44% fill-rate performance boost on Retina/4K
+            dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
             frameloop={isHeroVisible ? "always" : "demand"}
             camera={{ position: [0, 0, 7.5], fov: 50 }}
             gl={{
@@ -622,6 +637,19 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug: string }) {
               iconPosition="right"
               className="w-full sm:w-auto justify-center"
             />
+
+            {nextEventSlug && (
+              <PalagaiButton
+                href={`/events/${nextEventSlug}`}
+                variant="primary"
+                size="md"
+                primaryText={locale === "ta" ? "அடுத்த விழா" : "Next Event"}
+                secondaryText={locale === "ta" ? "Next Event" : "அடுத்த விழா"}
+                icon={<Calendar className="w-3.5 h-3.5 text-[#250d38]" />}
+                iconPosition="right"
+                className="w-full sm:w-auto justify-center"
+              />
+            )}
           </div>
         </div>
       </div>

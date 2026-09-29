@@ -191,7 +191,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
             }}
             placeholder={locale === "ta" ? "நிகழ்வுகள், குழு, பக்கங்கள் தேடுங்கள்..." : "Search events, people, pages, or FAQs..."}
             aria-label="Search query"
-            className="w-full bg-transparent text-white placeholder-slate-400 text-sm sm:text-base outline-none font-sans"
+            className="w-full bg-transparent text-white placeholder-slate-400 text-sm sm:text-base outline-none font-mono"
           />
           {query && (
             <button

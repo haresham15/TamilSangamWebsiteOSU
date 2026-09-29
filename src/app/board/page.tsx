@@ -100,9 +100,9 @@ export default function BoardPage() {
         className="relative w-full overflow-hidden"
         style={{
           WebkitMaskImage:
-            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
+            "linear-gradient(to bottom, black 65%, transparent 100%)",
           maskImage:
-            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
+            "linear-gradient(to bottom, black 65%, transparent 100%)",
         }}
       >
         <BoardHeroCanvas
@@ -128,7 +128,7 @@ export default function BoardPage() {
         >
           {/* Header */}
           <div className="max-w-3xl mb-12">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1c1008] border border-[#4a321f] text-[#D4AF37] text-xs font-mono tracking-wider uppercase mb-4 shadow-inner">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-none bg-[#1c1008] border border-[#4a321f] text-[#D4AF37] text-xs font-mono tracking-wider uppercase mb-4">
               <Crown className="w-3.5 h-3.5" />
               <span>CHOLA DARBAR · EXECUTIVE SENATE ROSTER</span>
               <span className="text-[#8f755a]">·</span>
@@ -146,7 +146,7 @@ export default function BoardPage() {
           </div>
 
         {/* Architectural Ledger Console Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 max-w-4xl mx-auto mb-12 rounded-2xl bg-[#1c1008] border border-[#3d2714] shadow-xl">
+        <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 max-w-4xl mx-auto mb-12 rounded-none bg-[#1c1008] border border-[#3d2714] shadow-[4px_4px_0px_#250d38]">
           {[
             { id: "current" as const, label: locale === "ta" ? "செயற்குழு 2025–26 (9)" : "Executive Board 2025–26 (9)" },
             { id: "liquid" as const, label: locale === "ta" ? "பெயர் அரங்கம் (Liquid Roster)" : "Liquid Roster (Editorial)" },
@@ -160,10 +160,10 @@ export default function BoardPage() {
                 playWoodClick();
                 setActiveTab(tab.id);
               }}
-              className={`min-h-[42px] px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider font-bold transition-all ${
+              className={`min-h-[42px] px-4 py-2 rounded-none text-xs font-mono uppercase tracking-wider font-bold transition-all border ${
                 activeTab === tab.id
-                  ? "bg-[#D4AF37] text-[#120A06] shadow-md shadow-[#D4AF37]/20"
-                  : "text-[#a89078] hover:text-[#faf5ed] hover:bg-[#2a170d]"
+                  ? "bg-[#D4AF37] text-[#120A06] border-[#D4AF37] shadow-[2px_2px_0px_#250d38]"
+                  : "text-[#a89078] hover:text-[#faf5ed] hover:bg-[#2a170d] border-transparent"
               }`}
             >
               {tab.label}
@@ -472,20 +472,20 @@ export default function BoardPage() {
             <motion.div
               layoutId={`board-card-container-${activeModalCard.id}`}
               transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="box-ticket relative w-full max-w-lg bg-[#1c1008] border-2 border-[#D4AF37] shadow-[8px_8px_0px_#6b4a32] p-6 sm:p-8 text-left overflow-hidden rounded-xl"
+              className="box-ticket relative w-full max-w-lg bg-[#1c1008] border-2 border-[#D4AF37] shadow-[8px_8px_0px_#6b4a32] p-6 sm:p-8 text-left overflow-hidden rounded-none"
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
               <button
                 type="button"
                 onClick={() => setActiveModalCard(null)}
-                className="absolute top-6 right-6 w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center border border-[#6b4a32] bg-[#2a170d] hover:bg-[#3d2714] text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] transition-[background-color,transform] duration-150 active:scale-95 cursor-pointer shadow-[2px_2px_0px_#3d2714] rounded-lg"
+                className="absolute top-6 right-6 w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center border border-[#6b4a32] bg-[#2a170d] hover:bg-[#3d2714] text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] transition-[background-color,transform] duration-150 active:scale-95 cursor-pointer shadow-[2px_2px_0px_#3d2714] rounded-none"
                 aria-label="Close officer modal"
               >
                 <X className="w-5 h-5 text-[#D4AF37]" />
               </button>
 
               <div className="flex items-center gap-4 mb-6">
-                <div className="relative w-16 h-16 bg-[#0d0603] p-2 border border-[#6b4a32] rounded-lg">
+                <div className="relative w-16 h-16 bg-[#0d0603] p-2 border border-[#6b4a32] rounded-none">
                   <Image
                     src={activeModalCard.photoUrl}
                     alt={activeModalCard.nameEn}

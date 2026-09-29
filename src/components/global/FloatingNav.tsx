@@ -68,24 +68,25 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
 
   return (
     <>
-      <header className="fixed top-2.5 sm:top-4 left-0 right-0 z-50 px-3 sm:px-6 pointer-events-none transition-all duration-300">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3 pointer-events-auto">
-          
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
+          isScrolled
+            ? "bg-[#120820]/97 backdrop-blur-md border-b border-[#D4AF37]/15 shadow-xl"
+            : "bg-transparent border-b border-transparent"
+        }`}
+      >
+        <div className="max-w-[1440px] mx-auto flex items-center h-16 px-4 sm:px-6">
+
           {/* ========================================================================= */}
-          {/* 1. BRAND LOGO LOCKUP: BILINGUAL TAMIL COLLEGIATE MEDALLION                */}
+          {/* 1. BRAND LOCKUP — flush left, no pill, no border                           */}
           {/* ========================================================================= */}
           <Link
             href="/"
             onClick={playClick}
             aria-label="OSU Tamil Sangam Home"
-            className={`group flex items-center gap-2.5 px-3 py-1.5 rounded-full backdrop-blur-xl border transition-all duration-200 ${
-              isScrolled
-                ? "bg-[#160a22]/95 border-[#D4AF37]/40 shadow-lg shadow-black/30"
-                : "bg-[#180d24]/90 border-[#D4AF37]/30 shadow-md shadow-black/20 hover:border-[#D4AF37]/60"
-            }`}
+            className="group flex items-center gap-2.5 shrink-0 mr-6 xl:mr-8"
           >
-            {/* Circular Kolam Emblem Medallion */}
-            <div className="relative w-8 h-8 rounded-full border border-[#D4AF37]/70 bg-[#250d38] overflow-hidden shrink-0 shadow-inner flex items-center justify-center p-0.5 group-hover:scale-105 transition-transform duration-200">
+            <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-none border border-[#D4AF37]/60 bg-[#250d38] overflow-hidden shrink-0 flex items-center justify-center p-0.5 group-hover:border-[#D4AF37] transition-colors duration-200">
               <Image
                 src="/emblem.svg"
                 alt="Official OSU Tamil Sangam Emblem"
@@ -95,16 +96,14 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 priority
               />
             </div>
-
-            {/* Bilingual Tamil Epigraphy Lockup */}
-            <div className="flex flex-col text-left leading-tight pr-1.5">
-              <span className="text-[12.5px] sm:text-[13.5px] font-bold text-[#faf5ed] group-hover:text-[#e0b968] transition-colors font-display tracking-tight">
+            <div className="flex flex-col text-left leading-tight">
+              <span className="text-[12.5px] sm:text-[13px] font-bold text-[#faf5ed] group-hover:text-[#e0b968] transition-colors font-display tracking-tight">
                 {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"}
               </span>
               <span
                 lang="ta"
                 style={{ letterSpacing: 0 }}
-                className="text-[9.5px] sm:text-[10px] font-tamil font-medium text-[#D4AF37]/85 group-hover:text-[#D4AF37] transition-colors"
+                className="text-[9px] sm:text-[9.5px] font-tamil font-medium text-[#D4AF37]/75 group-hover:text-[#D4AF37] transition-colors"
               >
                 {locale === "ta" ? "The Ohio State University" : "ஓஹியோ மாநிலப் பல்கலைக்கழகம்"}
               </span>
@@ -112,39 +111,34 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
           </Link>
 
           {/* ========================================================================= */}
-          {/* 2. DESKTOP NAVIGATION PILL: BILINGUAL TAMIL-STYLIZED LEDGER               */}
+          {/* 2. DESKTOP NAV LINKS — inline, no pill wrapper, bottom-border active state */}
           {/* ========================================================================= */}
           <nav
             aria-label="Primary Navigation"
-            className={`hidden lg:flex items-center gap-0.5 p-1 rounded-full backdrop-blur-xl border transition-all duration-200 ${
-              isScrolled
-                ? "bg-[#160a22]/95 border-[#D4AF37]/35 shadow-lg shadow-black/30"
-                : "bg-[#180d24]/85 border-[#D4AF37]/25 shadow-md shadow-black/20"
-            }`}
+            className="hidden lg:flex items-center gap-0 flex-1"
           >
             {navLinks.map((item) => {
               const isActive = pathname === item.href;
               const isJoin = item.isCta;
 
-              // Distinctive Join / Membership CTA
               if (isJoin) {
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={playClick}
-                    className={`ml-1.5 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-display font-bold transition-all duration-200 shadow-sm ${
+                    className={`ml-3 flex items-center gap-1.5 px-4 py-1.5 text-xs font-display font-bold transition-all duration-200 border rounded-none ${
                       isActive
-                        ? "bg-[#D4AF37] text-[#120a06] ring-2 ring-[#e0b968] shadow-[#D4AF37]/30"
-                        : "bg-gradient-to-r from-[#D4AF37] via-[#e6a239] to-[#d4942d] text-[#120a06] hover:brightness-110 active:scale-95 shadow-black/20"
+                        ? "bg-[#D4AF37] text-[#120a06] border-[#D4AF37]"
+                        : "bg-[#D4AF37]/10 border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/20 hover:border-[#D4AF37] active:scale-[0.97]"
                     }`}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#120a06] animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-none bg-[#55CCA2] animate-pulse" />
                     <span>{locale === "ta" ? item.ta : item.en}</span>
                     <span
                       lang="ta"
                       style={{ letterSpacing: 0 }}
-                      className="text-[10px] opacity-80 font-tamil font-normal hidden xl:inline"
+                      className="text-[10px] opacity-70 font-tamil font-normal hidden xl:inline"
                     >
                       {locale === "ta" ? item.en : item.ta}
                     </span>
@@ -157,31 +151,28 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                   key={item.href}
                   href={item.href}
                   onClick={playClick}
-                  className={`group relative flex flex-col items-center justify-center px-2.5 xl:px-3 py-1 rounded-full transition-all duration-150 ${
+                  className={`group relative flex flex-col items-center justify-center px-3 xl:px-3.5 h-12 sm:h-14 transition-colors duration-150 ${
                     isActive
-                      ? "bg-[#29143d] text-[#faf5ed] border border-[#D4AF37]/50 shadow-inner"
-                      : "text-[#d1b8e6] hover:text-[#faf5ed] hover:bg-[#250d38]/50"
+                      ? "text-[#faf5ed]"
+                      : "text-[#b8a0cc] hover:text-[#faf5ed]"
                   }`}
                 >
-                  {/* Primary Script Label */}
                   <span className="text-[12px] xl:text-[12.5px] font-display font-semibold tracking-normal leading-tight">
                     {locale === "ta" ? item.ta : item.en}
                   </span>
-                  
-                  {/* Classical Secondary Tamil / English Subscript */}
                   <span
                     lang="ta"
                     style={{ letterSpacing: 0 }}
                     className={`text-[8.5px] xl:text-[9px] font-tamil leading-none transition-colors ${
-                      isActive ? "text-[#D4AF37] font-semibold" : "text-[#a88bbd] group-hover:text-[#e0b968]"
+                      isActive ? "text-[#D4AF37]" : "text-[#8a6fa5] group-hover:text-[#e0b968]"
                     }`}
                   >
                     {locale === "ta" ? item.en : item.ta}
                   </span>
 
-                  {/* Active Kolam Pulli Dot */}
+                  {/* Active indicator: bottom gold stroke, not a background pill */}
                   {isActive && (
-                    <span className="absolute -bottom-0.5 w-1 h-1 rounded-full bg-[#D4AF37] shadow-[0_0_4px_#D4AF37]" />
+                    <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#D4AF37] shadow-[0_0_6px_oklch(0.82_0.18_85/0.5)]" />
                   )}
                 </Link>
               );
@@ -189,15 +180,9 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
           </nav>
 
           {/* ========================================================================= */}
-          {/* 3. CONTROLS CAPSULE: SEARCH · LANGUAGE · TINAI · SOUND · MENU             */}
+          {/* 3. CONTROLS — right-aligned, no pill wrapper, thin vertical divider        */}
           {/* ========================================================================= */}
-          <div
-            className={`flex items-center gap-1 sm:gap-1.5 p-1 rounded-full backdrop-blur-xl border transition-all duration-200 ${
-              isScrolled
-                ? "bg-[#160a22]/95 border-[#D4AF37]/35 shadow-lg shadow-black/30"
-                : "bg-[#180d24]/85 border-[#D4AF37]/25 shadow-md shadow-black/20"
-            }`}
-          >
+          <div className="flex items-center gap-1 sm:gap-1.5 ml-auto pl-3 sm:pl-4 border-l border-[#D4AF37]/15">
             {/* Search ⌘K Trigger */}
             <button
               onClick={() => {
@@ -206,12 +191,12 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               }}
               title={t("control.search")}
               aria-label="Open search command palette (⌘K)"
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full text-[#d1b8e6] hover:text-[#faf5ed] hover:bg-[#250d38] flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
+              className="w-8 h-8 sm:w-9 sm:h-9 text-[#b8a0cc] hover:text-[#faf5ed] hover:bg-[#250d38]/60 flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
             >
               <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
 
-            {/* Language Switcher Pill (EN | தமிழ்) */}
+            {/* Language Switcher */}
             <button
               onClick={() => {
                 playClick();
@@ -219,9 +204,9 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               }}
               title="Switch Language / மொழியை மாற்ற"
               aria-label={locale === "en" ? "Switch language to Tamil" : "Switch language to English"}
-              className="px-2.5 sm:px-3 py-1 rounded-full text-xs font-display font-bold border border-[#D4AF37]/40 hover:border-[#D4AF37] bg-[#250d38]/80 hover:bg-[#250d38] text-[#faf5ed] flex items-center gap-1.5 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
+              className="px-2.5 sm:px-3 py-1 text-xs font-display font-bold border border-[#D4AF37]/30 hover:border-[#D4AF37]/60 bg-[#250d38]/40 hover:bg-[#250d38]/70 text-[#faf5ed] flex items-center gap-1.5 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
             >
-              <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-[#D4AF37] text-[#120a06] font-extrabold leading-none">
+              <span className="text-[9px] font-mono px-1 py-0.5 bg-[#D4AF37] text-[#120a06] font-extrabold leading-none">
                 {locale === "en" ? "TA" : "EN"}
               </span>
               <span
@@ -233,7 +218,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               </span>
             </button>
 
-            {/* Tinai & Time-of-Day Landscape Chip */}
+            {/* Tinai & Time-of-Day Chip */}
             <div className="relative">
               <button
                 onClick={() => {
@@ -244,10 +229,10 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 aria-label="Select Tamil landscape (Tinai) and time of day"
                 aria-expanded={isTinaiMenuOpen}
                 aria-haspopup="true"
-                className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-display border border-[#D4AF37]/25 hover:border-[#D4AF37]/50 bg-[#250d38]/60 hover:bg-[#250d38] text-[#faf5ed] transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
+                className="hidden md:flex items-center gap-1.5 px-2.5 py-1 text-xs font-display border border-[#D4AF37]/20 hover:border-[#D4AF37]/40 bg-[#250d38]/30 hover:bg-[#250d38]/60 text-[#faf5ed] transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
               >
                 <span
-                  className="w-2 h-2 rounded-full border border-black/40 animate-pulse shrink-0"
+                  className="w-2 h-2 rounded-none border border-black/40 animate-pulse shrink-0"
                   style={{ backgroundColor: meta.accentColor }}
                 />
                 <span className="text-[#faf5ed] font-medium text-[11px]">
@@ -256,7 +241,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 <ChevronDown className="w-3 h-3 text-[#D4AF37] opacity-75" />
               </button>
 
-              {/* Tinai Dropdown Menu: Traditional Temple Landscape Ledger */}
+              {/* Tinai Dropdown Menu */}
               <AnimatePresence>
                 {isTinaiMenuOpen && (
                   <motion.div
@@ -264,9 +249,9 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.96 }}
                     transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#180d24]/95 backdrop-blur-2xl p-3 border border-[#D4AF37]/40 shadow-2xl z-50 text-left"
+                    className="absolute right-0 mt-2 w-64 bg-[#180d24]/97 backdrop-blur-xl p-3 border border-[#D4AF37]/40 shadow-2xl z-50 text-left"
                   >
-                    <div className="p-2 border-b border-[#D4AF37]/20 mb-2 bg-[#250d38]/60 rounded-xl">
+                    <div className="p-2 border-b border-[#D4AF37]/20 mb-2 bg-[#250d38]/60">
                       <p className="text-[10px] uppercase font-mono tracking-wider text-[#D4AF37] font-bold">
                         {locale === "ta" ? "ஐந்திணை நிலங்கள் & பொழுது" : "5 Landscapes & Time of Day"}
                       </p>
@@ -285,7 +270,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                           <button
                             key={key}
                             onClick={() => handleTinaiSelect(key)}
-                            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs text-left transition-all duration-150 cursor-pointer ${
+                            className={`w-full flex items-center justify-between px-3 py-2 text-xs text-left transition-all duration-150 cursor-pointer ${
                               isSelected
                                 ? "bg-[#2e1644] text-[#faf5ed] font-bold border border-[#D4AF37]/60 shadow-sm"
                                 : "text-[#d1b8e6] hover:bg-[#250d38]/50 hover:text-[#faf5ed]"
@@ -293,7 +278,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                           >
                             <div className="flex items-center gap-2">
                               <span
-                                className="w-2.5 h-2.5 rounded-full border border-black/30 shrink-0"
+                                className="w-2.5 h-2.5 rounded-none border border-black/30 shrink-0"
                                 style={{ backgroundColor: tMeta.accentColor }}
                               />
                               <div>
@@ -339,16 +324,16 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               onClick={toggleSound}
               title={isSoundEnabled ? t("control.soundOff") : t("control.soundOn")}
               aria-label={isSoundEnabled ? "Mute interactive audio effects" : "Enable interactive audio effects"}
-              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] ${
+              className={`w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] ${
                 isSoundEnabled
-                  ? "bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/50"
-                  : "text-[#d1b8e6] hover:text-[#faf5ed] hover:bg-[#250d38]"
+                  ? "bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/40"
+                  : "text-[#b8a0cc] hover:text-[#faf5ed] hover:bg-[#250d38]/60"
               }`}
             >
               {isSoundEnabled ? <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
             </button>
 
-            {/* Mobile Menu Toggle Button */}
+            {/* Mobile Menu Toggle */}
             <button
               onClick={() => {
                 playClick();
@@ -356,7 +341,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               }}
               aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMobileMenuOpen}
-              className="lg:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-full text-[#d1b8e6] hover:text-[#faf5ed] hover:bg-[#250d38] flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
+              className="lg:hidden w-8 h-8 sm:w-9 sm:h-9 text-[#b8a0cc] hover:text-[#faf5ed] hover:bg-[#250d38]/60 flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
             >
               {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -390,7 +375,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                     வழிகாட்டி & பக்க அட்டவணை
                   </span>
                 </div>
-                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#250d38] text-[#D4AF37] border border-[#D4AF37]/30">
+                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-none bg-[#250d38] text-[#D4AF37] border border-[#D4AF37]/30">
                   Navigation
                 </span>
               </div>
@@ -405,11 +390,11 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                       key={item.href}
                       href={item.href}
                       onClick={handleLinkClick}
-                      className={`flex items-center justify-between px-4 py-3 min-h-[48px] rounded-xl text-sm font-display transition-all duration-150 ${
+                      className={`flex items-center justify-between px-4 py-3 min-h-[48px] rounded-none text-sm font-display transition-all duration-150 ${
                         isActive
-                          ? "bg-[#29143d] text-[#faf5ed] border border-[#D4AF37] shadow-md shadow-[#D4AF37]/15"
+                          ? "bg-[#29143d] text-[#faf5ed] border border-[#D4AF37] shadow-[2px_2px_0px_#D4AF37]"
                           : isJoin
-                          ? "bg-gradient-to-r from-[#D4AF37] to-[#e6a239] text-[#120a06] font-bold shadow-md shadow-black/30"
+                          ? "bg-gradient-to-r from-[#D4AF37] to-[#e6a239] text-[#120a06] font-bold shadow-[2px_2px_0px_#250d38]"
                           : "bg-[#1c0f2a]/70 text-[#d1b8e6] hover:bg-[#250d38] hover:text-[#faf5ed] border border-white/5"
                       }`}
                     >
@@ -447,7 +432,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 <Link
                   href="/links"
                   onClick={handleLinkClick}
-                  className="flex items-center justify-between px-4 py-3 rounded-xl border border-[#D4AF37]/30 bg-[#250d38]/50 text-sm font-display font-semibold text-[#faf5ed] hover:bg-[#250d38] transition-colors"
+                  className="flex items-center justify-between px-4 py-3 rounded-none border border-[#D4AF37]/30 bg-[#250d38]/50 text-sm font-display font-semibold text-[#faf5ed] hover:bg-[#250d38] transition-colors"
                 >
                   <span className="flex items-center gap-2">
                     <span>{t("nav.links")}</span>
@@ -461,7 +446,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
             <div className="pt-6 border-t border-[#D4AF37]/20 flex items-center justify-between text-xs text-[#a88bbd]">
               <button
                 onClick={toggleLiteMode}
-                className="px-3.5 py-2 rounded-xl border border-[#D4AF37]/30 bg-[#250d38]/50 text-[#faf5ed] font-display font-medium flex items-center gap-2 hover:bg-[#250d38] transition-colors"
+                className="px-3.5 py-2 rounded-none border border-[#D4AF37]/30 bg-[#250d38]/50 text-[#faf5ed] font-display font-medium flex items-center gap-2 hover:bg-[#250d38] transition-colors"
               >
                 <Layers className="w-4 h-4 text-[#D4AF37]" />
                 <span>{isLiteMode ? "Lite Mode (Active)" : "3D Mode"}</span>

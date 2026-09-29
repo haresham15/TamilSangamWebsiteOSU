@@ -10,11 +10,9 @@ import { useAudio } from "@/context/AudioContext";
 import { 
   Calendar, 
   MapPin, 
-  Clock, 
-  Star 
+  Clock 
 } from "lucide-react";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
-import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -60,22 +58,17 @@ export default function EventsPage() {
   const years = ["all", "2025-2026"];
 
   return (
-    <div className="w-full text-left">
-      {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene (PRD Overhaul) */}
+    <div className="w-full text-left bg-[#FAF6EE]">
+      {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene (Leo Factory) */}
       <div
         id="events-hero-trigger"
-        className="w-full h-[100dvh] relative z-0 overflow-hidden"
+        className="w-full h-[100dvh] relative z-10 overflow-hidden"
         style={{
-          WebkitMaskImage:
-            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
-          maskImage:
-            "linear-gradient(to bottom, black 0%, black 72%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 65%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, black 65%, transparent 100%)",
         }}
       >
         <EventsGen3Canvas />
-
-        {/* Phase 3: Token-driven OKLCH DOM bridge to #FAF6EE */}
-        <HeroToContentBridge theme="events" heightPct={28} />
       </div>
 
       {/* 2. Events Catalogue Container with Warm Cream Background (#FAF6EE) */}

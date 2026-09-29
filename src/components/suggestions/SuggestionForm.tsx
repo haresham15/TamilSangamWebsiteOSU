@@ -42,11 +42,11 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full sm:w-auto px-7 py-3.5 bg-[#FFC526] hover:bg-[#FFD875] text-[#12183c] font-mono font-bold text-xs uppercase tracking-wider transition-all duration-200 shadow-[4px_4px_0px_#55CCA2] hover:shadow-[2px_2px_0px_#55CCA2] hover:translate-x-[2px] hover:translate-y-[2px] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none flex items-center justify-center gap-2.5 disabled:opacity-60 disabled:pointer-events-none cursor-pointer"
+      className="w-full sm:w-auto px-7 py-3.5 bg-[#FFB84D] hover:bg-[#FFC86B] text-[#0F050A] font-mono font-bold text-xs uppercase tracking-wider transition-all duration-200 shadow-[4px_4px_0px_#8B5A2B] hover:shadow-[2px_2px_0px_#8B5A2B] hover:translate-x-[2px] hover:translate-y-[2px] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none flex items-center justify-center gap-2.5 disabled:opacity-60 disabled:pointer-events-none cursor-pointer"
     >
       {pending ? (
         <>
-          <RefreshCw className="w-4 h-4 animate-spin text-[#12183c]" />
+          <RefreshCw className="w-4 h-4 animate-spin text-[#0F050A]" />
           <span>
             {locale === "ta"
               ? "வரைபடத்தில் பதிக்கப்படுகிறது..."
@@ -55,7 +55,7 @@ function SubmitButton() {
         </>
       ) : (
         <>
-          <Send className="w-4 h-4 text-[#12183c]" />
+          <Send className="w-4 h-4 text-[#0F050A]" />
           <span>
             {locale === "ta"
               ? "யோசனையைப் பகிரவும் (Pin to Blueprint)"
@@ -105,12 +105,12 @@ export function SuggestionForm({
 
   return (
     <div
-      className={`relative bg-[#0d1330]/95 backdrop-blur-md border-2 border-[#415682] p-6 sm:p-10 shadow-[8px_8px_0px_#12183c] text-white ${className}`}
+      className={`relative bg-[#150914]/95 backdrop-blur-md border-2 border-[#4A2038] p-6 sm:p-10 shadow-[8px_8px_0px_#2B1020] text-white ${className}`}
     >
       {/* Title block with Technical Stamp Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[#2d3b66] mb-8">
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[#3D1B2E] mb-8">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#1a2550] border border-[#55CCA2]/40 text-[#55CCA2] text-[11px] font-mono uppercase tracking-widest mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#241021] border border-[#FFB84D]/40 text-[#FFB84D] text-[11px] font-mono uppercase tracking-widest mb-2">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Sangam Blueprint Suggestion Ledger</span>
           </div>
@@ -125,7 +125,7 @@ export function SuggestionForm({
         </div>
 
         <div className="text-right hidden sm:block font-mono text-[11px] text-slate-400">
-          <p className="text-[#FFC526]">DISPATCH: osutamilsangam@gmail.com</p>
+          <p className="text-[#FFB84D]">DISPATCH: osutamilsangam@gmail.com</p>
           <p>REVIEW: Weekly Board Meetings</p>
         </div>
       </div>
@@ -133,7 +133,7 @@ export function SuggestionForm({
       {state.success ? (
         /* Success State */
         <div className="py-10 text-center space-y-6">
-          <div className="w-16 h-16 bg-[#55CCA2]/20 border-2 border-[#55CCA2] text-[#55CCA2] flex items-center justify-center mx-auto shadow-[4px_4px_0px_#55CCA2]">
+          <div className="w-16 h-16 bg-[#FFB84D]/20 border-2 border-[#FFB84D] text-[#FFB84D] flex items-center justify-center mx-auto shadow-[4px_4px_0px_#8B5A2B]">
             <CheckCircle2 className="w-8 h-8" />
           </div>
 
@@ -148,7 +148,7 @@ export function SuggestionForm({
                 "Your idea has been dispatched directly to the executive board and recorded in our blueprint ledger."}
             </p>
             {state.pin && (
-              <p className="text-xs font-mono text-[#FFC526] pt-2">
+              <p className="text-xs font-mono text-[#FFB84D] pt-2">
                 [EPHEMERAL PIN COORD: X={state.pin.x.toFixed(2)}, Y={state.pin.y.toFixed(2)}]
               </p>
             )}
@@ -157,9 +157,9 @@ export function SuggestionForm({
           <button
             type="button"
             onClick={handleReset}
-            className="px-6 py-2.5 bg-[#1a2550] hover:bg-[#253570] text-[#f8f6f0] border border-[#55CCA2]/50 text-xs font-mono uppercase tracking-wider transition-colors inline-flex items-center gap-2 cursor-pointer"
+            className="px-6 py-2.5 bg-[#241021] hover:bg-[#351830] text-[#f8f6f0] border border-[#FFB84D]/50 text-xs font-mono uppercase tracking-wider transition-colors inline-flex items-center gap-2 cursor-pointer"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-[#55CCA2]" />
+            <RefreshCw className="w-3.5 h-3.5 text-[#FFB84D]" />
             <span>Submit Another Suggestion</span>
           </button>
         </div>
@@ -181,7 +181,7 @@ export function SuggestionForm({
 
           {/* 1. Category Selection Pills */}
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-[#FFC526] mb-2.5 font-bold">
+            <label className="block text-xs font-mono uppercase tracking-wider text-[#FFB84D] mb-2.5 font-bold">
               1. Select a Category · வகை
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
@@ -195,20 +195,20 @@ export function SuggestionForm({
                     onClick={() => setSelectedCategory(cat.id)}
                     className={`p-3 text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
                       isSelected
-                        ? "bg-[#1a2b60] border-[#FFC526] shadow-[3px_3px_0px_#FFC526] text-white"
-                        : "bg-[#0a0e24] border-[#2d3b66] text-slate-400 hover:border-slate-400 hover:text-slate-200"
+                        ? "bg-[#2D1429] border-[#FFB84D] shadow-[3px_3px_0px_#FFB84D] text-white"
+                        : "bg-[#120710] border-[#3D1B2E] text-slate-400 hover:border-[#8B5A2B] hover:text-slate-200"
                     }`}
                   >
                     <Icon
                       className={`w-4 h-4 mb-2 ${
-                        isSelected ? "text-[#FFC526]" : "text-slate-400"
+                        isSelected ? "text-[#FFB84D]" : "text-slate-400"
                       }`}
                     />
                     <div>
                       <span className="block text-xs font-mono font-bold leading-tight">
                         {locale === "ta" ? cat.labelTa : cat.labelEn}
                       </span>
-                      <span className="block text-[10px] text-slate-400 font-sans mt-0.5">
+                      <span className="block text-[10px] text-slate-400 font-body mt-0.5">
                         {cat.labelEn}
                       </span>
                     </div>
@@ -246,7 +246,7 @@ export function SuggestionForm({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="e.g. A Tamil movie screening at Gateway Film Center, classical instrumental fusion jam on the Oval, career shadow nights with alumni in tech/healthcare, Pongal kolam contest..."
-              className="w-full px-4 py-3 bg-[#0a0e24] border-2 border-[#2d3b66] focus:border-[#55CCA2] text-[#f8f6f0] placeholder:text-slate-500 text-sm outline-none transition-colors font-body leading-relaxed resize-y"
+              className="w-full px-4 py-3 bg-[#120710] border-2 border-[#3D1B2E] focus:border-[#FFB84D] text-[#f8f6f0] placeholder:text-slate-500 text-sm outline-none transition-colors font-body leading-relaxed resize-y"
             />
           </div>
 
@@ -266,7 +266,7 @@ export function SuggestionForm({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Maya Sundaram (or leave blank)"
-                className="w-full px-4 py-2.5 bg-[#0a0e24] border-2 border-[#2d3b66] focus:border-[#55CCA2] text-[#f8f6f0] placeholder:text-slate-500 text-sm outline-none transition-colors font-body"
+                className="w-full px-4 py-2.5 bg-[#120710] border-2 border-[#3D1B2E] focus:border-[#FFB84D] text-[#f8f6f0] placeholder:text-slate-500 text-sm outline-none transition-colors font-body"
               />
             </div>
 
@@ -284,7 +284,7 @@ export function SuggestionForm({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. sundaram.123@osu.edu"
-                className="w-full px-4 py-2.5 bg-[#0a0e24] border-2 border-[#2d3b66] focus:border-[#55CCA2] text-[#f8f6f0] placeholder:text-slate-500 text-sm outline-none transition-colors font-body"
+                className="w-full px-4 py-2.5 bg-[#120710] border-2 border-[#3D1B2E] focus:border-[#FFB84D] text-[#f8f6f0] placeholder:text-slate-500 text-sm outline-none transition-colors font-body"
               />
             </div>
           </div>

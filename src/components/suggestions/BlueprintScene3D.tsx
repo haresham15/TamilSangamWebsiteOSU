@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useRef, useMemo, useState, useSyncExternalStore } from "react";
+import React, { useRef, useMemo, useState, useEffect, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
+import { ContactShadows } from "@react-three/drei";
 import { BlueprintPin, BLUEPRINT_PINS, BlueprintSVG } from "./BlueprintSVG";
 import { buildOhioStadiumLines, StadiumGeometryData } from "./OhioStadiumWireframe";
 
@@ -27,7 +28,7 @@ interface BlueprintScene3DProps {
   className?: string;
 }
 
-// Procedural high-resolution blueprint ground texture with cyanotype grid, millimeter ticks, and collegiate title stamp
+// Procedural high-resolution blueprint ground texture with Kaththi War Room palette, copper grid, and technical stamps
 function createBlueprintGroundTexture(): THREE.CanvasTexture | null {
   if (typeof document === "undefined") return null;
   const canvas = document.createElement("canvas");
@@ -36,16 +37,16 @@ function createBlueprintGroundTexture(): THREE.CanvasTexture | null {
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
 
-  // 1. Deep Cyanotype Indigo Gradient
+  // 1. Deep Bruised Plum/Purple Radial Void Gradient (#241021 -> #150914 -> #0F050A)
   const grad = ctx.createRadialGradient(1024, 1024, 80, 1024, 1024, 1400);
-  grad.addColorStop(0, "#192454");
-  grad.addColorStop(0.6, "#11173b");
-  grad.addColorStop(1, "#090d20");
+  grad.addColorStop(0, "#241021");
+  grad.addColorStop(0.55, "#150914");
+  grad.addColorStop(1, "#0F050A");
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 2048, 2048);
 
-  // 2. Blueprint Fine Millimeter Grid (32px cells)
-  ctx.strokeStyle = "rgba(100, 135, 195, 0.12)";
+  // 2. Blueprint Fine Millimeter Grid (32px cells) — Muted warm copper/brown (#8B5A2B with low opacity)
+  ctx.strokeStyle = "rgba(139, 90, 43, 0.16)";
   ctx.lineWidth = 1;
   const step = 32;
   ctx.beginPath();
@@ -59,8 +60,8 @@ function createBlueprintGroundTexture(): THREE.CanvasTexture | null {
   }
   ctx.stroke();
 
-  // 3. Major Grid (128px cells) with Gold/Teal Ticks
-  ctx.strokeStyle = "rgba(140, 180, 240, 0.28)";
+  // 3. Major Grid (128px cells) with Warm Copper/Bronze lines
+  ctx.strokeStyle = "rgba(175, 110, 50, 0.30)";
   ctx.lineWidth = 2;
   const majorStep = 128;
   ctx.beginPath();
@@ -74,8 +75,8 @@ function createBlueprintGroundTexture(): THREE.CanvasTexture | null {
   }
   ctx.stroke();
 
-  // 4. Kolam Pulli Dot Matrix & Dimension Crosses
-  ctx.fillStyle = "rgba(85, 204, 162, 0.55)";
+  // 4. Kolam Pulli Dot Matrix & Dimension Crosses in Blazing Amber/Gold (#FFB84D)
+  ctx.fillStyle = "rgba(255, 184, 77, 0.65)";
   for (let x = majorStep; x < 2048; x += majorStep) {
     for (let y = majorStep; y < 2048; y += majorStep) {
       ctx.beginPath();
@@ -83,7 +84,7 @@ function createBlueprintGroundTexture(): THREE.CanvasTexture | null {
       ctx.fill();
 
       // Dimension Cross
-      ctx.strokeStyle = "rgba(255, 197, 38, 0.3)";
+      ctx.strokeStyle = "rgba(255, 184, 77, 0.35)";
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(x - 8, y);
@@ -95,23 +96,31 @@ function createBlueprintGroundTexture(): THREE.CanvasTexture | null {
   }
 
   // 5. Technical Border Frame and Engineering Title Block
-  ctx.strokeStyle = "rgba(248, 246, 240, 0.4)";
+  ctx.strokeStyle = "rgba(248, 246, 240, 0.28)";
   ctx.lineWidth = 4;
   ctx.strokeRect(60, 60, 1928, 1928);
 
-  ctx.strokeStyle = "rgba(255, 197, 38, 0.65)";
+  ctx.strokeStyle = "rgba(255, 184, 77, 0.50)";
   ctx.lineWidth = 2;
   ctx.strokeRect(76, 76, 1896, 1896);
 
   // Technical Title Stamp (South-East Corner)
-  ctx.fillStyle = "rgba(248, 246, 240, 0.9)";
+  ctx.fillStyle = "rgba(255, 240, 212, 0.9)";
   ctx.font = "bold 22px monospace";
-  ctx.fillText("THE OHIO STATE UNIVERSITY · COMMUNITY BLUEPRINT ENGINE", 100, 130);
+  ctx.fillText("THE OHIO STATE UNIVERSITY · KATHTHI WAR ROOM ARCHIVE", 100, 130);
   ctx.font = "15px monospace";
-  ctx.fillStyle = "rgba(255, 197, 38, 0.85)";
+  ctx.fillStyle = "rgba(255, 184, 77, 0.85)";
   ctx.fillText("BUILDING OUR SANGAM LINE BY LINE · STUDENT VISION & SUGGESTION PLATFORM", 100, 158);
-  ctx.fillStyle = "rgba(85, 204, 162, 0.85)";
-  ctx.fillText("OSU TAMIL SANGAM · ARCHITECTURAL COMMUNITY METAPHOR · COLUMBUS, OH", 100, 182);
+  ctx.fillStyle = "rgba(229, 152, 56, 0.85)";
+  ctx.fillText("OSU TAMIL SANGAM · CINEMATIC DRAFTING TABLE · COLUMBUS, OH", 100, 182);
+
+  // 6. Seamless Void Falloff Vignette: Fades grid lines and border smoothly into #0F050A at the outer boundary
+  const vignette = ctx.createRadialGradient(1024, 1024, 620, 1024, 1024, 980);
+  vignette.addColorStop(0, "rgba(15, 5, 10, 0)");
+  vignette.addColorStop(0.55, "rgba(15, 5, 10, 0.55)");
+  vignette.addColorStop(1, "rgba(15, 5, 10, 1.0)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, 2048, 2048);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.wrapS = THREE.ClampToEdgeWrapping;
@@ -165,31 +174,31 @@ const StadiumLineShader = {
     varying float vScanIntensity;
 
     void main() {
-      // Base blueprint line color: crisp ivory/steel blue
+      // Base blueprint line color: blazing cinematic amber/gold (#FFB84D)
       vec3 color = uColorBase;
 
       // Element-specific architectural coloration
       if (vTag < 0.5) {
-        // Football Field: glowing mint/emerald
+        // Football Field: warm amber/copper turf lines
         color = uColorField;
       } else if (vTag > 3.5 && vTag < 4.5) {
         // North Rotunda: sacred radiant gold
         color = uColorRotunda;
       } else if (vTag > 4.5) {
-        // Press Box & Scoreboard: technical cyan
-        color = vec3(0.40, 0.78, 0.98);
+        // Press Box & Scoreboard: warm burnished bronze/gold
+        color = vec3(1.0, 0.72, 0.30);
       } else if (vTag > 1.5 && vTag < 2.5) {
         // Cantilever Steel Trusses: warm bronze/gold
         color = mix(uColorBase, vec3(1.0, 0.82, 0.4), 0.45);
       }
 
-      // Kaththi Hologram Glow Effect: blazing neon gold/cyan along the active construction wave
+      // Kaththi Hologram Glow Effect: blazing neon amber/gold along the active construction wave
       if (vScanIntensity > 0.01) {
-        vec3 activeGlow = mix(vec3(0.2, 0.9, 1.0), vec3(1.0, 0.85, 0.2), 0.5 + 0.5 * sin(uTime * 8.0));
+        vec3 activeGlow = mix(vec3(1.0, 0.65, 0.22), vec3(1.0, 0.90, 0.45), 0.5 + 0.5 * sin(uTime * 8.0));
         color = mix(color, activeGlow, vScanIntensity);
       }
 
-      gl_FragColor = vec4(color, 0.92);
+      gl_FragColor = vec4(color, 0.94);
     }
   `,
 };
@@ -208,7 +217,7 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: number }
     return { geometry: geom, maxHeight: data.maxHeight };
   }, []);
 
-  // Custom Shader Material uniforms
+  // Custom Shader Material uniforms: Blazing cinematic amber/gold palette (§Phase 1 Overhaul)
   const shaderMaterial = useMemo(() => {
     return new THREE.ShaderMaterial({
       vertexShader: StadiumLineShader.vertexShader,
@@ -217,16 +226,24 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: number }
         uProgress: { value: 0 },
         uMaxHeight: { value: maxHeight },
         uTime: { value: 0 },
-        uColorBase: { value: new THREE.Color("#f8f6f0") }, // Blueprint ivory
-        uColorGlow: { value: new THREE.Color("#FFC526") }, // Blazing construction gold
-        uColorField: { value: new THREE.Color("#55CCA2") }, // Emerald turf lines
-        uColorRotunda: { value: new THREE.Color("#FFD875") }, // Rotunda gold
+        uColorBase: { value: new THREE.Color("#FFB84D") }, // Blazing cinematic amber/gold (#FFB84D)
+        uColorGlow: { value: new THREE.Color("#FFA01C") }, // Deep amber construction glow
+        uColorField: { value: new THREE.Color("#E59838") }, // Warm copper/amber turf lines
+        uColorRotunda: { value: new THREE.Color("#FFD066") }, // Radiating Rotunda gold
       },
       transparent: true,
       depthWrite: true,
       blending: THREE.AdditiveBlending,
     });
   }, [maxHeight]);
+
+  // Unmount cleanup for stadium wireframe geometry & shader material
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+      shaderMaterial.dispose();
+    };
+  }, [geometry, shaderMaterial]);
 
   // Laser elevation ring at the active construction height
   const laserRingRef = useRef<THREE.Mesh>(null);
@@ -263,7 +280,7 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: number }
       <mesh ref={laserRingRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.1, -1.2]}>
         <ringGeometry args={[5.2, 5.8, 48]} />
         <meshBasicMaterial
-          color="#FFC526"
+          color="#FFB84D"
           transparent
           opacity={0.65}
           side={THREE.DoubleSide}
@@ -367,9 +384,9 @@ function StadiumCalloutPins({
             <mesh position={[0, 0.8, 0]}>
               <cylinderGeometry args={[0.02, 0.06, 1.6, 12]} />
               <meshBasicMaterial
-                color={isHovered ? "#55CCA2" : "#FFC526"}
+                color={isHovered ? "#FFE5B4" : "#FFB84D"}
                 transparent
-                opacity={isHovered ? 0.8 : 0.45}
+                opacity={isHovered ? 0.85 : 0.45}
               />
             </mesh>
 
@@ -377,9 +394,9 @@ function StadiumCalloutPins({
             <mesh position={[0, 1.6, 0]}>
               <sphereGeometry args={[isHovered ? 0.22 : 0.16, 16, 16]} />
               <meshStandardMaterial
-                color={isHovered ? "#55CCA2" : "#FFC526"}
-                emissive={isHovered ? "#55CCA2" : "#FFC526"}
-                emissiveIntensity={isHovered ? 1.4 : 0.9}
+                color={isHovered ? "#FFE5B4" : "#FFB84D"}
+                emissive={isHovered ? "#FFB84D" : "#FFA01C"}
+                emissiveIntensity={isHovered ? 1.6 : 0.9}
                 roughness={0.2}
               />
             </mesh>
@@ -388,9 +405,9 @@ function StadiumCalloutPins({
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
               <ringGeometry args={[0.25, 0.35, 24]} />
               <meshBasicMaterial
-                color={isHovered ? "#55CCA2" : "#FFC526"}
+                color={isHovered ? "#FFE5B4" : "#FFB84D"}
                 transparent
-                opacity={0.6}
+                opacity={0.65}
               />
             </mesh>
           </group>
@@ -440,32 +457,32 @@ function NewlyDroppedPin({ pin }: { pin: EphemeralPin }) {
       <mesh position={[0, 1.0, 0]} rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[0.18, 0.5, 16]} />
         <meshStandardMaterial
-          color="#FFC526"
-          emissive="#FFD875"
+          color="#FFB84D"
+          emissive="#FFA01C"
           emissiveIntensity={1.5}
         />
       </mesh>
       <mesh position={[0, 1.4, 0]}>
         <sphereGeometry args={[0.2, 16, 16]} />
         <meshStandardMaterial
-          color="#55CCA2"
-          emissive="#55CCA2"
+          color="#FFE5B4"
+          emissive="#FFB84D"
           emissiveIntensity={1.3}
         />
       </mesh>
 
-      <pointLight color="#FFC526" intensity={3.0} distance={5} position={[0, 1.2, 0]} />
+      <pointLight color="#FFB84D" intensity={3.0} distance={5} position={[0, 1.2, 0]} />
 
       {/* Ripple ring on ground */}
       <mesh ref={ringRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -6.0 + 0.02, 0]}>
         <ringGeometry args={[0.35, 0.5, 32]} />
-        <meshBasicMaterial color="#FFC526" transparent opacity={0.8} />
+        <meshBasicMaterial color="#FFB84D" transparent opacity={0.8} />
       </mesh>
     </group>
   );
 }
 
-// Ambient Floating Luminescent Particles
+// Ambient Floating Luminescent Particles (GPU Shader)
 function generateFloatingParticles(count: number) {
   let seed = 42;
   const rand = () => {
@@ -491,37 +508,548 @@ function getFloatingParticles(count: number) {
   return cachedFloatingParticles;
 }
 
+const particleVertexShader = `
+  uniform float uTime;
+  attribute float aPhase;
+  void main() {
+    vec3 pos = position;
+    pos.y += sin(uTime * 0.8 + aPhase) * 0.2;
+    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
+    gl_PointSize = (40.0 / -mvPosition.z);
+  }
+`;
+
+const particleFragmentShader = `
+  void main() {
+    float dist = length(gl_PointCoord - vec2(0.5));
+    if (dist > 0.5) discard;
+    float alpha = smoothstep(0.5, 0.0, dist) * 0.65;
+    gl_FragColor = vec4(1.0, 0.847, 0.459, alpha);
+  }
+`;
+
 function FloatingParticles() {
   const count = 100;
   const pointsRef = useRef<THREE.Points>(null);
-
   const { positions, phases } = useMemo(() => getFloatingParticles(count), [count]);
 
-  useFrame((state) => {
-    if (!pointsRef.current) return;
-    const time = state.clock.getElapsedTime();
-    const posAttr = pointsRef.current.geometry.attributes.position;
-    const array = posAttr.array as Float32Array;
+  const uniforms = useMemo(() => ({ uTime: { value: 0 } }), []);
 
-    for (let i = 0; i < count; i++) {
-      array[i * 3 + 1] = positions[i * 3 + 1] + Math.sin(time * 0.8 + phases[i]) * 0.2;
-    }
-    posAttr.needsUpdate = true;
+  useFrame((state) => {
+    uniforms.uTime.value = state.clock.getElapsedTime();
   });
+
+  useEffect(() => {
+    const currentPoints = pointsRef.current;
+    return () => {
+      if (currentPoints) {
+        currentPoints.geometry.dispose();
+        if (Array.isArray(currentPoints.material)) {
+          currentPoints.material.forEach((m) => m.dispose());
+        } else {
+          currentPoints.material.dispose();
+        }
+      }
+    };
+  }, []);
 
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-aPhase" args={[phases, 1]} />
       </bufferGeometry>
-      <pointsMaterial
-        size={0.07}
-        color="#FFD875"
+      <shaderMaterial
+        vertexShader={particleVertexShader}
+        fragmentShader={particleFragmentShader}
+        uniforms={uniforms}
         transparent
-        opacity={0.65}
+        depthWrite={false}
         blending={THREE.AdditiveBlending}
       />
     </points>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 1. THE SIGNATURE COIN (The Catalyst — Kaththi Memorabilia)
+// ---------------------------------------------------------------------------
+// A 3D cylindrical coin (CylinderGeometry) resting on one of the grid intersections
+// near the stadium entrance. Highly reflective silver/steel (MeshPhysicalMaterial)
+// catching the overhead spotlight.
+function KaththiSignatureCoin() {
+  const coinPos: [number, number, number] = [3.6, 0.035, 4.4];
+
+  return (
+    <group position={coinPos} rotation={[0, 0.42, 0]}>
+      {/* Outer Coin Body: Cylindrical Silver/Steel Coin with high clearcoat */}
+      <mesh castShadow receiveShadow position={[0, 0, 0]}>
+        <cylinderGeometry args={[0.55, 0.55, 0.07, 64]} />
+        <meshPhysicalMaterial
+          color="#E8EEF5"
+          metalness={1.0}
+          roughness={0.15}
+          clearcoat={1.0}
+          clearcoatRoughness={0.08}
+          reflectivity={0.95}
+        />
+      </mesh>
+
+      {/* Raised Outer Rim Ring */}
+      <mesh castShadow position={[0, 0.036, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.46, 0.54, 48]} />
+        <meshPhysicalMaterial
+          color="#D4DFEE"
+          metalness={1.0}
+          roughness={0.18}
+          clearcoat={1.0}
+        />
+      </mesh>
+
+      {/* Minted Inner Seal Center */}
+      <mesh castShadow position={[0, 0.0365, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.18, 0.23, 32]} />
+        <meshPhysicalMaterial
+          color="#CCD9E8"
+          metalness={1.0}
+          roughness={0.2}
+          clearcoat={0.9}
+        />
+      </mesh>
+      <mesh castShadow position={[0, 0.037, 0]}>
+        <cylinderGeometry args={[0.11, 0.11, 0.006, 24]} />
+        <meshPhysicalMaterial
+          color="#F2F6FA"
+          metalness={1.0}
+          roughness={0.12}
+          clearcoat={1.0}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 2. THE BRASS DRAFTING COMPASS (The Architect — Kaththi Memorabilia)
+// ---------------------------------------------------------------------------
+// An authentic 3D drafting compass/caliper resting flat on the grid floor.
+// Material: Aged brass/bronze (metalness: 0.8, roughness: 0.4, color: #B5A642).
+function BrassDraftingCompass() {
+  const compassPos: [number, number, number] = [-3.8, 0.04, 3.6];
+  const legLength = 2.6;
+  const spreadAngle = 0.26; // ~15 degrees each side
+
+  return (
+    <group position={compassPos} rotation={[0, -0.38, 0]}>
+      {/* 1. Hinge Pivot Head Assembly */}
+      <group position={[0, 0, -legLength / 2]}>
+        {/* Central Cylindrical Brass Hinge Disc */}
+        <mesh castShadow receiveShadow position={[0, 0.03, 0]}>
+          <cylinderGeometry args={[0.22, 0.22, 0.08, 24]} />
+          <meshStandardMaterial color="#B5A642" metalness={0.8} roughness={0.4} />
+        </mesh>
+        {/* Steel Hinge Screw Core */}
+        <mesh castShadow position={[0, 0.075, 0]}>
+          <cylinderGeometry args={[0.08, 0.08, 0.03, 16]} />
+          <meshStandardMaterial color="#555860" metalness={0.9} roughness={0.25} />
+        </mesh>
+        {/* Knurled Brass Thumb Handle pointing backwards */}
+        <mesh castShadow position={[0, 0.03, -0.32]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.065, 0.065, 0.45, 16]} />
+          <meshStandardMaterial color="#B5A642" metalness={0.8} roughness={0.45} />
+        </mesh>
+      </group>
+
+      {/* 2. Left Leg (Tapered Brass Arm with Steel Needle Point) */}
+      <group position={[0, 0, -legLength / 2]} rotation={[0, spreadAngle, 0]}>
+        {/* Main Brass Arm */}
+        <mesh castShadow receiveShadow position={[-0.03, 0.03, legLength * 0.4]}>
+          <boxGeometry args={[0.09, 0.06, legLength * 0.8]} />
+          <meshStandardMaterial color="#B5A642" metalness={0.8} roughness={0.4} />
+        </mesh>
+        {/* Needle Holder Collar */}
+        <mesh castShadow position={[-0.03, 0.03, legLength * 0.82]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.045, 0.045, 0.12, 12]} />
+          <meshStandardMaterial color="#8C7F32" metalness={0.85} roughness={0.35} />
+        </mesh>
+        {/* Fine Steel Needle Point extending to the blueprint grid */}
+        <mesh castShadow position={[-0.03, 0.02, legLength * 0.96]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.015, 0.005, 0.24, 8]} />
+          <meshStandardMaterial color="#4A4E57" metalness={0.95} roughness={0.2} />
+        </mesh>
+      </group>
+
+      {/* 3. Right Leg (Tapered Brass Arm with Drafting Lead Tip) */}
+      <group position={[0, 0, -legLength / 2]} rotation={[0, -spreadAngle, 0]}>
+        {/* Main Brass Arm */}
+        <mesh castShadow receiveShadow position={[0.03, 0.03, legLength * 0.4]}>
+          <boxGeometry args={[0.09, 0.06, legLength * 0.8]} />
+          <meshStandardMaterial color="#B5A642" metalness={0.8} roughness={0.4} />
+        </mesh>
+        {/* Lead Clamp Collar & Thumb Screw */}
+        <mesh castShadow position={[0.03, 0.03, legLength * 0.82]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.05, 0.05, 0.14, 12]} />
+          <meshStandardMaterial color="#8C7F32" metalness={0.85} roughness={0.35} />
+        </mesh>
+        {/* Graphite / Drafting Lead Tip */}
+        <mesh castShadow position={[0.03, 0.02, legLength * 0.95]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.02, 0.006, 0.22, 8]} />
+          <meshStandardMaterial color="#2B2D31" metalness={0.2} roughness={0.85} />
+        </mesh>
+      </group>
+
+      {/* 4. Horizontal Spindle & Knurled Adjustment Wheel */}
+      <group position={[0, 0.03, -legLength * 0.08]}>
+        {/* Threaded Brass Spindle Bar */}
+        <mesh castShadow position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.025, 0.025, 1.1, 12]} />
+          <meshStandardMaterial color="#B5A642" metalness={0.85} roughness={0.35} />
+        </mesh>
+        {/* Center Knurled Adjustment Wheel */}
+        <mesh castShadow position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.15, 0.15, 0.08, 24]} />
+          <meshStandardMaterial color="#9C8D35" metalness={0.8} roughness={0.5} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 3. THE HYDROLOGY PIPE NODES (The Mission — Kaththi Memorabilia)
+// ---------------------------------------------------------------------------
+// Below the primary grid, a faint, secondary glowing layer of interconnected
+// lines resembling underground water pipes with 4 glowing cyan PointLight nodes.
+// Rendered with additive blending and depthTest={false} to create the iconic
+// "hidden water blueprint" x-ray effect from Kaththi.
+function HydrologyPipeNodes() {
+  const pipeGeometry = useMemo(() => {
+    // Interconnected underground municipal pipeline network (Jeeva's Chennai water map reference)
+    const lines: number[] = [
+      // Primary West-East arterial conduit through south precinct
+      -16, -0.05, 1.2,   16, -0.05, 1.2,
+      // Secondary South-North pipeline 1 (West campus supply)
+      -2.6, -0.05, -9.0,  -2.6, -0.05, 8.5,
+      // Secondary South-North pipeline 2 (East campus supply)
+      2.4, -0.05, -9.0,   2.4, -0.05, 8.5,
+      // North Rotunda sub-surface ring conduit
+      -7.0, -0.05, -5.5,   7.0, -0.05, -5.5,
+      // Southern reservoir arterial line near entrance
+      -9.0, -0.05, 4.4,    9.0, -0.05, 4.4,
+      // Field subterranean cross-conduits
+      -2.6, -0.05, -2.0,   2.4, -0.05, -2.0,
+      -2.6, -0.05, -5.5,   2.4, -0.05, -5.5,
+      // Perimeter distribution feeds
+      -6.8, -0.05, -5.5,  -6.8, -0.05, 4.4,
+      6.8, -0.05, -5.5,   6.8, -0.05, 4.4,
+      // Diagonal feeder branch connecting to Kaththi coin intersection
+      -2.6, -0.05, 1.2,    3.6, -0.05, 4.4,
+      // Western aquifer branch past the drafting compass
+      -3.8, -0.05, 3.6,   -2.6, -0.05, 1.2,
+    ];
+
+    const geom = new THREE.BufferGeometry();
+    geom.setAttribute("position", new THREE.Float32BufferAttribute(lines, 3));
+    return geom;
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      pipeGeometry.dispose();
+    };
+  }, [pipeGeometry]);
+
+  // 4 glowing municipal pipe intersection nodes (Jeeva's discovered water nodes)
+  const nodes: [number, number, number][] = [
+    [-2.6, 0.05, 1.2],   // Node 1: Main West Junction
+    [2.4, 0.05, 1.2],    // Node 2: Main East Junction
+    [-2.6, 0.05, -5.5],  // Node 3: North Rotunda Underpass
+    [3.6, 0.05, 4.4],    // Node 4: South Gate Reservoir Feed (at Kaththi coin)
+  ];
+
+  return (
+    <group renderOrder={2}>
+      {/* Underground Water Pipe Lines rendered as faint luminous x-ray tracks */}
+      <lineSegments geometry={pipeGeometry}>
+        <lineBasicMaterial
+          color="#06B6D4"
+          transparent
+          opacity={0.55}
+          blending={THREE.AdditiveBlending}
+          depthTest={false}
+          depthWrite={false}
+        />
+      </lineSegments>
+
+      {/* 4 Glowing Blue/Cyan PointLight Nodes */}
+      {nodes.map((pos, idx) => (
+        <group key={idx} position={pos}>
+          {/* Subtle cyan PointLight providing dramatic thematic contrast */}
+          <pointLight
+            color="#00E5FF"
+            intensity={0.65}
+            distance={2.5}
+            decay={2}
+          />
+
+          {/* Glowing Junction Marker Sphere */}
+          <mesh>
+            <sphereGeometry args={[0.075, 16, 16]} />
+            <meshStandardMaterial
+              color="#22D3EE"
+              emissive="#00E5FF"
+              emissiveIntensity={2.5}
+              roughness={0.1}
+            />
+          </mesh>
+
+          {/* Water Valve Pulse Ring on ground */}
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]}>
+            <ringGeometry args={[0.12, 0.18, 24]} />
+            <meshBasicMaterial
+              color="#00E5FF"
+              transparent
+              opacity={0.7}
+              blending={THREE.AdditiveBlending}
+              depthTest={false}
+              depthWrite={false}
+            />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 4. ROLLED BLUEPRINT SCROLLS (The Master City Plans — Kaththi Memorabilia)
+// ---------------------------------------------------------------------------
+// A bundle of rolled architectural blueprints tied with copper ribbons on the outer East corner
+function RolledBlueprintScrolls() {
+  const scrollGroupPos: [number, number, number] = [7.8, 0.0, -3.0];
+
+  return (
+    <group position={scrollGroupPos} rotation={[0, 0.65, 0]}>
+      {/* Scroll 1: Base bottom scroll */}
+      <group position={[0, 0.22, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <mesh castShadow receiveShadow>
+          <cylinderGeometry args={[0.22, 0.22, 4.2, 24]} />
+          <meshStandardMaterial color="#D8C8AA" roughness={0.85} metalness={0.05} />
+        </mesh>
+        {/* Dark spiral paper roll core (Left) */}
+        <mesh position={[0, -2.11, 0]}>
+          <cylinderGeometry args={[0.21, 0.21, 0.02, 24]} />
+          <meshBasicMaterial color="#3D3020" />
+        </mesh>
+        {/* Dark spiral paper roll core (Right) */}
+        <mesh position={[0, 2.11, 0]}>
+          <cylinderGeometry args={[0.21, 0.21, 0.02, 24]} />
+          <meshBasicMaterial color="#3D3020" />
+        </mesh>
+        {/* Brass tie ribbons */}
+        {[-1.2, 1.2].map((y, i) => (
+          <mesh key={i} castShadow position={[0, y, 0]}>
+            <cylinderGeometry args={[0.226, 0.226, 0.08, 24]} />
+            <meshStandardMaterial color="#B5A642" metalness={0.8} roughness={0.35} />
+          </mesh>
+        ))}
+      </group>
+
+      {/* Scroll 2: Companion bottom scroll */}
+      <group position={[0.32, 0.18, 0.35]} rotation={[0, 0, Math.PI / 2]}>
+        <mesh castShadow receiveShadow>
+          <cylinderGeometry args={[0.18, 0.18, 3.8, 24]} />
+          <meshStandardMaterial color="#CCBA98" roughness={0.85} metalness={0.05} />
+        </mesh>
+        {/* Brass tie ribbons */}
+        {[-0.9, 0.9].map((y, i) => (
+          <mesh key={i} castShadow position={[0, y, 0]}>
+            <cylinderGeometry args={[0.186, 0.186, 0.06, 24]} />
+            <meshStandardMaterial color="#B5A642" metalness={0.8} roughness={0.35} />
+          </mesh>
+        ))}
+      </group>
+
+      {/* Scroll 3: Top nested scroll */}
+      <group position={[0.15, 0.38, 0.18]} rotation={[0, 0, Math.PI / 2]}>
+        <mesh castShadow receiveShadow>
+          <cylinderGeometry args={[0.16, 0.16, 3.6, 24]} />
+          <meshStandardMaterial color="#E0D2B8" roughness={0.8} metalness={0.05} />
+        </mesh>
+        {/* Cyan drafting seal tape (Jeeva's water plan seal) */}
+        <mesh castShadow position={[0, 0, 0]}>
+          <cylinderGeometry args={[0.166, 0.166, 0.14, 24]} />
+          <meshStandardMaterial color="#06B6D4" roughness={0.5} metalness={0.2} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 5. TRIANGULAR ARCHITECT SCALE RULER (The Scale Tool)
+// ---------------------------------------------------------------------------
+// Classic 3-sided architectural scale ruler in matte ivory with amber center groove
+function ArchitectScaleRuler() {
+  const rulerPos: [number, number, number] = [6.8, 0.08, 1.2];
+
+  return (
+    <group position={rulerPos} rotation={[0, -0.15, 0]}>
+      {/* 3-sided triangular prism ruler body */}
+      <mesh castShadow receiveShadow rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.13, 0.13, 4.0, 3]} />
+        <meshStandardMaterial color="#EAE4D5" roughness={0.7} metalness={0.1} />
+      </mesh>
+      {/* Color-coded center measurement groove stripe (Amber/Gold) */}
+      <mesh castShadow position={[0, 0.08, 0]}>
+        <boxGeometry args={[0.025, 0.015, 3.9]} />
+        <meshBasicMaterial color="#FFB84D" />
+      </mesh>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 6. DRAFTING GRAPHITE PENCIL (The Drafting Instrument)
+// ---------------------------------------------------------------------------
+// Hexagonal amber drafting pencil with sharpened cedar cone and graphite lead
+function DraftingPencil() {
+  const pencilPos: [number, number, number] = [7.2, 0.04, 2.6];
+
+  return (
+    <group position={pencilPos} rotation={[0, 0.25, 0]}>
+      {/* Hexagonal wooden barrel (6 facets) */}
+      <mesh castShadow receiveShadow rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.045, 0.045, 2.4, 6]} />
+        <meshStandardMaterial color="#E08E20" roughness={0.4} metalness={0.15} />
+      </mesh>
+      {/* Sharpened conical cedar wood cone */}
+      <mesh castShadow position={[0, 0, -1.29]} rotation={[-Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.045, 0.18, 12]} />
+        <meshStandardMaterial color="#E5CCA2" roughness={0.9} />
+      </mesh>
+      {/* Sharp graphite lead tip */}
+      <mesh castShadow position={[0, 0, -1.41]} rotation={[-Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.015, 0.08, 8]} />
+        <meshStandardMaterial color="#2B2D30" metalness={0.8} roughness={0.25} />
+      </mesh>
+      {/* Brass ferrule collar at eraser end */}
+      <mesh castShadow position={[0, 0, 1.25]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.047, 0.047, 0.12, 12]} />
+        <meshStandardMaterial color="#C2A649" metalness={0.85} roughness={0.35} />
+      </mesh>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 7. KATHTHI PRECISION UTILITY BLADE (The Folding Architect's Knife)
+// ---------------------------------------------------------------------------
+// Surgical stainless-steel folding knife resting half-open on the blueprint floor,
+// direct homage to the film's title framed as an architect's precision modeling blade.
+function KaththiUtilityBlade() {
+  const bladePos: [number, number, number] = [-7.2, 0.05, -0.6];
+
+  return (
+    <group position={bladePos} rotation={[0, 0.45, 0]}>
+      {/* Contoured titanium/carbon-steel handle */}
+      <mesh castShadow receiveShadow position={[0, 0.04, 0]}>
+        <boxGeometry args={[0.22, 0.08, 1.8]} />
+        <meshStandardMaterial color="#22262E" metalness={0.85} roughness={0.35} />
+      </mesh>
+      {/* Brass pivot rivet hinge */}
+      <mesh castShadow position={[0, 0.085, -0.7]} rotation={[0, 0, 0]}>
+        <cylinderGeometry args={[0.055, 0.055, 0.02, 16]} />
+        <meshStandardMaterial color="#B5A642" metalness={0.9} roughness={0.25} />
+      </mesh>
+      {/* Razor-sharp stainless steel blade angled out at ~35 degrees */}
+      <group position={[0, 0.04, -0.7]} rotation={[0, 0.6, 0]}>
+        <mesh castShadow position={[0, 0, -0.75]}>
+          <boxGeometry args={[0.03, 0.09, 1.5]} />
+          <meshPhysicalMaterial
+            color="#F0F5FA"
+            metalness={1.0}
+            roughness={0.12}
+            clearcoat={1.0}
+            clearcoatRoughness={0.06}
+          />
+        </mesh>
+        {/* Polished blade bevel cutting edge */}
+        <mesh castShadow position={[0.015, -0.025, -0.75]}>
+          <boxGeometry args={[0.008, 0.03, 1.48]} />
+          <meshPhysicalMaterial
+            color="#FFFFFF"
+            metalness={1.0}
+            roughness={0.08}
+            clearcoat={1.0}
+          />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 8. THANJAVUR SOIL SPECIMEN VIAL (The Village Earth — The Emotional Core)
+// ---------------------------------------------------------------------------
+// A laboratory specimen glass jar holding Thanjavur alluvial soil with a threaded brass cap,
+// resting near the North Rotunda to anchor the emotional stakes of Kaththi.
+function ThanjavurSoilVial() {
+  const jarPos: [number, number, number] = [-4.5, 0.28, -7.8];
+
+  return (
+    <group position={jarPos}>
+      {/* Translucent cylindrical glass jar body */}
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[0.26, 0.26, 0.58, 24]} />
+        <meshStandardMaterial
+          color="#D8EEF8"
+          transparent
+          opacity={0.35}
+          roughness={0.08}
+          metalness={0.1}
+        />
+      </mesh>
+      {/* Rich dark alluvial soil inside the jar */}
+      <mesh position={[0, -0.06, 0]}>
+        <cylinderGeometry args={[0.24, 0.24, 0.44, 20]} />
+        <meshStandardMaterial color="#24160E" roughness={0.96} metalness={0.02} />
+      </mesh>
+      {/* Threaded antique brass cap */}
+      <mesh castShadow position={[0, 0.32, 0]}>
+        <cylinderGeometry args={[0.28, 0.28, 0.12, 24]} />
+        <meshStandardMaterial color="#B5A642" metalness={0.85} roughness={0.35} />
+      </mesh>
+      {/* Archival paper specimen label */}
+      <mesh castShadow position={[0, 0, 0.265]}>
+        <boxGeometry args={[0.28, 0.22, 0.005]} />
+        <meshStandardMaterial color="#FAF6EE" roughness={0.8} />
+      </mesh>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 9. SOLID BRASS BLUEPRINT PAPERWEIGHT (The Drafting Desk Anchor)
+// ---------------------------------------------------------------------------
+// Solid chamfered brass anchor weight holding down the outer blueprint paper corner
+function BrassPaperweight() {
+  const weightPos: [number, number, number] = [-7.5, 0.06, 4.5];
+
+  return (
+    <group position={weightPos}>
+      {/* Main chamfered brass disc */}
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[0.45, 0.48, 0.12, 32]} />
+        <meshStandardMaterial color="#C2A649" metalness={0.85} roughness={0.32} />
+      </mesh>
+      {/* Center recessed ergonomic finger grip ring */}
+      <mesh castShadow position={[0, 0.05, 0]}>
+        <cylinderGeometry args={[0.24, 0.20, 0.03, 24]} />
+        <meshStandardMaterial color="#8A7326" metalness={0.9} roughness={0.4} />
+      </mesh>
+    </group>
   );
 }
 
@@ -546,6 +1074,13 @@ export function BlueprintScene3D({
     return createBlueprintGroundTexture();
   }, []);
 
+  // Dispose 2048x2048 ground texture on unmount
+  useEffect(() => {
+    return () => {
+      groundTexture?.dispose();
+    };
+  }, [groundTexture]);
+
   // Lite Mode or Pre-mount fallback: Static 2D Blueprint SVG
   if (isLiteMode || !mounted) {
     return (
@@ -556,7 +1091,7 @@ export function BlueprintScene3D({
             const found = BLUEPRINT_PINS.find((p) => p.category === cat);
             if (found && onSelectPin) onSelectPin(found);
           }}
-          className="max-w-4xl mx-auto shadow-2xl rounded-xl border border-[#415682]"
+          className="max-w-4xl mx-auto shadow-[6px_6px_0px_#090d20] rounded-none border border-[#415682]"
         />
       </div>
     );
@@ -565,7 +1100,8 @@ export function BlueprintScene3D({
   return (
     <div className={`relative w-full h-full ${className}`}>
       <Canvas
-        dpr={[1, 1.5]}
+        shadows
+        dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
         camera={{ position: [16.0, 13.5, 18.5], fov: 32 }}
         gl={{
           antialias: true,
@@ -574,17 +1110,29 @@ export function BlueprintScene3D({
         }}
         className="w-full h-full"
       >
-        {/* Deep Cyanotype Ink Sky Ground */}
-        <color attach="background" args={["#0a0e22"]} />
-        <fog attach="fog" args={["#0a0e22", 32, 95]} />
+        {/* Deep Bruised Plum/Purple Void (§Phase 1 Overhaul) */}
+        <color attach="background" args={["#0F050A"]} />
+        <fog attach="fog" args={["#0F050A", 28, 90]} />
 
-        {/* Studio Architectural Lighting */}
-        <ambientLight intensity={1.3} color="#c8d6f5" />
-        <directionalLight position={[20, 25, 15]} intensity={2.4} color="#fff1d6" />
-        <directionalLight position={[-15, 18, -15]} intensity={1.2} color="#55CCA2" />
+        {/* Cinematic War Room Lighting (§Phase 1 Overhaul) */}
+        <ambientLight intensity={0.8} color="#381D2C" />
+        <directionalLight position={[20, 25, 15]} intensity={1.8} color="#FFE6B8" />
+        <directionalLight position={[-15, 18, -15]} intensity={0.9} color="#8B5A2B" />
 
-        {/* 1. Large Cyanotype Blueprint Ground Plane (y = 0) */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+        {/* Soft overhead SpotLight creating a dramatic vignette pool of light on the blueprint floor */}
+        <spotLight
+          position={[0, 22, -1.2]}
+          color="#FFF0D4"
+          intensity={1.5}
+          angle={Math.PI / 4.2}
+          penumbra={0.85}
+          distance={45}
+          decay={2}
+          castShadow
+        />
+
+        {/* 1. Large Blueprint Ground Plane (y = 0) */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
           <planeGeometry args={[56, 56]} />
           <meshStandardMaterial
             map={groundTexture || undefined}
@@ -592,6 +1140,45 @@ export function BlueprintScene3D({
             metalness={0.1}
           />
         </mesh>
+
+        {/* Soft Contact Shadows (§Phase 3 Calibration) */}
+        <ContactShadows
+          position={[0, 0.012, 0]}
+          opacity={0.82}
+          scale={34}
+          blur={1.8}
+          far={4.0}
+          resolution={512}
+          color="#070308"
+        />
+
+        {/* Diegetic 3D Props (§Phase 2 & Additional Kaththi Memorabilia) */}
+        {/* 1. The Signature Coin (The Catalyst) */}
+        <KaththiSignatureCoin />
+
+        {/* 2. The Brass Drafting Compass (The Architect) */}
+        <BrassDraftingCompass />
+
+        {/* 3. The Hydrology Pipe Nodes (The Mission) */}
+        <HydrologyPipeNodes />
+
+        {/* 4. Rolled City Blueprint Scrolls (East Flank) */}
+        <RolledBlueprintScrolls />
+
+        {/* 5. Triangular Architect Scale Ruler (East Flank) */}
+        <ArchitectScaleRuler />
+
+        {/* 6. Hexagonal Drafting Graphite Pencil (East Flank) */}
+        <DraftingPencil />
+
+        {/* 7. Kaththi Precision Folding Utility Blade (West Flank) */}
+        <KaththiUtilityBlade />
+
+        {/* 8. Thanjavur Soil Specimen Vial (North Rotunda Flank) */}
+        <ThanjavurSoilVial />
+
+        {/* 9. Solid Brass Blueprint Corner Paperweight (West Flank) */}
+        <BrassPaperweight />
 
         {/* 2. Ohio Stadium ("The Shoe") 3D Wireframe Real-Time Construction */}
         <OhioStadiumWireframeMesh scrollProgress={scrollProgress} />

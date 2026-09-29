@@ -54,18 +54,7 @@ export function MorningVolumetrics({ gateProgressRef }: MorningVolumetricsProps)
     [glowTexture]
   );
 
-  const beamMaterial = useMemo(
-    () =>
-      new THREE.MeshBasicMaterial({
-        color: "#FFE4A8", // Golden morning light
-        transparent: true,
-        opacity: 0.06,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        side: THREE.DoubleSide,
-      }),
-    []
-  );
+  const beamMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
 
   useFrame((state) => {
     const p = gateProgressRef.current ?? 0;
@@ -78,7 +67,9 @@ export function MorningVolumetrics({ gateProgressRef }: MorningVolumetricsProps)
     const openFactor = Math.min(Math.max((p - 0.18) / 0.54, 0), 1);
     const targetOpacity = (0.05 + openFactor * 0.18) * shimmer;
 
-    beamMaterial.opacity = targetOpacity;
+    if (beamMaterialRef.current) {
+      beamMaterialRef.current.opacity = targetOpacity;
+    }
 
     if (shaftGroupRef.current) {
       const scaleX = 1.0 + openFactor * 0.6;
@@ -106,8 +97,16 @@ export function MorningVolumetrics({ gateProgressRef }: MorningVolumetricsProps)
             key={i}
             position={[xOffset * 0.8, -1.2, 3.5]}
             rotation={[Math.PI * 0.46, (xOffset * Math.PI) / 36, 0]}
-            material={beamMaterial}
           >
+            <meshBasicMaterial
+              ref={beamMaterialRef}
+              color="#FFE4A8" // Golden morning light
+              transparent
+              opacity={0.06}
+              blending={THREE.AdditiveBlending}
+              depthWrite={false}
+              side={THREE.DoubleSide}
+            />
             <cylinderGeometry args={[0.15, 1.2, 7.5, 12, 1, true]} />
           </mesh>
         ))}

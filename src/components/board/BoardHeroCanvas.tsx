@@ -5,13 +5,14 @@ import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Environment } from "@react-three/drei";
+import { Environment, BakeShadows } from "@react-three/drei";
 import { CraneCameraRig } from "./CraneCameraRig";
 import { CorridorTreadmill } from "./CorridorTreadmill";
 import { EmblemFinale } from "./EmblemFinale";
 import { PostFX } from "./PostFX";
 import { useBoardHeroStore } from "@/store/boardHeroStore";
-import { Crown, Sparkles, Terminal } from "lucide-react";
+import { CholaCrown3D } from "./CholaCrown3D";
+import { Terminal } from "lucide-react";
 import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 
 if (typeof window !== "undefined") {
@@ -160,7 +161,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
       ref={sectionRef}
       className={`relative w-full ${
         reducedMotion ? "h-[85dvh]" : "h-[100dvh]"
-      } overflow-hidden bg-[#120A06] border-b border-[#3d2714] shadow-2xl flex flex-col justify-between`}
+      } overflow-hidden bg-[#120A06] border-b border-[#3d2714] flex flex-col justify-between`}
       style={{ minHeight: "100dvh" }}
     >
       <div
@@ -168,50 +169,12 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
         className="relative w-full h-full flex flex-col justify-between"
       >
         {/* ========================================================================= */}
-        {/* 1. TOP CHOLA DARBAR SENATE HUD (Alaipayuthey / PS-1 Classical Motif)      */}
-        {/* ========================================================================= */}
-        <div className="relative z-20 w-full pt-16 sm:pt-20 px-4 sm:px-8 pb-3 bg-gradient-to-b from-[#1c1008] via-[#1c1008]/95 to-[#1c1008]/75 backdrop-blur-md border-b border-[#3d2714] flex flex-wrap items-center justify-between gap-3 text-xs font-mono tracking-wider text-[#D4AF37]">
-          {/* Left: Chola Imperial Senate Crest */}
-          <div className="flex items-center gap-2.5">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded bg-[#2a170d] border border-[#6b4a32] text-[#D4AF37] shadow-inner">
-              <Crown className="w-4 h-4" />
-            </span>
-            <div>
-              <span className="font-bold text-[#faf5ed] uppercase tracking-widest text-[11px] sm:text-xs">
-                CHOLA DARBAR · சோழர் தர்பார்
-              </span>
-              <span className="hidden sm:inline-block ml-2 text-[#a89078]">
-                [ 2026–2027 EXECUTIVE SENATE COUNCIL ]
-              </span>
-            </div>
-          </div>
-
-          {/* Center: Scroll Crane Indicator */}
-          <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded bg-[#22130a] border border-[#4d321d] text-[#e0b968]">
-            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span className="text-[11px] font-mono uppercase tracking-widest">
-              {scrollProgress >= 0.95
-                ? "ENTERING SANCTUM · REACHING IMPERIAL EMBLEM"
-                : "SCROLL TO CRANE THROUGH STONE MANDAPAM"}
-            </span>
-          </div>
-
-          {/* Right: Cultural Motto */}
-          <div className="flex items-center gap-3 text-[#d4af37]">
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#24140b] border border-[#52361f]">
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-              <span className="font-bold font-tamil text-[11px]">யாதும் ஊரே யாவரும் கேளீர்</span>
-            </div>
-          </div>
-        </div>
-
-        {/* ========================================================================= */}
-        {/* 2. R3F 3D VIEWPORT WITH PHYSICAL CAMERA & ATMOSPHERE                      */}
+        {/* R3F 3D VIEWPORT WITH PHYSICAL CAMERA & ATMOSPHERE (Clean Cinematic Scene) */}
         {/* ========================================================================= */}
         <div className="relative flex-1 w-full h-full">
           <Canvas
-            dpr={[1, 1.5]}
-            camera={{ position: [0, 1.6, 30], fov: 32 }}
+            dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
+            camera={{ position: [0, 2.22, 30], fov: 32 }}
             frameloop={inView ? "always" : "demand"}
             gl={{
               antialias: true,
@@ -238,8 +201,14 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
               shadow-mapSize-height={512}
             />
 
+            {/* Static Mandapam Architecture Shadow Baking */}
+            <BakeShadows />
+
             {/* Crane Camera Rig with spring-lag inertia (§6) */}
             <CraneCameraRig scrollProgress={reducedMotion ? 1.0 : localProgress} />
+
+            {/* Floating Imperial Chola Crown placed lower near stone floor so camera glides above it (z = 23.5) */}
+            <CholaCrown3D position={[0, 0.65, 23.5]} scale={0.88} />
 
             {/* 3D Modular Corridor Treadmill (§3) */}
             <Suspense fallback={null}>
@@ -270,7 +239,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
         {/* 3. ?debug=1 ENGINEERING HUD (§9 Verification)                             */}
         {/* ========================================================================= */}
         {debugActive && (
-          <div className="absolute top-24 left-6 z-30 p-3 rounded-lg bg-[#140b06]/92 border border-[#D4AF37]/40 backdrop-blur-md font-mono text-[11px] text-[#fef3c7] shadow-2xl flex flex-col gap-1.5 pointer-events-none">
+          <div className="absolute top-24 left-6 z-30 p-3 rounded-none bg-[#140b06]/92 border border-[#D4AF37]/40 backdrop-blur-md font-mono text-[11px] text-[#fef3c7] shadow-[4px_4px_0px_#250d38] flex flex-col gap-1.5 pointer-events-none">
             <div className="flex items-center gap-2 pb-1 border-b border-[#3d2714] text-[#D4AF37] font-bold">
               <Terminal className="w-3.5 h-3.5" />
               <span>CHOLA DARBAR CINEMATIC CRANE HUD</span>

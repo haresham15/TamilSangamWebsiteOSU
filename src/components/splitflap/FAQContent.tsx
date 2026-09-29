@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { FAQS, FaqItem } from "@/data/faq";
+import { useFaqStore } from "@/store/faqStore";
 import {
   Search,
   ChevronDown,
@@ -59,7 +60,8 @@ export function FAQContent({
         faq.questionTa.toLowerCase().includes(q) ||
         faq.answerEn.toLowerCase().includes(q) ||
         faq.answerTa.toLowerCase().includes(q) ||
-        faq.category.toLowerCase().includes(q)
+        faq.category.toLowerCase().includes(q) ||
+        faq.tags.some((t) => t.toLowerCase().includes(q))
       );
     });
   }, [faqs, selectedCategory, search]);
@@ -72,6 +74,29 @@ export function FAQContent({
     }
   };
 
+  // Phase 4: Board → DOM direction of the bidirectional bridge (PRD §8).
+  // When activeFaqId changes in the store (from search overlay or board),
+  // auto-expand the matching accordion and scroll it into view.
+  const accordionContainerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const unsub = useFaqStore.subscribe((state, prevState) => {
+      if (state.activeFaqId && state.activeFaqId !== prevState.activeFaqId) {
+        const faq = faqs.find((f) => f.id === state.activeFaqId);
+        if (faq) {
+          setExpandedId(faq.id);
+          // Distance-capped scroll nudge (PRD §8: nudge, not yank)
+          requestAnimationFrame(() => {
+            const el = document.getElementById(`faq-panel-${faq.id}`);
+            if (el) {
+              el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+          });
+        }
+      }
+    });
+    return unsub;
+  }, [faqs]);
+
   return (
     <div className="relative z-20 w-full min-h-screen bg-[#050201] pt-16 pb-32 px-4 sm:px-6 lg:px-8 border-t border-[#1c1510]">
       <div className="max-w-4xl mx-auto">
@@ -80,7 +105,7 @@ export function FAQContent({
         {/* ========================================================================= */}
         <div className="text-center mb-12">
           {/* Railway Station Dispatch Eyebrow */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#17110c] border border-[#38281a] text-[#f59e0b] text-xs font-mono tracking-wider uppercase mb-4 shadow-inner">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-none bg-[#17110c] border border-[#38281a] text-[#f59e0b] text-xs font-mono tracking-wider uppercase mb-4">
             <Train className="w-3.5 h-3.5" />
             <span>KNOWLEDGE ARCHIVE & SANGAM DISPATCH</span>
             <span className="text-[#8f755a]">·</span>
@@ -111,7 +136,7 @@ export function FAQContent({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by topic, keyword, or Tamil term (e.g., tickets, membership, தீபாவளி)..."
-              className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-[#110d0a] border border-[#2b2017] text-[#f5eedf] placeholder-[#6e5d4d] text-sm focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition-all"
+              className="w-full pl-12 pr-4 py-3.5 rounded-none bg-[#110d0a] border border-[#2b2017] text-[#f5eedf] placeholder-[#6e5d4d] text-sm focus:outline-none focus:border-[#d4af37] font-mono transition-all"
             />
             {search && (
               <button
@@ -131,10 +156,10 @@ export function FAQContent({
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider whitespace-nowrap transition-all ${
+                  className={`px-3.5 py-1.5 rounded-none text-xs font-mono tracking-wider whitespace-nowrap transition-all border ${
                     isActive
-                      ? "bg-[#d4af37] text-[#0d0a08] font-bold shadow-md shadow-[#d4af37]/20"
-                      : "bg-[#140f0c] text-[#a89985] hover:text-[#fdfaf5] hover:bg-[#1f1712] border border-[#261d15]"
+                      ? "bg-[#d4af37] text-[#0d0a08] font-bold border-[#d4af37] shadow-[2px_2px_0px_#250d38]"
+                      : "bg-[#140f0c] text-[#a89985] hover:text-[#fdfaf5] hover:bg-[#1f1712] border-[#261d15]"
                   }`}
                 >
                   {cat.toUpperCase()}
@@ -149,7 +174,7 @@ export function FAQContent({
         {/* ========================================================================= */}
         <div className="space-y-3.5">
           {filteredFaqs.length === 0 ? (
-            <div className="p-8 text-center rounded-2xl bg-[#0f0b09] border border-[#241a13] text-[#8f755a]">
+            <div className="p-8 text-center rounded-none bg-[#0f0b09] border border-[#241a13] text-[#8f755a]">
               <p className="font-mono text-sm">NO QUESTIONS MATCHED YOUR QUERY</p>
               <button
                 onClick={() => {
@@ -169,17 +194,19 @@ export function FAQContent({
               return (
                 <div
                   key={faq.id}
-                  className={`rounded-2xl transition-all duration-200 border ${
+                  className={`rounded-none transition-all duration-200 border ${
                     isExpanded
-                      ? "bg-[#120e0b] border-[#4a3a29] shadow-xl"
+                      ? "bg-[#120e0b] border-[#4a3a29] shadow-[3px_3px_0px_#250d38]"
                       : "bg-[#0b0806] border-[#1f1711] hover:border-[#33251a]"
                   }`}
                 >
-                  {/* Accordion Question Trigger Header */}
+                  {/* Accordion Question Trigger Header (ARIA accordion pattern — PRD §10) */}
                   <button
                     onClick={() => handleAccordionClick(faq)}
                     className="w-full p-5 text-left flex items-start justify-between gap-4 cursor-pointer"
                     aria-expanded={isExpanded}
+                    aria-controls={`faq-panel-${faq.id}`}
+                    id={`faq-trigger-${faq.id}`}
                   >
                     <div className="space-y-1.5 flex-1">
                       {/* Category Tag & Index */}
@@ -187,13 +214,13 @@ export function FAQContent({
                         <span className="font-mono text-[11px] text-[#8f755a]">
                           [#{String(index + 1).padStart(2, "0")}]
                         </span>
-                        <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-[#d4af37] px-2 py-0.5 rounded bg-[#1f1711] border border-[#3b2c1d]">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-[#d4af37] px-2 py-0.5 rounded-none bg-[#1f1711] border border-[#3b2c1d]">
                           <Tag className="w-2.5 h-2.5" />
                           {faq.category}
                         </span>
                         {isBoardActive && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-1.5 py-0.5 rounded">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-1.5 py-0.5 rounded-none">
+                            <span className="w-1.5 h-1.5 rounded-none bg-emerald-400 animate-pulse" />
                             ON BOARD
                           </span>
                         )}
@@ -210,7 +237,7 @@ export function FAQContent({
                       </p>
                     </div>
 
-                    <div className="mt-1 flex items-center justify-center w-8 h-8 rounded-full bg-[#1a140f] border border-[#2e2116] text-[#c59b27] shrink-0">
+                    <div className="mt-1 flex items-center justify-center w-8 h-8 rounded-none bg-[#1a140f] border border-[#2e2116] text-[#c59b27] shrink-0">
                       <ChevronDown
                         className={`w-4 h-4 transition-transform duration-300 ${
                           isExpanded ? "rotate-180 text-[#d4af37]" : ""
@@ -221,14 +248,19 @@ export function FAQContent({
 
                   {/* Accordion Expanded Answer Body */}
                   {isExpanded && (
-                    <div className="px-5 pb-5 pt-2 border-t border-[#1c1510] space-y-4">
+                    <div
+                      id={`faq-panel-${faq.id}`}
+                      role="region"
+                      aria-labelledby={`faq-trigger-${faq.id}`}
+                      className="px-5 pb-5 pt-2 border-t border-[#1c1510] space-y-4"
+                    >
                       {/* English Answer */}
-                      <div className="text-sm text-[#ded4c5] leading-relaxed font-sans">
+                      <div className="text-sm text-[#ded4c5] leading-relaxed font-body">
                         {faq.answerEn}
                       </div>
 
                       {/* Tamil Answer */}
-                      <div className="p-3.5 rounded-xl bg-[#0a0705] border border-[#231a12] text-xs sm:text-sm text-[#e0b968] font-tamil leading-relaxed">
+                      <div className="p-3.5 rounded-none bg-[#0a0705] border border-[#231a12] text-xs sm:text-sm text-[#e0b968] font-tamil leading-relaxed">
                         {faq.answerTa}
                       </div>
 
@@ -244,7 +276,7 @@ export function FAQContent({
                             e.stopPropagation();
                             if (onSelectFaq) onSelectFaq(faq);
                           }}
-                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#211810] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono tracking-wider text-[#d4af37] transition-all hover:border-[#d4af37]"
+                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-none bg-[#211810] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono tracking-wider text-[#d4af37] transition-all hover:border-[#d4af37] shadow-[2px_2px_0px_#250d38]"
                         >
                           <Sparkles className="w-3.5 h-3.5" />
                           <span>SEND TO FLAP BOARD</span>
