@@ -12,6 +12,8 @@ import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { ArrowUpRight, Mail, ArrowRight, X, Crown } from "lucide-react";
+import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
+
 
 // Dynamically load 3D Chola Darbar corridor hero without SSR
 const BoardHeroCanvas = dynamic(
@@ -121,20 +123,17 @@ export default function BoardPage() {
       {/* ========================================================================= */}
       {/* 2. EDITORIAL ROSTER GRID & ARCHITECTURAL LEDGER                           */}
       {/* ========================================================================= */}
-      <div className="relative z-20 w-full bg-[#F7F0E4] text-[#1C120A] pt-12 pb-24">
+      <div className="relative z-20 w-full bg-[#F7F0E4] text-[#1C120A] pt-12 pb-24 overflow-hidden">
+        {/* Structural Tamil Background Watermarks */}
+        <WatermarkGlyph text="அவை" opacity={0.04} align="right" theme="light" />
+        <WatermarkGlyph text="சபை" opacity={0.032} align="left" theme="light" className="top-[65%]" />
+
         <div
           id="board-editorial-roster"
-          className="w-full max-w-6xl mx-auto px-4 sm:px-6 text-left font-body"
+          className="w-full max-w-6xl mx-auto px-4 sm:px-6 text-left font-body relative z-10"
         >
           {/* Header */}
           <div className="max-w-3xl mb-12">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-none bg-[#1c1008] border border-[#4a321f] text-[#D4AF37] text-xs font-mono tracking-wider uppercase mb-4">
-              <Crown className="w-3.5 h-3.5" />
-              <span>CHOLA DARBAR · EXECUTIVE SENATE ROSTER</span>
-              <span className="text-[#8f755a]">·</span>
-              <span className="font-tamil">நிர்வாக அவை</span>
-            </div>
-
             <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
               {locale === "ta" ? "நிர்வாகக் குழு & தலைமைப் பொறுப்புகள்" : "Executive Board & Leadership"}
             </h1>
@@ -146,7 +145,7 @@ export default function BoardPage() {
           </div>
 
         {/* Architectural Ledger Console Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 max-w-4xl mx-auto mb-12 rounded-none bg-[#1c1008] border border-[#3d2714] shadow-[4px_4px_0px_#250d38]">
+        <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 max-w-4xl mx-auto mb-12 rounded-none bg-[#1c1008] border border-[#3d2714] shadow-[4px_4px_0px_#250d38] ticket-chamfer-tl-br blueprint-node">
           {[
             { id: "current" as const, label: locale === "ta" ? "செயற்குழு 2025–26 (9)" : "Executive Board 2025–26 (9)" },
             { id: "liquid" as const, label: locale === "ta" ? "பெயர் அரங்கம் (Liquid Roster)" : "Liquid Roster (Editorial)" },
@@ -215,9 +214,9 @@ export default function BoardPage() {
                     playClick();
                     setActiveModalCard(member);
                   }}
-                  className={`p-4 sm:p-5 border-2 transition-all cursor-pointer text-left ${
+                  className={`p-4 sm:p-5 border-2 transition-all cursor-pointer text-left ticket-chamfer-tl-br blueprint-node ${
                     isHovered
-                      ? "bg-[#250d38] border-[#55CCA2] shadow-[4px_4px_0px_#55CCA2] translate-x-1"
+                      ? "bg-[#250d38] border-[#55CCA2] shadow-[4px_4px_0px_#55CCA2] glow-halogen-mint translate-x-1"
                       : "bg-[#160d26]/80 border-white/10 hover:border-white/25 shadow-[2px_2px_0px_rgba(0,0,0,0.4)]"
                   }`}
                 >
@@ -244,7 +243,7 @@ export default function BoardPage() {
 
           {/* Right Column: Dynamic Morphed Portrait Display */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="box-ticket relative w-full max-w-sm bg-[#160d26] border-2 border-white/20 shadow-[6px_6px_0px_#4c2472] p-6 flex flex-col justify-between">
+            <div className="ticket-chamfer-tr-bl blueprint-node relative w-full max-w-sm bg-[#160d26] border-2 border-white/20 shadow-[6px_6px_0px_#4c2472] hover:glow-sodium p-6 flex flex-col justify-between transition-all duration-300">
               <div className="relative w-full h-52 overflow-hidden shadow-inner bg-black/40 border-2 border-white/10 flex items-center justify-center p-4">
                 <div className="relative w-24 h-24">
                   <Image
@@ -267,12 +266,12 @@ export default function BoardPage() {
                 </div>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1 mt-4">
                 <p className="text-xs text-white font-semibold">{hoveredMember.committeeEn}</p>
                 <p className="text-[11px] text-slate-400 line-clamp-2">{hoveredMember.bioEn}</p>
               </div>
 
-              <div className="flex items-center justify-between pt-2 text-xs font-mono text-slate-300 border-t border-white/10">
+              <div className="flex items-center justify-between pt-3 mt-4 text-xs font-mono text-slate-300 border-t border-white/10">
                 <span className="flex items-center gap-1">
                   <Mail className="w-3.5 h-3.5 text-[#D4AF37]" />
                   <span>{hoveredMember.email}</span>
@@ -287,7 +286,7 @@ export default function BoardPage() {
       {/* 3. Subcommittee Council (9 Dedicated Members) */}
       {activeTab === "subcommittee" && (
         <div className="space-y-8">
-          <div className="box-architectural-dark p-8 border-2 border-white/20 shadow-[5px_5px_0px_#4c2472]">
+          <div className="ticket-chamfer-tl-br blueprint-node p-8 border-2 border-white/20 shadow-[5px_5px_0px_#4c2472] bg-[#160d26]">
             <h2 className="text-2xl sm:text-3xl font-bold font-display text-white mb-3">
               {locale === "ta" ? "துணைக் குழு உறுப்பினர்கள்" : "Subcommittee Working Council"}
             </h2>
@@ -308,7 +307,7 @@ export default function BoardPage() {
               <motion.div
                 key={sub.id}
                 variants={itemVariants}
-                className="box-ticket p-6 bg-[#160d26] border-2 border-white/15 hover:border-[#55CCA2] shadow-[4px_4px_0px_rgba(76,36,114,0.4)] hover:shadow-[5px_5px_0px_#55CCA2] transition-all flex flex-col justify-between"
+                className="ticket-chamfer-tl-br blueprint-node p-6 bg-[#160d26] border-2 border-white/15 hover:border-[#55CCA2] shadow-[4px_4px_0px_rgba(76,36,114,0.4)] hover:shadow-[5px_5px_0px_#55CCA2] hover:glow-halogen-mint transition-all flex flex-col justify-between"
               >
                 <div>
                   <h3 className="text-xl font-bold font-display text-white tracking-tight mb-1">
@@ -340,7 +339,7 @@ export default function BoardPage() {
       {activeTab === "governance" && (
         <div className="space-y-8">
           {/* Key Rule: 2 Meetings + 2 Events for Voting & Shadowing */}
-          <div className="box-ticket p-8 sm:p-10 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] relative overflow-hidden">
+          <div className="ticket-chamfer-tl-br blueprint-node p-8 sm:p-10 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] hover:glow-sodium transition-all duration-300 relative overflow-hidden">
             <h2 className="text-2xl sm:text-4xl font-bold font-display text-white mb-4">
               {locale === "ta" ? "வாக்குரிமை & நிர்வாக வழிகாட்டல் தகுதிகள்" : "Voting Rights & Executive Board Shadowing"}
             </h2>
@@ -363,7 +362,7 @@ export default function BoardPage() {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {CLUB_PURPOSE.map((p) => (
-                <div key={p.id} className="box-architectural-dark p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472]">
+                <div key={p.id} className="ticket-chamfer-tl-br blueprint-node p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] bg-[#160d26] hover:glow-halogen-mint transition-all">
                   <h4 className="text-lg font-bold font-display text-white mb-2">
                     {locale === "ta" ? p.titleTa : p.titleEn}
                   </h4>
@@ -377,7 +376,7 @@ export default function BoardPage() {
 
           {/* Membership Demographics & Policy 1.15 Compliance */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="box-architectural-dark p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] space-y-3">
+            <div className="ticket-chamfer-tl-br blueprint-node p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] bg-[#160d26] space-y-3">
               <span className="text-xs font-mono uppercase tracking-wider text-[#55CCA2] block font-bold">
                 Student Quota & Year-Round Enrollment
               </span>
@@ -392,7 +391,7 @@ export default function BoardPage() {
               </p>
             </div>
 
-            <div className="box-architectural-dark p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] space-y-3">
+            <div className="ticket-chamfer-tl-br blueprint-node p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] bg-[#160d26] space-y-3">
               <span className="text-xs font-mono uppercase tracking-wider text-rose-400 block font-bold">
                 Safety & University Compliance
               </span>
@@ -413,7 +412,7 @@ export default function BoardPage() {
       {/* 5. Get Involved in Leadership & Student Committees */}
       {activeTab === "join-board" && (
         <div className="space-y-8">
-          <div className="box-architectural-dark p-8 border-2 border-white/20 shadow-[5px_5px_0px_#4c2472]">
+          <div className="ticket-chamfer-tl-br blueprint-node p-8 border-2 border-white/20 shadow-[5px_5px_0px_#4c2472] bg-[#160d26]">
             <h2 className="text-2xl sm:text-3xl font-bold font-display text-white mb-3">
               {locale === "ta" ? "செயற்குழுவில் இணையுங்கள்" : "Shape the Sangam — Join a Committee"}
             </h2>
@@ -426,7 +425,7 @@ export default function BoardPage() {
             <Link
               href="/join#performer"
               onClick={playClick}
-              className="btn-sangam-mint inline-flex items-center gap-2 px-6 py-3 text-xs uppercase tracking-wider"
+              className="btn-sangam-mint ticket-chamfer-tl-br inline-flex items-center gap-2 px-6 py-3 text-xs uppercase tracking-wider"
             >
               <span>Apply for Committee & Volunteer Roles</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -435,7 +434,7 @@ export default function BoardPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {committees.map((com, idx) => (
-              <div key={idx} className="box-architectural-dark p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] text-left">
+              <div key={idx} className="ticket-chamfer-tl-br blueprint-node p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] bg-[#160d26] text-left">
                 <h3 className="text-lg font-bold font-display text-white mb-2">
                   {com.titleEn}
                 </h3>
@@ -446,7 +445,7 @@ export default function BoardPage() {
                   {com.roles.map((role, rIdx) => (
                     <span
                       key={rIdx}
-                      className="text-xs text-[#55CCA2] bg-[#250d38]/80 px-2 py-0.5 border border-[#55CCA2]/20"
+                      className="text-xs font-mono text-[#55CCA2] bg-[#250d38]/80 px-2 py-0.5 border border-[#55CCA2]/20"
                     >
                       {role}
                     </span>
@@ -472,7 +471,7 @@ export default function BoardPage() {
             <motion.div
               layoutId={`board-card-container-${activeModalCard.id}`}
               transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="box-ticket relative w-full max-w-lg bg-[#1c1008] border-2 border-[#D4AF37] shadow-[8px_8px_0px_#6b4a32] p-6 sm:p-8 text-left overflow-hidden rounded-none"
+              className="ticket-chamfer-tl-br blueprint-node relative w-full max-w-lg bg-[#1c1008] border-2 border-[#D4AF37] shadow-[8px_8px_0px_#6b4a32] hover:glow-sodium p-6 sm:p-8 text-left overflow-hidden rounded-none"
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
               <button
@@ -483,6 +482,7 @@ export default function BoardPage() {
               >
                 <X className="w-5 h-5 text-[#D4AF37]" />
               </button>
+
 
               <div className="flex items-center gap-4 mb-6">
                 <div className="relative w-16 h-16 bg-[#0d0603] p-2 border border-[#6b4a32] rounded-none">

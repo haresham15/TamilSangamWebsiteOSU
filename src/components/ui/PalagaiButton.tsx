@@ -11,7 +11,7 @@ export interface PalagaiButtonProps {
   secondaryText?: string; // Tamil or alternate script translation that smoothly rolls into view
   href?: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
-  variant?: "primary" | "mint" | "white" | "dark";
+  variant?: "primary" | "mint" | "white" | "dark" | "gold-foil";
   size?: "sm" | "md" | "lg";
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
@@ -21,6 +21,8 @@ export interface PalagaiButtonProps {
   target?: string;
   rel?: string;
   "aria-label"?: string;
+  chamfer?: boolean;
+  glow?: boolean;
 }
 
 /**
@@ -48,6 +50,8 @@ export const PalagaiButton: React.FC<PalagaiButtonProps> = ({
   target,
   rel,
   "aria-label": ariaLabel,
+  chamfer = false,
+  glow = false,
 }) => {
   const { playClick, playWoodClick } = useAudio();
   const { locale } = useLocale();
@@ -67,7 +71,8 @@ export const PalagaiButton: React.FC<PalagaiButtonProps> = ({
     primary: "btn-sangam text-white",
     mint: "btn-sangam-mint text-[#240e36]",
     white: "btn-sangam-white text-[#250d38]",
-    dark: "bg-[#250d38] text-[#55CCA2] border-2 border-[#55CCA2] shadow-[3px_3px_0px_#55CCA2,6px_6px_0px_#4c2472] hover:bg-[#34144e] hover:shadow-[5px_5px_0px_#55CCA2,8px_8px_0px_#4c2472] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#55CCA2]",
+    dark: "bg-[#250d38] text-[#55CCA2] border-2 border-[#55CCA2] shadow-[3px_3px_0px_#55CCA2,6px_6px_0px_#4c2472] hover:bg-[#34144e] hover:shadow-[4px_4px_0px_#55CCA2,7px_7px_0px_#4c2472] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#55CCA2]",
+    "gold-foil": "btn-gold-foil text-[#1a0826] border border-amber-200/70 shadow-[3px_3px_0px_#8B5A2B] hover:shadow-[0_0_35px_rgba(255,184,77,0.45)]",
   }[variant];
 
   const sizeClasses = {
@@ -84,38 +89,37 @@ export const PalagaiButton: React.FC<PalagaiButtonProps> = ({
   const content = (
     <span className="relative z-10 flex items-center gap-2 font-mono font-bold uppercase tracking-wider select-none">
       {icon && iconPosition === "left" && (
-        <span className="shrink-0 transition-transform duration-200 ease-out group-hover:-translate-x-0.5 transform-gpu">
+        <span className="shrink-0 transition-transform duration-150 ease-out group-hover:-translate-x-0.5 transform-gpu">
           {icon}
         </span>
       )}
 
-      {/* Kinetic Text Track: If secondaryText is provided, roll on hover */}
-      {altLabel ? (
-        <span className="relative block h-[1.35em] overflow-hidden leading-tight">
-          <span className="block transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-full transform-gpu will-change-transform">
-            <span className="block h-[1.35em] flex items-center">{mainLabel}</span>
-            <span
-              className="block h-[1.35em] flex items-center font-tamil text-[1.05em] normal-case"
-              lang={locale === "ta" ? "en" : "ta"}
-              style={{ letterSpacing: 0 }}
-            >
-              {altLabel}
-            </span>
-          </span>
-        </span>
-      ) : (
+      {/* Stable, Highly Legible Bilingual Typography (No Disorienting Roll on Hover) */}
+      <span className="flex items-center gap-1.5 leading-tight">
         <span>{children || mainLabel}</span>
-      )}
+        {altLabel && altLabel !== mainLabel && (
+          <span
+            className="text-[10px] opacity-80 font-tamil font-normal tracking-normal lowercase first-letter:uppercase"
+            lang={locale === "ta" ? "en" : "ta"}
+            style={{ letterSpacing: 0 }}
+          >
+            {altLabel}
+          </span>
+        )}
+      </span>
 
       {icon && iconPosition === "right" && (
-        <span className="shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1 transform-gpu">
+        <span className="shrink-0 transition-transform duration-150 ease-out group-hover:translate-x-0.5 transform-gpu">
           {icon}
         </span>
       )}
     </span>
   );
 
-  const combinedClasses = `group relative inline-flex items-center justify-center font-mono font-bold uppercase tracking-wider select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 ${variantClasses} ${sizeClasses} ${className} ${disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : "cursor-pointer"}`;
+  const chamferClass = chamfer ? "ticket-chamfer-tl-br" : "rounded-none";
+  const glowClass = glow ? (variant === "mint" ? "hover:glow-halogen-mint" : "hover:glow-sodium") : "";
+
+  const combinedClasses = `group relative inline-flex items-center justify-center font-mono font-bold uppercase tracking-wider select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out ${variantClasses} ${sizeClasses} ${chamferClass} ${glowClass} ${className} ${disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : "cursor-pointer"}`;
 
   if (href && !disabled) {
     return (

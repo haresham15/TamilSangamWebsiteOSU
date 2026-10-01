@@ -22,12 +22,21 @@
   --color-kumkumam-crimson: oklch(0.62 0.22 25);
   --color-sandhanam-silk: oklch(0.98 0.015 85);
 
-  /* Typography Scale - Rooted in Tamil & Indic Cultural Epigraphy and Letterforms */
-  --font-display: var(--font-anek-tamil), 'Anek Tamil', var(--font-halant), 'Halant', sans-serif;
-  --font-serif: var(--font-halant), 'Halant', var(--font-rozha), 'Rozha One', serif;
-  --font-body: var(--font-mukta-malar), 'Mukta Malar', var(--font-anek-tamil), sans-serif;
-  --font-tamil: var(--font-mukta-malar), 'Mukta Malar', serif;
-  --font-mono: var(--font-mono), monospace;
+  /* Typography Scale - Cinematic Serifs & Sacred Tamil Epigraphy */
+  --font-marcellus: var(--font-marcellus), serif;
+  --font-prata: var(--font-prata), serif;
+  --font-cormorant: var(--font-cormorant), serif;
+  --font-kavivanar: var(--font-kavivanar), cursive, serif;
+  --font-tiro-tamil: var(--font-tiro-tamil), serif;
+  --font-outfit: var(--font-outfit), sans-serif;
+  --font-azeret-mono: var(--font-azeret-mono), monospace;
+
+  --font-display: var(--font-marcellus), var(--font-prata), var(--font-halant), 'Halant', var(--font-anek-tamil), 'Anek Tamil', serif;
+  --font-brutalist: var(--font-marcellus), var(--font-syne), 'Syne', sans-serif;
+  --font-serif: var(--font-marcellus), var(--font-cormorant), var(--font-halant), 'Halant', var(--font-rozha), serif;
+  --font-body: var(--font-outfit), var(--font-mukta-malar), 'Mukta Malar', sans-serif;
+  --font-tamil: var(--font-mukta-malar), var(--font-tiro-tamil), var(--font-kavivanar), serif;
+  --font-mono: var(--font-azeret-mono), var(--font-space-mono), var(--font-mono), monospace;
 
   /* Semantic Mappings for Bright, Colorful & Welcoming Experience */
   --color-action-primary: var(--color-sangam-purple);
@@ -390,165 +399,88 @@ h1, h2, h3, h4, .font-display, .font-serif {
 /* Signature Official Logo Action Button (Crisp Architectural Block with Stepped Pedestal Depth) */
 .btn-sangam {
   position: relative;
-  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background-color: var(--sangam-purple);
   color: #ffffff;
   font-weight: 700;
-  border-radius: 2px;
+  border-radius: 0px;
   box-shadow: 3px 3px 0px #55CCA2, 6px 6px 0px #250d38;
   border: 2px solid #250d38;
   transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  will-change: transform, box-shadow;
+  will-change: transform, box-shadow, background-color;
   transition-property: transform, box-shadow, background-color, border-color;
-  transition-duration: 180ms;
-  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.btn-sangam::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -120%;
-  width: 60%;
-  height: 200%;
-  background: linear-gradient(
-    105deg,
-    transparent 20%,
-    rgba(255, 255, 255, 0.4) 50%,
-    transparent 80%
-  );
-  transform: rotate(25deg);
-  pointer-events: none;
-  transition: left 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-sangam:hover {
   background-color: #6e2dae;
-  background-color: var(--color-sangam-purple-light, oklch(0.48 0.24 300));
-  transform: translate3d(-2px, -2px, 0);
-  box-shadow: 5px 5px 0px #55CCA2, 9px 9px 0px #250d38;
   border-color: #55CCA2;
-}
-
-.btn-sangam:hover::after {
-  left: 180%;
+  box-shadow: 4px 4px 0px #55CCA2, 7px 7px 0px #250d38;
 }
 
 .btn-sangam:active {
-  transform: translate3d(3px, 3px, 0);
-  box-shadow: 1px 1px 0px #55CCA2;
+  transform: translate3d(2px, 2px, 0);
+  box-shadow: 1px 1px 0px #55CCA2, 2px 2px 0px #250d38;
 }
 
 .btn-sangam-mint {
   position: relative;
-  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background-color: #55CCA2;
   color: #240e36;
   font-weight: 700;
-  border-radius: 2px;
+  border-radius: 0px;
   box-shadow: 3px 3px 0px #250d38, 6px 6px 0px #4c2472;
   border: 2px solid #250d38;
   transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  will-change: transform, box-shadow;
+  will-change: transform, box-shadow, background-color;
   transition-property: transform, box-shadow, background-color, border-color;
-  transition-duration: 180ms;
-  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.btn-sangam-mint::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -120%;
-  width: 60%;
-  height: 200%;
-  background: linear-gradient(
-    105deg,
-    transparent 20%,
-    rgba(255, 255, 255, 0.6) 50%,
-    transparent 80%
-  );
-  transform: rotate(25deg);
-  pointer-events: none;
-  transition: left 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-sangam-mint:hover {
   background-color: #6fe4ba;
-  transform: translate3d(-2px, -2px, 0);
-  box-shadow: 5px 5px 0px #250d38, 9px 9px 0px #4c2472;
-  border-color: #250d38;
-}
-
-.btn-sangam-mint:hover::after {
-  left: 180%;
+  box-shadow: 4px 4px 0px #250d38, 7px 7px 0px #4c2472;
 }
 
 .btn-sangam-mint:active {
-  transform: translate3d(3px, 3px, 0);
-  box-shadow: 1px 1px 0px #250d38;
+  transform: translate3d(2px, 2px, 0);
+  box-shadow: 1px 1px 0px #250d38, 2px 2px 0px #4c2472;
 }
 
 .btn-sangam-white {
   position: relative;
-  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
   color: #250d38;
   font-weight: 700;
-  border-radius: 2px;
+  border-radius: 0px;
   box-shadow: 3px 3px 0px #4c2472, 6px 6px 0px #55CCA2;
   border: 2px solid #250d38;
   transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  will-change: transform, box-shadow;
+  will-change: transform, box-shadow, background-color;
   transition-property: transform, box-shadow, background-color, border-color;
-  transition-duration: 180ms;
-  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.btn-sangam-white::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -120%;
-  width: 60%;
-  height: 200%;
-  background: linear-gradient(
-    105deg,
-    transparent 20%,
-    rgba(85, 204, 162, 0.3) 50%,
-    transparent 80%
-  );
-  transform: rotate(25deg);
-  pointer-events: none;
-  transition: left 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-sangam-white:hover {
   background-color: #fdfafd;
   border-color: #55CCA2;
-  transform: translate3d(-2px, -2px, 0);
-  box-shadow: 5px 5px 0px #55CCA2, 9px 9px 0px #4c2472;
-}
-
-.btn-sangam-white:hover::after {
-  left: 180%;
+  box-shadow: 4px 4px 0px #4c2472, 7px 7px 0px #55CCA2;
 }
 
 .btn-sangam-white:active {
-  transform: translate3d(3px, 3px, 0);
-  box-shadow: 1px 1px 0px #4c2472;
+  transform: translate3d(2px, 2px, 0);
+  box-shadow: 1px 1px 0px #4c2472, 2px 2px 0px #55CCA2;
 }
 
 /* Authentic Filter Coffee Steam Vapor Animation */
@@ -637,6 +569,184 @@ h1, h2, h3, h4, .font-display, .font-serif {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-tint);
+}
+
+/* ========================================================================= */
+/* TICKET & BLUEPRINT GEOMETRY (Alaipayuthey / Kaththi Mechanical Aesthetic) */
+/* ========================================================================= */
+
+.ticket-chamfer-tl-br {
+  clip-path: polygon(
+    14px 0%, 100% 0%, 
+    100% calc(100% - 14px), calc(100% - 14px) 100%, 
+    0% 100%, 0% 14px
+  );
+}
+
+.ticket-chamfer-tr-bl {
+  clip-path: polygon(
+    0% 0%, calc(100% - 14px) 0%, 
+    100% 14px, 100% 100%, 
+    14px 100%, 0% calc(100% - 14px)
+  );
+}
+
+.ticket-chamfer-r {
+  clip-path: polygon(
+    0% 0%, calc(100% - 14px) 0%, 
+    100% 14px, 100% calc(100% - 14px), 
+    calc(100% - 14px) 100%, 0% 100%
+  );
+}
+
+.ticket-notch-sides {
+  --notch-r: 9px;
+  mask-image: radial-gradient(circle at 0% 50%, transparent var(--notch-r), black calc(var(--notch-r) + 0.5px)),
+              radial-gradient(circle at 100% 50%, transparent var(--notch-r), black calc(var(--notch-r) + 0.5px));
+  mask-composite: intersect;
+  -webkit-mask-image: radial-gradient(circle at 0% 50%, transparent var(--notch-r), black calc(var(--notch-r) + 0.5px)),
+                      radial-gradient(circle at 100% 50%, transparent var(--notch-r), black calc(var(--notch-r) + 0.5px));
+  -webkit-mask-composite: source-in;
+}
+
+/* Blueprint Grid Node Crosshair Marker (+) */
+.blueprint-node {
+  position: relative;
+}
+.blueprint-node::before {
+  content: "+";
+  position: absolute;
+  top: -8px;
+  left: -5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  color: oklch(0.78 0.16 168 / 0.7);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ========================================================================= */
+/* DIEGETIC AMBIENT LIGHTING GLOWS (Physical Station Light Spill)            */
+/* ========================================================================= */
+
+.glow-sodium {
+  box-shadow: 0 0 60px oklch(0.82 0.18 85 / 0.18);
+}
+
+.glow-halogen-mint {
+  box-shadow: 0 0 55px oklch(0.78 0.16 168 / 0.24);
+}
+
+.glow-kumkumam {
+  box-shadow: 0 0 60px oklch(0.62 0.22 25 / 0.22);
+}
+
+/* ========================================================================= */
+/* CULTURAL DRAVIDIAN & TEMPLE ARCH GEOMETRY (Directive #2, #3, #4)          */
+/* ========================================================================= */
+
+.temple-arch {
+  border-radius: 44px 44px 8px 8px;
+}
+
+.temple-arch-lg {
+  border-radius: 64px 64px 12px 12px;
+}
+
+.temple-arch-top {
+  border-top-left-radius: 44px;
+  border-top-right-radius: 44px;
+}
+
+.oolai-chuvadi {
+  aspect-ratio: 24 / 7;
+}
+
+.border-brass {
+  border-color: rgba(181, 166, 66, 0.35);
+}
+
+.border-brass-subtle {
+  border-color: rgba(181, 166, 66, 0.18);
+}
+
+/* 4. The "Kuthuvilakku" Glow (Diegetic Lighting: Soft Radiating Amber) */
+.glow-kuthuvilakku {
+  box-shadow: 0 0 40px rgba(255, 184, 77, 0.2), 0 0 80px rgba(255, 184, 77, 0.08);
+}
+
+.glow-kuthuvilakku-sm {
+  box-shadow: 0 0 20px rgba(255, 184, 77, 0.25);
+}
+
+.hover-glow-kuthuvilakku:hover {
+  box-shadow: 0 0 40px rgba(255, 184, 77, 0.28), 0 0 80px rgba(255, 184, 77, 0.12);
+}
+
+/* Soft Vignettes: Spotlights drawing eye to center content */
+.vignette-ambient-dark {
+  background: radial-gradient(circle at center, transparent 30%, #050201 100%);
+}
+
+.vignette-ambient-warm {
+  background: radial-gradient(circle at center, transparent 40%, rgba(37, 13, 56, 0.08) 100%);
+}
+
+/* 3. Gold Foil & Brushed Brass Buttons (Directive #3) */
+.btn-gold-foil {
+  background: linear-gradient(135deg, #FFE8A3 0%, #FFB84D 40%, #D4AF37 75%, #A88424 100%);
+  color: #160826;
+  font-weight: 700;
+  border: 1px solid rgba(255, 235, 170, 0.7);
+  box-shadow: 0 2px 12px rgba(212, 175, 55, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.65);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-gold-foil:hover {
+  background: linear-gradient(135deg, #FFF0BD 0%, #FFC366 40%, #E2BE46 75%, #BA932E 100%);
+  box-shadow: 0 0 35px rgba(255, 184, 77, 0.45), 0 4px 18px rgba(212, 175, 55, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.85);
+  transform: translateY(-1px);
+}
+
+.btn-gold-foil:active {
+  transform: translateY(0px) scale(0.99);
+  box-shadow: 0 1px 6px rgba(212, 175, 55, 0.4);
+}
+
+/* ========================================================================= */
+/* DIEGETIC AUDIO-VISUAL MICRO-ANIMATIONS (CRT Flicker & RGB Aberration)     */
+/* ========================================================================= */
+
+@keyframes crt-flicker {
+  0% { opacity: 0.12; transform: scaleY(1.02); }
+  25% { opacity: 0.98; transform: scaleY(0.98); }
+  50% { opacity: 0.45; }
+  75% { opacity: 0.95; }
+  100% { opacity: 1; transform: scaleY(1); }
+}
+
+.crt-flicker {
+  animation: crt-flicker 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes rgb-split {
+  0% {
+    text-shadow: -2px 0 oklch(0.62 0.22 25), 2px 0 oklch(0.78 0.16 168);
+    transform: translate(-1px, 0);
+  }
+  50% {
+    text-shadow: 2px 0 oklch(0.62 0.22 25), -2px 0 oklch(0.78 0.16 168);
+    transform: translate(1px, -1px);
+  }
+  100% {
+    text-shadow: none;
+    transform: translate(0, 0);
+  }
+}
+
+.rgb-split {
+  animation: rgb-split 0.22s steps(2, end) forwards;
 }
 
 /* Reduced Motion Override */

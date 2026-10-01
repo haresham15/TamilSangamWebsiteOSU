@@ -19,6 +19,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
+import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 
 // Dynamically load the R3F Nanban Hero Canvas without SSR
 const JoinHeroCanvas = dynamic(
@@ -202,13 +203,12 @@ export default function JoinPage() {
       {/* ========================================================================= */}
       {/* PHASE 1: FORM DOM (min-h-screen Brutalist Console Membership Form)        */}
       {/* ========================================================================= */}
-      <div id="membership-form" className="min-h-screen relative z-20 w-full max-w-4xl mx-auto px-4 sm:px-6 pt-8 pb-28">
+      <div id="membership-form" className="min-h-screen relative z-20 w-full max-w-4xl mx-auto px-4 sm:px-6 pt-8 pb-28 overflow-hidden">
+        {/* Structural Blueprint Watermark Glyphs */}
+        <WatermarkGlyph text="நண்பன்" position="top-right" theme="dark" opacity={0.035} />
+
         {/* Section Headline */}
         <header className="mb-10 text-center sm:text-left">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-none border border-amber-500/40 bg-[#120a06] text-amber-300 text-xs font-mono uppercase tracking-widest mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>{locale === "ta" ? "100% இலவச உறுப்பினர் சேர்க்கை" : "100% Free Membership · No Dues"}</span>
-          </div>
           <h2 className="text-3xl sm:text-4xl font-bold font-display text-white tracking-tight mb-3">
             {locale === "ta" ? "சங்கக் குடும்பத்தில் இணைந்திடுங்கள்" : "Step Through the Gates"}
           </h2>
@@ -220,7 +220,7 @@ export default function JoinPage() {
         </header>
 
         {/* Multi-Step Card Container: Sharp Brutalist Architectural Block */}
-        <div className="rounded-none border-2 border-white/20 bg-[#050201] p-6 sm:p-10 shadow-[6px_6px_0px_#250d38]">
+        <div className="ticket-chamfer-tl-br relative border-2 border-white/20 bg-[#050201] p-6 sm:p-10 shadow-[6px_6px_0px_#250d38] hover:border-[#55CCA2]/40 transition-colors">
           {/* Step Indicator Bar */}
           <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
             {[
@@ -517,7 +517,7 @@ export default function JoinPage() {
                   <button
                     type="button"
                     onClick={handleNextStep}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-none bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#6ee7b7] focus:outline-none focus:ring-2 focus:ring-white transition-all cursor-pointer shadow-[3px_3px_0px_#ffffff] hover:translate-x-0.5 hover:translate-y-0.5"
+                    className="ticket-chamfer-tl-br inline-flex items-center gap-2 px-6 py-2.5 bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#6ee7b7] focus:outline-none focus:ring-2 focus:ring-white transition-[background-color,box-shadow,transform] duration-150 cursor-pointer shadow-[3px_3px_0px_#ffffff] hover:shadow-[4px_4px_0px_#ffffff] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#ffffff] hover:glow-halogen-mint"
                   >
                     <span>{locale === "ta" ? "அடுத்த படி" : "Next Step"}</span>
                     <ArrowRight className="w-4 h-4" />
@@ -526,7 +526,7 @@ export default function JoinPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center gap-2 px-8 py-3 rounded-none bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#6ee7b7] focus:outline-none focus:ring-2 focus:ring-white transition-all disabled:opacity-50 cursor-pointer shadow-[4px_4px_0px_#ffffff] hover:translate-x-0.5 hover:translate-y-0.5"
+                    className="ticket-chamfer-tl-br inline-flex items-center gap-2 px-8 py-3 bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#6ee7b7] focus:outline-none focus:ring-2 focus:ring-white transition-[background-color,box-shadow,transform] duration-150 disabled:opacity-50 cursor-pointer shadow-[4px_4px_0px_#ffffff] hover:shadow-[5px_5px_0px_#ffffff] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#ffffff] hover:glow-halogen-mint"
                   >
                     {isSubmitting ? (
                       <>

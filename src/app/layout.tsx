@@ -1,5 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Mukta_Malar, JetBrains_Mono, Anek_Tamil, Halant, Rozha_One } from "next/font/google";
+import { 
+  Mukta_Malar, 
+  JetBrains_Mono, 
+  Anek_Tamil, 
+  Halant, 
+  Rozha_One, 
+  Space_Mono, 
+  Syne,
+  Marcellus,
+  Prata,
+  Cormorant,
+  Outfit,
+  Kavivanar,
+  Tiro_Tamil,
+  Azeret_Mono
+} from "next/font/google";
 import "./globals.css";
 
 import { LocaleProvider } from "@/context/LocaleContext";
@@ -9,6 +24,7 @@ import { LiteModeProvider } from "@/context/LiteModeContext";
 import { AppShell } from "@/components/global/AppShell";
 import { OrganizationJsonLd, EventJsonLd, WebSiteJsonLd } from "@/components/global/JsonLd";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { FilmGrainOverlay } from "@/components/ui/FilmGrainOverlay";
 
 const muktaMalar = Mukta_Malar({
   variable: "--font-mukta-malar",
@@ -19,6 +35,18 @@ const muktaMalar = Mukta_Malar({
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
+});
+
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+const syne = Syne({
+  variable: "--font-brutalist",
+  subsets: ["latin"],
+  weight: ["700", "800"],
 });
 
 // Cultural Tamil & Indic Display Typefaces (replaces cold futuristic fonts)
@@ -38,6 +66,48 @@ const rozhaOne = Rozha_One({
   variable: "--font-rozha",
   subsets: ["latin"],
   weight: ["400"],
+});
+
+// Cinematic English Serifs & Heritage Scripts
+const marcellus = Marcellus({
+  variable: "--font-marcellus",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const prata = Prata({
+  variable: "--font-prata",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const cormorant = Cormorant({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  style: ["normal", "italic"],
+});
+
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+});
+
+const kavivanar = Kavivanar({
+  variable: "--font-kavivanar",
+  subsets: ["latin", "tamil"],
+  weight: "400",
+});
+
+const tiroTamil = Tiro_Tamil({
+  variable: "--font-tiro-tamil",
+  subsets: ["latin", "tamil"],
+  weight: "400",
+});
+
+const azeretMono = Azeret_Mono({
+  variable: "--font-azeret-mono",
+  subsets: ["latin"],
 });
 
 export const viewport: Viewport = {
@@ -165,10 +235,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${muktaMalar.variable} ${jetbrainsMono.variable} ${anekTamil.variable} ${halant.variable} ${rozhaOne.variable} h-full antialiased`}
+      className={`${muktaMalar.variable} ${jetbrainsMono.variable} ${spaceMono.variable} ${syne.variable} ${anekTamil.variable} ${halant.variable} ${rozhaOne.variable} ${marcellus.variable} ${prata.variable} ${cormorant.variable} ${outfit.variable} ${kavivanar.variable} ${tiroTamil.variable} ${azeretMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans bg-[var(--bg-base)] text-[var(--text-primary)]">
+      <body className="min-h-full flex flex-col font-sans bg-[var(--bg-base)] text-[var(--text-primary)] relative">
+        {/* Global 35mm Analog Film Grain Overlay */}
+        <FilmGrainOverlay />
+
         {/* Structured Data for Search Engine Crawlers */}
         <WebSiteJsonLd />
         <OrganizationJsonLd />

@@ -15,6 +15,7 @@ import { useLiteMode } from "@/context/LiteModeContext";
 import { BlueprintScene3D } from "@/components/suggestions/BlueprintScene3D";
 import { SuggestionForm } from "@/components/suggestions/SuggestionForm";
 import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 import type { BlueprintPin } from "@/components/suggestions/BlueprintSVG";
 import { OFFICIAL_DISCLAIMER, CONTACT_EMAIL } from "@/lib/constants";
 
@@ -90,7 +91,11 @@ export default function SuggestionsPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#0F050A] text-[#f8f6f0] selection:bg-[#FFB84D] selection:text-[#150914]">
+    <div className="relative min-h-screen bg-[#0F050A] text-[#f8f6f0] selection:bg-[#FFB84D] selection:text-[#150914] overflow-hidden">
+      {/* Structural Blueprint Watermark Glyphs */}
+      <WatermarkGlyph text="வரைபடம்" position="top-right" theme="dark" opacity={0.035} />
+      <WatermarkGlyph text="கருத்து" position="center" theme="dark" opacity={0.03} />
+
       {/* 1. Sticky Hero Container with 3D Blueprint Extrusion */}
       <section
         ref={containerRef}
@@ -119,12 +124,7 @@ export default function SuggestionsPage() {
             pointerEvents: scrollProgress > 0.15 ? "none" : "auto",
           }}
         >
-          <div className="w-full bg-[#150914]/85 border border-[#4A2038]/70 px-5 py-3.5 sm:px-6 sm:py-4 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.6)] text-center space-y-1.5">
-            {/* Eyebrow Badge */}
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-[#241021]/90 border border-[#FFB84D]/60 text-[#FFB84D] text-[10px] font-mono font-bold uppercase tracking-wider mx-auto">
-              <span className="w-1.5 h-1.5 rounded-none bg-[#FFB84D] animate-pulse" />
-              <span>{locale === "ta" ? "சமூக வரைபடம் · ஓஹியோ தமிழ்ச் சங்கம்" : "Community Blueprint · OSU Tamil Sangam"}</span>
-            </div>
+          <div className="ticket-chamfer-tl-br relative w-full bg-[#150914]/90 border border-[#FFB84D]/40 px-5 py-3.5 sm:px-6 sm:py-4 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.6)] text-center space-y-1.5 hover:glow-sodium transition-all">
 
             {/* Cinematic Metaphor Title */}
             <h1 className="text-lg sm:text-xl md:text-2xl font-bold font-display text-[#f8f6f0] tracking-tight leading-snug">
@@ -143,7 +143,8 @@ export default function SuggestionsPage() {
         {/* Active Pin Callout Card Overlay (if a pin is clicked or active) */}
         {activePin && (
           <div className="relative z-30 max-w-md mx-auto my-auto px-4 pointer-events-auto animate-in fade-in zoom-in-95 duration-200">
-            <div className="bg-[#150914]/95 border-2 border-[#FFB84D] p-5 shadow-[6px_6px_0px_#8B5A2B] backdrop-blur-lg">
+            <div className="ticket-chamfer-tr-bl relative bg-[#150914]/95 border-2 border-[#FFB84D] p-5 shadow-[6px_6px_0px_#8B5A2B] backdrop-blur-lg hover:glow-sodium transition-all">
+
               <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#4A2038]">
                 <div className="inline-flex items-center gap-2 text-xs font-mono font-bold text-[#FFB84D]">
                   <MapPin className="w-3.5 h-3.5" />
@@ -163,7 +164,7 @@ export default function SuggestionsPage() {
               <button
                 type="button"
                 onClick={scrollToForm}
-                className="w-full py-2 bg-[#FFB84D] hover:bg-[#ffc978] text-[#150914] font-mono text-xs font-bold uppercase tracking-wider transition-colors"
+                className="ticket-chamfer-tl-br w-full py-2 bg-[#FFB84D] hover:bg-[#ffc978] text-[#150914] font-mono text-xs font-bold uppercase tracking-wider transition-colors hover:glow-sodium"
               >
                 Draft Suggestion for this Location →
               </button>
@@ -173,11 +174,10 @@ export default function SuggestionsPage() {
 
         {/* Bottom Jump-to-Form Trigger */}
         <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pb-8 flex items-center justify-end pointer-events-auto">
-
           <button
             type="button"
             onClick={scrollToForm}
-            className="ml-auto mb-16 sm:mb-0 inline-flex items-center gap-2 px-4 py-2 bg-[#150914]/95 hover:bg-[#241021] border-2 border-[#FFB84D] text-[#FFB84D] text-xs font-mono font-bold uppercase tracking-wider backdrop-blur-xl transition-all cursor-pointer shadow-[4px_4px_0px_#8B5A2B]"
+            className="ticket-chamfer-tl-br ml-auto mb-16 sm:mb-0 inline-flex items-center gap-2 px-4 py-2 bg-[#150914]/95 hover:bg-[#241021] border-2 border-[#FFB84D] text-[#FFB84D] text-xs font-mono font-bold uppercase tracking-wider backdrop-blur-xl transition-all cursor-pointer shadow-[4px_4px_0px_#8B5A2B] hover:glow-sodium"
           >
             <span>Jump to Suggestion Box</span>
             <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
@@ -195,7 +195,7 @@ export default function SuggestionsPage() {
       >
         {/* Editorial Explainer Banner */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 bg-[#150914] border-2 border-[#4A2038] space-y-2 shadow-[4px_4px_0px_#0F050A]">
+          <div className="ticket-chamfer-tl-br relative p-6 bg-[#150914] border border-[#4A2038] hover:border-[#FFB84D]/40 space-y-2 shadow-[4px_4px_0px_#0F050A] hover:glow-sodium transition-all">
             <div className="w-8 h-8 bg-[#FFB84D]/20 border border-[#FFB84D] text-[#FFB84D] flex items-center justify-center font-mono font-bold text-xs">
               01
             </div>
@@ -207,7 +207,7 @@ export default function SuggestionsPage() {
             </p>
           </div>
 
-          <div className="p-6 bg-[#150914] border-2 border-[#4A2038] space-y-2 shadow-[4px_4px_0px_#0F050A]">
+          <div className="ticket-chamfer-tl-br relative p-6 bg-[#150914] border border-[#4A2038] hover:border-[#FFB84D]/40 space-y-2 shadow-[4px_4px_0px_#0F050A] hover:glow-sodium transition-all">
             <div className="w-8 h-8 bg-[#FFB84D]/20 border border-[#FFB84D] text-[#FFB84D] flex items-center justify-center font-mono font-bold text-xs">
               02
             </div>
@@ -220,7 +220,7 @@ export default function SuggestionsPage() {
             </p>
           </div>
 
-          <div className="p-6 bg-[#150914] border-2 border-[#4A2038] space-y-2 shadow-[4px_4px_0px_#0F050A]">
+          <div className="ticket-chamfer-tl-br relative p-6 bg-[#150914] border border-[#4A2038] hover:border-[#FFB84D]/40 space-y-2 shadow-[4px_4px_0px_#0F050A] hover:glow-sodium transition-all">
             <div className="w-8 h-8 bg-[#8B5A2B]/25 border border-[#8B5A2B] text-[#FFB84D] flex items-center justify-center font-mono font-bold text-xs">
               03
             </div>
@@ -246,7 +246,7 @@ export default function SuggestionsPage() {
         />
 
         {/* Official Governance & University Entity Disclaimer */}
-        <div className="p-6 sm:p-8 bg-[#150914] border-2 border-[#4A2038] space-y-3">
+        <div className="ticket-chamfer-tl-br relative p-6 sm:p-8 bg-[#150914] border border-[#4A2038] hover:border-white/20 space-y-3 transition-colors">
           <h4 className="text-sm font-bold text-white font-display">
             University Disclosure
           </h4>

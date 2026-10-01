@@ -349,7 +349,7 @@ export function HeroSplitFlapCanvas({
         second: "2-digit",
       }) + " EST";
       setTimeStr(formattedTime);
-      
+
       if (boardHandleRef.current) {
         boardHandleRef.current.updateLiveClock(formattedTime);
       }
@@ -489,9 +489,8 @@ export function HeroSplitFlapCanvas({
   return (
     <div
       ref={pinWrapperRef}
-      className={`relative w-full ${
-        reducedMotion ? "h-[85dvh]" : "h-[200vh]" // 100dvh sticky viewport + 100vh pinned scroll length
-      }`}
+      className={`relative w-full ${reducedMotion ? "h-[85dvh]" : "h-[200vh]" // 100dvh sticky viewport + 100vh pinned scroll length
+        }`}
     >
       <div
         ref={stickyContainerRef}
@@ -594,13 +593,12 @@ export function HeroSplitFlapCanvas({
             <div className="flex items-center justify-between gap-4">
               <span className="text-[#a89985]">Boot State:</span>
               <span
-                className={`font-bold uppercase ${
-                  bootState === "settled"
+                className={`font-bold uppercase ${bootState === "settled"
                     ? "text-emerald-400"
                     : bootState === "playing"
-                    ? "text-amber-400"
-                    : "text-zinc-400"
-                }`}
+                      ? "text-amber-400"
+                      : "text-zinc-400"
+                  }`}
               >
                 {bootState}
               </span>

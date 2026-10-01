@@ -34,6 +34,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
   const [isTinaiMenuOpen, setIsTinaiMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isFlickering, setIsFlickering] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,6 +61,13 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
     setIsMobileMenuOpen(false);
   };
 
+  const handleToggleMobileMenu = () => {
+    playClick();
+    setIsFlickering(true);
+    setTimeout(() => setIsFlickering(false), 240);
+    setIsMobileMenuOpen((prev) => !prev);
+  };
+
   const handleTinaiSelect = (id: Tinai) => {
     playBell(660);
     setTinai(id, true);
@@ -71,11 +79,11 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
       <header
         className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
           isScrolled
-            ? "bg-[#120820]/97 backdrop-blur-md border-b border-[#D4AF37]/15 shadow-xl"
-            : "bg-transparent border-b border-transparent"
+            ? "bg-[#0c0617]/97 backdrop-blur-md border-b border-white/15 shadow-[0_4px_30px_rgba(0,0,0,0.85)]"
+            : "bg-gradient-to-b from-[#070504]/90 to-transparent border-b border-white/10"
         }`}
       >
-        <div className="max-w-[1440px] mx-auto flex items-center h-16 px-4 sm:px-6">
+        <div className="max-w-[1440px] mx-auto flex items-center h-16 px-4 sm:px-6 relative">
 
           {/* ========================================================================= */}
           {/* 1. BRAND LOCKUP — flush left, no pill, no border                           */}
@@ -127,18 +135,18 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                     key={item.href}
                     href={item.href}
                     onClick={playClick}
-                    className={`ml-3 flex items-center gap-1.5 px-4 py-1.5 text-xs font-display font-bold transition-all duration-200 border rounded-none ${
+                    className={`ml-3 flex items-center gap-1.5 px-4 py-1.5 text-xs font-display font-bold transition-all duration-300 border ${
                       isActive
-                        ? "bg-[#D4AF37] text-[#120a06] border-[#D4AF37]"
-                        : "bg-[#D4AF37]/10 border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/20 hover:border-[#D4AF37] active:scale-[0.97]"
+                        ? "btn-gold-foil text-[#1a0b2e] border-amber-200/90 shadow-[0_0_20px_rgba(255,184,77,0.45)]"
+                        : "btn-gold-foil text-[#1a0b2e] border-amber-300/70 hover-glow-kuthuvilakku hover:scale-[1.02] active:scale-[0.98]"
                     }`}
                   >
-                    <span className="w-1.5 h-1.5 rounded-none bg-[#55CCA2] animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#1a0b2e] animate-pulse" />
                     <span>{locale === "ta" ? item.ta : item.en}</span>
                     <span
                       lang="ta"
                       style={{ letterSpacing: 0 }}
-                      className="text-[10px] opacity-70 font-tamil font-normal hidden xl:inline"
+                      className="text-[10px] opacity-80 font-tamil font-normal hidden xl:inline text-[#2b104a]"
                     >
                       {locale === "ta" ? item.en : item.ta}
                     </span>
@@ -335,10 +343,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
 
             {/* Mobile Menu Toggle */}
             <button
-              onClick={() => {
-                playClick();
-                setIsMobileMenuOpen(!isMobileMenuOpen);
-              }}
+              onClick={handleToggleMobileMenu}
               aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMobileMenuOpen}
               className="lg:hidden w-8 h-8 sm:w-9 sm:h-9 text-[#b8a0cc] hover:text-[#faf5ed] hover:bg-[#250d38]/60 flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
@@ -350,7 +355,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
       </header>
 
       {/* ========================================================================= */}
-      {/* 4. MOBILE DRAWER NAVIGATION: ELEGANT TAMIL ARCHITECTURAL PANEL             */}
+      {/* 4. MOBILE DRAWER NAVIGATION: TACTILE ARCHITECTURAL VIEWFINDER PANEL       */}
       {/* ========================================================================= */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -358,11 +363,13 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-40 bg-[#12071a]/95 backdrop-blur-2xl lg:hidden flex flex-col pt-24 px-5 sm:px-6 pb-12 justify-between overflow-y-auto border-b border-[#D4AF37]/30 shadow-2xl"
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className={`fixed inset-0 z-40 bg-[#0d0716]/98 backdrop-blur-2xl lg:hidden flex flex-col pt-24 px-5 sm:px-6 pb-12 justify-between overflow-y-auto border-b border-white/20 shadow-2xl ${
+              isFlickering ? "crt-flicker" : ""
+            }`}
           >
             <div className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#D4AF37]/20">
+              <div className="flex items-center justify-between pb-3 border-b border-white/15">
                 <div className="flex flex-col text-left">
                   <span className="text-sm font-bold text-[#faf5ed] font-display">
                     {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"}
@@ -375,9 +382,11 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                     வழிகாட்டி & பக்க அட்டவணை
                   </span>
                 </div>
-                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-none bg-[#250d38] text-[#D4AF37] border border-[#D4AF37]/30">
-                  Navigation
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-none bg-[#250d38] text-[#55CCA2] border border-[#55CCA2]/40">
+                    MENU
+                  </span>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 gap-2">
@@ -391,11 +400,11 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                       href={item.href}
                       onClick={handleLinkClick}
                       className={`flex items-center justify-between px-4 py-3 min-h-[48px] rounded-none text-sm font-display transition-all duration-150 ${
-                        isActive
-                          ? "bg-[#29143d] text-[#faf5ed] border border-[#D4AF37] shadow-[2px_2px_0px_#D4AF37]"
-                          : isJoin
-                          ? "bg-gradient-to-r from-[#D4AF37] to-[#e6a239] text-[#120a06] font-bold shadow-[2px_2px_0px_#250d38]"
-                          : "bg-[#1c0f2a]/70 text-[#d1b8e6] hover:bg-[#250d38] hover:text-[#faf5ed] border border-white/5"
+                        isJoin
+                          ? "btn-gold-foil text-[#1a0b2e] font-bold border border-amber-300/80 shadow-[0_0_25px_rgba(255,184,77,0.3)]"
+                          : isActive
+                          ? "bg-[#29143d] text-[#faf5ed] border-l-4 border-l-[#55CCA2] border-y border-r border-[#55CCA2]/40 shadow-[2px_2px_0px_#55CCA2]"
+                          : "bg-[#160b24]/85 text-[#d1b8e6] hover:bg-[#250d38] hover:text-[#faf5ed] border border-white/10"
                       }`}
                     >
                       <div className="flex items-center gap-3">

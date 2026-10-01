@@ -25,6 +25,7 @@ import {
   Sparkles,
   CheckCircle2,
 } from "lucide-react";
+import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 
 export default function EventInfoAndGalleryPage() {
   const params = useParams();
@@ -70,9 +71,12 @@ export default function EventInfoAndGalleryPage() {
   const gridPhotos = album.photos.slice(1);
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-28 text-left font-body">
+    <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-28 text-left font-body overflow-hidden">
+      {/* Structural Watermark */}
+      <WatermarkGlyph text="நிழற்படம்" position="top-right" theme="light" opacity={0.035} />
+
       {/* Top Breadcrumb Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-8 pb-4 border-b-2 border-purple-200">
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 mb-8 pb-4 border-b-2 border-purple-200">
         <Link
           href="/gallery"
           onClick={playClick}
@@ -90,7 +94,7 @@ export default function EventInfoAndGalleryPage() {
       </div>
 
       {/* Main Event Header */}
-      <div className="mb-12">
+      <div className="relative z-10 mb-12">
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#250d38] font-display tracking-tight mb-3">
           {locale === "ta" ? album.titleTa : album.titleEn}
         </h1>
@@ -100,7 +104,7 @@ export default function EventInfoAndGalleryPage() {
         </p>
 
         {/* Architectural Metadata Ribbon */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 bg-purple-50/70 border-2 border-[#250d38] shadow-[4px_4px_0px_#4c2472] mb-8">
+        <div className="ticket-chamfer-tl-br relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 bg-purple-50/70 border-2 border-[#250d38] shadow-[4px_4px_0px_#4c2472] mb-8">
           <div className="flex items-start gap-2.5">
             <Calendar className="w-4 h-4 text-[#55CCA2] shrink-0 mt-0.5" />
             <div>
@@ -213,10 +217,7 @@ export default function EventInfoAndGalleryPage() {
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-[#250d38]/95 via-[#250d38]/40 to-transparent flex flex-col justify-end p-5 sm:p-8 text-white">
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                  <span className="px-2.5 py-1 bg-[#250d38] border border-[#55CCA2] text-[10px] font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
-                    Moment 1 of 5 · Event Welcome
-                  </span>
+                <div className="flex flex-wrap items-center justify-end gap-2 mb-2">
                   <span className="p-1.5 bg-[#250d38] border border-white/40 text-white group-hover:border-[#55CCA2] transition-colors">
                     <Eye className="w-4 h-4 text-[#55CCA2]" />
                   </span>
@@ -252,10 +253,7 @@ export default function EventInfoAndGalleryPage() {
 
               {/* Seamless Hover / Content Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-[#250d38]/95 via-[#250d38]/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3.5 text-white">
-                <div className="flex items-center justify-between">
-                  <span className="px-1.5 py-0.5 bg-[#250d38] border border-white/30 text-[9px] font-mono text-[#55CCA2] font-bold uppercase">
-                    Moment {idx + 2} of 5
-                  </span>
+                <div className="flex items-center justify-end">
                   <span className="p-1 bg-[#250d38] border border-white/40 text-white">
                     <Eye className="w-3 h-3 text-[#55CCA2]" />
                   </span>
@@ -305,7 +303,7 @@ export default function EventInfoAndGalleryPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={playClick}
-                className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#55CCA2] text-[#1b0d28] font-mono font-extrabold text-xs uppercase tracking-wider border-2 border-[#1b0d28] shadow-[4px_4px_0px_#ffffff] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
+                className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#55CCA2] text-[#1b0d28] font-mono font-extrabold text-xs uppercase tracking-wider border-2 border-[#1b0d28] shadow-[4px_4px_0px_#ffffff] hover:shadow-[5px_5px_0px_#ffffff] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#ffffff] transition-[background-color,box-shadow,transform] duration-150"
               >
                 <span>Open Full Album on Google Photos</span>
                 <ExternalLink className="w-4 h-4 text-[#1b0d28]" />
@@ -361,9 +359,6 @@ export default function EventInfoAndGalleryPage() {
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                     sizes="(max-width: 768px) 100vw, 300px"
                   />
-                  <div className="absolute top-2 left-2 px-1.5 py-0.5 bg-[#250d38] text-[9px] font-mono text-[#55CCA2] font-bold">
-                    {other.academicYear}
-                  </div>
                 </div>
 
                 <h4 className="text-sm font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors line-clamp-1">

@@ -7,9 +7,6 @@ import {
   Search,
   ChevronDown,
   Sparkles,
-  Train,
-  CheckCircle2,
-  Tag,
   ArrowUpRight,
 } from "lucide-react";
 
@@ -104,14 +101,6 @@ export function FAQContent({
         {/* EDITORIAL HEADER (Sanity CMS-Ready Architecture)                         */}
         {/* ========================================================================= */}
         <div className="text-center mb-12">
-          {/* Railway Station Dispatch Eyebrow */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-none bg-[#17110c] border border-[#38281a] text-[#f59e0b] text-xs font-mono tracking-wider uppercase mb-4">
-            <Train className="w-3.5 h-3.5" />
-            <span>KNOWLEDGE ARCHIVE & SANGAM DISPATCH</span>
-            <span className="text-[#8f755a]">·</span>
-            <span className="font-tamil">வினா விடை</span>
-          </div>
-
           <h1 className="text-3xl sm:text-5xl font-extrabold text-[#fdfaf5] tracking-tight font-display mb-3">
             Frequently Asked Questions
           </h1>
@@ -209,22 +198,6 @@ export function FAQContent({
                     id={`faq-trigger-${faq.id}`}
                   >
                     <div className="space-y-1.5 flex-1">
-                      {/* Category Tag & Index */}
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[11px] text-[#8f755a]">
-                          [#{String(index + 1).padStart(2, "0")}]
-                        </span>
-                        <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-[#d4af37] px-2 py-0.5 rounded-none bg-[#1f1711] border border-[#3b2c1d]">
-                          <Tag className="w-2.5 h-2.5" />
-                          {faq.category}
-                        </span>
-                        {isBoardActive && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-1.5 py-0.5 rounded-none">
-                            <span className="w-1.5 h-1.5 rounded-none bg-emerald-400 animate-pulse" />
-                            ON BOARD
-                          </span>
-                        )}
-                      </div>
 
                       {/* Question English */}
                       <h3 className="text-base sm:text-lg font-bold text-[#faf5ed] font-display">
@@ -265,11 +238,7 @@ export function FAQContent({
                       </div>
 
                       {/* Action Bar: Transmit to 3D Split-Flap Board */}
-                      <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
-                        <div className="flex items-center gap-1.5 text-xs text-[#8f755a]">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                          <span>Sanity Verified Club Policy</span>
-                        </div>
+                      <div className="pt-2 flex flex-wrap items-center justify-end gap-3">
 
                         <button
                           onClick={(e) => {

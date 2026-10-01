@@ -136,20 +136,12 @@ export function JoinHeroCanvas() {
       {/* ================================================================= */}
       <div className="absolute top-20 sm:top-24 left-0 right-0 z-30 px-3 sm:px-6 pointer-events-none">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-2 pointer-events-auto">
-          {/* Live Gateway Emblem */}
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#140b08]/85 border border-amber-500/40 rounded-none shadow-[2px_2px_0px_#250d38] backdrop-blur-md shrink min-w-0">
-            <span className="w-2 h-2 rounded-none bg-[#55CCA2] animate-pulse shrink-0" />
-            <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-amber-200 truncate">
-              {locale === "ta" ? "நண்பன் வாயில் · 2026–2027" : "Nanban Campus Arch · 2026–2027"}
-            </span>
-          </div>
-
           {/* Persistent Conversion "Join Now ↓" Skip Link */}
           <a
             id="hero-skip-link"
             href="#membership-form"
             onClick={handleSkipToForm}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider rounded-none border-2 border-white shadow-[3px_3px_0px_#ffffff] hover:bg-[#6ee7b7] hover:translate-x-0.5 hover:translate-y-0.5 active:translate-x-1 active:translate-y-1 focus:outline-none focus:ring-2 focus:ring-white transition-all cursor-pointer shrink-0 min-h-[44px]"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider rounded-none border-2 border-white shadow-[3px_3px_0px_#ffffff] hover:bg-[#6ee7b7] hover:shadow-[4px_4px_0px_#ffffff] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#ffffff] focus:outline-none focus:ring-2 focus:ring-white transition-[background-color,box-shadow,transform] duration-150 cursor-pointer shrink-0 min-h-[44px]"
           >
             <span>{locale === "ta" ? "இப்போதே இணையுங்கள் ↓" : "Join Now ↓"}</span>
             <span className="text-[10px] opacity-75 font-body hidden md:inline">

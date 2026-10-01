@@ -14,6 +14,7 @@ import {
   Sparkles,
   Globe
 } from "lucide-react";
+import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 
 const InstagramIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -87,12 +88,15 @@ export default function BioHubPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--surface-base)] text-[var(--text-primary)] flex flex-col items-center justify-between py-12 px-4 select-none font-body">
+    <div className="relative min-h-screen bg-[#0d0714] text-slate-100 flex flex-col items-center justify-between py-12 px-4 select-none font-body overflow-hidden">
+      {/* Structural Watermark */}
+      <WatermarkGlyph text="இணைப்பு" position="center" theme="dark" opacity={0.035} />
+
       {/* Container restricted to mobile width for sleek bio-link feel */}
-      <div className="w-full max-w-md mx-auto text-center">
+      <div className="relative z-10 w-full max-w-md mx-auto text-center">
         {/* Distilled Profile Avatar */}
-        <div className="relative w-20 h-20 mx-auto mb-4 p-1 border-2 border-[#55CCA2] bg-[#160d26] shadow-[4px_4px_0px_#4c2472]">
-          <div className="w-full h-full bg-[#250d38] border border-white/10 flex items-center justify-center text-3xl font-display font-bold text-[#55CCA2]">
+        <div className="ticket-chamfer-tl-br relative w-20 h-20 mx-auto mb-4 p-1 border-2 border-[#55CCA2] bg-[#160d26] shadow-[4px_4px_0px_#4c2472] hover:glow-halogen-mint transition-all">
+          <div className="ticket-chamfer-tl-br w-full h-full bg-[#250d38] border border-white/10 flex items-center justify-center text-3xl font-display font-bold text-[#55CCA2]">
             ஐ
           </div>
         </div>
@@ -114,7 +118,7 @@ export default function BioHubPage() {
             href="https://instagram.com/osutamilsangam"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-11 h-11 min-w-[44px] min-h-[44px] border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,color,box-shadow,transform] duration-150 flex items-center justify-center cursor-pointer"
+            className="ticket-chamfer-tl-br w-11 h-11 min-w-[44px] min-h-[44px] border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,color,box-shadow,transform] duration-150 flex items-center justify-center cursor-pointer hover:glow-halogen-mint"
             aria-label="Instagram profile"
             title="Instagram"
           >
@@ -124,7 +128,7 @@ export default function BioHubPage() {
             href="https://groupme.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-11 h-11 min-w-[44px] min-h-[44px] border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,color,box-shadow,transform] duration-150 flex items-center justify-center cursor-pointer"
+            className="ticket-chamfer-tl-br w-11 h-11 min-w-[44px] min-h-[44px] border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,color,box-shadow,transform] duration-150 flex items-center justify-center cursor-pointer hover:glow-halogen-mint"
             aria-label="GroupMe chat"
             title="GroupMe"
           >
@@ -133,7 +137,7 @@ export default function BioHubPage() {
           <button
             type="button"
             onClick={() => handleCopy("email", "president.osutamilsangam@gmail.com")}
-            className="w-11 h-11 min-w-[44px] min-h-[44px] border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,color,box-shadow,transform] duration-150 flex items-center justify-center cursor-pointer relative"
+            className="ticket-chamfer-tl-br w-11 h-11 min-w-[44px] min-h-[44px] border-2 border-white/20 bg-white/5 hover:border-[#55CCA2] hover:text-[#55CCA2] shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:shadow-[3px_3px_0px_#55CCA2] active:translate-x-[1px] active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,color,box-shadow,transform] duration-150 flex items-center justify-center cursor-pointer relative hover:glow-halogen-mint"
             aria-label="Copy Contact Email"
             title="Copy Contact Email"
           >
@@ -151,14 +155,14 @@ export default function BioHubPage() {
             const IconComponent = link.icon;
             const content = (
               <div
-                className={`w-full p-4 border-2 transition-[border-color,box-shadow,transform] duration-150 active:translate-x-[1px] active:translate-y-[1px] text-left flex items-center justify-between ${
+                className={`ticket-chamfer-tl-br relative w-full p-4 border-2 transition-[border-color,box-shadow,transform] duration-150 active:translate-x-[1px] active:translate-y-[1px] text-left flex items-center justify-between ${
                   link.isFeatured
-                    ? "bg-[#250d38] border-[#55CCA2] shadow-[4px_4px_0px_#55CCA2]"
+                    ? "bg-[#250d38] border-[#55CCA2] shadow-[4px_4px_0px_#55CCA2] hover:glow-halogen-mint"
                     : "bg-[#160d26] border-white/15 hover:border-[#55CCA2] shadow-[3px_3px_0px_#4c2472] hover:shadow-[4px_4px_0px_#55CCA2]"
                 }`}
               >
                 <div className="flex items-center gap-3.5 min-w-0 pr-2">
-                  <div className="w-9 h-9 border-2 border-white/20 bg-black/40 flex items-center justify-center shrink-0 text-[#55CCA2]">
+                  <div className="w-9 h-9 border border-white/20 bg-black/40 flex items-center justify-center shrink-0 text-[#55CCA2]">
                     <IconComponent className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">

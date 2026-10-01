@@ -25,6 +25,8 @@ import {
 } from "lucide-react";
 import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
 import { SplitFlapMiniHeader } from "@/components/splitflap/SplitFlapMiniHeader";
+import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
+
 
 import HeroSplitFlapCanvas from "@/components/splitflap/HeroSplitFlapCanvas";
 
@@ -298,16 +300,17 @@ export default function UserGuideAndFaqPage() {
       {/* ========================================================================= */}
       {/* 2. EDITORIAL CONSOLE: UNIFIED USER GUIDE, SEARCHABLE FAQ & KNOWLEDGE BASE */}
       {/* ========================================================================= */}
-      <div className="relative z-20 w-full bg-[#FAF6EE] text-[#1c1008] pt-12 pb-32">
-        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Railway Station Dispatch Header */}
+      {/* ========================================================================= */}
+      {/* 2. EDITORIAL CONSOLE: UNIFIED USER GUIDE, SEARCHABLE FAQ & KNOWLEDGE BASE */}
+      {/* ========================================================================= */}
+      <div className="relative z-20 w-full bg-[#FAF6EE] text-[#1c1008] pt-12 pb-32 overflow-hidden">
+        {/* Structural Tamil Background Watermarks */}
+        <WatermarkGlyph text="பயணம்" opacity={0.04} align="right" theme="light" />
+        <WatermarkGlyph text="வழிகாட்டி" opacity={0.032} align="left" theme="light" className="top-[60%]" />
+
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-none bg-[#17110c] border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-mono tracking-wider uppercase mb-4 shadow-[3px_3px_0px_#261d15]">
-            <Train className="w-3.5 h-3.5" />
-            <span>SOUTHERN RAILWAY · SANGAM DISPATCH & USER GUIDE</span>
-            <span className="text-[#8f755a]">·</span>
-            <span className="font-tamil">வழிகாட்டி & வினா விடை</span>
-          </div>
 
           <h1
             className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display mb-3"
@@ -325,17 +328,18 @@ export default function UserGuideAndFaqPage() {
               ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் விதிமுறைகள், உறுப்புரிமை, மற்றும் அறிவுத் தளம்"
               : "Interactive Southern Railway split-flap engine connected live to OSU Tamil Sangam guidelines"}
           </p>
-          <p className="max-w-2xl mx-auto text-xs sm:text-sm text-[#4c3828] leading-relaxed">
+          <p className="max-w-2xl mx-auto text-xs sm:text-sm text-[#4c3828] leading-relaxed font-body">
             Select any question, guide chapter, or knowledge topic below to broadcast its verified policy
             directly to the 3D mechanical departure board above.
           </p>
         </div>
 
         {/* Console Nav Tabs: Guide vs FAQ vs Knowledge Base */}
-        <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 max-w-2xl mx-auto mb-10 rounded-none bg-[#110d0a] border border-[#261d15] shadow-[4px_4px_0px_#261d15]">
+        <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 max-w-2xl mx-auto mb-10 rounded-none bg-[#110d0a] border border-[#261d15] shadow-[4px_4px_0px_#261d15] ticket-chamfer-tl-br blueprint-node">
           {[
             {
               id: "faq" as const,
+
               icon: <HelpCircle className="w-4 h-4" />,
               label:
                 locale === "ta"
@@ -492,13 +496,14 @@ export default function UserGuideAndFaqPage() {
                   return (
                     <div
                       key={faq.id}
-                      className={`rounded-none transition-all duration-200 border ${
+                      className={`ticket-chamfer-tl-br blueprint-node rounded-none transition-all duration-200 border ${
                         isExpanded
-                          ? "bg-[#120e0b] border-[#4a3a29] shadow-[4px_4px_0px_#1f1711]"
-                          : "bg-[#0b0806] border-[#1f1711] hover:border-[#33251a]"
+                          ? "bg-[#120e0b] border-[#4a3a29] shadow-[4px_4px_0px_#1f1711] glow-sodium"
+                          : "bg-[#0b0806] border-[#1f1711] hover:border-[#33251a] hover:glow-halogen-mint"
                       }`}
                     >
                       {/* Accordion Question Trigger Header */}
+
                       <button
                         id={`faq-trigger-${faq.id}`}
                         aria-controls={`faq-panel-${faq.id}`}
@@ -512,21 +517,6 @@ export default function UserGuideAndFaqPage() {
                         className="w-full p-5 text-left flex items-start justify-between gap-4 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] rounded-none"
                       >
                         <div className="space-y-1.5 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-[11px] text-[#8f755a]">
-                              [#{String(index + 1).padStart(2, "0")}]
-                            </span>
-                            <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-[#d4af37] px-2 py-0.5 rounded-none bg-[#1f1711] border border-[#3b2c1d]">
-                              <Tag className="w-2.5 h-2.5" />
-                              {faq.category}
-                            </span>
-                            {isBoardActive && (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-1.5 py-0.5 rounded-none">
-                                <span className="w-1.5 h-1.5 rounded-none bg-emerald-400 animate-pulse" />
-                                LIVE ON FLAP BOARD
-                              </span>
-                            )}
-                          </div>
 
                           <h3
                             className="text-base sm:text-lg font-bold text-[#faf5ed] font-display"
@@ -575,11 +565,7 @@ export default function UserGuideAndFaqPage() {
                             )}
 
                             {/* Action Bar: Transmit to Split-Flap Board */}
-                            <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
-                              <div className="flex items-center gap-1.5 text-xs text-[#8f755a]">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                                <span>Sanity Verified Policy · Nanba Grounded</span>
-                              </div>
+                            <div className="pt-2 flex flex-wrap items-center justify-end gap-3">
 
                               <button
                                 onClick={(e) => {
@@ -614,12 +600,13 @@ export default function UserGuideAndFaqPage() {
         {activeTab === "guide" && (
           <div className="space-y-8">
             {/* Chapter 1: Joining & Membership */}
-            <div className="p-6 sm:p-8 rounded-none bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-[4px_4px_0px_#2e2217] transition-all">
+            <div className="ticket-chamfer-tl-br blueprint-node p-6 sm:p-8 rounded-none bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-[4px_4px_0px_#2e2217] hover:glow-sodium transition-all">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <div>
                   <span className="text-[11px] font-mono text-[#d4af37] uppercase tracking-wider font-bold">
-                    [ CHAPTER 01 · MEMBERSHIP ]
+                    Membership & Dues
                   </span>
+
                   <h2 className="text-2xl sm:text-3xl font-bold text-[#faf5ed] font-display mt-0.5">
                     Joining the Club is 100% Free
                   </h2>
@@ -665,11 +652,11 @@ export default function UserGuideAndFaqPage() {
             </div>
 
             {/* Chapter 2: Attending Events */}
-            <div className="p-6 sm:p-8 rounded-none bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-[4px_4px_0px_#2e2217] transition-all">
+            <div className="ticket-chamfer-tl-br blueprint-node p-6 sm:p-8 rounded-none bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-[4px_4px_0px_#2e2217] hover:glow-sodium transition-all">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <div>
                   <span className="text-[11px] font-mono text-[#d4af37] uppercase tracking-wider font-bold">
-                    [ CHAPTER 02 · EVENTS & SHOWCASES ]
+                    Events & Showcases
                   </span>
                   <h2 className="text-2xl sm:text-3xl font-bold text-[#faf5ed] font-display mt-0.5">
                     Campus Events & What to Expect
@@ -711,11 +698,11 @@ export default function UserGuideAndFaqPage() {
             </div>
 
             {/* Chapter 3: Creative Tracks (Aatam & Paatam) */}
-            <div className="p-6 sm:p-8 rounded-none bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-[4px_4px_0px_#2e2217] transition-all">
+            <div className="ticket-chamfer-tl-br blueprint-node p-6 sm:p-8 rounded-none bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-[4px_4px_0px_#2e2217] hover:glow-sodium transition-all">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <div>
                   <span className="text-[11px] font-mono text-[#d4af37] uppercase tracking-wider font-bold">
-                    [ CHAPTER 03 · DANCE & MUSIC ]
+                    Dance & Music Tracks
                   </span>
                   <h2 className="text-2xl sm:text-3xl font-bold text-[#faf5ed] font-display mt-0.5">
                     Performance, Dance & Media Tracks
@@ -749,11 +736,12 @@ export default function UserGuideAndFaqPage() {
             </div>
 
             {/* Chapter 4: Governance & Voting Rights */}
-            <div className="p-6 sm:p-8 rounded-none bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-[4px_4px_0px_#2e2217] transition-all">
+            <div className="ticket-chamfer-tl-br blueprint-node p-6 sm:p-8 rounded-none bg-[#110d0a] border border-[#2e2217] hover:border-[#d4af37]/50 shadow-[4px_4px_0px_#2e2217] hover:glow-sodium transition-all">
+
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <div>
                   <span className="text-[11px] font-mono text-[#d4af37] uppercase tracking-wider font-bold">
-                    [ CHAPTER 04 · CONSTITUTION & VOTING ]
+                    Constitution & Voting Rights
                   </span>
                   <h2 className="text-2xl sm:text-3xl font-bold text-[#faf5ed] font-display mt-0.5">
                     Constitutional Voting & Board Shadowing
@@ -793,13 +781,10 @@ export default function UserGuideAndFaqPage() {
         {/* ======================================================== */}
         {activeTab === "knowledge" && (
           <div className="space-y-6">
-            <div className="p-6 rounded-none bg-[#110d0a] border border-[#2b2017] shadow-[4px_4px_0px_#2b2017] text-white">
+            <div className="ticket-chamfer-tl-br blueprint-node p-6 rounded-none bg-[#110d0a] border border-[#2b2017] shadow-[4px_4px_0px_#2b2017] hover:glow-sodium text-white transition-all">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
                 <div>
-                  <div className="flex items-center gap-2 text-xs font-mono text-[#55CCA2] uppercase font-bold mb-1">
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>SYNCHRONIZED AI GROUNDING ENGINE</span>
-                  </div>
                   <h2 className="text-xl sm:text-2xl font-bold font-display text-[#faf5ed]">
                     Editable Website Knowledge Base
                   </h2>
@@ -938,9 +923,10 @@ export default function UserGuideAndFaqPage() {
                   filteredKb.map((item) => (
                     <div
                       key={item.id}
-                      className="p-5 rounded-none bg-[#0c0907] border border-[#231a13] hover:border-[#38281a] flex flex-col justify-between transition-all"
+                      className="ticket-chamfer-tl-br blueprint-node p-5 rounded-none bg-[#0c0907] border border-[#231a13] hover:border-[#55CCA2] shadow-[3px_3px_0px_#110d0a] hover:glow-halogen-mint flex flex-col justify-between transition-all"
                     >
                       <div>
+
                         <div className="flex items-center justify-between gap-2 mb-2">
                           <span className="text-[10px] font-mono uppercase tracking-wider text-[#d4af37] px-2 py-0.5 rounded-none bg-[#1f1711] border border-[#3b2c1d]">
                             {item.category}

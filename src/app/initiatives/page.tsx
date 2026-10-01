@@ -7,6 +7,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { INITIATIVE_PILLARS, ART_FORMS } from "@/data/initiatives";
 import { Sparkles, Music, HeartHandshake, Calendar, Users, ArrowRight } from "lucide-react";
+import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 
 export default function InitiativesPage() {
   const { locale } = useLocale();
@@ -16,9 +17,14 @@ export default function InitiativesPage() {
   const activePillar = INITIATIVE_PILLARS.find((p) => p.id === selectedPillar) || INITIATIVE_PILLARS[0];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left">
+    <div className="min-h-screen bg-[#0d0714] text-slate-100">
+      <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left overflow-hidden">
+      {/* Structural Watermark Glyphs */}
+      <WatermarkGlyph text="முன்னெடுப்பு" position="top-right" theme="dark" opacity={0.035} />
+      <WatermarkGlyph text="கலை" position="center" theme="dark" opacity={0.03} />
+
       {/* Header */}
-      <div className="max-w-3xl mb-16">
+      <div className="max-w-3xl mb-16 relative z-10">
         <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight font-display mb-4">
           {locale === "ta" ? "முன்னெடுப்புகள் & கலைப்பிரிவுகள்" : "Initiatives & Campus Hubs"}
         </h1>
@@ -30,7 +36,7 @@ export default function InitiativesPage() {
       </div>
 
       {/* 1. The Three Pillars Selector Tabs */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 relative z-10">
         {INITIATIVE_PILLARS.map((pillar) => {
           const isSelected = selectedPillar === pillar.id;
           return (
@@ -40,9 +46,9 @@ export default function InitiativesPage() {
                 playWoodClick();
                 setSelectedPillar(pillar.id);
               }}
-              className={`box-architectural-dark p-6 text-left border-2 transition-all ${
+              className={`ticket-chamfer-tl-br relative p-6 text-left border-2 transition-all cursor-pointer ${
                 isSelected
-                  ? "border-[#55CCA2] bg-[#250d38] shadow-[6px_6px_0px_#55CCA2] -translate-y-0.5"
+                  ? "border-[#55CCA2] bg-[#250d38] shadow-[6px_6px_0px_#55CCA2] -translate-y-0.5 hover:glow-halogen-mint"
                   : "border-white/10 bg-[#160d26]/80 hover:border-white/25 shadow-[4px_4px_0px_#4c2472] text-slate-300"
               }`}
             >
@@ -66,7 +72,7 @@ export default function InitiativesPage() {
       </div>
 
       {/* Active Pillar Deep Dive Showcase */}
-      <div className="box-ticket p-8 sm:p-12 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] mb-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="ticket-chamfer-tl-br relative p-8 sm:p-12 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] mb-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center z-10 hover:glow-halogen-mint transition-all">
         <div className="lg:col-span-7 space-y-6">
           <h2 className="text-3xl sm:text-4xl font-bold text-white font-serif tracking-tight">
             {locale === "ta" ? activePillar.titleTa : activePillar.titleEn}
@@ -132,11 +138,11 @@ export default function InitiativesPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
           {ART_FORMS.map((art) => (
             <div
               key={art.id}
-              className="box-ticket bg-[#160d26] overflow-hidden border-2 border-white/15 hover:border-[#55CCA2] shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] flex flex-col justify-between transition-all"
+              className="ticket-chamfer-tl-br relative bg-[#160d26] overflow-hidden border-2 border-white/15 hover:border-[#55CCA2] shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] flex flex-col justify-between transition-all hover:glow-halogen-mint"
             >
               <div className="relative h-48 w-full overflow-hidden border-b-2 border-white/10">
                 <Image
@@ -173,6 +179,7 @@ export default function InitiativesPage() {
           ))}
         </div>
       </div>
+    </div>
     </div>
   );
 }

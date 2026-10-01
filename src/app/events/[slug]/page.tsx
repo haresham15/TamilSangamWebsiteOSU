@@ -23,6 +23,7 @@ import {
   Camera,
   X
 } from "lucide-react";
+import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 
 export default function EventDetailPage() {
   const params = useParams();
@@ -78,7 +79,11 @@ END:VCALENDAR`;
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left">
+    <div className="w-full min-h-screen bg-[#0d0714] text-slate-100">
+      <div className="relative w-full max-w-5xl mx-auto px-4 sm:px-6 pt-32 pb-24 text-left overflow-hidden">
+        {/* Structural Watermark */}
+        <WatermarkGlyph text="விழா" position="top-right" theme="dark" opacity={0.035} />
+
       {/* Back Link */}
       <Link
         href="/events"
@@ -90,7 +95,7 @@ END:VCALENDAR`;
       </Link>
 
       {/* Hero Poster Banner */}
-      <div className="box-ticket relative h-80 sm:h-96 overflow-hidden border-2 border-white/20 shadow-[6px_6px_0px_#55CCA2] mb-12">
+      <div className="ticket-chamfer-tl-br relative h-80 sm:h-96 overflow-hidden border-2 border-white/20 shadow-[6px_6px_0px_#55CCA2] mb-12 hover:glow-sodium transition-all">
         <Image
           src={event.posterImage}
           alt={event.titleEn}
@@ -179,7 +184,7 @@ END:VCALENDAR`;
 
         {/* Right Column: Ticket Card, Venue, Add to Calendar */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="box-ticket p-6 sm:p-7 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] space-y-6">
+          <div className="ticket-chamfer-tl-br relative p-6 sm:p-7 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] space-y-6 hover:glow-halogen-mint transition-all">
             <div className="border-b-2 border-white/10 pb-4">
               <span className="text-xs font-mono text-[#55CCA2] font-semibold block">
                 Admission
@@ -208,7 +213,7 @@ END:VCALENDAR`;
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={playClick}
-                className="w-full py-3.5 px-4 btn-sangam-mint text-xs uppercase tracking-wider flex items-center justify-center gap-2 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2"
+                className="ticket-chamfer-tl-br w-full py-3.5 px-4 btn-sangam-mint text-xs uppercase tracking-wider flex items-center justify-center gap-2 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 hover:glow-halogen-mint"
               >
                 <ExternalLink className="w-4 h-4" />
                 <span>Official Ticketing Portal</span>
@@ -219,7 +224,7 @@ END:VCALENDAR`;
                   playClick();
                   setIsRsvpOpen(true);
                 }}
-                className="w-full py-3 px-4 bg-[#250d38] border-2 border-[#55CCA2] text-[#55CCA2] font-semibold text-xs uppercase tracking-wider hover:bg-[#34144e] shadow-[3px_3px_0px_#55CCA2] active:translate-x-0.5 active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[background-color,box-shadow,transform] duration-150 flex items-center justify-center gap-2 cursor-pointer"
+                className="ticket-chamfer-tl-br w-full py-3 px-4 bg-[#250d38] border-2 border-[#55CCA2] text-[#55CCA2] font-semibold text-xs uppercase tracking-wider hover:bg-[#34144e] shadow-[3px_3px_0px_#55CCA2] active:translate-x-0.5 active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[background-color,box-shadow,transform] duration-150 flex items-center justify-center gap-2 cursor-pointer hover:glow-halogen-mint"
               >
                 <Ticket className="w-4 h-4 text-[#55CCA2]" />
                 <span>RSVP for Group Rates</span>
@@ -227,7 +232,7 @@ END:VCALENDAR`;
 
               <button
                 onClick={handleDownloadIcs}
-                className="w-full py-2.5 px-4 bg-transparent border-2 border-white/20 text-slate-200 text-xs font-mono uppercase tracking-wider hover:text-white hover:border-[#55CCA2] hover:bg-white/5 active:translate-x-0.5 active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,color,background-color,transform] duration-150 flex items-center justify-center gap-1.5 cursor-pointer"
+                className="ticket-chamfer-tl-br w-full py-2.5 px-4 bg-transparent border-2 border-white/20 text-slate-200 text-xs font-mono uppercase tracking-wider hover:text-white hover:border-[#55CCA2] hover:bg-white/5 active:translate-x-0.5 active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,color,background-color,transform] duration-150 flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5 text-[#55CCA2]" />
                 <span>Add to Calendar (.ics)</span>
@@ -320,7 +325,7 @@ END:VCALENDAR`;
               target="_blank"
               rel="noopener noreferrer"
               onClick={playClick}
-              className="inline-flex items-center gap-2 px-5 py-3 bg-[#55CCA2] text-[#1b0d28] font-mono font-bold text-xs uppercase tracking-wider border-2 border-[#1b0d28] shadow-[3px_3px_0px_#ffffff] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2 px-5 py-3 bg-[#55CCA2] text-[#1b0d28] font-mono font-bold text-xs uppercase tracking-wider border-2 border-[#1b0d28] shadow-[3px_3px_0px_#ffffff] hover:shadow-[4px_4px_0px_#ffffff] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#ffffff] transition-[background-color,box-shadow,transform] duration-150"
             >
               <span>Open Google Photos Album</span>
               <ExternalLink className="w-3.5 h-3.5 text-[#1b0d28]" />
@@ -416,7 +421,7 @@ END:VCALENDAR`;
 
                   <button
                     type="submit"
-                    className="w-full py-3 bg-[#55CCA2] text-[#1b0d28] font-bold text-xs uppercase tracking-wider border-2 border-[#1b0d28] shadow-[3px_3px_0px_#1b0d28] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
+                    className="w-full py-3 bg-[#55CCA2] text-[#1b0d28] font-bold text-xs uppercase tracking-wider border-2 border-[#1b0d28] shadow-[3px_3px_0px_#1b0d28] hover:shadow-[4px_4px_0px_#1b0d28] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#1b0d28] transition-[background-color,box-shadow,transform] duration-150"
                   >
                     Submit RSVP
                   </button>
@@ -451,6 +456,7 @@ END:VCALENDAR`;
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -119,21 +119,21 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
     const positions = new Float32Array([
       // Top Quad (vertices 0, 1, 2, 3)
       -halfW, slitGap, 0,
-       halfW, slitGap, 0,
+      halfW, slitGap, 0,
       -halfW, HALF_HEIGHT, 0,
-       halfW, HALF_HEIGHT, 0,
+      halfW, HALF_HEIGHT, 0,
       // Bottom Quad (vertices 4, 5, 6, 7)
       -halfW, -HALF_HEIGHT, 0,
-       halfW, -HALF_HEIGHT, 0,
+      halfW, -HALF_HEIGHT, 0,
       -halfW, -slitGap, 0,
-       halfW, -slitGap, 0,
+      halfW, -slitGap, 0,
     ]);
 
     const uvs = new Float32Array([
       // Top Quad UV
-      0, 0,  1, 0,  0, 1,  1, 1,
+      0, 0, 1, 0, 0, 1, 1, 1,
       // Bottom Quad UV
-      0, 0,  1, 0,  0, 1,  1, 1,
+      0, 0, 1, 0, 0, 1, 1, 1,
     ]);
 
     const isTopCard = new Float32Array([
@@ -142,13 +142,13 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
     ]);
 
     const normals = new Float32Array([
-      0, 0, 1,  0, 0, 1,  0, 0, 1,  0, 0, 1,
-      0, 0, 1,  0, 0, 1,  0, 0, 1,  0, 0, 1,
+      0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+      0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
     ]);
 
     const indices = [
-      0, 1, 2,  2, 1, 3, // Top quad
-      4, 5, 6,  6, 5, 7, // Bottom quad
+      0, 1, 2, 2, 1, 3, // Top quad
+      4, 5, 6, 6, 5, 7, // Bottom quad
     ];
 
     geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -175,29 +175,29 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
     const positions = new Float32Array([
       // Front Quad (hinge at y=0, tip at y=HALF_HEIGHT)
       -halfW, 0, 0.001,
-       halfW, 0, 0.001,
+      halfW, 0, 0.001,
       -halfW, HALF_HEIGHT, 0.001,
-       halfW, HALF_HEIGHT, 0.001,
+      halfW, HALF_HEIGHT, 0.001,
       // Back Quad
       -halfW, 0, -0.001,
-       halfW, 0, -0.001,
+      halfW, 0, -0.001,
       -halfW, HALF_HEIGHT, -0.001,
-       halfW, HALF_HEIGHT, -0.001,
+      halfW, HALF_HEIGHT, -0.001,
     ]);
 
     const normals = new Float32Array([
-      0, 0, 1,   0, 0, 1,   0, 0, 1,   0, 0, 1,
-      0, 0, -1,  0, 0, -1,  0, 0, -1,  0, 0, -1,
+      0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+      0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1,
     ]);
 
     const uvs = new Float32Array([
-      0, 0,  1, 0,  0, 1,  1, 1, // Front quad
-      0, 0,  1, 0,  0, 1,  1, 1, // Back quad
+      0, 0, 1, 0, 0, 1, 1, 1, // Front quad
+      0, 0, 1, 0, 0, 1, 1, 1, // Back quad
     ]);
 
     const indices = [
-      0, 1, 2,  2, 1, 3, // Front CCW
-      5, 4, 7,  7, 4, 6, // Back CCW
+      0, 1, 2, 2, 1, 3, // Front CCW
+      5, 4, 7, 7, 4, 6, // Back CCW
     ];
 
     geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -389,19 +389,19 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
   // Update Row 9 (bottom row) with a live clock
   const updateLiveClock = useCallback((timeStr: string) => {
     if (!isBootedRef.current || useFaqStore.getState().bootState !== "settled") return;
-    
+
     // Right-align the time string
     const prefix = "LOCAL TIME · ";
     const fullStr = (prefix + timeStr).padStart(BOARD_COLS, " ");
     const line = padGraphemes(fullStr, BOARD_COLS);
-    
+
     const row = 9;
     for (let c = 0; c < BOARD_COLS; c++) {
       const index = row * BOARD_COLS + c;
       const targetChar = line[c] || " ";
       if (boardCharsRef.current[index] !== targetChar) {
-         // Pass empty intermediate chars so it flips exactly once
-         sequenceSlotSteps(index, [], targetChar);
+        // Pass empty intermediate chars so it flips exactly once
+        sequenceSlotSteps(index, [], targetChar);
       }
     }
   }, [sequenceSlotSteps]);

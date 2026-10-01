@@ -15,10 +15,15 @@ import {
 } from "@/components/ui/KolamIcons";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
 import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
+import { CulturalGlossaryTerm } from "@/components/ui/CulturalGlossaryTerm";
+import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
 import { EVENTS } from "@/data/events";
 import { 
   Calendar, 
-  MapPin 
+  MapPin,
+  Sparkles,
+  Scroll
 } from "lucide-react";
 
 export default function HomePage() {
@@ -53,7 +58,10 @@ export default function HomePage() {
   };
 
   return (
-    <div className="relative w-full overflow-hidden bg-[#fffdfa] font-body text-left">
+    <div className="relative w-full overflow-hidden bg-[#fffdfa] font-body text-left vignette-ambient-warm">
+      {/* 0. Tactile Heritage Sandstone Texture Overlay across the page */}
+      <HeritageTextureOverlay variant="sandstone" opacity={0.02} />
+
       {/* 1. Subtle Ambient Background Kolam Lattice */}
       <GlowingKolamField />
 
@@ -70,9 +78,48 @@ export default function HomePage() {
         variant="mint"
       />
 
+      {/* 3.5 The Oolai Chuvadi (Palm Leaf) Manuscript Aspect-Ratio Banner */}
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-10 -mb-6">
+        <div className="oolai-chuvadi relative flex items-center justify-between gap-4 py-3 sm:py-3.5 px-6 sm:px-12 bg-[#fbf5e6] text-[#2c1507] border border-[#B5A642]/45 shadow-[0_4px_20px_rgba(181,166,66,0.12)] hover:border-[#B5A642] hover-glow-kuthuvilakku transition-all duration-300">
+          {/* Classical Manuscript Eyelet Perforation Cord Holes */}
+          <div className="hidden sm:flex items-center gap-1.5 shrink-0">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#522909]/20 border border-[#522909]/40 shadow-inner" />
+            <div className="w-6 h-[1px] bg-[#B5A642]/40" />
+          </div>
+
+          <div className="flex-1 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center">
+            <span
+              lang="ta"
+              style={{ letterSpacing: 0 }}
+              className="text-xs sm:text-sm font-tamil font-bold text-[#4a2307] tracking-normal"
+            >
+              யாதும் ஊரே யாவரும் கேளீர்
+            </span>
+            <span className="hidden sm:inline text-[#B5A642]/60">·</span>
+            <span className="text-[11px] sm:text-xs font-serif italic text-[#5c310c]">
+              &quot;To us, all towns are our own, and all people are our kin.&quot;
+            </span>
+            <span className="hidden md:inline text-[#B5A642]/60">·</span>
+            <div className="hidden md:inline">
+              <CulturalGlossaryTerm termKey="yaadhum-oore" className="text-[#87500e] text-[11px] font-mono">
+                Purananuru 192
+              </CulturalGlossaryTerm>
+            </div>
+          </div>
+
+          <div className="hidden sm:flex items-center gap-1.5 shrink-0">
+            <div className="w-6 h-[1px] bg-[#B5A642]/40" />
+            <div className="w-2.5 h-2.5 rounded-full bg-[#522909]/20 border border-[#522909]/40 shadow-inner" />
+          </div>
+        </div>
+      </div>
+
       {/* 4. Flagship Festival Spotlight */}
-      <section className="relative py-20 px-4 sm:px-8 z-10 max-w-6xl mx-auto">
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
+      <section className="relative py-20 px-4 sm:px-8 z-10 max-w-6xl mx-auto overflow-hidden">
+        {/* Structural Tamil Background Watermark */}
+        <WatermarkGlyph text="திருவிழா" opacity={0.04} align="right" theme="light" />
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8 relative z-10">
           <div>
             <h2 className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display">
               {locale === "ta" ? "அடுத்த முக்கிய நிகழ்வு" : "Next Flagship Festival"}
@@ -83,16 +130,16 @@ export default function HomePage() {
             onClick={playClick}
             className="text-xs font-mono text-[#4c2472] hover:text-[#11694c] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-colors"
           >
-            <span>{locale === "ta" ? "அனைத்து நிகழ்வுகளையும் காண்க" : "See Every Event"}</span>
+            <span>{locale === "ta" ? "அனைத்து நிகழ்வுகளையும் காண்க →" : "See Every Event →"}</span>
           </Link>
         </div>
 
-        {/* Poster & Ticket Presentation Box Structure */}
-        <div className="box-ticket border-2 border-[#250d38] bg-white p-6 sm:p-10 shadow-[6px_6px_0px_#250d38] overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative">
+        {/* Poster & Ticket Presentation Box Structure (Cultural Geometry with Filigree Brass Borders & Temple Arch) */}
+        <div className="rounded-t-[36px] rounded-b-md border border-[#B5A642]/40 bg-white p-6 sm:p-10 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.22)] hover:border-[#FFB84D] transition-all duration-300 overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
           {/* Subtle Perforated Die-Cut Ticket Notch Details for Large Screens */}
-          <div className="hidden lg:block absolute left-[58.33%] top-0 bottom-0 w-0 border-r-2 border-dashed border-[#250d38]/50 pointer-events-none" />
-          <div className="hidden lg:block absolute left-[58.33%] -top-3 -translate-x-1/2 w-6 h-6 bg-[#fffdfa] border-2 border-[#250d38] rotate-45 z-20 pointer-events-none" />
-          <div className="hidden lg:block absolute left-[58.33%] -bottom-3 -translate-x-1/2 w-6 h-6 bg-[#fffdfa] border-2 border-[#250d38] rotate-45 z-20 pointer-events-none" />
+          <div className="hidden lg:block absolute left-[58.33%] top-0 bottom-0 w-0 border-r-2 border-dashed border-[#B5A642]/40 pointer-events-none" />
+          <div className="hidden lg:block absolute left-[58.33%] -top-3 -translate-x-1/2 w-6 h-6 bg-[#fffdfa] border border-[#B5A642]/40 rotate-45 z-20 pointer-events-none" />
+          <div className="hidden lg:block absolute left-[58.33%] -bottom-3 -translate-x-1/2 w-6 h-6 bg-[#fffdfa] border border-[#B5A642]/40 rotate-45 z-20 pointer-events-none" />
 
           <div className="lg:col-span-7 space-y-4 text-left">
             <div className="flex flex-wrap items-center gap-3 text-xs font-mono font-bold">
@@ -137,18 +184,19 @@ export default function HomePage() {
                 href={`/events/${nextEvent.slug}`}
                 primaryText={locale === "ta" ? "நிகழ்ச்சி விவரங்கள் & அட்டவணை" : "View Event Details & Schedule"}
                 secondaryText={locale === "ta" ? "View Event Details & Schedule" : "நிகழ்ச்சி விவரங்கள் & அட்டவணை"}
-                variant="primary"
+                variant="gold-foil"
                 className="w-full sm:w-auto justify-center"
               />
             </div>
           </div>
 
-          <div className="lg:col-span-5 relative h-72 sm:h-84 border-2 border-[#250d38] shadow-[4px_4px_0px_#4c2472] overflow-hidden group">
+          {/* Temple Arch Framing for the Event Poster (rounded-t-[44px] rounded-b-md) */}
+          <div className="lg:col-span-5 relative h-72 sm:h-84 temple-arch border border-[#B5A642]/50 shadow-[4px_4px_0px_#4c2472] overflow-hidden group">
             <Image
               src={nextEvent.posterImage}
               alt={nextEvent.titleEn}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              className="object-cover group-hover:scale-105 transition-transform duration-500 rounded-t-[44px] rounded-b-md"
               sizes="(max-width: 1024px) 100vw, 500px"
             />
           </div>
@@ -159,8 +207,11 @@ export default function HomePage() {
       <SilkHoverPillars />
 
       {/* 6. Photo Vault & Memories Spotlight */}
-      <section className="relative py-16 px-4 sm:px-8 z-10 max-w-6xl mx-auto">
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
+      <section className="relative py-16 px-4 sm:px-8 z-10 max-w-6xl mx-auto overflow-hidden">
+        {/* Structural Tamil Background Watermark */}
+        <WatermarkGlyph text="நினைவுகள்" opacity={0.038} align="left" theme="light" />
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8 relative z-10">
           <div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#250d38] tracking-tight font-display">
               {locale === "ta" ? "நினைவுகள் & புகைப்படத் தொகுப்பு" : "Memories & Photo Archives"}
@@ -171,7 +222,7 @@ export default function HomePage() {
             onClick={playClick}
             className="text-xs font-mono text-[#4c2472] hover:text-[#11694c] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-colors"
           >
-            <span>{locale === "ta" ? "முழு தொகுப்பைக் காண்க" : "Explore All Photo Archives →"}</span>
+            <span>{locale === "ta" ? "முழு தொகுப்பைக் காண்க →" : "Explore All Photo Archives →"}</span>
           </Link>
         </div>
 
@@ -180,7 +231,7 @@ export default function HomePage() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10"
         >
           <motion.div
             variants={cardVariants}
@@ -189,9 +240,9 @@ export default function HomePage() {
             <Link
               href="/gallery/berry-cute-picnic"
               onClick={playClick}
-              className="border-2 border-[#250d38] bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[box-shadow,border-color] duration-200 ease-out group flex flex-col justify-between h-full"
+              className="temple-arch border border-[#B5A642]/35 bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out group flex flex-col justify-between h-full overflow-hidden"
             >
-              <div className="relative w-full aspect-[4/3] overflow-hidden border-b-2 border-[#250d38]">
+              <div className="relative w-full aspect-[4/3] overflow-hidden border-b border-[#B5A642]/35 rounded-t-[38px]">
                 <Image
                   src="https://lh3.googleusercontent.com/pw/AP1GczPlVkHkFW39BMqHGdeuYa0EwT1OOXOGWweSVgrPMbn24CSvrUlwF8CS_x787kPudpRyXEgtSMteYmBp6Zbad4uzMgeqB6LfISOvbS0AO1-qHsPKtEoC=w1200-h800-no"
                   alt="TS A Berry Cute Picnic"
@@ -199,12 +250,6 @@ export default function HomePage() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 100vw, 400px"
                 />
-                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-[#55CCA2] font-bold uppercase border border-[#55CCA2]">
-                  2025–2026
-                </div>
-                <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-white font-bold border border-white/40">
-                  5 Photos
-                </div>
               </div>
               <div className="p-4">
                 <h3 className="text-base font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
@@ -224,9 +269,9 @@ export default function HomePage() {
             <Link
               href="/gallery/streetside-sapad"
               onClick={playClick}
-              className="border-2 border-[#250d38] bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[box-shadow,border-color] duration-200 ease-out group flex flex-col justify-between h-full"
+              className="temple-arch border border-[#B5A642]/35 bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out group flex flex-col justify-between h-full overflow-hidden"
             >
-              <div className="relative w-full aspect-[4/3] overflow-hidden border-b-2 border-[#250d38]">
+              <div className="relative w-full aspect-[4/3] overflow-hidden border-b border-[#B5A642]/35 rounded-t-[38px]">
                 <Image
                   src="https://lh3.googleusercontent.com/pw/AP1GczPoDEE5ppMuBlStSn71wmY-vnb9sbDehdzKVvxu_QvEJZfJ8hGCig4Bkxoe8Rx8-xpnXzZA02iZ2EZid-qciQ4V85WQKl44j_Ed6YLD25GTunQbulMG=w1200-h800-no"
                   alt="TS Streetside Sapad Event"
@@ -234,12 +279,6 @@ export default function HomePage() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 100vw, 400px"
                 />
-                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-[#55CCA2] font-bold uppercase border border-[#55CCA2]">
-                  2025–2026 Archive
-                </div>
-                <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-white font-bold border border-white/40">
-                  5 Photos
-                </div>
               </div>
               <div className="p-4">
                 <h3 className="text-base font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
@@ -259,9 +298,9 @@ export default function HomePage() {
             <Link
               href="/gallery/namma-jathara"
               onClick={playClick}
-              className="border-2 border-[#250d38] bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[6px_6px_0px_#55CCA2] hover:border-[#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[box-shadow,border-color] duration-200 ease-out group flex flex-col justify-between h-full"
+              className="temple-arch border border-[#B5A642]/35 bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out group flex flex-col justify-between h-full overflow-hidden"
             >
-              <div className="relative w-full aspect-[4/3] overflow-hidden border-b-2 border-[#250d38]">
+              <div className="relative w-full aspect-[4/3] overflow-hidden border-b border-[#B5A642]/35 rounded-t-[38px]">
                 <Image
                   src="https://lh3.googleusercontent.com/pw/AP1GczMckOLKN2caITiN5K1TOGffHjjgJrfgVuOLzMp4vuZ6J7kgf1CQB-PChurpUnPfiexScEG44wZkP-PWanuwwdRE3STuUUNN6LLQoe-ioZJ3MeSMpkCC=w1200-h800-no"
                   alt="TS x TT: Namma Jathara"
@@ -269,12 +308,6 @@ export default function HomePage() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 100vw, 400px"
                 />
-                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-[#55CCA2] font-bold uppercase border border-[#55CCA2]">
-                  2025–2026 Archive
-                </div>
-                <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-[#250d38] text-[10px] font-mono text-white font-bold border border-white/40">
-                  5 Photos
-                </div>
               </div>
               <div className="p-4">
                 <h3 className="text-base font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
@@ -290,28 +323,48 @@ export default function HomePage() {
       </section>
 
       {/* 7. Signature Moment: Filter Coffee Intermission Pavilion Box */}
-      <section className="relative py-16 px-4 sm:px-6 z-10 max-w-4xl mx-auto text-center">
-        <div className="p-8 sm:p-12 bg-[#250d38] border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] relative overflow-hidden text-white">
-          <div className="flex justify-center mb-4">
-            <FilterKaapiGlyph size={28} className="text-[#55CCA2]" />
+      <section className="relative py-16 px-4 sm:px-6 z-10 max-w-4xl mx-auto text-center overflow-hidden">
+        {/* Structural Tamil Background Watermark */}
+        <WatermarkGlyph text="வணக்கம்" opacity={0.045} align="center" theme="light" />
+
+        <div className="p-8 sm:p-12 bg-[#250d38] rounded-t-[44px] rounded-b-md border border-[#B5A642]/50 shadow-[0_0_35px_rgba(255,184,77,0.18)] hover-glow-kuthuvilakku transition-all duration-300 relative overflow-hidden text-white z-10">
+          {/* Tactile Kanjeevaram Texture Overlay */}
+          <HeritageTextureOverlay variant="kanjeevaram" opacity={0.038} />
+
+          <div className="flex justify-center mb-4 relative z-10">
+            <FilterKaapiGlyph size={32} className="text-[#FFB84D]" />
           </div>
 
-          <h3 className="text-3xl sm:text-4xl font-display font-extrabold text-white mb-3">
+          <h3 className="text-3xl sm:text-4xl font-display font-extrabold text-white mb-3 relative z-10">
             {locale === "ta" ? "சூடான ஃபில்டர் காபி இடைவேளை" : "Filter Coffee Intermission"}
           </h3>
 
-          <p className="text-xs sm:text-sm text-purple-200/90 max-w-lg mx-auto mb-6 leading-relaxed font-body">
-            {locale === "ta"
-              ? "ஒரு நிமிடம் நில்லுங்கள், சூடான கும்பகோணம் டிகிரி காபியை ருசியுங்கள். எங்கள் சங்கத்தில் இணைந்து புதிய நண்பர்களை உருவாக்குங்கள்!"
-              : "Pause for a moment, enjoy the frothy aroma of Kumbakonam degree kaapi, and pull up a chair. Connect with the Buckeye Tamil community today."}
+          <p className="text-xs sm:text-sm text-purple-200/90 max-w-lg mx-auto mb-6 leading-relaxed font-body relative z-10">
+            {locale === "ta" ? (
+              <span>
+                ஒரு நிமிடம் நில்லுங்கள், சூடான கும்பகோணம்{" "}
+                <CulturalGlossaryTerm termKey="kaapi" className="text-[#FFB84D]">
+                  டிகிரி காபியை
+                </CulturalGlossaryTerm>{" "}
+                ருசியுங்கள். எங்கள் சங்கத்தில் இணைந்து புதிய நண்பர்களை உருவாக்குங்கள்!
+              </span>
+            ) : (
+              <span>
+                Pause for a moment, enjoy the frothy aroma of Kumbakonam degree{" "}
+                <CulturalGlossaryTerm termKey="kaapi" className="text-[#FFB84D]">
+                  kaapi
+                </CulturalGlossaryTerm>
+                , and pull up a chair. Connect with the Buckeye Tamil community today.
+              </span>
+            )}
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 relative z-10">
             <PalagaiButton
               href="/join"
               primaryText={locale === "ta" ? "மாணவர் குழுவில் இணைக" : "Join the Student GroupMe"}
               secondaryText={locale === "ta" ? "Join the Student GroupMe" : "மாணவர் குழுவில் இணைக"}
-              variant="mint"
+              variant="gold-foil"
               size="lg"
             />
             <PalagaiButton

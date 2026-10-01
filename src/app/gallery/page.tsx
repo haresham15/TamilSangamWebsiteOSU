@@ -25,6 +25,8 @@ import {
 } from "lucide-react";
 
 import { GalleryHeroCanvas } from "@/components/gallery/GalleryHeroCanvas";
+import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
+
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -154,116 +156,122 @@ export default function GalleryPage() {
         }}
       />
 
-      <div id="gallery-vault-content" className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-24 text-left font-body">
+      <div id="gallery-vault-content" className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-24 text-left font-body relative overflow-hidden">
+        {/* Structural Tamil Background Watermarks */}
+        <WatermarkGlyph text="நினைவுகள்" opacity={0.04} align="right" theme="light" />
+        <WatermarkGlyph text="நிழற்படம்" opacity={0.032} align="left" theme="light" className="top-[60%]" />
+
         {/* Header with High-Contrast Deep Plum Brand Typography */}
-      <div className="max-w-3xl mb-12">
-        <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
-          {locale === "ta" ? "நினைவுகள் · வரலாற்று புகைப்படத் தொகுப்பு" : "Memories & Event Info Pages"}
-        </h1>
-        <p className="text-base sm:text-lg text-[#250d38] font-medium leading-relaxed font-body">
-          {locale === "ta"
-            ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் 2025–2026 கல்வியாண்டின் விழாக்கள், பிக்னிக், தெருவோரச் சாப்பாடு மற்றும் கலை நிகழ்ச்சிகளின் பிரத்யேக தகவல் பக்கங்கள் மற்றும் 5 புகைப்படக் கதைகள்."
-            : "Explore our collegiate archive of past events at Ohio State from the 2025–2026 academic year. Each event features a dedicated info page with 5 curated photographs capturing the full narrative, plus direct links to complete Google Photos albums."}
-        </p>
-      </div>
+        <div className="max-w-3xl mb-12 relative z-10">
 
-      {/* 1. Academic Year Filter: Architectural Console Strip */}
-      <div className="flex flex-wrap items-center gap-2 mb-8">
-        <span className="text-xs font-mono font-bold text-[#250d38] mr-1 flex items-center gap-1.5">
-          <Calendar className="w-3.5 h-3.5 text-[#55CCA2]" />
-          <span>Timeline Era:</span>
-        </span>
-        <div className="box-tab-strip">
-          {academicYears.map((year) => (
-            <button
-              key={year.id}
-              onClick={() => {
-                playWoodClick();
-                setActiveYear(year.id);
+          <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
+            {locale === "ta" ? "நினைவுகள் · வரலாற்று புகைப்படத் தொகுப்பு" : "Memories & Event Info Pages"}
+          </h1>
+          <p className="text-base sm:text-lg text-[#250d38] font-medium leading-relaxed font-body">
+            {locale === "ta"
+              ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் 2025–2026 கல்வியாண்டின் விழாக்கள், பிக்னிக், தெருவோரச் சாப்பாடு மற்றும் கலை நிகழ்ச்சிகளின் பிரத்யேக தகவல் பக்கங்கள் மற்றும் 5 புகைப்படக் கதைகள்."
+              : "Explore our collegiate archive of past events at Ohio State from the 2025–2026 academic year. Each event features a dedicated info page with 5 curated photographs capturing the full narrative, plus direct links to complete Google Photos albums."}
+          </p>
+        </div>
+
+        {/* 1. Academic Year Filter: Architectural Console Strip */}
+        <div className="flex flex-wrap items-center gap-2 mb-8 relative z-10">
+          <span className="text-xs font-mono font-bold text-[#250d38] mr-1 flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5 text-[#55CCA2]" />
+            <span>Timeline Era:</span>
+          </span>
+          <div className="box-tab-strip">
+            {academicYears.map((year) => (
+              <button
+                key={year.id}
+                onClick={() => {
+                  playWoodClick();
+                  setActiveYear(year.id);
+                  setVisibleCount(24);
+                }}
+                className={`box-tab-item ${activeYear === year.id ? "box-tab-item-active" : ""}`}
+              >
+                {locale === "ta" ? year.labelTa : year.labelEn}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* 2. Photo Archive Search & Filter Panel: Architectural Console */}
+        <div className="ticket-chamfer-tl-br blueprint-node border-2 border-[#250d38] bg-white p-6 sm:p-8 shadow-[5px_5px_0px_#4c2472] hover:glow-sodium transition-all duration-300 mb-12 relative z-10">
+          <div className="flex items-center justify-between gap-2 text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold mb-3 border-b-2 border-purple-200 pb-2">
+            <div className="flex items-center gap-2">
+              <Search className="w-4 h-4 text-[#55CCA2]" />
+              <span>Search Photo Vault</span>
+            </div>
+            <span className="text-purple-900/80 font-mono text-xs font-bold">
+              {filteredPhotos.length} {filteredPhotos.length === 1 ? "photo" : "photos"} matched
+            </span>
+          </div>
+
+          <div className="relative w-full mb-4">
+            <Search className="w-5 h-5 text-purple-400 absolute left-4 top-3.5" />
+            <input
+              id="gallery-search-input"
+              name="gallery_search"
+              type="text"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
                 setVisibleCount(24);
               }}
-              className={`box-tab-item ${activeYear === year.id ? "box-tab-item-active" : ""}`}
-            >
-              {locale === "ta" ? year.labelTa : year.labelEn}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* 2. Photo Archive Search & Filter Panel: Architectural Console */}
-      <div className="border-2 border-[#250d38] bg-white p-6 sm:p-8 shadow-[5px_5px_0px_#4c2472] mb-12">
-        <div className="flex items-center justify-between gap-2 text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold mb-3 border-b-2 border-purple-200 pb-2">
-          <div className="flex items-center gap-2">
-            <Search className="w-4 h-4 text-[#55CCA2]" />
-            <span>Search Photo Vault</span>
+              placeholder="Search by title, event, tag (e.g. 'picnic', 'sapad', 'dosa', 'jathara', 'dance', 'lawn')..."
+              aria-label="Search photos by event, tag, or title"
+              className="w-full pl-12 pr-4 py-3 bg-purple-50/50 border-2 border-[#250d38] text-[#250d38] placeholder-purple-900/40 text-sm font-mono outline-none focus:border-[#4c2472] focus:bg-white transition-all ticket-chamfer-tl-br"
+            />
           </div>
-          <span className="text-purple-900/80 font-mono text-xs font-bold">
-            {filteredPhotos.length} {filteredPhotos.length === 1 ? "photo" : "photos"} matched
-          </span>
-        </div>
 
-        <div className="relative w-full mb-4">
-          <Search className="w-5 h-5 text-purple-400 absolute left-4 top-3.5" />
-          <input
-            id="gallery-search-input"
-            name="gallery_search"
-            type="text"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setVisibleCount(24);
-            }}
-            placeholder="Search by title, event, tag (e.g. 'picnic', 'sapad', 'dosa', 'jathara', 'dance', 'lawn')..."
-            aria-label="Search photos by event, tag, or title"
-            className="w-full pl-12 pr-4 py-3 bg-purple-50/50 border-2 border-[#250d38] text-[#250d38] placeholder-purple-900/40 text-sm outline-none focus:border-[#4c2472] focus:bg-white font-body transition-all"
-          />
-        </div>
-
-        {/* Quick Tag Ledger Chips */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-mono text-[#250d38] mr-1 flex items-center gap-1 font-bold">
-            <Filter className="w-3.5 h-3.5 text-[#55CCA2]" />
-            <span>Tag:</span>
-          </span>
-          {tags.map((tag) => (
-            <button
-              key={tag}
-              onClick={() => {
-                playWoodClick();
-                setActiveTag(tag);
-                setVisibleCount(24);
-              }}
-              className={`px-2.5 py-1 text-xs font-mono uppercase font-bold border transition-all ${
-                activeTag === tag
-                  ? "bg-[#250d38] text-[#55CCA2] border-[#250d38] shadow-[1px_1px_0px_#55CCA2]"
-                  : "bg-purple-50/80 text-[#4c2472] border-purple-300 hover:bg-purple-100"
-              }`}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* 3. Featured Event Info & Photo Pages */}
-      <div className="mb-16">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#250d38] font-display">
-              {locale === "ta" ? "நிகழ்ச்சி தகவல் பக்கங்கள் & புகைப்படக் கதைகள்" : "Event Info Pages & Photo Stories"}
-            </h2>
+          {/* Quick Tag Ledger Chips */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-xs font-mono text-[#250d38] mr-1 flex items-center gap-1 font-bold">
+              <Filter className="w-3.5 h-3.5 text-[#55CCA2]" />
+              <span>Tag:</span>
+            </span>
+            {tags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => {
+                  playWoodClick();
+                  setActiveTag(tag);
+                  setVisibleCount(24);
+                }}
+                className={`px-2.5 py-1 text-xs font-mono uppercase font-bold border transition-all ticket-chamfer-tl-br ${
+                  activeTag === tag
+                    ? "bg-[#250d38] text-[#55CCA2] border-[#250d38] shadow-[1px_1px_0px_#55CCA2]"
+                    : "bg-purple-50/80 text-[#4c2472] border-purple-300 hover:bg-purple-100"
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
           </div>
-          <span className="text-xs font-mono text-[#4c2472] font-bold">
-            {filteredAlbums.length} {filteredAlbums.length === 1 ? "Event" : "Events"}
-          </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredAlbums.map((album) => (
-            <div
-              key={album.slug}
-              className="border-2 border-[#250d38] bg-white p-6 flex flex-col justify-between group hover:border-[#55CCA2] hover:shadow-[6px_6px_0px_#55CCA2] transition-all duration-200 shadow-[4px_4px_0px_#4c2472]"
-            >
+        {/* 3. Featured Event Info & Photo Pages */}
+        <div className="mb-16 relative z-10">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#250d38] font-display">
+                {locale === "ta" ? "நிகழ்ச்சி தகவல் பக்கங்கள் & புகைப்படக் கதைகள்" : "Event Info Pages & Photo Stories"}
+              </h2>
+            </div>
+            <span className="text-xs font-mono text-[#4c2472] font-bold">
+              {filteredAlbums.length} {filteredAlbums.length === 1 ? "Event" : "Events"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredAlbums.map((album) => (
+              <div
+                key={album.slug}
+                className="ticket-chamfer-tl-br blueprint-node border-2 border-[#250d38] bg-white p-6 flex flex-col justify-between group hover:border-[#55CCA2] hover:shadow-[6px_6px_0px_#55CCA2] hover:glow-halogen-mint transition-all duration-200 shadow-[4px_4px_0px_#4c2472]"
+              >
+
               <div>
                 {/* Album Header & Tags */}
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
@@ -308,9 +316,6 @@ export default function GalleryPage() {
                         className="object-cover"
                         sizes="80px"
                       />
-                      <div className="absolute top-0.5 left-0.5 px-1 bg-[#250d38]/80 text-[8px] font-mono text-[#55CCA2] font-bold">
-                        {idx + 1}
-                      </div>
                     </div>
                   ))}
                 </div>

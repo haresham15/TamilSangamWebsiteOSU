@@ -42,7 +42,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full sm:w-auto px-7 py-3.5 bg-[#FFB84D] hover:bg-[#FFC86B] text-[#0F050A] font-mono font-bold text-xs uppercase tracking-wider transition-all duration-200 shadow-[4px_4px_0px_#8B5A2B] hover:shadow-[2px_2px_0px_#8B5A2B] hover:translate-x-[2px] hover:translate-y-[2px] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none flex items-center justify-center gap-2.5 disabled:opacity-60 disabled:pointer-events-none cursor-pointer"
+      className="ticket-chamfer-tl-br w-full sm:w-auto px-7 py-3.5 bg-[#FFB84D] hover:bg-[#FFC86B] text-[#0F050A] font-mono font-bold text-xs uppercase tracking-wider transition-[background-color,box-shadow,transform] duration-150 shadow-[4px_4px_0px_#8B5A2B] hover:shadow-[5px_5px_0px_#8B5A2B] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#8B5A2B] flex items-center justify-center gap-2.5 disabled:opacity-60 disabled:pointer-events-none cursor-pointer hover:glow-sodium"
     >
       {pending ? (
         <>
@@ -105,15 +105,11 @@ export function SuggestionForm({
 
   return (
     <div
-      className={`relative bg-[#150914]/95 backdrop-blur-md border-2 border-[#4A2038] p-6 sm:p-10 shadow-[8px_8px_0px_#2B1020] text-white ${className}`}
+      className={`ticket-chamfer-tl-br relative bg-[#150914]/95 backdrop-blur-md border-2 border-[#4A2038] p-6 sm:p-10 shadow-[8px_8px_0px_#2B1020] text-white hover:border-[#FFB84D]/40 transition-colors ${className}`}
     >
-      {/* Title block with Technical Stamp Header */}
+      {/* Title block */}
       <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[#3D1B2E] mb-8">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#241021] border border-[#FFB84D]/40 text-[#FFB84D] text-[11px] font-mono uppercase tracking-widest mb-2">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Sangam Blueprint Suggestion Ledger</span>
-          </div>
           <h3 className="text-2xl sm:text-3xl font-extrabold font-display text-[#f8f6f0] tracking-tight">
             {locale === "ta" ? "உங்கள் யோசனையைப் பகிருங்கள்" : "Drop an Idea onto the Blueprint"}
           </h3>
@@ -125,8 +121,8 @@ export function SuggestionForm({
         </div>
 
         <div className="text-right hidden sm:block font-mono text-[11px] text-slate-400">
-          <p className="text-[#FFB84D]">DISPATCH: osutamilsangam@gmail.com</p>
-          <p>REVIEW: Weekly Board Meetings</p>
+          <p className="text-[#FFB84D]">osutamilsangam@gmail.com</p>
+          <p>Reviewed Weekly</p>
         </div>
       </div>
 
@@ -193,9 +189,9 @@ export function SuggestionForm({
                     key={cat.id}
                     type="button"
                     onClick={() => setSelectedCategory(cat.id)}
-                    className={`p-3 text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
+                    className={`ticket-chamfer-tl-br p-3 text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
                       isSelected
-                        ? "bg-[#2D1429] border-[#FFB84D] shadow-[3px_3px_0px_#FFB84D] text-white"
+                        ? "bg-[#2D1429] border-[#FFB84D] shadow-[3px_3px_0px_#FFB84D] text-white hover:glow-sodium"
                         : "bg-[#120710] border-[#3D1B2E] text-slate-400 hover:border-[#8B5A2B] hover:text-slate-200"
                     }`}
                   >

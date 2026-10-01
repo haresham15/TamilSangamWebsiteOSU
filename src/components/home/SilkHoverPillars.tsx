@@ -7,6 +7,9 @@ import { useLiteMode } from "@/context/LiteModeContext";
 import { ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
+import { CulturalGlossaryTerm } from "@/components/ui/CulturalGlossaryTerm";
+import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
+import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 
 interface PillarItem {
   id: string;
@@ -252,8 +255,11 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       role="article"
       aria-label={pillar.titleEn}
       style={{ perspective: 1000, transformStyle: "preserve-3d", willChange: "transform" }}
-      className="relative w-full rounded-none border-2 border-[#250d38] bg-[#1a0b2e] text-white p-6 sm:p-10 overflow-hidden shadow-[4px_4px_0px_#4c2472] sm:shadow-[6px_6px_0px_#4c2472] hover:border-[#55CCA2] hover:shadow-[8px_8px_0px_#55CCA2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] focus-visible:ring-offset-2 transition-[border-color,box-shadow] duration-300 ease-out flex flex-col justify-between min-h-[320px] sm:min-h-[360px] group select-none cursor-pointer sm:cursor-default transform-gpu"
+      className="relative w-full rounded-t-[36px] rounded-b-md border border-[#B5A642]/35 bg-[#170a29] text-white p-6 sm:p-10 overflow-hidden shadow-[4px_4px_0px_#4c2472] sm:shadow-[6px_6px_0px_#4c2472] hover:border-[#FFB84D] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-all duration-300 ease-out flex flex-col justify-between min-h-[320px] sm:min-h-[360px] group select-none cursor-pointer sm:cursor-default transform-gpu"
     >
+      {/* Tactile Woven Kanjeevaram Silk Texture Overlay */}
+      <HeritageTextureOverlay variant="kanjeevaram" opacity={0.035} />
+
       {/* 1. Iridescent Kanchipuram Silk Sheen Underlay */}
       <div
         className="absolute inset-0 z-0 pointer-events-none opacity-40 group-hover:opacity-75 transition-opacity duration-700"
@@ -293,16 +299,29 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       <div
         lang="ta"
         style={{ letterSpacing: 0 }}
-        className="absolute right-4 bottom-2 text-7xl sm:text-9xl font-bold font-tamil text-white/15 group-hover:text-white/25 select-none pointer-events-none transition-colors duration-500 z-10"
+        className="absolute right-4 bottom-2 text-7xl sm:text-9xl font-bold font-tamil text-white/10 group-hover:text-white/20 select-none pointer-events-none transition-colors duration-500 z-10"
       >
         {pillar.tamilScript}
       </div>
 
       {/* 4. Foreground Kinetic Typography Content */}
       <div className="relative z-20 space-y-4">
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-mono tracking-widest uppercase text-[#B5A642] font-semibold">
+              {locale === "ta" ? pillar.pillarNumTa : pillar.pillarNum}
+            </span>
+            <span className="text-[#B5A642]/50">·</span>
+            <CulturalGlossaryTerm
+              termKey={pillar.id as any}
+              position="bottom"
+              className="text-[#f5d77f] font-mono text-[11px]"
+            >
+              {pillar.id.toUpperCase()}
+            </CulturalGlossaryTerm>
+          </div>
           <div
-            className="w-3 h-3 rounded-none border border-white/40"
+            className="w-3 h-3 rounded-full border border-white/40 shadow-[0_0_10px_rgba(255,184,77,0.4)]"
             style={{ backgroundColor: pillar.accentColor }}
           />
         </div>
@@ -344,9 +363,12 @@ export function SilkHoverPillars() {
   const { locale } = useLocale();
 
   return (
-    <section className="relative py-24 px-4 sm:px-8 z-10 max-w-6xl mx-auto">
+    <section className="relative py-24 px-4 sm:px-8 z-10 max-w-6xl mx-auto overflow-hidden">
+      {/* Ghost Translation Watermark Behind Header */}
+      <WatermarkGlyph text="தூண்கள்" opacity={0.038} align="right" theme="light" />
+
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12">
+      <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12 relative z-10">
         <div>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
             {locale === "ta" ? "சங்கத்தின் நான்கு தூண்கள்" : "The Four Pillars of Sangam"}

@@ -16,16 +16,11 @@ export default function ErrorBoundary({ error, reset }: ErrorProps) {
   }, [error]);
 
   return (
-    <div className="w-full min-h-[80vh] flex items-center justify-center px-4 sm:px-6 pt-32 pb-20 text-left font-body">
-      <div className="w-full max-w-2xl">
-        {/* Decorative Alert Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-950/80 border-2 border-red-400 text-red-300 font-mono text-xs uppercase font-bold tracking-wider mb-6 shadow-[2px_2px_0px_#ef4444]">
-          <AlertTriangle className="w-3.5 h-3.5" />
-          <span>Application State Alert</span>
-        </div>
-
+    <div className="relative w-full min-h-[80vh] flex items-center justify-center px-4 sm:px-6 pt-32 pb-20 text-left font-body overflow-hidden">
+      <div className="relative z-10 w-full max-w-2xl">
         {/* Card */}
-        <div className="p-8 sm:p-12 bg-white border-2 border-[#250d38] shadow-[8px_8px_0px_#250d38] relative overflow-hidden">
+        <div className="ticket-chamfer-tl-br relative p-8 sm:p-12 bg-white border-2 border-[#250d38] shadow-[8px_8px_0px_#250d38] overflow-hidden">
+
           <div className="space-y-4 max-w-lg">
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[#250d38] font-display tracking-tight">
               Something unexpected occurred
@@ -44,7 +39,7 @@ export default function ErrorBoundary({ error, reset }: ErrorProps) {
           <div className="mt-8 pt-6 border-t-2 border-purple-100 flex flex-wrap items-center gap-3">
             <button
               onClick={() => reset()}
-              className="px-5 py-2.5 bg-[#250d38] text-white border-2 border-[#55CCA2] shadow-[3px_3px_0px_#55CCA2] hover:shadow-[4px_4px_0px_#55CCA2] text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all"
+              className="ticket-chamfer-tl-br px-5 py-2.5 bg-[#250d38] text-white border-2 border-[#55CCA2] shadow-[3px_3px_0px_#55CCA2] hover:shadow-[4px_4px_0px_#55CCA2] text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer hover:glow-halogen-mint"
             >
               <RefreshCw className="w-3.5 h-3.5 text-[#55CCA2]" />
               <span>Try Again</span>
@@ -52,7 +47,7 @@ export default function ErrorBoundary({ error, reset }: ErrorProps) {
 
             <Link
               href="/"
-              className="px-5 py-2.5 border-2 border-[#250d38] bg-[#faf8f5] text-[#250d38] hover:bg-emerald-50 hover:border-[#55CCA2] text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-colors"
+              className="ticket-chamfer-tl-br px-5 py-2.5 border-2 border-[#250d38] bg-[#faf8f5] text-[#250d38] hover:bg-emerald-50 hover:border-[#55CCA2] text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-colors hover:glow-halogen-mint"
             >
               <Home className="w-3.5 h-3.5 text-[#250d38]" />
               <span>Return Home</span>
