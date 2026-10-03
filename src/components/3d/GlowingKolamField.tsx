@@ -77,46 +77,56 @@ export const GlowingKolamField: React.FC = () => {
 
       ctx.clearRect(0, 0, width, height);
 
-      const time = timeMs * 0.001;
-
+      // Batch 1: All ambient dots in a single fast GPU draw call
+      ctx.beginPath();
+      const radiusSq = mouse.radius * mouse.radius;
       for (let x = spacing / 2; x < width; x += spacing) {
         for (let y = spacing / 2; y < height; y += spacing) {
-          const dx = mouse.x - x;
-          const dy = mouse.y - y;
-          const distSq = dx * dx + dy * dy;
-          const radiusSq = mouse.radius * mouse.radius;
+          if (mouse.active) {
+            const dx = mouse.x - x;
+            const dy = mouse.y - y;
+            if (dx * dx + dy * dy < radiusSq) continue;
+          }
+          ctx.moveTo(x + 1.5, y);
+          ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+        }
+      }
+      ctx.fillStyle = "rgba(243, 231, 211, 0.12)";
+      ctx.fill();
 
-          if (distSq < radiusSq) {
-            const dist = Math.sqrt(distSq);
-            const factor = 1 - dist / mouse.radius;
-            const r = 1.6 + factor * 3.2;
+      // Batch 2: Only interactive dots near the mouse cursor
+      if (mouse.active) {
+        for (let x = spacing / 2; x < width; x += spacing) {
+          for (let y = spacing / 2; y < height; y += spacing) {
+            const dx = mouse.x - x;
+            const dy = mouse.y - y;
+            const distSq = dx * dx + dy * dy;
 
-            // Connect lines to nearby dots in active radius (drawing kolam lines)
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-            ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `rgba(242, 183, 5, ${factor * 0.22})`;
-            ctx.lineWidth = 0.8;
-            ctx.stroke();
+            if (distSq < radiusSq) {
+              const dist = Math.sqrt(distSq);
+              const factor = 1 - dist / mouse.radius;
+              const r = 1.6 + factor * 3.2;
 
-            // Hardware-accelerated soft outer glow ring (eliminates slow CPU shadowBlur)
-            ctx.beginPath();
-            ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(85, 204, 162, ${factor * 0.28})`;
-            ctx.fill();
+              // Connect lines to nearby dots in active radius (drawing kolam lines)
+              ctx.beginPath();
+              ctx.moveTo(x, y);
+              ctx.lineTo(mouse.x, mouse.y);
+              ctx.strokeStyle = `rgba(242, 183, 5, ${factor * 0.22})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
 
-            // Inner crisp accent dot
-            ctx.beginPath();
-            ctx.arc(x, y, r, 0, Math.PI * 2);
-            ctx.fillStyle = meta.accentColor;
-            ctx.fill();
-          } else {
-            // Ambient gentle shimmer with lightweight sine math
-            const alpha = 0.11 + Math.sin(time + x * 0.04 + y * 0.04) * 0.04;
-            ctx.beginPath();
-            ctx.arc(x, y, 1.5, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(243, 231, 211, ${alpha})`;
-            ctx.fill();
+              // Hardware-accelerated soft outer glow ring
+              ctx.beginPath();
+              ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(85, 204, 162, ${factor * 0.28})`;
+              ctx.fill();
+
+              // Inner crisp accent dot
+              ctx.beginPath();
+              ctx.arc(x, y, r, 0, Math.PI * 2);
+              ctx.fillStyle = meta.accentColor;
+              ctx.fill();
+            }
           }
         }
       }

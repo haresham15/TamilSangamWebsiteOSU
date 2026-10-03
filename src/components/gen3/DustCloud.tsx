@@ -91,7 +91,9 @@ export function DustCloud({ count = 200 }) {
 
   // Zero CPU writes: only update a single float time uniform on GPU
   useFrame((state) => {
-    material.uniforms.uTime.value = state.clock.getElapsedTime();
+    if (pointsRef.current) {
+      (pointsRef.current.material as THREE.ShaderMaterial).uniforms.uTime.value = state.clock.getElapsedTime();
+    }
   });
 
   return (

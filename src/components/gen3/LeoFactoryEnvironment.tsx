@@ -1419,7 +1419,9 @@ function FactorySparks({ count = 140 }) {
   }, [geometry, material]);
 
   useFrame((state) => {
-    material.uniforms.uTime.value = state.clock.getElapsedTime();
+    if (pointsRef.current) {
+      (pointsRef.current.material as THREE.ShaderMaterial).uniforms.uTime.value = state.clock.getElapsedTime();
+    }
   });
 
   return (

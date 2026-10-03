@@ -8,7 +8,6 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS, BoardMember } from "@/data/board";
 import { CLUB_PURPOSE, MEMBERSHIP_GOVERNANCE } from "@/data/constitution";
 import { HolographicCard } from "@/components/3d/HolographicCard";
-import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { ArrowUpRight, Mail, ArrowRight, X, Crown } from "lucide-react";
@@ -21,11 +20,11 @@ const BoardHeroCanvas = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[70dvh] bg-[#120A06] flex flex-col items-center justify-center text-[#D4AF37] font-mono text-xs gap-3 border-b border-[#3d2714]">
+      <div className="w-full h-[70dvh] bg-[#120A06] flex flex-col items-center justify-center text-[#FFB84D] font-cyber-mono text-xs lowercase gap-3 border-b border-[#3d2714]">
         <div className="flex items-center gap-2">
-          <Crown className="w-4 h-4 text-[#D4AF37] animate-pulse" />
-          <span className="tracking-widest uppercase">
-            AWAKENING PONNIYIN SELVAN CHOLA DARBAR COLONNADE...
+          <Crown className="w-4 h-4 text-[#FFB84D] animate-pulse" />
+          <span className="tracking-widest">
+            awakening ponniyin selvan chola darbar colonnade... [ webgl core ]
           </span>
         </div>
       </div>
@@ -99,31 +98,23 @@ export default function BoardPage() {
       {/* ========================================================================= */}
       <section
         id="chola-darbar-hero"
-        className="relative w-full overflow-hidden"
+        className="relative w-full overflow-hidden bg-[#120A06]"
         style={{
           WebkitMaskImage:
-            "linear-gradient(to bottom, black 65%, transparent 100%)",
+            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
           maskImage:
-            "linear-gradient(to bottom, black 65%, transparent 100%)",
+            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
         }}
       >
-        <BoardHeroCanvas
-          onFinaleComplete={() => {
-            const roster = document.getElementById("board-editorial-roster");
-            if (roster) {
-              roster.scrollIntoView({ behavior: "smooth" });
-            }
-          }}
-        />
-
-        {/* Phase 3: Token-driven OKLCH DOM bridge to editorial roster */}
-        <HeroToContentBridge theme="board" heightPct={28} />
+        <BoardHeroCanvas />
+        {/* Bottom overlay gradient blending agent */}
+        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#120A06] via-[#120A06]/80 to-transparent pointer-events-none z-10" />
       </section>
 
       {/* ========================================================================= */}
       {/* 2. EDITORIAL ROSTER GRID & ARCHITECTURAL LEDGER                           */}
       {/* ========================================================================= */}
-      <div className="relative z-20 w-full bg-[#F7F0E4] text-[#1C120A] pt-12 pb-24 overflow-hidden">
+      <div className="relative z-20 -mt-32 w-full bg-[#F7F0E4] text-[#1C120A] pt-16 pb-24 overflow-hidden">
         {/* Structural Tamil Background Watermarks */}
         <WatermarkGlyph text="அவை" opacity={0.04} align="right" theme="light" />
         <WatermarkGlyph text="சபை" opacity={0.032} align="left" theme="light" className="top-[65%]" />

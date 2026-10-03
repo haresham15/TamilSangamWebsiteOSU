@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useMemo, useRef, useEffect } from "react";
+import React, { useMemo, useEffect } from "react";
 import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
 
 const VERGE_VERTEX = /* glsl */ `
   varying vec2 vUv;

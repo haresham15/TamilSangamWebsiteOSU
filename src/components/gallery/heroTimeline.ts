@@ -37,7 +37,7 @@ export const HERO_CONSTANTS = {
   // Scroll Metrics
   scrollDistanceDesktop: 4200, // Equiv to ~600vh scroll runway
   scrollDistanceMobile: 3500,  // Equiv to ~500vh
-  scrubDamping: 0.6,           // Smooth GSAP scrub inertia
+  scrubDamping: 0.1,           // Ultra-responsive real-time scroll sync with Lenis
 
   // PostFX & Optics
   bloomThreshold: 0.85,

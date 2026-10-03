@@ -65,17 +65,19 @@ export default function EventsPage() {
       {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene (Leo Factory) */}
       <div
         id="events-hero-trigger"
-        className="w-full h-[100dvh] relative z-10 overflow-hidden"
+        className="w-full h-[100dvh] relative z-10 overflow-hidden bg-[#FAF6EE]"
         style={{
-          WebkitMaskImage: "linear-gradient(to bottom, black 65%, transparent 100%)",
-          maskImage: "linear-gradient(to bottom, black 65%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+          maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
         }}
       >
         <EventsGen3Canvas />
+        {/* Bottom overlay gradient blending agent */}
+        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#FAF6EE] via-[#FAF6EE]/80 to-transparent pointer-events-none z-10" />
       </div>
 
       {/* 2. Events Catalogue Container with Warm Cream Background (#FAF6EE) & Tactile Sandstone Texture */}
-      <div className="relative z-10 w-full bg-[#FAF6EE] overflow-hidden vignette-ambient-warm">
+      <div className="relative z-20 -mt-32 w-full bg-[#FAF6EE] overflow-hidden vignette-ambient-warm">
         {/* Tactile Sandstone Texture Overlay */}
         <HeritageTextureOverlay variant="sandstone" opacity={0.02} />
 

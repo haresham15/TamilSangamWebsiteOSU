@@ -37,6 +37,10 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
   );
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.history.scrollRestoration = "manual";
+    }
+
     // Respect lite mode and reduced motion
     const prefersReducedMotion =
       typeof window !== "undefined" &&
@@ -48,16 +52,15 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Initialize Lenis with high-performance responsive deceleration
+    // Initialize Lenis with ultra-responsive silky linear interpolation
     const lenis = new Lenis({
-      duration: 0.82,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      lerp: 0.095, // Pure exponential interpolation: instantaneous response, buttery smooth deceleration
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       syncTouch: false, // Don't fight native touch momentum scrolling (Phase 6 mandate)
-      touchMultiplier: 1.25,
-      wheelMultiplier: 1.15,
+      touchMultiplier: 1.0,
+      wheelMultiplier: 1.0,
       autoRaf: false,
     });
 
@@ -78,8 +81,8 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     };
 
     gsap.ticker.add(tickerCallback);
-    // Smooth frame delta spikes so micro-hiccups never cause violent scroll jumps
-    gsap.ticker.lagSmoothing(500, 33);
+    // Disable lag smoothing so GSAP never stutters, pauses, or jumps frames during load or render
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
       gsap.ticker.remove(tickerCallback);
@@ -92,6 +95,29 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       }
     };
   }, [isLiteMode]);
+
+  // Smoothly intercept in-page anchor links with Lenis
+  useEffect(() => {
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement)?.closest?.("a");
+      if (!target) return;
+      const href = target.getAttribute("href");
+      if (href && href.startsWith("#") && href.length > 1) {
+        try {
+          const el = document.querySelector(href);
+          if (el && lenisRef.current) {
+            e.preventDefault();
+            lenisRef.current.scrollTo(el as HTMLElement, { offset: -30, duration: 1.0 });
+          }
+        } catch {
+          // Ignore invalid selector queries
+        }
+      }
+    };
+
+    document.addEventListener("click", handleAnchorClick, { capture: true });
+    return () => document.removeEventListener("click", handleAnchorClick, { capture: true });
+  }, []);
 
   // Route change handler: reset scroll position, resize Lenis, and refresh ScrollTrigger
   useEffect(() => {

@@ -235,7 +235,7 @@ export default function EventInfoAndGalleryPage() {
 
         {/* 4-Grid Supporting Photos (Activities, Food, Games, Finale) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {gridPhotos.map((photo, idx) => (
+          {gridPhotos.map((photo) => (
             <motion.div
               key={photo.id}
               layoutId={`album-photo-${photo.id}`}

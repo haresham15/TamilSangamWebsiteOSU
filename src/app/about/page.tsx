@@ -7,7 +7,6 @@ import { useAudio } from "@/context/AudioContext";
 import { FAQS } from "@/data/faq";
 import { CLUB_PURPOSE } from "@/data/constitution";
 import { GopuramZScroll } from "@/components/about/GopuramZScroll";
-import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 import { CulturalGlossaryTerm } from "@/components/ui/CulturalGlossaryTerm";
 import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
@@ -93,19 +92,21 @@ export default function AboutPage() {
     <div className="w-full text-left font-body bg-[#fffdfa]">
       {/* Cinematic 3D Gopuram Z-Axis Mission Fly-Through */}
       <div
-        className="relative w-full overflow-hidden"
+        className="relative w-full overflow-hidden bg-[#fffdfa]"
         style={{
           WebkitMaskImage:
-            "linear-gradient(to bottom, black 0%, black 75%, transparent 100%)",
+            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
           maskImage:
-            "linear-gradient(to bottom, black 0%, black 75%, transparent 100%)",
+            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
         }}
       >
         <GopuramZScroll />
-        <HeroToContentBridge theme="about" heightPct={24} />
+        {/* Bottom overlay gradient blending agent */}
+        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#fffdfa] via-[#fffdfa]/80 to-transparent pointer-events-none z-10" />
       </div>
 
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-24 relative overflow-hidden vignette-ambient-warm">
+      {/* The section immediately below the Hero: negative margin pull-up */}
+      <div className="relative z-20 -mt-32 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-24 overflow-hidden vignette-ambient-warm">
         {/* Tactile Sandstone Texture Overlay */}
         <HeritageTextureOverlay variant="sandstone" opacity={0.02} />
 

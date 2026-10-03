@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { getScrollProgress } from "./useScrollCinematic";
@@ -50,6 +50,11 @@ export function Performer() {
   });
 
   const { actions } = useAnimations(animations, scene);
+
+  const proxyForeArmEuler = useRef(new THREE.Euler(-0.3, 0.0, -1.2));
+  const proxyHandEuler = useRef(new THREE.Euler(0.0, 0.0, 0.2));
+  const proxyForeArmQuat = useRef(new THREE.Quaternion());
+  const proxyHandQuat = useRef(new THREE.Quaternion());
 
   useEffect(() => {
     const isDebug = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug") === "1";
@@ -108,12 +113,12 @@ export function Performer() {
       const rightHand = (scene.getObjectByName("RightHand") || scene.getObjectByName("mixamorigRightHand")) as THREE.Bone;
 
       if (rightForeArm && rightHand) {
-        // LOCAL space quaternions relative to bind pose, NOT world space from Object3D proxy
-        const proxyForeArmQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.3, 0.0, -1.2));
-        const proxyHandQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(0.0, progress * Math.PI * 2, 0.2));
+        proxyForeArmQuat.current.setFromEuler(proxyForeArmEuler.current);
+        proxyHandEuler.current.set(0.0, progress * Math.PI * 2, 0.2);
+        proxyHandQuat.current.setFromEuler(proxyHandEuler.current);
 
-        rightForeArm.quaternion.slerp(proxyForeArmQuat, blendFactor);
-        rightHand.quaternion.slerp(proxyHandQuat, blendFactor);
+        rightForeArm.quaternion.slerp(proxyForeArmQuat.current, blendFactor);
+        rightHand.quaternion.slerp(proxyHandQuat.current, blendFactor);
       }
     }
   });

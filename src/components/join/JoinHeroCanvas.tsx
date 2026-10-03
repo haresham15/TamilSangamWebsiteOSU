@@ -1,28 +1,34 @@
 "use client";
 
-import React, { Suspense, useState, useEffect, useRef } from "react";
+import React, { Suspense, useState, useEffect, useRef, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Environment, BakeShadows } from "@react-three/drei";
+import { BakeShadows } from "@react-three/drei";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { useLocale } from "@/context/LocaleContext";
 import { CampusGate } from "./CampusGate";
 import { GateLettering } from "./GateLettering";
-import { IvyField } from "./IvyField";
 import { ShadowLatticeDecal } from "./ShadowLatticeDecal";
 import { MorningVolumetrics } from "./MorningVolumetrics";
 import { LeafDrift } from "./LeafDrift";
 import { CraneCameraRig } from "./CraneCameraRig";
 import { WhiteoutFinale } from "./WhiteoutFinale";
-import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
+import { MorningSkyDome } from "./env/MorningSkyDome";
+import { MorningEnvironment } from "./env/MorningEnvironment";
+import { MorningKeyLight } from "./env/MorningKeyLight";
+import { MorningLightShafts } from "./env/MorningLightShafts";
+import { FOG_COLOR, FOG_DENSITY } from "./env/sun";
+
+import { JoinMaterialsManager, type IronVariant } from "./JoinMaterialsManager";
+import { MorningCampusVignette } from "./vignette/MorningCampusVignette";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export function JoinHeroCanvas() {
+export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = {}) {
   const { locale } = useLocale();
 
   const pinWrapperRef = useRef<HTMLDivElement>(null);
@@ -32,17 +38,63 @@ export function JoinHeroCanvas() {
     typeof window !== "undefined" ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false
   );
 
+  // Auto-detect tier B on mobile touch screens if not explicitly specified
+  const tier: "A" | "B" | "C" = useMemo(() => {
+    if (reducedMotion) return "C";
+    if (propTier) return propTier;
+    if (typeof window !== "undefined" && window.innerWidth < 768) return "B";
+    return "A";
+  }, [propTier, reducedMotion]);
+
+  const [ironVariant, setIronVariant] = useState<IronVariant>(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const iron = params.get("iron")?.toLowerCase();
+      if (iron === "a") return "a";
+    }
+    return "b";
+  });
+
   // Synchronized scroll kinematics
   const scrollProgressRef = useRef(0);
   const gateProgressRef = useRef(0);
 
-  // Bespoke scene-matched environment map (§1.1b PRD Mandate)
-  const bespokeEnv = React.useMemo(() => createBespokeEnvironmentTexture("dawn-nanban"), []);
+  // Dev test helper for deterministic Playwright captures (§8)
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      (window as unknown as {
+        __joinHero?: {
+          setGateProgress: (p: number) => void;
+          getState: () => {
+            scrollProgress: number;
+            gateProgress: number;
+            ironVariant: IronVariant;
+            tier: "A" | "B" | "C";
+          };
+          setIronVariant: (v: IronVariant) => void;
+        };
+      }).__joinHero = {
+        setGateProgress: (p: number) => {
+          const clamped = Math.min(Math.max(p, 0), 1);
+          gateProgressRef.current = clamped;
+          const approxScrollP = 0.18 + clamped * 0.54;
+          scrollProgressRef.current = approxScrollP;
+        },
+        getState: () => ({
+          scrollProgress: scrollProgressRef.current,
+          gateProgress: gateProgressRef.current,
+          ironVariant,
+          tier,
+        }),
+        setIronVariant: (v: IronVariant) => setIronVariant(v),
+      };
+    }
     return () => {
-      bespokeEnv?.dispose();
+      if (typeof window !== "undefined") {
+        delete (window as unknown as { __joinHero?: unknown }).__joinHero;
+      }
     };
-  }, [bespokeEnv]);
+  }, [ironVariant, tier]);
 
   // Listen to prefers-reduced-motion
   useEffect(() => {
@@ -83,7 +135,7 @@ export function JoinHeroCanvas() {
         end: "+=130%",
         pin: true,
         pinSpacing: true,
-        scrub: 0.8,
+        scrub: true,
         anticipatePin: 1,
         onUpdate: (self) => {
           const p = self.progress;
@@ -128,26 +180,49 @@ export function JoinHeroCanvas() {
       ref={pinWrapperRef}
       className={`relative w-full ${
         reducedMotion ? "h-[85dvh]" : "h-[100dvh]"
-      } overflow-hidden bg-[#050201]`}
+      } overflow-hidden bg-[#F4EEDD]`}
       style={{ minHeight: "100dvh" }}
     >
       {/* ================================================================= */}
       {/* 1. PERSISTENT SKIP LINK & RUNNING HEADER CONSOLE (p=0 to p=1)      */}
       {/* ================================================================= */}
-      <div className="absolute top-20 sm:top-24 left-0 right-0 z-30 px-3 sm:px-6 pointer-events-none">
-        <div className="max-w-5xl mx-auto flex items-center justify-between gap-2 pointer-events-auto">
-          {/* Persistent Conversion "Join Now ↓" Skip Link */}
+      <div className="absolute top-20 sm:top-24 left-0 right-0 z-30 px-3 sm:px-8 pointer-events-none">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 pointer-events-auto">
+          {/* Persistent Conversion "Join Now ↓" Skip Link (High WCAG contrast against cream morning sky) */}
           <a
             id="hero-skip-link"
             href="#membership-form"
             onClick={handleSkipToForm}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider rounded-none border-2 border-white shadow-[3px_3px_0px_#ffffff] hover:bg-[#6ee7b7] hover:shadow-[4px_4px_0px_#ffffff] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#ffffff] focus:outline-none focus:ring-2 focus:ring-white transition-[background-color,box-shadow,transform] duration-150 cursor-pointer shrink-0 min-h-[44px]"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider rounded-none border-2 border-[#141414] shadow-[3px_3px_0px_#141414] hover:bg-[#6ee7b7] hover:shadow-[4px_4px_0px_#141414] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#141414] focus:outline-none focus:ring-2 focus:ring-[#141414] transition-[background-color,box-shadow,transform] duration-150 cursor-pointer shrink-0 min-h-[44px]"
           >
             <span>{locale === "ta" ? "இப்போதே இணையுங்கள் ↓" : "Join Now ↓"}</span>
             <span className="text-[10px] opacity-75 font-body hidden md:inline">
               {locale === "ta" ? "(படிவம்)" : "(Skip intro)"}
             </span>
           </a>
+
+          {/* Iron PBR Variant Switcher (Phase 3: §4 & §8) */}
+          <div className="flex items-center gap-1.5 bg-[#141414]/90 backdrop-blur-md px-2.5 py-1 border border-[#C49A45]/50 text-xs font-mono text-[#F4EEDD] shadow-sm">
+            <span className="text-white/60 text-[10px] uppercase tracking-wider hidden sm:inline">Iron PBR:</span>
+            <button
+              type="button"
+              onClick={() => setIronVariant("a")}
+              className={`px-2 py-0.5 transition-colors cursor-pointer text-[11px] ${
+                ironVariant === "a" ? "bg-[#C49A45] text-black font-bold" : "text-white/70 hover:text-white"
+              }`}
+            >
+              Var A (Specular)
+            </button>
+            <button
+              type="button"
+              onClick={() => setIronVariant("b")}
+              className={`px-2 py-0.5 transition-colors cursor-pointer text-[11px] ${
+                ironVariant === "b" ? "bg-[#C49A45] text-black font-bold" : "text-white/70 hover:text-white"
+              }`}
+            >
+              Var B (Matte)
+            </button>
+          </div>
         </div>
       </div>
 
@@ -161,62 +236,48 @@ export function JoinHeroCanvas() {
           frameloop={inView ? "always" : "demand"}
           gl={{
             antialias: true,
+            alpha: true,
             powerPreference: "high-performance",
             toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 1.15,
+            toneMappingExposure: 0.9,
           }}
-          shadows={{ type: THREE.PCFShadowMap }}
+          shadows={tier !== "C" ? { type: THREE.PCFShadowMap } : false}
+          onCreated={({ gl }) => {
+            gl.domElement.addEventListener("webglcontextlost", (event) => {
+              event.preventDefault();
+              console.warn("[JoinHeroCanvas] WebGL context lost. Attempting restore...");
+            });
+            gl.domElement.addEventListener("webglcontextrestored", () => {
+              console.info("[JoinHeroCanvas] WebGL context restored.");
+            });
+          }}
         >
-          {/* Dawn atmospheric sky background */}
-          <color attach="background" args={["#0c0705"]} />
-          {/* Volumetric distance fog */}
-          <fogExp2 attach="fog" args={["#160e0b", 0.022]} />
+          {/* Seamless matching canvas background & fog (§3.2) */}
+          <color attach="background" args={[FOG_COLOR]} />
+          <fogExp2 attach="fog" args={[FOG_COLOR, FOG_DENSITY]} />
 
-          {/* Bespoke Scene-Matched Dawn Environment Map (§1.1b PRD Mandate) */}
-          {bespokeEnv && <Environment map={bespokeEnv} background={false} />}
+          {/* Custom Morning Gradient Sky Dome (§3.2) */}
+          <MorningSkyDome />
 
-          {/* The Golden Hour Sun with High-Res Soft PCF Shadows */}
-          <directionalLight
-            position={[10, 15, 10]}
-            intensity={2.8}
-            color="#FFF8E7"
-            castShadow
-            shadow-mapSize-width={2048}
-            shadow-mapSize-height={2048}
-            shadow-camera-left={-12}
-            shadow-camera-right={12}
-            shadow-camera-top={12}
-            shadow-camera-bottom={-12}
-            shadow-camera-near={0.5}
-            shadow-camera-far={45}
-            shadow-bias={-0.0001}
-          />
+          {/* Procedural 4-Lightformer Environment (§3.3) */}
+          <MorningEnvironment />
 
-          {/* Back Sunrise Rim Light beaming through the iron filigree from behind */}
-          <directionalLight
-            position={[0, 6, -9]}
-            intensity={3.2}
-            color="#FFAF5E"
-          />
+          {/* Key Directional Light & Tight Shadow Frustum (§3.4) */}
+          <MorningKeyLight tier={tier} />
 
-          {/* Secondary ambient fill */}
-          <directionalLight
-            position={[-8, 6, -8]}
-            intensity={0.4}
-            color="#ffaa66"
-          />
-
-          {/* Overhead Pillar Lantern Glows */}
-          <pointLight position={[-3.85, 5.6, 0.4]} intensity={2.0} color="#FFB566" distance={9} decay={2} />
-          <pointLight position={[3.85, 5.6, 0.4]} intensity={2.0} color="#FFB566" distance={9} decay={2} />
+          {/* Morning Sunbeam Light Shafts aligned to -SUN_DIR (§3.5) */}
+          <MorningLightShafts enabled={tier === "A" && !reducedMotion} reducedMotion={reducedMotion} />
 
           {/* Scroll-driven Crane Camera Kinematics */}
           <CraneCameraRig scrollProgressRef={scrollProgressRef} />
 
           <Suspense fallback={null}>
             <BakeShadows />
+            {/* Phase 3 PBR Materials: Limestone Pillars & Iron Variant A/B */}
+            <JoinMaterialsManager ironVariant={ironVariant} pillarMaterialMode="limestone" />
+
             {/* Stone Walkway & Dynamic Gate Shadow Lattice */}
-            <ShadowLatticeDecal gateProgressRef={gateProgressRef} />
+            <ShadowLatticeDecal />
 
             {/* Collegiate Brick Pillars & Swinging Lattice Leaves (PBR Materials & Bump Maps) */}
             <CampusGate gateProgressRef={gateProgressRef} />
@@ -224,14 +285,14 @@ export function JoinHeroCanvas() {
             {/* Parametric "TAMIL SANGAM" Bronze Arch Lettering */}
             <GateLettering />
 
-            {/* Clustered Ivy Vines climbing Pillars */}
-            <IvyField />
-
             {/* Volumetric Morning Sunbeams pouring through Gateway */}
             <MorningVolumetrics gateProgressRef={gateProgressRef} />
 
-            {/* 120 Drifting Autumn Campus Leaves */}
-            <LeafDrift count={120} />
+            {/* Phase 5 Vignette: Chai Bench, Blackboard, Tin Trunk, Mortarboard & Campus Props (§5) */}
+            <MorningCampusVignette tier={tier} />
+
+            {/* Ohio Buckeye Leaves & Jasmine Petals with Backlight Translucency (§0 Items 7 & 8) */}
+            <LeafDrift tier={tier} reducedMotion={reducedMotion} />
 
             {/* Finale Sunrise Bloom */}
             <WhiteoutFinale scrollProgressRef={scrollProgressRef} />

@@ -177,7 +177,6 @@ export function PolaroidCard({ data, onSelect }: PolaroidCardProps) {
 
   useEffect(() => {
     if (photoTextureCache.has(data.memory.src)) {
-      setPhotoTex(photoTextureCache.get(data.memory.src)!);
       return;
     }
 

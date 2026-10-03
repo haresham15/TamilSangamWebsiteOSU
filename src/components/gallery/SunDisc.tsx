@@ -103,12 +103,14 @@ export function SunDisc({ scrollProgress = 0, bloomBoost = 1.0 }: SunDiscProps) 
       finaleMult *= 1.0 + finaleProgress * 2.5;
     }
 
-    streakMat.opacity = Math.min(1.0, shimmer * 0.6 * finaleMult);
     if (streakRef.current) {
+      (streakRef.current.material as THREE.Material).opacity = Math.min(1.0, shimmer * 0.6 * finaleMult);
       streakRef.current.scale.x = 14 * (1.0 + (finaleMult - 1.0) * 0.5);
     }
 
-    secondaryStreakMat.opacity = Math.min(0.6, shimmer * 0.3 * finaleMult);
+    if (secondaryStreakRef.current) {
+      (secondaryStreakRef.current.material as THREE.Material).opacity = Math.min(0.6, shimmer * 0.3 * finaleMult);
+    }
 
     if (pointLightRef.current) {
       pointLightRef.current.intensity = 4.0 * (1.0 + (finaleMult - 1.0) * 0.4);

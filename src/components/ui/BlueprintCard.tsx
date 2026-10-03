@@ -28,9 +28,6 @@ export const BlueprintCard = forwardRef<HTMLDivElement, BlueprintCardProps>(
       className = "",
       variant = "chamfer-tl-br",
       glowColor = "sodium",
-      indexStamp,
-      metaStamp,
-      showCrosshairs = true,
       ...props
     },
     ref

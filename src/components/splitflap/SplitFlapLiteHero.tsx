@@ -2,15 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import { useFaqStore } from "@/store/faqStore";
-import { Train, Clock, Sparkles } from "lucide-react";
-import { useLocale } from "@/context/LocaleContext";
+import { Train, Clock } from "lucide-react";
 
 interface SplitFlapLiteHeroProps {
   onSearchFocus?: () => void;
 }
 
 export function SplitFlapLiteHero({ onSearchFocus }: SplitFlapLiteHeroProps) {
-  const { locale } = useLocale();
   const activeFlapLabel = useFaqStore((s) => s.activeFlapLabel || "TAMIL SANGAM");
   const activeQuestion = useFaqStore((s) => s.activeQuestion);
   const [timeStr, setTimeStr] = useState<string>("18:45:00 EST");

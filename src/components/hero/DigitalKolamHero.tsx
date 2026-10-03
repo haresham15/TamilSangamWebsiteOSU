@@ -327,14 +327,14 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
     const ctx = gsap.context(() => {
       if (!sectionRef.current || !textGroupRef.current) return;
 
-      // GSAP ScrollTrigger timeline pinning hero section (100dvh) with silky momentum scrub
+      // GSAP ScrollTrigger timeline pinning hero section (100dvh) with silky real-time Lenis sync
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
           end: "+=1400",
           pin: true,
-          scrub: 0.5, // 0.5s smoothing eliminates jerky stepped mousewheel jumps
+          scrub: true,
           anticipatePin: 1,
           onUpdate: (self) => {
             scrollProgressRef.current = self.progress;
@@ -434,10 +434,24 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
     <div
       ref={sectionRef}
       className="relative w-full h-[100dvh] overflow-hidden bg-[#10061a] text-white flex flex-col justify-between"
-      style={{ minHeight: "100dvh" }}
+      style={{
+        minHeight: "100dvh",
+        WebkitMaskImage:
+          "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+        maskImage:
+          "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+      }}
     >
       {/* 1. Full-Screen 3D Particle Canvas with Pure GPU Shader Turbulence */}
-      <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
+      <div
+        className="absolute inset-0 z-0 pointer-events-none w-full h-full"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+          maskImage:
+            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+        }}
+      >
         {mounted && !isLiteMode && (
           <Canvas
             dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
@@ -478,11 +492,11 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
                     y="170"
                     textAnchor="middle"
                     fill="white"
-                    fontFamily="var(--font-mukta-malar), var(--font-tamil), sans-serif"
-                    fontWeight="900"
+                    fontFamily="var(--font-mukta-malar), 'Mukta Malar', var(--font-tamil), sans-serif"
+                    fontWeight="800"
                     fontSize="94"
                     letterSpacing="0"
-                    style={{ letterSpacing: 0 }}
+                    style={{ letterSpacing: 0, fontFamily: "var(--font-mukta-malar), 'Mukta Malar', sans-serif" }}
                   >
                     தமிழ்
                     <tspan x="250" y="275">
@@ -497,11 +511,11 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
                     y="235"
                     textAnchor="middle"
                     fill="white"
-                    fontFamily="var(--font-mukta-malar), var(--font-tamil), sans-serif"
-                    fontWeight="900"
+                    fontFamily="var(--font-mukta-malar), 'Mukta Malar', var(--font-tamil), sans-serif"
+                    fontWeight="800"
                     fontSize="155"
                     letterSpacing="0"
-                    style={{ letterSpacing: 0 }}
+                    style={{ letterSpacing: 0, fontFamily: "var(--font-mukta-malar), 'Mukta Malar', sans-serif" }}
                   >
                     தமிழ் சங்கம்
                   </text>
@@ -530,10 +544,10 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
         </svg>
       </div>
 
-      {/* 3. Soft Ambient Architectural Contour of the Tamil Script with Radiant Outer Teal Shading */}
+      {/* 3. Soft Ambient Architectural Contour of the Tamil Script (Mukta Malar Option 1) */}
       <div
         ref={contourRef}
-        className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-90 drop-shadow-[0_0_12px_rgba(85,204,162,0.85)] drop-shadow-[0_0_24px_rgba(85,204,162,0.45)]"
+        className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-90 drop-shadow-[0_0_8px_rgba(85,204,162,0.4)]"
       >
         <svg
           viewBox={isMobile ? "0 0 500 400" : "0 0 1400 350"}
@@ -549,14 +563,14 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
                 textAnchor="middle"
                 fill="none"
                 stroke="#55CCA2"
-                strokeWidth="2.5"
+                strokeWidth="1.8"
                 strokeLinejoin="round"
                 strokeLinecap="round"
-                fontFamily="var(--font-mukta-malar), var(--font-tamil), sans-serif"
-                fontWeight="900"
+                fontFamily="var(--font-mukta-malar), 'Mukta Malar', var(--font-tamil), sans-serif"
+                fontWeight="800"
                 fontSize="94"
                 letterSpacing="0"
-                style={{ letterSpacing: 0 }}
+                style={{ letterSpacing: 0, fontFamily: "var(--font-mukta-malar), 'Mukta Malar', sans-serif" }}
               >
                 தமிழ்
                 <tspan x="250" y="275">
@@ -571,14 +585,14 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
                 textAnchor="middle"
                 fill="none"
                 stroke="#55CCA2"
-                strokeWidth="3.2"
+                strokeWidth="2"
                 strokeLinejoin="round"
                 strokeLinecap="round"
-                fontFamily="var(--font-mukta-malar), var(--font-tamil), sans-serif"
-                fontWeight="900"
+                fontFamily="var(--font-mukta-malar), 'Mukta Malar', var(--font-tamil), sans-serif"
+                fontWeight="800"
                 fontSize="155"
                 letterSpacing="0"
-                style={{ letterSpacing: 0 }}
+                style={{ letterSpacing: 0, fontFamily: "var(--font-mukta-malar), 'Mukta Malar', sans-serif" }}
               >
                 தமிழ் சங்கம்
               </text>
@@ -653,6 +667,9 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
           </div>
         </div>
       </div>
+
+      {/* Bottom overlay gradient blending agent */}
+      <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#10061a] via-[#10061a]/80 to-transparent pointer-events-none z-10" />
     </div>
   );
 }

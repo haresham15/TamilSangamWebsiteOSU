@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,18 +17,30 @@ import {
   CheckCircle2,
   Train,
   Sparkles,
-  Tag,
   BookOpen,
   HelpCircle,
   Database,
   ArrowUp,
 } from "lucide-react";
-import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
 import { SplitFlapMiniHeader } from "@/components/splitflap/SplitFlapMiniHeader";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 
-
-import HeroSplitFlapCanvas from "@/components/splitflap/HeroSplitFlapCanvas";
+const HeroSplitFlapCanvas = dynamic(
+  () => import("@/components/splitflap/HeroSplitFlapCanvas"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[65dvh] bg-[#070504] flex flex-col items-center justify-center text-[#d4af37] font-mono text-xs gap-3">
+        <div className="flex items-center gap-2">
+          <Train className="w-4 h-4 animate-bounce text-[#f59e0b]" />
+          <span className="tracking-widest uppercase">
+            INITIALIZING ALAIPAYUTHEY MECHANICAL SPLIT-FLAP MATRIX...
+          </span>
+        </div>
+      </div>
+    ),
+  }
+);
 
 const FAQ_CATEGORIES = [
   "All",
@@ -42,17 +54,11 @@ const FAQ_CATEGORIES = [
 export default function UserGuideAndFaqPage() {
   const { locale } = useLocale();
   const { playClick, playWoodClick, playBell } = useAudio();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Active guide section tab
   const [activeTab, setActiveTab] = useState<"guide" | "faq" | "knowledge">("faq");
 
   // 3D Split-Flap Board State
-  const [activeFaq, setActiveFaq] = useState<FaqItem>(FAQS[0]);
   const [searchQuery, setSearchQuery] = useState("");
 
   // FAQ Filter state
@@ -103,7 +109,6 @@ export default function UserGuideAndFaqPage() {
 
   // Synchronize board with selected FAQ via ref-based Zustand action (§5)
   const handleSelectFaq = useCallback((faq: FaqItem) => {
-    setActiveFaq(faq);
     useFaqStore.getState().setActiveFaq(faq.id, faq.questionEn, faq.answerEn, faq.flapLabel);
   }, []);
 
@@ -265,26 +270,21 @@ export default function UserGuideAndFaqPage() {
       {/* ========================================================================= */}
       <section
         id="alaipayuthey-splitflap-hero"
-        className="relative w-full"
+        className="relative w-full overflow-hidden bg-[#070504]"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+          maskImage:
+            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+        }}
       >
-        {mounted ? (
-          <HeroSplitFlapCanvas
-            searchQuery={searchQuery}
-            onSearchChange={handleSearchChange}
-          />
-        ) : (
-          <div className="w-full h-[65dvh] bg-[#070504] flex flex-col items-center justify-center text-[#d4af37] font-mono text-xs gap-3 border-b border-[#261d15]">
-            <div className="flex items-center gap-2">
-              <Train className="w-4 h-4 animate-bounce text-[#f59e0b]" />
-              <span className="tracking-widest uppercase">
-                INITIALIZING ALAIPAYUTHEY MECHANICAL SPLIT-FLAP MATRIX...
-              </span>
-            </div>
-          </div>
-        )}
+        <HeroSplitFlapCanvas
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
+        />
 
-        {/* Phase 3: Token-driven OKLCH DOM bridge to #FAF6EE */}
-        <HeroToContentBridge theme="guide" heightPct={28} />
+        {/* Bottom overlay gradient blending agent */}
+        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#070504] via-[#070504]/80 to-transparent pointer-events-none z-10" />
       </section>
 
       {/* ========================================================================= */}
@@ -298,12 +298,9 @@ export default function UserGuideAndFaqPage() {
       />
 
       {/* ========================================================================= */}
-      {/* 2. EDITORIAL CONSOLE: UNIFIED USER GUIDE, SEARCHABLE FAQ & KNOWLEDGE BASE */}
+      {/* 3. EDITORIAL CONSOLE: UNIFIED USER GUIDE, SEARCHABLE FAQ & KNOWLEDGE BASE */}
       {/* ========================================================================= */}
-      {/* ========================================================================= */}
-      {/* 2. EDITORIAL CONSOLE: UNIFIED USER GUIDE, SEARCHABLE FAQ & KNOWLEDGE BASE */}
-      {/* ========================================================================= */}
-      <div className="relative z-20 w-full bg-[#FAF6EE] text-[#1c1008] pt-12 pb-32 overflow-hidden">
+      <div className="relative z-20 -mt-20 sm:-mt-32 w-full bg-[#FAF6EE] text-[#1c1008] pt-16 sm:pt-24 pb-32 overflow-hidden">
         {/* Structural Tamil Background Watermarks */}
         <WatermarkGlyph text="பயணம்" opacity={0.04} align="right" theme="light" />
         <WatermarkGlyph text="வழிகாட்டி" opacity={0.032} align="left" theme="light" className="top-[60%]" />
@@ -489,9 +486,8 @@ export default function UserGuideAndFaqPage() {
                   </div>
                 </div>
               ) : (
-                filteredFaqs.map((faq, index) => {
+                filteredFaqs.map((faq) => {
                   const isExpanded = expandedFaqId === faq.id;
-                  const isBoardActive = activeFaq.id === faq.id;
 
                   return (
                     <div

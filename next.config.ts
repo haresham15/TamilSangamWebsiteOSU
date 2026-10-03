@@ -1,6 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "three",
+      "@react-three/drei",
+      "gsap",
+      "framer-motion",
+    ],
+  },
   images: {
     remotePatterns: [
       {

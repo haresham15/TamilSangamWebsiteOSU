@@ -7,7 +7,7 @@ import { useLiteMode } from "@/context/LiteModeContext";
 import { ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
-import { CulturalGlossaryTerm } from "@/components/ui/CulturalGlossaryTerm";
+import { CulturalGlossaryTerm, CULTURAL_GLOSSARY } from "@/components/ui/CulturalGlossaryTerm";
 import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 
@@ -313,7 +313,7 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
             </span>
             <span className="text-[#B5A642]/50">·</span>
             <CulturalGlossaryTerm
-              termKey={pillar.id as any}
+              termKey={pillar.id as keyof typeof CULTURAL_GLOSSARY}
               position="bottom"
               className="text-[#f5d77f] font-mono text-[11px]"
             >

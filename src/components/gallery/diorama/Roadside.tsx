@@ -77,6 +77,8 @@ const SILHOUETTE_FRAGMENT = /* glsl */ `
 
 const INSTANCE_COUNT = 36;
 
+const roadsideDummy = new THREE.Object3D();
+
 export function Roadside() {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const zPositions = useRef<Float32Array>(new Float32Array(INSTANCE_COUNT));
@@ -96,7 +98,7 @@ export function Roadside() {
   const initialTransforms = useMemo(() => {
     const matrices: THREE.Matrix4[] = [];
     const types = new Float32Array(INSTANCE_COUNT);
-    const dummy = new THREE.Object3D();
+    const initialZ = new Float32Array(INSTANCE_COUNT);
 
     for (let i = 0; i < INSTANCE_COUNT; i++) {
       // Spaced 8m to 16m apart along the left road verge (x ≈ -5.2 to -7.5)
@@ -105,20 +107,21 @@ export function Roadside() {
       const scale = 0.8 + ((i * 7) % 5) * 0.1; // 0.8 to 1.2
       const isPole = i % 4 === 0 ? 1.0 : 0.0;
 
-      zPositions.current[i] = z;
+      initialZ[i] = z;
       types[i] = isPole;
 
-      dummy.position.set(x, scale * 6.5, z);
-      dummy.scale.set(scale, scale, 1);
-      dummy.rotation.set(0, 0, (Math.sin(i * 1.5) * 0.04));
-      dummy.updateMatrix();
-      matrices.push(dummy.matrix.clone());
+      roadsideDummy.position.set(x, scale * 6.5, z);
+      roadsideDummy.scale.set(scale, scale, 1);
+      roadsideDummy.rotation.set(0, 0, (Math.sin(i * 1.5) * 0.04));
+      roadsideDummy.updateMatrix();
+      matrices.push(roadsideDummy.matrix.clone());
     }
 
-    return { matrices, types };
+    return { matrices, types, initialZ };
   }, []);
 
   useEffect(() => {
+    zPositions.current.set(initialTransforms.initialZ);
     if (!meshRef.current) return;
     initialTransforms.matrices.forEach((mat, idx) => {
       meshRef.current?.setMatrixAt(idx, mat);
@@ -134,9 +137,7 @@ export function Roadside() {
   useFrame((_, delta) => {
     if (!meshRef.current) return;
     const speed = 1.2 + Math.min(2.8, Math.abs(galleryScrollState.velocity) * 0.003);
-    const dummy = new THREE.Object3D();
 
-    let needsUpdate = false;
     for (let i = 0; i < INSTANCE_COUNT; i++) {
       // Advance toward camera
       zPositions.current[i] += delta * speed * 2.0;
@@ -144,14 +145,13 @@ export function Roadside() {
       // Recycle when behind camera
       if (zPositions.current[i] > 10.0) {
         zPositions.current[i] = -340.0 + (zPositions.current[i] - 10.0);
-        needsUpdate = true;
       }
 
-      meshRef.current.getMatrixAt(i, dummy.matrix);
-      dummy.matrix.decompose(dummy.position, dummy.quaternion, dummy.scale);
-      dummy.position.z = zPositions.current[i];
-      dummy.updateMatrix();
-      meshRef.current.setMatrixAt(i, dummy.matrix);
+      meshRef.current.getMatrixAt(i, roadsideDummy.matrix);
+      roadsideDummy.matrix.decompose(roadsideDummy.position, roadsideDummy.quaternion, roadsideDummy.scale);
+      roadsideDummy.position.z = zPositions.current[i];
+      roadsideDummy.updateMatrix();
+      meshRef.current.setMatrixAt(i, roadsideDummy.matrix);
     }
 
     meshRef.current.instanceMatrix.needsUpdate = true;

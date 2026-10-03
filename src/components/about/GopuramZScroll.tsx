@@ -355,7 +355,7 @@ export function GopuramZScroll() {
         start: "top top",
         end: "+=2200", // Snappy, punchy flight duration without dragging
         pin: true,
-        scrub: 0.5, // 0.5s smooth inertia prevents jerky stepping
+        scrub: true,
         anticipatePin: 1,
         onUpdate: (self) => {
           scrollProgressRef.current = self.progress;
@@ -391,12 +391,11 @@ export function GopuramZScroll() {
             camera={{ position: [0, 0, 12], fov: 50 }}
             gl={{
               antialias: true,
-              alpha: false,
+              alpha: true,
               powerPreference: "high-performance",
             }}
             className="w-full h-full"
           >
-            <color attach="background" args={["#120a1f"]} />
             <fog attach="fog" args={["#120a1f", 10, 45]} />
 
             <directionalLight position={[10, 20, 10]} intensity={2.5} color="#ffe5b4" />

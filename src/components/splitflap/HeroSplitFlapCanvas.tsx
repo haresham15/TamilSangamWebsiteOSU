@@ -90,6 +90,8 @@ function DustMotes({ count = 100 }: { count?: number }) {
     return { geometry: geo, material: mat };
   }, [count]);
 
+  const pointsRef = useRef<THREE.Points>(null);
+
   useEffect(() => {
     return () => {
       geometry.dispose();
@@ -98,10 +100,12 @@ function DustMotes({ count = 100 }: { count?: number }) {
   }, [geometry, material]);
 
   useFrame((state) => {
-    material.uniforms.uTime.value = state.clock.getElapsedTime();
+    if (pointsRef.current) {
+      (pointsRef.current.material as THREE.ShaderMaterial).uniforms.uTime.value = state.clock.getElapsedTime();
+    }
   });
 
-  return <points geometry={geometry} material={material} />;
+  return <points ref={pointsRef} geometry={geometry} material={material} />;
 }
 
 // ---------------------------------------------------------------------------
@@ -276,7 +280,6 @@ interface HeroSplitFlapCanvasProps {
 
 export function HeroSplitFlapCanvas({
   onSearchChange,
-  searchQuery = "",
 }: HeroSplitFlapCanvasProps) {
   const pinWrapperRef = useRef<HTMLDivElement>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
@@ -297,7 +300,6 @@ export function HeroSplitFlapCanvas({
     }
     return false;
   });
-  const [timeStr, setTimeStr] = useState<string>("18:45:00 EST");
 
   // Bespoke scene-matched environment reflections (§1.1b PRD Mandate)
   const bespokeEnv = useMemo(() => createBespokeEnvironmentTexture("transit-solari"), []);
@@ -348,7 +350,6 @@ export function HeroSplitFlapCanvas({
         minute: "2-digit",
         second: "2-digit",
       }) + " EST";
-      setTimeStr(formattedTime);
 
       if (boardHandleRef.current) {
         boardHandleRef.current.updateLiveClock(formattedTime);
@@ -399,7 +400,7 @@ export function HeroSplitFlapCanvas({
           end: "bottom bottom",
           pin: stickyContainerRef.current,
           pinSpacing: false,
-          scrub: 0.5,
+          scrub: true,
           onUpdate: (self) => {
             const p = self.progress;
             useFaqStore.getState().setScrollProgress(p);
@@ -494,18 +495,28 @@ export function HeroSplitFlapCanvas({
     >
       <div
         ref={stickyContainerRef}
-        className="sticky top-0 z-10 w-full h-[100dvh] overflow-hidden bg-[#070504] border-b border-[#261d15] flex flex-col justify-between"
+        className="sticky top-0 z-10 w-full h-[100dvh] overflow-hidden bg-[#070504] flex flex-col justify-between"
       >
         {/* ========================================================================= */}
         {/* R3F 3D VIEWPORT WITH PHYSICAL CAMERA & ATMOSPHERE (Clean Cinematic Scene) */}
         {/* ========================================================================= */}
-        <div className="relative flex-1 w-full h-full" aria-hidden="true">
+        <div
+          className="relative flex-1 w-full h-full"
+          aria-hidden="true"
+          style={{
+            WebkitMaskImage:
+              "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+            maskImage:
+              "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+          }}
+        >
           <Canvas
             dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
             camera={{ position: [0, 1.6, 5.8], fov: 42 }}
             frameloop={inView ? "always" : "demand"}
             gl={{
               antialias: true,
+              alpha: true,
               powerPreference: "high-performance",
               toneMapping: THREE.ACESFilmicToneMapping,
               toneMappingExposure: 1.15,
@@ -573,8 +584,8 @@ export function HeroSplitFlapCanvas({
             </Suspense>
           </Canvas>
 
-          {/* Bottom Vignette Gradient to dissolve 3D floor into DOM content */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#070504] via-[#070504]/70 to-transparent" />
+          {/* Bottom overlay gradient blending agent */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#070504] via-[#070504]/80 to-transparent z-10" />
         </div>
 
         {/* ========================================================================= */}

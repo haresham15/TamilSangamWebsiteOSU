@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { FAQS, FaqItem } from "@/data/faq";
 import { useFaqStore } from "@/store/faqStore";
 import {
@@ -74,7 +74,6 @@ export function FAQContent({
   // Phase 4: Board → DOM direction of the bidirectional bridge (PRD §8).
   // When activeFaqId changes in the store (from search overlay or board),
   // auto-expand the matching accordion and scroll it into view.
-  const accordionContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const unsub = useFaqStore.subscribe((state, prevState) => {
       if (state.activeFaqId && state.activeFaqId !== prevState.activeFaqId) {
@@ -176,9 +175,8 @@ export function FAQContent({
               </button>
             </div>
           ) : (
-            filteredFaqs.map((faq, index) => {
+            filteredFaqs.map((faq) => {
               const isExpanded = expandedId === faq.id;
-              const isBoardActive = activeFaqId === faq.id;
 
               return (
                 <div

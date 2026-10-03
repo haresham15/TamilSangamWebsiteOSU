@@ -6,9 +6,9 @@ import * as THREE from "three";
 import { SceneLighting } from "./SceneLighting";
 import { MinimalPlatform } from "./MinimalPlatform";
 import { SangamLogo3D } from "./SangamLogo3D";
-import { CameraChoreography } from "./CameraChoreography";
-import { useScrollCinematic } from "./useScrollCinematic";
 import { VolumetricCones } from "./VolumetricCones";
+import { LeoCameraRig } from "./LeoCameraRig";
+import { LeoScrollController } from "./LeoScrollController";
 import { DustCloud } from "./DustCloud";
 import { LeoFactoryEnvironment } from "./LeoFactoryEnvironment";
 import { JumpingCrowdSilhouettes } from "./JumpingCrowdSilhouettes";
@@ -83,9 +83,6 @@ function DepthTextureProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function EventsGen3Canvas() {
-  // Initialize scroll tracking (does not cause react re-renders inside useFrame)
-  useScrollCinematic("events-hero-trigger");
-
   // Bespoke scene-matched environment reflections (§1.1b PRD Mandate)
   const bespokeEnv = useMemo(() => createBespokeEnvironmentTexture("arena-concert"), []);
   React.useEffect(() => {
@@ -118,7 +115,8 @@ export function EventsGen3Canvas() {
           <DepthTextureProvider>
             <React.Suspense fallback={null}>
               <BakeShadows />
-              <CameraChoreography />
+              <LeoCameraRig />
+              <LeoScrollController />
               <LeoFactoryEnvironment />
               <VolumetricCones />
               <DustCloud />

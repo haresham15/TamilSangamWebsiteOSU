@@ -1,23 +1,40 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   MapPin,
   ArrowDown,
-  Layers,
   Mail,
+  Compass,
 } from "lucide-react";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
-import { BlueprintScene3D } from "@/components/suggestions/BlueprintScene3D";
 import { SuggestionForm } from "@/components/suggestions/SuggestionForm";
 import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 import type { BlueprintPin } from "@/components/suggestions/BlueprintSVG";
 import { OFFICIAL_DISCLAIMER, CONTACT_EMAIL } from "@/lib/constants";
+
+const BlueprintScene3D = dynamic(
+  () => import("@/components/suggestions/BlueprintScene3D").then((m) => m.BlueprintScene3D),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full bg-[#0F050A] flex flex-col items-center justify-center text-[#FFB84D] font-mono text-xs gap-3">
+        <div className="flex items-center gap-2">
+          <Compass className="w-4 h-4 animate-spin text-[#55CCA2]" />
+          <span className="tracking-widest uppercase">
+            CALIBRATING 3D AXONOMETRIC BLUEPRINT MATRIX...
+          </span>
+        </div>
+      </div>
+    ),
+  }
+);
 
 export default function SuggestionsPage() {
   const { locale } = useLocale();
@@ -101,7 +118,13 @@ export default function SuggestionsPage() {
         ref={containerRef}
         className={`relative w-full ${
           isLiteMode ? "min-h-auto pt-28 pb-16" : "h-[100dvh]"
-        } overflow-hidden flex flex-col justify-between select-none`}
+        } overflow-hidden flex flex-col justify-between select-none bg-[#0F050A]`}
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+          maskImage:
+            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+        }}
       >
         {/* Background 3D Canvas / 2D SVG Fallback */}
         <div className="absolute inset-0 z-0 w-full h-full">
@@ -113,6 +136,26 @@ export default function SuggestionsPage() {
             className="w-full h-full"
           />
         </div>
+
+        {/* Screen Reader Accessible Blueprint Landmarks */}
+        <div className="sr-only">
+          <h2>Interactive Ohio Stadium Blueprint Landmarks</h2>
+          <p>Explore ideas and initiatives anchored at authentic Ohio Stadium architectural zones:</p>
+          <ul>
+            <li>
+              <strong>50-Yard Line (The Turf):</strong> Campus events, athletic competitions, and outdoor lawn socials.
+            </li>
+            <li>
+              <strong>North Rotunda (Heritage Dome):</strong> Classical Tamil architecture, cultural exhibits, and arts showcase.
+            </li>
+            <li>
+              <strong>West Press Box (Executive Tower):</strong> Organizational leadership, campus initiatives, and student advocacy.
+            </li>
+          </ul>
+        </div>
+
+        {/* Bottom overlay gradient blending agent */}
+        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#0F050A] via-[#0F050A]/80 to-transparent pointer-events-none z-10" />
 
         {/* Top Subtle Floating HUD: One Singular Cinematic Metaphor Title Placard
             Smoothly fades as user scrolls so focus stays 100% on the rising stadium wireframe */}
@@ -191,7 +234,7 @@ export default function SuggestionsPage() {
       {/* 2. Interactive Suggestion Box Section */}
       <section
         ref={formSectionRef}
-        className="relative z-20 py-20 px-4 sm:px-8 max-w-5xl mx-auto space-y-12"
+        className="relative z-20 -mt-32 min-h-screen bg-[#0F050A] py-20 px-4 sm:px-8 max-w-5xl mx-auto space-y-12"
       >
         {/* Editorial Explainer Banner */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

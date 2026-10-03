@@ -14,21 +14,24 @@ export function SplitFlapMiniHeader({ onSearchFocus }: SplitFlapMiniHeaderProps)
   const activeQuestion = useFaqStore((s) => s.activeQuestion);
   const { playClick, playWoodClick } = useAudio();
 
-  const [displayChars, setDisplayChars] = useState<string[]>([]);
+  const target = (activeFlapLabel || "TAMIL SANGAM").padEnd(16, " ").slice(0, 16);
+  const displayChars = target.split("");
   const [isFlipping, setIsFlipping] = useState<boolean>(false);
 
-  // Update display characters with split-flap transition effect
+  // Trigger split-flap flip animation on label change
   useEffect(() => {
-    const target = (activeFlapLabel || "TAMIL SANGAM").padEnd(16, " ").slice(0, 16);
-    setIsFlipping(true);
-    const chars = target.split("");
-    setDisplayChars(chars);
+    const frame = requestAnimationFrame(() => {
+      setIsFlipping(true);
+    });
 
     const timeout = setTimeout(() => {
       setIsFlipping(false);
     }, 450);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timeout);
+    };
   }, [activeFlapLabel]);
 
   const scrollToHero = () => {

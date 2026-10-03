@@ -70,10 +70,6 @@ export function GalleryHeroCanvas({ onFinaleComplete, onSelectMemory }: GalleryH
           if (washRef.current) {
             washRef.current.style.opacity = String(timeline.washOpacity);
           }
-
-          if (p >= 0.98 && onFinaleComplete) {
-            onFinaleComplete();
-          }
         },
       });
 
@@ -94,15 +90,19 @@ export function GalleryHeroCanvas({ onFinaleComplete, onSelectMemory }: GalleryH
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[100svh] overflow-hidden bg-[#170d2b]"
+      className="relative w-full h-[100svh] overflow-hidden bg-[#FFFDF8]"
+      style={{
+        WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+        maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
+      }}
     >
-      {/* WebGL Canvas */}
+      {/* WebGL Canvas with alpha: true */}
       <Canvas
         frameloop={inView ? "always" : "never"}
         dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
         gl={{
           antialias: true,
-          alpha: false,
+          alpha: true,
           powerPreference: "high-performance",
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.05,
@@ -110,6 +110,9 @@ export function GalleryHeroCanvas({ onFinaleComplete, onSelectMemory }: GalleryH
       >
         <SceneRoot onSelect={onSelectMemory} />
       </Canvas>
+
+      {/* Bottom overlay gradient blending agent */}
+      <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#FFFDF8] via-[#FFFDF8]/80 to-transparent pointer-events-none z-10" />
 
       {/* Diegetic Bilingual Overlay UI */}
       <HeroOverlay />

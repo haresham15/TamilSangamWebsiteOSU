@@ -46,6 +46,11 @@ const DUST_FRAGMENT = /* glsl */ `
 
 const COUNT = 300;
 
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+  return x - Math.floor(x);
+}
+
 export function DustMotes() {
   const pointsRef = useRef<THREE.Points>(null);
   const matRef = useRef<THREE.ShaderMaterial>(null);
@@ -58,14 +63,21 @@ export function DustMotes() {
     const phases = new Float32Array(COUNT);
 
     for (let i = 0; i < COUNT; i++) {
-      // Concentrated inside the sunlit shaft (x from -6 to +14, y from 0.5 to 4.5, z from -2 to -45)
-      positions[i * 3 + 0] = (Math.random() - 0.3) * 20.0;
-      positions[i * 3 + 1] = 0.5 + Math.random() * 4.0;
-      positions[i * 3 + 2] = -2.0 - Math.random() * 42.0;
+      const r1 = seededRandom(i * 6 + 1);
+      const r2 = seededRandom(i * 6 + 2);
+      const r3 = seededRandom(i * 6 + 3);
+      const r4 = seededRandom(i * 6 + 4);
+      const r5 = seededRandom(i * 6 + 5);
+      const r6 = seededRandom(i * 6 + 6);
 
-      sizes[i] = 1.6 + Math.random() * 2.8;
-      speeds[i] = 0.6 + Math.random() * 0.8;
-      phases[i] = Math.random() * Math.PI * 2.0;
+      // Concentrated inside the sunlit shaft (x from -6 to +14, y from 0.5 to 4.5, z from -2 to -45)
+      positions[i * 3 + 0] = (r1 - 0.3) * 20.0;
+      positions[i * 3 + 1] = 0.5 + r2 * 4.0;
+      positions[i * 3 + 2] = -2.0 - r3 * 42.0;
+
+      sizes[i] = 1.6 + r4 * 2.8;
+      speeds[i] = 0.6 + r5 * 0.8;
+      phases[i] = r6 * Math.PI * 2.0;
     }
 
     geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));

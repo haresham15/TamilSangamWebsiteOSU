@@ -121,7 +121,6 @@ export function GalleryHeroCanvas({ onFinaleComplete }: GalleryHeroCanvasProps) 
   const activePolaroidsCount = useGalleryHeroStore((s) => s.activePolaroidsCount);
   const cooldownTimer = useGalleryHeroStore((s) => s.cooldownTimer);
   const finaleFired = useGalleryHeroStore((s) => s.finaleFired);
-  const isPlucking = useGalleryHeroStore((s) => s.isPlucking);
   const fps = useGalleryHeroStore((s) => s.fps);
 
   // Sync debugMode and listen to prefers-reduced-motion changes

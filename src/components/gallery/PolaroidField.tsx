@@ -12,7 +12,7 @@ const POOL_SIZE = 14;
 export function PolaroidField({ onSelect }: { onSelect?: (memory: HeroMemory) => void }) {
   // Pre-seed all 14 cards evenly distributed along the highway from z = -3.5 to z = -145
   // so there is NEVER an empty scene at any point in time (PRD Section 5.4.2)
-  const [cards, setCards] = useState<PolaroidInstanceData[]>(() => {
+  const [cards] = useState<PolaroidInstanceData[]>(() => {
     const initial: PolaroidInstanceData[] = [];
     const step = 10.5; // ~10.5m spacing between memories
 
@@ -42,9 +42,12 @@ export function PolaroidField({ onSelect }: { onSelect?: (memory: HeroMemory) =>
   });
 
   const cardsRef = useRef<PolaroidInstanceData[]>(cards);
-  cardsRef.current = cards;
+  const nextSpawnTime = useRef(0);
 
-  const nextSpawnTime = useRef(performance.now() + 2400);
+  useEffect(() => {
+    cardsRef.current = cards;
+    nextSpawnTime.current = performance.now() + 2400;
+  }, [cards]);
 
   // 1. Pluck Event Triggered Spawn (PRD Section 5.4.2: "Plucks also spawn")
   useEffect(() => {

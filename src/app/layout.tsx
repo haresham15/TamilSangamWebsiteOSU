@@ -4,8 +4,6 @@ import {
   JetBrains_Mono, 
   Anek_Tamil, 
   Halant, 
-  Rozha_One, 
-  Space_Mono, 
   Syne,
   Marcellus,
   Prata,
@@ -13,7 +11,9 @@ import {
   Outfit,
   Kavivanar,
   Tiro_Tamil,
-  Azeret_Mono
+  Azeret_Mono,
+  Fragment_Mono,
+  Major_Mono_Display
 } from "next/font/google";
 import "./globals.css";
 
@@ -37,16 +37,10 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-const spaceMono = Space_Mono({
-  variable: "--font-space-mono",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-});
-
 const syne = Syne({
-  variable: "--font-brutalist",
+  variable: "--font-syne",
   subsets: ["latin"],
-  weight: ["700", "800"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 // Cultural Tamil & Indic Display Typefaces (replaces cold futuristic fonts)
@@ -60,12 +54,6 @@ const halant = Halant({
   variable: "--font-halant",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
-});
-
-const rozhaOne = Rozha_One({
-  variable: "--font-rozha",
-  subsets: ["latin"],
-  weight: ["400"],
 });
 
 // Cinematic English Serifs & Heritage Scripts
@@ -108,6 +96,18 @@ const tiroTamil = Tiro_Tamil({
 const azeretMono = Azeret_Mono({
   variable: "--font-azeret-mono",
   subsets: ["latin"],
+});
+
+const fragmentMono = Fragment_Mono({
+  variable: "--font-fragment-mono",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const majorMono = Major_Mono_Display({
+  variable: "--font-major-mono",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 export const viewport: Viewport = {
@@ -235,7 +235,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${muktaMalar.variable} ${jetbrainsMono.variable} ${spaceMono.variable} ${syne.variable} ${anekTamil.variable} ${halant.variable} ${rozhaOne.variable} ${marcellus.variable} ${prata.variable} ${cormorant.variable} ${outfit.variable} ${kavivanar.variable} ${tiroTamil.variable} ${azeretMono.variable} h-full antialiased`}
+      className={`${muktaMalar.variable} ${jetbrainsMono.variable} ${syne.variable} ${anekTamil.variable} ${halant.variable} ${marcellus.variable} ${prata.variable} ${cormorant.variable} ${outfit.variable} ${kavivanar.variable} ${tiroTamil.variable} ${azeretMono.variable} ${fragmentMono.variable} ${majorMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans bg-[var(--bg-base)] text-[var(--text-primary)] relative">

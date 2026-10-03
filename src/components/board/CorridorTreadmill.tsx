@@ -262,8 +262,6 @@ function CholaModularSegment({
  * Keeps draw calls flat and memory bounded.
  */
 export function CorridorTreadmill() {
-  const segmentGroupRefs = useRef<(THREE.Group | null)[]>([]);
-
   // Memoized shared geometries & materials pool (shared across all 7 segments)
   const sharedAssets = useMemo<SharedAssets>(() => {
     return {
@@ -339,9 +337,10 @@ export function CorridorTreadmill() {
     };
   }, [sharedAssets]);
 
-  // Internal Z offsets for each recycled segment in the pool
-  const zOffsetsRef = useRef<Float32Array>(
-    new Float32Array(Array.from({ length: POOL_SIZE }, (_, i) => 30 - i * UNIT_LENGTH))
+  // Internal Z positions for each segment in the colonnade (Z = 30 to Z = 0)
+  const segmentPositions = useMemo(
+    () => Array.from({ length: POOL_SIZE }, (_, i) => 30 - i * UNIT_LENGTH),
+    []
   );
 
   // Set of lamp indices that are currently granted real PointLights (max 2-3)
@@ -351,40 +350,18 @@ export function CorridorTreadmill() {
 
   useFrame((state) => {
     const camZ = state.camera.position.z;
-    const offsets = zOffsetsRef.current;
 
-    // Check each unit: if behind camera by more than 1 unit length, recycle to the front
-    let didRecycle = false;
-    for (let i = 0; i < POOL_SIZE; i++) {
-      if (offsets[i] > camZ + UNIT_LENGTH * 1.2) {
-        // Find minimum (furthest front) Z in current pool
-        let minZ = offsets[0];
-        for (let j = 1; j < POOL_SIZE; j++) {
-          if (offsets[j] < minZ) minZ = offsets[j];
-        }
-        offsets[i] = minZ - UNIT_LENGTH;
-        didRecycle = true;
-      }
-
-      const grp = segmentGroupRefs.current[i];
-      if (grp) {
-        grp.position.z = offsets[i];
-      }
-    }
-
-    if (didRecycle) {
-      useBoardHeroStore.getState().incrementRecycledCount();
-    }
-
-    // Dynamic light assignment: find the closest 2 lamps to camera Z
-    if (Math.abs(camZ - lastUpdatedZRef.current) > 1.2) {
+    // Dynamic light assignment: find the closest active lamps to camera Z (fully reversible)
+    if (Math.abs(camZ - lastUpdatedZRef.current) > 0.8) {
       lastUpdatedZRef.current = camZ;
 
-      // Calculate distances for all lamps
+      // Calculate distances for all lamps relative to camera Z
       const lampDistances: { index: number; dist: number }[] = [];
       for (let i = 0; i < POOL_SIZE; i++) {
-        const segZ = offsets[i];
-        const dist = Math.abs(segZ - camZ);
+        const segZ = segmentPositions[i];
+        // Give lamps slightly in front of the camera natural priority over lamps passed behind
+        const zDiff = segZ - camZ;
+        const dist = zDiff > 1.5 ? Math.abs(zDiff) + 6.0 : Math.abs(zDiff);
         lampDistances.push({ index: i * 2, dist });
         lampDistances.push({ index: i * 2 + 1, dist });
       }
@@ -407,13 +384,7 @@ export function CorridorTreadmill() {
   return (
     <group>
       {Array.from({ length: POOL_SIZE }).map((_, i) => (
-        <group
-          key={i}
-          ref={(el) => {
-            segmentGroupRefs.current[i] = el;
-          }}
-          position={[0, 0, 30 - i * UNIT_LENGTH]}
-        >
+        <group key={i} position={[0, 0, 30 - i * UNIT_LENGTH]}>
           <CholaModularSegment
             unitIndex={i}
             nearestLampIndices={nearestLampIndices}

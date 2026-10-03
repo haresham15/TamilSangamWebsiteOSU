@@ -9,7 +9,6 @@ import {
   Loader2,
   AlertCircle,
   GraduationCap,
-  Sparkles,
   User,
   Mail,
   BookOpen,
@@ -18,7 +17,6 @@ import {
   ArrowRight,
   ArrowLeft,
 } from "lucide-react";
-import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 
 // Dynamically load the R3F Nanban Hero Canvas without SSR
@@ -27,11 +25,11 @@ const JoinHeroCanvas = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[70dvh] flex flex-col items-center justify-center bg-[#050201] text-amber-100/70 font-mono text-xs gap-3">
+      <div className="w-full h-[70dvh] flex flex-col items-center justify-center bg-[#F4EEDD] text-[#6B4E2B] font-cyber-mono text-xs lowercase gap-3">
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full bg-[#55CCA2] animate-pulse" />
-          <span className="tracking-widest uppercase font-semibold">
-            OPENING THE NANBAN GATES OF BELONGING...
+          <span className="tracking-widest font-normal">
+            entering the morning campus... [ webgl r3f core loading ]
           </span>
         </div>
       </div>
@@ -182,28 +180,19 @@ export default function JoinPage() {
       {/* PHASE 1: 70dvh HYBRID HERO WRAPPER & SEAMLESS GRADIENT HANDOFF            */}
       {/* ========================================================================= */}
       <section
+        id="nanban-gates-hero"
         aria-label="Nanban Campus Gates 3D Viewport"
-        className="relative w-full overflow-hidden bg-[#050201]"
+        className="relative w-full overflow-hidden bg-[#F4EEDD]"
       >
-        {/* Crucial CSS Blend: WebkitMaskImage linear-gradient fades out canvas at bottom (Strict 65% handoff) */}
-        <div
-          className="w-full h-full"
-          style={{
-            WebkitMaskImage: "linear-gradient(to bottom, black 65%, transparent 100%)",
-            maskImage: "linear-gradient(to bottom, black 65%, transparent 100%)",
-          }}
-        >
-          <JoinHeroCanvas />
-        </div>
-
-        {/* Token-driven OKLCH DOM bridge to membership form */}
-        <HeroToContentBridge theme="join" heightPct={28} />
+        <JoinHeroCanvas />
+        {/* Bottom overlay gradient blending agent transitioning into the brutalist form */}
+        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#050201] via-[#050201]/70 to-transparent pointer-events-none z-10" />
       </section>
 
       {/* ========================================================================= */}
       {/* PHASE 1: FORM DOM (min-h-screen Brutalist Console Membership Form)        */}
       {/* ========================================================================= */}
-      <div id="membership-form" className="min-h-screen relative z-20 w-full max-w-4xl mx-auto px-4 sm:px-6 pt-8 pb-28 overflow-hidden">
+      <div id="membership-form" className="min-h-screen relative z-20 -mt-32 w-full max-w-4xl mx-auto px-4 sm:px-6 pt-16 pb-28 overflow-hidden">
         {/* Structural Blueprint Watermark Glyphs */}
         <WatermarkGlyph text="நண்பன்" position="top-right" theme="dark" opacity={0.035} />
 

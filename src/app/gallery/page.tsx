@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import dynamic from "next/dynamic";
+
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { GALLERY_ALBUMS, PhotoItem } from "@/data/gallery";
 import { GlyphMosaicImage } from "@/components/ui/GlyphMosaicImage";
-import { HeroToContentBridge } from "@/components/shared/HeroToContentBridge";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import {
@@ -21,11 +20,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Maximize2,
-  Music,
 } from "lucide-react";
-
-import { GalleryHeroCanvas } from "@/components/gallery/GalleryHeroCanvas";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
+
+import { GalleryHero } from "@/components/gallery-hero/GalleryHero";
 
 
 const containerVariants: Variants = {
@@ -135,28 +133,10 @@ export default function GalleryPage() {
 
   return (
     <div className="w-full bg-[#FFFDF8] min-h-screen text-left font-body">
-      {/* 3D Vaaranam Aayiram ECR Acoustic Hero */}
-      <GalleryHeroCanvas
-        onSelectMemory={(mem) => {
-          playClick();
-          const match = allPhotos.find(
-            (p) => p.albumSlug === mem.albumSlug || p.titleEn.toLowerCase().includes(mem.event.toLowerCase())
-          );
-          if (match) {
-            setSelectedPhoto(match);
-          } else if (allPhotos.length > 0) {
-            setSelectedPhoto(allPhotos[0]);
-          }
-        }}
-        onFinaleComplete={() => {
-          const vault = document.getElementById("gallery-vault-content");
-          if (vault) {
-            vault.scrollIntoView({ behavior: "smooth" });
-          }
-        }}
-      />
+      {/* 3D Fretboard Highway Hero (§0 - §4) */}
+      <GalleryHero />
 
-      <div id="gallery-vault-content" className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-24 text-left font-body relative overflow-hidden">
+      <div id="gallery-vault-content" className="relative z-20 -mt-32 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-24 text-left font-body overflow-hidden">
         {/* Structural Tamil Background Watermarks */}
         <WatermarkGlyph text="நினைவுகள்" opacity={0.04} align="right" theme="light" />
         <WatermarkGlyph text="நிழற்படம்" opacity={0.032} align="left" theme="light" className="top-[60%]" />
@@ -304,7 +284,7 @@ export default function GalleryPage() {
 
                 {/* 5-Photo Thumbnail Strip Preview */}
                 <div className="grid grid-cols-5 gap-1.5 mb-4">
-                  {album.photos.map((p, idx) => (
+                  {album.photos.map((p) => (
                     <div
                       key={p.id}
                       className="relative aspect-[4/3] border border-[#250d38] overflow-hidden bg-purple-950/10"

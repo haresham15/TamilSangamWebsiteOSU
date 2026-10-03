@@ -15,12 +15,14 @@ interface WatermarkGlyphProps {
   position?: "left" | "center" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right" | string;
   /** Color theme for dark vs light page backgrounds */
   theme?: "dark" | "light";
+  /** Typographic variant: 'tiro' for letterpress ancient authority or 'kavivanar' for manuscript handwriting */
+  fontVariant?: "tiro" | "kavivanar";
 }
 
 /**
- * WatermarkGlyph (Bilingual Brutalism Architecture)
+ * WatermarkGlyph (Bilingual Epigraphic Architecture)
  * Injects massive structural Tamil typography across background grids.
- * Eradicates empty dead space with cultural authority and epigraphic depth.
+ * Eradicates empty dead space with Tiro Tamil letterpress authority and epigraphic depth.
  */
 export const WatermarkGlyph = memo(function WatermarkGlyph({
   text,
@@ -29,6 +31,7 @@ export const WatermarkGlyph = memo(function WatermarkGlyph({
   align,
   position,
   theme = "dark",
+  fontVariant = "tiro",
 }: WatermarkGlyphProps) {
   const resolvedAlign =
     align ||
@@ -65,7 +68,11 @@ export const WatermarkGlyph = memo(function WatermarkGlyph({
       <span
         lang="ta"
         style={{ letterSpacing: 0, opacity }}
-        className={`font-tamil font-black text-[22vw] sm:text-[18vw] lg:text-[16vw] leading-none whitespace-nowrap tracking-tight block ${colorClass}`}
+        className={`${
+          fontVariant === "kavivanar"
+            ? "font-palmleaf-tamil font-bold"
+            : "font-letterpress-tamil font-bold"
+        } text-[22vw] sm:text-[18vw] lg:text-[16vw] leading-none whitespace-nowrap tracking-tight block ${colorClass}`}
       >
         {text}
       </span>

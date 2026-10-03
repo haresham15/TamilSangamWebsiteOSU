@@ -8,9 +8,12 @@ interface WhiteoutFinaleProps {
   scrollProgressRef: React.RefObject<number>;
 }
 
+const FORWARD_OFFSET = new THREE.Vector3(0, 0, -0.6);
+
 export function WhiteoutFinale({ scrollProgressRef }: WhiteoutFinaleProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.MeshBasicMaterial>(null);
+  const forwardVec = useRef(new THREE.Vector3());
 
   useFrame((state) => {
     const p = scrollProgressRef.current ?? 0;
@@ -19,10 +22,8 @@ export function WhiteoutFinale({ scrollProgressRef }: WhiteoutFinaleProps) {
     // Billboard placed right in front of camera lens
     if (meshRef.current) {
       meshRef.current.position.copy(camera.position);
-      // Offset slightly along camera's forward vector
-      const forward = new THREE.Vector3(0, 0, -0.6);
-      forward.applyQuaternion(camera.quaternion);
-      meshRef.current.position.add(forward);
+      forwardVec.current.copy(FORWARD_OFFSET).applyQuaternion(camera.quaternion);
+      meshRef.current.position.add(forwardVec.current);
       meshRef.current.quaternion.copy(camera.quaternion);
     }
 

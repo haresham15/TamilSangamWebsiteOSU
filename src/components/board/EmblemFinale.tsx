@@ -70,7 +70,7 @@ export function EmblemFinale({ scrollProgress, onFinaleTriggered }: EmblemFinale
       } else if (onFinaleTriggered) {
         onFinaleTriggered();
       }
-    } else if (p < 0.85 && hasFiredRef.current) {
+    } else if (p < 0.96 && hasFiredRef.current) {
       // Reset when user scrolls back up into corridor
       hasFiredRef.current = false;
       useBoardHeroStore.getState().setFinaleFired(false);
@@ -78,7 +78,8 @@ export function EmblemFinale({ scrollProgress, onFinaleTriggered }: EmblemFinale
       if (emblemMeshRef.current && ringMeshRef.current && backLightRef.current) {
         const mat = emblemMeshRef.current.material as THREE.MeshStandardMaterial;
         const ringMat = ringMeshRef.current.material as THREE.MeshStandardMaterial;
-        mat.emissiveIntensity = 1.0;
+        gsap.killTweensOf([mat, ringMat, backLightRef.current]);
+        mat.emissiveIntensity = 0.85;
         ringMat.emissiveIntensity = 1.0;
         backLightRef.current.intensity = 3.5;
       }

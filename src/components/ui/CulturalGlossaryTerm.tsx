@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Sparkles, Volume2 } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useAudio } from "@/context/AudioContext";
 
 export interface CulturalTermData {
@@ -153,13 +153,12 @@ export function CulturalGlossaryTerm({
   termKey,
   children,
   className = "",
-  theme = "dark",
   position = "top",
 }: CulturalGlossaryTermProps) {
   const data = CULTURAL_GLOSSARY[termKey];
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLSpanElement>(null);
-  const { playWoodClick, playBell } = useAudio();
+  const { playWoodClick } = useAudio();
 
   // If term not found, render fallback
   if (!data) {
@@ -173,11 +172,6 @@ export function CulturalGlossaryTerm({
 
   const handleClose = () => {
     setIsOpen(false);
-  };
-
-  const handlePlayPronunciation = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    playBell(587.33); // D5 chime
   };
 
   return (

@@ -301,19 +301,20 @@ function SteadyIsometricCamera() {
   // revealing the entire horseshoe, outer Roman arches, tiered bowl, and North Rotunda in one steady frame.
   const basePos = useMemo(() => new THREE.Vector3(16.0, 13.5, 18.5), []);
   const lookTarget = useMemo(() => new THREE.Vector3(0.0, 1.4, -1.2), []);
+  const targetPos = useRef(new THREE.Vector3(16.0, 13.5, 18.5));
 
   useFrame((state) => {
     // Subtle, organic breathing parallax to keep the scene alive
     const mouseX = state.mouse.x * 0.35;
     const mouseY = state.mouse.y * 0.20;
 
-    const targetPos = new THREE.Vector3(
+    targetPos.current.set(
       basePos.x + mouseX,
       basePos.y + mouseY,
       basePos.z
     );
 
-    camera.position.lerp(targetPos, 0.05);
+    camera.position.lerp(targetPos.current, 0.05);
     camera.lookAt(lookTarget);
   });
 
@@ -537,7 +538,9 @@ function FloatingParticles() {
   const uniforms = useMemo(() => ({ uTime: { value: 0 } }), []);
 
   useFrame((state) => {
-    uniforms.uTime.value = state.clock.getElapsedTime();
+    if (pointsRef.current) {
+      (pointsRef.current.material as THREE.ShaderMaterial).uniforms.uTime.value = state.clock.getElapsedTime();
+    }
   });
 
   useEffect(() => {
@@ -1105,13 +1108,11 @@ export function BlueprintScene3D({
         camera={{ position: [16.0, 13.5, 18.5], fov: 32 }}
         gl={{
           antialias: true,
-          alpha: false,
+          alpha: true,
           powerPreference: "high-performance",
         }}
         className="w-full h-full"
       >
-        {/* Deep Bruised Plum/Purple Void (§Phase 1 Overhaul) */}
-        <color attach="background" args={["#0F050A"]} />
         <fog attach="fog" args={["#0F050A", 28, 90]} />
 
         {/* Cinematic War Room Lighting (§Phase 1 Overhaul) */}

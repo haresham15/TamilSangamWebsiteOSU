@@ -9,7 +9,7 @@
 
 The `/gallery` hero is a cinematic 2.5D diorama inspired by Gautham Vasudev Menon's *Vaaranam Aayiram*—capturing the feeling of driving the East Coast Road at golden hour, viewing collegiate memories through the resonant metallic strings of an acoustic guitar.
 
-```
+```text
 app/gallery/page.tsx
 └─ <GalleryHeroCanvas/>                (Client Component, GSAP Pinned)
    ├─ <Canvas> (R3F WebGL2)
@@ -37,7 +37,7 @@ app/gallery/page.tsx
 All optical, kinematic, and timeline parameters are centrally controlled in [`src/components/gallery/heroTimeline.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/gallery/heroTimeline.ts):
 
 | Parameter | Value | Description |
-|---|---|---|
+| :--- | :--- | :--- |
 | `cameraEyeHeight` | `1.4m` | Eye level above highway road plane |
 | `baseFov` | `38°` | Anamorphic cinematic focal length at rest |
 | `finaleFov` | `58°` | Widened FOV as camera rushes into solar core |
@@ -73,6 +73,7 @@ All optical, kinematic, and timeline parameters are centrally controlled in [`sr
 ## 4. Master Scroll Choreography (`getHeroTimelineValues`)
 
 Across the $3600\text{px}$ GSAP pinned runway:
+
 1. **$p \in [0.00, 0.08]$ ("Golden hour arrives")**: Idle glide, title and scroll cue active, strings at rest.
 2. **$p \in [0.08, 0.55]$ ("The Journey")**: Camera advances $-4\text{m} \to -49\text{m}$, FOV $38^\circ \to 44^\circ$, full memory stream flow, title fades by $p = 0.16$.
 3. **$p \in [0.55, 0.80]$ ("The Approach")**: Camera accelerates $-49\text{m} \to -139\text{m}$, FOV $44^\circ \to 50^\circ$, strings slacken and fade out (`stringsOpacity: 1.0 -> 0.0`), sun grows.

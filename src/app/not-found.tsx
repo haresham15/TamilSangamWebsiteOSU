@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { Home, Calendar, BookOpen, Bot, ArrowRight, Compass } from "lucide-react";
+import { Home, Calendar, BookOpen, Bot, ArrowRight } from "lucide-react";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 
 export default function NotFound() {

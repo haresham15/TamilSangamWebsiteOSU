@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { AlertTriangle, RefreshCw, Home, Mail } from "lucide-react";
+import { RefreshCw, Home, Mail } from "lucide-react";
 
 interface ErrorProps {
   error: Error & { digest?: string };

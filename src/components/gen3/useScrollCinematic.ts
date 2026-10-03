@@ -37,7 +37,7 @@ export function useScrollCinematic(triggerId: string = "events-hero-trigger") {
         end: "+=1600",
         pin: true,
         pinSpacing: true, // Smooth organic transition to catalogue below
-        scrub: 0.6, // 0.6s momentum scrub absorbs discrete mousewheel ticks and eliminates twitches
+        scrub: true,
         anticipatePin: 1,
         onUpdate: (self) => {
           scrollProgress = self.progress;

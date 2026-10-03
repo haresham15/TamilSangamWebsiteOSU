@@ -98,7 +98,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
         start: "top top",
         end: "+=1600",
         pin: true,
-        scrub: 0.5,
+        scrub: true,
         anticipatePin: 1,
         onUpdate: (self) => {
           const p = self.progress;
@@ -106,12 +106,14 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
           useBoardHeroStore.getState().setScrollProgress(p);
 
           // If user scrolls back up into corridor, smoothly restore canvas opacity & reset gold flash
-          if (p < 0.85) {
+          if (p < 0.96) {
             if (goldOverlayRef.current) {
-              gsap.to(goldOverlayRef.current, { opacity: 0, duration: 0.25, overwrite: "auto" });
+              gsap.killTweensOf(goldOverlayRef.current);
+              gsap.to(goldOverlayRef.current, { opacity: 0, duration: 0.2, overwrite: "auto" });
             }
             if (canvasContainerRef.current) {
-              gsap.to(canvasContainerRef.current, { opacity: 1, duration: 0.25, overwrite: "auto" });
+              gsap.killTweensOf(canvasContainerRef.current);
+              gsap.to(canvasContainerRef.current, { opacity: 1, duration: 0.2, overwrite: "auto" });
             }
           }
         },
@@ -178,6 +180,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
             frameloop={inView ? "always" : "demand"}
             gl={{
               antialias: true,
+              alpha: true,
               powerPreference: "high-performance",
               toneMapping: THREE.ACESFilmicToneMapping,
               toneMappingExposure: 1.0,

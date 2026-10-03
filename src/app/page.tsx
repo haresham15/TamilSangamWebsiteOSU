@@ -21,9 +21,7 @@ import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
 import { EVENTS } from "@/data/events";
 import { 
   Calendar, 
-  MapPin,
-  Sparkles,
-  Scroll
+  MapPin
 } from "lucide-react";
 
 export default function HomePage() {
@@ -69,7 +67,7 @@ export default function HomePage() {
       <DigitalKolamHero nextEventSlug={nextEvent.slug} />
 
       {/* 2.5 Color Gradient Transition: 3D Cosmic Plum -> Sangam Royal Purple -> Warm Ivory */}
-      <HeroGradientTransition variant="home" className="-mt-14 sm:-mt-20 z-10" />
+      <HeroGradientTransition variant="home" className="-mt-32 relative z-20" />
 
       {/* 3. Woven Temple Border Marquee Divider */}
       <WovenBorderMarquee
