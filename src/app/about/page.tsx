@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
@@ -10,6 +10,8 @@ import { GopuramZScroll } from "@/components/about/GopuramZScroll";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 import { CulturalGlossaryTerm } from "@/components/ui/CulturalGlossaryTerm";
 import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
+import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { initParallax } from "@/engine/parallax";
 import { 
   Search, 
   ChevronDown, 
@@ -23,6 +25,12 @@ export default function AboutPage() {
 
   const [faqSearch, setFaqSearch] = useState("");
   const [expandedFaq, setExpandedFaq] = useState<string | null>("faq-01");
+
+  // Mount ScrollTrigger-based data-speed parallax (§7.3)
+  useEffect(() => {
+    const cleanup = initParallax("#about-content-scope");
+    return cleanup;
+  }, []);
 
   const timelineEvents = [
     {
@@ -89,80 +97,102 @@ export default function AboutPage() {
   });
 
   return (
-    <div className="w-full text-left font-body bg-[#fffdfa]">
+    <div className="w-full text-left font-body bg-transparent">
       {/* Cinematic 3D Gopuram Z-Axis Mission Fly-Through */}
-      <div
-        className="relative w-full overflow-hidden bg-[#fffdfa]"
-        style={{
-          WebkitMaskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-          maskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-        }}
-      >
+      <div className="relative w-full overflow-hidden bg-transparent">
         <GopuramZScroll />
-        {/* Bottom overlay gradient blending agent */}
-        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#fffdfa] via-[#fffdfa]/80 to-transparent pointer-events-none z-10" />
       </div>
 
-      {/* The section immediately below the Hero: negative margin pull-up */}
-      <div className="relative z-20 -mt-32 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-24 overflow-hidden vignette-ambient-warm">
+      {/* Color Gradient Transition from 3D Gopuram Night (#120a1f) to Warm Ivory (#fffdfa) */}
+      <HeroGradientTransition variant="about" className="-mt-32 relative z-20" />
+
+      {/* The section immediately below the Hero: full-bleed warm ivory background */}
+      <div className="relative z-20 w-full bg-[#fffdfa] overflow-hidden">
+        <div
+          id="about-content-scope"
+          data-parallax-scope
+          className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-24 overflow-hidden vignette-ambient-warm"
+        >
         {/* Tactile Sandstone Texture Overlay */}
         <HeritageTextureOverlay variant="sandstone" opacity={0.02} />
 
-        {/* Structural Tamil Background Watermarks */}
-        <WatermarkGlyph text="தமிழ்" opacity={0.04} align="right" theme="light" />
-        <WatermarkGlyph text="நோக்கம்" opacity={0.032} align="left" theme="light" className="top-[60%]" />
+        {/* Structural Tamil Background Watermarks with ScrollTrigger Parallax (§7.3) */}
+        <div data-speed="0.82" aria-hidden="true" className="pointer-events-none">
+          <WatermarkGlyph text="தமிழ்" opacity={0.04} align="right" theme="light" />
+        </div>
+        <div data-speed="1.14" aria-hidden="true" className="pointer-events-none">
+          <WatermarkGlyph text="நோக்கம்" opacity={0.032} align="left" theme="light" className="top-[60%]" />
+        </div>
 
-        {/* Page Header */}
+        {/* Page Header with Fluid Typography (§7.1) */}
         <div className="max-w-3xl mb-16 relative z-10">
-          <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display leading-[1.08] mb-4">
+          <h1 className="text-[length:var(--text-display)] font-extrabold text-[#250d38] tracking-tight font-display leading-[1.12] [text-wrap:balance] mb-4">
             {locale === "ta" ? "யாதும் ஊரே யாவரும் கேளீர்" : "To Us All Towns Are Home, Everyone Our Kin"}
           </h1>
-          <p className="text-base sm:text-lg text-[#250d38] font-medium leading-relaxed font-body">
+          <p className="text-[length:var(--text-body)] text-[#250d38] font-medium leading-relaxed font-body">
             {locale === "ta"
               ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் என்பது மாணவர்கள் அனைவரும் ஒன்றிணைந்து தமிழ் பண்பாட்டை ரசிக்கவும், நல்ல உணவை ருசிக்கவும், மற்றும் நட்பை வளர்க்கவும் வழிகாட்டும் திறந்த மனப்பான்மை கொண்ட மாணவர் அமைப்பாகும்."
               : "The Ohio State University Tamil Sangam is an open, welcoming student-run cultural hub. We bring people of all backgrounds, cultures, and languages together to celebrate Tamil culture, eat incredible food, hang out, and build genuine collegiate friendships."}
           </p>
         </div>
 
-        {/* 1. What is a Sangam? Essay Card (Cultural Archway with Filigree Brass & Kanjeevaram Sheen) */}
-        <div className="rounded-t-[36px] rounded-b-md p-8 sm:p-12 border border-[#B5A642]/40 bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.2)] hover:border-[#FFB84D] transition-all duration-300 mb-16 relative z-10 overflow-hidden">
-          {/* Subtle Tactile Kanjeevaram Silk Sheen */}
-          <HeritageTextureOverlay variant="kanjeevaram" opacity={0.025} />
+        {/* 1. What is a Sangam? Asymmetric Editorial Grid Collision Pattern (§7.2) */}
+        <div className="relative mb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-8 lg:gap-x-0 items-center">
+            {/* DOM Order 1: Editorial Essay Card (Primary text content) */}
+            <article className="lg:col-start-1 lg:col-span-8 lg:row-start-1 z-20 rounded-t-[36px] rounded-b-md p-8 sm:p-12 border border-[#B5A642]/40 bg-white/95 backdrop-blur-md shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.2)] hover:border-[#FFB84D] transition-all duration-300 relative overflow-hidden">
+              <HeritageTextureOverlay variant="kanjeevaram" opacity={0.025} />
+              <div className="max-w-2xl space-y-4 relative z-10">
+                <div className="flex items-center gap-2 font-mono text-xs text-[#11694c] font-bold">
+                  <span>EST. 2021</span>
+                  <span>·</span>
+                  <span>COLUMBUS, OHIO</span>
+                  <span>·</span>
+                  <CulturalGlossaryTerm termKey="yaadhum-oore" className="text-[#87500e]">
+                    PURANANURU 192
+                  </CulturalGlossaryTerm>
+                </div>
+                <h2 className="text-[length:var(--text-title)] font-bold text-[#250d38] font-display leading-[1.2] [text-wrap:balance]">
+                  {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம் என்பது என்ன?" : "What is Tamil Sangam at OSU?"}
+                </h2>
+                <p className="text-[length:var(--text-body)] text-[#250d38] leading-relaxed font-body">
+                  In Tamil, the word{" "}
+                  <CulturalGlossaryTerm termKey="sangam" className="text-[#4c2472] font-bold">
+                    Sangam
+                  </CulturalGlossaryTerm>{" "}
+                  (சங்கம்) represents an ancient assembly, union, or community gathering where thinkers, poets, and friends gather as equals. At The Ohio State University, our Sangam is an active, open, and casual student hub for Tamil Buckeyes and everyone in our campus community.
+                </p>
+                <p className="text-[length:var(--text-body)] text-[#250d38] leading-relaxed font-body">
+                  Our events are relaxed and social — whether it&apos;s chilling on the South Oval with snacks, savoring hot kothu parotta at street food nights, jamming to film music, or celebrating at our annual Diwali party. You don&apos;t need to speak Tamil, and you don&apos;t need any specific cultural background: students of all languages, majors, and backgrounds are always welcome to hang out and find a home away from home!
+                </p>
+              </div>
+            </article>
 
-          <div className="max-w-3xl space-y-4 relative z-10">
-            <div className="flex items-center gap-2 font-mono text-xs text-[#11694c] font-bold">
-              <span>EST. 2021</span>
-              <span>·</span>
-              <span>COLUMBUS, OHIO</span>
-              <span>·</span>
-              <CulturalGlossaryTerm termKey="yaadhum-oore" className="text-[#87500e]">
-                PURANANURU 192
-              </CulturalGlossaryTerm>
-            </div>
-
-            <h2 className="text-2xl sm:text-4xl font-bold text-[#250d38] font-display leading-tight">
-              {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம் என்பது என்ன?" : "What is Tamil Sangam at OSU?"}
-            </h2>
-
-            <p className="text-sm sm:text-base text-[#250d38] leading-relaxed font-body">
-              In Tamil, the word{" "}
-              <CulturalGlossaryTerm termKey="sangam" className="text-[#4c2472] font-bold">
-                Sangam
-              </CulturalGlossaryTerm>{" "}
-              (சங்கம்) represents an ancient assembly, union, or community gathering where thinkers, poets, and friends gather as equals. At The Ohio State University, our Sangam is an active, open, and casual student hub for Tamil Buckeyes and everyone in our campus community.
-            </p>
-
-            <p className="text-sm sm:text-base text-[#250d38] leading-relaxed font-body">
-              Our events are relaxed and social — whether it&apos;s chilling on the South Oval with snacks, savoring hot kothu parotta at street food nights, jamming to film music, or celebrating at our annual Diwali party. You don&apos;t need to speak Tamil, and you don&apos;t need any specific cultural background: students of all languages, majors, and backgrounds are always welcome to hang out and find a home away from home!
-            </p>
+            {/* DOM Order 2: Overlapping Architectural Motif / Graphic Feature with Parallax (§7.2, §7.3) */}
+            <aside
+              data-speed="0.88"
+              className="lg:col-start-7 lg:col-span-6 lg:row-start-1 z-10 hidden lg:block rounded-3xl p-8 bg-gradient-to-br from-[#250d38] via-[#3b155a] to-[#12071d] text-white border border-[var(--sangam-gold)]/40 shadow-2xl overflow-hidden relative"
+              aria-hidden="true"
+            >
+              <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-[var(--sangam-gold)]/10 blur-2xl" />
+              <div className="relative z-10 pl-16 py-6 space-y-3">
+                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--sangam-gold)] block">
+                  Classical Epigraphy
+                </span>
+                <p lang="ta" className="text-2xl font-bold font-tamil text-[var(--sangam-gold)] leading-snug">
+                  யாதும் ஊரே யாவரும் கேளீர்
+                </p>
+                <p className="text-xs text-purple-200/80 font-body leading-relaxed">
+                  2,000+ years of Dravidian heritage, brought alive across student socials, dance teams, and culinary feasts in Columbus.
+                </p>
+              </div>
+            </aside>
           </div>
         </div>
 
         {/* 2. Official Core Mission & Purpose (The 4 Pillars) */}
         <div className="mb-20 relative z-10">
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-[#250d38] mb-8 font-display leading-tight">
+          <h2 className="text-[length:var(--text-title)] font-extrabold text-[#250d38] mb-8 font-display leading-[1.2] [text-wrap:balance]">
             {locale === "ta" ? "சங்கத்தின் முதன்மை நோக்கங்கள்" : "Core Mission & Purpose"}
           </h2>
 
@@ -187,7 +217,7 @@ export default function AboutPage() {
 
         {/* 3. Timeline & Campus Milestones */}
         <div className="mb-20 relative z-10">
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-[#250d38] mb-8 font-display leading-tight">
+          <h2 className="text-[length:var(--text-title)] font-extrabold text-[#250d38] mb-8 font-display leading-[1.2] [text-wrap:balance]">
             {locale === "ta" ? "வளர்ச்சிப் படிகள்" : "Our Journey at Ohio State"}
           </h2>
 
@@ -217,7 +247,7 @@ export default function AboutPage() {
 
         {/* 4. Campus Alliances & Community Partners */}
         <div className="mb-20 relative z-10">
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-[#250d38] mb-8 font-display leading-tight">
+          <h2 className="text-[length:var(--text-title)] font-extrabold text-[#250d38] mb-8 font-display leading-[1.2] [text-wrap:balance]">
             {locale === "ta" ? "கூட்டமைப்புகள் & ஆதரவாளர்கள்" : "Campus Alliances & Community Partners"}
           </h2>
 
@@ -320,6 +350,6 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
-  );
-
+  </div>
+);
 }

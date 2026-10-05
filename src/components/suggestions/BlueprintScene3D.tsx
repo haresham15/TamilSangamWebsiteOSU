@@ -1,18 +1,13 @@
 "use client";
 
 import React, { useRef, useMemo, useState, useEffect, useSyncExternalStore } from "react";
-import dynamic from "next/dynamic";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows } from "@react-three/drei";
+import { ContactShadows, View, PerspectiveCamera } from "@react-three/drei";
+import { useWarmup } from "@/components/gl/useWarmup";
+import { governor } from "@/engine/governor";
 import { BlueprintPin, BLUEPRINT_PINS, BlueprintSVG } from "./BlueprintSVG";
 import { buildOhioStadiumLines, StadiumGeometryData } from "./OhioStadiumWireframe";
-
-// Client-only dynamic R3F Canvas
-const Canvas = dynamic(
-  () => import("@react-three/fiber").then((mod) => mod.Canvas),
-  { ssr: false }
-);
 
 interface EphemeralPin {
   id: string;
@@ -350,7 +345,8 @@ function StadiumCalloutPins({
 
   useFrame((_, delta) => {
     if (ringRef.current) {
-      ringRef.current.rotation.y += delta * 0.6;
+      const safeDelta = Math.min(Math.max(delta, 0), 0.05);
+      ringRef.current.rotation.y += safeDelta * 0.6;
     }
   });
 
@@ -430,10 +426,11 @@ function NewlyDroppedPin({ pin }: { pin: EphemeralPin }) {
   const posZ = (pin.y / 4) * 3.5;
 
   useFrame((_, delta) => {
+    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
     if (altitudeRef.current > 0.05 || Math.abs(velocityRef.current) > 0.05) {
       const gravity = 18;
-      const nextVel = velocityRef.current - gravity * delta;
-      let nextAlt = altitudeRef.current + nextVel * delta;
+      const nextVel = velocityRef.current - gravity * safeDelta;
+      let nextAlt = altitudeRef.current + nextVel * safeDelta;
 
       if (nextAlt <= 0) {
         nextAlt = 0;
@@ -576,12 +573,12 @@ function FloatingParticles() {
 }
 
 // ---------------------------------------------------------------------------
-// 1. THE SIGNATURE COIN (The Catalyst — Kaththi Memorabilia)
+// 1. THE ARCHITECTURAL HERITAGE COIN (Collegiate Landmark Relic)
 // ---------------------------------------------------------------------------
 // A 3D cylindrical coin (CylinderGeometry) resting on one of the grid intersections
 // near the stadium entrance. Highly reflective silver/steel (MeshPhysicalMaterial)
 // catching the overhead spotlight.
-function KaththiSignatureCoin() {
+function ArchitecturalHeritageCoin() {
   const coinPos: [number, number, number] = [3.6, 0.035, 4.4];
 
   return (
@@ -947,11 +944,11 @@ function DraftingPencil() {
 }
 
 // ---------------------------------------------------------------------------
-// 7. KATHTHI PRECISION UTILITY BLADE (The Folding Architect's Knife)
+// 7. ARCHITECT PRECISION UTILITY BLADE (The Precision Modeling Tool)
 // ---------------------------------------------------------------------------
 // Surgical stainless-steel folding knife resting half-open on the blueprint floor,
-// direct homage to the film's title framed as an architect's precision modeling blade.
-function KaththiUtilityBlade() {
+// modeled as an architect's precision scale modeling instrument.
+function ArchitectPrecisionUtilityBlade() {
   const bladePos: [number, number, number] = [-7.2, 0.05, -0.6];
 
   return (
@@ -1058,6 +1055,101 @@ function BrassPaperweight() {
 
 const emptySubscribe = () => () => {};
 
+function BlueprintSceneContent({
+  groundTexture,
+  scrollProgress,
+  onSelectPin,
+  hoveredPinId,
+  setHoveredPinId,
+  newPin,
+}: {
+  groundTexture: THREE.CanvasTexture | null;
+  scrollProgress: number;
+  onSelectPin?: (pin: BlueprintPin) => void;
+  hoveredPinId: string | null;
+  setHoveredPinId: (id: string | null) => void;
+  newPin?: EphemeralPin | null;
+}) {
+  useWarmup("ideas-blueprint");
+
+  return (
+    <>
+      <color attach="background" args={["#0F050A"]} />
+      <PerspectiveCamera makeDefault position={[16.0, 13.5, 18.5]} fov={32} near={0.1} far={120} />
+      <fog attach="fog" args={["#0F050A", 28, 90]} />
+
+      {/* Cinematic War Room Lighting */}
+      <ambientLight intensity={0.8} color="#381D2C" />
+      <directionalLight position={[20, 25, 15]} intensity={1.8} color="#FFE6B8" />
+      <directionalLight position={[-15, 18, -15]} intensity={0.9} color="#8B5A2B" />
+
+      {/* Soft overhead SpotLight creating a dramatic vignette pool of light on the blueprint floor */}
+      <spotLight
+        position={[0, 22, -1.2]}
+        color="#FFF0D4"
+        intensity={1.5}
+        angle={Math.PI / 4.2}
+        penumbra={0.85}
+        distance={45}
+        decay={2}
+        castShadow
+      />
+
+      {/* 1. Large Blueprint Ground Plane (y = 0) */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
+        <planeGeometry args={[56, 56]} />
+        <meshStandardMaterial
+          map={groundTexture || undefined}
+          roughness={0.75}
+          metalness={0.1}
+        />
+      </mesh>
+
+      {/* Soft Contact Shadows */}
+      <ContactShadows
+        position={[0, 0.012, 0]}
+        opacity={0.82}
+        scale={34}
+        blur={1.8}
+        far={4.0}
+        resolution={512}
+        color="#070308"
+      />
+
+      {/* Diegetic 3D Architectural Props */}
+      <ArchitecturalHeritageCoin />
+      <BrassDraftingCompass />
+      <HydrologyPipeNodes />
+      <RolledBlueprintScrolls />
+      <ArchitectScaleRuler />
+      <DraftingPencil />
+      <ArchitectPrecisionUtilityBlade />
+      <ThanjavurSoilVial />
+      <BrassPaperweight />
+
+      {/* 2. Ohio Stadium ("The Shoe") 3D Wireframe Real-Time Construction */}
+      <OhioStadiumWireframeMesh scrollProgress={scrollProgress} />
+
+      {/* 3. Authentic Landmark Pins (50-Yard Line, North Rotunda, West Tower) */}
+      <StadiumCalloutPins
+        onSelectPin={onSelectPin}
+        hoveredPinId={hoveredPinId}
+        setHoveredPinId={setHoveredPinId}
+        scrollProgress={scrollProgress}
+      />
+
+      {/* 4. Newly Dropped Ephemeral Pin */}
+      {newPin && <NewlyDroppedPin key={newPin.id} pin={newPin} />}
+
+      {/* 5. Floating Luminescent Particles */}
+      <FloatingParticles />
+
+      {/* 6. Steady Axonometric / Isometric Architectural Camera */}
+      <SteadyIsometricCamera />
+    </>
+  );
+}
+
 export function BlueprintScene3D({
   scrollProgress,
   isLiteMode = false,
@@ -1084,6 +1176,29 @@ export function BlueprintScene3D({
     };
   }, [groundTexture]);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(true);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      { threshold: 0.01 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    governor.request("ideas-blueprint", inView ? 1 : 0);
+    return () => {
+      governor.request("ideas-blueprint", 0);
+    };
+  }, [inView]);
+
   // Lite Mode or Pre-mount fallback: Static 2D Blueprint SVG
   if (isLiteMode || !mounted) {
     return (
@@ -1101,106 +1216,17 @@ export function BlueprintScene3D({
   }
 
   return (
-    <div className={`relative w-full h-full ${className}`}>
-      <Canvas
-        shadows
-        dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
-        camera={{ position: [16.0, 13.5, 18.5], fov: 32 }}
-        gl={{
-          antialias: true,
-          alpha: true,
-          powerPreference: "high-performance",
-        }}
-        className="w-full h-full"
-      >
-        <fog attach="fog" args={["#0F050A", 28, 90]} />
-
-        {/* Cinematic War Room Lighting (§Phase 1 Overhaul) */}
-        <ambientLight intensity={0.8} color="#381D2C" />
-        <directionalLight position={[20, 25, 15]} intensity={1.8} color="#FFE6B8" />
-        <directionalLight position={[-15, 18, -15]} intensity={0.9} color="#8B5A2B" />
-
-        {/* Soft overhead SpotLight creating a dramatic vignette pool of light on the blueprint floor */}
-        <spotLight
-          position={[0, 22, -1.2]}
-          color="#FFF0D4"
-          intensity={1.5}
-          angle={Math.PI / 4.2}
-          penumbra={0.85}
-          distance={45}
-          decay={2}
-          castShadow
-        />
-
-        {/* 1. Large Blueprint Ground Plane (y = 0) */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-          <planeGeometry args={[56, 56]} />
-          <meshStandardMaterial
-            map={groundTexture || undefined}
-            roughness={0.75}
-            metalness={0.1}
-          />
-        </mesh>
-
-        {/* Soft Contact Shadows (§Phase 3 Calibration) */}
-        <ContactShadows
-          position={[0, 0.012, 0]}
-          opacity={0.82}
-          scale={34}
-          blur={1.8}
-          far={4.0}
-          resolution={512}
-          color="#070308"
-        />
-
-        {/* Diegetic 3D Props (§Phase 2 & Additional Kaththi Memorabilia) */}
-        {/* 1. The Signature Coin (The Catalyst) */}
-        <KaththiSignatureCoin />
-
-        {/* 2. The Brass Drafting Compass (The Architect) */}
-        <BrassDraftingCompass />
-
-        {/* 3. The Hydrology Pipe Nodes (The Mission) */}
-        <HydrologyPipeNodes />
-
-        {/* 4. Rolled City Blueprint Scrolls (East Flank) */}
-        <RolledBlueprintScrolls />
-
-        {/* 5. Triangular Architect Scale Ruler (East Flank) */}
-        <ArchitectScaleRuler />
-
-        {/* 6. Hexagonal Drafting Graphite Pencil (East Flank) */}
-        <DraftingPencil />
-
-        {/* 7. Kaththi Precision Folding Utility Blade (West Flank) */}
-        <KaththiUtilityBlade />
-
-        {/* 8. Thanjavur Soil Specimen Vial (North Rotunda Flank) */}
-        <ThanjavurSoilVial />
-
-        {/* 9. Solid Brass Blueprint Corner Paperweight (West Flank) */}
-        <BrassPaperweight />
-
-        {/* 2. Ohio Stadium ("The Shoe") 3D Wireframe Real-Time Construction */}
-        <OhioStadiumWireframeMesh scrollProgress={scrollProgress} />
-
-        {/* 3. Authentic Landmark Pins (50-Yard Line, North Rotunda, West Tower) */}
-        <StadiumCalloutPins
+    <div ref={containerRef} className={`relative w-full h-full bg-transparent ${className}`}>
+      <View className="w-full h-full">
+        <BlueprintSceneContent
+          groundTexture={groundTexture}
+          scrollProgress={scrollProgress}
           onSelectPin={onSelectPin}
           hoveredPinId={hoveredPinId}
           setHoveredPinId={setHoveredPinId}
-          scrollProgress={scrollProgress}
+          newPin={newPin}
         />
-
-        {/* 4. Newly Dropped Ephemeral Pin */}
-        {newPin && <NewlyDroppedPin key={newPin.id} pin={newPin} />}
-
-        {/* 5. Floating Luminescent Particles */}
-        <FloatingParticles />
-
-        {/* 6. Steady Axonometric / Isometric Architectural Camera */}
-        <SteadyIsometricCamera />
-      </Canvas>
+      </View>
     </div>
   );
 }

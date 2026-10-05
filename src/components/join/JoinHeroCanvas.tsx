@@ -1,12 +1,11 @@
 "use client";
 
 import React, { Suspense, useState, useEffect, useRef, useMemo } from "react";
-import { Canvas } from "@react-three/fiber";
-import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { BakeShadows } from "@react-three/drei";
-import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
+import { View, PerspectiveCamera, BakeShadows } from "@react-three/drei";
+import { useWarmup } from "@/components/gl/useWarmup";
+import { governor } from "@/engine/governor";
 import { useLocale } from "@/context/LocaleContext";
 import { CampusGate } from "./CampusGate";
 import { GateLettering } from "./GateLettering";
@@ -28,12 +27,16 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+function JoinSceneWarmup() {
+  useWarmup("join-morning-gates");
+  return null;
+}
+
 export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = {}) {
   const { locale } = useLocale();
 
   const pinWrapperRef = useRef<HTMLDivElement>(null);
 
-  const [inView, setInView] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(() => 
     typeof window !== "undefined" ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false
   );
@@ -109,13 +112,16 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
   useEffect(() => {
     if (!pinWrapperRef.current) return;
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setInView(entry.isIntersecting);
-      },
-      { threshold: 0.05 }
-    );
-    observer.observe(pinWrapperRef.current);
-    return () => observer.disconnect();
+       ([entry]) => {
+         governor.request("join-morning-gates", entry.isIntersecting ? 1 : 0);
+       },
+       { threshold: 0.05 }
+     );
+     observer.observe(pinWrapperRef.current);
+     return () => {
+       observer.disconnect();
+       governor.request("join-morning-gates", 0);
+     };
   }, []);
 
   // GSAP ScrollTrigger Pinned Timeline: Scrolls smoothly into and through the gates
@@ -129,6 +135,9 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
     }
 
     const ctx = gsap.context(() => {
+      // Ambient frame request while mounted (§4.3)
+      governor.request("join-hero", 1);
+
       ScrollTrigger.create({
         trigger: pinWrapperRef.current,
         start: "top top",
@@ -140,6 +149,9 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
         onUpdate: (self) => {
           const p = self.progress;
           scrollProgressRef.current = p;
+
+          // Request level 2 on active scrolling (§4.3)
+          governor.request("join-hero", Math.abs(self.getVelocity()) > 10 ? 2 : 1);
 
           // Gate swing kinematics:
           // Closed from p = 0 to 0.18
@@ -163,7 +175,10 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
       }
     }, pinWrapperRef);
 
-    return () => ctx.revert();
+    return () => {
+      governor.request("join-hero", 0);
+      ctx.revert();
+    };
   }, [reducedMotion]);
 
   const handleSkipToForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -180,7 +195,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
       ref={pinWrapperRef}
       className={`relative w-full ${
         reducedMotion ? "h-[85dvh]" : "h-[100dvh]"
-      } overflow-hidden bg-[#F4EEDD]`}
+      } overflow-hidden bg-transparent`}
       style={{ minHeight: "100dvh" }}
     >
       {/* ================================================================= */}
@@ -230,28 +245,10 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
       {/* 2. R3F 3D VIEWPORT WITH PBR ENVIRONMENT, GATES & POST-PROCESSING   */}
       {/* ================================================================= */}
       <div className="relative w-full h-full">
-        <Canvas
-          dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
-          camera={{ position: [0, 2.4, 12.2], fov: 44 }}
-          frameloop={inView ? "always" : "demand"}
-          gl={{
-            antialias: true,
-            alpha: true,
-            powerPreference: "high-performance",
-            toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 0.9,
-          }}
-          shadows={tier !== "C" ? { type: THREE.PCFShadowMap } : false}
-          onCreated={({ gl }) => {
-            gl.domElement.addEventListener("webglcontextlost", (event) => {
-              event.preventDefault();
-              console.warn("[JoinHeroCanvas] WebGL context lost. Attempting restore...");
-            });
-            gl.domElement.addEventListener("webglcontextrestored", () => {
-              console.info("[JoinHeroCanvas] WebGL context restored.");
-            });
-          }}
-        >
+        <View className="w-full h-full">
+          <JoinSceneWarmup />
+          <PerspectiveCamera makeDefault position={[0, 2.4, 12.2]} fov={44} near={0.05} far={100} />
+
           {/* Seamless matching canvas background & fog (§3.2) */}
           <color attach="background" args={[FOG_COLOR]} />
           <fogExp2 attach="fog" args={[FOG_COLOR, FOG_DENSITY]} />
@@ -296,14 +293,11 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
 
             {/* Finale Sunrise Bloom */}
             <WhiteoutFinale scrollProgressRef={scrollProgressRef} />
-
-            {/* Optical Post-Processing: Vignette & Edge Bloom */}
-            <EffectComposer>
-              <Vignette offset={0.3} darkness={0.6} />
-              <Bloom luminanceThreshold={0.88} intensity={0.4} />
-            </EffectComposer>
           </Suspense>
-        </Canvas>
+        </View>
+
+        {/* Optical Post-Processing: CSS Vignette Overlay (§1, Spike S3) */}
+        <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(20,10,5,0.45)_100%)]" />
       </div>
     </div>
   );

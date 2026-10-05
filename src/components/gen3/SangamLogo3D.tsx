@@ -161,6 +161,7 @@ export function SangamLogo3D() {
   }, []);
 
   useFrame((state, delta) => {
+    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
     const time = state.clock.elapsedTime;
 
     if (groupRef.current) {
@@ -168,7 +169,7 @@ export function SangamLogo3D() {
       groupRef.current.position.y = 3.65 + Math.sin(time * 1.5) * 0.12;
       
       // Majestic horizontal coin spin around vertical Y-axis (stays upright)
-      groupRef.current.rotation.y += delta * 0.45;
+      groupRef.current.rotation.y += safeDelta * 0.45;
       
       // Subtle natural wobble on X
       groupRef.current.rotation.x = Math.sin(time * 0.8) * 0.05;
@@ -177,14 +178,14 @@ export function SangamLogo3D() {
     // Independent smooth celestial orbit for the outer rings (encircling the coin equatorially high above the ground)
     if (ring1Ref.current) {
       ring1Ref.current.position.y = 3.65 + Math.sin(time * 1.5) * 0.12;
-      ring1Ref.current.rotation.y += delta * 0.25;
+      ring1Ref.current.rotation.y += safeDelta * 0.25;
       ring1Ref.current.rotation.x = Math.sin(time * 0.5) * 0.16 + 0.28;
       ring1Ref.current.rotation.z = Math.cos(time * 0.4) * 0.12;
     }
 
     if (ring2Ref.current) {
       ring2Ref.current.position.y = 3.65 + Math.sin(time * 1.5) * 0.12;
-      ring2Ref.current.rotation.y -= delta * 0.2;
+      ring2Ref.current.rotation.y -= safeDelta * 0.2;
       ring2Ref.current.rotation.x = Math.cos(time * 0.45) * 0.18 - 0.26;
       ring2Ref.current.rotation.z = Math.sin(time * 0.38) * 0.15 + 0.12;
     }

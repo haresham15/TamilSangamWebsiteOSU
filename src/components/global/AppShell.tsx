@@ -7,6 +7,7 @@ import { FloatingNav } from "./FloatingNav";
 import { CommandPalette } from "./CommandPalette";
 import { Footer } from "./Footer";
 import { SangamChatbot } from "@/components/chat/SangamChatbot";
+import { DirectorHUD } from "@/director/DirectorHUD";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -45,6 +46,10 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
 
       {/* 5. Footer (Skipped on /links) */}
       {!isLinksPage && <Footer />}
+
+      {/* 6. Director's Viewport Diagnostics HUD (§6) */}
+      <DirectorHUD />
     </div>
   );
 };
+

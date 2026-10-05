@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, useLayoutEffect } from "react";
+import React, { useMemo, useRef, useLayoutEffect, useEffect } from "react";
 import * as THREE from "three";
 import { computeAllFrets, TOTAL_FRETS } from "./fretMath";
 
@@ -29,9 +29,19 @@ export function Frets() {
         metalness: 1.0,
         roughness: 0.22,
         envMapIntensity: 1.6,
+        polygonOffset: true,
+        polygonOffsetFactor: -1,
+        polygonOffsetUnits: -1,
       }),
     []
   );
+
+  useEffect(() => {
+    return () => {
+      cylinderGeo.dispose();
+      material.dispose();
+    };
+  }, [cylinderGeo, material]);
 
   useLayoutEffect(() => {
     if (!meshRef.current) return;

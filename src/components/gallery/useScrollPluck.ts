@@ -59,11 +59,12 @@ export function useScrollPluck(config: ScrollPluckConfig = {}) {
     );
 
     // 4. Exponential frame-rate independent damping toward target (§8)
+    const safeDelta = Math.min(Math.max(delta, 0.001), 0.05);
     currentAmplitude.current = THREE.MathUtils.damp(
       currentAmplitude.current,
       targetAmplitude,
       cfg.dampingLambda,
-      delta
+      safeDelta
     );
 
     // 5. Update state in store for HUD & reactive components

@@ -12,6 +12,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { ArrowUpRight, Mail, ArrowRight, X, Crown } from "lucide-react";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
+import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 
 
 // Dynamically load 3D Chola Darbar corridor hero without SSR
@@ -92,29 +93,24 @@ export default function BoardPage() {
   ];
 
   return (
-    <main className="relative w-full min-h-screen bg-[#120A06] text-[#faf5ed]">
+    <main className="relative w-full min-h-screen bg-transparent text-[#faf5ed]">
       {/* ========================================================================= */}
       {/* 1. CINEMATIC 3D HERO: PONNIYIN SELVAN CHOLA DARBAR CRANE CORRIDOR         */}
       {/* ========================================================================= */}
       <section
         id="chola-darbar-hero"
-        className="relative w-full overflow-hidden bg-[#120A06]"
-        style={{
-          WebkitMaskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-          maskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-        }}
+        className="relative w-full overflow-hidden bg-transparent"
       >
         <BoardHeroCanvas />
-        {/* Bottom overlay gradient blending agent */}
-        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#120A06] via-[#120A06]/80 to-transparent pointer-events-none z-10" />
       </section>
+
+      {/* Color Gradient Transition from 3D Chola Darbar (#120A06) to Warm Sandstone Ledger (#F7F0E4) */}
+      <HeroGradientTransition variant="board" className="-mt-32 relative z-20" />
 
       {/* ========================================================================= */}
       {/* 2. EDITORIAL ROSTER GRID & ARCHITECTURAL LEDGER                           */}
       {/* ========================================================================= */}
-      <div className="relative z-20 -mt-32 w-full bg-[#F7F0E4] text-[#1C120A] pt-16 pb-24 overflow-hidden">
+      <div className="relative z-20 w-full bg-[#F7F0E4] text-[#1C120A] pt-16 pb-24 overflow-hidden">
         {/* Structural Tamil Background Watermarks */}
         <WatermarkGlyph text="அவை" opacity={0.04} align="right" theme="light" />
         <WatermarkGlyph text="சபை" opacity={0.032} align="left" theme="light" className="top-[65%]" />

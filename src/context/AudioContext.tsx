@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { soundEngine } from "@/lib/soundEngine";
+import { audio } from "@/audio/AudioController";
+import { armAudioUnlock } from "@/audio/armUnlock";
 
 interface AudioContextType {
   isSoundEnabled: boolean;
@@ -12,6 +14,7 @@ interface AudioContextType {
   playWoodClick: () => void;
   playFlour: () => void;
   playSyllable: (syllable: string) => void;
+  playAcousticString: (stringIndex: number, strength?: number) => void;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -20,24 +23,35 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const [isSoundEnabled, setIsSoundEnabled] = useState<boolean>(false);
 
   useEffect(() => {
+    // Arm first-gesture passive unlock listener (§4.4)
+    armAudioUnlock();
+
     queueMicrotask(() => {
-      const saved = localStorage.getItem("sangam_sound_enabled");
-      if (saved === "true") {
-        setIsSoundEnabled(true);
-        soundEngine.setMuted(false);
-      } else {
-        soundEngine.setMuted(true);
-      }
+      const saved =
+        localStorage.getItem("sound") ??
+        localStorage.getItem("sangam_sound_enabled");
+      const enabled = saved === "1" || saved === "true";
+      setIsSoundEnabled(enabled);
+      audio.setEnabled(enabled);
+      soundEngine.setMuted(!enabled);
     });
   }, []);
 
   const toggleSound = () => {
     const nextState = !isSoundEnabled;
     setIsSoundEnabled(nextState);
+    audio.setEnabled(nextState);
     soundEngine.setMuted(!nextState);
-    localStorage.setItem("sangam_sound_enabled", String(nextState));
+
+    try {
+      localStorage.setItem("sound", nextState ? "1" : "0");
+      localStorage.setItem("sangam_sound_enabled", String(nextState));
+    } catch {
+      // Ignore private storage restrictions
+    }
+
     if (nextState) {
-      soundEngine.playTempleBell(880);
+      audio.play("toggle");
     }
   };
 
@@ -52,6 +66,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
         playWoodClick: () => soundEngine.playWoodClick(),
         playFlour: () => soundEngine.playFlourChime(),
         playSyllable: (s) => soundEngine.playSolkattuSyllable(s),
+        playAcousticString: (idx, strength) => soundEngine.playAcousticString(idx, strength),
       }}
     >
       {children}

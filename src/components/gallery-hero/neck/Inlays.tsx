@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, useLayoutEffect } from "react";
+import React, { useMemo, useRef, useLayoutEffect, useEffect } from "react";
 import * as THREE from "three";
 import { computeAllInlays } from "./fretMath";
 
@@ -37,9 +37,19 @@ export function Inlays() {
         clearcoat: 0.5,
         clearcoatRoughness: 0.2,
         envMapIntensity: 1.5,
+        polygonOffset: true,
+        polygonOffsetFactor: -1,
+        polygonOffsetUnits: -1,
       }),
     []
   );
+
+  useEffect(() => {
+    return () => {
+      discGeo.dispose();
+      material.dispose();
+    };
+  }, [discGeo, material]);
 
   useLayoutEffect(() => {
     if (!meshRef.current) return;

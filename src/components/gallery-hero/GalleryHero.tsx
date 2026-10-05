@@ -15,6 +15,7 @@ const DebugHUD = dynamic(
 );
 import { WashOverlay } from "./fx/WashOverlay";
 import { registerTimelineProgressSetter, unregisterTimelineProgressSetter, heroState } from "./state";
+import { governor } from "@/engine/governor";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useLocale } from "@/context/LocaleContext";
 import { ChevronDown } from "lucide-react";
@@ -62,10 +63,16 @@ export function GalleryHero() {
           heroState.rawVelocity = self.getVelocity();
           heroState.lastScrollTime = performance.now();
 
+          // Governor request: level 2 on active scroll, level 1 when idle ambient (§4.3)
+          governor.request("gallery-hero", Math.abs(self.getVelocity()) > 10 ? 2 : 1);
+
           // Strum State Machine: first forward scroll detection (§5.3)
           updateStrumScrollIntent(self.progress, self.direction);
         },
       });
+
+      // Ambient frame request while mounted (§4.3)
+      governor.request("gallery-hero", 1);
 
       // 4. Register programmatic progress setter for debug HUD / tests (§9)
       registerTimelineProgressSetter((p) => {
@@ -94,6 +101,7 @@ export function GalleryHero() {
     }, pinWrapperRef);
 
     return () => {
+      governor.request("gallery-hero", 0);
       unregisterTimelineProgressSetter();
       ctx.revert();
     };
@@ -114,7 +122,7 @@ export function GalleryHero() {
   return (
     <div
       ref={pinWrapperRef}
-      className="relative w-full h-[100dvh] overflow-hidden bg-[#0D0709] select-none"
+      className="relative w-full h-[100dvh] overflow-hidden bg-transparent select-none"
     >
       {/* 3D WebGL Canvas Layer */}
       <HeroCanvas />

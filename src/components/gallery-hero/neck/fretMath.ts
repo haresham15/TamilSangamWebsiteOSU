@@ -49,6 +49,8 @@ export function getStringSpacing(s: number): number {
   return 0.9 + 0.2 * (s / 75.0);
 }
 
+import { calculateCameraS } from "@/gallery/ramp";
+
 /**
  * String height above fretboard surface
  */
@@ -57,10 +59,27 @@ export function getStringHeight(s: number): number {
 }
 
 /**
- * Camera travel along neck: linear in s (0 to 75 su)
+ * Camera travel along neck: kinematic speed ramp via ramp.ts (§5.1, §5.2)
  */
-export function getCameraS(progress: number): number {
-  return MAX_JOURNEY_S * Math.min(Math.max(progress, 0.0), 1.0);
+export function getCameraS(progress: number, reducedMotion = false): number {
+  return calculateCameraS(progress, {
+    reducedMotion,
+    fret5S: getFretS(5),
+    fret12S: getFretS(12),
+    maxS: MAX_JOURNEY_S,
+  }).s;
+}
+
+/**
+ * Instantaneous camera speed factor along neck (1.0 = baseline)
+ */
+export function getCameraSpeed(progress: number, reducedMotion = false): number {
+  return calculateCameraS(progress, {
+    reducedMotion,
+    fret5S: getFretS(5),
+    fret12S: getFretS(12),
+    maxS: MAX_JOURNEY_S,
+  }).speed;
 }
 
 /**

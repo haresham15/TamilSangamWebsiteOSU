@@ -79,6 +79,7 @@ export function LightingRig() {
   const targetFogColor = useMemo(() => new THREE.Color(), []);
 
   useFrame((state, delta) => {
+    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
     const p = heroState.progress;
     const camZ = state.camera.position.z;
 
@@ -115,7 +116,7 @@ export function LightingRig() {
       const targetExp = THREE.MathUtils.lerp(era2.exposure, era3.exposure, t2_3);
 
       // Critically damped spring integration (omega = 6.0)
-      const damp = Math.min(1.0, 6.0 * delta);
+      const damp = Math.min(1.0, 6.0 * safeDelta);
       currentKeyColor.current.lerp(targetKeyColor, damp);
       currentKeyIntensity.current = THREE.MathUtils.lerp(currentKeyIntensity.current, targetKeyInt, damp);
       currentKeyOffset.current.lerp(targetKeyOffset, damp);
@@ -141,7 +142,7 @@ export function LightingRig() {
       const targetFogDens = THREE.MathUtils.lerp(era1.fogDensity, era2.fogDensity, t1_2);
       const targetExp = THREE.MathUtils.lerp(era1.exposure, era2.exposure, t1_2);
 
-      const damp = Math.min(1.0, 6.0 * delta);
+      const damp = Math.min(1.0, 6.0 * safeDelta);
       currentKeyColor.current.lerp(targetKeyColor, damp);
       currentKeyIntensity.current = THREE.MathUtils.lerp(currentKeyIntensity.current, targetKeyInt, damp);
       currentKeyOffset.current.lerp(targetKeyOffset, damp);

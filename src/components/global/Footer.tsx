@@ -7,6 +7,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { CheckCircle2, ArrowRight, Loader2, AlertCircle, ExternalLink } from "lucide-react";
 import { EVENTS } from "@/data/events";
+import { DirectorFooterButton } from "@/director/DirectorHUD";
 
 const getSavedEmail = () => {
   if (typeof window === "undefined") return "";
@@ -305,11 +306,19 @@ export const Footer: React.FC = () => {
             <Link href="/links" className="text-[#55CCA2] font-semibold hover:underline transition-colors">Quick Links</Link>
           </nav>
 
-          <div className="text-center md:text-right font-mono text-[11px] space-y-1">
-            <p className="text-white/90">© {new Date().getFullYear()} OSU Tamil Sangam. The Ohio State University.</p>
-            <p className="text-white/40 text-[10px]">
-              Registered student organization at Ohio State. Not an official university entity.
-            </p>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex items-center gap-2">
+              <DirectorFooterButton />
+              <span className="hidden lg:inline text-[10px] font-mono text-white/40 border-l border-white/10 pl-2">
+                Keys: <kbd className="text-[#55CCA2]">Shift+D</kbd> Viewport · <kbd className="text-[#55CCA2]">W</kbd> Wire · <kbd className="text-[#55CCA2]">C</kbd> Grade · <kbd className="text-[#55CCA2]">Esc</kbd> Exit
+              </span>
+            </div>
+            <div className="text-center md:text-right font-mono text-[11px] space-y-1">
+              <p className="text-white/90">© {new Date().getFullYear()} OSU Tamil Sangam. The Ohio State University.</p>
+              <p className="text-white/40 text-[10px]">
+                Registered student organization at Ohio State. Not an official university entity.
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -227,12 +227,13 @@ export function MemoryStream({ amplitudeRef, reducedMotion = false }: MemoryStre
   useFrame((state, delta) => {
     if (reducedMotion) return;
 
+    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
     const time = state.clock.getElapsedTime();
     const currentAmp = amplitudeRef.current || 0;
 
     // 1. Pluck Event Detection (Rising-edge crossing of SPAWN_THRESHOLD)
-    cooldownTimer.current -= delta;
-    idleTimer.current += delta;
+    cooldownTimer.current -= safeDelta;
+    idleTimer.current += safeDelta;
 
     const aboveThreshold = currentAmp > SPAWN_THRESHOLD;
     if (aboveThreshold && !wasAboveThreshold.current && cooldownTimer.current <= 0) {
@@ -264,7 +265,7 @@ export function MemoryStream({ amplitudeRef, reducedMotion = false }: MemoryStre
       mesh.visible = true;
 
       // Forward drift toward camera
-      p.position.z += p.speed * delta;
+      p.position.z += p.speed * safeDelta;
 
       // Gentle multi-axis cardstock tumble (NO vertex deformation)
       p.rotation.z = Math.sin(time * 0.4 + p.seed) * 0.08;

@@ -19,6 +19,8 @@ import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 import type { BlueprintPin } from "@/components/suggestions/BlueprintSVG";
 import { OFFICIAL_DISCLAIMER, CONTACT_EMAIL } from "@/lib/constants";
 
+import { governor } from "@/engine/governor";
+
 const BlueprintScene3D = dynamic(
   () => import("@/components/suggestions/BlueprintScene3D").then((m) => m.BlueprintScene3D),
   {
@@ -70,6 +72,7 @@ export default function SuggestionsPage() {
         anticipatePin: 1,
         onUpdate: (self) => {
           setScrollProgress(self.progress);
+          governor.request("ideas-blueprint", Math.abs(self.getVelocity()) > 10 ? 2 : 1);
         },
       });
 
@@ -108,7 +111,7 @@ export default function SuggestionsPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#0F050A] text-[#f8f6f0] selection:bg-[#FFB84D] selection:text-[#150914] overflow-hidden">
+    <div className="relative min-h-screen bg-transparent text-[#f8f6f0] selection:bg-[#FFB84D] selection:text-[#150914] overflow-hidden">
       {/* Structural Blueprint Watermark Glyphs */}
       <WatermarkGlyph text="வரைபடம்" position="top-right" theme="dark" opacity={0.035} />
       <WatermarkGlyph text="கருத்து" position="center" theme="dark" opacity={0.03} />
@@ -118,13 +121,8 @@ export default function SuggestionsPage() {
         ref={containerRef}
         className={`relative w-full ${
           isLiteMode ? "min-h-auto pt-28 pb-16" : "h-[100dvh]"
-        } overflow-hidden flex flex-col justify-between select-none bg-[#0F050A]`}
-        style={{
-          WebkitMaskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-          maskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-        }}
+        } overflow-hidden flex flex-col justify-between select-none bg-transparent`}
+        style={{ minHeight: "100dvh" }}
       >
         {/* Background 3D Canvas / 2D SVG Fallback */}
         <div className="absolute inset-0 z-0 w-full h-full">
@@ -229,15 +227,16 @@ export default function SuggestionsPage() {
       </section>
 
       {/* Color Gradient Transition from 3D Blueprint (#0F050A) to Form Section (#0F050A) */}
-      <HeroGradientTransition variant="suggestions" className="-mt-14 sm:-mt-20 z-10" />
+      <HeroGradientTransition variant="suggestions" className="-mt-32 relative z-20" />
 
       {/* 2. Interactive Suggestion Box Section */}
       <section
         ref={formSectionRef}
-        className="relative z-20 -mt-32 min-h-screen bg-[#0F050A] py-20 px-4 sm:px-8 max-w-5xl mx-auto space-y-12"
+        className="relative z-20 w-full min-h-screen bg-[#0F050A] py-20"
       >
-        {/* Editorial Explainer Banner */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 space-y-12">
+          {/* Editorial Explainer Banner */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="ticket-chamfer-tl-br relative p-6 bg-[#150914] border border-[#4A2038] hover:border-[#FFB84D]/40 space-y-2 shadow-[4px_4px_0px_#0F050A] hover:glow-sodium transition-all">
             <div className="w-8 h-8 bg-[#FFB84D]/20 border border-[#FFB84D] text-[#FFB84D] flex items-center justify-center font-mono font-bold text-xs">
               01
@@ -311,7 +310,8 @@ export default function SuggestionsPage() {
             </Link>
           </div>
         </div>
-      </section>
-    </div>
-  );
+      </div>
+    </section>
+  </div>
+);
 }

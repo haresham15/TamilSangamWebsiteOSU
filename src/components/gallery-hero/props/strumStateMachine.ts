@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import gsap from "gsap";
 import { globalStringEnergy } from "../strings/Strings";
+import { soundEngine } from "@/lib/soundEngine";
 
 export type StrumPhase = "IDLE" | "STRUM" | "DRIVEN";
 
@@ -22,8 +23,9 @@ let lastStrumEndTime = 0;
 let topQuietStartTime = 0;
 let strumTimeline: gsap.core.Timeline | null = null;
 
-// History buffer for motion blur ghost echoes (2–3 frames back)
+// History buffer and object pool for motion blur ghost echoes (2–3 frames back)
 const history: Array<{ pos: THREE.Vector3; rot: THREE.Euler; opacity: number }> = [];
+const historyPool: Array<{ pos: THREE.Vector3; rot: THREE.Euler; opacity: number }> = [];
 
 export const currentStrumState: StrumFrameState = {
   visible: false,
@@ -107,14 +109,22 @@ export function triggerStrumSequence(onComplete?: () => void): void {
       );
       currentStrumState.lead.opacity = track.opacity;
 
-      // Update history buffer for 2-3 motion blur echoes
-      history.unshift({
-        pos: currentStrumState.lead.position.clone(),
-        rot: currentStrumState.lead.rotation.clone(),
-        opacity: currentStrumState.lead.opacity,
-      });
+      // Update history buffer for 2-3 motion blur echoes with pooled objects
+      let entry = historyPool.pop();
+      if (!entry) {
+        entry = {
+          pos: new THREE.Vector3(),
+          rot: new THREE.Euler(),
+          opacity: 0,
+        };
+      }
+      entry.pos.copy(currentStrumState.lead.position);
+      entry.rot.copy(currentStrumState.lead.rotation);
+      entry.opacity = currentStrumState.lead.opacity;
+      history.unshift(entry);
       if (history.length > 8) {
-        history.pop();
+        const discarded = history.pop();
+        if (discarded) historyPool.push(discarded);
       }
 
       // Ghost 1 (lag ~2 frames)
@@ -136,6 +146,7 @@ export function triggerStrumSequence(onComplete?: () => void): void {
         if (!stringPlucked[s] && timeInSec >= pluckTimes[s]) {
           stringPlucked[s] = true;
           globalStringEnergy.triggerPluck(s, pluckAmps[s]);
+          soundEngine.playAcousticString(s, pluckAmps[s]);
         }
       }
     },

@@ -16,6 +16,7 @@ import { PalagaiButton } from "@/components/ui/PalagaiButton";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 import { CulturalGlossaryTerm } from "@/components/ui/CulturalGlossaryTerm";
 import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
+import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -61,23 +62,20 @@ export default function EventsPage() {
   const years = ["all", "2025-2026"];
 
   return (
-    <div className="w-full text-left bg-[#FAF6EE]">
-      {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene (Leo Factory) */}
+    <div className="w-full text-left bg-transparent">
+      {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene (Festival Arena) */}
       <div
         id="events-hero-trigger"
-        className="w-full h-[100dvh] relative z-10 overflow-hidden bg-[#FAF6EE]"
-        style={{
-          WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-          maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-        }}
+        className="w-full h-[100dvh] relative z-10 overflow-hidden bg-transparent"
       >
         <EventsGen3Canvas />
-        {/* Bottom overlay gradient blending agent */}
-        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#FAF6EE] via-[#FAF6EE]/80 to-transparent pointer-events-none z-10" />
       </div>
 
+      {/* Color Gradient Transition from 3D Festival Arena (#0c0a08) to Warm Cream (#FAF6EE) */}
+      <HeroGradientTransition variant="events" className="-mt-32 relative z-20" />
+
       {/* 2. Events Catalogue Container with Warm Cream Background (#FAF6EE) & Tactile Sandstone Texture */}
-      <div className="relative z-20 -mt-32 w-full bg-[#FAF6EE] overflow-hidden vignette-ambient-warm">
+      <div className="relative z-20 w-full bg-[#FAF6EE] overflow-hidden vignette-ambient-warm">
         {/* Tactile Sandstone Texture Overlay */}
         <HeritageTextureOverlay variant="sandstone" opacity={0.02} />
 

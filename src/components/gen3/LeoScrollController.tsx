@@ -5,6 +5,7 @@ import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { leoKinematics } from "@/store/leoHeroStore";
+import { governor } from "@/engine/governor";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -60,8 +61,11 @@ export function LeoScrollController({ triggerId = "events-hero-trigger" }: LeoSc
           end: "+=1600",
           pin: true,
           pinSpacing: true,
-          scrub: 1.2, // Native smooth scrub per directive
+          scrub: 0.6, // Responsive smooth scrub
           anticipatePin: 1,
+          onUpdate: (self) => {
+            governor.request("events-arena", Math.abs(self.getVelocity()) > 10 ? 2 : 1);
+          },
         },
       });
 

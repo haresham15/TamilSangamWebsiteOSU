@@ -54,7 +54,7 @@ export function SceneLighting() {
       <ambientLight intensity={0.18} color="#161018" />
       <hemisphereLight args={["#201610", "#030202", 0.18]} />
 
-      {/* Primary God Light (Naa Ready Sodium Vapor Flood) illuminating upper wall & architecture */}
+      {/* Primary God Light (Festival Arena Amber Sodium Vapor Flood) illuminating upper wall & architecture */}
       <directionalLight
         ref={godLightRef}
         position={[0, 6.5, -8]}

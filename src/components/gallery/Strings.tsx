@@ -32,10 +32,11 @@ export function Strings() {
   }, []);
 
   useFrame((state, delta) => {
+    const clampedDelta = Math.min(delta, 0.1);
     const time = state.clock.getElapsedTime();
 
     // 2. Advance pluck energy model decay (e *= exp(-dt/τ))
-    pluckBus.update(delta);
+    pluckBus.update(clampedDelta);
 
     // 3. Handle scroll velocity strums
     pluckBus.handleScrollVelocity(galleryScrollState.velocity, performance.now());

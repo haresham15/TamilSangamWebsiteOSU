@@ -41,6 +41,7 @@ export const heroState: HeroState = {
 };
 
 let timelineSetter: ((p: number) => void) | null = null;
+let cameraSnapHandler: ((p: number) => void) | null = null;
 
 export function registerTimelineProgressSetter(setter: (p: number) => void) {
   timelineSetter = setter;
@@ -50,14 +51,23 @@ export function unregisterTimelineProgressSetter() {
   timelineSetter = null;
 }
 
+export function registerCameraSnapHandler(handler: (p: number) => void) {
+  cameraSnapHandler = handler;
+}
+
+export function unregisterCameraSnapHandler() {
+  cameraSnapHandler = null;
+}
+
 /**
  * Programmatic progress setter.
- * Updates mutable state and seeks master timeline if registered.
+ * Updates mutable state, seeks master timeline, and snaps camera rig.
  */
 export function setHeroProgress(p: number) {
   const clamped = Math.min(Math.max(p, 0.0), 1.0);
   heroState.progress = clamped;
   heroState.cameraS = getCameraS(clamped);
+  cameraSnapHandler?.(clamped);
 
   // Era mapping:
   // 0.00 - 0.334: Era 1 (Nut to Fret 5)

@@ -6,10 +6,10 @@ import { useFrame } from "@react-three/fiber";
 import { seededRandom } from "@/lib/prng";
 
 // ---------------------------------------------------------------------------
-// 4K High-Detail Procedural Texture for Leo / Naa Ready Factory Back Wall
+// 4K High-Detail Procedural Texture for Festival Arena Back Wall
 // ---------------------------------------------------------------------------
 
-function createLeoBackWallTexture(): THREE.CanvasTexture | null {
+function createArenaBackWallTexture(): THREE.CanvasTexture | null {
   if (typeof document === "undefined") return null;
   const canvas = document.createElement("canvas");
   canvas.width = 4096;
@@ -105,7 +105,7 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
   ctx.save();
 
   // =========================================================================
-  // 2. CENTRAL MASTER STENCIL MURAL: LEO DASS & "NAA READY"
+  // 2. CENTRAL MASTER STENCIL MURAL: SANGAM FESTIVAL & AATAM PAATAM KONDATAM
   // Centered at cx = 2048, cy = 820 (Upper Register, Unobstructed under Catwalk)
   // =========================================================================
   const cx = 2048;
@@ -146,34 +146,34 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
   // Arch Header above Lion
   ctx.font = "bold 40px 'Courier New', monospace";
   ctx.fillStyle = "rgba(245, 158, 11, 0.9)";
-  ctx.fillText("★ LEO DASS ORDNANCE & CONFECTIONERY FACILITY ★", cx, cy - 235);
+  ctx.fillText("★ OSU TAMIL SANGAM · CULTURAL FESTIVAL ARENA ★", cx, cy - 235);
 
-  // Massive "L E O" Headline Stencil
+  // Massive "S A N G A M" Headline Stencil
   ctx.font = "900 160px 'Impact', 'Arial Black', sans-serif";
   ctx.fillStyle = "rgba(10, 8, 6, 0.95)";
-  ctx.fillText("L  E  O", cx + 5, cy - 75);
+  ctx.fillText("S  A  N  G  A  M", cx + 5, cy - 75);
   ctx.fillStyle = "rgba(255, 215, 80, 0.9)";
-  ctx.fillText("L  E  O", cx, cy - 80);
+  ctx.fillText("S  A  N  G  A  M", cx, cy - 80);
 
-  // "— BLOODY SWEET —" Stamped in bold distressed crimson
-  ctx.font = "900 68px 'Courier New', monospace";
+  // "— AATAM · PAATAM · KONDATAM —" Stamped in bold festive crimson
+  ctx.font = "900 60px 'Courier New', monospace";
   ctx.fillStyle = "rgba(15, 10, 10, 0.95)";
-  ctx.fillText("— BLOODY SWEET —", cx + 4, cy + 34);
+  ctx.fillText("— AATAM · PAATAM · KONDATAM —", cx + 4, cy + 34);
   ctx.fillStyle = "rgba(235, 45, 45, 0.95)";
-  ctx.fillText("— BLOODY SWEET —", cx, cy + 30);
+  ctx.fillText("— AATAM · PAATAM · KONDATAM —", cx, cy + 30);
 
-  // Bilingual Signature Slogan: "நான் ரெடி தான் வரவா? · NAA READY THAAN VARAVAA?"
+  // Bilingual Signature Slogan: "ஆட்டம் · பாட்டம் · கொண்டாட்டம்"
   // Tamil Primary Headline in Radiant Cream-Gold
   ctx.font = "bold 80px 'Mukta Malar', 'Noto Sans Tamil', sans-serif";
   ctx.fillStyle = "rgba(15, 10, 5, 0.95)";
-  ctx.fillText("நான் ரெடி தான் வரவா?", cx + 5, cy + 135);
+  ctx.fillText("ஆட்டம் பாட்டம் கொண்டாட்டம்", cx + 5, cy + 135);
   ctx.fillStyle = "rgba(255, 240, 190, 0.95)";
-  ctx.fillText("நான் ரெடி தான் வரவா?", cx, cy + 130);
+  ctx.fillText("ஆட்டம் பாட்டம் கொண்டாட்டம்", cx, cy + 130);
 
   // English Subtitle
-  ctx.font = "900 52px 'Arial Black', sans-serif";
+  ctx.font = "900 48px 'Arial Black', sans-serif";
   ctx.fillStyle = "rgba(245, 175, 45, 0.9)";
-  ctx.fillText("NAA READY THAAN VARAVAA?", cx, cy + 205);
+  ctx.fillText("COMMUNITY · CULTURE · CELEBRATION", cx, cy + 205);
 
   // Heavy Industrial Facility Badge & Institutional Sub-text
   ctx.font = "bold 30px 'Courier New', monospace";
@@ -182,7 +182,7 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
 
   ctx.font = "bold 23px 'Courier New', monospace";
   ctx.fillStyle = "rgba(220, 190, 130, 0.8)";
-  ctx.fillText("HEAVY ORDNANCE PRODUCTION UNIT 01  ·  BATCH #2026-TS-OSU", cx, cy + 320);
+  ctx.fillText("COLLEGIATE CULTURAL PRODUCTION  ·  ESTABLISHED 1972 · BUCKEYE SANGAM", cx, cy + 320);
 
   // =========================================================================
   // 3. MIDDLE REGISTER DIRECTLY BEHIND & FLANKING THE COIN (cy ≈ 1520 - 1650)
@@ -280,21 +280,21 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
   ctx.textAlign = "left";
   ctx.font = "900 40px 'Impact', sans-serif";
   ctx.fillStyle = "rgba(255, 80, 80, 0.95)";
-  ctx.fillText("LEO DASS ARMORY DIVISION", rmx - 420, 1390);
+  ctx.fillText("COLLEGIATE FESTIVAL STAGE WING", rmx - 420, 1390);
 
   ctx.font = "bold 28px 'Mukta Malar', 'Noto Sans Tamil', sans-serif";
   ctx.fillStyle = "rgba(255, 215, 180, 0.9)";
-  ctx.fillText("லியோ தாஸ் ஆயுத கிடங்கு · கொலம்பஸ் பிரிவு", rmx - 420, 1435);
+  ctx.fillText("ஓஹியோ தமிழ் கலை மேடை அரங்கம்", rmx - 420, 1435);
 
   ctx.font = "bold 23px 'Courier New', monospace";
   ctx.fillStyle = "rgba(200, 195, 185, 0.85)";
   const rightMidSpecs = [
-    "SECURITY PROTOCOL: SANGAM LEVEL 04 RED",
+    "FESTIVAL PROTOCOL: SANGAM COMMUNITY STAGE",
     "உறுதி · ஒழுக்கம் · வெற்றி (RESOLVE · DISCIPLINE)",
     "வெற்றி நமதே! · VICTORY IS OURS!",
-    "EMERGENCY EGRESS ROUTE: NORTH-EAST STAIR 02",
-    "அங்கீகரிக்கப்பட்ட நபர்களுக்கு மட்டுமே அனுமதி",
-    "AUTHORIZED TS-OSU SQUAD MEMBERS ONLY",
+    "EGRESS ROUTE: OHIO UNION NORTH EXIT",
+    "அனைத்து மாணவர்களுக்கும் அன்பான வரவேற்பு",
+    "OPEN TO ALL OHIO STATE STUDENTS & FACULTY",
   ];
   rightMidSpecs.forEach((txt, idx) => {
     ctx.fillText(txt, rmx - 420, 1485 + idx * 36);
@@ -315,22 +315,22 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
 
   ctx.font = "900 48px 'Impact', sans-serif";
   ctx.fillStyle = "rgba(255, 205, 70, 0.9)";
-  ctx.fillText("ZONE 04 : WEAPONS FORGE & FOUNDRY", lx, 525);
+  ctx.fillText("ZONE 04 : LIVE SOUND & STAGE RIG", lx, 525);
   ctx.font = "bold 30px 'Mukta Malar', 'Noto Sans Tamil', sans-serif";
   ctx.fillStyle = "rgba(255, 235, 175, 0.85)";
-  ctx.fillText("பிரிவு 04 : ஆயுத உலைக்களம் & பட்டறை", lx, 565);
+  ctx.fillText("பிரிவு 04 : நேரடி இசை & கலை அரங்கம்", lx, 565);
 
   // Technical Specs Box
   ctx.textAlign = "left";
   ctx.font = "bold 26px 'Courier New', monospace";
   ctx.fillStyle = "rgba(200, 190, 175, 0.75)";
   const specLines = [
-    "MACHINE ID: LATHE & PRESS LINE #03",
-    "MAX OPERATING LOAD: 50,000 KG",
-    "PRESSURE CHAMBER: 850 PSI TESTED",
-    "FORGE TEMPERATURE: 1,450°C",
-    "SERVICED: COLUMBUS DEPOT · 2026",
-    "SERIAL: TS-OSU-1999-LEO-DASS",
+    "AUDIO SYSTEM: D&B AUDIOTECHNIK LINE ARRAY",
+    "MAX SOUND PRESSURE: 104 DB LEQ COMPLIANT",
+    "LIGHTING RIG: MOVING HEAD BEAMS & STROBES",
+    "COLOR TEMPERATURE: 3,200K WARM TUNGSTEN",
+    "SERVICED: OHIO UNION AUDITORIUM · 2026",
+    "SERIAL: TS-OSU-1972-SANGAM",
   ];
   specLines.forEach((line, idx) => {
     ctx.fillText(line, lx - 440, 650 + idx * 42);
@@ -359,23 +359,22 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
     ctx.fillText(char, 220, 420 + idx * 80);
   });
 
-  // Stenciled Blueprint Schematic of Sledgehammer & Gear
+  // Stenciled Blueprint Schematic of Stage Rig & Speakers
   ctx.strokeStyle = "rgba(85, 204, 162, 0.35)";
   ctx.lineWidth = 2.5;
   ctx.strokeRect(lx - 440, 1080, 880, 230);
   ctx.beginPath();
-  // Sledgehammer outline blueprint
   ctx.strokeRect(lx - 340, 1130, 140, 80);
   ctx.strokeRect(lx - 200, 1160, 420, 20);
   ctx.stroke();
   ctx.font = "bold 20px 'Courier New', monospace";
   ctx.fillStyle = "rgba(85, 204, 162, 0.75)";
-  ctx.fillText("[ SCHEMATIC 04-A: SANGAM HEAVY SLEDGE · 1800mm HANDLE ]", lx + 40, 1240);
+  ctx.fillText("[ SCHEMATIC 04-A: SANGAM FESTIVAL TRUSS · 18M SPAN ]", lx + 40, 1240);
   ctx.font = "bold 20px 'Mukta Malar', 'Noto Sans Tamil', sans-serif";
-  ctx.fillText("ஆயுத வடிவமைப்பு திட்ட வரைபடம் · ஒப்புதல் பெற்றது", lx + 40, 1275);
+  ctx.fillText("மேடை வடிவமைப்பு திட்ட வரைபடம் · ஒப்புதல் பெற்றது", lx + 40, 1275);
 
   // =========================================================================
-  // 5. RIGHT UPPER WING: LEO DASS CO. ORDNANCE & CONFECTIONERY (X in [2750, 3950])
+  // 5. RIGHT UPPER WING: SANGAM PRODUCTION BOARD (X in [2750, 3950])
   // =========================================================================
   const rx = 3350;
 
@@ -389,22 +388,22 @@ function createLeoBackWallTexture(): THREE.CanvasTexture | null {
 
   ctx.font = "900 48px 'Impact', sans-serif";
   ctx.fillStyle = "rgba(255, 205, 70, 0.9)";
-  ctx.fillText("LEO DASS CO. : ORDNANCE LOT #07", rx, 525);
+  ctx.fillText("OSU TAMIL SANGAM : FESTIVAL LOT #07", rx, 525);
   ctx.font = "bold 30px 'Mukta Malar', 'Noto Sans Tamil', sans-serif";
   ctx.fillStyle = "rgba(255, 235, 175, 0.85)";
-  ctx.fillText("லியோ தாஸ் நிறுவனம் · கொலம்பஸ் பிரிவு", rx, 565);
+  ctx.fillText("ஓஹியோ தமிழ்ச் சங்கம் · கொலம்பஸ் பிரிவு", rx, 565);
 
   // Operational Directives
   ctx.textAlign = "left";
   ctx.font = "bold 26px 'Courier New', monospace";
   ctx.fillStyle = "rgba(200, 190, 175, 0.75)";
   const rightLines = [
-    "OPERATION: KASHMIR TO COLUMBUS 2026",
-    "DIVISION: CHOCOLATE & HEAVY ORDNANCE",
-    "TARGET OUTPUT: 10,000 UNITS / DAY",
-    "INSPECTION: PASSED BY CHIEF LEO DASS",
-    "ACCESS LEVEL: CLASSIFIED Sangam RED",
-    "RULE #01: NO MERCY. NO PROTOCOL.",
+    "PRODUCTION: BUCKEYE SANGAM STAGE 2026",
+    "DIVISION: LIVE GAANA & BHARATANATYAM",
+    "ATTENDEES: OHIO STATE STUDENT COMMUNITY",
+    "CURATED BY: OSU TAMIL SANGAM EXECUTIVE BOARD",
+    "VENUE: OHIO UNION BALLROOM & PERFORMANCE HALL",
+    "TRADITION: AATAM · PAATAM · KONDATAM",
   ];
   rightLines.forEach((line, idx) => {
     ctx.fillText(line, rx - 440, 650 + idx * 42);
@@ -762,7 +761,7 @@ function createCrateTexture(): THREE.CanvasTexture | null {
   ctx.fillStyle = "rgba(220, 190, 130, 0.75)";
   ctx.font = "bold 28px 'Courier New', monospace";
   ctx.textAlign = "center";
-  ctx.fillText("LEO DASS CO.", 256, 230);
+  ctx.fillText("TAMIL SANGAM CO.", 256, 230);
   ctx.font = "bold 18px 'Courier New', monospace";
   ctx.fillText("ORDNANCE LOT #07", 256, 270);
   ctx.fillText("COLUMBUS · 2026", 256, 300);
@@ -1434,7 +1433,7 @@ function FactorySparks({ count = 140 }) {
 // ---------------------------------------------------------------------------
 
 export function LeoFactoryEnvironment() {
-  const backWallTexture = useMemo(() => createLeoBackWallTexture(), []);
+  const backWallTexture = useMemo(() => createArenaBackWallTexture(), []);
   const floorTexture = useMemo(() => createFloorTexture(), []);
   const crateTexture = useMemo(() => createCrateTexture(), []);
   const leftWallTexture = useMemo(() => createSideWallTexture("left"), []);
@@ -1467,7 +1466,7 @@ export function LeoFactoryEnvironment() {
       {/* Safety Floor Hazard Ring around Central Turntable Platform */}
       <FloorHazardRing radius={4.2} />
 
-      {/* 2. Enclosed Back Wall with 4K Detailed Leo Stencil Mural & Factory Signage */}
+      {/* 2. Enclosed Back Wall with 4K Detailed Sangam Stencil Mural & Arena Signage */}
       <mesh position={[0, 8.5, -12]} receiveShadow>
         <planeGeometry args={[36, 18]} />
         <meshStandardMaterial
@@ -1619,7 +1618,7 @@ export function LeoFactoryEnvironment() {
       <WoodCrate position={[4.8, 0.55, 0.6]} texture={crateTexture} />
       <WoodCrate position={[-4.6, 0.55, 2.2]} rotation={[0, 0.35, 0]} texture={crateTexture} />
 
-      {/* 10. Upward Drifting Naa Ready Forge Sparks & Embers */}
+      {/* 10. Upward Drifting Festival Forge Sparks & Embers */}
       <FactorySparks count={140} />
     </group>
   );

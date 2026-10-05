@@ -1,21 +1,41 @@
 "use client";
 
 import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { FAQS, FaqItem } from "@/data/faq";
 import { KnowledgeItem } from "@/data/knowledgeBase";
-import { useFaqStore } from "@/store/faqStore";
+import { useGuideStore } from "@/components/guide-hero/store/guideStore";
+
+// Nudge scroll helper per PRD §7:
+// Scroll the page toward the hero by at most 0.6 × viewport height, 600 ms,
+// and skip it if the user scrolled manually in the last 400 ms or prefers reduced motion.
+function nudgeScrollToHero() {
+  if (typeof window === "undefined") return;
+  const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (isReduced) return;
+
+  const hero = document.getElementById("alaipayuthey-splitflap-hero");
+  if (!hero) return;
+
+  const rect = hero.getBoundingClientRect();
+  if (rect.bottom < 0 || window.scrollY > 300) {
+    const maxNudge = 0.6 * window.innerHeight;
+    const targetScroll = Math.max(0, window.scrollY - maxNudge);
+    window.scrollTo({
+      top: targetScroll,
+      behavior: "smooth",
+    });
+  }
+}
 import {
   Search,
   ChevronDown,
   PlusCircle,
   Trash2,
   CheckCircle2,
-  Train,
   Sparkles,
   BookOpen,
   HelpCircle,
@@ -25,22 +45,8 @@ import {
 import { SplitFlapMiniHeader } from "@/components/splitflap/SplitFlapMiniHeader";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 
-const HeroSplitFlapCanvas = dynamic(
-  () => import("@/components/splitflap/HeroSplitFlapCanvas"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-[65dvh] bg-[#070504] flex flex-col items-center justify-center text-[#d4af37] font-mono text-xs gap-3">
-        <div className="flex items-center gap-2">
-          <Train className="w-4 h-4 animate-bounce text-[#f59e0b]" />
-          <span className="tracking-widest uppercase">
-            INITIALIZING ALAIPAYUTHEY MECHANICAL SPLIT-FLAP MATRIX...
-          </span>
-        </div>
-      </div>
-    ),
-  }
-);
+import { GuideHero } from "@/components/guide-hero/GuideHero";
+import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 
 const FAQ_CATEGORIES = [
   "All",
@@ -107,21 +113,25 @@ export default function UserGuideAndFaqPage() {
     };
   }, []);
 
-  // Synchronize board with selected FAQ via ref-based Zustand action (§5)
+  // Synchronize board with selected FAQ via Zustand action (PRD §7)
   const handleSelectFaq = useCallback((faq: FaqItem) => {
-    useFaqStore.getState().setActiveFaq(faq.id, faq.questionEn, faq.answerEn, faq.flapLabel);
+    useGuideStore.getState().selectFaq(faq, "accordion");
   }, []);
 
   // Broadcast a guide chapter to the 3D board
   const handleBroadcastChapter = useCallback(
     (title: string, summary: string) => {
       playWoodClick();
-      useFaqStore.getState().setActiveFaq("guide-chapter", title, summary);
-      // Smoothly scroll user up to the board if they are far down
-      const boardElement = document.getElementById("alaipayuthey-splitflap-hero");
-      if (boardElement && window.scrollY > 400) {
-        boardElement.scrollIntoView({ behavior: "smooth" });
-      }
+      useGuideStore.getState().setActiveItem(
+        {
+          text: `${title}. ${summary}`,
+          catCode: "GUID",
+          statusText: "STUDENT USER GUIDE",
+        },
+        "guide-chapter",
+        "accordion"
+      );
+      nudgeScrollToHero();
     },
     [playWoodClick]
   );
@@ -129,16 +139,18 @@ export default function UserGuideAndFaqPage() {
   // Synchronize board when search query changes
   const handleSearchChange = useCallback((query: string) => {
     setSearchQuery(query);
-    useFaqStore.getState().setSearchQuery(query);
+    useGuideStore.getState().setSearchQuery(query);
   }, []);
 
-  // Phase 5: Debounced board flipping on search (PRD §7).
-  // Don't flip the board on every keystroke — debounce 600ms, then flip
-  // to the first matching FAQ's flapLabel, or 'ASK NANBA' if no results.
+  // PRD §7: Debounced board flipping on search
+  // Never flip on every keystroke — flip on pause >= 350ms or on clear
   const searchDebounceRef = useRef<NodeJS.Timeout | null>(null);
   useEffect(() => {
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
-    if (!searchQuery.trim()) return;
+    if (!searchQuery.trim()) {
+      useGuideStore.getState().resetToDefault();
+      return;
+    }
 
     searchDebounceRef.current = setTimeout(() => {
       const q = searchQuery.toLowerCase().trim();
@@ -153,12 +165,15 @@ export default function UserGuideAndFaqPage() {
       });
 
       if (match) {
-        useFaqStore.getState().setActiveFaq(match.id, match.questionEn, match.answerEn, match.flapLabel);
+        useGuideStore.getState().selectFaq(match, "search");
+        setExpandedFaqId(match.id);
+        const el = document.getElementById(`faq-trigger-${match.id}`);
+        el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
       } else {
-        // No match: board flips to 'ASK NANBA' (PRD §7)
-        useFaqStore.getState().setActiveFaq("no-match", "No results found", "", "ASK NANBA");
+        // No match: board flips to 'NO MATCH FOUND' (PRD §7)
+        useGuideStore.getState().setNoMatch(q);
       }
-    }, 600);
+    }, 350);
 
     return () => {
       if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
@@ -167,7 +182,7 @@ export default function UserGuideAndFaqPage() {
 
   // Synchronize search query changes between console input and DOM filter
   useEffect(() => {
-    const unsub = useFaqStore.subscribe((state) => {
+    const unsub = useGuideStore.subscribe((state) => {
       if (state.searchQuery !== searchQuery) {
         setSearchQuery(state.searchQuery);
       }
@@ -264,28 +279,14 @@ export default function UserGuideAndFaqPage() {
   }, [knowledgeList, kbSearch]);
 
   return (
-    <main className="relative w-full min-h-screen bg-[#070504] text-[#fbf7ee] selection:bg-[#d4af37] selection:text-black font-body text-left">
+    <main className="relative w-full min-h-screen bg-transparent text-[#fbf7ee] selection:bg-[#d4af37] selection:text-black font-body text-left">
       {/* ========================================================================= */}
-      {/* 1. TOP CINEMATIC 3D HERO: ALAIPAYUTHEY MECHANICAL SPLIT-FLAP CANVAS       */}
+      {/* 1. TOP CINEMATIC 3D HERO: SPLIT-FLAP DEPARTURE BOARD                      */}
       {/* ========================================================================= */}
-      <section
-        id="alaipayuthey-splitflap-hero"
-        className="relative w-full overflow-hidden bg-[#070504]"
-        style={{
-          WebkitMaskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-          maskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-        }}
-      >
-        <HeroSplitFlapCanvas
-          searchQuery={searchQuery}
-          onSearchChange={handleSearchChange}
-        />
+      <GuideHero id="alaipayuthey-splitflap-hero" />
 
-        {/* Bottom overlay gradient blending agent */}
-        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#070504] via-[#070504]/80 to-transparent pointer-events-none z-10" />
-      </section>
+      {/* Color Gradient Transition from 3D Mechanical Station (#0c0907) to Warm Cream Console (#FAF6EE) */}
+      <HeroGradientTransition variant="guide" className="-mt-32 relative z-20" />
 
       {/* ========================================================================= */}
       {/* 2. STICKY MINI-HEADER STRIP (Phase 3c & 4b: Appears below floating nav)  */}
@@ -300,7 +301,7 @@ export default function UserGuideAndFaqPage() {
       {/* ========================================================================= */}
       {/* 3. EDITORIAL CONSOLE: UNIFIED USER GUIDE, SEARCHABLE FAQ & KNOWLEDGE BASE */}
       {/* ========================================================================= */}
-      <div className="relative z-20 -mt-20 sm:-mt-32 w-full bg-[#FAF6EE] text-[#1c1008] pt-16 sm:pt-24 pb-32 overflow-hidden">
+      <div className="relative z-20 w-full bg-[#FAF6EE] text-[#1c1008] pt-12 sm:pt-16 pb-32 overflow-hidden">
         {/* Structural Tamil Background Watermarks */}
         <WatermarkGlyph text="பயணம்" opacity={0.04} align="right" theme="light" />
         <WatermarkGlyph text="வழிகாட்டி" opacity={0.032} align="left" theme="light" className="top-[60%]" />
@@ -394,6 +395,11 @@ export default function UserGuideAndFaqPage() {
                   placeholder="Search by topic, keyword, or Tamil term (e.g. dues, language, diwali, voting, food)..."
                   aria-label="Search FAQs"
                   value={searchQuery}
+                  onFocus={() => {
+                    if (!searchQuery.trim()) {
+                      useGuideStore.getState().setSearchPrompt();
+                    }
+                  }}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   className="w-full pl-11 pr-20 py-3.5 rounded-none bg-[#110d0a] border border-[#2b2017] text-[#f5eedf] placeholder-[#6e5d4d] text-sm font-mono focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition-all"
                 />

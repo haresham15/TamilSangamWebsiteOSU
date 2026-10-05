@@ -1,20 +1,15 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useSyncExternalStore } from "react";
-import dynamic from "next/dynamic";
+import React, { useRef, useEffect, useSyncExternalStore } from "react";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
-
-// Client-only R3F dynamic import
-const Canvas = dynamic(
-  () => import("@react-three/fiber").then((mod) => mod.Canvas),
-  { ssr: false }
-);
+import { View, PerspectiveCamera, Html } from "@react-three/drei";
+import { governor } from "@/engine/governor";
+import { useWarmup } from "@/components/gl/useWarmup";
 
 interface TierItem {
   id: string;
@@ -280,6 +275,7 @@ function AscendingGopuramCamera({
   isMobile: boolean;
 }) {
   useFrame((state, delta) => {
+    const clampedDelta = Math.min(delta, 0.1);
     const { camera } = state;
     // 5 rings spaced 15 units apart. Z goes from 12 to -68.
     const startZ = 12;
@@ -289,9 +285,9 @@ function AscendingGopuramCamera({
     const targetX = isMobile ? 0 : -2;
     const targetY = 0;
 
-    camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 16.0, delta);
-    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 16.0, delta);
-    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 16.0, delta);
+    camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 16.0, clampedDelta);
+    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 16.0, clampedDelta);
+    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 16.0, clampedDelta);
 
     // Natural subtle breeze sway
     const swayTime = camera.position.z * 0.08;
@@ -304,6 +300,11 @@ function AscendingGopuramCamera({
   return null;
 }
 
+function GopuramWarmup() {
+  useWarmup("about-gopuram");
+  return null;
+}
+
 const emptySubscribe = () => () => {};
 
 export function GopuramZScroll() {
@@ -312,7 +313,6 @@ export function GopuramZScroll() {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollProgressRef = useRef(0);
-  const [isSectionVisible, setIsSectionVisible] = useState(true);
 
   const mounted = useSyncExternalStore(
     emptySubscribe,
@@ -334,12 +334,15 @@ export function GopuramZScroll() {
     if (!containerRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsSectionVisible(entry.isIntersecting);
+        governor.request("about-gopuram", entry.isIntersecting ? 1 : 0);
       },
       { threshold: 0.02 }
     );
     observer.observe(containerRef.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      governor.request("about-gopuram", 0);
+    };
   }, []);
 
   useEffect(() => {
@@ -359,6 +362,7 @@ export function GopuramZScroll() {
         anticipatePin: 1,
         onUpdate: (self) => {
           scrollProgressRef.current = self.progress;
+          governor.request("about-gopuram", 2);
         },
       });
 
@@ -380,22 +384,15 @@ export function GopuramZScroll() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[100dvh] overflow-hidden bg-gradient-to-b from-[#120a1f] via-[#1a0f2e] to-[#251542] text-white flex flex-col justify-between select-none"
+      className="relative w-full h-[100dvh] overflow-hidden bg-transparent text-white flex flex-col justify-between select-none"
       style={{ minHeight: "100dvh" }}
     >
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         {mounted && !isLiteMode && (
-          <Canvas
-            dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
-            frameloop={isSectionVisible ? "always" : "demand"}
-            camera={{ position: [0, 0, 12], fov: 50 }}
-            gl={{
-              antialias: true,
-              alpha: true,
-              powerPreference: "high-performance",
-            }}
-            className="w-full h-full"
-          >
+          <View className="w-full h-full">
+            <GopuramWarmup />
+            <color attach="background" args={["#120a1f"]} />
+            <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={50} near={0.05} far={150} />
             <fog attach="fog" args={["#120a1f", 10, 45]} />
 
             <directionalLight position={[10, 20, 10]} intensity={2.5} color="#ffe5b4" />
@@ -420,7 +417,7 @@ export function GopuramZScroll() {
             ))}
 
             <AscendingGopuramCamera scrollProgressRef={scrollProgressRef} isMobile={isMobile} />
-          </Canvas>
+          </View>
         )}
       </div>
     </div>

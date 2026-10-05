@@ -39,7 +39,7 @@ export function CraneCameraRig({ scrollProgressRef }: CraneCameraRigProps) {
     }
 
     // Frame-rate independent damped inertia (§1.3)
-    const smoothDelta = Math.min(delta, 0.1);
+    const smoothDelta = Math.min(Math.max(delta, 0), 0.05);
     camera.position.x = 0;
     camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 4.8, smoothDelta);
     camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 4.8, smoothDelta);

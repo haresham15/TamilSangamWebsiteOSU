@@ -87,7 +87,6 @@ export function CameraRig() {
 
     if ("fov" in camera) {
       const persCamera = camera as THREE.PerspectiveCamera;
-      // eslint-disable-next-line react-hooks/immutability
       persCamera.fov = fov;
       persCamera.updateProjectionMatrix();
     }
@@ -95,7 +94,6 @@ export function CameraRig() {
     camera.lookAt(0, lookY, 0);
 
     if (scene.fog && "density" in scene.fog) {
-      // eslint-disable-next-line react-hooks/immutability
       (scene.fog as THREE.FogExp2).density = fog;
     }
   });

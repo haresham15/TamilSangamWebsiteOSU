@@ -56,20 +56,20 @@ const GRADIENT_CONFIGS: Record<
       "radial-gradient(ellipse 75% 55% at 50% 0%, rgba(255,157,92,0.25) 0%, rgba(72,23,12,0.35) 50%, transparent 80%)",
   },
 
-  // 5. Board: Mandapam Torchlit Stone (#1C120A) -> Molten Gold Halo -> Imperial Chola Obsidian (#120A06)
+  // 5. Board: Mandapam Torchlit Stone (#120A06) -> Molten Gold / Bronze Halo -> Warm Sandstone Ledger (#F7F0E4)
   board: {
     gradientClass:
-      "bg-gradient-to-b from-[#1C120A] via-[#23150c] via-50% to-[#120A06]",
+      "bg-gradient-to-b from-[#120A06] via-[#2a170d] via-35% via-[#6a3d1c] via-65% via-[#c49f78] via-88% to-[#F7F0E4]",
     ambientGlow:
-      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(212,175,55,0.22) 0%, rgba(35,21,12,0.4) 50%, transparent 80%)",
+      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(180,120,50,0.10) 0%, rgba(35,21,12,0.3) 50%, transparent 80%)",
   },
 
-  // 6. Guide: Southern Railway Mechanical Station (#0c0907) -> Tungsten Lamp Spill -> Platform Console (#070504)
+  // 6. Guide: Southern Railway Mechanical Station (#0c0907) -> Amber Tungsten Lamp Spill -> Platform Console (#FAF6EE)
   guide: {
     gradientClass:
-      "bg-gradient-to-b from-[#0c0907] via-[#16100a] via-50% to-[#070504]",
+      "bg-gradient-to-b from-[#0c0907] via-[#21160e] via-35% via-[#6a3916] via-65% via-[#c4a178] via-88% to-[#FAF6EE]",
     ambientGlow:
-      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(245,158,11,0.2) 0%, rgba(22,16,10,0.35) 50%, transparent 80%)",
+      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(245,158,11,0.25) 0%, rgba(33,22,14,0.4) 50%, transparent 80%)",
   },
 
   // 7. Suggestions: 3D Kaththi War Room Blueprint (#0F050A) -> Bruised Plum (#150914) -> Amber Shimmer

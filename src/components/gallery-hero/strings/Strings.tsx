@@ -13,6 +13,10 @@ import { triggerStrumSequence } from "../props/strumStateMachine";
 // Global energy model instance accessible across components and debug HUD
 export const globalStringEnergy = new StringEnergyModel();
 
+if (typeof window !== "undefined") {
+  (window as unknown as { __globalStringEnergy: StringEnergyModel }).__globalStringEnergy = globalStringEnergy;
+}
+
 export function Strings() {
   const meshRef = useRef<THREE.InstancedMesh>(null);
 
@@ -149,7 +153,14 @@ export function Strings() {
     }
   });
 
-  // 5. Register global pluck handlers and cleanup on unmount
+  // 5. Wireframe variant preserving vertex patch animation (§6.3)
+  const wireMaterial = useMemo(() => {
+    const wm = material.clone();
+    wm.wireframe = true;
+    return wm;
+  }, [material]);
+
+  // 6. Register global pluck handlers and cleanup on unmount
   useEffect(() => {
     registerPluckHandlers(
       (idx, amp) => globalStringEnergy.triggerPluck(idx, amp),
@@ -159,8 +170,9 @@ export function Strings() {
     return () => {
       geometry.dispose();
       material.dispose();
+      wireMaterial.dispose();
     };
-  }, [geometry, material]);
+  }, [geometry, material, wireMaterial]);
 
   return (
     <instancedMesh
@@ -169,6 +181,8 @@ export function Strings() {
       castShadow
       receiveShadow
       name="guitar-strings"
+      frustumCulled={false}
+      userData={{ wireMaterial }}
     />
   );
 }

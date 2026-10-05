@@ -3,6 +3,8 @@
  * Source of truth: docs/gallery-hero-prd.md (Section 5.3)
  */
 
+import { soundEngine } from "@/lib/soundEngine";
+
 export type PluckListener = (stringIndex: number, strength: number, worldX?: number) => void;
 
 class PluckBus {
@@ -35,10 +37,11 @@ class PluckBus {
     this.energies[stringIndex] = Math.min(1.0, this.energies[stringIndex] + clampedStrength);
 
     this.listeners.forEach((fn) => fn(stringIndex, clampedStrength, worldX));
+    soundEngine.playAcousticString(stringIndex, clampedStrength);
   }
 
   public update(delta: number) {
-    const safeDelta = Math.min(delta, 0.1);
+    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
     for (let i = 0; i < 6; i++) {
       if (this.energies[i] > 0.001) {
         // e *= exp(-dt / τ)

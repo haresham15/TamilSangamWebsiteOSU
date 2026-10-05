@@ -14,6 +14,7 @@ import {
   FilterKaapiGlyph,
 } from "@/components/ui/KolamIcons";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
+import { Magnetic } from "@/components/ui/Magnetic";
 import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 import { CulturalGlossaryTerm } from "@/components/ui/CulturalGlossaryTerm";
@@ -358,13 +359,15 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 relative z-10">
-            <PalagaiButton
-              href="/join"
-              primaryText={locale === "ta" ? "மாணவர் குழுவில் இணைக" : "Join the Student GroupMe"}
-              secondaryText={locale === "ta" ? "Join the Student GroupMe" : "மாணவர் குழுவில் இணைக"}
-              variant="gold-foil"
-              size="lg"
-            />
+            <Magnetic>
+              <PalagaiButton
+                href="/join"
+                primaryText={locale === "ta" ? "மாணவர் குழுவில் இணைக" : "Join the Student GroupMe"}
+                secondaryText={locale === "ta" ? "Join the Student GroupMe" : "மாணவர் குழுவில் இணைக"}
+                variant="gold-foil"
+                size="lg"
+              />
+            </Magnetic>
             <PalagaiButton
               href="/about"
               primaryText={locale === "ta" ? "எங்கள் வரலாறு & நோக்கம்" : "Our Ethos & Constitution"}

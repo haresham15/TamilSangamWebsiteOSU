@@ -15,15 +15,13 @@ import {
   Fragment_Mono,
   Major_Mono_Display
 } from "next/font/google";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 
-import { LocaleProvider } from "@/context/LocaleContext";
-import { TinaiProvider } from "@/context/TinaiContext";
-import { AudioProvider } from "@/context/AudioContext";
-import { LiteModeProvider } from "@/context/LiteModeContext";
+import { Providers } from "@/components/providers/Providers";
+import { GlobalCanvas } from "@/components/gl/GlobalCanvas";
 import { AppShell } from "@/components/global/AppShell";
 import { OrganizationJsonLd, EventJsonLd, WebSiteJsonLd } from "@/components/global/JsonLd";
-import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { FilmGrainOverlay } from "@/components/ui/FilmGrainOverlay";
 
 const muktaMalar = Mukta_Malar({
@@ -238,7 +236,7 @@ export default function RootLayout({
       className={`${muktaMalar.variable} ${jetbrainsMono.variable} ${syne.variable} ${anekTamil.variable} ${halant.variable} ${marcellus.variable} ${prata.variable} ${cormorant.variable} ${outfit.variable} ${kavivanar.variable} ${tiroTamil.variable} ${azeretMono.variable} ${fragmentMono.variable} ${majorMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans bg-[var(--bg-base)] text-[var(--text-primary)] relative">
+      <body className="min-h-full flex flex-col font-sans text-[var(--text-primary)] relative">
         {/* Global 35mm Analog Film Grain Overlay */}
         <FilmGrainOverlay />
 
@@ -247,17 +245,12 @@ export default function RootLayout({
         <OrganizationJsonLd />
         <EventJsonLd />
 
-        <LocaleProvider>
-          <TinaiProvider>
-            <AudioProvider>
-              <LiteModeProvider>
-                <SmoothScroll>
-                  <AppShell>{children}</AppShell>
-                </SmoothScroll>
-              </LiteModeProvider>
-            </AudioProvider>
-          </TinaiProvider>
-        </LocaleProvider>
+        <Providers>
+          <div id="app-root">
+            <AppShell>{children}</AppShell>
+          </div>
+          <GlobalCanvas />
+        </Providers>
       </body>
     </html>
   );

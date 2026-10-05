@@ -166,7 +166,7 @@ export default function JoinPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050201] text-white selection:bg-[#55CCA2] selection:text-[#050201]">
+    <main className="min-h-screen bg-transparent text-white selection:bg-[#55CCA2] selection:text-[#050201]">
       {/* WCAG AA 2.4.1 Bypass Blocks: Accessible skip link for keyboard & assistive tech */}
       <a
         href="#membership-form"
@@ -182,7 +182,7 @@ export default function JoinPage() {
       <section
         id="nanban-gates-hero"
         aria-label="Nanban Campus Gates 3D Viewport"
-        className="relative w-full overflow-hidden bg-[#F4EEDD]"
+        className="relative w-full overflow-hidden bg-transparent"
       >
         <JoinHeroCanvas />
         {/* Bottom overlay gradient blending agent transitioning into the brutalist form */}

@@ -1,22 +1,26 @@
 "use client";
 
 import React, { Suspense, useState, useEffect, useRef } from "react";
-import { Canvas } from "@react-three/fiber";
-import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Environment, BakeShadows } from "@react-three/drei";
+import { View, PerspectiveCamera, Environment, BakeShadows } from "@react-three/drei";
 import { CraneCameraRig } from "./CraneCameraRig";
 import { CorridorTreadmill } from "./CorridorTreadmill";
 import { EmblemFinale } from "./EmblemFinale";
-import { PostFX } from "./PostFX";
 import { useBoardHeroStore } from "@/store/boardHeroStore";
 import { CholaCrown3D } from "./CholaCrown3D";
 import { Terminal } from "lucide-react";
 import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
+import { useWarmup } from "@/components/gl/useWarmup";
+import { governor } from "@/engine/governor";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
+}
+
+function BoardSceneWarmup() {
+  useWarmup("board-corridor");
+  return null;
 }
 
 interface BoardHeroCanvasProps {
@@ -86,6 +90,13 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    governor.request("board-corridor", inView ? 1 : 0);
+    return () => {
+      governor.request("board-corridor", 0);
+    };
+  }, [inView]);
+
   // §6: GSAP ScrollTrigger Pinned Timeline (Pins sectionRef with +=1600 scroll distance)
   useEffect(() => {
     if (reducedMotion || !sectionRef.current) {
@@ -104,6 +115,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
           const p = self.progress;
           setLocalProgress(p);
           useBoardHeroStore.getState().setScrollProgress(p);
+          governor.request("board-corridor", Math.abs(self.getVelocity()) > 10 ? 2 : 1);
 
           // If user scrolls back up into corridor, smoothly restore canvas opacity & reset gold flash
           if (p < 0.96) {
@@ -137,25 +149,23 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
   const handleFinaleTriggered = () => {
     if (!goldOverlayRef.current || !canvasContainerRef.current) return;
 
-    // 1. Full-screen gold flash (0 -> 0.85 over 0.25s)
-    gsap.to(goldOverlayRef.current, {
-      opacity: 0.85,
-      duration: 0.25,
-      ease: "power2.inOut",
-      onComplete: () => {
-        // 2. Crossfade canvas container to 0.15 over 0.35s
-        gsap.to(canvasContainerRef.current, {
-          opacity: 0.15,
-          duration: 0.35,
-          ease: "power2.out",
-          onComplete: () => {
-            if (onFinaleComplete) {
-              onFinaleComplete();
-            }
-          },
-        });
-      },
-    });
+    // Pulse gold flash in and smoothly fade out to 0
+    gsap.timeline()
+      .to(goldOverlayRef.current, {
+        opacity: 0.5,
+        duration: 0.2,
+        ease: "power2.in",
+      })
+      .to(goldOverlayRef.current, {
+        opacity: 0,
+        duration: 0.45,
+        ease: "power2.out",
+        onComplete: () => {
+          if (onFinaleComplete) {
+            onFinaleComplete();
+          }
+        },
+      });
   };
 
   return (
@@ -163,7 +173,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
       ref={sectionRef}
       className={`relative w-full ${
         reducedMotion ? "h-[85dvh]" : "h-[100dvh]"
-      } overflow-hidden bg-[#120A06] border-b border-[#3d2714] flex flex-col justify-between`}
+      } overflow-hidden bg-transparent border-b border-[#3d2714] flex flex-col justify-between`}
       style={{ minHeight: "100dvh" }}
     >
       <div
@@ -174,19 +184,10 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
         {/* R3F 3D VIEWPORT WITH PHYSICAL CAMERA & ATMOSPHERE (Clean Cinematic Scene) */}
         {/* ========================================================================= */}
         <div className="relative flex-1 w-full h-full">
-          <Canvas
-            dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
-            camera={{ position: [0, 2.22, 30], fov: 32 }}
-            frameloop={inView ? "always" : "demand"}
-            gl={{
-              antialias: true,
-              alpha: true,
-              powerPreference: "high-performance",
-              toneMapping: THREE.ACESFilmicToneMapping,
-              toneMappingExposure: 1.0,
-            }}
-            shadows
-          >
+          <View className="w-full h-full">
+            <BoardSceneWarmup />
+            <PerspectiveCamera makeDefault position={[0, 2.22, 30]} fov={32} near={0.05} far={100} />
+            <color attach="background" args={["#120A06"]} />
             {/* World-Space FogExp2 per §2 & §5 Table */}
             <fogExp2 attach="fog" args={["#1C120A", 0.045]} />
 
@@ -223,19 +224,19 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
               scrollProgress={reducedMotion ? 1.0 : localProgress}
               onFinaleTriggered={handleFinaleTriggered}
             />
+          </View>
 
-            {/* Post-Processing Effects (§8) */}
-            <PostFX />
-          </Canvas>
+          {/* Optical Post-Processing: CSS Vignette Overlay (§1, Spike S3) */}
+          <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(20,10,5,0.45)_100%)]" />
 
           {/* Additive Gold Finale Flash Overlay (§7) */}
           <div
             ref={goldOverlayRef}
-            className="pointer-events-none absolute inset-0 bg-[#D4AF37] opacity-0 transition-opacity duration-200"
+            className="pointer-events-none absolute inset-0 bg-[#D4AF37] opacity-0 z-20"
           />
 
           {/* Bottom Vignette Gradient to dissolve floor into DOM */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#120A06] via-[#120A06]/70 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#120A06] via-[#120A06]/70 to-transparent z-10" />
         </div>
 
         {/* ========================================================================= */}

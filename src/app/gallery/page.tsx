@@ -24,6 +24,8 @@ import {
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 
 import { GalleryHero } from "@/components/gallery-hero/GalleryHero";
+import { ImageGridView } from "@/components/gl/planes/ImageGridView";
+import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 
 
 const containerVariants: Variants = {
@@ -132,11 +134,14 @@ export default function GalleryPage() {
   };
 
   return (
-    <div className="w-full bg-[#FFFDF8] min-h-screen text-left font-body">
+    <div className="w-full bg-transparent min-h-screen text-left font-body">
       {/* 3D Fretboard Highway Hero (§0 - §4) */}
       <GalleryHero />
 
-      <div id="gallery-vault-content" className="relative z-20 -mt-32 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-24 text-left font-body overflow-hidden">
+      {/* Color Gradient Transition from 3D Fretboard Sunset (#1F0A05) to Warm Cream Archive */}
+      <HeroGradientTransition variant="gallery" className="-mt-32 relative z-20" />
+
+      <div id="gallery-vault-content" className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-24 text-left font-body overflow-hidden">
         {/* Structural Tamil Background Watermarks */}
         <WatermarkGlyph text="நினைவுகள்" opacity={0.04} align="right" theme="light" />
         <WatermarkGlyph text="நிழற்படம்" opacity={0.032} align="left" theme="light" className="top-[60%]" />
@@ -407,52 +412,61 @@ export default function GalleryPage() {
         </div>
       ) : (
         <>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 mb-12"
+          <ImageGridView
+            itemSelector="[data-plane-item]"
+            imgSelector="img"
+            radius={8}
+            className="mb-12"
           >
-            {filteredPhotos.slice(0, visibleCount).map((photo) => {
-              const parentAlbum = GALLERY_ALBUMS.find((a) => a.slug === photo.albumSlug);
-              return (
-                <motion.div
-                  key={photo.id}
-                  variants={itemVariants}
-                  layoutId={`photo-card-${photo.id}`}
-                  className="relative aspect-[4/3] overflow-hidden group cursor-pointer bg-purple-950/10 border-2 border-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:shadow-[4px_4px_0px_#55CCA2] hover:border-[#55CCA2] transition-all duration-200"
-                  onClick={() => {
-                    playClick();
-                    setSelectedPhoto(photo);
-                  }}
-                >
-                  {/* Image Container with Glyph Loader */}
-                  <GlyphMosaicImage
-                    src={photo.imageUrl}
-                    alt={photo.titleEn}
-                    aspectRatio="aspect-[4/3]"
-                  />
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4"
+            >
+              {filteredPhotos.slice(0, visibleCount).map((photo) => {
+                const parentAlbum = GALLERY_ALBUMS.find((a) => a.slug === photo.albumSlug);
+                return (
+                  <motion.div
+                    key={photo.id}
+                    variants={itemVariants}
+                    layoutId={`photo-card-${photo.id}`}
+                    data-plane-item
+                    data-plane-id={photo.id}
+                    className="relative aspect-[4/3] overflow-hidden group cursor-pointer data-[gl-ready=true]:bg-transparent bg-purple-950/10 border-2 border-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:shadow-[4px_4px_0px_#55CCA2] hover:border-[#55CCA2] transition-all duration-200"
+                    onClick={() => {
+                      playClick();
+                      setSelectedPhoto(photo);
+                    }}
+                  >
+                    {/* Image Container with Glyph Loader */}
+                    <GlyphMosaicImage
+                      src={photo.imageUrl}
+                      alt={photo.titleEn}
+                      aspectRatio="aspect-[4/3]"
+                    />
 
-                  {/* Subtle, seamless hover overlay showing album tag and expand icon */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#250d38]/90 via-[#250d38]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-3 sm:p-3.5 pointer-events-none">
-                    <div className="flex justify-end">
-                      <span className="p-1 bg-[#250d38] border border-[#55CCA2] text-white">
-                        <Eye className="w-3.5 h-3.5 text-[#55CCA2]" />
-                      </span>
+                    {/* Subtle, seamless hover overlay showing album tag and expand icon */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#250d38]/90 via-[#250d38]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-3 sm:p-3.5 pointer-events-none">
+                      <div className="flex justify-end">
+                        <span className="p-1 bg-[#250d38] border border-[#55CCA2] text-white">
+                          <Eye className="w-3.5 h-3.5 text-[#55CCA2]" />
+                        </span>
+                      </div>
+                      <div className="text-left">
+                        <span className="text-[10px] font-mono text-[#55CCA2] font-semibold block truncate">
+                          {parentAlbum?.titleEn || photo.eventDate}
+                        </span>
+                        <span className="text-xs font-bold text-white font-display block truncate">
+                          {locale === "ta" ? photo.titleTa : photo.titleEn}
+                        </span>
+                      </div>
                     </div>
-                    <div className="text-left">
-                      <span className="text-[10px] font-mono text-[#55CCA2] font-semibold block truncate">
-                        {parentAlbum?.titleEn || photo.eventDate}
-                      </span>
-                      <span className="text-xs font-bold text-white font-display block truncate">
-                        {locale === "ta" ? photo.titleTa : photo.titleEn}
-                      </span>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </ImageGridView>
 
           {/* Load More Button */}
           {visibleCount < filteredPhotos.length && (

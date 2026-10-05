@@ -5,6 +5,10 @@ export interface FaqItem {
   questionTa: string;
   answerEn: string;
   answerTa: string;
+  /** Primary text spelled out on the 3D departure board (≤ 3 lines on desktop). PRD §6.1 */
+  boardText: string;
+  /** Short uppercase category code (≤ 4 chars: GENL, DUES, JOIN, etc.). PRD §6.1 */
+  catCode?: string;
   /** Short EN keyword for the split-flap board to spell. ≤14 chars, uppercase.
    *  Tamil NEVER appears on flap cells — it lives in static chrome and DOM only.
    *  See guide-split-flap PRD §4.3 / §6. */
@@ -17,6 +21,8 @@ export const FAQS: FaqItem[] = [
   {
     id: "faq-01",
     category: "General",
+    catCode: "GENL",
+    boardText: "WHAT IS OSU TAMIL SANGAM? CAMPUS HUB FOR CULTURE & FEASTS",
     questionEn: "What is OSU Tamil Sangam?",
     questionTa: "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் என்றால் என்ன?",
     answerEn:
@@ -29,6 +35,8 @@ export const FAQS: FaqItem[] = [
   {
     id: "faq-02",
     category: "Membership",
+    catCode: "JOIN",
+    boardText: "DO I HAVE TO SPEAK TAMIL? NO ALL STUDENTS ARE WELCOME",
     questionEn: "Do I have to speak Tamil or be Tamil to join?",
     questionTa: "நான் தமிழனாக இருக்க வேண்டுமா அல்லது தமிழ் பேச வேண்டுமா?",
     answerEn:
@@ -41,6 +49,8 @@ export const FAQS: FaqItem[] = [
   {
     id: "faq-03",
     category: "Membership",
+    catCode: "DUES",
+    boardText: "ARE THERE MEMBERSHIP FEES? 100% FREE NO DUES FOR OSU",
     questionEn: "Are there any membership fees or dues?",
     questionTa: "உறுப்பினர் கட்டணம் ஏதேனும் உண்டா?",
     answerEn:
@@ -53,6 +63,8 @@ export const FAQS: FaqItem[] = [
   {
     id: "faq-04",
     category: "Governance",
+    catCode: "GOVN",
+    boardText: "HOW TO QUALIFY TO VOTE? ATTEND 2 MEETINGS AND 2 EVENTS",
     questionEn: "How do members qualify for voting rights and Executive Board shadowing?",
     questionTa: "வாக்குரிமை மற்றும் நிர்வாகக் குழு வழிகாட்டல் (shadowing) பெறுவதற்கான தகுதிகள் யாவை?",
     answerEn:
@@ -65,6 +77,8 @@ export const FAQS: FaqItem[] = [
   {
     id: "faq-05",
     category: "Membership",
+    catCode: "COMM",
+    boardText: "CAN COMMUNITY PARTICIPATE? WELCOME TO FESTIVALS & BANQUETS",
     questionEn: "Can non-student community members participate in Sangam activities?",
     questionTa: "மாணவர் அல்லாத சமூகத்தினரும் சங்க நிகழ்வுகளில் கலந்துகொள்ளலாமா?",
     answerEn:
@@ -77,6 +91,8 @@ export const FAQS: FaqItem[] = [
   {
     id: "faq-06",
     category: "Governance",
+    catCode: "SAFE",
+    boardText: "SAFETY AND ZERO TOLERANCE STRICT COMPLIANCE POLICY 1.15",
     questionEn: "What are the organization's policies regarding non-discrimination and safety?",
     questionTa: "பாகுபாடின்மை மற்றும் பாதுகாப்பு தொடர்பான சங்கத்தின் கொள்கைகள் என்ன?",
     answerEn:
@@ -89,6 +105,8 @@ export const FAQS: FaqItem[] = [
   {
     id: "faq-07",
     category: "Performances",
+    catCode: "AATM",
+    boardText: "HOW TO JOIN DANCE OR MUSIC? AATAM AND PAATAM JAMS OPEN",
     questionEn: "How do I get involved with dance (Aatam) or music (Paatam)?",
     questionTa: "நடனம் அல்லது இசைப் பிரிவுகளில் எவ்வாறு பங்கேற்பது?",
     answerEn:
@@ -101,6 +119,8 @@ export const FAQS: FaqItem[] = [
   {
     id: "faq-08",
     category: "Events",
+    catCode: "EVNT",
+    boardText: "WHERE DO EVENTS HAPPEN? OHIO UNION SOUTH OVAL AND RPAC",
     questionEn: "Where do Sangam events take place on campus?",
     questionTa: "நிகழ்ச்சிகள் வளாகத்தில் எங்கு நடைபெறும்?",
     answerEn:
@@ -113,6 +133,8 @@ export const FAQS: FaqItem[] = [
   {
     id: "faq-09",
     category: "General",
+    catCode: "PRIV",
+    boardText: "HOW IS PHOTO PRIVACY KEPT? REQUEST REMOVAL WITHIN 48 HRS",
     questionEn: "How does this website preserve my photo privacy?",
     questionTa: "புகைப்படங்களில் எனது தனியுரிமை எவ்வாறு பாதுகாக்கப்படுகிறது?",
     answerEn:

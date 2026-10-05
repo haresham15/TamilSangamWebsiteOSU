@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Component, ErrorInfo, useMemo, createContext, useContext } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { SceneLighting } from "./SceneLighting";
 import { MinimalPlatform } from "./MinimalPlatform";
@@ -12,9 +12,10 @@ import { LeoScrollController } from "./LeoScrollController";
 import { DustCloud } from "./DustCloud";
 import { LeoFactoryEnvironment } from "./LeoFactoryEnvironment";
 import { JumpingCrowdSilhouettes } from "./JumpingCrowdSilhouettes";
-import { EffectComposer, Vignette } from "@react-three/postprocessing";
-import { Environment, BakeShadows } from "@react-three/drei";
+import { Environment, BakeShadows, View } from "@react-three/drei";
 import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
+import { useWarmup } from "@/components/gl/useWarmup";
+import { governor } from "@/engine/governor";
 
 // The strict blueprint mandate: magenta error state on failure, no silent fallbacks.
 class CanvasErrorBoundary extends Component<
@@ -82,57 +83,79 @@ function DepthTextureProvider({ children }: { children: React.ReactNode }) {
   return <DepthContext.Provider value={depthTarget}>{children}</DepthContext.Provider>;
 }
 
-export function EventsGen3Canvas() {
-  // Bespoke scene-matched environment reflections (§1.1b PRD Mandate)
-  const bespokeEnv = useMemo(() => createBespokeEnvironmentTexture("arena-concert"), []);
-  React.useEffect(() => {
-    return () => {
-      bespokeEnv?.dispose();
-    };
-  }, [bespokeEnv]);
+function EventsConcertScene({ bespokeEnv }: { bespokeEnv: THREE.Texture | null }) {
+  useWarmup("events-arena");
 
   return (
-    <div className="w-full h-full min-h-[100dvh] absolute top-0 left-0 bg-transparent">
+    <>
+      {/* Concert stadium dark backdrop */}
+      <color attach="background" args={["#0c0a08"]} />
+
+      {/* Distant atmospheric concert fog */}
+      <fogExp2 attach="fog" args={["#0c0a08", 0.024]} />
+
+      {/* Bespoke Scene-Matched Concert Arena Environment Map */}
+      {bespokeEnv && <Environment map={bespokeEnv} background={false} />}
+
+      <DepthTextureProvider>
+        <React.Suspense fallback={null}>
+          <BakeShadows />
+          <LeoCameraRig />
+          <LeoScrollController />
+          <LeoFactoryEnvironment />
+          <VolumetricCones />
+          <DustCloud />
+          <SceneLighting />
+          <MinimalPlatform />
+          <SangamLogo3D />
+          <JumpingCrowdSilhouettes />
+        </React.Suspense>
+      </DepthTextureProvider>
+    </>
+  );
+}
+
+export function EventsGen3Canvas() {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  // Bespoke scene-matched environment reflections (§1.1b PRD Mandate)
+  const bespokeEnv = useMemo(() => createBespokeEnvironmentTexture("arena-concert"), []);
+  const [inView, setInView] = React.useState(true);
+
+  React.useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      { threshold: 0.01 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  React.useEffect(() => {
+    governor.request("events-arena", inView ? 2 : 0);
+    return () => {
+      governor.request("events-arena", 0);
+      bespokeEnv?.dispose();
+    };
+  }, [inView, bespokeEnv]);
+
+  return (
+    <div ref={containerRef} className="w-full h-full min-h-[100dvh] absolute top-0 left-0 bg-transparent pointer-events-none">
       <CanvasErrorBoundary>
-        <Canvas
-          dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
-          gl={{
-            antialias: true,
-            alpha: true,
-            powerPreference: "high-performance",
-            toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 1.15,
-          }}
-          shadows={{ type: THREE.PCFShadowMap }}
-        >
-          {/* We rely on the HTML gradient behind the Canvas for the background color, keeping alpha: true */}
-          {/* Fog remains so distant meshes blend into the dark top of the HTML gradient */}
-          <fogExp2 attach="fog" args={["#0c0a08", 0.024]} />
-
-          {/* Bespoke Scene-Matched Concert Arena Environment Map */}
-          {bespokeEnv && <Environment map={bespokeEnv} background={false} />}
-          
-          <DepthTextureProvider>
-            <React.Suspense fallback={null}>
-              <BakeShadows />
-              <LeoCameraRig />
-              <LeoScrollController />
-              <LeoFactoryEnvironment />
-              <VolumetricCones />
-              <DustCloud />
-              <SceneLighting />
-              <MinimalPlatform />
-              <SangamLogo3D />
-              <JumpingCrowdSilhouettes />
-
-              {/* Vignette post-processing applied after local lights to crush corner bleeding */}
-              <EffectComposer multisampling={0}>
-                <Vignette eskil={false} offset={0.25} darkness={0.76} />
-              </EffectComposer>
-            </React.Suspense>
-          </DepthTextureProvider>
-        </Canvas>
+        <View className="w-full h-full pointer-events-auto">
+          <EventsConcertScene bespokeEnv={bespokeEnv} />
+        </View>
       </CanvasErrorBoundary>
+      {/* High-performance CSS Vignette overlay to crush corner bleeding (§Spike S3) */}
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{
+          background: "radial-gradient(circle at center, transparent 40%, rgba(12,10,8,0.76) 100%)",
+        }}
+      />
     </div>
   );
 }

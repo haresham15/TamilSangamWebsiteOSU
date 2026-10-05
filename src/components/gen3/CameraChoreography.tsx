@@ -60,7 +60,7 @@ export function CameraChoreography() {
     const clampedProgress = Math.min(1.0, Math.max(0.0, rawProgress));
 
     // 2. Exponential damp progress to absorb any micro frame timing variations
-    const safeDelta = Math.min(Math.max(delta, 0.001), 0.1);
+    const safeDelta = Math.min(Math.max(delta, 0.001), 0.05);
     currentProgress.current = THREE.MathUtils.damp(
       currentProgress.current,
       clampedProgress,

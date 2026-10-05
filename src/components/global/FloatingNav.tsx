@@ -94,7 +94,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
             aria-label="OSU Tamil Sangam Home"
             className="group flex items-center gap-2.5 shrink-0 mr-6 xl:mr-8"
           >
-            <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-none border border-[#D4AF37]/60 bg-[#250d38] overflow-hidden shrink-0 flex items-center justify-center p-0.5 group-hover:border-[#D4AF37] transition-colors duration-200">
+            <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden shrink-0 flex items-center justify-center">
               <Image
                 src="/emblem.svg"
                 alt="Official OSU Tamil Sangam Emblem"

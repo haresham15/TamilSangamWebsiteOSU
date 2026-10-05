@@ -1,21 +1,16 @@
 "use client";
 
 import React, { useRef, useEffect, useState, useMemo, useSyncExternalStore } from "react";
-import dynamic from "next/dynamic";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { Users, ArrowRight, Calendar } from "lucide-react";
 import { PalagaiButton } from "@/components/ui/PalagaiButton";
+import { Magnetic } from "@/components/ui/Magnetic";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
-
-// Client-only R3F Canvas
-const Canvas = dynamic(
-  () => import("@react-three/fiber").then((mod) => mod.Canvas),
-  { ssr: false }
-);
+import { Canvas, useFrame } from "@react-three/fiber";
+import { governor } from "@/engine/governor";
 
 // Authentic Mathematical Tamil Pulli & Sikku Kamalam Kolam Generator
 function generateKolamPoints(isMobile: boolean) {
@@ -260,7 +255,7 @@ function GPUKolamParticles({
   }, []);
 
   return (
-    <points ref={pointsRef}>
+    <points ref={pointsRef} frustumCulled={false}>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[data.positions, 3]} />
         <bufferAttribute attach="attributes-aColor" args={[data.colors, 3]} />
@@ -276,6 +271,7 @@ function GPUKolamParticles({
     </points>
   );
 }
+
 
 export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) {
   const { locale } = useLocale();
@@ -338,6 +334,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
           anticipatePin: 1,
           onUpdate: (self) => {
             scrollProgressRef.current = self.progress;
+            governor.request("home-kolam", Math.abs(self.getVelocity()) > 10 ? 2 : 1);
           },
         },
       });
@@ -430,28 +427,36 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
     };
   }, [isLiteMode, isMobile]);
 
+  const [inView, setInView] = useState(true);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      { threshold: 0.01 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    governor.request("home-kolam", inView ? 1 : 0);
+    return () => {
+      governor.request("home-kolam", 0);
+    };
+  }, [inView]);
+
   return (
     <div
       ref={sectionRef}
       className="relative w-full h-[100dvh] overflow-hidden bg-[#10061a] text-white flex flex-col justify-between"
-      style={{
-        minHeight: "100dvh",
-        WebkitMaskImage:
-          "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-        maskImage:
-          "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-      }}
+      style={{ minHeight: "100dvh" }}
     >
       {/* 1. Full-Screen 3D Particle Canvas with Pure GPU Shader Turbulence */}
-      <div
-        className="absolute inset-0 z-0 pointer-events-none w-full h-full"
-        style={{
-          WebkitMaskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-          maskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)",
-        }}
-      >
+      <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         {mounted && !isLiteMode && (
           <Canvas
             dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
@@ -616,11 +621,11 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
           >
             ஆட்டம் · பாட்டம் · கொண்டாட்டம்
           </p>
-          <h1 className="text-2xl sm:text-5xl md:text-6xl font-extrabold font-display tracking-tight text-white leading-[1.1] sm:leading-[1.06] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] [text-shadow:0_0_24px_rgba(85,204,162,0.4)]">
+          <h1 className="text-[length:var(--text-display)] font-extrabold font-display tracking-tight text-white leading-[1.08] [text-wrap:balance] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] [text-shadow:0_0_24px_rgba(85,204,162,0.4)]">
             Start the Aatam, Paatam, and Kondatam!
             <span className="sr-only"> — OSU Tamil Sangam at The Ohio State University</span>
           </h1>
-          <p className="text-xs sm:text-base text-purple-100/90 font-body leading-relaxed max-w-xl drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
+          <p className="text-[length:var(--text-body)] text-purple-100/90 font-body leading-relaxed max-w-xl drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
             {locale === "ta"
               ? "ஓஹியோ பல்கலைக்கழகத்தில் தமிழ் மாணவர்கள் மற்றும் அனைத்து நண்பர்களையும் ஒன்றிணைக்கும் கலாச்சாரப் பாலம். மொழி பேதமின்றி அனைவரும் அன்போடு வரவேற்கப்படுகிறீர்கள்!"
               : "A welcoming campus hub for Tamil culture, good food, casual hangouts, and collegiate celebration in Columbus. Open to all students, majors, and languages."}
@@ -630,16 +635,18 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
         {/* Bottom CTA Action Bar */}
         <div className="pt-3 sm:pt-4 border-t border-purple-500/20 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
-            <PalagaiButton
-              href="/join"
-              variant="mint"
-              size="md"
-              primaryText={locale === "ta" ? "இணையுங்கள்" : "Join The Club"}
-              secondaryText={locale === "ta" ? "Join The Club" : "இணையுங்கள்"}
-              icon={<Users className="w-4 h-4 text-[#250d38]" />}
-              iconPosition="left"
-              className="w-full sm:w-auto justify-center"
-            />
+            <Magnetic>
+              <PalagaiButton
+                href="/join"
+                variant="mint"
+                size="md"
+                primaryText={locale === "ta" ? "இணையுங்கள்" : "Join The Club"}
+                secondaryText={locale === "ta" ? "Join The Club" : "இணையுங்கள்"}
+                icon={<Users className="w-4 h-4 text-[#250d38]" />}
+                iconPosition="left"
+                className="w-full sm:w-auto justify-center"
+              />
+            </Magnetic>
 
             <PalagaiButton
               href="/board"
@@ -653,16 +660,18 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
             />
 
             {nextEventSlug && (
-              <PalagaiButton
-                href={`/events/${nextEventSlug}`}
-                variant="primary"
-                size="md"
-                primaryText={locale === "ta" ? "அடுத்த விழா" : "Next Event"}
-                secondaryText={locale === "ta" ? "Next Event" : "அடுத்த விழா"}
-                icon={<Calendar className="w-3.5 h-3.5 text-[#250d38]" />}
-                iconPosition="right"
-                className="w-full sm:w-auto justify-center"
-              />
+              <Magnetic>
+                <PalagaiButton
+                  href={`/events/${nextEventSlug}`}
+                  variant="primary"
+                  size="md"
+                  primaryText={locale === "ta" ? "அடுத்த விழா" : "Next Event"}
+                  secondaryText={locale === "ta" ? "Next Event" : "அடுத்த விழா"}
+                  icon={<Calendar className="w-3.5 h-3.5 text-[#250d38]" />}
+                  iconPosition="right"
+                  className="w-full sm:w-auto justify-center"
+                />
+              </Magnetic>
             )}
           </div>
         </div>

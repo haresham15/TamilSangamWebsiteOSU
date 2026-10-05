@@ -76,6 +76,7 @@ export function PolaroidField({ onSelect }: { onSelect?: (memory: HeroMemory) =>
   }, []);
 
   useFrame((state, delta) => {
+    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
     const time = state.clock.getElapsedTime();
     const velocity = Math.abs(galleryScrollState.velocity);
     const speedMultiplier = 1.0 + Math.min(2.5, velocity * 0.0025);
@@ -111,14 +112,14 @@ export function PolaroidField({ onSelect }: { onSelect?: (memory: HeroMemory) =>
           effectiveSpeed *= 0.35; // Gentle linger for legibility
         }
 
-        card.z += delta * effectiveSpeed;
+        card.z += safeDelta * effectiveSpeed;
 
         // Gentle organic slipstream tumble
         card.rotZ = Math.sin(time * 1.2 + card.phase) * 0.08;
         card.rotY += Math.sin(time * 0.8 + card.phase) * 0.002;
 
         // Subtle lateral drift away from road center
-        card.x += Math.sin(time * 0.5 + card.phase) * delta * 0.05;
+        card.x += Math.sin(time * 0.5 + card.phase) * safeDelta * 0.05;
       }
     }
   });

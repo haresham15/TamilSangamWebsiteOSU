@@ -124,7 +124,8 @@ export function CoastalCyclorama({ speedMultiplier = 1.0 }: CoastalCycloramaProp
   // Pan texture UV offset each frame (NOT rotating the mesh)
   useFrame((_, delta) => {
     if (textureRef.current) {
-      textureRef.current.offset.x += 0.008 * speedMultiplier * delta;
+      const safeDelta = Math.min(Math.max(delta, 0), 0.05);
+      textureRef.current.offset.x += 0.008 * speedMultiplier * safeDelta;
     }
   });
 

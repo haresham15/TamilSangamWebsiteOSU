@@ -49,6 +49,12 @@
   --font-mono: var(--font-fragment-mono), var(--font-azeret-mono), monospace;
   --font-ui: var(--font-syne), var(--font-outfit), sans-serif;
 
+  /* Fluid Typography Tokens (§7.1) */
+  --text-display: clamp(2.5rem, 1rem + 5vw, 6rem);        /* hero H1; max/min = 2.4 */
+  --text-title:   clamp(1.75rem, 1rem + 2.6vw, 3.5rem);
+  --text-body:    clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-mark:    clamp(8rem, 5rem + 22vw, 26rem);        /* decorative watermark only: aria-hidden */
+
   /* Semantic Mappings for Bright, Colorful & Welcoming Experience */
   --color-action-primary: var(--color-sangam-purple);
   --color-action-hover: var(--color-sangam-purple-light);
@@ -124,6 +130,55 @@
     --accent-tint: oklch(0.55 0.18 210);
     --accent-glow: oklch(0.55 0.18 210 / 0.35);
     --accent-gradient: linear-gradient(135deg, oklch(0.38 0.22 305) 0%, oklch(0.55 0.18 210) 100%);
+  }
+
+  /* Stacking and layout (§3.1) */
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  html {
+    background: var(--bg-base);
+  }
+  body {
+    background: transparent !important;
+    min-height: 100dvh;
+  }
+
+  /* Tamil Typography Rules (§7.1) */
+  :lang(ta) {
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.65;
+  }
+  :lang(ta) .display {
+    line-height: 1.25; /* tall Tamil glyphs: never clip vowel signs */
+  }
+  #gl-root {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    z-index: 0;
+    pointer-events: none;
+  }
+  #app-root {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Tamil Typographic Line-Height & Rendering Rules (§7.1) */
+  :lang(ta) {
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    line-height: 1.65;
+  }
+  :lang(ta) .display,
+  :lang(ta) h1,
+  :lang(ta) h2,
+  :lang(ta) .font-display {
+    line-height: 1.25;
   }
 
   [data-tinai="mullai"] {

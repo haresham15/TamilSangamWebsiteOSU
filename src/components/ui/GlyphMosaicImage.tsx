@@ -43,7 +43,7 @@ export const GlyphMosaicImage: React.FC<GlyphMosaicImageProps> = ({
   }, [isLiteMode]);
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl bg-[#090b14] ${aspectRatio} ${className}`}>
+    <div className={`relative overflow-hidden rounded-2xl group-data-[gl-ready=true]:bg-transparent bg-[#090b14] ${aspectRatio} ${className}`}>
       {/* Glyph-Mosaic Layer (Active while loading) */}
       {!isLoaded && !isLiteMode && (
         <div className="absolute inset-0 grid grid-cols-8 grid-rows-6 p-4 gap-1 items-center justify-items-center select-none pointer-events-none z-10 transition-opacity duration-700 font-mono text-xs sm:text-sm text-[var(--accent-tint)] opacity-70">

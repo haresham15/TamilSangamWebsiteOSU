@@ -110,8 +110,9 @@ export function Road() {
 
   useFrame((_, delta) => {
     // Constant idle dolly advance (1.2 m/s) + velocity scaling
+    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
     const speed = 1.2 + Math.min(2.8, Math.abs(galleryScrollState.velocity) * 0.003);
-    currentOffset.current += delta * speed;
+    currentOffset.current += safeDelta * speed;
 
     if (matRef.current) {
       matRef.current.uniforms.uDollyOffset.value = currentOffset.current;

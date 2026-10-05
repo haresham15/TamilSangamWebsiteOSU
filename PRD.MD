@@ -1,11 +1,25 @@
 # (ஐந்திணை) — OSU Tamil Sangam Website
 
-**PRD v0.2 (Draft for board review)** · September 20, 2026 · Owner: Haresh
-**v0.2 change:** merges the strongest ideas from a second, Gemini-generated PRD (cinematic grading, magnetic/cursor UI, liquid-distortion roster, semantic photo search, cross-route image flights, UI sound design, and more). Full disposition of every idea, including what was changed or declined and why, is in **Appendix E**.
-**Working title:** *Aintinai* — after the five landscapes of classical Sangam poetry, which become the site's visual and structural system.
-**Brand line (from the club's current Linktree):** "Start the Aatam, Paatam, and Kondatam!" — ஆட்டம் · பாட்டம் · கொண்டாட்டம்
+**PRD v2.0 (Active Architectural Ground Truth)** · October 5, 2026 · Owner: Haresh
+**Current Architecture:** Next.js 16.3.5 · React 19.2.8 · Three.js r186 / R3F v9.7 · @react-three/postprocessing v3.1 · GSAP 3.15 · Lenis 1.3 · Tailwind CSS v4 (@theme OKLCH tokens) · Web Audio API synthesis
+**Working title:** *Aintinai* — after the five landscapes of classical Sangam poetry, which form the site's visual, structural, and temporal coordinate system.
+**Brand line:** "Start the Aatam, Paatam, and Kondatam!" — ஆட்டம் · பாட்டம் · கொண்டாட்டம்
 
-> All Tamil copy in this document is **draft** and must be reviewed by a native Tamil reader before it ships.
+---
+
+## 0.1 Active Subsystem PRD Tracker & Implementation Status
+
+| Subsystem PRD | Scope / Document | Core Invariants & Features | Status |
+|---|---|---|---|
+| **Global Architecture v2** | `docs/global-architecture-prd-v2.md` | Single unified master ticker (`masterTick.ts`), delta clamping ($\le 50\text{ ms}$), frame governor (Levels 0, 1, 2), persistent `<GlobalCanvas>` with Drei `<View>` scissoring, Plan C dedicated hero canvases, compositor shutter (`Shutter.tsx`), asset pre-compilation (`useWarmup`). | **SHIPPED** |
+| **Gallery Hero ("Fretboard Highway")** | `src/components/gallery-hero/` | 24-fret true 12-TET fretboard highway, 3 era color transitions, scroll-driven guitar pick strumming, 6-string physics InstancedMesh with damping, landmark gizmos, rose contact at $p=0.52$. | **SHIPPED** |
+| **Guide Hero ("PlatformBoard")** | `src/components/guide-hero/` | Mechanical Solari split-flap departure board, deterministic per-cell state machine ($FALL = 0.7$), bilingual Tamil/English schedule cycling. | **SHIPPED** |
+| **Join Hero ("Morning Campus")** | `src/components/join/` | Procedural limestone courtyard, wrought iron collegiate gates, crane camera trajectory, interactive application portal. | **SHIPPED** |
+| **Sensory Layer v2: Phase 1 (Color Pipeline)** | `src/gl/grade/` | Single tone-mapper enforcement (ToneMappingMode.AGX), `<Canvas flat>`, Bloom $\to$ AGX $\to$ LUT $\to$ Vignette $\to$ Grain stack, compacted 33³ PNG strip (`heritage-33.png`, 76.8 KB), $\Delta E$ brand validation ($\le 4.0$). | **COMPLETED** |
+| **Sensory Layer v2: Phase 2 (Diegetic Audio)** | `src/audio/` | Web Audio client singleton (`AudioController.ts`), opt-in gate via nav toggle, master limiter/compressor, passive gesture unlock (`armUnlock.ts`), 8ms flap impact bus coalescing (`impactBus.ts`), CTA hover thud with fine-pointer check and cooldowns. | **COMPLETED** |
+| **Sensory Layer v2: Phase 3 (Speed Ramping)** | `src/gallery/ramp.ts`, `neck/fretMath.ts` | Scroll-linked kinematic camera velocity solver ($P = 1.7202$), exact fret 5 & 12 preservation, rose contact brake at 52%, asymmetric critically damped FOV spring, camera world speed limiter ($90\text{ su/s}$). | **COMPLETED** |
+| **Sensory Layer v2: Phase 4 (Director's Viewport)** | `src/director/` | Monospace diagnostic HUD (`DirectorHUD.tsx`), `Shift+D` chord + footer trigger, input-guarded `W`/`C` toggles, unlit green wireframe material registry preserving vertex patches, 250ms scanline wipe. | **COMPLETED** |
+| **Sensory Layer v2: Phase 5 (Hardening & Auditing)** | `scripts/test-phase5-hardening.mjs` | 100% audit pass across budgets, WCAG 2.2 AA / WCAG 2.1.4 single-key protection, `prefers-reduced-motion` fallbacks, zero gratuitous dependencies, zero TypeScript errors. | **COMPLETED** |
 
 ---
 
@@ -14,6 +28,7 @@
 The club currently lives on a Linktree: two social links, a ticket link, two Google Forms, a GroupMe, and two photo folders. There is no page that says what the club *is*, who runs it, what it has done, or what is coming.
 
 This project replaces that with a single destination that is (a) genuinely useful in two taps, and (b) unlike anything else on a campus club site.
+
 
 **The concept.** Classical Tamil poetry organizes the world into five landscapes (*aintinai*), each tied to a mood and a time of day. The site *is* that map. Scrolling the home page is a climb up a procedurally generated *gopuram* (temple tower) whose five tiers are the five landscapes; each landscape is a section of the club. The atmosphere of the whole site follows the traditional five divisions of the Tamil day, based on the visitor's local time.
 
