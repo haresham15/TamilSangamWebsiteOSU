@@ -16,24 +16,17 @@ import { registerRenderer, unregisterRenderer } from "@/engine/renderer";
  */
 export function GlobalCanvas() {
   const tier = useTier();
-  const [source, setSource] = useState<HTMLElement | null>(() => {
-    if (typeof document !== "undefined") {
-      return document.getElementById("app-root");
-    }
-    return null;
-  });
+  const [source, setSource] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (!source) {
-      const el = document.getElementById("app-root");
-      if (el) {
-        requestAnimationFrame(() => setSource(el));
-      }
+    const el = document.getElementById("app-root");
+    if (el) {
+      setSource(el);
     }
     return () => {
       unregisterRenderer();
     };
-  }, [source]);
+  }, []);
 
   if (!source || tier === "C") {
     return null; // Lite: no canvas at all (§2, §3.1)

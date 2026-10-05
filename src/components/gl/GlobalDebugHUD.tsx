@@ -9,11 +9,7 @@ import { scroll } from "@/engine/masterTick";
 
 export function GlobalDebugHUD() {
   const tier = useTier();
-  const [visible] = useState(() => {
-    if (typeof window === "undefined") return false;
-    const p = new URLSearchParams(window.location.search);
-    return p.get("debug") === "1" || p.get("debug") === "true" || p.has("debug");
-  });
+  const [visible, setVisible] = useState(false);
   const [fps, setFps] = useState(60);
   const [govLevel, setGovLevel] = useState<GovernorLevel>(0);
   const [asks, setAsks] = useState<Record<string, GovernorLevel>>({});
@@ -33,8 +29,16 @@ export function GlobalDebugHUD() {
     textures: 0,
   });
 
+  // Read debug param after mount to avoid SSR mismatch
   useEffect(() => {
-    if (typeof window === "undefined" || !visible) return;
+    const p = new URLSearchParams(window.location.search);
+    if (p.get("debug") === "1" || p.get("debug") === "true" || p.has("debug")) {
+      setVisible(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!visible) return;
 
     let frameCount = 0;
     let lastFpsTime = performance.now();
