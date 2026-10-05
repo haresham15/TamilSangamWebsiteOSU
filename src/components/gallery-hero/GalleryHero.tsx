@@ -163,7 +163,7 @@ export function GalleryHero() {
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold font-display text-[#FFF8E7] tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+          <h1 className="text-[clamp(2.5rem,5vw+1.5rem,6rem)] font-extrabold font-display text-[#FFF8E7] tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
             {locale === "ta" ? "நினைவுகள் · நினைவலைகள்" : "Memories · நினைவுகள்"}
           </h1>
 

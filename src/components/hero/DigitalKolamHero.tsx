@@ -9,7 +9,8 @@ import { Magnetic } from "@/components/ui/Magnetic";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
+import { PerspectiveCamera, View } from "@react-three/drei";
 import { governor } from "@/engine/governor";
 
 // Authentic Mathematical Tamil Pulli & Sikku Kamalam Kolam Generator
@@ -301,20 +302,6 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
     () => false
   );
 
-  const [isHeroVisible, setIsHeroVisible] = useState(true);
-
-  useEffect(() => {
-    if (!sectionRef.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsHeroVisible(entry.isIntersecting);
-      },
-      { threshold: 0.02 }
-    );
-    observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   useEffect(() => {
     if (isLiteMode) return;
 
@@ -458,20 +445,11 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
       {/* 1. Full-Screen 3D Particle Canvas with Pure GPU Shader Turbulence */}
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         {mounted && !isLiteMode && (
-          <Canvas
-            dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
-            frameloop={isHeroVisible ? "always" : "demand"}
-            camera={{ position: [0, 0, 7.5], fov: 50 }}
-            gl={{
-              antialias: true,
-              alpha: true,
-              powerPreference: "high-performance",
-            }}
-            className="w-full h-full"
-          >
+          <View className="w-full h-full">
+            <PerspectiveCamera makeDefault position={[0, 0, 7.5]} fov={50} />
             <ambientLight intensity={0.4} />
             <GPUKolamParticles scrollProgressRef={scrollProgressRef} isMobile={isMobile} />
-          </Canvas>
+          </View>
         )}
       </div>
 

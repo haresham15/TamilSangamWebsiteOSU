@@ -30,8 +30,9 @@ function InteractiveKnot({
 
   useFrame((_, delta) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x += delta * (hovered ? 1.5 : 0.5);
-      meshRef.current.rotation.y += delta * (hovered ? 2.0 : 0.8);
+      const safeDelta = Math.min(Math.max(delta, 0), 0.05);
+      meshRef.current.rotation.x += safeDelta * (hovered ? 1.5 : 0.5);
+      meshRef.current.rotation.y += safeDelta * (hovered ? 2.0 : 0.8);
     }
   });
 
@@ -69,8 +70,9 @@ function AlignmentBox({ index }: { index: number }) {
 
   useFrame((_, delta) => {
     if (boxRef.current) {
-      boxRef.current.rotation.y += delta * 0.7;
-      boxRef.current.rotation.x += delta * 0.35;
+      const safeDelta = Math.min(Math.max(delta, 0), 0.05);
+      boxRef.current.rotation.y += safeDelta * 0.7;
+      boxRef.current.rotation.x += safeDelta * 0.35;
     }
   });
 
@@ -92,7 +94,8 @@ function GlowingDiamond({ useShaderGlow }: { useShaderGlow: boolean }) {
 
   useFrame((state, delta) => {
     if (diamondRef.current) {
-      diamondRef.current.rotation.y += delta * 0.8;
+      const safeDelta = Math.min(Math.max(delta, 0), 0.05);
+      diamondRef.current.rotation.y += safeDelta * 0.8;
       diamondRef.current.position.y = Math.sin(state.clock.elapsedTime * 2) * 0.15;
     }
   });

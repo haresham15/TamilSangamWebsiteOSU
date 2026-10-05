@@ -48,13 +48,11 @@ export function unregisterSystem(s: System) {
 
 let last = 0;
 let frame = 0;
-let renderTimeSec = 0;
 let lastSyncedClock: unknown = null;
 
 export function resetMasterClock() {
   last = 0;
   frame = 0;
-  renderTimeSec = 0;
   lastSyncedClock = null;
 }
 
@@ -99,21 +97,16 @@ export function masterTick(timeSec: number, lenis: Lenis | null) {
     return;
   }
 
-  // Synchronize render time with active R3F clock to eliminate first-frame or remount spikes
+  // R3F manual timestamps are seconds. Keep the timestamp absolute so a
+  // remount cannot desynchronize the render clock from browser time.
+  const renderTimestampSec = performance.now() / 1000;
+
+  // Prime a new R3F clock before its first manual advance to avoid a first-frame spike.
   const r3fClock = getRendererClock();
   if (r3fClock && r3fClock !== lastSyncedClock) {
     lastSyncedClock = r3fClock;
-    renderTimeSec = 0;
-    r3fClock.elapsedTime = 0;
+    r3fClock.elapsedTime = renderTimestampSec;
   }
 
-  // Accumulate clamped delta in seconds for R3F advance.
-  // In R3F frameloop="never", advance(timestamp) computes:
-  //   delta = timestamp - clock.elapsedTime
-  //   clock.elapsedTime = timestamp
-  // Passing milliseconds (like performance.now()) causes delta to be ~16.6 instead of ~0.016,
-  // making all useFrame lerps explode and all shaders cycle at 1000x speed.
-  // By passing renderTimeSec (seconds, strictly advancing by dt <= 0.05), R3F receives the exact frame delta.
-  renderTimeSec += dt;
-  rendererAdvance(renderTimeSec, true);
+  rendererAdvance(renderTimestampSec, true);
 }

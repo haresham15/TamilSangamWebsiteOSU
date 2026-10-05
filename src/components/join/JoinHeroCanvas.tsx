@@ -3,7 +3,7 @@
 import React, { Suspense, useState, useEffect, useRef, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { View, PerspectiveCamera, BakeShadows } from "@react-three/drei";
+import { View, PerspectiveCamera, BakeShadows, Sky } from "@react-three/drei";
 import { useWarmup } from "@/components/gl/useWarmup";
 import { governor } from "@/engine/governor";
 import { useLocale } from "@/context/LocaleContext";
@@ -14,11 +14,10 @@ import { MorningVolumetrics } from "./MorningVolumetrics";
 import { LeafDrift } from "./LeafDrift";
 import { CraneCameraRig } from "./CraneCameraRig";
 import { WhiteoutFinale } from "./WhiteoutFinale";
-import { MorningSkyDome } from "./env/MorningSkyDome";
 import { MorningEnvironment } from "./env/MorningEnvironment";
 import { MorningKeyLight } from "./env/MorningKeyLight";
 import { MorningLightShafts } from "./env/MorningLightShafts";
-import { FOG_COLOR, FOG_DENSITY } from "./env/sun";
+import { FOG_COLOR, FOG_DENSITY, SUN_POS } from "./env/sun";
 
 import { JoinMaterialsManager, type IronVariant } from "./JoinMaterialsManager";
 import { MorningCampusVignette } from "./vignette/MorningCampusVignette";
@@ -254,7 +253,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
           <fogExp2 attach="fog" args={[FOG_COLOR, FOG_DENSITY]} />
 
           {/* Custom Morning Gradient Sky Dome (§3.2) */}
-          <MorningSkyDome />
+          <Sky distance={450000} sunPosition={SUN_POS} turbidity={7} rayleigh={1.5} mieCoefficient={0.008} mieDirectionalG={0.82} />
 
           {/* Procedural 4-Lightformer Environment (§3.3) */}
           <MorningEnvironment />

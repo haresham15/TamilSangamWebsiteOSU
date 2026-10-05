@@ -25,11 +25,17 @@ function loadLutStrip(url: string): Promise<LookupTexture> {
         try {
           const lut = LookupTexture.from(texture);
           lut.name = "heritage-33";
+          lut.minFilter = THREE.LinearFilter;
+          lut.magFilter = THREE.LinearFilter;
+          lut.needsUpdate = true;
           cachedLut = lut;
           resolve(lut);
         } catch (err) {
           console.warn("[useGradeLut] Failed to parse 2D strip, falling back to neutral identity:", err);
           const fallback = LookupTexture.createNeutral(gradeConfig.lutSize);
+          fallback.minFilter = THREE.LinearFilter;
+          fallback.magFilter = THREE.LinearFilter;
+          fallback.needsUpdate = true;
           cachedLut = fallback;
           resolve(fallback);
         }
@@ -37,8 +43,11 @@ function loadLutStrip(url: string): Promise<LookupTexture> {
       undefined,
       (err) => {
         console.warn("[useGradeLut] Failed to load LUT texture file, falling back to neutral identity:", err);
-        const fallback = LookupTexture.createNeutral(gradeConfig.lutSize);
-        cachedLut = fallback;
+          const fallback = LookupTexture.createNeutral(gradeConfig.lutSize);
+          fallback.minFilter = THREE.LinearFilter;
+          fallback.magFilter = THREE.LinearFilter;
+          fallback.needsUpdate = true;
+          cachedLut = fallback;
         resolve(fallback);
       }
     );

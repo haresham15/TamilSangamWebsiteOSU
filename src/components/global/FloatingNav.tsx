@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLocale } from "@/context/LocaleContext";
 import { useTinai, TINAIS, Tinai } from "@/context/TinaiContext";
 import { useAudio } from "@/context/AudioContext";
@@ -33,15 +35,31 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
 
   const [isTinaiMenuOpen, setIsTinaiMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isFlickering, setIsFlickering] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+    gsap.registerPlugin(ScrollTrigger);
+    const header = headerRef.current;
+    if (!header) return;
+
+    const glassClasses = ["backdrop-blur-md", "bg-[#050201]/60", "border-white/10"];
+    const applyScrollState = (scrollY: number, direction: number) => {
+      const isPastThreshold = scrollY > 20;
+      header.classList.toggle("border-transparent", !isPastThreshold);
+      glassClasses.forEach((className) => header.classList.toggle(className, isPastThreshold));
+      header.classList.toggle("-translate-y-full", isPastThreshold && direction === 1);
+      header.classList.toggle("translate-y-0", !(isPastThreshold && direction === 1));
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    const trigger = ScrollTrigger.create({
+      start: 0,
+      end: "max",
+      onUpdate: (self) => applyScrollState(self.scroll(), self.direction),
+    });
+    applyScrollState(window.scrollY, -1);
+
+    return () => trigger.kill();
   }, []);
 
   // Ordered strictly by importance: Home -> Events -> Join -> About -> Board -> Gallery -> Guide -> Feedback
@@ -77,11 +95,8 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
-          isScrolled
-            ? "bg-[#0c0617]/97 backdrop-blur-md border-b border-white/15 shadow-[0_4px_30px_rgba(0,0,0,0.85)]"
-            : "bg-gradient-to-b from-[#070504]/90 to-transparent border-b border-white/10"
-        }`}
+        ref={headerRef}
+        className="fixed top-0 left-0 right-0 z-50 w-full border-b border-transparent bg-transparent translate-y-0 transition-[transform,background-color,border-color,backdrop-filter] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
       >
         <div className="max-w-[1440px] mx-auto flex items-center h-16 px-4 sm:px-6 relative">
 
@@ -135,7 +150,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                     key={item.href}
                     href={item.href}
                     onClick={playClick}
-                    className={`ml-3 flex items-center gap-1.5 px-4 py-1.5 text-xs font-display font-bold transition-all duration-300 border ${
+                    className={`ml-3 flex items-center gap-1.5 px-4 py-1.5 text-xs font-display font-bold transition-[background-color,color,border-color,box-shadow,transform] duration-300 border ${
                       isActive
                         ? "btn-gold-foil text-[#1a0b2e] border-amber-200/90 shadow-[0_0_20px_rgba(255,184,77,0.45)]"
                         : "btn-gold-foil text-[#1a0b2e] border-amber-300/70 hover-glow-kuthuvilakku hover:scale-[1.02] active:scale-[0.98]"
@@ -212,7 +227,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               }}
               title="Switch Language / மொழியை மாற்ற"
               aria-label={locale === "en" ? "Switch language to Tamil" : "Switch language to English"}
-              className="px-2.5 sm:px-3 py-1 text-xs font-display font-bold border border-[#D4AF37]/30 hover:border-[#D4AF37]/60 bg-[#250d38]/40 hover:bg-[#250d38]/70 text-[#faf5ed] flex items-center gap-1.5 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
+              className="px-2.5 sm:px-3 py-1 text-xs font-display font-bold border border-[#D4AF37]/30 hover:border-[#D4AF37]/60 bg-[#250d38]/40 hover:bg-[#250d38]/70 text-[#faf5ed] flex items-center gap-1.5 transition-[border-color,background-color,color] duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
             >
               <span className="text-[9px] font-mono px-1 py-0.5 bg-[#D4AF37] text-[#120a06] font-extrabold leading-none">
                 {locale === "en" ? "TA" : "EN"}
@@ -237,7 +252,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 aria-label="Select Tamil landscape (Tinai) and time of day"
                 aria-expanded={isTinaiMenuOpen}
                 aria-haspopup="true"
-                className="hidden md:flex items-center gap-1.5 px-2.5 py-1 text-xs font-display border border-[#D4AF37]/20 hover:border-[#D4AF37]/40 bg-[#250d38]/30 hover:bg-[#250d38]/60 text-[#faf5ed] transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
+                className="hidden md:flex items-center gap-1.5 px-2.5 py-1 text-xs font-display border border-[#D4AF37]/20 hover:border-[#D4AF37]/40 bg-[#250d38]/30 hover:bg-[#250d38]/60 text-[#faf5ed] transition-[border-color,background-color,color] duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
               >
                 <span
                   className="w-2 h-2 rounded-none border border-black/40 animate-pulse shrink-0"
@@ -278,7 +293,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                           <button
                             key={key}
                             onClick={() => handleTinaiSelect(key)}
-                            className={`w-full flex items-center justify-between px-3 py-2 text-xs text-left transition-all duration-150 cursor-pointer ${
+                            className={`w-full flex items-center justify-between px-3 py-2 text-xs text-left transition-[background-color,color,border-color,box-shadow] duration-150 cursor-pointer ${
                               isSelected
                                 ? "bg-[#2e1644] text-[#faf5ed] font-bold border border-[#D4AF37]/60 shadow-sm"
                                 : "text-[#d1b8e6] hover:bg-[#250d38]/50 hover:text-[#faf5ed]"
@@ -332,7 +347,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
               onClick={toggleSound}
               title={isSoundEnabled ? t("control.soundOff") : t("control.soundOn")}
               aria-label={isSoundEnabled ? "Mute interactive audio effects" : "Enable interactive audio effects"}
-              className={`w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] ${
+              className={`w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center transition-[background-color,color,border-color] duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] ${
                 isSoundEnabled
                   ? "bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/40"
                   : "text-[#b8a0cc] hover:text-[#faf5ed] hover:bg-[#250d38]/60"
@@ -399,7 +414,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                       key={item.href}
                       href={item.href}
                       onClick={handleLinkClick}
-                      className={`flex items-center justify-between px-4 py-3 min-h-[48px] rounded-none text-sm font-display transition-all duration-150 ${
+                      className={`flex items-center justify-between px-4 py-3 min-h-[48px] rounded-none text-sm font-display transition-[background-color,color,border-color,box-shadow,transform] duration-150 ${
                         isJoin
                           ? "btn-gold-foil text-[#1a0b2e] font-bold border border-amber-300/80 shadow-[0_0_25px_rgba(255,184,77,0.3)]"
                           : isActive

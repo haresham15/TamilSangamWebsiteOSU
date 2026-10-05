@@ -311,7 +311,7 @@ export default function UserGuideAndFaqPage() {
         <div className="text-center max-w-3xl mx-auto mb-10">
 
           <h1
-            className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display mb-3"
+            className="text-[clamp(2.5rem,5vw+1.5rem,6rem)] font-extrabold text-[#250d38] tracking-tight font-display mb-3"
             {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}
           >
             {locale === "ta"

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import { governor, GovernorLevel } from "@/engine/governor";
 import { getRenderer } from "@/engine/renderer";
 import { useTier } from "@/components/providers/TierProvider";
@@ -9,7 +9,14 @@ import { scroll } from "@/engine/masterTick";
 
 export function GlobalDebugHUD() {
   const tier = useTier();
-  const [visible, setVisible] = useState(false);
+  const visible = useSyncExternalStore(
+    () => () => {},
+    () => {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("debug") === "1" || params.get("debug") === "true" || params.has("debug");
+    },
+    () => false
+  );
   const [fps, setFps] = useState(60);
   const [govLevel, setGovLevel] = useState<GovernorLevel>(0);
   const [asks, setAsks] = useState<Record<string, GovernorLevel>>({});
@@ -28,14 +35,6 @@ export function GlobalDebugHUD() {
     geometries: 0,
     textures: 0,
   });
-
-  // Read debug param after mount to avoid SSR mismatch
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    if (p.get("debug") === "1" || p.get("debug") === "true" || p.has("debug")) {
-      setVisible(true);
-    }
-  }, []);
 
   useEffect(() => {
     if (!visible) return;

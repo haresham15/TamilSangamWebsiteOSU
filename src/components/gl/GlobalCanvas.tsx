@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { View } from "@react-three/drei";
+import * as THREE from "three";
 import { useTier } from "@/components/providers/TierProvider";
 import { registerRenderer, unregisterRenderer } from "@/engine/renderer";
+import { GradeStack } from "@/gl/grade/GradeStack";
 
 /**
  * GlobalCanvas (§3.1)
@@ -19,11 +21,12 @@ export function GlobalCanvas() {
   const [source, setSource] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    const el = document.getElementById("app-root");
-    if (el) {
-      setSource(el);
-    }
+    const frameId = requestAnimationFrame(() => {
+      setSource(document.getElementById("app-root"));
+    });
+
     return () => {
+      cancelAnimationFrame(frameId);
       unregisterRenderer();
     };
   }, []);
@@ -38,6 +41,7 @@ export function GlobalCanvas() {
         eventSource={source}
         eventPrefix="client"
         frameloop="never"
+        shadows
         dpr={[1, tier === "A" ? 1.75 : 1.25]}
         gl={{
           antialias: true,
@@ -47,10 +51,13 @@ export function GlobalCanvas() {
         style={{ width: "100%", height: "100%" }}
         onCreated={({ gl, advance, clock }) => {
           gl.setClearAlpha(0);
+          gl.shadowMap.enabled = true;
+          gl.shadowMap.type = THREE.PCFShadowMap;
           registerRenderer(gl, advance, clock);
         }}
       >
         <View.Port />
+        <GradeStack tier={tier} />
       </Canvas>
     </div>
   );

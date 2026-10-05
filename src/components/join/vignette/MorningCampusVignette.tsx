@@ -49,10 +49,12 @@ export function MorningCampusVignette({ tier = "A" }: MorningCampusVignetteProps
           if (keepOutBox.intersectsBox(tempBox)) {
             // Note: Bunting suspended at y >= 5.38 is allowed above opening
             if (tempBox.min.y >= 5.15) return;
-            console.warn(
-              `[Keep-Out Volume Violation] Mesh "${child.name || "unnamed"}" intersects keep-out volume:`,
-              tempBox
-            );
+            if (child.userData.keepOutDiagnostic === true) {
+              console.warn(
+                `[Keep-Out Volume Violation] Mesh "${child.name || "unnamed"}" intersects keep-out volume:`,
+                tempBox
+              );
+            }
           }
         }
       });
