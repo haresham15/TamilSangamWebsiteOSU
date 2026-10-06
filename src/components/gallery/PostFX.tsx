@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+
 import * as THREE from "three";
 import { EffectComposer, Bloom, GodRays, Vignette, Noise } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
