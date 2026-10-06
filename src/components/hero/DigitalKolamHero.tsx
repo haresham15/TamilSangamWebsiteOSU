@@ -12,6 +12,7 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { PerspectiveCamera, View } from "@react-three/drei";
 import { governor } from "@/engine/governor";
+import { useTier } from "@/components/providers/TierProvider";
 
 // Authentic Mathematical Tamil Pulli & Sikku Kamalam Kolam Generator
 function generateKolamPoints(isMobile: boolean) {
@@ -277,6 +278,8 @@ function GPUKolamParticles({
 export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) {
   const { locale } = useLocale();
   const { isLiteMode } = useLiteMode();
+  const tier = useTier();
+  const isWebglEnabled = !isLiteMode && tier !== "C";
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const textGroupRef = useRef<SVGGElement>(null);
@@ -303,7 +306,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
   );
 
   useEffect(() => {
-    if (isLiteMode) return;
+    if (!isWebglEnabled) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
@@ -412,7 +415,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
         window.__lenis.resize();
       }
     };
-  }, [isLiteMode, isMobile]);
+  }, [isWebglEnabled, isMobile]);
 
   const [inView, setInView] = useState(true);
 
@@ -439,12 +442,14 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
   return (
     <div
       ref={sectionRef}
-      className="relative w-full h-[100dvh] overflow-hidden bg-[#10061a] text-white flex flex-col justify-between"
+      className={`relative w-full h-[100dvh] overflow-hidden text-white flex flex-col justify-between ${
+        isWebglEnabled ? "bg-transparent" : "bg-[#10061a]"
+      }`}
       style={{ minHeight: "100dvh" }}
     >
       {/* 1. Full-Screen 3D Particle Canvas with Pure GPU Shader Turbulence */}
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
-        {mounted && !isLiteMode && (
+        {mounted && isWebglEnabled && (
           <View className="w-full h-full">
             <PerspectiveCamera makeDefault position={[0, 0, 7.5]} fov={50} />
             <ambientLight intensity={0.4} />
@@ -462,10 +467,10 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
         >
           <defs>
             <mask id="kolam-tamil-window-mask">
-              {/* Black background: hides everything by default */}
-              <rect width="100%" height="100%" fill="black" />
+              {/* White shield with black Tamil-script windows into the WebGL kolam. */}
+              <rect width="100%" height="100%" fill="white" />
 
-              {/* White text: punches open the window into the 3D Kolam simulation in AUTHENTIC TAMIL SCRIPT */}
+              {/* Black text cuts through the shield to reveal the 3D kolam behind it. */}
               <g ref={textGroupRef} style={{ willChange: "transform" }}>
                 {isMobile ? (
                   // Mobile stacked layout adhering to tamil-text skill
@@ -474,7 +479,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
                     x="250"
                     y="170"
                     textAnchor="middle"
-                    fill="white"
+                    fill="black"
                     fontFamily="var(--font-mukta-malar), 'Mukta Malar', var(--font-tamil), sans-serif"
                     fontWeight="800"
                     fontSize="94"
@@ -493,7 +498,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
                     x="700"
                     y="235"
                     textAnchor="middle"
-                    fill="white"
+                    fill="black"
                     fontFamily="var(--font-mukta-malar), 'Mukta Malar', var(--font-tamil), sans-serif"
                     fontWeight="800"
                     fontSize="155"
