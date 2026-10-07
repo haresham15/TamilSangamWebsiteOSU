@@ -47,6 +47,8 @@ export function AtlasDebugOverlay() {
     <div className="absolute top-20 right-4 z-30 pointer-events-auto">
       <button
         onClick={() => setOpen(!open)}
+        aria-label={open ? "Hide Atlas Debug" : "Show Atlas Debug"}
+        aria-expanded={open}
         className="px-2.5 py-1 text-[10px] font-mono font-bold tracking-wider uppercase border border-[#55CCA2]/40 bg-[#0c0d10]/85 text-[#55CCA2] hover:bg-[#55CCA2]/20 hover:border-[#55CCA2] transition-all rounded shadow-md backdrop-blur"
       >
         {open ? "✕ HIDE ATLAS" : "⚙ ATLAS DEBUG"}

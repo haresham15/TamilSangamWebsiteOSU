@@ -189,6 +189,8 @@ export function SuggestionForm({
                     key={cat.id}
                     type="button"
                     onClick={() => setSelectedCategory(cat.id)}
+                    aria-label={`Select category: ${cat.labelEn}`}
+                    aria-pressed={isSelected}
                     className={`ticket-chamfer-tl-br p-3 text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
                       isSelected
                         ? "bg-[#2D1429] border-[#FFB84D] shadow-[3px_3px_0px_#FFB84D] text-white hover:glow-sodium"

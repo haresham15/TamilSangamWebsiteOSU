@@ -129,6 +129,7 @@ export function FAQContent({
             {search && (
               <button
                 onClick={() => setSearch("")}
+                aria-label="Clear search input"
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-[#a89985] hover:text-[#fdfaf5] transition-colors"
               >
                 CLEAR
@@ -144,6 +145,8 @@ export function FAQContent({
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
+                  aria-pressed={isActive}
+                  aria-label={`Filter by category: ${cat}`}
                   className={`px-3.5 py-1.5 rounded-none text-xs font-mono tracking-wider whitespace-nowrap transition-all border ${
                     isActive
                       ? "bg-[#d4af37] text-[#0d0a08] font-bold border-[#d4af37] shadow-[2px_2px_0px_#250d38]"
