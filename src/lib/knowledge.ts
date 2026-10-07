@@ -64,7 +64,7 @@ export function getKnowledgeBase(): KnowledgeItem[] {
   return merged;
 }
 
-export function saveKnowledgeItem(item: Partial<KnowledgeItem> & { titleEn: string; contentEn: string }): KnowledgeItem {
+export async function saveKnowledgeItem(item: Partial<KnowledgeItem> & { titleEn: string; contentEn: string }): Promise<KnowledgeItem> {
   const customList = loadCustomKnowledge();
   
   const id = item.id || `kb-custom-${Date.now()}`;
@@ -94,7 +94,7 @@ export function saveKnowledgeItem(item: Partial<KnowledgeItem> & { titleEn: stri
 
   try {
     ensureCustomKnowledgeFile();
-    fs.writeFileSync(CUSTOM_KB_FILE, JSON.stringify(customList, null, 2), "utf-8");
+    await fs.promises.writeFile(CUSTOM_KB_FILE, JSON.stringify(customList, null, 2), "utf-8");
   } catch (err) {
     console.warn("[KnowledgeBase] Unable to persist to disk:", err);
   }
@@ -102,7 +102,7 @@ export function saveKnowledgeItem(item: Partial<KnowledgeItem> & { titleEn: stri
   return newItem;
 }
 
-export function deleteKnowledgeItem(id: string): boolean {
+export async function deleteKnowledgeItem(id: string): Promise<boolean> {
   const customList = loadCustomKnowledge();
   const filtered = customList.filter((k) => k.id !== id);
   
@@ -110,7 +110,7 @@ export function deleteKnowledgeItem(id: string): boolean {
     inMemoryCustomKB = filtered;
     try {
       ensureCustomKnowledgeFile();
-      fs.writeFileSync(CUSTOM_KB_FILE, JSON.stringify(filtered, null, 2), "utf-8");
+      await fs.promises.writeFile(CUSTOM_KB_FILE, JSON.stringify(filtered, null, 2), "utf-8");
     } catch (err) {
       console.warn("[KnowledgeBase] Unable to persist delete to disk:", err);
     }
