@@ -1,0 +1,11 @@
+--- src/components/global/JsonLd.tsx
++++ src/components/global/JsonLd.tsx
+@@ -9,7 +9,8 @@
+  * Safely serialize JSON-LD to prevent XSS attacks.
+  * By escaping the '<' character, we prevent breaking out of the <script> tag.
+  */
+-function safeJsonLd(data: any): string {
++// eslint-disable-next-line @typescript-eslint/no-explicit-any
++function safeJsonLd(data: Record<string, any>): string {
+   return JSON.stringify(data).replace(/</g, '\\u003c');
+ }

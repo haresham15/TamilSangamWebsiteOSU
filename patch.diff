@@ -1,0 +1,80 @@
+--- src/components/global/JsonLd.tsx
++++ src/components/global/JsonLd.tsx
+@@ -5,6 +5,14 @@
+ import { CURRENT_BOARD } from "@/data/board";
+ import { GalleryAlbum } from "@/types";
+
++/**
++ * Safely serialize JSON-LD to prevent XSS attacks.
++ * By escaping the '<' character, we prevent breaking out of the <script> tag.
++ */
++function safeJsonLd(data: any): string {
++  return JSON.stringify(data).replace(/</g, '\\u003c');
++}
++
+ /**
+  * Global WebSite Schema for Sitewide Search and Identity
+  */
+@@ -39,7 +47,7 @@
+   return (
+     <script
+       type="application/ld+json"
+-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
++      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+     />
+   );
+ };
+@@ -111,7 +119,7 @@
+   return (
+     <script
+       type="application/ld+json"
+-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
++      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+     />
+   );
+ };
+@@ -156,7 +164,7 @@
+   return (
+     <script
+       type="application/ld+json"
+-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
++      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+     />
+   );
+ };
+@@ -183,7 +191,7 @@
+   return (
+     <script
+       type="application/ld+json"
+-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
++      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+     />
+   );
+ };
+@@ -261,7 +269,7 @@
+   return (
+     <script
+       type="application/ld+json"
+-      dangerouslySetInnerHTML={{ __html: JSON.stringify(eventLd) }}
++      dangerouslySetInnerHTML={{ __html: safeJsonLd(eventLd) }}
+     />
+   );
+ };
+@@ -319,7 +327,7 @@
+   return (
+     <script
+       type="application/ld+json"
+-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
++      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+     />
+   );
+ };
+@@ -355,7 +363,7 @@
+   return (
+     <script
+       type="application/ld+json"
+-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
++      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+     />
+   );
+ };

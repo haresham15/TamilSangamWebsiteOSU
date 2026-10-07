@@ -8,8 +8,7 @@ import { GalleryAlbum } from "@/data/gallery";
  * Safely serialize JSON-LD to prevent XSS attacks.
  * By escaping the '<' character, we prevent breaking out of the <script> tag.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function safeJsonLd(data: Record<string, any>): string {
+function safeJsonLd(data: any): string {
   return JSON.stringify(data).replace(/</g, '\\u003c');
 }
 
