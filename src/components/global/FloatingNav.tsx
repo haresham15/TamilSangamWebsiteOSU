@@ -22,6 +22,18 @@ import {
   ChevronDown
 } from "lucide-react";
 
+// Ordered strictly by importance: Home -> Events -> Join -> About -> Board -> Gallery -> Guide -> Feedback
+const navLinks = [
+  { href: "/", en: "Home", ta: "முகப்பு", labelKey: "nav.home" },
+  { href: "/events", en: "Events", ta: "நிகழ்வுகள்", labelKey: "nav.events" },
+  { href: "/about", en: "About", ta: "அறிமுகம்", labelKey: "nav.about" },
+  { href: "/board", en: "Board", ta: "அவை", labelKey: "nav.board" },
+  { href: "/gallery", en: "Gallery", ta: "நினைவுகள்", labelKey: "nav.gallery" },
+  { href: "/guide", en: "Guide", ta: "வழிகாட்டி", labelKey: "nav.guide" },
+  { href: "/suggestions", en: "Ideas", ta: "கருத்து", labelKey: "nav.suggestions" },
+  { href: "/join", en: "Join", ta: "இணையுங்கள்", labelKey: "nav.join", isCta: true },
+];
+
 interface FloatingNavProps {
   onOpenSearch: () => void;
 }
@@ -61,18 +73,6 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
 
     return () => trigger.kill();
   }, []);
-
-  // Ordered strictly by importance: Home -> Events -> Join -> About -> Board -> Gallery -> Guide -> Feedback
-  const navLinks = [
-    { href: "/", en: "Home", ta: "முகப்பு", labelKey: "nav.home" },
-    { href: "/events", en: "Events", ta: "நிகழ்வுகள்", labelKey: "nav.events" },
-    { href: "/about", en: "About", ta: "அறிமுகம்", labelKey: "nav.about" },
-    { href: "/board", en: "Board", ta: "அவை", labelKey: "nav.board" },
-    { href: "/gallery", en: "Gallery", ta: "நினைவுகள்", labelKey: "nav.gallery" },
-    { href: "/guide", en: "Guide", ta: "வழிகாட்டி", labelKey: "nav.guide" },
-    { href: "/suggestions", en: "Ideas", ta: "கருத்து", labelKey: "nav.suggestions" },
-    { href: "/join", en: "Join", ta: "இணையுங்கள்", labelKey: "nav.join", isCta: true },
-  ];
 
   const handleLinkClick = () => {
     playClick();
