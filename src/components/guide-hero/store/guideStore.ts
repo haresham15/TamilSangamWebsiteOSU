@@ -3,8 +3,9 @@
 import { create } from "zustand";
 import { FAQS, FaqItem } from "@/data/faq";
 import { BoardContentItem } from "../board/layout";
+import { POPULAR_FAQ_FALLBACK_ID, popularFaqBoardItem, type RankedFaq } from "@/lib/faq-engagement/contracts";
 
-export type GuideSource = "idle" | "accordion" | "search" | "board";
+export type GuideSource = "idle" | "accordion" | "search" | "board" | "station";
 
 export interface GuideStoreState {
   activeId: string | null;
@@ -15,6 +16,7 @@ export interface GuideStoreState {
   isPastHero: boolean;
 
   activeFlapLabel: string;
+  popularRanking: RankedFaq[];
 
   // Actions
   selectFaq: (faq: FaqItem, source?: GuideSource) => void;
@@ -24,20 +26,24 @@ export interface GuideStoreState {
   setSearchQuery: (query: string) => void;
   setNoMatch: (query: string) => void;
   setIsPastHero: (past: boolean) => void;
+  setPopularRanking: (ranked: RankedFaq[]) => void;
+  revealMostAsked: () => void;
+  advancePopularCarousel: () => void;
   resetToDefault: () => void;
 }
 
+const initialPopularRanking: RankedFaq[] = [{ id: POPULAR_FAQ_FALLBACK_ID, rank: 1 }];
+const initialPopularFaq = FAQS.find((faq) => faq.id === POPULAR_FAQ_FALLBACK_ID) ?? FAQS[0];
+
 export const DEFAULT_BOARD_ITEM: BoardContentItem = {
-  no: 1,
-  text: "WHAT IS OSU TAMIL SANGAM? CAMPUS HUB FOR CULTURE & FEASTS",
-  catCode: "GENL",
-  statusText: "ANSWERED  READ BELOW V",
+  ...popularFaqBoardItem(initialPopularFaq, 1),
 };
 
 export const useGuideStore = create<GuideStoreState>((set, get) => ({
-  activeId: "faq-01",
+  activeId: initialPopularFaq.id,
   activeItem: DEFAULT_BOARD_ITEM,
   activeFlapLabel: "OSU TAMIL SANGAM",
+  popularRanking: initialPopularRanking,
   source: "idle",
   seq: 0,
   searchQuery: "",
@@ -115,9 +121,44 @@ export const useGuideStore = create<GuideStoreState>((set, get) => ({
     set({ isPastHero: past });
   },
 
+  setPopularRanking: (ranked) => {
+    const valid = ranked.filter((entry) => FAQS.some((faq) => faq.id === entry.id));
+    if (valid.length) set({ popularRanking: valid });
+  },
+
+  revealMostAsked: () => {
+    const state = get();
+    if (state.source !== "idle") return;
+    const ranked = state.popularRanking[0] ?? initialPopularRanking[0];
+    const faq = FAQS.find((candidate) => candidate.id === ranked.id) ?? initialPopularFaq;
+    set((current) => ({
+      activeId: faq.id,
+      activeItem: popularFaqBoardItem(faq, ranked.rank),
+      activeFlapLabel: faq.flapLabel || "OSU TAMIL SANGAM",
+      source: "station",
+      seq: current.seq + 1,
+    }));
+  },
+
+  advancePopularCarousel: () => {
+    const state = get();
+    if (state.source !== "station") return;
+    const ranked = state.popularRanking[1];
+    if (!ranked) return;
+    const faq = FAQS.find((candidate) => candidate.id === ranked.id);
+    if (!faq) return;
+    set((current) => ({
+      activeId: faq.id,
+      activeItem: popularFaqBoardItem(faq, ranked.rank),
+      activeFlapLabel: faq.flapLabel || "OSU TAMIL SANGAM",
+      source: "station",
+      seq: current.seq + 1,
+    }));
+  },
+
   resetToDefault: () => {
     set((state) => ({
-      activeId: "faq-01",
+      activeId: initialPopularFaq.id,
       activeItem: DEFAULT_BOARD_ITEM,
       activeFlapLabel: "OSU TAMIL SANGAM",
       source: "idle",

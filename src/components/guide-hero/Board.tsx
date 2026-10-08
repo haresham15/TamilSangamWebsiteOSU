@@ -4,9 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { GuideEnvironment } from "./board/environment";
-import { GuideChassis } from "./board/chassis";
-
-import { FlapCells } from "./board/cells";
+import { BoardRoot } from "./BoardRoot";
 
 import { scroll } from "@/engine/masterTick";
 
@@ -99,23 +97,17 @@ export default function Board({
 
       {/* 3. Station Board Scene Group (Subject to Scroll Recede) */}
       <group ref={sceneGroupRef} position={[0, 0, 0]}>
-        {/* Powder-Coated Dielectric Chassis with Painted Sign & LED */}
-        <GuideChassis
+        <BoardRoot
           boardWidth={boardWidth}
           boardHeight={boardHeight}
+          cols={cols}
+          rows={rows}
           isMoving={movingState}
           settleShake={shakeState}
+          onMovingChange={setMovingState}
+          onSettleShake={setShakeState}
+          fogEnabled
         />
-
-        {/* Phase 2 & 3: Instanced Flap Cells with Kinematics (1 InstancedMesh, 1 draw call) */}
-        <group position={[0, 0, 0]}>
-          <FlapCells
-            cols={cols}
-            rows={rows}
-            onMovingChange={setMovingState}
-            onSettleShake={setShakeState}
-          />
-        </group>
       </group>
     </>
   );

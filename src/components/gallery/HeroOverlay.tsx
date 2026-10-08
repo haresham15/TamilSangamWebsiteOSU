@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { useLocale } from "@/context/LocaleContext";
 
 export function HeroOverlay() {

@@ -57,7 +57,7 @@ export function SplitFlapMiniHeader({ onSearchFocus }: SplitFlapMiniHeaderProps)
 
   const scrollToHero = () => {
     playWoodClick();
-    const hero = document.getElementById("alaipayuthey-splitflap-hero");
+    const hero = document.getElementById("guide-station-hero");
     if (hero) {
       hero.scrollIntoView({ behavior: "smooth" });
     } else {

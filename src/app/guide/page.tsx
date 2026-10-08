@@ -8,6 +8,7 @@ import { useAudio } from "@/context/AudioContext";
 import { FAQS, FaqItem } from "@/data/faq";
 import { KnowledgeItem } from "@/data/knowledgeBase";
 import { useGuideStore } from "@/components/guide-hero/store/guideStore";
+import { trackFaqEngagement } from "@/components/guide-hero/faqEngagement";
 
 // Nudge scroll helper per PRD §7:
 // Scroll the page toward the hero by at most 0.6 × viewport height, 600 ms,
@@ -17,7 +18,7 @@ function nudgeScrollToHero() {
   const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (isReduced) return;
 
-  const hero = document.getElementById("alaipayuthey-splitflap-hero");
+  const hero = document.getElementById("guide-station-hero");
   if (!hero) return;
 
   const rect = hero.getBoundingClientRect();
@@ -283,7 +284,7 @@ export default function UserGuideAndFaqPage() {
       {/* ========================================================================= */}
       {/* 1. TOP CINEMATIC 3D HERO: SPLIT-FLAP DEPARTURE BOARD                      */}
       {/* ========================================================================= */}
-      <GuideHero id="alaipayuthey-splitflap-hero" />
+      <GuideHero id="guide-station-hero" />
 
       {/* Color Gradient Transition from 3D Mechanical Station (#0c0907) to Warm Cream Console (#FAF6EE) */}
       <HeroGradientTransition variant="guide" className="-mt-32 relative z-20" />
@@ -401,6 +402,11 @@ export default function UserGuideAndFaqPage() {
                     }
                   }}
                   onChange={(e) => handleSearchChange(e.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key !== "Enter") return;
+                    const match = FAQS.find((faq) => faq.questionEn.toLowerCase().includes(searchQuery.toLowerCase().trim()));
+                    if (match) trackFaqEngagement(match.id, "search");
+                  }}
                   className="w-full pl-11 pr-20 py-3.5 rounded-none bg-[#110d0a] border border-[#2b2017] text-[#f5eedf] placeholder-[#6e5d4d] text-sm font-mono focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition-all"
                 />
                 {searchQuery && (
@@ -515,6 +521,7 @@ export default function UserGuideAndFaqPage() {
                           const nextId = isExpanded ? null : faq.id;
                           setExpandedFaqId(nextId);
                           handleSelectFaq(faq);
+                          if (nextId === faq.id) trackFaqEngagement(faq.id, "open");
                         }}
                         className="w-full p-5 text-left flex items-start justify-between gap-4 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] rounded-none"
                       >
@@ -573,7 +580,8 @@ export default function UserGuideAndFaqPage() {
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleSelectFaq(faq);
-                                  const hero = document.getElementById("alaipayuthey-splitflap-hero");
+                                  trackFaqEngagement(faq.id, "board");
+                                  const hero = document.getElementById("guide-station-hero");
                                   if (hero && window.scrollY > 400) {
                                     hero.scrollIntoView({ behavior: "smooth" });
                                   }

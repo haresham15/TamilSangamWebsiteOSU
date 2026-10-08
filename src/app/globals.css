@@ -68,6 +68,17 @@
   --color-text-secondary: oklch(0.36 0.09 305);
   --color-text-muted: oklch(0.55 0.06 305);
 
+  /* Guide Hero v3 pre-dawn station semantic tokens */
+  --color-station-fog: oklch(0.12 0.02 250);
+  --color-station-haze: oklch(0.22 0.05 245);
+  --color-station-haze-bright: oklch(0.34 0.06 245);
+  --color-station-coach: oklch(0.22 0.03 245);
+  --color-station-coach-edge: oklch(0.46 0.05 245);
+  --color-station-coach-band: oklch(0.84 0.03 85);
+  --color-station-platform: oklch(0.24 0.02 250);
+  --color-station-practical: oklch(0.82 0.16 73);
+  --color-station-rim: oklch(0.68 0.08 240);
+
   /* Hero-to-Content DTCG Semantic Transitions */
   --color-surface-hero-join: oklch(0.975 0.015 85);
   --color-surface-hero-board: oklch(0.18 0.04 45);
@@ -75,6 +86,134 @@
   --color-surface-hero-gallery: oklch(0.96 0.018 75);
   --color-surface-hero-guide: oklch(0.16 0.02 260);
   --color-surface-hero-about: oklch(0.15 0.02 55);
+}
+
+@layer components {
+  .guide-station-poster {
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 33%, color-mix(in oklch, var(--color-station-haze-bright) 70%, transparent), transparent 36%),
+      linear-gradient(180deg, var(--color-station-fog) 0%, var(--color-station-haze) 70%, var(--color-station-platform) 100%);
+  }
+
+  .guide-station-poster__haze,
+  .guide-station-poster__coach,
+  .guide-station-poster__window,
+  .guide-station-poster__board {
+    opacity: 0;
+    transition: opacity 180ms linear;
+  }
+
+  .guide-station-poster--fallback .guide-station-poster__haze,
+  .guide-station-poster--fallback .guide-station-poster__coach,
+  .guide-station-poster--fallback .guide-station-poster__window,
+  .guide-station-poster--fallback .guide-station-poster__board {
+    opacity: 1;
+  }
+
+  .guide-station-poster__haze {
+    position: absolute;
+    inset: 11% 8% 29%;
+    background: radial-gradient(ellipse at center, color-mix(in oklch, var(--color-station-haze-bright) 82%, transparent), transparent 70%);
+    filter: blur(22px);
+  }
+
+  .guide-station-poster__coach {
+    position: absolute;
+    inset: 24% -8% 31%;
+    border-block: 1px solid color-mix(in oklch, var(--color-station-coach-band) 32%, transparent);
+    background: linear-gradient(180deg, var(--color-station-coach-edge), var(--color-station-coach) 36%, var(--color-station-fog));
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--color-station-rim) 25%, transparent);
+  }
+
+  .guide-station-poster__window {
+    position: absolute;
+    top: 31%;
+    left: 50%;
+    width: min(46vw, 31rem);
+    aspect-ratio: 1.78;
+    transform: translateX(-50%);
+    overflow: hidden;
+    border: 0.6rem solid var(--color-station-coach);
+    background: radial-gradient(circle at 50% 46%, var(--color-station-practical), color-mix(in oklch, var(--color-station-practical) 38%, var(--color-station-fog)) 58%, var(--color-station-fog));
+    box-shadow: 0 0 4rem color-mix(in oklch, var(--color-station-practical) 25%, transparent);
+  }
+
+  .guide-station-poster__window > b {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--color-station-fog);
+  }
+
+  .guide-station-poster__window > b:nth-of-type(1) { left: 10%; }
+  .guide-station-poster__window > b:nth-of-type(2) { left: 23%; }
+  .guide-station-poster__window > b:nth-of-type(3) { left: 36%; }
+  .guide-station-poster__window > b:nth-of-type(4) { left: 50%; }
+  .guide-station-poster__window > b:nth-of-type(5) { left: 64%; }
+  .guide-station-poster__window > b:nth-of-type(6) { left: 77%; }
+  .guide-station-poster__window > b:nth-of-type(7) { left: 90%; }
+
+  .guide-station-poster__silhouette {
+    position: absolute;
+    bottom: -3%;
+    width: 20%;
+    height: 72%;
+    border-radius: 48% 48% 8% 8%;
+    background: var(--color-station-fog);
+    box-shadow: 0 0 1rem color-mix(in oklch, var(--color-station-practical) 30%, transparent);
+  }
+
+  .guide-station-poster__silhouette--left { left: 24%; transform: skewX(7deg); }
+  .guide-station-poster__silhouette--right { right: 23%; height: 59%; transform: skewX(-9deg); }
+
+  .guide-station-poster__board {
+    position: absolute;
+    inset: auto 50% 9%;
+    display: grid;
+    gap: 0.55rem;
+    width: min(84vw, 51rem);
+    transform: translateX(-50%);
+    border: 1px solid color-mix(in oklch, var(--color-station-coach-band) 52%, transparent);
+    background: color-mix(in oklch, var(--color-station-fog) 94%, transparent);
+    padding: 1rem clamp(1rem, 3vw, 2rem);
+    color: var(--color-station-coach-band);
+    text-align: center;
+  }
+
+  .guide-station-poster__board span { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.14em; color: var(--color-station-practical); }
+  .guide-station-poster__board strong { font-family: var(--font-mono); font-size: clamp(0.75rem, 2vw, 1.15rem); letter-spacing: 0.08em; line-height: 1.35; }
+
+  .guide-station-handoff { background: linear-gradient(to bottom, transparent 82%, color-mix(in oklch, var(--color-station-fog) 70%, transparent) 92%, var(--color-surface-base) 100%); }
+
+  .guide-station-skip {
+    pointer-events: none;
+    opacity: 0;
+    border: 1px solid color-mix(in oklch, var(--color-station-practical) 64%, transparent);
+    background: color-mix(in oklch, var(--color-station-fog) 88%, transparent);
+    color: var(--color-station-coach-band);
+    transition: opacity 180ms linear;
+  }
+
+  .guide-station-skip--visible {
+    pointer-events: auto;
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .guide-station-poster__window { width: 84vw; top: 27%; }
+    .guide-station-poster__board { bottom: 12%; }
+    .guide-station-skip { left: 1rem; top: 5rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .guide-station-poster__haze,
+    .guide-station-poster__coach,
+    .guide-station-poster__window,
+    .guide-station-poster__board,
+    .guide-station-skip { transition: none; }
+  }
 }
 
 @layer base {
@@ -100,6 +239,14 @@
     --text-primary: oklch(0.20 0.10 305);
     --text-secondary: oklch(0.36 0.09 305);
     --text-muted: oklch(0.55 0.06 305);
+
+    /* Guide Hero v3 pre-dawn station semantic tokens */
+    --guide-station-fog: oklch(0.12 0.02 250);
+    --guide-station-haze: oklch(0.22 0.05 245);
+    --guide-station-coach: oklch(0.22 0.03 245);
+    --guide-station-platform: oklch(0.24 0.02 250);
+    --guide-station-practical: oklch(0.82 0.16 73);
+    --guide-station-rim: oklch(0.68 0.08 240);
 
     /* Interactive Elements & Logo 3D Accents */
     --button-primary-bg: var(--sangam-purple);
@@ -896,4 +1043,3 @@ h1, h2, h3, h4, .font-display, .font-serif {
     scroll-behavior: auto !important;
   }
 }
-

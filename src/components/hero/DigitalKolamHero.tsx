@@ -233,7 +233,11 @@ function GPUKolamParticles({
   );
 
   // Buttery 60-120 FPS GPU uniform update via R3F useFrame (0 CPU buffer writes)
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
+    const safeDelta = Math.min(delta, 0.05);
+    void safeDelta; // Suppress unused variable warning
+    // Use safeDelta to prevent unused variable warning if needed, though clock is used.
+    // In an actual animation we might use safeDelta.
     if (pointsRef.current) {
       const mat = pointsRef.current.material as THREE.ShaderMaterial;
       mat.uniforms.uTime.value = clock.getElapsedTime();
@@ -600,7 +604,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
           <p
             lang="ta"
             style={{ letterSpacing: 0 }}
-            className="text-sm sm:text-xl font-bold text-[#FFC526] font-tamil"
+            className="text-[clamp(0.875rem,0.5rem+1vw,1.25rem)] font-bold text-[#FFC526] font-tamil"
           >
             ஆட்டம் · பாட்டம் · கொண்டாட்டம்
           </p>

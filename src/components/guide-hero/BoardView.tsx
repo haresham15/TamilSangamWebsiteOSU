@@ -1,52 +1,57 @@
-// src/components/guide-hero/BoardView.tsx
 "use client";
 
 import React, { Suspense } from "react";
-import { View, PerspectiveCamera } from "@react-three/drei";
-import Board, { BoardProps } from "./Board";
+import { View } from "@react-three/drei";
+import type { BoardProps } from "./Board";
 import { governor } from "@/engine/governor";
 import { useWarmup } from "@/components/gl/useWarmup";
+import { StationScene } from "./station/StationScene";
+import { getGuideStationProgress, getGuideStationTargetProgress, useGuideStationTimeline } from "./station/useGuideStationTimeline";
 
-function BoardScene({ ...boardProps }: BoardProps) {
-  useWarmup("guide-board");
+interface BoardViewProps extends Pick<BoardProps, "boardWidth" | "boardHeight" | "cols" | "rows"> {
+  sequenceElement: React.RefObject<HTMLElement | null>;
+}
+
+function StationViewScene({ boardWidth, boardHeight, cols, rows }: Omit<BoardViewProps, "sequenceElement">) {
+  useWarmup("guide-station");
 
   return (
-    <>
-      <color attach="background" args={["#070504"]} />
-      <PerspectiveCamera makeDefault fov={28} position={[0, 0, 18]} near={0.1} far={50} />
-      <Suspense fallback={null}>
-        <Board {...boardProps} />
-      </Suspense>
-    </>
+    <Suspense fallback={null}>
+      <StationScene
+        getProgress={getGuideStationProgress}
+        getTargetProgress={getGuideStationTargetProgress}
+        board={{ boardWidth, boardHeight, cols, rows }}
+      />
+    </Suspense>
   );
 }
 
-export default function BoardView({ ...boardProps }: BoardProps) {
+/** Production station view: one View, one ScrollTrigger input, one master-tick progress follower. */
+export default function BoardView({ sequenceElement, ...boardProps }: BoardViewProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
+  useGuideStationTimeline(sequenceElement);
 
   React.useEffect(() => {
-    // Immediately declare level 1 on mount so initial render occurs
-    governor.request("guide-board", 1);
+    governor.request("guide-station", 1);
 
-    const el = containerRef.current;
-    if (!el) return;
+    const element = containerRef.current;
+    if (!element) return;
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        governor.request("guide-board", entry.isIntersecting ? 1 : 0);
-      },
+      ([entry]) => governor.request("guide-station", entry.isIntersecting ? 1 : 0),
       { threshold: 0.01 }
     );
-    observer.observe(el);
+    observer.observe(element);
     return () => {
       observer.disconnect();
-      governor.request("guide-board", 0);
+      governor.request("guide-station", 0);
     };
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full h-full">
-      <View className="w-full h-full">
-        <BoardScene {...boardProps} />
+    <div ref={containerRef} className="h-full w-full">
+      {/* Index 2 deliberately renders after the global grade stack; see Phase 0B checkpoint. */}
+      <View className="h-full w-full" index={2}>
+        <StationViewScene {...boardProps} />
       </View>
     </div>
   );

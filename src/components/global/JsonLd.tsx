@@ -5,6 +5,15 @@ import { CURRENT_BOARD } from "@/data/board";
 import { GalleryAlbum } from "@/data/gallery";
 
 /**
+ * Safely serialize JSON-LD to prevent XSS attacks.
+ * By escaping the '<' character, we prevent breaking out of the <script> tag.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function safeJsonLd(data: Record<string, any>): string {
+  return JSON.stringify(data).replace(/</g, '\\u003c');
+}
+
+/**
  * WebSite Structured Data with Google Sitelinks SearchBox
  */
 export const WebSiteJsonLd: React.FC = () => {
@@ -39,7 +48,7 @@ export const WebSiteJsonLd: React.FC = () => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
     />
   );
 };
@@ -111,7 +120,7 @@ export const OrganizationJsonLd: React.FC = () => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
     />
   );
 };
@@ -156,7 +165,7 @@ export const FaqJsonLd: React.FC<{
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
     />
   );
 };
@@ -183,7 +192,7 @@ export const BreadcrumbJsonLd: React.FC<{
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
     />
   );
 };
@@ -261,7 +270,7 @@ export const SingleEventJsonLd: React.FC<{ event: SangamEvent }> = ({ event }) =
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(eventLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(eventLd) }}
     />
   );
 };
@@ -319,7 +328,7 @@ export const BoardJsonLd: React.FC<{
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
     />
   );
 };
@@ -355,7 +364,7 @@ export const PhotoAlbumJsonLd: React.FC<{ album: GalleryAlbum }> = ({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
     />
   );
 };

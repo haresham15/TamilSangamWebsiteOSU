@@ -14,23 +14,20 @@ export function LiteModeProvider({ children }: { children: React.ReactNode }) {
   const [isLiteMode, setIsLiteModeState] = useState<boolean>(false);
 
   useEffect(() => {
-    queueMicrotask(() => {
-      // Check saved preference
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateAutoPreference = () => {
       const saved = localStorage.getItem("sangam_lite_mode");
       if (saved !== null) {
         setIsLiteModeState(saved === "true");
         return;
       }
-
-      // Auto-detect reduced motion or low connection
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const connection = (navigator as unknown as { connection?: { saveData?: boolean } }).connection;
-      const saveData = connection?.saveData;
+      setIsLiteModeState(media.matches || Boolean(connection?.saveData));
+    };
 
-      if (prefersReducedMotion || saveData) {
-        setIsLiteModeState(true);
-      }
-    });
+    queueMicrotask(updateAutoPreference);
+    media.addEventListener("change", updateAutoPreference);
+    return () => media.removeEventListener("change", updateAutoPreference);
   }, []);
 
   const setLiteMode = (enabled: boolean) => {

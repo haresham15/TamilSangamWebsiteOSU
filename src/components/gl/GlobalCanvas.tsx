@@ -5,6 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import { View } from "@react-three/drei";
 import * as THREE from "three";
 import { useTier } from "@/components/providers/TierProvider";
+import { useLiteMode } from "@/context/LiteModeContext";
 import { registerRenderer, unregisterRenderer } from "@/engine/renderer";
 import { GradeStack } from "@/gl/grade/GradeStack";
 
@@ -18,6 +19,7 @@ import { GradeStack } from "@/gl/grade/GradeStack";
  */
 export function GlobalCanvas() {
   const tier = useTier();
+  const { isLiteMode } = useLiteMode();
   const [source, setSource] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export function GlobalCanvas() {
     };
   }, []);
 
-  if (!source || tier === "C") {
+  if (!source || tier === "C" || isLiteMode) {
     return null; // Lite: no canvas at all (§2, §3.1)
   }
 
