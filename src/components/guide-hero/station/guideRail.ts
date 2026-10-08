@@ -176,24 +176,35 @@ function sampleNumber(from: number, to: number, amount: number) {
   return from + (to - from) * amount;
 }
 
-function toTuple(vector: THREE.Vector3): GuideVec3 {
-  return [vector.x, vector.y, vector.z];
-}
+const targetPos = new THREE.Vector3();
+const targetLookAt = new THREE.Vector3();
+const targetFocus = new THREE.Vector3();
+
+let cachedProgress = -1;
+let cachedFrame: GuideRailFrame | null = null;
 
 /** Catmull-Rom position/look-at/focus rails with scalar values sampled over the same progress segments. */
 export function sampleGuideRail(progress: number): GuideRailFrame {
   const p = clampProgress(progress);
+  if (cachedFrame && Math.abs(p - cachedProgress) < 0.00001) {
+    return cachedFrame;
+  }
   const segmentIndex = findSegment(p);
   const from = GUIDE_RAIL_KEYFRAMES[segmentIndex];
   const to = GUIDE_RAIL_KEYFRAMES[segmentIndex + 1];
   const amount = to.progress === from.progress ? 0 : (p - from.progress) / (to.progress - from.progress);
   const curveAmount = (1 + amount) / 3;
 
-  return {
+  positionCurves[segmentIndex].getPoint(curveAmount, targetPos);
+  lookAtCurves[segmentIndex].getPoint(curveAmount, targetLookAt);
+  focusCurves[segmentIndex].getPoint(curveAmount, targetFocus);
+
+  cachedProgress = p;
+  cachedFrame = {
     progress: p,
-    position: toTuple(positionCurves[segmentIndex].getPoint(curveAmount)),
-    lookAt: toTuple(lookAtCurves[segmentIndex].getPoint(curveAmount)),
-    focusTarget: toTuple(focusCurves[segmentIndex].getPoint(curveAmount)),
+    position: [targetPos.x, targetPos.y, targetPos.z],
+    lookAt: [targetLookAt.x, targetLookAt.y, targetLookAt.z],
+    focusTarget: [targetFocus.x, targetFocus.y, targetFocus.z],
     fov: sampleNumber(from.fov, to.fov, amount),
     roll: sampleNumber(from.roll, to.roll, amount),
     exposure: sampleNumber(from.exposure, to.exposure, amount),
@@ -203,4 +214,5 @@ export function sampleGuideRail(progress: number): GuideRailFrame {
     handheldAmplitude: sampleNumber(from.handheldAmplitude, to.handheldAmplitude, amount),
     departureOffset: sampleNumber(from.departureOffset, to.departureOffset, amount),
   };
+  return cachedFrame;
 }

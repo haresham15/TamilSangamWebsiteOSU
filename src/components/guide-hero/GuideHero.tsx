@@ -35,6 +35,7 @@ export function GuideHero({
   const [reduceMotion, setReduceMotion] = React.useState(false);
   const [showSkip, setShowSkip] = React.useState(false);
   const activeItem = useGuideStore((state) => state.activeItem);
+  const source = useGuideStore((state) => state.source);
   const liveTitle = activeItem?.text || activeTitle;
   const isFallback = isLiteMode || tier === "C" || reduceMotion;
 
@@ -82,26 +83,31 @@ export function GuideHero({
     return () => observer.disconnect();
   }, []);
 
-  const windowWidth = useSyncExternalStore(
+  const breakpoint = useSyncExternalStore(
     (callback) => {
       window.addEventListener("resize", callback);
       return () => window.removeEventListener("resize", callback);
     },
-    () => (typeof window !== "undefined" ? window.innerWidth : 1200),
-    () => 1200
+    () => {
+      if (typeof window === "undefined") return "lg";
+      if (window.innerWidth < 640) return "sm";
+      if (window.innerWidth < 1024) return "md";
+      return "lg";
+    },
+    () => "lg"
   );
 
   const board = React.useMemo(() => {
-    if (windowWidth < 640) return { boardWidth: 14 * 0.7, boardHeight: 9 * 1.04, cols: 14, rows: 9 };
-    if (windowWidth < 1024) return { boardWidth: 24 * 0.7, boardHeight: 6 * 1.04, cols: 24, rows: 6 };
+    if (breakpoint === "sm") return { boardWidth: 14 * 0.7, boardHeight: 9 * 1.04, cols: 14, rows: 9 };
+    if (breakpoint === "md") return { boardWidth: 24 * 0.7, boardHeight: 6 * 1.04, cols: 24, rows: 6 };
     return { boardWidth: 30 * 0.7, boardHeight: 5 * 1.04, cols: 30, rows: 5 };
-  }, [windowWidth]);
+  }, [breakpoint]);
 
   const skipStationSequence = () => {
     const section = sectionRef.current;
     if (!section) return;
-    const mobile = window.matchMedia("(max-width: 768px)").matches;
-    const target = section.getBoundingClientRect().top + window.scrollY + window.innerHeight * (mobile ? 2.8 : 3.4) * 0.92;
+    const pinnedDistance = Math.max(0, section.offsetHeight - window.innerHeight);
+    const target = section.getBoundingClientRect().top + window.scrollY + pinnedDistance * 0.92;
     const lenis = getActiveLenis();
     if (lenis) {
       lenis.scrollTo(target, { immediate: reduceMotion, duration: reduceMotion ? undefined : 0.65 });
@@ -111,13 +117,13 @@ export function GuideHero({
   };
 
   return (
-    <section ref={sectionRef} id={id} aria-label="FAQ Departure Board" className={`relative w-full select-none bg-transparent ${isFallback ? "min-h-[100dvh]" : "min-h-[280dvh] md:min-h-[340dvh]"}`}>
+    <section ref={sectionRef} id={id} aria-label="FAQ Departure Board" className={`relative w-full select-none bg-transparent ${isFallback ? "min-h-[100dvh]" : "min-h-[380dvh] md:min-h-[440dvh]"}`}>
       <div className="sticky top-0 h-[100dvh] min-h-[480px] overflow-hidden">
         <p aria-live="polite" className="sr-only">
-          {useGuideStore.getState().source === "station" ? `Most asked: ${liveTitle}` : `Showing: ${liveTitle}`}
+          {source === "station" ? `Most asked: ${liveTitle}` : `Showing: ${liveTitle}`}
         </p>
         <div className="absolute inset-0 z-0 h-full w-full" aria-hidden="true">
-          <GuideHeroPoster fallback={isFallback} title={liveTitle} status={useGuideStore.getState().source === "station" ? "MOST ASKED" : "FAQ DEPARTURE"} />
+          <GuideHeroPoster fallback={isFallback} title={liveTitle} status={source === "station" ? "MOST ASKED" : "FAQ DEPARTURE"} />
           {!isFallback && <BoardView sequenceElement={sectionRef} {...board} />}
         </div>
         <div className="guide-station-handoff pointer-events-none absolute inset-0 z-10 h-full w-full" />

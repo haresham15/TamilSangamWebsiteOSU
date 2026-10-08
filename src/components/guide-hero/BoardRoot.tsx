@@ -35,8 +35,8 @@ export function BoardRoot({
   boardHeight = 5.2,
   cols = 30,
   rows = 5,
-  isMoving = false,
-  settleShake = 0,
+  isMoving: isMovingProp,
+  settleShake: settleShakeProp,
   onMovingChange,
   onSettleShake,
   position = [0, 0, 0],
@@ -46,30 +46,66 @@ export function BoardRoot({
 }: BoardRootProps) {
   const groupRef = useRef<THREE.Group>(null);
   const originalFogValues = useRef(new Map<THREE.Material, boolean>());
+  const appliedRef = useRef(false);
+
+  const [internalMoving, setInternalMoving] = React.useState(false);
+  const [internalShake, setInternalShake] = React.useState(0);
+  const isMoving = isMovingProp ?? internalMoving;
+  const settleShake = settleShakeProp ?? internalShake;
+
+  const handleMovingChange = (moving: boolean) => {
+    setInternalMoving(moving);
+    onMovingChange?.(moving);
+  };
+  const handleSettleShake = (shake: number) => {
+    setInternalShake(shake);
+    onSettleShake?.(shake);
+  };
 
   const applyFogPolicy = () => {
+    if (appliedRef.current) return;
     const group = groupRef.current;
     if (!group) return;
 
+    let meshCount = 0;
     group.traverse((object) => {
       if (!(object instanceof THREE.Mesh)) return;
-      const materials = Array.isArray(object.material) ? object.material : [object.material];
-      for (const material of materials) {
-        const fogMaterial = material as THREE.Material & { fog: boolean };
-        if (!originalFogValues.current.has(material)) {
-          originalFogValues.current.set(material, fogMaterial.fog);
+      meshCount++;
+      const mat = object.material;
+      if (!mat) return;
+      if (Array.isArray(mat)) {
+        for (let i = 0; i < mat.length; i++) {
+          const m = mat[i] as THREE.Material & { fog: boolean };
+          if (!originalFogValues.current.has(m)) {
+            originalFogValues.current.set(m, m.fog);
+          }
+          if (m.fog !== fogEnabled) {
+            m.fog = fogEnabled;
+            m.needsUpdate = true;
+          }
         }
-        if (fogMaterial.fog !== fogEnabled) {
-          fogMaterial.fog = fogEnabled;
-          material.needsUpdate = true;
+      } else {
+        const m = mat as THREE.Material & { fog: boolean };
+        if (!originalFogValues.current.has(m)) {
+          originalFogValues.current.set(m, m.fog);
+        }
+        if (m.fog !== fogEnabled) {
+          m.fog = fogEnabled;
+          m.needsUpdate = true;
         }
       }
     });
+
+    if (meshCount > 10) {
+      appliedRef.current = true;
+    }
   };
 
-  // Flap materials are created after the atlas resolves, so the policy is
-  // applied through the shared render clock until every material is observed.
   useFrame(applyFogPolicy);
+
+  useEffect(() => {
+    appliedRef.current = false;
+  }, [fogEnabled]);
 
   useEffect(() => {
     const fogValues = originalFogValues.current;
@@ -93,8 +129,8 @@ export function BoardRoot({
       <FlapCells
         cols={cols}
         rows={rows}
-        onMovingChange={onMovingChange}
-        onSettleShake={onSettleShake}
+        onMovingChange={handleMovingChange}
+        onSettleShake={handleSettleShake}
       />
     </group>
   );

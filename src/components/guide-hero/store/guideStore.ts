@@ -156,8 +156,10 @@ export const useGuideStore = create<GuideStoreState>((set, get) => ({
 
   advancePopularCarousel: () => {
     const state = get();
-    if (state.source !== "station") return;
-    const ranked = state.popularRanking[1];
+    if (state.source !== "station" || state.popularRanking.length === 0) return;
+    const currentIndex = state.popularRanking.findIndex((r) => r.id === state.activeId);
+    const nextIndex = (currentIndex + 1) % state.popularRanking.length;
+    const ranked = state.popularRanking[nextIndex];
     if (!ranked) return;
     const faq = FAQS.find((candidate) => candidate.id === ranked.id);
     if (!faq) return;

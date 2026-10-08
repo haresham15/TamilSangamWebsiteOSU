@@ -35,6 +35,7 @@ function createCompartmentGradient() {
 }
 
 function Curtain() {
+  const meshRef = React.useRef<THREE.Mesh>(null);
   const shape = useMemo(() => {
     const curtain = new THREE.Shape();
     curtain.moveTo(-1.86, 1.03);
@@ -46,8 +47,15 @@ function Curtain() {
     return curtain;
   }, []);
 
+  useFrame(({ clock }) => {
+    if (!meshRef.current) return;
+    const t = clock.getElapsedTime();
+    meshRef.current.rotation.y = Math.sin(t * 3.2) * 0.035 + Math.sin(t * 7.1) * 0.012;
+    meshRef.current.position.x = Math.sin(t * 2.8) * 0.01;
+  });
+
   return (
-    <mesh position={[0, 0, 0.06]} renderOrder={22}>
+    <mesh ref={meshRef} position={[0, 0, 0.06]} renderOrder={22}>
       <shapeGeometry args={[shape]} />
       <meshBasicMaterial color={guideStationPalette.coachBand} transparent opacity={0.68} depthWrite={false} side={THREE.DoubleSide} />
     </mesh>
@@ -103,9 +111,9 @@ export function WindowAssembly({ progress, getProgress }: WindowAssemblyProps) {
         <planeGeometry args={[4.03, 2.23]} />
         <meshBasicMaterial color={guideStationPalette.practicalCool} transparent opacity={0.08} depthWrite={false} />
       </mesh>
-      {[-1.45, -0.96, -0.47, 0.02, 0.51, 1, 1.49].map((x) => (
-        <mesh key={x} position={[x, 0, 0.1]} renderOrder={24}>
-          <cylinderGeometry args={[0.035, 0.035, 2.18, 10]} />
+      {[-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75].map((y) => (
+        <mesh key={y} position={[0, y, 0.1]} rotation={[0, 0, Math.PI / 2]} renderOrder={24}>
+          <cylinderGeometry args={[0.012, 0.012, 4.05, 10]} />
           <meshStandardMaterial color={guideStationPalette.boardInk} metalness={0.78} roughness={0.22} />
         </mesh>
       ))}

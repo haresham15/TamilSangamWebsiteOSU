@@ -32,12 +32,12 @@ export default function BoardView({ sequenceElement, ...boardProps }: BoardViewP
   useGuideStationTimeline(sequenceElement);
 
   React.useEffect(() => {
-    governor.request("guide-station", 1);
+    governor.request("guide-station", 2);
 
     const element = containerRef.current;
     if (!element) return;
     const observer = new IntersectionObserver(
-      ([entry]) => governor.request("guide-station", entry.isIntersecting ? 1 : 0),
+      ([entry]) => governor.request("guide-station", entry.isIntersecting ? 2 : 0),
       { threshold: 0.01 }
     );
     observer.observe(element);

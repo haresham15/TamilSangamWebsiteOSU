@@ -20,6 +20,19 @@ export async function POST(request: NextRequest) {
     const acceptLanguage = request.headers.get("accept-language");
     if (!userAgent || isLikelyBot(userAgent, acceptLanguage)) return new NextResponse(null, { status: 204 });
 
+    const origin = request.headers.get("origin");
+    const host = request.headers.get("host");
+    if (origin && host) {
+      try {
+        const originHost = new URL(origin).host;
+        if (originHost !== host) {
+          return new NextResponse(null, { status: 403 });
+        }
+      } catch {
+        return new NextResponse(null, { status: 400 });
+      }
+    }
+
     const forwarded = request.headers.get("x-forwarded-for");
     const ip = forwarded?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "local";
     const result = recordFaqEngagement(faqId, kind, createDailyVisitorHash(ip, userAgent));

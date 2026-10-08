@@ -6,7 +6,11 @@ export const dynamic = "force-dynamic";
 
 /** The response deliberately exposes ranks, never raw behavioural counts. */
 export function GET() {
-  return NextResponse.json(getPopularFaqs(), {
-    headers: { "Cache-Control": "private, max-age=300, stale-while-revalidate=60" },
-  });
+  try {
+    return NextResponse.json(getPopularFaqs(), {
+      headers: { "Cache-Control": "private, max-age=300, stale-while-revalidate=60" },
+    });
+  } catch {
+    return NextResponse.json({ ranked: [] }, { status: 200 });
+  }
 }

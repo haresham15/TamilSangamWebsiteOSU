@@ -46,7 +46,7 @@ export function GlobalCanvas() {
         shadows
         dpr={[1, tier === "A" ? 1.75 : 1.25]}
         gl={{
-          antialias: true,
+          antialias: false,
           alpha: true,
           powerPreference: "high-performance",
         }}

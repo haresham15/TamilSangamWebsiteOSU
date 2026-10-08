@@ -29,34 +29,51 @@ export function isFaqEngagementKind(value: unknown): value is FaqEngagementKind 
   return typeof value === "string" && (FAQ_ENGAGEMENT_KINDS as readonly string[]).includes(value);
 }
 
-export function createDailyVisitorHash(ip: string, userAgent: string, now = new Date()) {
-  const salt = process.env.FAQ_ENGAGEMENT_SALT ?? "local-development-only-faq-salt";
-  return createHmac("sha256", `${salt}:${dayStamp(now)}`).update(`${ip}\n${userAgent}`).digest("hex").slice(0, 32);
+export function createDailyVisitorHash(ip: string, userAgent: string, now = new Date()): string | null {
+  const salt = process.env.FAQ_ENGAGEMENT_SALT;
+  if (!salt) {
+    if (process.env.NODE_ENV === "production") {
+      // In production, fail closed to prevent predictable un-salted visitor hashing.
+      return null;
+    }
+  }
+  const effectiveSalt = salt ?? "local-development-only-faq-salt";
+  return createHmac("sha256", `${effectiveSalt}:${dayStamp(now)}`).update(`${ip}\n${userAgent}`).digest("hex").slice(0, 32);
 }
 
-export function getPopularFaqs(now = new Date()) {
+export function getPopularFaqs(now = new Date()): PopularFaqResult {
   const nowMs = now.getTime();
   if (cachedPopular && cachedPopular.expiresAt > nowMs) return cachedPopular.value;
-  const value = rankPopularFaqs(FAQS, getFaqEngagementStore().listDailyCounts(daysAgo(now, 27)), now);
-  cachedPopular = { value, expiresAt: nowMs + FIVE_MINUTES };
-  return value;
+  try {
+    const value = rankPopularFaqs(FAQS, getFaqEngagementStore().listDailyCounts(daysAgo(now, 27)), now);
+    cachedPopular = { value, expiresAt: nowMs + FIVE_MINUTES };
+    return value;
+  } catch {
+    // If local SQLite is unavailable or read-only (e.g. serverless sandbox), fallback to editorial ranking.
+    return rankPopularFaqs(FAQS, [], now);
+  }
 }
 
 export function recordFaqEngagement(
   faqId: string,
   kind: FaqEngagementKind,
-  visitorHash: string,
+  visitorHash: string | null,
   now = new Date()
 ) {
   void kind; // The aggregate intentionally stores no event-level behavioural profile.
   if (!FAQS.some((faq) => faq.id === faqId)) return "invalid" as const;
-  const result = getFaqEngagementStore().record({
-    faqId,
-    visitorHash,
-    day: dayStamp(now),
-    minuteBucket: minuteStamp(now),
-    nowMs: now.getTime(),
-  });
-  if (result === "recorded") cachedPopular = undefined;
-  return result;
+  if (!visitorHash) return "rate_limited" as const;
+  try {
+    const result = getFaqEngagementStore().record({
+      faqId,
+      visitorHash,
+      day: dayStamp(now),
+      minuteBucket: minuteStamp(now),
+      nowMs: now.getTime(),
+    });
+    if (result === "recorded") cachedPopular = undefined;
+    return result;
+  } catch {
+    return "rate_limited" as const;
+  }
 }

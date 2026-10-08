@@ -48,7 +48,7 @@ export function useGuideStationTimeline(sequenceElement: RefObject<HTMLElement |
     const trigger = ScrollTrigger.create({
       trigger: element,
       start: "top top",
-      end: () => `+=${window.innerHeight * ((isMobileViewport() ? GUIDE_HERO_SCROLL_VH.mobile : GUIDE_HERO_SCROLL_VH.desktop) / 100)}`,
+      end: () => `+=${Math.max(0, element.offsetHeight - window.innerHeight)}`,
       scrub: 0.8,
       invalidateOnRefresh: true,
       onUpdate: (self) => {

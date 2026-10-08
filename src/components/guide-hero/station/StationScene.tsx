@@ -45,20 +45,24 @@ function StationCamera({ getProgress, getTargetProgress }: { getProgress: () => 
     const frame = sampleGuideRail(getProgress());
     const drift = reduceMotion ? 0 : Math.sin(simTime.current * 1.88) * frame.handheldAmplitude;
     camera.position.set(frame.position[0] + drift, frame.position[1] + drift * 0.35, frame.position[2]);
-    camera.fov = frame.fov;
-    camera.updateProjectionMatrix();
+    if (Math.abs(camera.fov - frame.fov) > 0.001) {
+      camera.fov = frame.fov;
+      camera.updateProjectionMatrix();
+    }
     target.set(frame.lookAt[0] + drift * 0.2, frame.lookAt[1], frame.lookAt[2]);
     camera.lookAt(target);
     camera.rotateZ(reduceMotion ? frame.roll : frame.roll + drift * 0.08);
     camera.updateMatrixWorld();
 
-    if (typeof window !== "undefined") {
-      window.__guideStationCamera = {
-        progress: frame.progress,
-        targetProgress: getTargetProgress(),
-        position: [camera.position.x, camera.position.y, camera.position.z],
-        lookAt: [target.x, target.y, target.z],
-      };
+    if (typeof window !== "undefined" && window.__guideStationCamera) {
+      window.__guideStationCamera.progress = frame.progress;
+      window.__guideStationCamera.targetProgress = getTargetProgress();
+      window.__guideStationCamera.position[0] = camera.position.x;
+      window.__guideStationCamera.position[1] = camera.position.y;
+      window.__guideStationCamera.position[2] = camera.position.z;
+      window.__guideStationCamera.lookAt[0] = target.x;
+      window.__guideStationCamera.lookAt[1] = target.y;
+      window.__guideStationCamera.lookAt[2] = target.z;
     }
   });
 
@@ -68,21 +72,25 @@ function StationCamera({ getProgress, getTargetProgress }: { getProgress: () => 
 function StationBoard({ getProgress, board }: { getProgress: () => number; board?: StationSceneProps["board"] }) {
   const revealRef = useRef<THREE.Group>(null);
   const mostAskedRevealed = useRef(false);
-  const carouselTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const carouselInterval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   useEffect(() => () => {
-    if (carouselTimeout.current) clearTimeout(carouselTimeout.current);
+    if (carouselInterval.current) clearInterval(carouselInterval.current);
   }, []);
 
   useFrame(() => {
     const group = revealRef.current;
     if (!group) return;
     const progress = getProgress();
-    group.visible = progress >= 0.62;
+    group.visible = progress >= 0.55;
     if (progress < 0.82 || mostAskedRevealed.current) return;
     mostAskedRevealed.current = true;
     useGuideStore.getState().revealMostAsked();
-    carouselTimeout.current = setTimeout(() => useGuideStore.getState().advancePopularCarousel(), 12_000);
+    if (!carouselInterval.current) {
+      carouselInterval.current = setInterval(() => {
+        useGuideStore.getState().advancePopularCarousel();
+      }, 12_000);
+    }
   });
 
   return (
@@ -331,10 +339,40 @@ function BoardHangers() {
   );
 }
 
+function TrainSet({ getProgress }: { getProgress: () => number }) {
+  const trainRef = useRef<THREE.Group>(null);
+  useFrame(() => {
+    if (!trainRef.current) return;
+    const frame = sampleGuideRail(getProgress());
+    trainRef.current.position.x = frame.departureOffset * 35;
+  });
+
+  return (
+    <group ref={trainRef} name="StationTrainSet">
+      <Coach position={[0, 0, 0]} />
+      <Coach position={[0, 0, -4]} dimmed />
+      <Coach position={[0, 0, -8]} dimmed />
+    </group>
+  );
+}
+
 /** Pre-dawn station scene; the Phase 3 camera rig samples its rail through the shared render clock. */
 export function StationScene({ progress = 0, getProgress, getTargetProgress, board }: StationSceneProps) {
   const readProgress = useMemo(() => getProgress ?? (() => progress), [getProgress, progress]);
   const readTargetProgress = useMemo(() => getTargetProgress ?? readProgress, [getTargetProgress, readProgress]);
+
+  const spotTarget = useMemo(() => {
+    const obj = new THREE.Object3D();
+    obj.position.set(0, 0, 1.2);
+    return obj;
+  }, []);
+  const spotRef = useRef<THREE.SpotLight>(null);
+
+  useEffect(() => {
+    if (spotRef.current) {
+      spotRef.current.target = spotTarget;
+    }
+  }, [spotTarget]);
 
   return (
     <>
@@ -344,18 +382,17 @@ export function StationScene({ progress = 0, getProgress, getTargetProgress, boa
       <hemisphereLight args={[guideStationPalette.rim, guideStationPalette.fog, 0.35]} />
       <directionalLight position={[-8, 15, 8]} intensity={0.8} color={guideStationPalette.rim} />
       <pointLight position={[0.3, 2.3, -1.5]} intensity={80} decay={2} color={guideStationPalette.windowGlow} />
+      <primitive object={spotTarget} />
       <spotLight
+        ref={spotRef}
         position={[0, 7, 2]}
-        rotation={[-0.68, 0, 0]}
         intensity={120}
         angle={0.7}
         penumbra={0.8}
         color={guideStationPalette.windowGlow}
       />
       <WetPlatform />
-      <Coach position={[0, 0, 0]} />
-      <Coach position={[0, 0, -4]} dimmed />
-      <Coach position={[0, 0, -8]} dimmed />
+      <TrainSet getProgress={readProgress} />
       <WindowAssembly progress={readProgress()} getProgress={readProgress} />
       <RainStreaks />
       <HallRafters />
