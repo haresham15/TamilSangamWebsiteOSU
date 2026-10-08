@@ -120,7 +120,7 @@ export default function HomePage() {
 
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8 relative z-10">
           <div>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display">
+            <h2 className="text-[clamp(2rem,4vw+1rem,4.5rem)] font-extrabold text-[#250d38] tracking-tight font-display leading-[1.15]" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
               {locale === "ta" ? "அடுத்த முக்கிய நிகழ்வு" : "Next Flagship Festival"}
             </h2>
           </div>
@@ -133,8 +133,8 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Poster & Ticket Presentation Box Structure (Cultural Geometry with Filigree Brass Borders & Temple Arch) */}
-        <div className="rounded-t-[36px] rounded-b-md border border-[#B5A642]/40 bg-white p-6 sm:p-10 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.22)] hover:border-[#FFB84D] transition-all duration-300 overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+        {/* Poster & Ticket Presentation Box Structure (Brutalist Geometry with Filigree Brass Borders) */}
+        <div className="rounded-none border border-[#B5A642]/40 bg-white p-6 sm:p-10 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.22)] hover:border-[#FFB84D] transition-all duration-300 overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
           {/* Subtle Perforated Die-Cut Ticket Notch Details for Large Screens */}
           <div className="hidden lg:block absolute left-[58.33%] top-0 bottom-0 w-0 border-r-2 border-dashed border-[#B5A642]/40 pointer-events-none" />
           <div className="hidden lg:block absolute left-[58.33%] -top-3 -translate-x-1/2 w-6 h-6 bg-[#fffdfa] border border-[#B5A642]/40 rotate-45 z-20 pointer-events-none" />
@@ -189,13 +189,13 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Temple Arch Framing for the Event Poster (rounded-t-[44px] rounded-b-md) */}
-          <div className="lg:col-span-5 relative h-72 sm:h-84 temple-arch border border-[#B5A642]/50 shadow-[4px_4px_0px_#4c2472] overflow-hidden group">
+          {/* Brutalist Framing for the Event Poster */}
+          <div className="lg:col-span-5 relative h-72 sm:h-84 rounded-none border border-[#B5A642]/50 shadow-[4px_4px_0px_#4c2472] overflow-hidden group">
             <Image
               src={nextEvent.posterImage}
               alt={nextEvent.titleEn}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500 rounded-t-[44px] rounded-b-md"
+              className="object-cover group-hover:scale-105 transition-transform duration-500 rounded-none"
               sizes="(max-width: 1024px) 100vw, 500px"
             />
           </div>
@@ -212,7 +212,7 @@ export default function HomePage() {
 
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8 relative z-10">
           <div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#250d38] tracking-tight font-display">
+            <h2 className="text-[clamp(2rem,4vw+1rem,4.5rem)] font-extrabold text-[#250d38] tracking-tight font-display leading-[1.15]" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
               {locale === "ta" ? "நினைவுகள் & புகைப்படத் தொகுப்பு" : "Memories & Photo Archives"}
             </h2>
           </div>
@@ -239,9 +239,9 @@ export default function HomePage() {
             <Link
               href="/gallery/berry-cute-picnic"
               onClick={playClick}
-              className="temple-arch border border-[#B5A642]/35 bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out group flex flex-col justify-between h-full overflow-hidden"
+              className="rounded-none border border-[#B5A642]/35 bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out group flex flex-col justify-between h-full overflow-hidden"
             >
-              <div className="relative w-full aspect-[4/3] overflow-hidden border-b border-[#B5A642]/35 rounded-t-[38px]">
+              <div className="relative w-full aspect-[4/3] overflow-hidden border-b border-[#B5A642]/35 rounded-none">
                 <Image
                   src="https://lh3.googleusercontent.com/pw/AP1GczPlVkHkFW39BMqHGdeuYa0EwT1OOXOGWweSVgrPMbn24CSvrUlwF8CS_x787kPudpRyXEgtSMteYmBp6Zbad4uzMgeqB6LfISOvbS0AO1-qHsPKtEoC=w1200-h800-no"
                   alt="TS A Berry Cute Picnic"
@@ -268,9 +268,9 @@ export default function HomePage() {
             <Link
               href="/gallery/streetside-sapad"
               onClick={playClick}
-              className="temple-arch border border-[#B5A642]/35 bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out group flex flex-col justify-between h-full overflow-hidden"
+              className="rounded-none border border-[#B5A642]/35 bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out group flex flex-col justify-between h-full overflow-hidden"
             >
-              <div className="relative w-full aspect-[4/3] overflow-hidden border-b border-[#B5A642]/35 rounded-t-[38px]">
+              <div className="relative w-full aspect-[4/3] overflow-hidden border-b border-[#B5A642]/35 rounded-none">
                 <Image
                   src="https://lh3.googleusercontent.com/pw/AP1GczPoDEE5ppMuBlStSn71wmY-vnb9sbDehdzKVvxu_QvEJZfJ8hGCig4Bkxoe8Rx8-xpnXzZA02iZ2EZid-qciQ4V85WQKl44j_Ed6YLD25GTunQbulMG=w1200-h800-no"
                   alt="TS Streetside Sapad Event"
@@ -297,9 +297,9 @@ export default function HomePage() {
             <Link
               href="/gallery/namma-jathara"
               onClick={playClick}
-              className="temple-arch border border-[#B5A642]/35 bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out group flex flex-col justify-between h-full overflow-hidden"
+              className="rounded-none border border-[#B5A642]/35 bg-white shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out group flex flex-col justify-between h-full overflow-hidden"
             >
-              <div className="relative w-full aspect-[4/3] overflow-hidden border-b border-[#B5A642]/35 rounded-t-[38px]">
+              <div className="relative w-full aspect-[4/3] overflow-hidden border-b border-[#B5A642]/35 rounded-none">
                 <Image
                   src="https://lh3.googleusercontent.com/pw/AP1GczMckOLKN2caITiN5K1TOGffHjjgJrfgVuOLzMp4vuZ6J7kgf1CQB-PChurpUnPfiexScEG44wZkP-PWanuwwdRE3STuUUNN6LLQoe-ioZJ3MeSMpkCC=w1200-h800-no"
                   alt="TS x TT: Namma Jathara"
@@ -326,7 +326,7 @@ export default function HomePage() {
         {/* Structural Tamil Background Watermark */}
         <WatermarkGlyph text="வணக்கம்" opacity={0.045} align="center" theme="light" />
 
-        <div className="p-8 sm:p-12 bg-[#250d38] rounded-t-[44px] rounded-b-md border border-[#B5A642]/50 shadow-[0_0_35px_rgba(255,184,77,0.18)] hover-glow-kuthuvilakku transition-all duration-300 relative overflow-hidden text-white z-10">
+        <div className="p-8 sm:p-12 bg-[#250d38] rounded-none border border-[#B5A642]/50 shadow-[0_0_35px_rgba(255,184,77,0.18)] hover-glow-kuthuvilakku transition-all duration-300 relative overflow-hidden text-white z-10">
           {/* Tactile Kanjeevaram Texture Overlay */}
           <HeritageTextureOverlay variant="kanjeevaram" opacity={0.038} />
 
@@ -334,7 +334,7 @@ export default function HomePage() {
             <FilterKaapiGlyph size={32} className="text-[#FFB84D]" />
           </div>
 
-          <h3 className="text-3xl sm:text-4xl font-display font-extrabold text-white mb-3 relative z-10">
+          <h3 className="text-[clamp(2rem,3.5vw+0.5rem,3.5rem)] font-display font-extrabold text-white mb-3 relative z-10 leading-[1.2]">
             {locale === "ta" ? "சூடான ஃபில்டர் காபி இடைவேளை" : "Filter Coffee Intermission"}
           </h3>
 

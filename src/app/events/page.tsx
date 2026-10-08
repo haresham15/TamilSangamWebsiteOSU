@@ -87,7 +87,7 @@ export default function EventsPage() {
           {/* Page Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div className="max-w-2xl">
-              <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
+              <h1 className="text-[clamp(2.5rem,5vw+1.5rem,5.5rem)] font-extrabold text-[#250d38] tracking-tight font-display mb-4 leading-[1.1]" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
                 {locale === "ta" ? "நிகழ்வுகள் & சந்திப்புகள்" : "Events & Campus Gatherings"}
               </h1>
               <p className="text-sm sm:text-base text-[#250d38] font-medium leading-relaxed font-body" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
@@ -125,7 +125,7 @@ export default function EventsPage() {
           </div>
 
           {/* 1. Welcoming Community Hub Banner: Open to All Languages */}
-          <div className="p-6 bg-[#250d38] border border-[#B5A642]/50 rounded-t-[32px] rounded-b-md shadow-[0_0_30px_rgba(255,184,77,0.18)] hover-glow-kuthuvilakku transition-all duration-300 mb-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-white relative overflow-hidden">
+          <div className="p-6 bg-[#250d38] border border-[#B5A642]/50 rounded-none shadow-[0_0_30px_rgba(255,184,77,0.18)] hover-glow-kuthuvilakku transition-all duration-300 mb-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-white relative overflow-hidden">
             {/* Tactile Kanjeevaram Texture Overlay */}
             <HeritageTextureOverlay variant="kanjeevaram" opacity={0.035} />
 
@@ -162,20 +162,20 @@ export default function EventsPage() {
                 key={evt.slug}
                 variants={itemVariants}
                 layout
-                className="rounded-t-[36px] rounded-b-md border border-[#B5A642]/35 bg-white p-6 sm:p-8 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.22)] hover:border-[#FFB84D] transition-all duration-300 ease-out grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left relative overflow-hidden"
+                className="rounded-none border border-[#B5A642]/35 bg-white p-6 sm:p-8 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.22)] hover:border-[#FFB84D] transition-all duration-300 ease-out grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left relative overflow-hidden"
               >
                 {/* Perforated vertical railway ticket divider for desktop */}
                 <div className="hidden lg:block absolute left-[41.66%] top-0 bottom-0 w-0 border-r-2 border-dashed border-[#B5A642]/35 pointer-events-none" />
                 <div className="hidden lg:block absolute left-[41.66%] -top-3 -translate-x-1/2 w-6 h-6 bg-[#FAF6EE] border border-[#B5A642]/40 rotate-45 z-20 pointer-events-none" />
                 <div className="hidden lg:block absolute left-[41.66%] -bottom-3 -translate-x-1/2 w-6 h-6 bg-[#FAF6EE] border border-[#B5A642]/40 rotate-45 z-20 pointer-events-none" />
 
-                {/* Event Poster / Visual: Temple Arch Framing */}
-                <div className="lg:col-span-5 relative h-64 sm:h-72 temple-arch border border-[#B5A642]/40 overflow-hidden shadow-[3px_3px_0px_#4c2472] group">
+                {/* Event Poster / Visual: Brutalist Framing */}
+                <div className="lg:col-span-5 relative h-64 sm:h-72 rounded-none border border-[#B5A642]/40 overflow-hidden shadow-[3px_3px_0px_#4c2472] group">
                   <Image
                     src={evt.posterImage}
                     alt={evt.titleEn}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500 rounded-t-[40px] rounded-b-md"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500 rounded-none"
                     sizes="(max-width: 1024px) 100vw, 500px"
                   />
                   <div className="absolute top-2 left-2 flex flex-wrap gap-1.5 z-10">
@@ -197,7 +197,7 @@ export default function EventsPage() {
                     </span>
                   </div>
 
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-[#250d38] font-display tracking-tight" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
+                  <h2 className="text-[clamp(1.5rem,3vw+0.5rem,2.5rem)] font-extrabold text-[#250d38] font-display tracking-tight leading-[1.2]" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
                     {locale === "ta" ? evt.titleTa : evt.titleEn}
                   </h2>
 
@@ -259,14 +259,14 @@ export default function EventsPage() {
                   key={evt.slug}
                   href={`/events/${evt.slug}`}
                   onClick={playClick}
-                  className="temple-arch group relative h-80 overflow-hidden border border-[#B5A642]/40 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out block rounded-t-[40px] rounded-b-md"
+                  className="group relative h-80 overflow-hidden border border-[#B5A642]/40 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out block rounded-none"
                 >
                   {/* Base Poster at rest */}
                   <Image
                     src={evt.posterImage}
                     alt={evt.titleEn}
                     fill
-                    className="object-cover transition-opacity duration-500 group-hover:opacity-0 rounded-t-[40px] rounded-b-md"
+                    className="object-cover transition-opacity duration-500 group-hover:opacity-0 rounded-none"
                     sizes="(max-width: 768px) 100vw, 400px"
                   />
 
@@ -275,7 +275,7 @@ export default function EventsPage() {
                     src={evt.hoverImage}
                     alt={evt.titleEn}
                     fill
-                    className="object-cover transition-opacity duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-105 rounded-t-[40px] rounded-b-md"
+                    className="object-cover transition-opacity duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-105 rounded-none"
                     sizes="(max-width: 768px) 100vw, 400px"
                   />
 

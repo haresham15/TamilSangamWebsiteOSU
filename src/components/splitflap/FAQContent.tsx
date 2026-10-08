@@ -99,14 +99,14 @@ export function FAQContent({
         {/* ========================================================================= */}
         {/* EDITORIAL HEADER (Sanity CMS-Ready Architecture)                         */}
         {/* ========================================================================= */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#fdfaf5] tracking-tight font-display mb-3">
+        <div className="text-left mb-12">
+          <h1 className="text-[clamp(2.25rem,5vw,5rem)] font-extrabold text-[#fdfaf5] tracking-tight font-display mb-3 leading-[1.1]">
             Frequently Asked Questions
           </h1>
           <p className="text-base sm:text-lg text-[#c59b27] font-tamil font-medium mb-4">
             அடிக்கடி கேட்கப்படும் கேள்விகள் மற்றும் விளக்கங்கள்
           </p>
-          <p className="max-w-2xl mx-auto text-sm sm:text-base text-[#a89985] leading-relaxed">
+          <p className="max-w-2xl text-sm sm:text-base text-[#a89985] leading-relaxed">
             Select any question to inspect detailed guidelines or broadcast the answer directly to the 
             mechanical split-flap departure board above.
           </p>

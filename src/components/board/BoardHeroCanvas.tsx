@@ -184,7 +184,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
         {/* R3F 3D VIEWPORT WITH PHYSICAL CAMERA & ATMOSPHERE (Clean Cinematic Scene) */}
         {/* ========================================================================= */}
         <div className="relative flex-1 w-full h-full">
-          <View className="w-full h-full">
+          <View className="w-full h-full pointer-events-auto">
             <BoardSceneWarmup />
             <PerspectiveCamera makeDefault position={[0, 2.22, 30]} fov={32} near={0.05} far={100} />
             <color attach="background" args={["#120A06"]} />

@@ -255,7 +255,7 @@ function SilkPillarCard({ pillar }: { pillar: PillarItem }) {
       role="article"
       aria-label={pillar.titleEn}
       style={{ perspective: 1000, transformStyle: "preserve-3d", willChange: "transform" }}
-      className="relative w-full rounded-t-[36px] rounded-b-md border border-[#B5A642]/35 bg-[#170a29] text-white p-6 sm:p-10 overflow-hidden shadow-[4px_4px_0px_#4c2472] sm:shadow-[6px_6px_0px_#4c2472] hover:border-[#FFB84D] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-all duration-300 ease-out flex flex-col justify-between min-h-[320px] sm:min-h-[360px] group select-none cursor-pointer sm:cursor-default transform-gpu"
+      className="relative w-full rounded-none border border-[#B5A642]/35 bg-[#170a29] text-white p-6 sm:p-10 overflow-hidden shadow-[4px_4px_0px_#4c2472] sm:shadow-[6px_6px_0px_#4c2472] hover:border-[#FFB84D] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-all duration-300 ease-out flex flex-col justify-between min-h-[320px] sm:min-h-[360px] group select-none cursor-pointer sm:cursor-default transform-gpu"
     >
       {/* Tactile Woven Kanjeevaram Silk Texture Overlay */}
       <HeritageTextureOverlay variant="kanjeevaram" opacity={0.035} />
@@ -370,7 +370,7 @@ export function SilkHoverPillars() {
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12 relative z-10">
         <div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-[#250d38] tracking-tight font-display" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
+          <h2 className="text-[clamp(2rem,4vw+1rem,4.5rem)] font-extrabold text-[#250d38] tracking-tight font-display leading-[1.15]" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
             {locale === "ta" ? "சங்கத்தின் நான்கு தூண்கள்" : "The Four Pillars of Sangam"}
           </h2>
         </div>

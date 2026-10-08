@@ -236,7 +236,7 @@ export default function RootLayout({
       className={`${muktaMalar.variable} ${jetbrainsMono.variable} ${syne.variable} ${anekTamil.variable} ${halant.variable} ${marcellus.variable} ${prata.variable} ${cormorant.variable} ${outfit.variable} ${kavivanar.variable} ${tiroTamil.variable} ${azeretMono.variable} ${fragmentMono.variable} ${majorMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans text-[var(--text-primary)] relative">
+      <body className="min-h-full flex flex-col font-sans text-[var(--text-primary)] relative overflow-x-hidden w-full max-w-[100vw]">
         {/* Global 35mm Analog Film Grain Overlay */}
         <FilmGrainOverlay />
 

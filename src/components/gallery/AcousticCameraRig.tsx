@@ -52,8 +52,8 @@ export function AcousticCameraRig({ scrollProgress }: AcousticCameraRigProps) {
     targetPos.set(targetX, targetY, targetZ);
 
     // Spring-follow damping for physical inertia (§6 & §10)
-    const clampedDelta = Math.min(delta, 0.1);
-    const damping = 1 - Math.pow(0.001, clampedDelta);
+    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
+    const damping = 1 - Math.pow(0.001, safeDelta);
     camera.position.lerp(targetPos, Math.min(1.0, damping * 4.0));
 
     if ("fov" in camera) {

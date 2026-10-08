@@ -75,18 +75,27 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
     return new THREE.CatmullRomCurve3(points);
   }, []);
 
-  useFrame(() => {
+  useFrame((_, delta) => {
+    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
     const p = gateProgressRef.current ?? 0;
     const maxAngle = Math.PI * 0.44; // ~79 degrees open
-    const currentAngle = p * maxAngle;
+    const targetAngle = p * maxAngle;
 
     if (leftHingeRef.current) {
-      // Left gate swings inward
-      leftHingeRef.current.rotation.y = -currentAngle;
+      leftHingeRef.current.rotation.y = THREE.MathUtils.damp(
+        leftHingeRef.current.rotation.y,
+        -targetAngle,
+        10.0,
+        safeDelta
+      );
     }
     if (rightHingeRef.current) {
-      // Right gate swings inward
-      rightHingeRef.current.rotation.y = currentAngle;
+      rightHingeRef.current.rotation.y = THREE.MathUtils.damp(
+        rightHingeRef.current.rotation.y,
+        targetAngle,
+        10.0,
+        safeDelta
+      );
     }
   });
 

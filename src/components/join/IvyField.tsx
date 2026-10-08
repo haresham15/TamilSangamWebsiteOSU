@@ -67,11 +67,13 @@ function PillarIvy({ pillarX }: IvyClusterProps) {
     if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
   }, [matrices, colors, count]);
 
-  useFrame((state) => {
+  const swayTime = useRef(0);
+  useFrame((_, delta) => {
     if (!meshRef.current) return;
-    const time = state.clock.getElapsedTime();
+    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
+    swayTime.current += safeDelta;
     // Gentle campus breeze sway
-    meshRef.current.rotation.y = Math.sin(time * 0.6 + pillarX) * 0.02;
+    meshRef.current.rotation.y = Math.sin(swayTime.current * 0.6 + pillarX) * 0.02;
   });
 
   return (

@@ -36,11 +36,14 @@ function StationCamera({ getProgress, getTargetProgress }: { getProgress: () => 
     return () => media.removeEventListener("change", update);
   }, []);
 
-  useFrame(({ clock }) => {
+  const simTime = useRef(0);
+  useFrame((_, delta) => {
+    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
+    simTime.current += safeDelta;
     const camera = cameraRef.current;
     if (!camera) return;
     const frame = sampleGuideRail(getProgress());
-    const drift = reduceMotion ? 0 : Math.sin(clock.elapsedTime * 1.88) * frame.handheldAmplitude;
+    const drift = reduceMotion ? 0 : Math.sin(simTime.current * 1.88) * frame.handheldAmplitude;
     camera.position.set(frame.position[0] + drift, frame.position[1] + drift * 0.35, frame.position[2]);
     camera.fov = frame.fov;
     camera.updateProjectionMatrix();

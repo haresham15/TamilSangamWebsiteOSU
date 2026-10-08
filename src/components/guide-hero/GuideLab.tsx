@@ -40,7 +40,7 @@ function GuideLabViewport({ initialProgress }: { initialProgress: number }) {
         </div>
 
         <div data-testid="guide-lab-view" className="relative h-[70dvh] min-h-[480px] overflow-hidden bg-transparent">
-          <View className="h-full w-full" index={2}>
+          <View className="h-full w-full pointer-events-auto" index={2}>
             <LabScene progress={progress} />
           </View>
         </div>

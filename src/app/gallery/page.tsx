@@ -149,7 +149,7 @@ export default function GalleryPage() {
         {/* Header with High-Contrast Deep Plum Brand Typography */}
         <div className="max-w-3xl mb-12 relative z-10">
 
-          <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
+          <h1 className="text-[clamp(2.5rem,5vw+1.5rem,5.5rem)] font-extrabold text-[#250d38] tracking-tight font-display mb-4 leading-[1.1]" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
             {locale === "ta" ? "நினைவுகள் · வரலாற்று புகைப்படத் தொகுப்பு" : "Memories & Event Info Pages"}
           </h1>
           <p className="text-base sm:text-lg text-[#250d38] font-medium leading-relaxed font-body">

@@ -234,13 +234,10 @@ function GPUKolamParticles({
 
   // Buttery 60-120 FPS GPU uniform update via R3F useFrame (0 CPU buffer writes)
   useFrame(({ clock }, delta) => {
-    const safeDelta = Math.min(delta, 0.05);
-    void safeDelta; // Suppress unused variable warning
-    // Use safeDelta to prevent unused variable warning if needed, though clock is used.
-    // In an actual animation we might use safeDelta.
+    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
     if (pointsRef.current) {
       const mat = pointsRef.current.material as THREE.ShaderMaterial;
-      mat.uniforms.uTime.value = clock.getElapsedTime();
+      mat.uniforms.uTime.value += safeDelta;
       mat.uniforms.uScrollProgress.value = scrollProgressRef.current;
     }
   });
@@ -454,7 +451,7 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
       {/* 1. Full-Screen 3D Particle Canvas with Pure GPU Shader Turbulence */}
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         {mounted && isWebglEnabled && (
-          <View className="w-full h-full">
+          <View className="w-full h-full pointer-events-auto">
             <PerspectiveCamera makeDefault position={[0, 0, 7.5]} fov={50} />
             <ambientLight intensity={0.4} />
             <GPUKolamParticles scrollProgressRef={scrollProgressRef} isMobile={isMobile} />

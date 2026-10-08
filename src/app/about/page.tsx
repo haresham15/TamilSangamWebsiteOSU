@@ -140,7 +140,7 @@ export default function AboutPage() {
         <div className="relative mb-20">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-8 lg:gap-x-0 items-center">
             {/* DOM Order 1: Editorial Essay Card (Primary text content) */}
-            <article className="lg:col-start-1 lg:col-span-8 lg:row-start-1 z-20 rounded-t-[36px] rounded-b-md p-8 sm:p-12 border border-[#B5A642]/40 bg-white/95 backdrop-blur-md shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.2)] hover:border-[#FFB84D] transition-all duration-300 relative overflow-hidden">
+            <article className="lg:col-start-1 lg:col-span-8 lg:row-start-1 z-20 rounded-none p-8 sm:p-12 border border-[#B5A642]/40 bg-white/95 backdrop-blur-md shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.2)] hover:border-[#FFB84D] transition-all duration-300 relative overflow-hidden">
               <HeritageTextureOverlay variant="kanjeevaram" opacity={0.025} />
               <div className="max-w-2xl space-y-4 relative z-10">
                 <div className="flex items-center gap-2 font-mono text-xs text-[#11694c] font-bold">
@@ -171,7 +171,7 @@ export default function AboutPage() {
             {/* DOM Order 2: Overlapping Architectural Motif / Graphic Feature with Parallax (§7.2, §7.3) */}
             <aside
               data-speed="0.88"
-              className="lg:col-start-7 lg:col-span-6 lg:row-start-1 z-10 hidden lg:block rounded-3xl p-8 bg-gradient-to-br from-[#250d38] via-[#3b155a] to-[#12071d] text-white border border-[var(--sangam-gold)]/40 shadow-2xl overflow-hidden relative"
+              className="lg:col-start-7 lg:col-span-6 lg:row-start-1 z-10 hidden lg:block rounded-none p-8 bg-gradient-to-br from-[#250d38] via-[#3b155a] to-[#12071d] text-white border border-[var(--sangam-gold)]/40 shadow-2xl overflow-hidden relative"
               aria-hidden="true"
             >
               <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-[var(--sangam-gold)]/10 blur-2xl" />
@@ -200,7 +200,7 @@ export default function AboutPage() {
             {CLUB_PURPOSE.map((p) => (
               <div
                 key={p.id}
-                className="rounded-t-[28px] rounded-b-md p-6 sm:p-8 bg-white border border-[#B5A642]/35 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_30px_rgba(255,184,77,0.2)] hover:border-[#FFB84D] flex flex-col justify-between transition-all duration-300"
+                className="rounded-none p-6 sm:p-8 bg-white border border-[#B5A642]/35 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_30px_rgba(255,184,77,0.2)] hover:border-[#FFB84D] flex flex-col justify-between transition-all duration-300"
               >
                 <div>
                   <h3 className="text-xl font-bold text-[#250d38] mb-2 font-display">
@@ -225,7 +225,7 @@ export default function AboutPage() {
             {timelineEvents.map((evt, idx) => (
               <div
                 key={idx}
-                className="rounded-t-[24px] rounded-b-md p-6 sm:p-8 bg-white border border-[#B5A642]/35 shadow-[3px_3px_0px_#4c2472] hover:shadow-[0_0_30px_rgba(255,184,77,0.2)] hover:border-[#FFB84D] flex flex-col sm:flex-row items-start sm:items-center gap-6 transition-all duration-300"
+                className="rounded-none p-6 sm:p-8 bg-white border border-[#B5A642]/35 shadow-[3px_3px_0px_#4c2472] hover:shadow-[0_0_30px_rgba(255,184,77,0.2)] hover:border-[#FFB84D] flex flex-col sm:flex-row items-start sm:items-center gap-6 transition-all duration-300"
               >
                 <div className="shrink-0 flex sm:flex-col items-center sm:items-start gap-2 sm:gap-0">
                   <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#87500e]">
@@ -255,7 +255,7 @@ export default function AboutPage() {
             {partners.map((pt, idx) => (
               <div
                 key={idx}
-                className="rounded-t-[28px] rounded-b-md p-6 sm:p-8 bg-white border border-[#B5A642]/35 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_30px_rgba(255,184,77,0.2)] hover:border-[#FFB84D] transition-all duration-300"
+                className="rounded-none p-6 sm:p-8 bg-white border border-[#B5A642]/35 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_30px_rgba(255,184,77,0.2)] hover:border-[#FFB84D] transition-all duration-300"
               >
                 <span className="text-xs font-mono font-bold text-[#11694c] uppercase tracking-wider block mb-2">
                   {pt.type}
@@ -275,7 +275,7 @@ export default function AboutPage() {
         <div id="faq" className="scroll-mt-32 relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-[#250d38] font-display leading-tight">
+              <h2 className="text-[clamp(2rem,3.5vw+0.5rem,3.5rem)] font-extrabold text-[#250d38] font-display leading-[1.2]" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
                 {locale === "ta" ? "பொதுவான வினாக்கள்" : "Frequently Asked Questions"}
               </h2>
             </div>
@@ -291,7 +291,7 @@ export default function AboutPage() {
                 onChange={(e) => setFaqSearch(e.target.value)}
                 placeholder="Search questions..."
                 aria-label="Search frequently asked questions"
-                className="w-full pl-9 pr-4 py-2.5 bg-white border border-[#B5A642]/40 rounded-t-lg rounded-b-md shadow-[2px_2px_0px_#4c2472] text-[#250d38] placeholder-purple-900/40 text-xs font-mono outline-none focus:border-[#FFB84D] focus:shadow-[0_0_20px_rgba(255,184,77,0.2)] transition-all"
+                className="w-full pl-9 pr-4 py-2.5 bg-white border border-[#B5A642]/40 rounded-none shadow-[2px_2px_0px_#4c2472] text-[#250d38] placeholder-purple-900/40 text-xs font-mono outline-none focus:border-[#FFB84D] focus:shadow-[0_0_20px_rgba(255,184,77,0.2)] transition-all"
               />
             </div>
           </div>
@@ -302,7 +302,7 @@ export default function AboutPage() {
               return (
                 <div
                   key={faq.id}
-                  className="rounded-t-[20px] rounded-b-md bg-white border border-[#B5A642]/35 shadow-[2px_2px_0px_#4c2472] hover:shadow-[0_0_25px_rgba(255,184,77,0.18)] hover:border-[#FFB84D] overflow-hidden transition-all duration-300"
+                  className="rounded-none bg-white border border-[#B5A642]/35 shadow-[2px_2px_0px_#4c2472] hover:shadow-[0_0_25px_rgba(255,184,77,0.18)] hover:border-[#FFB84D] overflow-hidden transition-all duration-300"
                 >
                   <button
                     type="button"

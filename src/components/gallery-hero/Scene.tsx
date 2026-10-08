@@ -49,7 +49,7 @@ export default function Scene() {
 
   return (
     <div className="w-full h-full relative">
-      <View className="w-full h-full">
+      <View className="w-full h-full pointer-events-auto">
         <SceneWarmup />
         <SceneRegistrar />
         {/* Dynamic Scene Background & Exponential Squared Fog */}

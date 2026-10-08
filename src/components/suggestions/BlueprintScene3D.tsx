@@ -1217,7 +1217,7 @@ export function BlueprintScene3D({
 
   return (
     <div ref={containerRef} className={`relative w-full h-full bg-transparent ${className}`}>
-      <View className="w-full h-full">
+      <View className="w-full h-full pointer-events-auto">
         <BlueprintSceneContent
           groundTexture={groundTexture}
           scrollProgress={scrollProgress}

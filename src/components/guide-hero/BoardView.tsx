@@ -50,7 +50,7 @@ export default function BoardView({ sequenceElement, ...boardProps }: BoardViewP
   return (
     <div ref={containerRef} className="h-full w-full">
       {/* Index 2 deliberately renders after the global grade stack; see Phase 0B checkpoint. */}
-      <View className="h-full w-full" index={2}>
+      <View className="h-full w-full pointer-events-auto" index={2}>
         <StationViewScene {...boardProps} />
       </View>
     </div>

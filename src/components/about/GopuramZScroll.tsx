@@ -389,7 +389,7 @@ export function GopuramZScroll() {
     >
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         {mounted && !isLiteMode && (
-          <View className="w-full h-full">
+          <View className="w-full h-full pointer-events-auto">
             <GopuramWarmup />
             <color attach="background" args={["#120a1f"]} />
             <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={50} near={0.05} far={150} />
