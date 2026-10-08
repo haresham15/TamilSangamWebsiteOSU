@@ -123,7 +123,21 @@ export const useGuideStore = create<GuideStoreState>((set, get) => ({
 
   setPopularRanking: (ranked) => {
     const valid = ranked.filter((entry) => FAQS.some((faq) => faq.id === entry.id));
-    if (valid.length) set({ popularRanking: valid });
+    if (valid.length) {
+      set((state) => {
+        const updates: Partial<GuideStoreState> = { popularRanking: valid };
+        if (state.source === "idle") {
+          const top = valid[0];
+          const faq = FAQS.find((candidate) => candidate.id === top.id);
+          if (faq) {
+            updates.activeId = faq.id;
+            updates.activeItem = popularFaqBoardItem(faq, top.rank);
+            updates.activeFlapLabel = faq.flapLabel || "OSU TAMIL SANGAM";
+          }
+        }
+        return updates;
+      });
+    }
   },
 
   revealMostAsked: () => {

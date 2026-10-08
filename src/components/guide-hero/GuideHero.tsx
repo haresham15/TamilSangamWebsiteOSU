@@ -20,12 +20,14 @@ interface GuideHeroProps {
   activeTitle?: string;
   isMoving?: boolean;
   showAtlasDebug?: boolean;
+  initialPopularRanking?: RankedFaq[];
 }
 
 /** Scroll-pinned station sequence with a semantic DOM title and a canvas-only atmosphere layer. */
 export function GuideHero({
   id = "guide-station-hero",
   activeTitle = "SANGAM JUNCTION · FAQ DEPARTURE BOARD",
+  initialPopularRanking,
 }: GuideHeroProps) {
   const { isLiteMode } = useLiteMode();
   const tier = useTier();
@@ -38,6 +40,9 @@ export function GuideHero({
 
   useEffect(() => {
     let active = true;
+    if (initialPopularRanking && initialPopularRanking.length > 0) {
+      useGuideStore.getState().setPopularRanking(initialPopularRanking);
+    }
     void fetch("/api/faq/popular")
       .then((response) => (response.ok ? response.json() : undefined))
       .then((payload: { ranked?: RankedFaq[] } | undefined) => {
@@ -47,7 +52,7 @@ export function GuideHero({
     return () => {
       active = false;
     };
-  }, []);
+  }, [initialPopularRanking]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
