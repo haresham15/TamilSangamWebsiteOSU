@@ -21,7 +21,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const isLinksPage = pathname === "/links";
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-between overflow-x-hidden">
+    <div className="relative min-h-screen flex flex-col justify-between overflow-x-clip">
       {/* 1. Global Floating Nav (Skipped on /links to preserve Linktree simplicity) */}
       {!isLinksPage && <FloatingNav onOpenSearch={() => setIsSearchOpen(true)} />}
 

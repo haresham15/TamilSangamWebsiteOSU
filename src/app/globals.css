@@ -91,6 +91,14 @@
 @layer components {
   .guide-station-poster {
     overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms linear;
+  }
+
+  .guide-station-poster--fallback {
+    opacity: 1;
+    pointer-events: auto;
     background:
       radial-gradient(circle at 50% 33%, color-mix(in oklch, var(--color-station-haze-bright) 70%, transparent), transparent 36%),
       linear-gradient(180deg, var(--color-station-fog) 0%, var(--color-station-haze) 70%, var(--color-station-platform) 100%);
