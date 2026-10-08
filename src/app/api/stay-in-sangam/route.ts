@@ -1,3 +1,4 @@
+import { checkRateLimit } from "./rateLimit";
 import { NextRequest, NextResponse } from "next/server";
 import {
   validateEmail,
@@ -7,25 +8,7 @@ import {
   getSubscribersStats,
 } from "@/lib/email";
 
-// Simple in-memory rate-limiter to prevent abuse (IP-based, resets every minute)
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + 60000 });
-    return true;
-  }
-
-  if (entry.count >= 10) {
-    return false; // Exceeded 10 requests per minute
-  }
-
-  entry.count += 1;
-  return true;
-}
 
 export async function POST(req: NextRequest) {
   try {
