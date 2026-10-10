@@ -72,7 +72,6 @@ const cormorant = Cormorant({
   variable: "--font-cormorant",
   subsets: ["latin"],
   weight: ["400", "600", "700"],
-  style: ["normal", "italic"],
 });
 
 const outfit = Outfit({
