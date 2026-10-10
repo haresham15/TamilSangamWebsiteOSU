@@ -20,7 +20,6 @@ import {
   PulliDotLattice,
 } from "./pathBuilder";
 import { createPeelConveyorMaterial } from "./peelConveyorShader";
-import { TraditionalSideKolams } from "./TraditionalSideKolams";
 
 /**
  * Camera Vertical Truck Glide (§PRD 5.2)
@@ -544,9 +543,6 @@ export function DigitalKolamHero() {
 
           {/* Peel & Flow Kolam Halves (§PRD Home Hero) */}
           <PeelAndFlowKolamMesh isMobile={isMobile} tier={tier} />
-
-          {/* Traditional Royal Purple Stationary Flanking Kolams */}
-          <TraditionalSideKolams isMobile={isMobile} tier={tier} />
 
           {/* Golden "அ" Emblem in Protected Central Void (R >= 2.05) */}
           <GoldenTamilEmblem isMobile={isMobile} />

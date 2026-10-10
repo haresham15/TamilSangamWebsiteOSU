@@ -24,7 +24,6 @@ import { Providers } from "@/components/providers/Providers";
 import { GlobalCanvas } from "@/components/gl/GlobalCanvas";
 import { AppShell } from "@/components/global/AppShell";
 import { OrganizationJsonLd, EventJsonLd, WebSiteJsonLd } from "@/components/global/JsonLd";
-import { ViewfinderCursor } from "@/components/ui/ViewfinderCursor";
 
 const muktaMalar = Mukta_Malar({
   variable: "--font-mukta-malar",
@@ -251,9 +250,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-body text-[var(--text-primary)] relative overflow-x-hidden w-full max-w-[100vw]">
-        {/* Floating Tamil Letter Cursor */}
-        <ViewfinderCursor />
-
         {/* Structured Data for Search Engine Crawlers */}
         <WebSiteJsonLd />
         <OrganizationJsonLd />
