@@ -1,3 +1,3 @@
-## 2026-10-07 - Memoization in React Components
-**Learning:** React components sometimes re-create reference values (like arrays or objects) during renders. Moving these constants outside the component prevents unnecessary re-evaluations and re-renders.
-**Action:** Extract static data outside component scopes or use `useMemo` where applicable.
+## 2024-05-24 - [CommandPalette Re-renders]
+**Learning:** Found an opportunity to optimize performance by utilizing React.useMemo() for search indices that rely on large lists.
+**Action:** Always memoize arrays and objects that are mapped onto derived states, especially in dynamic searching / filtering components that update on keystrokes.

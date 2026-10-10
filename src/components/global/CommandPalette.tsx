@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
@@ -33,7 +33,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Build searchable index
-  const items: SearchItem[] = [
+  const items: SearchItem[] = useMemo(() => [
     // Core Pages
     { id: "p-home", category: "Page", title: "Home / முகப்பு", subtitle: "Official Emblem & Flagship Highlights", href: "/", icon: <Sparkles className="w-4 h-4 text-[#55CCA2]" /> },
     { id: "p-events", category: "Page", title: "Events / நிகழ்வுகள்", subtitle: "Upcoming festivals & Ticket drops", href: "/events", icon: <Calendar className="w-4 h-4 text-[#f59e0b]" /> },
@@ -95,17 +95,19 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       href: "/about#faq",
       icon: <HelpCircle className="w-4 h-4 text-[#8b5cf6]" />,
     })),
-  ];
+  ], []);
 
-  const filteredItems = items.filter((item) => {
-    const q = query.toLowerCase().trim();
-    if (!q) return true;
-    return (
-      item.title.toLowerCase().includes(q) ||
-      item.subtitle.toLowerCase().includes(q) ||
-      item.category.toLowerCase().includes(q)
-    );
-  }).slice(0, 8);
+  const filteredItems = useMemo(() => {
+    return items.filter((item) => {
+      const q = query.toLowerCase().trim();
+      if (!q) return true;
+      return (
+        item.title.toLowerCase().includes(q) ||
+        item.subtitle.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q)
+      );
+    }).slice(0, 8);
+  }, [items, query]);
 
   const handleSelect = useCallback(
     (item: SearchItem) => {
