@@ -20,6 +20,9 @@ import { setHeroScrollProgress } from "@/engine/heroScrollStore";
 import { governor } from "@/engine/governor";
 import { EVENTS } from "@/data/events";
 import { Calendar, MapPin } from "lucide-react";
+import { audioLayer } from "@/utils/audioLayer";
+import { SANGAM_CIPHER_CHARS, triggerTerminalDecode } from "@/utils/scrambleTerminal";
+import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 
 export default function HomePage() {
   const { locale } = useLocale();
@@ -28,13 +31,15 @@ export default function HomePage() {
 
   const pinnedWrapperRef = useRef<HTMLDivElement>(null);
   const pinnedViewportRef = useRef<HTMLDivElement>(null);
-  const actITelemetryRef = useRef<HTMLDivElement>(null);
   const actIIKuralRef = useRef<HTMLDivElement>(null);
   const kuralTamilRef = useRef<HTMLQuoteElement>(null);
   const kuralEnglishRef = useRef<HTMLParagraphElement>(null);
   const kuralMetaRef = useRef<HTMLDivElement>(null);
   const monolithRef = useRef<HTMLElement>(null);
   const liveTimeRef = useRef<HTMLSpanElement>(null);
+  const monolithPrologueRef = useRef<HTMLParagraphElement>(null);
+  const monolithTamilRef = useRef<HTMLParagraphElement>(null);
+  const decodedMonolithRef = useRef(false);
 
   // Live Columbus EDT clock island (PRD §9.1)
   useEffect(() => {
@@ -58,11 +63,10 @@ export default function HomePage() {
 
   // GSAP 3-Act Scroll-Telling Setup (Zero React Re-renders on Scroll)
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger, SplitText);
+    gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin);
 
     const wrapper = pinnedWrapperRef.current;
     const viewport = pinnedViewportRef.current;
-    const telemetry = actITelemetryRef.current;
     const kural = actIIKuralRef.current;
     const tamil = kuralTamilRef.current;
     const english = kuralEnglishRef.current;
@@ -81,7 +85,7 @@ export default function HomePage() {
     const chatbot = document.getElementById("global-sangam-chatbot");
 
     const ctx = gsap.context(() => {
-      // 1. Master Pinned Timeline: Pins the 100dvh viewport container while scrubbing 300vh
+      // 1. Master Pinned Timeline: Pins the 100dvh viewport container while scrubbing 300vh (§MASTER DIRECTIVE)
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapper,
@@ -89,16 +93,45 @@ export default function HomePage() {
           end: "bottom bottom",
           pin: viewport,
           anticipatePin: 1,
-          scrub: true,
+          scrub: 0.6, // PRD §9: scrub 0.6
           onUpdate: (self) => {
             // Hot loop state update without triggering React reconciliation
             setHeroScrollProgress(self.progress);
 
-            // Toggle hero purge dataset attribute (active during Acts I & II)
-            if (self.progress < 0.50) {
+            // Toggle hero purge dataset attribute (active during Acts I & II up to 0.60)
+            if (self.progress < 0.60) {
               document.body.dataset.heroPurge = "true";
+              delete document.body.dataset.heroPassed;
             } else {
               delete document.body.dataset.heroPurge;
+              document.body.dataset.heroPassed = "true";
+
+              // Terminal Boot Sequence (GSAP ScrambleText) on Act III Monolith
+              if (!decodedMonolithRef.current) {
+                decodedMonolithRef.current = true;
+                if (monolithPrologueRef.current) {
+                  gsap.to(monolithPrologueRef.current, {
+                    duration: 0.8,
+                    scrambleText: {
+                      text: monolithPrologueRef.current.innerText,
+                      chars: SANGAM_CIPHER_CHARS,
+                      speed: 1.2,
+                      revealDelay: 0.1,
+                    },
+                  });
+                }
+                if (monolithTamilRef.current) {
+                  gsap.to(monolithTamilRef.current, {
+                    duration: 0.8,
+                    scrambleText: {
+                      text: monolithTamilRef.current.innerText,
+                      chars: SANGAM_CIPHER_CHARS,
+                      speed: 1.2,
+                      revealDelay: 0.1,
+                    },
+                  });
+                }
+              }
             }
 
             // Governor render pause & inert focus trap guard
@@ -114,105 +147,90 @@ export default function HomePage() {
       });
 
       // =========================================================================
-      // CLUTTER ASSASSINATION (Phase 4 & Master Directive)
-      // Hide Navbar and Chatbot during Acts I & II (0.00 -> 0.50), reveal at 0.50
+      // CLUTTER ASSASSINATION & PERSISTENT NAV EMERGENCE (§PRD 9 & 10)
+      // Hide Navbar and Chatbot throughout Acts I & II (0.00 -> 0.60).
+      // Once scrolled past the hero wreath (0.60+), navbar becomes FULLY VISIBLE!
       // =========================================================================
       if (nav) {
         tl.fromTo(
           nav,
           { opacity: 0, pointerEvents: "none" },
-          { opacity: 1, pointerEvents: "auto", duration: 0.06, ease: "power2.out" },
-          0.50
+          { opacity: 1, pointerEvents: "auto", duration: 0.04, ease: "power2.out" },
+          0.60
         );
       }
       if (chatbot) {
         tl.fromTo(
           chatbot,
           { opacity: 0, pointerEvents: "none" },
-          { opacity: 1, pointerEvents: "auto", duration: 0.06, ease: "power2.out" },
-          0.50
+          { opacity: 1, pointerEvents: "auto", duration: 0.04, ease: "power2.out" },
+          0.60
         );
       }
 
       // =========================================================================
-      // ACT I: 0.00 -> 0.18 Scroll
-      // Minimal architectural edge telemetry fades out early (0.00 -> 0.14)
-      // =========================================================================
-      if (telemetry) {
-        tl.to(
-          telemetry,
-          {
-            opacity: 0,
-            y: -15,
-            ease: "power1.out",
-            duration: 0.14,
-          },
-          0
-        );
-      }
-
-      // =========================================================================
-      // ACT II: 0.16 -> 0.50 Scroll (§PHASE 3: TYPOGRAPHY CLUTTER PURGE)
-      // 3-Tier Staggered Reveal for Kural 81 in Centered Pure Negative Space
+      // ACT II: 0.54 -> 0.66 Scroll (§PRD 9: KURAL TIERS INSIDE WREATH)
+      // 3-Tier Staggered Reveal for Kural 81 centered inside wreath cradle
       // =========================================================================
       if (kural) {
         tl.fromTo(
           kural,
           { opacity: 0 },
-          { opacity: 1, duration: 0.04, ease: "none" },
-          0.16
+          { opacity: 1, duration: 0.02, ease: "none" },
+          0.53
         );
       }
 
-      // Tier 1: Tamil Script (Strictly 2 lines, Blur 10px -> 0px and y: 40 -> 0, NO shadow)
+      // Tier 1: Tamil Script (0.54 -> 0.58, slide up + blur 10px -> 0px)
       if (tamil) {
         tl.fromTo(
           tamil,
-          { opacity: 0, y: 40, filter: "blur(10px)" },
-          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.10, ease: "power2.out" },
-          0.18
+          { opacity: 0, y: 35, filter: "blur(10px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.04, ease: "power2.out" },
+          0.54
         );
       }
 
-      // Tier 2: English Translation via SplitText word-by-word cascade
+      // Tier 2: English Translation (0.58 -> 0.62, word-by-word cascade)
       if (split && split.words && split.words.length > 0) {
         tl.fromTo(
           split.words,
-          { opacity: 0, y: 14 },
-          { opacity: 1, y: 0, stagger: 0.005, duration: 0.08, ease: "power2.out" },
-          0.24
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, stagger: 0.002, duration: 0.04, ease: "power2.out" },
+          0.58
         );
       }
 
-      // Tier 3: Clean Monospace Metadata (Unboxed)
+      // Tier 3: Metadata / Caption (0.62 -> 0.66)
       if (meta) {
         tl.fromTo(
           meta,
-          { opacity: 0, y: 16 },
-          { opacity: 1, y: 0, duration: 0.06, ease: "power2.out" },
-          0.34
+          { opacity: 0, y: 14 },
+          { opacity: 1, y: 0, duration: 0.04, ease: "power2.out" },
+          0.62
         );
       }
 
-      // Gentle exit of Act II before Curtain Rise (0.47 -> 0.50)
+      // Dwell period (0.66 -> 0.762): Reading pause with wreath formed.
+      // Exit of Kural at start of curtain rise (0.74 -> 0.762)
       if (kural) {
         tl.to(
           kural,
-          { opacity: 0, y: -24, filter: "blur(6px)", duration: 0.03, ease: "power1.in" },
-          0.47
+          { opacity: 0, y: -20, filter: "blur(6px)", duration: 0.022, ease: "power1.in" },
+          0.74
         );
       }
 
       // =========================================================================
-      // ACT III: 0.50 -> 1.00 Scroll ("Curtain Rise", §PHASE 4)
-      // Monolith physically slides UP (yPercent: 100 -> 0) covering the WebGL scene
+      // ACT III: 0.762 -> 1.00 Scroll ("Curtain Rise", §PRD 9, ACT3_START = 0.762)
+      // Monolith slides UP (yPercent: 100 -> 0) naturally covering the WebGL scene
       // =========================================================================
       if (monolith) {
         tl.fromTo(
           monolith,
           { yPercent: 100 },
-          { yPercent: 0, duration: 0.50, ease: "power2.out" },
-          0.50
+          { yPercent: 0, duration: 0.238, ease: "none" },
+          0.762
         );
       }
     }, wrapper);
@@ -237,9 +255,14 @@ export default function HomePage() {
       <HeritageTextureOverlay variant="sandstone" opacity={0.02} />
 
       {/* =========================================================================
-          ACTS I, II & III: 300vh PINNED DOM WRAPPER & GSAP TIMELINE
+          ACTS I, II & III: 300vh PINNED DOM WRAPPER & GSAP TIMELINE (CINEMATIC)
           ========================================================================= */}
-      <div ref={pinnedWrapperRef} className="relative w-full h-[300vh]">
+      <div
+        ref={pinnedWrapperRef}
+        data-hero-pinned="home"
+        id="act-i-viewport-wrapper"
+        className="relative w-full h-[520dvh]"
+      >
         {/* Pinned 100dvh Viewport Container */}
         <div
           ref={pinnedViewportRef}
@@ -248,33 +271,24 @@ export default function HomePage() {
           {/* Act I: WebGL Canvas Layer (Digital Kolam + 3D Emblem) */}
           <DigitalKolamHero />
 
-          {/* Act I: Minimal Architectural Edge Telemetry (Only coordinates in extreme bottom corners) */}
-          <div
-            ref={actITelemetryRef}
-            className="absolute inset-x-0 bottom-0 z-10 pointer-events-none p-6 sm:p-10 lg:p-14 flex items-center justify-between font-space-mono text-[10px] sm:text-xs text-white/35 tracking-widest uppercase select-none"
-          >
-            <span>LAT 40.0067° N · LON 83.0305° W</span>
-            <span>COLUMBUS, OHIO · 2024</span>
-          </div>
-
           {/* Act II: Centered Poetic Inscription (Kural 81) in Pure Negative Space (§MASTER DIRECTIVE) */}
           <div
             ref={actIIKuralRef}
             className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center px-4 sm:px-8 text-center"
             style={{ opacity: 0 }}
           >
-            <div className="max-w-2xl mx-auto flex flex-col items-center justify-center">
-              {/* Tier 1: Tamil Inscription (Strictly 2 Lines, Blur 10px -> 0px, y: 40 -> 0, NO shadow) */}
+            <div className="max-w-3xl mx-auto flex flex-col items-center justify-center translate-y-8 sm:translate-y-12 lg:translate-y-14">
+              {/* Tier 1: Tamil Inscription (Strictly 2 Lines, Blur 10px -> 0px, y: 35 -> 0, NO shadow) */}
               <blockquote
                 ref={kuralTamilRef}
                 lang="ta"
-                className="font-noto-serif-tamil text-[clamp(1.25rem,2.2vw,2rem)] leading-relaxed sm:leading-loose text-[#FAFAFA] font-medium"
-                style={{ letterSpacing: "0.01em" }}
+                className="font-noto-serif-tamil text-[clamp(1.35rem,2.4vw,2.25rem)] text-[#FAFAFA] font-medium tracking-wide"
+                style={{ letterSpacing: "0.02em" }}
               >
-                <span className="block sm:whitespace-nowrap">
+                <span className="block sm:whitespace-nowrap leading-[1.8] sm:leading-[1.9]">
                   இருந்தோம்பி இல்வாழ்வ தெல்லாம் விருந்தோம்பி
                 </span>
-                <span className="block sm:whitespace-nowrap mt-1">
+                <span className="block sm:whitespace-nowrap mt-4 sm:mt-5 leading-[1.8] sm:leading-[1.9]">
                   வேளாண்மை செய்தற் பொருட்டு.
                 </span>
               </blockquote>
@@ -282,7 +296,7 @@ export default function HomePage() {
               {/* Tier 2: Translation (SplitText word-by-word cascade) */}
               <p
                 ref={kuralEnglishRef}
-                className="font-space-mono text-xs sm:text-sm text-white/75 max-w-lg mt-5 leading-relaxed"
+                className="font-space-mono text-xs sm:text-sm text-white/80 max-w-xl mt-8 sm:mt-10 leading-relaxed sm:leading-loose tracking-wide"
               >
                 &ldquo;The entire virtue of establishing a home is to welcome guests with an open heart and extend generosity.&rdquo;
               </p>
@@ -290,7 +304,7 @@ export default function HomePage() {
               {/* Tier 3: Clean, unboxed monospace line (§MASTER DIRECTIVE) */}
               <div
                 ref={kuralMetaRef}
-                className="mt-6 font-space-mono text-[10px] sm:text-[11px] text-[#FFB84D]/80 tracking-[0.2em] uppercase"
+                className="mt-6 sm:mt-8 font-space-mono text-[10px] sm:text-[11px] text-[#FFB84D]/85 tracking-[0.22em] uppercase"
               >
                 THIRUKKURAL 81 // ADHIGAARAM 9
               </div>
@@ -323,6 +337,7 @@ export default function HomePage() {
                 </div>
 
                 <p
+                  ref={monolithTamilRef}
                   lang="ta"
                   style={{ letterSpacing: 0 }}
                   className="font-noto-serif-tamil text-sm sm:text-base text-neutral-400 leading-relaxed pt-2"
@@ -362,7 +377,7 @@ export default function HomePage() {
                 <h3 className="text-[clamp(2rem,3.8vw,3.75rem)] font-display font-medium text-white leading-snug tracking-tight">
                   &ldquo;A hearth on the banks of the Olentangy.&rdquo;
                 </h3>
-                <p className="mt-4 text-sm sm:text-base text-neutral-300 font-body leading-relaxed max-w-2xl">
+                <p ref={monolithPrologueRef} className="mt-4 text-sm sm:text-base text-neutral-300 font-body leading-relaxed max-w-2xl">
                   Born from the longing for home-cooked meals, late-night filter coffee, and the rhythm of Sangam verses beneath Midwest skies. We bridge ancient Tamil civilization with collegiate celebration, open dance floors, and lifelong kinship.
                 </p>
               </div>
@@ -373,6 +388,10 @@ export default function HomePage() {
                 <Link
                   href="/about"
                   onClick={playClick}
+                  onMouseEnter={() => {
+                    audioLayer.playTapeClack();
+                  }}
+                  data-cursor="bracket"
                   className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-7 hover:bg-white/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
@@ -400,6 +419,10 @@ export default function HomePage() {
                 <Link
                   href="/events"
                   onClick={playClick}
+                  onMouseEnter={() => {
+                    audioLayer.playTapeClack();
+                  }}
+                  data-cursor="bracket"
                   className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-7 hover:bg-white/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
@@ -427,6 +450,13 @@ export default function HomePage() {
                 <Link
                   href="/join"
                   onClick={playClick}
+                  onMouseEnter={() => {
+                    audioLayer.playTapeClack();
+                  }}
+                  onPointerDown={() => {
+                    audioLayer.playSubBassThud();
+                  }}
+                  data-cursor="bracket"
                   className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-7 hover:bg-white/[0.03] transition-[transform,color,background-color] duration-300 ease-out border-b border-white/10 lg:border-b-0"
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">

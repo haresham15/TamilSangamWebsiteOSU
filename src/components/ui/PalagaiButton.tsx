@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useAudio } from "@/context/AudioContext";
 import { useLocale } from "@/context/LocaleContext";
+import { audioLayer } from "@/utils/audioLayer";
 
 export interface PalagaiButtonProps {
   children?: React.ReactNode;
@@ -56,6 +57,28 @@ export const PalagaiButton: React.FC<PalagaiButtonProps> = ({
   const { playClick, playWoodClick } = useAudio();
   const { locale } = useLocale();
 
+  // Primary label logic
+  const mainLabel = primaryText || (typeof children === "string" ? children : "");
+  // Alternate label if user provided secondaryText
+  const altLabel = secondaryText;
+
+  const isPrimaryAction =
+    variant === "gold-foil" ||
+    variant === "primary" ||
+    (typeof mainLabel === "string" && mainLabel.toLowerCase().includes("join"));
+
+  const handlePointerDown = () => {
+    if (disabled) return;
+    if (isPrimaryAction) {
+      audioLayer.playSubBassThud();
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (disabled) return;
+    audioLayer.playTapeClack();
+  };
+
   const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
     if (disabled) return;
     try {
@@ -81,10 +104,6 @@ export const PalagaiButton: React.FC<PalagaiButtonProps> = ({
     lg: "px-7 py-3.5 text-sm min-h-[50px]",
   }[size];
 
-  // Primary label logic
-  const mainLabel = primaryText || (typeof children === "string" ? children : "");
-  // Alternate label if user provided secondaryText
-  const altLabel = secondaryText;
 
   const content = (
     <span className="relative z-10 flex items-center gap-2 font-mono font-bold uppercase tracking-wider select-none">
@@ -126,6 +145,9 @@ export const PalagaiButton: React.FC<PalagaiButtonProps> = ({
       <Link
         href={href}
         onClick={handleClick}
+        onMouseEnter={handleMouseEnter}
+        onPointerDown={handlePointerDown}
+        data-cursor="bracket"
         target={target}
         rel={rel}
         className={combinedClasses}
@@ -140,6 +162,9 @@ export const PalagaiButton: React.FC<PalagaiButtonProps> = ({
     <button
       type={type}
       onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onPointerDown={handlePointerDown}
+      data-cursor="bracket"
       disabled={disabled}
       className={combinedClasses}
       aria-label={ariaLabel || (typeof mainLabel === "string" ? mainLabel : undefined)}

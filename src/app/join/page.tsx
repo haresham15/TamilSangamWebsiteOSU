@@ -18,6 +18,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
+import { audioLayer } from "@/utils/audioLayer";
 
 // Dynamically load the R3F Nanban Hero Canvas without SSR
 const JoinHeroCanvas = dynamic(
@@ -181,6 +182,7 @@ export default function JoinPage() {
       {/* ========================================================================= */}
       <section
         id="nanban-gates-hero"
+        data-hero-container="true"
         aria-label="Nanban Campus Gates 3D Viewport"
         className="relative w-full overflow-hidden bg-transparent"
       >
@@ -506,6 +508,9 @@ export default function JoinPage() {
                   <button
                     type="button"
                     onClick={handleNextStep}
+                    onMouseEnter={() => audioLayer.playTapeClack()}
+                    onPointerDown={() => audioLayer.playSubBassThud()}
+                    data-cursor="bracket"
                     className="ticket-chamfer-tl-br inline-flex items-center gap-2 px-6 py-2.5 bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#6ee7b7] focus:outline-none focus:ring-2 focus:ring-white transition-[background-color,box-shadow,transform] duration-150 cursor-pointer shadow-[3px_3px_0px_#ffffff] hover:shadow-[4px_4px_0px_#ffffff] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#ffffff] hover:glow-halogen-mint"
                   >
                     <span>{locale === "ta" ? "அடுத்த படி" : "Next Step"}</span>
@@ -515,6 +520,9 @@ export default function JoinPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
+                    onMouseEnter={() => audioLayer.playTapeClack()}
+                    onPointerDown={() => audioLayer.playSubBassThud()}
+                    data-cursor="bracket"
                     className="ticket-chamfer-tl-br inline-flex items-center gap-2 px-8 py-3 bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#6ee7b7] focus:outline-none focus:ring-2 focus:ring-white transition-[background-color,box-shadow,transform] duration-150 disabled:opacity-50 cursor-pointer shadow-[4px_4px_0px_#ffffff] hover:shadow-[5px_5px_0px_#ffffff] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#ffffff] hover:glow-halogen-mint"
                   >
                     {isSubmitting ? (

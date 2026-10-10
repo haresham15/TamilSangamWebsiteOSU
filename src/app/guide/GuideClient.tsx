@@ -49,6 +49,8 @@ import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 import { GuideHero } from "@/components/guide-hero/GuideHero";
 import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 import type { RankedFaq } from "@/lib/faq-engagement/contracts";
+import { audioLayer } from "@/utils/audioLayer";
+import { initTerminalBootScramble } from "@/utils/scrambleTerminal";
 
 const FAQ_CATEGORIES = [
   "All",
@@ -117,6 +119,16 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
     return () => {
       ignore = true;
     };
+  }, []);
+
+  const guideLeadRef = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (guideLeadRef.current) {
+      initTerminalBootScramble(guideLeadRef.current, {
+        start: "top 80%",
+        duration: 0.8,
+      });
+    }
   }, []);
 
   // Synchronize board with selected FAQ via Zustand action (PRD §7)
@@ -332,7 +344,7 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
               ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் விதிமுறைகள், உறுப்புரிமை, மற்றும் அறிவுத் தளம்"
               : "Interactive Southern Railway split-flap engine connected live to OSU Tamil Sangam guidelines"}
           </p>
-          <p className="max-w-2xl mx-auto text-xs sm:text-sm text-[#4c3828] leading-relaxed font-body">
+          <p ref={guideLeadRef} className="max-w-2xl mx-auto text-xs sm:text-sm text-[#4c3828] leading-relaxed font-body">
             Select any question, guide chapter, or knowledge topic below to broadcast its verified policy
             directly to the 3D mechanical departure board above.
           </p>
@@ -373,6 +385,8 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
                 playWoodClick();
                 setActiveTab(tab.id);
               }}
+              onMouseEnter={() => audioLayer.playTapeClack()}
+              data-cursor="bracket"
               className={`min-h-[44px] px-5 py-2.5 rounded-none text-xs font-mono uppercase tracking-wider font-bold transition-all flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] active:scale-[0.98] ${
                 activeTab === tab.id
                   ? "bg-[#d4af37] text-[#0d0a08] shadow-[2px_2px_0px_#261d15]"

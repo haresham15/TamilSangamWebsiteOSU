@@ -1,53 +1,55 @@
 /**
- * Home Hero v3: "The Wreath Split" Architecture Constants
- * Single source of truth for all scroll dimensions, timing thresholds,
- * and layout overlap formulas (§PRD 5.3).
+ * Home Hero: "Peel & Flow" Architecture Constants (§PRD Home Hero)
+ * 
+ * Single source of truth for:
+ * 1. Pinned stage duration D (420dvh desktop, 360dvh mobile)
+ * 2. Overlap layout formulas (Monolith margin-top = -100dvh, ACT3_START = 1 - 100/D_vh)
+ * 3. 3-Act Scroll progression milestones
+ * 4. 3D World space layout and viewport calibration
  */
 
+import { WORLD_HV, WREATH_CY, WREATH_R_IN, WREATH_BAND_WIDTH, WREATH_GAP_RAD, WREATH_CROSS_RAD, STRAND_COUNT } from "./flowMath";
+export { WREATH_CROSS_RAD };
+
 export const HERO_D_VH = {
-  desktop: 300,
-  mobile: 260,
-} as const;
-
-export const HERO_TIMING = {
-  // Act I: Emblem Hold & Kolam Pulse
-  ACT1_HOLD_END: 0.08,
-
-  // Act II: Wreath Unzip & Thirukkural Reveal
-  ACT2_START: 0.08,
-  ACT2_END: 0.50,
-  ACT2_SPAN: 0.42, // (0.50 - 0.08)
-
-  // Act II: Thirukkural Tier Reveals (relative to local q in [0, 1])
-  KURAL_TIER1_START: 0.55,
-  KURAL_TIER1_END: 0.70,
-  KURAL_TIER2_START: 0.70,
-  KURAL_TIER2_END: 0.85,
-  KURAL_TIER3_START: 0.85,
-  KURAL_TIER3_END: 1.00,
-
-  // Emblem Exit (relative to local q in [0, 1])
-  EMBLEM_EXIT_END: 0.60,
-
-  // Act II Dwell: Reading pause with wreath formed
-  ACT2_DWELL_END: 0.62,
-
-  // Act III: Monolith Slate 1:1 Curtain Rise
-  ACT3_START: 0.62,
-  ACT3_COVER_COMPLETE: 0.953,
-  ACT3_SETTLE: 1.00,
+  desktop: 420,
+  mobile: 360,
 } as const;
 
 /**
- * Calculates the exact negative top margin for the Monolith section.
- * Natural 1:1 scroll moves the Monolith top edge into the viewport bottom
- * at p = ACT3_START (0.62), fully covering the pinned 100dvh stage at p = 0.953.
- * Formula: margin-top = -(1 - ACT3_START) * D
+ * Calculates ACT3_START based on pinned duration D:
+ * ACT3_START = 1 - 100 / D_vh (e.g. D = 420 -> 0.762, D = 360 -> 0.722)
  */
-export function getMonolithMarginVh(isMobile: boolean): number {
+export function getAct3Start(isMobile: boolean): number {
   const d = isMobile ? HERO_D_VH.mobile : HERO_D_VH.desktop;
-  return -((1 - HERO_TIMING.ACT3_START) * d); // -(1 - 0.62) * 300 = -114dvh
+  return 1 - 100 / d;
 }
+
+export const HERO_TIMING = {
+  // Act I: Kolam symmetry hold & ambient shimmer
+  IDLE_HOLD_END: 0.04,
+
+  // Act I -> II: Peel & Flow unravelling
+  FLOW_START: 0.04,
+  FLOW_END: 0.62,
+
+  // Act II: Thirukkural Tier Reveals
+  KURAL_TAMIL_START: 0.54,
+  KURAL_TAMIL_END: 0.58,
+  KURAL_ENG_START: 0.58,
+  KURAL_ENG_END: 0.62,
+  KURAL_CAPTION_START: 0.62,
+  KURAL_CAPTION_END: 0.66,
+
+  // Act II Dwell: Sacred reading pause inside formed wreath cradle
+  DWELL_START: 0.66,
+} as const;
+
+/**
+ * Standard Monolith negative top margin:
+ * Monolith margin-top = -100dvh (always)
+ */
+export const MONOLITH_MARGIN_TOP_VH = -100;
 
 export interface WreathParams {
   rIn: number;
@@ -64,23 +66,23 @@ export interface WreathParams {
 }
 
 export const WREATH_PARAMS_LANDSCAPE: WreathParams = {
-  rIn: 2.27,      // 0.30 * Hv (Hv approx 7.57 at dist 12, FOV 35)
-  rOut: 4.24,     // 0.56 * Hv
-  eps: 1.0,       // circular in landscape
-  phiGap: 0.2443, // 14 deg gap at top (radians)
-  delta: 0.5,     // zipper top-to-bottom stagger spread
-  ax: 0.22,       // mid-pose X push
-  az: 0.35,       // mid-pose Z push
-  zTip: 0.40,     // tips curl toward camera (+Z)
-  zBelly: 0.50,   // belly bows back (-Z)
-  kw: 0.55,       // tube radius compression factor
-  fOut: 0.70,     // outer line fade factor
+  rIn: 2.27,
+  rOut: 4.24,
+  eps: 1.0,
+  phiGap: 0.2443,
+  delta: 0.5,
+  ax: 0.22,
+  az: 0.35,
+  zTip: 0.40,
+  zBelly: 0.50,
+  kw: 0.55,
+  fOut: 0.70,
 };
 
 export const WREATH_PARAMS_PORTRAIT: WreathParams = {
   rIn: 1.95,
   rOut: 3.65,
-  eps: 1.45,      // elliptical extension for tall mobile screens
+  eps: 1.45,
   phiGap: 0.2443,
   delta: 0.5,
   ax: 0.16,
@@ -89,4 +91,13 @@ export const WREATH_PARAMS_PORTRAIT: WreathParams = {
   zBelly: 0.40,
   kw: 0.50,
   fOut: 0.75,
+};
+
+export {
+  WORLD_HV,
+  WREATH_CY,
+  WREATH_R_IN,
+  WREATH_BAND_WIDTH,
+  WREATH_GAP_RAD,
+  STRAND_COUNT,
 };

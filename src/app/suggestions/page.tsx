@@ -119,6 +119,7 @@ export default function SuggestionsPage() {
       {/* 1. Sticky Hero Container with 3D Blueprint Extrusion */}
       <section
         ref={containerRef}
+        data-hero-pinned="suggestions"
         className={`relative w-full ${
           isLiteMode ? "min-h-auto pt-28 pb-16" : "h-[100dvh]"
         } overflow-hidden flex flex-col justify-between select-none bg-transparent`}

@@ -51,28 +51,148 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
     const header = headerRef.current;
     if (!header) return;
 
-    const glassClasses = ["backdrop-blur-md", "bg-[#050201]/60", "border-white/10"];
-    const applyScrollState = (scrollY: number, direction: number) => {
-      const isPastThreshold = scrollY > 20;
-      header.classList.toggle("border-transparent", !isPastThreshold);
-      glassClasses.forEach((className) => header.classList.toggle(className, isPastThreshold));
-      header.classList.toggle("-translate-y-full", isPastThreshold && direction === 1);
-      header.classList.toggle("translate-y-0", !(isPastThreshold && direction === 1));
+    // Calculate when the hero animation on the current page is scrolled through one full time
+    const getHeroScrollThreshold = (): number => {
+      if (typeof window === "undefined") return 40;
+
+      // 1. Home page: 3-Act pinned Kolam Hero (Acts I & II finish, Act III curtain rises at ~0.64)
+      if (pathname === "/") {
+        const homePinned = document.querySelector<HTMLElement>(
+          '[data-hero-pinned="home"], #act-i-viewport-wrapper'
+        );
+        if (homePinned) {
+          const scrollDistance = homePinned.offsetHeight - window.innerHeight;
+          return Math.max(800, scrollDistance * 0.62);
+        }
+        return window.innerHeight * 2.0;
+      }
+
+      // 2. About page: Gopuram Z-axis flight pinned for 2200px
+      if (pathname === "/about") {
+        const aboutPinned = document.querySelector<HTMLElement>(
+          '[data-hero-pinned="about"], #gopuram-hero-wrapper'
+        );
+        if (aboutPinned) {
+          return 1900;
+        }
+        return 1800;
+      }
+
+      // 3. Ideas/Suggestions page: Blueprint pinned for 2200px
+      if (pathname === "/suggestions") {
+        const suggPinned = document.querySelector<HTMLElement>(
+          '[data-hero-pinned="suggestions"]'
+        );
+        if (suggPinned) {
+          return 1900;
+        }
+        return 1800;
+      }
+
+      // 4. Other pages with standard hero canvases/viewports (Events, Board, Gallery, Join, Guide)
+      const heroEl = document.querySelector<HTMLElement>(
+        '[data-hero-container="true"], #events-hero-trigger, #chola-darbar-hero, #nanban-gates-hero, #guide-station-hero, #gallery-hero, [data-hero-scope]'
+      );
+      if (heroEl) {
+        // Once scrolled through 75% of the hero element, it's considered scrolled through
+        return Math.max(200, heroEl.offsetHeight * 0.75);
+      }
+
+      // 5. Fallback for static/content-only pages without hero animations
+      return 30;
     };
 
-    const trigger = ScrollTrigger.create({
-      start: 0,
-      end: "max",
-      onUpdate: (self) => applyScrollState(self.scroll(), self.direction),
-    });
-    applyScrollState(window.scrollY, -1);
+    let heroThreshold = getHeroScrollThreshold();
 
-    return () => trigger.kill();
-  }, []);
+    const glassClasses = [
+      "backdrop-blur-md",
+      "bg-[#050201]/95",
+      "border-white/10",
+      "shadow-[0_4px_30px_rgba(0,0,0,0.5)]",
+    ];
+
+    const applyScrollState = (scrollY: number) => {
+      const isPastHero = scrollY >= heroThreshold;
+
+      if (isPastHero || isMobileMenuOpen) {
+        // Scrolled through the hero one full time: Navbar is FULLY VISIBLE & pinned!
+        // It NEVER hides on down-scroll!
+        header.classList.remove(
+          "-translate-y-full",
+          "opacity-0",
+          "pointer-events-none",
+          "bg-transparent",
+          "border-transparent"
+        );
+        header.classList.add("translate-y-0", "opacity-100", "pointer-events-auto");
+        glassClasses.forEach((cls) => header.classList.add(cls));
+      } else {
+        // Inside the hero animation: Navbar stays hidden to preserve full-bleed cinematic focus
+        header.classList.remove("translate-y-0", "opacity-100", "pointer-events-auto");
+        glassClasses.forEach((cls) => header.classList.remove(cls));
+        header.classList.add(
+          "-translate-y-full",
+          "opacity-0",
+          "pointer-events-none",
+          "bg-transparent",
+          "border-transparent"
+        );
+      }
+    };
+
+    // Recalculate on resize
+    const handleResize = () => {
+      heroThreshold = getHeroScrollThreshold();
+      applyScrollState(window.scrollY);
+    };
+
+    // Top-edge cursor hover reveal on desktop (for accessibility if user wants nav while in hero)
+    let isHoveringTop = false;
+    const handleMouseMove = (e: MouseEvent) => {
+      if (window.scrollY < heroThreshold && !isMobileMenuOpen) {
+        if (e.clientY <= 36 && !isHoveringTop) {
+          isHoveringTop = true;
+          header.classList.remove(
+            "-translate-y-full",
+            "opacity-0",
+            "pointer-events-none",
+            "bg-transparent",
+            "border-transparent"
+          );
+          header.classList.add("translate-y-0", "opacity-100", "pointer-events-auto");
+          glassClasses.forEach((cls) => header.classList.add(cls));
+        } else if (e.clientY > 80 && isHoveringTop) {
+          isHoveringTop = false;
+          applyScrollState(window.scrollY);
+        }
+      }
+    };
+
+    const handleScroll = () => {
+      applyScrollState(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+
+    // Initial check (with a small timeout to allow pinned layouts to mount)
+    applyScrollState(window.scrollY);
+    const tId = setTimeout(() => {
+      heroThreshold = getHeroScrollThreshold();
+      applyScrollState(window.scrollY);
+    }, 200);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handleMouseMove);
+      clearTimeout(tId);
+    };
+  }, [pathname, isMobileMenuOpen]);
 
   const handleLinkClick = () => {
     playClick();
@@ -97,7 +217,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
       <header
         id="global-floating-nav"
         ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-50 w-full border-b border-transparent bg-transparent translate-y-0 transition-[transform,background-color,border-color,backdrop-filter] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        className="fixed top-0 left-0 right-0 z-50 w-full border-b border-transparent bg-transparent -translate-y-full opacity-0 pointer-events-none transition-[transform,opacity,background-color,border-color,backdrop-filter] duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
       >
         <div className="max-w-[1440px] mx-auto flex items-center h-16 px-4 sm:px-6 relative">
 

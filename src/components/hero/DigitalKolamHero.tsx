@@ -9,7 +9,38 @@ import { useTier } from "@/components/providers/TierProvider";
 import { SceneRegistrar } from "@/director/wireframe";
 import { heroScrollProgress, heroDirectorState } from "@/engine/heroScrollStore";
 import { governor } from "@/engine/governor";
-import { buildSymmetricKolamHalves } from "./kolamGeometry";
+import { evalCamera, STRAND_COUNT, WREATH_CY, WREATH_R_IN } from "./flowMath";
+import {
+  generatePulliLattice,
+  generateStrandWaypoints,
+  buildResampledStrand,
+  buildStaticKolamMeshes,
+  buildCompositePath,
+  buildPathTextureBundle,
+  PulliDotLattice,
+} from "./pathBuilder";
+import { createPeelConveyorMaterial } from "./peelConveyorShader";
+import { TraditionalSideKolams } from "./TraditionalSideKolams";
+
+/**
+ * Camera Vertical Truck Glide (§PRD 5.2)
+ * Glides downward from y = 0 to y = -1.2 * Hv, with camZ 12 -> 11.2 and pitch -4 deg -> 0 deg.
+ */
+function HeroTruckCamera() {
+  const cameraRef = useRef<THREE.PerspectiveCamera>(null);
+
+  useSafeFrame((state) => {
+    const p = heroDirectorState.scrubActive
+      ? heroDirectorState.scrubProgress
+      : heroScrollProgress.current;
+
+    const { camY, camZ, pitchDeg } = evalCamera(p);
+    state.camera.position.set(0, camY, camZ);
+    state.camera.rotation.set(pitchDeg * (Math.PI / 180), 0, 0);
+  });
+
+  return <PerspectiveCamera ref={cameraRef} makeDefault position={[0, 0, 12]} fov={35} />;
+}
 
 /**
  * Shared Safe Frame Hook enforcing Safeguard 2 (Delta Clamping)
@@ -37,57 +68,39 @@ function smootherstep(x: number): number {
  * - Draw-on emergence transition factor
  * - Diagnostic Wireframe Companion for Director's Viewport (§6.3)
  */
+/**
+ * Kolam Gold Shader Material Patched via onBeforeCompile (§PRD 8.2)
+ * Retains complete Three.js PBR pipeline, HDR bloom emissive response, and fog.
+ * Injects:
+ * - Subtle travelling light pulse wave along the continuous woven threads
+ */
 function createSymmetricKolamMaterial() {
-  const uniforms = {
-    uTime: { value: 0 },
-    uDraw: { value: 0 },
-  };
-
-  const mat = new THREE.MeshStandardMaterial({
-    color: "#F6EED8",
-    emissive: new THREE.Color("#FFD270"),
-    emissiveIntensity: 0.50,
-    roughness: 0.30,
-    metalness: 0.18,
-    fog: true,
+  const customMaterial = new THREE.MeshStandardMaterial({
+    color: "#FFB84D",
+    metalness: 0.55,
+    roughness: 0.22,
+    emissive: "#FF9E1B",
+    emissiveIntensity: 0.20,
   });
+  customMaterial.defines = { USE_UV: "" };
 
-  mat.onBeforeCompile = (shader) => {
-    Object.assign(shader.uniforms, uniforms);
-
-    shader.vertexShader = `
-      uniform float uDraw;
-      attribute float aArc;
-      varying float vArc;
-    ` + shader.vertexShader;
-
-    shader.vertexShader = shader.vertexShader.replace(
-      "#include <begin_vertex>",
-      `
-      #include <begin_vertex>
-      vArc = aArc;
-      float drawFactor = uDraw >= 1.0 ? 1.0 : smoothstep(aArc, aArc + 0.08, uDraw);
-      transformed = position * drawFactor;
-      `
-    );
-
+  customMaterial.onBeforeCompile = (shader) => {
+    shader.uniforms.uTime = { value: 0 };
+    shader.uniforms.uScroll = { value: 0 };
     shader.fragmentShader = `
       uniform float uTime;
-      varying float vArc;
-    ` + shader.fragmentShader;
-
-    shader.fragmentShader = shader.fragmentShader.replace(
-      "#include <emissivemap_fragment>",
-      `
-      #include <emissivemap_fragment>
-      // Slow travelling light pulses along the continuous threads
-      float wave = sin(vArc * 6.283185 * 3.5 - uTime * 1.1) * 0.5 + 0.5;
-      float crest = smoothstep(0.90, 1.0, wave);
-      vec3 crestColor = vec3(1.0, 0.74, 0.32); // Temple amber gold
-      totalEmissiveRadiance *= (1.0 + 1.25 * crest);
-      totalEmissiveRadiance = mix(totalEmissiveRadiance, crestColor * 2.2, crest * 0.65);
+      uniform float uScroll;
+      ${shader.fragmentShader}
+    `.replace(
+      `#include <emissivemap_fragment>`,
+      `#include <emissivemap_fragment>
+       // Subtle travelling light pulse along the woven threads
+       float pulse = sin(vUv.x * 24.0 - uTime * 2.0);
+       float glow = smoothstep(0.65, 1.0, pulse) * 0.35;
+       totalEmissiveRadiance += vec3(1.0, 0.72, 0.25) * glow;
       `
     );
+    customMaterial.userData.shader = shader;
   };
 
   // Diagnostic wireframe material variant (§6.3)
@@ -97,74 +110,83 @@ function createSymmetricKolamMaterial() {
     toneMapped: false,
   });
 
-  wireMat.onBeforeCompile = (shader) => {
-    Object.assign(shader.uniforms, uniforms);
-    shader.vertexShader = `
-      uniform float uDraw;
-      attribute float aArc;
-      varying float vArc;
-    ` + shader.vertexShader;
-
-    shader.vertexShader = shader.vertexShader.replace(
-      "#include <begin_vertex>",
-      `
-      #include <begin_vertex>
-      vArc = aArc;
-      float drawFactor = uDraw >= 1.0 ? 1.0 : smoothstep(aArc, aArc + 0.08, uDraw);
-      transformed = position * drawFactor;
-      `
-    );
-  };
-
-  return { material: mat, wireMaterial: wireMat, uniforms };
+  return { material: customMaterial, wireMaterial: wireMat };
 }
 
 /**
- * Top-Severed Peeling Wreath Component (§MASTER DIRECTIVE)
- * Two symmetrical halves (Left and Right) that mate flush at scrollProgress = 0 with zero seam.
- * Rigged with double hinges at the bottom-center base [0, -5, 0] with mesh offset [0, 5, 0].
- * As scroll advances:
- * 1. Immediately disconnects exclusively at the top seam.
- * 2. Left hinge rotates z to -Math.PI * 0.55; Right hinge rotates z to +Math.PI * 0.55.
- * 3. Meshes bend downward (position.y -= scrollProgress * 3) and curve outward to form the Wreath cradle.
- * 4. Master Kolam group translates upward on Y from 0 to 9.2 (cinematic downward camera pan illusion).
+ * Stationary Grounded Pulli Points (§PRD 5.1 & 5.4)
+ * Small warm gold dots of the Pulli grid stay completely stationary in 3D world space.
+ * Extended vertically to cover y in [+0.6 Hv, -1.9 Hv] (~+4.54 to -14.38).
  */
-function TopSeveredKolamHeroMesh({ isMobile, tier }: { isMobile: boolean; tier: string }) {
-  const masterKolamGroupRef = useRef<THREE.Group>(null);
-  const leftHingeRef = useRef<THREE.Group>(null);
-  const rightHingeRef = useRef<THREE.Group>(null);
-  const leftMeshOffsetRef = useRef<THREE.Group>(null);
-  const rightMeshOffsetRef = useRef<THREE.Group>(null);
+function GroundedPulliPoints({ lattice }: { lattice: PulliDotLattice }) {
+  const dotsRef = useRef<THREE.InstancedMesh>(null);
+  const totalCount = lattice.dotCount * 2;
 
-  const leftDotsRef = useRef<THREE.InstancedMesh>(null);
-  const rightDotsRef = useRef<THREE.InstancedMesh>(null);
-
-  const introStartTimeRef = useRef<number | null>(null);
-
-  const radialSegments = tier === "A" ? 10 : 8;
-  const data = useMemo(
-    () => buildSymmetricKolamHalves(isMobile, radialSegments),
-    [isMobile, radialSegments]
-  );
-
-  const { material, wireMaterial, uniforms } = useMemo(
-    () => createSymmetricKolamMaterial(),
-    []
-  );
-
-  // Instanced sphere dot materials
   const dotGeo = useMemo(() => new THREE.SphereGeometry(0.026, 10, 8), []);
-  const dotMat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#FFF4D0",
-        emissive: "#FFC526",
-        emissiveIntensity: 0.45,
-        roughness: 0.25,
-        metalness: 0.6,
-      }),
-    []
-  );
+  const dotMat = useMemo(() => {
+    const mat = new THREE.MeshStandardMaterial({
+      color: "#FFF4D0",
+      emissive: "#FFC526",
+      emissiveIntensity: 0.45,
+      roughness: 0.25,
+      metalness: 0.6,
+    });
+
+    const uniforms = {
+      uP: { value: 0 },
+      uCenter: { value: new THREE.Vector2(0, WREATH_CY) },
+      uTextRadius: { value: 1.15 * WREATH_R_IN },
+    };
+    mat.userData.uniforms = uniforms;
+
+    mat.onBeforeCompile = (shader) => {
+      shader.uniforms.uP = uniforms.uP;
+      shader.uniforms.uCenter = uniforms.uCenter;
+      shader.uniforms.uTextRadius = uniforms.uTextRadius;
+
+      shader.vertexShader = `
+        varying vec2 vDotPos;
+        ${shader.vertexShader}
+      `.replace(
+        `#include <begin_vertex>`,
+        `#include <begin_vertex>
+         #ifdef USE_INSTANCING
+           vDotPos = (instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xy;
+         #else
+           vDotPos = position.xy;
+         #endif
+        `
+      );
+
+      shader.fragmentShader = `
+        uniform float uP;
+        uniform vec2 uCenter;
+        uniform float uTextRadius;
+        varying vec2 vDotPos;
+        ${shader.fragmentShader}
+      `.replace(
+        `#include <emissivemap_fragment>`,
+        `#include <emissivemap_fragment>
+         // PRD §8.4: Fade dot alpha/emissive inside radius 1.15 * R_in around C once wreath forms
+         float dotDist = length(vDotPos - uCenter);
+         float kuralFormT = smoothstep(0.42, 0.60, uP);
+         float insideVoid = 1.0 - smoothstep(uTextRadius * 0.70, uTextRadius, dotDist);
+         float dimFactor = mix(1.0, 0.12, kuralFormT * insideVoid);
+
+         // Soft glow pulse following peel front down the lattice
+         float peelFrontY = mix(4.5, -9.08, smoothstep(0.04, 0.60, uP));
+         float peelDist = abs(vDotPos.y - peelFrontY);
+         float pulse = exp(-peelDist * peelDist / 1.4) * (1.0 - kuralFormT * 0.85);
+
+         diffuseColor.rgb *= dimFactor;
+         totalEmissiveRadiance *= dimFactor;
+         totalEmissiveRadiance += vec3(1.0, 0.75, 0.3) * pulse * 0.35;
+        `
+      );
+    };
+
+    return mat;
+  }, []);
 
   const dotWireMat = useMemo(
     () =>
@@ -178,192 +200,144 @@ function TopSeveredKolamHeroMesh({ isMobile, tier }: { isMobile: boolean; tier: 
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
-  // Initialize initial dot matrices
   useEffect(() => {
-    if (leftDotsRef.current && rightDotsRef.current) {
-      // Left dots
-      for (let i = 0; i < data.leftDotCount; i++) {
-        const x = data.leftPulliPositions[i * 3];
-        const y = data.leftPulliPositions[i * 3 + 1];
-        const z = data.leftPulliPositions[i * 3 + 2];
-        dummy.position.set(x, y, z);
-        dummy.scale.setScalar(1);
-        dummy.updateMatrix();
-        leftDotsRef.current.setMatrixAt(i, dummy.matrix);
-      }
-      leftDotsRef.current.instanceMatrix.needsUpdate = true;
-
-      // Right dots
-      for (let i = 0; i < data.rightDotCount; i++) {
-        const x = data.rightPulliPositions[i * 3];
-        const y = data.rightPulliPositions[i * 3 + 1];
-        const z = data.rightPulliPositions[i * 3 + 2];
-        dummy.position.set(x, y, z);
-        dummy.scale.setScalar(1);
-        dummy.updateMatrix();
-        rightDotsRef.current.setMatrixAt(i, dummy.matrix);
-      }
-      rightDotsRef.current.instanceMatrix.needsUpdate = true;
+    if (!dotsRef.current) return;
+    let idx = 0;
+    // Left hemisphere pulli dots
+    for (let i = 0; i < lattice.dotCount; i++) {
+      dummy.position.set(
+        lattice.leftDots[i * 3],
+        lattice.leftDots[i * 3 + 1],
+        lattice.leftDots[i * 3 + 2]
+      );
+      dummy.scale.setScalar(1);
+      dummy.updateMatrix();
+      dotsRef.current.setMatrixAt(idx++, dummy.matrix);
     }
-  }, [data, dummy]);
-
-  // Hot loop execution (Safe Delta clamped)
-  useSafeFrame((state, safeDelta) => {
-    const time = state.clock.elapsedTime;
-    if (introStartTimeRef.current === null) {
-      introStartTimeRef.current = time;
+    // Right hemisphere pulli dots
+    for (let i = 0; i < lattice.dotCount; i++) {
+      dummy.position.set(
+        lattice.rightDots[i * 3],
+        lattice.rightDots[i * 3 + 1],
+        lattice.rightDots[i * 3 + 2]
+      );
+      dummy.scale.setScalar(1);
+      dummy.updateMatrix();
+      dotsRef.current.setMatrixAt(idx++, dummy.matrix);
     }
-    const startTime = introStartTimeRef.current ?? time;
-    const elapsedSinceIntro = time - startTime;
+    dotsRef.current.instanceMatrix.needsUpdate = true;
+  }, [lattice, dummy]);
 
-    // 1. Draw-on intro factor (0 -> 1 over 2.4s)
-    const targetDraw = Math.min(1.05, elapsedSinceIntro / 2.4);
-    uniforms.uDraw.value = THREE.MathUtils.lerp(uniforms.uDraw.value, targetDraw, 0.15);
-
-    // 2. Pulse waves with Director speed multiplier
-    const speedMult = heroDirectorState.speedMultiplier;
-    uniforms.uTime.value = time * speedMult;
-
-    // 3. Scroll progress (Director override if active, else live page scroll)
+  useSafeFrame(() => {
+    if (dotsRef.current) {
+      dotsRef.current.visible = heroDirectorState.dotsVisible;
+    }
     const p = heroDirectorState.scrubActive
       ? heroDirectorState.scrubProgress
       : heroScrollProgress.current;
-
-    // Act II progression: 0.00 -> 0.50 drives complete unravelling and wreath cradle
-    const q = THREE.MathUtils.clamp(p / 0.50, 0, 1);
-    const s = smootherstep(q);
-
-    // =========================================================================
-    // PHASE 2, ITEM 1: UNLINKING THE TOP SEAM (DOUBLE-HINGE TRANSFORMATIONS)
-    // =========================================================================
-    // Left Hinge (pivots outward to left)
-    // Left Hinge (pivots outward to left)
-    if (leftHingeRef.current) {
-      // Outward base movement as top unlinks
-      leftHingeRef.current.position.x = -1.4 * s;
-      leftHingeRef.current.position.y = -5.0 + 0.35 * s;
-
-      // Rotation: Z rolls from 0 to +Math.PI * 0.55 (peeling the left tip outward and downward)
-      leftHingeRef.current.rotation.z = Math.PI * 0.55 * s;
-      // 3D tactile depth roll: tips curl slightly toward camera and flare outward
-      leftHingeRef.current.rotation.y = -0.28 * Math.sin(Math.PI * s);
-      leftHingeRef.current.rotation.x = -0.16 * s;
-    }
-
-    // Right Hinge (pivots outward to right)
-    if (rightHingeRef.current) {
-      // Outward base movement as top unlinks
-      rightHingeRef.current.position.x = 1.4 * s;
-      rightHingeRef.current.position.y = -5.0 + 0.35 * s;
-
-      // Rotation: Z rolls from 0 to -Math.PI * 0.55 (peeling the right tip outward and downward)
-      rightHingeRef.current.rotation.z = -Math.PI * 0.55 * s;
-      // 3D tactile depth roll
-      rightHingeRef.current.rotation.y = 0.28 * Math.sin(Math.PI * s);
-      rightHingeRef.current.rotation.x = -0.16 * s;
-    }
-
-    // =========================================================================
-    // PHASE 2, ITEM 2: THE BEND (SIMULATED SPLINE UNROLL & MESH OFFSET)
-    // =========================================================================
-    // Translate meshes downward relative to hinges (position.y -= scrollProgress * 3)
-    const meshOffsetY = 5.0 - q * 3.0; // Dropping top corners down into the wreath cradle
-    const stretchX = 1.0 + 0.32 * Math.sin(Math.PI * s) + 0.12 * s;
-    const scaleZ = 1.0 + 0.35 * s;
-    const scaleY = 1.0 - 0.08 * s;
-
-    if (leftMeshOffsetRef.current) {
-      leftMeshOffsetRef.current.position.y = meshOffsetY;
-      leftMeshOffsetRef.current.scale.set(stretchX, scaleY, scaleZ);
-    }
-
-    if (rightMeshOffsetRef.current) {
-      rightMeshOffsetRef.current.position.y = meshOffsetY;
-      rightMeshOffsetRef.current.scale.set(stretchX, scaleY, scaleZ);
-    }
-
-    // =========================================================================
-    // PHASE 2, ITEM 3: CAMERA PAN (PARENT WEBGL SCENE TRANSLATION)
-    // =========================================================================
-    // Master Kolam group translates on Y: 0 -> 3.2, aligning the unrolled wreath
-    // at the bottom edge of the screen (Y ≈ -3.3 to -1.8) cradling Thirukkural 81
-    if (masterKolamGroupRef.current) {
-      masterKolamGroupRef.current.position.y = THREE.MathUtils.lerp(0, 3.2, s);
-
-      // Subtle breathing rotation during Act I idle (when closed at p = 0)
-      if (p < 0.02) {
-        masterKolamGroupRef.current.rotation.z = Math.sin(time * 0.35) * 0.015;
-      } else {
-        masterKolamGroupRef.current.rotation.z = 0;
-      }
-    }
-
-    // Dots visibility & draw scaling
-    const drawFactor = uniforms.uDraw.value;
-    const dotScale = Math.max(0.001, (1.0 - 0.25 * s) * drawFactor);
-
-    if (leftDotsRef.current) {
-      leftDotsRef.current.visible = heroDirectorState.dotsVisible;
-    }
-    if (rightDotsRef.current) {
-      rightDotsRef.current.visible = heroDirectorState.dotsVisible;
+    if (dotMat.userData.uniforms) {
+      dotMat.userData.uniforms.uP.value = p;
     }
   });
 
   return (
-    <group ref={masterKolamGroupRef} name="MasterKolamContainer" position={[0, 0, 0]}>
-      {/* =======================================================================
-          LEFT HALF HINGE: Pivot at bottom-center base [0, -5, 0]
-          ======================================================================= */}
-      <group ref={leftHingeRef} name="LeftHinge" position={[0, -5, 0]}>
-        <group ref={leftMeshOffsetRef} name="LeftMeshOffset" position={[0, 5, 0]}>
-          {/* Left Kolam Tube Mesh */}
-          <mesh
-            geometry={data.leftGeometry}
-            material={material}
-            userData={{ wireMaterial }}
-            castShadow
-            receiveShadow
-          />
-          {/* Left Pulli Dots */}
-          <instancedMesh
-            ref={leftDotsRef}
-            args={[dotGeo, dotMat, data.leftDotCount]}
-            userData={{ wireMaterial: dotWireMat }}
-          />
-        </group>
-      </group>
+    <instancedMesh
+      ref={dotsRef}
+      args={[dotGeo, dotMat, totalCount]}
+      userData={{ wireMaterial: dotWireMat }}
+      position={[0, 0, 0]}
+    />
+  );
+}
 
-      {/* =======================================================================
-          RIGHT HALF HINGE: Pivot at bottom-center base [0, -5, 0]
-          ======================================================================= */}
-      <group ref={rightHingeRef} name="RightHinge" position={[0, -5, 0]}>
-        <group ref={rightMeshOffsetRef} name="RightMeshOffset" position={[0, 5, 0]}>
-          {/* Right Kolam Tube Mesh */}
-          <mesh
-            geometry={data.rightGeometry}
-            material={material}
-            userData={{ wireMaterial }}
-            castShadow
-            receiveShadow
-          />
-          {/* Right Pulli Dots */}
-          <instancedMesh
-            ref={rightDotsRef}
-            args={[dotGeo, dotMat, data.rightDotCount]}
-            userData={{ wireMaterial: dotWireMat }}
-          />
-        </group>
+/**
+ * Peel & Flow Kolam Mesh — GPU Conveyor (§PRD 6, 7 & 8)
+ * Renders the 7 authentic dot-woven strands per half with zero-twist camera-aligned frames.
+ * Displaces vertices dynamically along composite path Pi_k(s) based on analytic feed s = f_k(p) - a.
+ * At p = 0.00, renders the pristine stationary weave.
+ * As p advances, lines peel exclusively at the top seam (V-notch) and flow downward into the wreath.
+ */
+function PeelAndFlowKolamMesh({ isMobile, tier }: { isMobile: boolean; tier: string }) {
+  const { lattice, rightGeometry, rightConveyor, leftConveyor } = useMemo(() => {
+    const lattice = generatePulliLattice(isMobile);
+    const strands = [];
+    const compositePaths = [];
+
+    for (let k = 0; k < STRAND_COUNT; k++) {
+      const waypoints = generateStrandWaypoints(k, STRAND_COUNT);
+      const strand = buildResampledStrand(waypoints, k, 0.02);
+      strands.push(strand);
+      compositePaths.push(buildCompositePath(strand, k, 0.02));
+    }
+
+    const bundle = buildPathTextureBundle(compositePaths, 4096);
+
+    const radialSegs = tier === "A" ? 10 : 8;
+    const dsTube = tier === "A" ? 0.045 : 0.07;
+    const { rightGeometry } = buildStaticKolamMeshes(
+      strands,
+      radialSegs,
+      dsTube,
+      0.024
+    );
+
+    const rightConveyor = createPeelConveyorMaterial(bundle, +0.03);
+    const leftConveyor = createPeelConveyorMaterial(bundle, -0.03);
+
+    return { lattice, rightGeometry, rightConveyor, leftConveyor };
+  }, [isMobile, tier]);
+
+  // Hot loop execution (clamped delta)
+  useSafeFrame((state) => {
+    const time = state.clock.elapsedTime;
+    const speedMult = heroDirectorState.speedMultiplier;
+    const p = heroDirectorState.scrubActive
+      ? heroDirectorState.scrubProgress
+      : heroScrollProgress.current;
+
+    rightConveyor.uniforms.uTime.value = time * speedMult;
+    rightConveyor.uniforms.uP.value = p;
+
+    leftConveyor.uniforms.uTime.value = time * speedMult;
+    leftConveyor.uniforms.uP.value = p;
+  });
+
+  return (
+    <>
+      {/* Grounded Stationary Pulli Dots Lattice */}
+      <GroundedPulliPoints lattice={lattice} />
+
+      {/* Symmetric Dot-Woven Kolam Halves Driven by GPU Conveyor */}
+      <group name="PeelAndFlowKolamContainer" position={[0, 0, 0]}>
+        <mesh
+          name="RightHalf"
+          geometry={rightGeometry}
+          material={rightConveyor.material}
+          userData={{ wireMaterial: rightConveyor.wireMaterial }}
+          scale={[1, 1, 1]}
+          castShadow
+          receiveShadow
+        />
+        <mesh
+          name="LeftHalf"
+          geometry={rightGeometry}
+          material={leftConveyor.material}
+          userData={{ wireMaterial: leftConveyor.wireMaterial }}
+          scale={[-1, 1, 1]}
+          castShadow
+          receiveShadow
+        />
       </group>
-    </group>
+    </>
   );
 }
 
 /**
  * 3D Golden "அ" Emblem Component (§MASTER DIRECTIVE)
  * High-fidelity single-glyph Tamil letter "அ" from Mukta Malar font,
- * suspended at [0, 0, 0] inside the protected central void (R >= 2.05).
- * At scrollProgress 0.0 -> 0.38: translates z from 0 -> -30 and dissolves opacity to 0.
+ * suspended stationary at [0, 0, 0] inside the protected central void.
+ * - Stays completely stagnant at its coordinates without shrinking or flying away.
+ * - Fades out its opacity smoothly between scrollProgress 0.00 -> 0.35.
  */
 function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
@@ -388,14 +362,6 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
     const startTime = introStartRef.current ?? time;
     const elapsed = time - startTime;
 
-    const p = heroDirectorState.scrubActive
-      ? heroDirectorState.scrubProgress
-      : heroScrollProgress.current;
-
-    // Kinematics: Exits cleanly over scrollProgress 0.0 -> 0.38
-    const tExit = THREE.MathUtils.clamp(p / 0.38, 0, 1);
-    const sExit = THREE.MathUtils.smoothstep(tExit, 0, 1);
-
     if (groupRef.current) {
       // Intro emergence: from z = -8 to z = 0 over 1.8s
       let introZ = 0;
@@ -404,22 +370,18 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
         introZ = THREE.MathUtils.lerp(-8, 0, THREE.MathUtils.smoothstep(introT, 0, 1));
       }
 
-      // Idle float (damped as emblem exits)
-      const floatFactor = 1.0 - sExit;
-      const floatY = Math.sin(time * 1.05) * 0.08 * floatFactor;
-      const wobbleY = Math.sin(time * 0.75) * 0.07 * floatFactor; // ±4 deg wobble
-      const tiltX = Math.sin(time * 0.50) * 0.03 * floatFactor;
+      // World-static with micro-motion (A <= 0.04, tilt <= 3 deg, §PRD 5.1 & 5.3)
+      // NO z-recede, NO fade. Leaves the frame purely because the camera descends.
+      const floatY = Math.sin(time * 1.05) * 0.03;
+      const wobbleY = Math.sin(time * 0.75) * 0.02;
+      const tiltX = Math.sin(time * 0.50) * 0.015;
 
-      // Scroll recession: deep into fog to z = -30 (§MASTER DIRECTIVE)
-      const scrollZ = THREE.MathUtils.lerp(0, -30, sExit * sExit);
-
-      groupRef.current.position.set(0, floatY, introZ + scrollZ);
+      groupRef.current.position.set(0, floatY, introZ);
       groupRef.current.rotation.set(tiltX, wobbleY, 0);
 
-      // Material dissolve to 0 opacity
       if (materialRef.current) {
-        materialRef.current.opacity = 1.0 - sExit;
-        materialRef.current.transparent = true;
+        materialRef.current.opacity = 1.0;
+        materialRef.current.transparent = false;
       }
     }
   });
@@ -540,7 +502,7 @@ export function DigitalKolamHero() {
           <SceneRegistrar />
           <color attach="background" args={["#050201"]} />
           <fogExp2 attach="fog" args={["#050201", 0.03]} />
-          <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={35} />
+          <HeroTruckCamera />
 
           {/* Local Lightformer Environment rendered once (frames={1}, zero CDN dependency) */}
           <Environment frames={1} resolution={256} background={false}>
@@ -580,8 +542,11 @@ export function DigitalKolamHero() {
           {/* Ambient Floating Dust Motes */}
           <DustMotes isMobile={isMobile} tier={tier} />
 
-          {/* Top-Severed Peeling Wreath Kolam Halves (§MASTER DIRECTIVE) */}
-          <TopSeveredKolamHeroMesh isMobile={isMobile} tier={tier} />
+          {/* Peel & Flow Kolam Halves (§PRD Home Hero) */}
+          <PeelAndFlowKolamMesh isMobile={isMobile} tier={tier} />
+
+          {/* Traditional Royal Purple Stationary Flanking Kolams */}
+          <TraditionalSideKolams isMobile={isMobile} tier={tier} />
 
           {/* Golden "அ" Emblem in Protected Central Void (R >= 2.05) */}
           <GoldenTamilEmblem isMobile={isMobile} />

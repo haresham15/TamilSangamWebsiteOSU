@@ -26,6 +26,8 @@ import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 import { GalleryHero } from "@/components/gallery-hero/GalleryHero";
 import { ImageGridView } from "@/components/gl/planes/ImageGridView";
 import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { NleTimelineLightbox } from "@/components/gallery/NleTimelineLightbox";
+import { audioLayer } from "@/utils/audioLayer";
 
 
 const containerVariants: Variants = {
@@ -136,7 +138,9 @@ export default function GalleryPage() {
   return (
     <div className="w-full bg-transparent min-h-screen text-left font-body">
       {/* 3D Fretboard Highway Hero (§0 - §4) */}
-      <GalleryHero />
+      <div data-hero-container="true" id="gallery-hero" className="w-full relative">
+        <GalleryHero />
+      </div>
 
       {/* Color Gradient Transition from 3D Fretboard Sunset (#1F0A05) to Warm Cream Archive */}
       <HeroGradientTransition variant="gallery" className="-mt-32 relative z-20" />
@@ -433,9 +437,12 @@ export default function GalleryPage() {
                     layoutId={`photo-card-${photo.id}`}
                     data-plane-item
                     data-plane-id={photo.id}
+                    data-cursor="bracket"
                     className="relative aspect-[4/3] overflow-hidden group cursor-pointer data-[gl-ready=true]:bg-transparent bg-purple-950/10 border-2 border-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:shadow-[4px_4px_0px_#55CCA2] hover:border-[#55CCA2] transition-all duration-200"
+                    onMouseEnter={() => audioLayer.playTapeClack(0.25)}
                     onClick={() => {
                       playClick();
+                      audioLayer.playTapeClack(0.5);
                       setSelectedPhoto(photo);
                     }}
                   >
@@ -474,8 +481,11 @@ export default function GalleryPage() {
               <button
                 onClick={() => {
                   playClick();
+                  audioLayer.playTapeClack(0.4);
                   setVisibleCount((prev) => prev + 24);
                 }}
+                onMouseEnter={() => audioLayer.playTapeClack(0.2)}
+                data-cursor="bracket"
                 className="px-8 py-3.5 btn-sangam-white font-mono font-bold text-xs uppercase tracking-wider"
               >
                 Load More Photos ({filteredPhotos.length - visibleCount} Remaining) →
@@ -485,113 +495,16 @@ export default function GalleryPage() {
         </>
       )}
 
-      {/* Photo Lightbox Shared Element Modal: Architectural Exhibition Box */}
-      <AnimatePresence>
-        {selectedPhoto && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#250d38]/90 backdrop-blur-xl"
-            onClick={() => setSelectedPhoto(null)}
-          >
-            <motion.div
-              layoutId={`photo-card-${selectedPhoto.id}`}
-              transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="w-full max-w-5xl bg-[#1c082b] border-2 border-[#55CCA2] p-6 shadow-[8px_8px_0px_#55CCA2] relative text-left"
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-            >
-              {/* Close Button */}
-              <button
-                onClick={() => setSelectedPhoto(null)}
-                className="absolute top-4 right-4 w-10 h-10 min-w-[40px] min-h-[40px] border-2 border-[#55CCA2] bg-[#250d38] hover:bg-[#34144e] text-white z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] transition-[background-color,transform] duration-150 active:scale-95 flex items-center justify-center cursor-pointer shadow-[2px_2px_0px_#55CCA2]"
-                aria-label="Close photo lightbox"
-              >
-                <X className="w-5 h-5 text-[#55CCA2]" />
-              </button>
-
-              {/* Prev / Next Navigation Buttons */}
-              <button
-                onClick={handlePrevPhoto}
-                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-11 h-11 min-w-[44px] min-h-[44px] bg-[#250d38] hover:bg-[#34144e] text-white border-2 border-[#55CCA2] z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] active:scale-95 transition-[background-color,transform,box-shadow] duration-150 flex items-center justify-center shadow-[3px_3px_0px_#55CCA2] cursor-pointer"
-                aria-label="Previous photo"
-              >
-                <ChevronLeft className="w-5 h-5 text-[#55CCA2]" />
-              </button>
-              <button
-                onClick={handleNextPhoto}
-                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-11 h-11 min-w-[44px] min-h-[44px] bg-[#250d38] hover:bg-[#34144e] text-white border-2 border-[#55CCA2] z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] active:scale-95 transition-[background-color,transform,box-shadow] duration-150 flex items-center justify-center shadow-[3px_3px_0px_#55CCA2] cursor-pointer"
-                aria-label="Next photo"
-              >
-                <ChevronRight className="w-5 h-5 text-[#55CCA2]" />
-              </button>
-
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-                <div className="lg:col-span-8 relative h-80 sm:h-[480px] border-2 border-white/20 bg-black/60 overflow-hidden shadow-inner">
-                  <Image
-                    src={selectedPhoto.imageUrl}
-                    alt={selectedPhoto.titleEn}
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 1024px) 100vw, 850px"
-                    priority
-                  />
-                </div>
-
-                <div className="lg:col-span-4 space-y-4 text-white">
-                  <div className="text-xs font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
-                    Photo {currentPhotoIndex + 1} of {filteredPhotos.length}
-                  </div>
-
-                  <h3 className="text-2xl font-bold text-white font-display">
-                    {locale === "ta" ? selectedPhoto.titleTa : selectedPhoto.titleEn}
-                  </h3>
-                  <p className="text-xs text-purple-100/80 leading-relaxed font-body">
-                    {locale === "ta" ? selectedPhoto.captionTa : selectedPhoto.captionEn}
-                  </p>
-
-                  <div className="text-xs font-mono text-purple-200/70 space-y-1 pt-2 border-t border-white/10">
-                    <p>Photographer: {selectedPhoto.photographer}</p>
-                    <p>Event Date: {selectedPhoto.eventDate}</p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {selectedPhoto.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 border border-purple-400/40 bg-purple-950/70 text-[10px] font-mono text-[#55CCA2] font-bold uppercase"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                    <a
-                      href={selectedPhoto.imageUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-mono text-[#55CCA2] hover:underline flex items-center gap-1.5 font-bold uppercase tracking-wider"
-                    >
-                      <Maximize2 className="w-3.5 h-3.5" />
-                      <span>Full Resolution →</span>
-                    </a>
-
-                    <button
-                      onClick={() => setIsRemovalModalOpen(true)}
-                      className="text-[11px] font-mono text-red-300 hover:text-red-200 hover:underline flex items-center gap-1"
-                    >
-                      <ShieldAlert className="w-3.5 h-3.5" />
-                      <span>Request Removal</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* DaVinci Resolve NLE Timeline Lightbox (§PHASE 3) */}
+      {selectedPhoto && (
+        <NleTimelineLightbox
+          photo={selectedPhoto}
+          photos={filteredPhotos}
+          onSelectPhoto={(p) => setSelectedPhoto(p)}
+          onClose={() => setSelectedPhoto(null)}
+          onRequestRemoval={() => setIsRemovalModalOpen(true)}
+        />
+      )}
 
       {/* Privacy Removal Request Modal: Architectural Alert Box */}
       {isRemovalModalOpen && (

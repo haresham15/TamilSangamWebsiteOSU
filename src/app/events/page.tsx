@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, Variants } from "framer-motion";
 import { EVENTS } from "@/data/events";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
+import { audioLayer } from "@/utils/audioLayer";
+import { DraggableMemoryArchive } from "@/components/events/DraggableMemoryArchive";
 import { 
   Calendar, 
   MapPin, 
@@ -18,25 +19,7 @@ import { CulturalGlossaryTerm } from "@/components/ui/CulturalGlossaryTerm";
 import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
 import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1,
-    },
-  },
-};
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const },
-  },
-};
 
 import dynamic from "next/dynamic";
 
@@ -66,6 +49,7 @@ export default function EventsPage() {
       {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene (Festival Arena) */}
       <div
         id="events-hero-trigger"
+        data-hero-container="true"
         className="w-full h-[100dvh] relative z-10 overflow-hidden bg-transparent"
       >
         <EventsGen3Canvas />
@@ -150,19 +134,14 @@ export default function EventsPage() {
             </div>
           </div>
 
-          {/* 2. Events Main Feed with Parent Variant Sequencing */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="space-y-8 mb-24"
-          >
+          {/* 2. Events Main Feed: Dossier Ribbons with Tactile Hardware Clack */}
+          <div className="space-y-8 mb-24">
             {filteredEvents.map((evt) => (
-              <motion.div
+              <div
                 key={evt.slug}
-                variants={itemVariants}
-                layout
-                className="rounded-none border border-[#B5A642]/35 bg-white p-6 sm:p-8 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.22)] hover:border-[#FFB84D] transition-all duration-300 ease-out grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left relative overflow-hidden"
+                onMouseEnter={() => audioLayer.playTapeClack()}
+                data-cursor="bracket"
+                className="dossier-ribbon rounded-none border border-[#B5A642]/35 bg-white p-6 sm:p-8 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.22)] hover:border-[#FFB84D] transition-all duration-300 ease-out grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left relative overflow-hidden"
               >
                 {/* Perforated vertical railway ticket divider for desktop */}
                 <div className="hidden lg:block absolute left-[41.66%] top-0 bottom-0 w-0 border-r-2 border-dashed border-[#B5A642]/35 pointer-events-none" />
@@ -238,12 +217,17 @@ export default function EventsPage() {
                     />
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
 
-          {/* 3. Signature Feature: Events Hall of Fame (Hover Swap Poster-to-Photo Grid) */}
-          <div id="hall-of-fame" className="pt-12 border-t-2 border-purple-200 relative z-10">
+          {/* 3. Physical Physics: GSAP Draggable Memory Archive (§PHASE 4) */}
+          <div id="memory-archive" className="pt-12 mb-16 border-t border-[#B5A642]/30 relative z-10">
+            <DraggableMemoryArchive />
+          </div>
+
+          {/* 4. Signature Feature: Events Hall of Fame (Hover Swap Poster-to-Photo Grid) */}
+          <div id="hall-of-fame" className="pt-8 border-t border-[#B5A642]/20 relative z-10">
             <div className="max-w-2xl mb-10">
               <h2 className="text-2xl sm:text-4xl font-extrabold text-[#250d38] font-display tracking-tight">
                 {locale === "ta" ? "புகழ் அரங்கம் · Events Hall of Fame" : "Events Hall of Fame"}
@@ -259,6 +243,8 @@ export default function EventsPage() {
                   key={evt.slug}
                   href={`/events/${evt.slug}`}
                   onClick={playClick}
+                  onMouseEnter={() => audioLayer.playTapeClack()}
+                  data-cursor="bracket"
                   className="group relative h-80 overflow-hidden border border-[#B5A642]/40 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out block rounded-none"
                 >
                   {/* Base Poster at rest */}

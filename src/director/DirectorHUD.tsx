@@ -258,14 +258,14 @@ export function DirectorHUD() {
                   className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold ${
                     (heroScrubActive ? heroScrubProgress : heroScrollProgress.current) < 0.16
                       ? "bg-amber-500/20 text-[#FFB84D] border border-[#FFB84D]/40"
-                      : (heroScrubActive ? heroScrubProgress : heroScrollProgress.current) <= 0.50
+                      : (heroScrubActive ? heroScrubProgress : heroScrollProgress.current) <= 0.64
                       ? "bg-emerald-500/20 text-[#55CCA2] border border-[#55CCA2]/40"
                       : "bg-purple-500/20 text-[#A78BFA] border border-[#A78BFA]/40"
                   }`}
                 >
-                  {(heroScrubActive ? heroScrubProgress : heroScrollProgress.current) < 0.16
+                  {(heroScrubActive ? heroScrubProgress : heroScrollProgress.current) < 0.18
                     ? "ACT I: SIKKU"
-                    : (heroScrubActive ? heroScrubProgress : heroScrollProgress.current) <= 0.50
+                    : (heroScrubActive ? heroScrubProgress : heroScrollProgress.current) <= 0.64
                     ? "ACT II: WREATH"
                     : "ACT III: MONOLITH"}
                 </span>
@@ -320,24 +320,24 @@ export function DirectorHUD() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => setHeroScrubProgress(0.20)}
+                        onClick={() => setHeroScrubProgress(0.25)}
                         className="px-1 py-0.5 text-[8px] bg-neutral-800 hover:bg-[#00ff41]/20 border border-neutral-700 hover:border-[#00ff41]/50 text-neutral-300 rounded text-center transition-colors"
                       >
-                        0.2 Sever
+                        0.25 Sever
                       </button>
                       <button
                         type="button"
-                        onClick={() => setHeroScrubProgress(0.40)}
+                        onClick={() => setHeroScrubProgress(0.50)}
                         className="px-1 py-0.5 text-[8px] bg-neutral-800 hover:bg-[#00ff41]/20 border border-neutral-700 hover:border-[#00ff41]/50 text-neutral-300 rounded text-center transition-colors"
                       >
-                        0.4 Wreath
+                        0.50 Wreath
                       </button>
                       <button
                         type="button"
-                        onClick={() => setHeroScrubProgress(0.70)}
+                        onClick={() => setHeroScrubProgress(0.75)}
                         className="px-1 py-0.5 text-[8px] bg-neutral-800 hover:bg-[#00ff41]/20 border border-neutral-700 hover:border-[#00ff41]/50 text-neutral-300 rounded text-center transition-colors"
                       >
-                        0.7 Monolith
+                        0.75 Monolith
                       </button>
                     </div>
                   </div>

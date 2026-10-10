@@ -1077,3 +1077,23 @@ h1, h2, h3, h4, .font-display, .font-serif {
   pointer-events: auto;
 }
 
+/* =========================================================================
+   Phase 5: The Viewfinder Cursor (Global Architectural Override)
+   Only active for devices with fine pointer (mouse/trackpad), never touch.
+   ========================================================================= */
+@media (hover: hover) and (pointer: fine) {
+  html,
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  [role="button"],
+  [data-cursor="bracket"],
+  .cursor-pointer {
+    cursor: none !important;
+  }
+}
+
+

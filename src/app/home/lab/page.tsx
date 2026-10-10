@@ -2,190 +2,318 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { PerspectiveCamera, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import {
-  WREATH_PARAMS_LANDSCAPE,
-  WREATH_PARAMS_PORTRAIT,
-  WreathParams,
-} from "@/components/hero/homeHero.constants";
+  calcStrandFeed,
+  calcPeelLift,
+  evalCamera,
+  evalWreathPoint,
+  calcWreathLaneLength,
+  solveLaneRippleAmplitude,
+  WORLD_HV,
+  STRAND_COUNT,
+  WREATH_GAP_RAD,
+  WREATH_CY,
+  WREATH_R_IN,
+  WREATH_BAND_WIDTH,
+} from "@/components/hero/flowMath";
 import {
-  evalDeformedCenterline,
-  evalDeformedTubeVertex,
-  zipperOpenness,
-} from "@/components/hero/wreathMath";
+  generatePulliLattice,
+  generateStrandWaypoints,
+  buildResampledStrand,
+  buildStaticKolamMeshes,
+  buildCompositePath,
+  buildPathTextureBundle,
+} from "@/components/hero/pathBuilder";
+import { createPeelConveyorMaterial } from "@/components/hero/peelConveyorShader";
+import {
+  HERO_D_VH,
+  HERO_TIMING,
+  getAct3Start,
+} from "@/components/hero/homeHero.constants";
+
+interface StrandVisualData {
+  index: number;
+  rank: number;
+  L: number;
+  laneRadius: number;
+  Ak: number;
+  finalLaneLen: number;
+  feed: number;
+  sTail: number;
+  normalizedX: number;
+  lanePoints: THREE.Vector3[];
+}
+
+function LabConveyorController({
+  p,
+  rightConveyor,
+  leftConveyor,
+}: {
+  p: number;
+  rightConveyor: any;
+  leftConveyor: any;
+}) {
+  useFrame((state) => {
+    const time = state.clock.elapsedTime;
+    if (rightConveyor?.uniforms) {
+      rightConveyor.uniforms.uP.value = p;
+      rightConveyor.uniforms.uTime.value = time;
+    }
+    if (leftConveyor?.uniforms) {
+      leftConveyor.uniforms.uP.value = p;
+      leftConveyor.uniforms.uTime.value = time;
+    }
+  });
+  return null;
+}
 
 export default function HomeLabPage() {
   const [p, setP] = useState(0.0);
-  const [usePortrait, setUsePortrait] = useState(false);
-  const [wireframe, setWireframe] = useState(false);
-  const [showCenterline, setShowCenterline] = useState(true);
+  const [followCamera, setFollowCamera] = useState(true);
+  const [showWeave, setShowWeave] = useState(true);
+  const [showLanes, setShowLanes] = useState(true);
+  const [showDots, setShowDots] = useState(true);
 
-  // Tunable parameters
-  const defaultParams = usePortrait ? WREATH_PARAMS_PORTRAIT : WREATH_PARAMS_LANDSCAPE;
-  const [rIn, setRIn] = useState(defaultParams.rIn);
-  const [rOut, setROut] = useState(defaultParams.rOut);
-  const [eps, setEps] = useState(defaultParams.eps);
-  const [phiGap, setPhiGap] = useState(defaultParams.phiGap);
-  const [delta, setDelta] = useState(defaultParams.delta);
-  const [ax, setAx] = useState(defaultParams.ax);
-  const [az, setAz] = useState(defaultParams.az);
-  const [zTip, setZTip] = useState(defaultParams.zTip);
-  const [zBelly, setZBelly] = useState(defaultParams.zBelly);
-  const [kw, setKw] = useState(defaultParams.kw);
-  const [fOut, setFOut] = useState(defaultParams.fOut);
+  // Camera coordinates computed from p
+  const cam = useMemo(() => evalCamera(p), [p]);
 
-  // Compute Act II local q from hero scroll progress p (0.08 -> 0.50)
-  const q = Math.max(0, Math.min(1, (p - 0.08) / 0.42));
+  // GPU Conveyor & Meshes from pathBuilder
+  const { rightGeometry, rightConveyor, leftConveyor } = useMemo(() => {
+    const strands = [];
+    const compositePaths = [];
+    for (let k = 0; k < STRAND_COUNT; k++) {
+      const waypoints = generateStrandWaypoints(k, STRAND_COUNT);
+      const strand = buildResampledStrand(waypoints, k, 0.02);
+      strands.push(strand);
+      compositePaths.push(buildCompositePath(strand, k, 0.02));
+    }
+    const bundle = buildPathTextureBundle(compositePaths, 4096);
+    const { rightGeometry } = buildStaticKolamMeshes(strands, 10, 0.045, 0.024);
+    const rightConveyor = createPeelConveyorMaterial(bundle, +0.03);
+    const leftConveyor = createPeelConveyorMaterial(bundle, -0.03);
+    return { rightGeometry, rightConveyor, leftConveyor };
+  }, []);
 
-  const currentParams: WreathParams = useMemo(
-    () => ({
-      rIn,
-      rOut,
-      eps,
-      phiGap,
-      delta,
-      ax,
-      az,
-      zTip,
-      zBelly,
-      kw,
-      fOut,
-    }),
-    [rIn, rOut, eps, phiGap, delta, ax, az, zTip, zBelly, kw, fOut]
-  );
+  // Sync scroll progress p to GPU conveyor materials
+  React.useEffect(() => {
+    if (rightConveyor) {
+      rightConveyor.uniforms.uP.value = p;
+    }
+    if (leftConveyor) {
+      leftConveyor.uniforms.uP.value = p;
+    }
+  }, [p, rightConveyor, leftConveyor]);
 
-  // Synthetic sample curves to simulate the kolam halves
-  const linesData = useMemo(() => {
-    const numCurves = 12;
-    const pointsPerCurve = 64;
-    const halfWidth = 5.0;
-    const viewHeight = 7.5;
+  // Synthetic strands with solved wreath lanes
+  const strandsData: StrandVisualData[] = useMemo(() => {
+    const strands: StrandVisualData[] = [];
 
-    const curves: { pointsRight: THREE.Vector3[]; pointsLeft: THREE.Vector3[] }[] = [];
+    const nu = 12;
 
-    for (let c = 0; c < numCurves; c++) {
-      const sBase = (c + 0.5) / numCurves;
-      const ptsR: THREE.Vector3[] = [];
-      const ptsL: THREE.Vector3[] = [];
+    for (let k = 0; k < STRAND_COUNT; k++) {
+      const rank = k / (STRAND_COUNT - 1);
+      const L = 1.95 * WORLD_HV + k * 0.08;
+      const laneRadius = WREATH_R_IN + 0.03 * WORLD_HV + rank * 0.17 * WORLD_HV;
+      const psi = (k * Math.PI) / 3;
 
-      for (let i = 0; i <= pointsPerCurve; i++) {
-        const t = i / pointsPerCurve;
-        // Flat position in right half
-        const s = Math.min(1, sBase + Math.sin(t * Math.PI * 4) * 0.12);
-        const F: { x: number; y: number; z: number } = {
-          x: s * halfWidth,
-          y: viewHeight * (0.5 - t),
-          z: Math.sin(t * Math.PI * 6) * 0.06,
-        };
+      // Solve ripple amplitude so lane arc length == L
+      const { Ak, finalLength } = solveLaneRippleAmplitude(
+        L,
+        laneRadius,
+        nu,
+        psi,
+        0.35,
+        WREATH_GAP_RAD
+      );
 
-        const defR = evalDeformedCenterline(
-          F,
-          s,
-          t,
-          q,
-          halfWidth,
-          viewHeight,
-          currentParams
+      // Feed at current scroll p
+      const totalFeed = L + 4.5; // Weave exit + channel travel
+      const { feed, normalizedX } = calcStrandFeed(p, rank, totalFeed);
+      const sTail = feed - L;
+
+      // Sample lane arc points
+      const lanePoints: THREE.Vector3[] = [];
+      const numPts = 64;
+      const startTh = Math.PI;
+      const endTh = 2 * Math.PI - WREATH_GAP_RAD;
+      for (let i = 0; i <= numPts; i++) {
+        const th = startTh + (i / numPts) * (endTh - startTh);
+        lanePoints.push(
+          evalWreathPoint(th, laneRadius, Ak, nu, psi, WREATH_CY, 0.03, WREATH_GAP_RAD)
         );
-        ptsR.push(new THREE.Vector3(defR.x, defR.y, defR.z));
-
-        // Mirrored left half (x -> -x)
-        ptsL.push(new THREE.Vector3(-defR.x, defR.y, defR.z));
       }
 
-      curves.push({ pointsRight: ptsR, pointsLeft: ptsL });
+      strands.push({
+        index: k,
+        rank,
+        L,
+        laneRadius,
+        Ak,
+        finalLaneLen: finalLength,
+        feed,
+        sTail,
+        normalizedX,
+        lanePoints,
+      });
     }
 
-    return curves;
-  }, [q, currentParams]);
+    return strands;
+  }, [p]);
+
+  // Pulli lattice points
+  const dotsData = useMemo(() => {
+    const dots: [number, number, number][] = [];
+    const spacing = 0.48;
+    const maxN = 9;
+    for (let r = -maxN * 2; r <= maxN; r++) {
+      const cols = maxN * 2 + 1 - Math.abs(r > 0 ? r : Math.floor(r * 0.5));
+      for (let c = 0; c < Math.min(cols, 20); c++) {
+        const x = (c - 9) * spacing;
+        const y = r * (spacing * 0.866);
+        const dist = Math.sqrt(x * x + y * y);
+        if (dist >= 2.05) {
+          dots.push([x, y, 0]);
+        }
+      }
+    }
+    return dots;
+  }, []);
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#050201] text-white font-mono text-xs">
-      {/* 3D WebGL Viewport */}
+      {/* 3D WebGL Canvas */}
       <div className="relative flex-1 h-full">
         <Canvas>
-          <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={35} />
-          <OrbitControls makeDefault enableDamping dampingFactor={0.05} />
+          <LabConveyorController p={p} rightConveyor={rightConveyor} leftConveyor={leftConveyor} />
+          {followCamera ? (
+            <PerspectiveCamera
+              makeDefault
+              position={[0, cam.camY, cam.camZ]}
+              rotation={[cam.pitchDeg * (Math.PI / 180), 0, 0]}
+              fov={35}
+            />
+          ) : (
+            <>
+              <PerspectiveCamera makeDefault position={[0, -4.5, 14]} fov={35} />
+              <OrbitControls makeDefault enableDamping dampingFactor={0.05} />
+            </>
+          )}
+
           <ambientLight intensity={0.6} color="#FFE8B5" />
           <directionalLight position={[5, 8, 5]} intensity={2.5} color="#FFF8E7" />
-          <pointLight position={[0, 0, 4]} intensity={3.0} color="#FFB84D" />
+          <pointLight position={[0, cam.camY, 4]} intensity={3.0} color="#FFB84D" />
 
-          {/* Reference Center Target */}
-          <gridHelper args={[16, 16, "#442200", "#180d05"]} position={[0, -4.5, 0]} />
-
-          {/* Render Right & Left Halves */}
-          {linesData.map((line, idx) => (
-            <React.Fragment key={`curve-${idx}`}>
-              {/* Right Half */}
-              <line>
-                <bufferGeometry>
-                  <bufferAttribute
-                    attach="attributes-position"
-                    args={[
-                      new Float32Array(line.pointsRight.flatMap((pt) => [pt.x, pt.y, pt.z])),
-                      3,
-                    ]}
-                  />
-                </bufferGeometry>
-                <lineBasicMaterial
-                  color="#FFB84D"
-                  linewidth={wireframe ? 1 : 2}
-                  transparent
-                  opacity={0.85}
+          {/* Stationary Grounded Dot Lattice */}
+          {showDots && (
+            <points>
+              <bufferGeometry>
+                <bufferAttribute
+                  attach="attributes-position"
+                  args={[new Float32Array(dotsData.flat()), 3]}
                 />
-              </line>
+              </bufferGeometry>
+              <pointsMaterial size={0.04} color="#FFD270" transparent opacity={0.45} />
+            </points>
+          )}
 
-              {/* Left Half (Mirrored) */}
-              <line>
-                <bufferGeometry>
-                  <bufferAttribute
-                    attach="attributes-position"
-                    args={[
-                      new Float32Array(line.pointsLeft.flatMap((pt) => [pt.x, pt.y, pt.z])),
-                      3,
-                    ]}
-                  />
-                </bufferGeometry>
-                <lineBasicMaterial
-                  color="#FFB84D"
-                  linewidth={wireframe ? 1 : 2}
-                  transparent
-                  opacity={0.85}
-                />
-              </line>
-            </React.Fragment>
-          ))}
+          {/* Authentic Dot-Woven Kolam Meshes Driven by GPU Conveyor */}
+          {showWeave && (
+            <group name="LabKolamConveyor">
+              <mesh
+                geometry={rightGeometry}
+                material={rightConveyor.material}
+                scale={[1, 1, 1]}
+              />
+              <mesh
+                geometry={rightGeometry}
+                material={leftConveyor.material}
+                scale={[-1, 1, 1]}
+              />
+            </group>
+          )}
+
+          {/* Wreath Lane Guides */}
+          {showLanes &&
+            strandsData.map((s) => (
+              <React.Fragment key={`lane-${s.index}`}>
+                {/* Right half (climbs left arc) */}
+                <line>
+                  <bufferGeometry>
+                    <bufferAttribute
+                      attach="attributes-position"
+                      args={[new Float32Array(s.lanePoints.flatMap((pt) => [pt.x, pt.y, pt.z])), 3]}
+                    />
+                  </bufferGeometry>
+                  <lineBasicMaterial color="#34d399" transparent opacity={0.65} linewidth={1} />
+                </line>
+                {/* Left half mirrored (climbs right arc) */}
+                <line>
+                  <bufferGeometry>
+                    <bufferAttribute
+                      attach="attributes-position"
+                      args={[new Float32Array(s.lanePoints.flatMap((pt) => [-pt.x, pt.y, -pt.z])), 3]}
+                    />
+                  </bufferGeometry>
+                  <lineBasicMaterial color="#38bdf8" transparent opacity={0.65} linewidth={1} />
+                </line>
+              </React.Fragment>
+            ))}
+
+          {/* Thirukkural Sacred Void Guide Sphere */}
+          <mesh position={[0, WREATH_CY, 0]}>
+            <ringGeometry args={[WREATH_R_IN - 0.05, WREATH_R_IN, 64]} />
+            <meshBasicMaterial color="#f59e0b" transparent opacity={0.3} wireframe />
+          </mesh>
         </Canvas>
 
         {/* Viewport Overlay HUD */}
-        <div className="absolute top-4 left-4 p-3 bg-black/80 border border-white/10 backdrop-blur-md space-y-1">
-          <div className="text-[#FFB84D] font-bold">WREATH DEFORMATION LAB // §PRD 12.1</div>
-          <div>SCROLL p: {p.toFixed(3)}</div>
-          <div>ACT II q: {q.toFixed(3)}</div>
-          <div>TOP OPEN (t=0): {zipperOpenness(0, q, delta).toFixed(2)}</div>
-          <div>BOTTOM TIE (t=1): {zipperOpenness(1, q, delta).toFixed(2)}</div>
+        <div className="absolute top-4 left-4 p-4 bg-black/85 border border-white/10 backdrop-blur-md space-y-2 pointer-events-none">
+          <div className="text-[#FFB84D] font-bold tracking-wider">
+            PEEL & FLOW ENGINE // §PRD LAB (HOME HERO)
+          </div>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-[11px] text-white/80">
+            <div>
+              SCROLL <span className="text-[#FFB84D] font-bold">p = {p.toFixed(3)}</span>
+            </div>
+            <div>
+              CAMERA Y: <span className="text-white font-mono">{cam.camY.toFixed(2)}</span>
+            </div>
+            <div>
+              CAMERA Z: <span className="text-white font-mono">{cam.camZ.toFixed(2)}</span>
+            </div>
+            <div>
+              PITCH: <span className="text-white font-mono">{cam.pitchDeg.toFixed(1)}°</span>
+            </div>
+            <div>
+              ACT3_START: <span className="text-white font-mono">{getAct3Start(false).toFixed(3)}</span>
+            </div>
+            <div>
+              WREATH CY: <span className="text-white font-mono">{WREATH_CY.toFixed(2)}</span>
+            </div>
+          </div>
         </div>
 
         <div className="absolute bottom-4 left-4">
           <Link
             href="/"
-            className="px-3 py-1.5 bg-[#FFB84D] text-black font-bold uppercase tracking-wider hover:bg-white transition-colors"
+            className="px-3 py-1.5 bg-[#FFB84D] text-black font-bold uppercase tracking-wider hover:bg-white transition-colors text-[11px]"
           >
-            ← Return to Homepage
+            ← Return to Live Homepage
           </Link>
         </div>
       </div>
 
       {/* Control Panel Sidebar */}
-      <div className="w-80 h-full overflow-y-auto border-l border-white/10 bg-[#0a0503] p-5 space-y-6">
+      <div className="w-88 h-full overflow-y-auto border-l border-white/10 bg-[#0a0503] p-5 space-y-6">
         <div>
           <h2 className="text-[#FFB84D] font-bold text-sm tracking-widest uppercase mb-1">
             Timeline Controller
           </h2>
           <p className="text-white/50 text-[10px]">
-            Scrub hero scroll progress p (0.00 - 1.00)
+            Scrub hero scroll progress p (0.00 – 1.00)
           </p>
         </div>
 
@@ -193,7 +321,7 @@ export default function HomeLabPage() {
         <div className="space-y-2 bg-white/5 p-3 border border-white/10">
           <div className="flex justify-between">
             <span className="text-white/80 font-bold">Progress (p)</span>
-            <span className="text-[#FFB84D] font-bold">{p.toFixed(3)}</span>
+            <span className="text-[#FFB84D] font-bold text-sm">{p.toFixed(3)}</span>
           </div>
           <input
             type="range"
@@ -204,196 +332,137 @@ export default function HomeLabPage() {
             onChange={(e) => setP(parseFloat(e.target.value))}
             className="w-full accent-[#FFB84D]"
           />
-          <div className="flex justify-between text-[10px] text-white/40">
-            <span>Act I (0.0)</span>
-            <span>Unzip (0.08)</span>
-            <span>Dwell (0.50)</span>
-            <span>Act III (0.62)</span>
+          <div className="flex justify-between text-[9px] text-white/40">
+            <span>P0 (0.00)</span>
+            <span>P1 (0.06)</span>
+            <span>P3 (0.28)</span>
+            <span>P6 (0.60)</span>
+            <span>Act III (0.76)</span>
           </div>
         </div>
 
-        {/* Quick Act Presets */}
-        <div className="grid grid-cols-2 gap-2 text-[11px]">
-          <button
-            onClick={() => setP(0.0)}
-            className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
-          >
-            A1: p=0.0 (Hold)
-          </button>
-          <button
-            onClick={() => setP(0.14)}
-            className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
-          >
-            B1: p=0.14 (Start)
-          </button>
-          <button
-            onClick={() => setP(0.29)}
-            className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
-          >
-            B2: p=0.29 (Half)
-          </button>
-          <button
-            onClick={() => setP(0.50)}
-            className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
-          >
-            B4: p=0.50 (Wreath)
-          </button>
-        </div>
-
-        {/* Wreath Parameters */}
-        <div className="space-y-4 pt-2 border-t border-white/10">
-          <div className="flex justify-between items-center">
-            <h3 className="text-[#FFB84D] font-bold tracking-wider uppercase text-[11px]">
-              Geometry Sliders (§7.7)
-            </h3>
+        {/* Approval Frame Presets (§PRD 12.3) */}
+        <div className="space-y-2">
+          <div className="text-[#FFB84D] font-bold uppercase tracking-wider text-[10px]">
+            Approval Frames (§PRD 12.3)
+          </div>
+          <div className="grid grid-cols-2 gap-1.5 text-[10px]">
             <button
-              onClick={() => setUsePortrait(!usePortrait)}
-              className="px-2 py-0.5 text-[10px] bg-white/10 border border-white/20 hover:border-white"
+              onClick={() => setP(0.0)}
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
             >
-              {usePortrait ? "PORTRAIT" : "LANDSCAPE"}
+              P0: p=0.00 (Rest)
+            </button>
+            <button
+              onClick={() => setP(0.06)}
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
+            >
+              P1: p=0.06 (Notch)
+            </button>
+            <button
+              onClick={() => setP(0.15)}
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
+            >
+              P2: p=0.15 (Peel)
+            </button>
+            <button
+              onClick={() => setP(0.28)}
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
+            >
+              P3: p=0.28 (Stream)
+            </button>
+            <button
+              onClick={() => setP(0.40)}
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
+            >
+              P4: p=0.40 (Cross)
+            </button>
+            <button
+              onClick={() => setP(0.52)}
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
+            >
+              P5: p=0.52 (Settle)
+            </button>
+            <button
+              onClick={() => setP(0.60)}
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left col-span-2 text-center font-bold text-[#FFB84D]"
+            >
+              P6: p=0.60 (Wreath Formed)
             </button>
           </div>
+        </div>
 
-          <div className="space-y-1">
-            <div className="flex justify-between text-[11px]">
-              <span>R_in (Inner Radius)</span>
-              <span>{rIn.toFixed(2)}</span>
-            </div>
-            <input
-              type="range"
-              min="1.0"
-              max="4.0"
-              step="0.05"
-              value={rIn}
-              onChange={(e) => setRIn(parseFloat(e.target.value))}
-              className="w-full accent-[#FFB84D]"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <div className="flex justify-between text-[11px]">
-              <span>R_out (Outer Radius)</span>
-              <span>{rOut.toFixed(2)}</span>
-            </div>
-            <input
-              type="range"
-              min="2.0"
-              max="6.0"
-              step="0.05"
-              value={rOut}
-              onChange={(e) => setROut(parseFloat(e.target.value))}
-              className="w-full accent-[#FFB84D]"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <div className="flex justify-between text-[11px]">
-              <span>eps (Elliptical Factor)</span>
-              <span>{eps.toFixed(2)}</span>
-            </div>
-            <input
-              type="range"
-              min="0.8"
-              max="2.0"
-              step="0.05"
-              value={eps}
-              onChange={(e) => setEps(parseFloat(e.target.value))}
-              className="w-full accent-[#FFB84D]"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <div className="flex justify-between text-[11px]">
-              <span>delta (Zipper Spread)</span>
-              <span>{delta.toFixed(2)}</span>
-            </div>
-            <input
-              type="range"
-              min="0.1"
-              max="0.8"
-              step="0.02"
-              value={delta}
-              onChange={(e) => setDelta(parseFloat(e.target.value))}
-              className="w-full accent-[#FFB84D]"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <div className="flex justify-between text-[11px]">
-              <span>ax (Bézier Mid X-Push)</span>
-              <span>{ax.toFixed(2)}</span>
-            </div>
-            <input
-              type="range"
-              min="0.0"
-              max="0.6"
-              step="0.02"
-              value={ax}
-              onChange={(e) => setAx(parseFloat(e.target.value))}
-              className="w-full accent-[#FFB84D]"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <div className="flex justify-between text-[11px]">
-              <span>az (Bézier Mid Z-Push)</span>
-              <span>{az.toFixed(2)}</span>
-            </div>
-            <input
-              type="range"
-              min="0.0"
-              max="0.8"
-              step="0.02"
-              value={az}
-              onChange={(e) => setAz(parseFloat(e.target.value))}
-              className="w-full accent-[#FFB84D]"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <div className="flex justify-between text-[11px]">
-              <span>z_tip (Tip Curl +Z)</span>
-              <span>{zTip.toFixed(2)}</span>
-            </div>
-            <input
-              type="range"
-              min="0.0"
-              max="1.0"
-              step="0.02"
-              value={zTip}
-              onChange={(e) => setZTip(parseFloat(e.target.value))}
-              className="w-full accent-[#FFB84D]"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <div className="flex justify-between text-[11px]">
-              <span>z_belly (Belly Bow -Z)</span>
-              <span>{zBelly.toFixed(2)}</span>
-            </div>
-            <input
-              type="range"
-              min="0.0"
-              max="1.2"
-              step="0.02"
-              value={zBelly}
-              onChange={(e) => setZBelly(parseFloat(e.target.value))}
-              className="w-full accent-[#FFB84D]"
-            />
+        {/* Camera & Layer Toggles */}
+        <div className="space-y-2 pt-2 border-t border-white/10">
+          <div className="text-white/80 font-bold uppercase text-[10px]">Viewport Toggles</div>
+          <div className="space-y-1.5 text-[11px]">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={followCamera}
+                onChange={(e) => setFollowCamera(e.target.checked)}
+                className="accent-[#FFB84D]"
+              />
+              <span>Follow Truck Camera (p-glide)</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showWeave}
+                onChange={(e) => setShowWeave(e.target.checked)}
+                className="accent-[#FFB84D]"
+              />
+              <span>Show Kolam Weave (Gold Strands)</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showLanes}
+                onChange={(e) => setShowLanes(e.target.checked)}
+                className="accent-[#FFB84D]"
+              />
+              <span>Show Wreath Lanes (Green/Cyan)</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showDots}
+                onChange={(e) => setShowDots(e.target.checked)}
+                className="accent-[#FFB84D]"
+              />
+              <span>Show Pulli Lattice Dots</span>
+            </label>
           </div>
         </div>
 
-        {/* Viewport Toggles */}
-        <div className="pt-2 border-t border-white/10 space-y-2">
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={wireframe}
-              onChange={(e) => setWireframe(e.target.checked)}
-              className="accent-[#FFB84D]"
-            />
-            <span>Wireframe Mode</span>
-          </label>
+        {/* Per-Strand Conveyor Feed Telemetry */}
+        <div className="space-y-2 pt-2 border-t border-white/10">
+          <div className="text-[#FFB84D] font-bold uppercase text-[10px]">
+            Strand Conveyors (Seam &rarr; Flank)
+          </div>
+          <div className="space-y-1.5">
+            {strandsData.map((s) => (
+              <div key={`tele-${s.index}`} className="p-2 bg-white/5 border border-white/10 space-y-1">
+                <div className="flex justify-between text-[10px]">
+                  <span className="font-bold text-[#FFB84D]">
+                    Strand #{s.index} ({s.index === 0 ? "Seam" : s.index === 6 ? "Flank" : `Rank ${s.rank.toFixed(2)}`})
+                  </span>
+                  <span className="text-white/60">L = {s.L.toFixed(2)}</span>
+                </div>
+                <div className="w-full bg-black h-1.5 rounded-none overflow-hidden">
+                  <div
+                    className="bg-[#FFB84D] h-full"
+                    style={{ width: `${s.normalizedX * 100}%` }}
+                  />
+                </div>
+                <div className="flex justify-between text-[9px] text-white/50">
+                  <span>Feed: {s.feed.toFixed(2)}</span>
+                  <span>sTail: {s.sTail.toFixed(2)}</span>
+                  <span>Ripple Ak: {s.Ak.toFixed(3)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

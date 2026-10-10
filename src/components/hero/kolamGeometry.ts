@@ -184,7 +184,7 @@ function createRightHemisphereCurves(): HalfKolamCurve[] {
  */
 export function buildSymmetricKolamHalves(
   isMobile: boolean,
-  radialSegments = 8,
+  radialSegments = 12,
   tubeRadius = 0.024
 ): SymmetricKolamData {
   const halfWidth = isMobile ? 4.4 : 5.8;
@@ -228,9 +228,9 @@ export function buildSymmetricKolamHalves(
     leftPulliPositions[i * 3 + 2] = z;
   }
 
-  // 2. Direct Tube Geometry Generation for Right Hemisphere
+  // 2. Direct Tube Geometry Generation for Right Hemisphere (Smooth segment density)
   const curves = createRightHemisphereCurves();
-  const tubularSegments = isMobile ? 64 : 80;
+  const tubularSegments = isMobile ? 80 : 128;
 
   const posArr: number[] = [];
   const normArr: number[] = [];
@@ -289,6 +289,12 @@ export function buildSymmetricKolamHalves(
   rightGeometry.setAttribute("normal", new THREE.Float32BufferAttribute(normArr, 3));
   rightGeometry.setAttribute("aArc", new THREE.Float32BufferAttribute(arcArr, 1));
   rightGeometry.setIndex(indexArr);
+
+  // Ensure geometry is centered in Y and Z at local origin (0, 0, 0)
+  rightGeometry.computeBoundingBox();
+  const bbCenter = new THREE.Vector3();
+  rightGeometry.boundingBox?.getCenter(bbCenter);
+  rightGeometry.translate(0, -bbCenter.y, -bbCenter.z);
 
   // 3. Perfect Mathematical Reflection for Left Hemisphere
   const leftGeometry = rightGeometry.clone();

@@ -99,6 +99,7 @@ export default function BoardPage() {
       {/* ========================================================================= */}
       <section
         id="chola-darbar-hero"
+        data-hero-container="true"
         className="relative w-full overflow-hidden bg-transparent"
       >
         <BoardHeroCanvas />

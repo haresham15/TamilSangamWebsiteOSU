@@ -385,6 +385,8 @@ export function GopuramZScroll() {
   return (
     <div
       ref={containerRef}
+      data-hero-pinned="about"
+      id="gopuram-hero-wrapper"
       className="relative w-full h-[100dvh] overflow-hidden bg-transparent text-white flex flex-col justify-between select-none"
       style={{ minHeight: "100dvh" }}
     >
