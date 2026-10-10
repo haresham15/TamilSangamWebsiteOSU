@@ -63,6 +63,12 @@ export function initDirectorKeys(): () => void {
     } else if (k === "c") {
       e.preventDefault();
       state.toggleGrade();
+    } else if (k === "s") {
+      e.preventDefault();
+      state.toggleHeroScrub();
+    } else if (k === "p") {
+      e.preventDefault();
+      state.toggleHeroDots();
     } else if (k === "escape") {
       e.preventDefault();
       state.close();

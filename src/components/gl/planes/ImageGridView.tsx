@@ -192,7 +192,7 @@ export function ImageGridView({
       {/* Persistent Drei View overlay mapped to grid container (Tier A only) (§9.1) */}
       {isMounted && tier === "A" && (
         <div className="absolute inset-0 pointer-events-none z-0">
-          <View className="w-full h-full pointer-events-auto">
+          <View className="w-full h-full pointer-events-auto" index={2}>
             <PlanesScene viewRef={containerRef} />
           </View>
         </div>

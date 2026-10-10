@@ -8,6 +8,7 @@ import { useTier } from "@/components/providers/TierProvider";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { registerRenderer, unregisterRenderer } from "@/engine/renderer";
 import { GradeStack } from "@/gl/grade/GradeStack";
+import { SceneRegistrar } from "@/director/wireframe";
 
 /**
  * GlobalCanvas (§3.1)
@@ -44,9 +45,9 @@ export function GlobalCanvas() {
         eventPrefix="client"
         frameloop="never"
         shadows
-        dpr={[1, tier === "A" ? 1.75 : 1.25]}
+        dpr={[1, tier === "A" ? 2 : 1.5]}
         gl={{
-          antialias: false,
+          antialias: true,
           alpha: true,
           powerPreference: "high-performance",
         }}
@@ -58,6 +59,7 @@ export function GlobalCanvas() {
           registerRenderer(gl, advance, clock);
         }}
       >
+        <SceneRegistrar />
         <View.Port />
         <GradeStack tier={tier} />
       </Canvas>

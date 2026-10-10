@@ -13,6 +13,7 @@ import { Terminal } from "lucide-react";
 import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 import { useWarmup } from "@/components/gl/useWarmup";
 import { governor } from "@/engine/governor";
+import { SceneRegistrar } from "@/director/wireframe";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -184,7 +185,8 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
         {/* R3F 3D VIEWPORT WITH PHYSICAL CAMERA & ATMOSPHERE (Clean Cinematic Scene) */}
         {/* ========================================================================= */}
         <div className="relative flex-1 w-full h-full">
-          <View className="w-full h-full pointer-events-auto">
+          <View className="w-full h-full pointer-events-auto" index={2}>
+            <SceneRegistrar />
             <BoardSceneWarmup />
             <PerspectiveCamera makeDefault position={[0, 2.22, 30]} fov={32} near={0.05} far={100} />
             <color attach="background" args={["#120A06"]} />

@@ -7,6 +7,7 @@ import { View, PerspectiveCamera, BakeShadows, Sky } from "@react-three/drei";
 import { useWarmup } from "@/components/gl/useWarmup";
 import { governor } from "@/engine/governor";
 import { useLocale } from "@/context/LocaleContext";
+import { SceneRegistrar } from "@/director/wireframe";
 import { CampusGate } from "./CampusGate";
 import { GateLettering } from "./GateLettering";
 import { ShadowLatticeDecal } from "./ShadowLatticeDecal";
@@ -244,7 +245,8 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
       {/* 2. R3F 3D VIEWPORT WITH PBR ENVIRONMENT, GATES & POST-PROCESSING   */}
       {/* ================================================================= */}
       <div className="relative w-full h-full">
-        <View className="w-full h-full pointer-events-auto">
+        <View className="w-full h-full pointer-events-auto" index={2}>
+          <SceneRegistrar />
           <JoinSceneWarmup />
           <PerspectiveCamera makeDefault position={[0, 2.4, 12.2]} fov={44} near={0.05} far={100} />
 

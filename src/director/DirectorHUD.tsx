@@ -10,22 +10,56 @@ import { heroState } from "@/components/gallery-hero/state";
 import { getCameraSpeed } from "@/components/gallery-hero/neck/fretMath";
 import { defaultRamp } from "@/gallery/ramp";
 import { getRenderer } from "@/engine/renderer";
-import { Eye, Layers, X, Terminal, Sliders, Activity } from "lucide-react";
+import { heroScrollProgress } from "@/engine/heroScrollStore";
+import { Eye, Layers, X, Terminal, Sliders, Activity, Compass } from "lucide-react";
+
+/**
+ * Checks whether Director Viewport should be active.
+ * - Always available in dev (`process.env.NODE_ENV !== 'production'`)
+ * - In production: hidden completely unless explicitly enabled via URL param (?director=1 or ?debug=1) or localStorage
+ */
+export function isDirectorEnabled(): boolean {
+  if (typeof window === "undefined") {
+    return process.env.NODE_ENV !== "production";
+  }
+  if (process.env.NODE_ENV !== "production") return true;
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("director") || params.has("debug")) return true;
+    if (localStorage.getItem("sangam_director") === "true") return true;
+  } catch {}
+  return false;
+}
 
 export function DirectorHUD() {
   const tier = useTier();
+  const [enabled, setEnabled] = useState(false);
+
   const {
     open,
     gradeOn,
     wire,
+    lutIntensity,
     scanlineActive,
     announcement,
+    heroScrubActive,
+    heroScrubProgress,
+    heroDotsVisible,
+    heroSpeed,
     toggleGrade,
     toggleWire,
+    setLutIntensity,
+    toggleHeroScrub,
+    setHeroScrubProgress,
+    toggleHeroDots,
+    setHeroSpeed,
     close,
   } = useDirectorStore();
 
-  const [intensity, setIntensity] = useState(0.75);
+  useEffect(() => {
+    setEnabled(isDirectorEnabled());
+  }, []);
+
   const [showTelemetry, setShowTelemetry] = useState(() => {
     return typeof window !== "undefined" && window.location.search.includes("debug");
   });
@@ -39,13 +73,14 @@ export function DirectorHUD() {
   });
 
   useEffect(() => {
+    if (!enabled) return;
     const cleanup = initDirectorKeys();
     return cleanup;
-  }, []);
+  }, [enabled]);
 
   // Update telemetry metrics periodically when HUD is open
   useEffect(() => {
-    if (!open) return;
+    if (!open || !enabled) return;
 
     let frames = 0;
     let lastTime = performance.now();
@@ -73,7 +108,7 @@ export function DirectorHUD() {
 
     const frameCounter = () => {
       frames++;
-      if (open) requestAnimationFrame(frameCounter);
+      if (open && enabled) requestAnimationFrame(frameCounter);
     };
     const reqId = requestAnimationFrame(frameCounter);
 
@@ -81,7 +116,9 @@ export function DirectorHUD() {
       clearInterval(interval);
       cancelAnimationFrame(reqId);
     };
-  }, [open]);
+  }, [open, enabled]);
+
+  if (!enabled) return null;
 
   return (
     <>
@@ -141,7 +178,7 @@ export function DirectorHUD() {
           </div>
 
           {/* Action Controls */}
-          <div className="flex flex-col gap-2 pt-1">
+          <div className="flex flex-col gap-2.5 pt-1">
             {/* Color Grade Toggle (C) - No-op on Tier B (§7) */}
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-neutral-400">Color Pass:</span>
@@ -167,6 +204,29 @@ export function DirectorHUD() {
               )}
             </div>
 
+            {/* LUT Intensity Slider (Directly accessible when GRADED) */}
+            {tier !== "B" && gradeOn && (
+              <div className="flex items-center justify-between gap-2 px-2 py-1.5 rounded bg-black/50 border border-[#00ff41]/20">
+                <span className="text-[10px] text-neutral-300 flex items-center gap-1">
+                  <Sliders className="w-3 h-3 text-[#00ff41]" />
+                  LUT Mix:
+                </span>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.05"
+                  aria-label="LUT Color Grade Intensity"
+                  value={lutIntensity}
+                  onChange={(e) => setLutIntensity(parseFloat(e.target.value))}
+                  className="w-24 accent-[#00ff41] cursor-pointer"
+                />
+                <span className="w-8 text-right font-bold text-[10px] text-[#00ff41]">
+                  {(lutIntensity * 100).toFixed(0)}%
+                </span>
+              </div>
+            )}
+
             {/* Wireframe Toggle (W) */}
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-neutral-400">Mesh Mode:</span>
@@ -187,6 +247,136 @@ export function DirectorHUD() {
                 </kbd>
               </button>
             </div>
+
+            {/* HERO KOLAM KINEMATICS & TUNING (§MASTER DIRECTIVE) */}
+            <div className="pt-2 border-t border-[#00ff41]/20 flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] uppercase tracking-wider text-[#00ff41] font-bold flex items-center gap-1">
+                  <Compass className="w-3 h-3 text-[#00ff41]" /> Hero Kolam
+                </span>
+                <span
+                  className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold ${
+                    (heroScrubActive ? heroScrubProgress : heroScrollProgress.current) < 0.16
+                      ? "bg-amber-500/20 text-[#FFB84D] border border-[#FFB84D]/40"
+                      : (heroScrubActive ? heroScrubProgress : heroScrollProgress.current) <= 0.50
+                      ? "bg-emerald-500/20 text-[#55CCA2] border border-[#55CCA2]/40"
+                      : "bg-purple-500/20 text-[#A78BFA] border border-[#A78BFA]/40"
+                  }`}
+                >
+                  {(heroScrubActive ? heroScrubProgress : heroScrollProgress.current) < 0.16
+                    ? "ACT I: SIKKU"
+                    : (heroScrubActive ? heroScrubProgress : heroScrollProgress.current) <= 0.50
+                    ? "ACT II: WREATH"
+                    : "ACT III: MONOLITH"}
+                </span>
+              </div>
+
+              {/* Scrub Override */}
+              <div className="flex flex-col gap-1.5 p-2 rounded bg-black/50 border border-[#00ff41]/20">
+                <div className="flex items-center justify-between text-[10px]">
+                  <span className="text-neutral-300">Kinematic Scrub:</span>
+                  <button
+                    type="button"
+                    onClick={toggleHeroScrub}
+                    className={`px-2 py-0.5 rounded text-[9px] font-bold border transition-colors ${
+                      heroScrubActive
+                        ? "bg-[#00ff41]/20 border-[#00ff41] text-[#00ff41]"
+                        : "bg-neutral-800 border-neutral-700 text-neutral-400"
+                    }`}
+                  >
+                    {heroScrubActive ? "LOCKED" : "LIVE SCROLL"}
+                  </button>
+                </div>
+
+                {heroScrubActive && (
+                  <div className="flex flex-col gap-1 pt-1">
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="text-[#00ff41] font-mono">
+                        p = {heroScrubProgress.toFixed(3)}
+                      </span>
+                      <span className="text-neutral-400">
+                        {Math.round(heroScrubProgress * 100)}%
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.005"
+                      aria-label="Hero Scroll Progress Scrub"
+                      value={heroScrubProgress}
+                      onChange={(e) => setHeroScrubProgress(parseFloat(e.target.value))}
+                      className="w-full accent-[#00ff41] cursor-pointer"
+                    />
+
+                    {/* Quick Jump Buttons */}
+                    <div className="grid grid-cols-4 gap-1 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setHeroScrubProgress(0.0)}
+                        className="px-1 py-0.5 text-[8px] bg-neutral-800 hover:bg-[#00ff41]/20 border border-neutral-700 hover:border-[#00ff41]/50 text-neutral-300 rounded text-center transition-colors"
+                      >
+                        0.0 Act I
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setHeroScrubProgress(0.20)}
+                        className="px-1 py-0.5 text-[8px] bg-neutral-800 hover:bg-[#00ff41]/20 border border-neutral-700 hover:border-[#00ff41]/50 text-neutral-300 rounded text-center transition-colors"
+                      >
+                        0.2 Sever
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setHeroScrubProgress(0.40)}
+                        className="px-1 py-0.5 text-[8px] bg-neutral-800 hover:bg-[#00ff41]/20 border border-neutral-700 hover:border-[#00ff41]/50 text-neutral-300 rounded text-center transition-colors"
+                      >
+                        0.4 Wreath
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setHeroScrubProgress(0.70)}
+                        className="px-1 py-0.5 text-[8px] bg-neutral-800 hover:bg-[#00ff41]/20 border border-neutral-700 hover:border-[#00ff41]/50 text-neutral-300 rounded text-center transition-colors"
+                      >
+                        0.7 Monolith
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Pulli Dots & Pulse Speed */}
+              <div className="flex items-center justify-between text-[10px]">
+                <span className="text-neutral-400">Pulli Dots:</span>
+                <button
+                  type="button"
+                  onClick={toggleHeroDots}
+                  className={`px-2 py-0.5 rounded text-[9px] font-bold border transition-colors ${
+                    heroDotsVisible
+                      ? "bg-[#00ff41]/20 border-[#00ff41] text-[#00ff41]"
+                      : "bg-neutral-800 border-neutral-700 text-neutral-400"
+                  }`}
+                >
+                  {heroDotsVisible ? "VISIBLE" : "HIDDEN"}
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between gap-2 px-2 py-1 rounded bg-black/40 border border-[#00ff41]/20 text-[10px]">
+                <span className="text-neutral-300">Pulse Speed:</span>
+                <input
+                  type="range"
+                  min="0.2"
+                  max="3.0"
+                  step="0.1"
+                  aria-label="Travelling Pulse Wave Speed"
+                  value={heroSpeed}
+                  onChange={(e) => setHeroSpeed(parseFloat(e.target.value))}
+                  className="w-20 accent-[#00ff41] cursor-pointer"
+                />
+                <span className="w-7 text-right font-bold text-[9px] text-[#00ff41]">
+                  {heroSpeed.toFixed(1)}x
+                </span>
+              </div>
+            </div>
           </div>
 
           {/* §8 ?debug Telemetry Panel */}
@@ -194,26 +384,9 @@ export function DirectorHUD() {
             <div className="mt-2 pt-2 border-t border-[#00ff41]/20 flex flex-col gap-2 text-[10px] text-neutral-300 bg-black/40 p-2.5 rounded border border-[#00ff41]/10">
               <div className="flex items-center justify-between text-neutral-400">
                 <span className="font-semibold text-[#00ff41] flex items-center gap-1">
-                  <Sliders className="w-3 h-3" /> Telemetry (?debug)
+                  <Activity className="w-3 h-3" /> Telemetry (?debug)
                 </span>
                 <span>{fps} FPS</span>
-              </div>
-
-              {/* Intensity Slider */}
-              <div className="flex items-center justify-between gap-2">
-                <span>LUT Intensity:</span>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.05"
-                  value={intensity}
-                  onChange={(e) => setIntensity(parseFloat(e.target.value))}
-                  className="w-24 accent-[#00ff41]"
-                />
-                <span className="w-8 text-right font-bold text-[#00ff41]">
-                  {(intensity * 100).toFixed(0)}%
-                </span>
               </div>
 
               {/* Kinematic Ramp Telemetry */}
@@ -259,13 +432,19 @@ export function DirectorHUD() {
 
 /**
  * Accessible Footer Button to deliberately open Director's Viewport (§6.1, §7)
+ * Hidden completely in production for regular users.
  * Hidden on Tier C (Lite) per Section 7 summary table.
  */
 export function DirectorFooterButton() {
+  const [enabled, setEnabled] = useState(false);
   const tier = useTier();
   const toggleOpen = useDirectorStore((s) => s.toggleOpen);
 
-  if (tier === "C") return null;
+  useEffect(() => {
+    setEnabled(isDirectorEnabled());
+  }, []);
+
+  if (!enabled || tier === "C") return null;
 
   return (
     <button

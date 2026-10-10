@@ -21,31 +21,37 @@
   --color-kumkumam-crimson: oklch(0.62 0.22 25);
   --color-sandhanam-silk: oklch(0.98 0.015 85);
 
-  /* 1. Cinematic Serifs (Primary English Headers) */
+  /* 1. Cultural Display Serifs (Warm, Inviting Primary English & Bilingual Headers) */
+  --font-halant: var(--font-halant), 'Halant', serif;
+  --font-anek-tamil: var(--font-anek-tamil), 'Anek Tamil', sans-serif;
   --font-marcellus: var(--font-marcellus), serif;
   --font-prata: var(--font-prata), serif;
   --font-cormorant: var(--font-cormorant), serif;
 
-  /* 2. Palm-Leaf & Press (Tamil Displays) */
+  /* 2. Palm-Leaf & Press (Tamil Displays & Classical Script) */
+  --font-mukta-malar: var(--font-mukta-malar), 'Mukta Malar', sans-serif;
+  --font-noto-serif-tamil: var(--font-noto-serif-tamil), 'Noto Serif Tamil', serif;
   --font-tiro-tamil: var(--font-tiro-tamil), serif;
   --font-kavivanar: var(--font-kavivanar), cursive, serif;
 
   /* 3. Camera Viewfinder (High-Tech Metadata) */
+  --font-space-mono: var(--font-space-mono), 'Space Mono', monospace;
   --font-fragment-mono: var(--font-fragment-mono), monospace;
   --font-azeret-mono: var(--font-azeret-mono), monospace;
   --font-major-mono: var(--font-major-mono), monospace;
 
-  /* 4. Architectural Bridge (Body & UI Elements) */
+  /* 4. Architectural Bridge (UI Elements) */
   --font-outfit: var(--font-outfit), sans-serif;
   --font-syne: var(--font-syne), sans-serif;
 
-  /* Systemic Typography Scale */
+  /* Systemic Typography Scale - Restored to Clean Sangam Aesthetics (Marcellus, Prata, Cormorant & Outfit) */
   --font-display: var(--font-marcellus), var(--font-prata), var(--font-cormorant), serif;
   --font-editorial: var(--font-prata), serif;
   --font-romantic: var(--font-cormorant), serif;
   --font-serif: var(--font-marcellus), var(--font-cormorant), var(--font-prata), serif;
-  --font-body: var(--font-outfit), var(--font-mukta-malar), 'Mukta Malar', sans-serif;
-  --font-tamil: var(--font-kavivanar), var(--font-tiro-tamil), var(--font-mukta-malar), serif;
+  --font-sans: var(--font-outfit), sans-serif;
+  --font-body: var(--font-outfit), sans-serif;
+  --font-tamil: var(--font-mukta-malar), var(--font-tiro-tamil), var(--font-kavivanar), serif;
   --font-mono: var(--font-fragment-mono), var(--font-azeret-mono), monospace;
   --font-ui: var(--font-syne), var(--font-outfit), sans-serif;
 
@@ -317,6 +323,7 @@
     height: 100dvh;
     z-index: -1;
     pointer-events: none;
+    background: #10061a;
   }
   #app-root {
     position: relative;
@@ -1051,3 +1058,22 @@ h1, h2, h3, h4, .font-display, .font-serif {
     scroll-behavior: auto !important;
   }
 }
+
+/* =========================================================================
+   Home Hero v3: UI Purge in Acts I & II (§PRD 7.11)
+   Visually purged while p < 0.62, but fully reachable via keyboard Tab focus,
+   top-edge hover (top 72px), scroll-up intent, or skip link.
+   ========================================================================= */
+[data-hero-purge="true"] :is(.site-nav, .ask-nanba, #global-floating-nav, #global-sangam-chatbot) {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-hero-purge="true"] :is(.site-nav, #global-floating-nav):focus-within,
+[data-hero-purge="true"] :is(.site-nav, #global-floating-nav):hover,
+[data-hero-purge="true"].hero-nav-revealed :is(.site-nav, .ask-nanba, #global-floating-nav, #global-sangam-chatbot) {
+  opacity: 1;
+  pointer-events: auto;
+}
+

@@ -13,7 +13,9 @@ import {
   Tiro_Tamil,
   Azeret_Mono,
   Fragment_Mono,
-  Major_Mono_Display
+  Major_Mono_Display,
+  Noto_Serif_Tamil,
+  Space_Mono
 } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
@@ -51,7 +53,7 @@ const anekTamil = Anek_Tamil({
 const halant = Halant({
   variable: "--font-halant",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 // Cinematic English Serifs & Heritage Scripts
@@ -106,6 +108,18 @@ const majorMono = Major_Mono_Display({
   variable: "--font-major-mono",
   subsets: ["latin"],
   weight: "400",
+});
+
+const notoSerifTamil = Noto_Serif_Tamil({
+  variable: "--font-noto-serif-tamil",
+  subsets: ["tamil"],
+  weight: ["400", "700"],
+});
+
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export const viewport: Viewport = {
@@ -233,10 +247,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${muktaMalar.variable} ${jetbrainsMono.variable} ${syne.variable} ${anekTamil.variable} ${halant.variable} ${marcellus.variable} ${prata.variable} ${cormorant.variable} ${outfit.variable} ${kavivanar.variable} ${tiroTamil.variable} ${azeretMono.variable} ${fragmentMono.variable} ${majorMono.variable} h-full antialiased`}
+      className={`${muktaMalar.variable} ${jetbrainsMono.variable} ${syne.variable} ${anekTamil.variable} ${halant.variable} ${marcellus.variable} ${prata.variable} ${cormorant.variable} ${outfit.variable} ${kavivanar.variable} ${tiroTamil.variable} ${azeretMono.variable} ${fragmentMono.variable} ${majorMono.variable} ${notoSerifTamil.variable} ${spaceMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans text-[var(--text-primary)] relative overflow-x-hidden w-full max-w-[100vw]">
+      <body className="min-h-full flex flex-col font-body text-[var(--text-primary)] relative overflow-x-hidden w-full max-w-[100vw]">
         {/* Global 35mm Analog Film Grain Overlay */}
         <FilmGrainOverlay />
 

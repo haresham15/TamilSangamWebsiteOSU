@@ -10,6 +10,7 @@ import { useFrame } from "@react-three/fiber";
 import { View, PerspectiveCamera, Html } from "@react-three/drei";
 import { governor } from "@/engine/governor";
 import { useWarmup } from "@/components/gl/useWarmup";
+import { SceneRegistrar } from "@/director/wireframe";
 
 interface TierItem {
   id: string;
@@ -389,7 +390,8 @@ export function GopuramZScroll() {
     >
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         {mounted && !isLiteMode && (
-          <View className="w-full h-full pointer-events-auto">
+          <View className="w-full h-full pointer-events-auto" index={2}>
+            <SceneRegistrar />
             <GopuramWarmup />
             <color attach="background" args={["#120a1f"]} />
             <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={50} near={0.05} far={150} />

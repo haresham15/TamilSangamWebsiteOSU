@@ -95,6 +95,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
   return (
     <>
       <header
+        id="global-floating-nav"
         ref={headerRef}
         className="fixed top-0 left-0 right-0 z-50 w-full border-b border-transparent bg-transparent translate-y-0 transition-[transform,background-color,border-color,backdrop-filter] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
       >

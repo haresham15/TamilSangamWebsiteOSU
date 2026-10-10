@@ -6,6 +6,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, View, PerspectiveCamera } from "@react-three/drei";
 import { useWarmup } from "@/components/gl/useWarmup";
 import { governor } from "@/engine/governor";
+import { SceneRegistrar } from "@/director/wireframe";
 import { BlueprintPin, BLUEPRINT_PINS, BlueprintSVG } from "./BlueprintSVG";
 import { buildOhioStadiumLines, StadiumGeometryData } from "./OhioStadiumWireframe";
 
@@ -536,7 +537,10 @@ function FloatingParticles() {
 
   useFrame((state) => {
     if (pointsRef.current) {
-      (pointsRef.current.material as THREE.ShaderMaterial).uniforms.uTime.value = state.clock.getElapsedTime();
+      const mat = pointsRef.current.material as THREE.ShaderMaterial;
+      if (mat?.uniforms?.uTime) {
+        mat.uniforms.uTime.value = state.clock.getElapsedTime();
+      }
     }
   });
 
@@ -1217,7 +1221,8 @@ export function BlueprintScene3D({
 
   return (
     <div ref={containerRef} className={`relative w-full h-full bg-transparent ${className}`}>
-      <View className="w-full h-full pointer-events-auto">
+      <View className="w-full h-full pointer-events-auto" index={2}>
+        <SceneRegistrar />
         <BlueprintSceneContent
           groundTexture={groundTexture}
           scrollProgress={scrollProgress}

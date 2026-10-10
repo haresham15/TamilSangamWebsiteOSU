@@ -317,7 +317,7 @@ export default function SpikePage() {
         {/* The Viewport Container */}
         <div className="relative w-full h-[360px] md:h-[440px] rounded-xl overflow-hidden border border-[var(--border-subtle)] bg-transparent">
           {/* Drei View for the 3D Scene */}
-          <View className="absolute inset-0 w-full h-full pointer-events-auto">
+          <View className="absolute inset-0 w-full h-full pointer-events-auto" index={2}>
             <PerspectiveCamera makeDefault position={[0, 0, 4.2]} fov={45} />
             <ambientLight intensity={0.7} />
             <directionalLight position={[5, 5, 5]} intensity={1.5} />
@@ -408,7 +408,7 @@ export default function SpikePage() {
               <div className="absolute bottom-1 right-1 text-[9px] font-mono text-[var(--sangam-gold)] z-20">BR</div>
 
               {/* Drei View for each card */}
-              <View className="absolute inset-0 w-full h-full pointer-events-auto">
+              <View className="absolute inset-0 w-full h-full pointer-events-auto" index={2}>
                 <PerspectiveCamera makeDefault position={[0, 0, 3.8]} fov={50} />
                 <ambientLight intensity={0.6} />
                 <directionalLight position={[4, 4, 4]} intensity={1.2} />
@@ -447,7 +447,7 @@ export default function SpikePage() {
         </div>
 
         <div className="relative w-full h-72 rounded-xl overflow-hidden border border-[var(--border-subtle)] bg-transparent">
-          <View className="absolute inset-0 w-full h-full pointer-events-auto">
+          <View className="absolute inset-0 w-full h-full pointer-events-auto" index={2}>
             <PerspectiveCamera makeDefault position={[0, 0, 3.6]} fov={45} />
             <ambientLight intensity={0.5} />
             <directionalLight position={[3, 5, 2]} intensity={1.4} />

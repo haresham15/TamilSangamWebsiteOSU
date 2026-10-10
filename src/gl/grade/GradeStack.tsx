@@ -37,18 +37,20 @@ export function GradeStack({
   const lut = useGradeLut();
   const lutRef = useRef<LUT3DEffect>(null);
   const directorGradeOn = useDirectorStore((s) => s.gradeOn);
+  const directorLutIntensity = useDirectorStore((s) => s.lutIntensity);
   const activeGradeOn = gradeOn && directorGradeOn;
 
   useEffect(() => {
     if (lutRef.current) {
-      const targetOpacity = activeGradeOn ? intensity : 0;
+      const effectiveIntensity = directorLutIntensity !== undefined ? directorLutIntensity : intensity;
+      const targetOpacity = activeGradeOn ? effectiveIntensity : 0;
       gsap.to(lutRef.current.blendMode.opacity, {
         value: targetOpacity,
-        duration: 0.25,
+        duration: 0.15,
         ease: "power2.out",
       });
     }
-  }, [activeGradeOn, intensity]);
+  }, [activeGradeOn, intensity, directorLutIntensity]);
 
   if (tier !== "A" || !lut) return null;
 

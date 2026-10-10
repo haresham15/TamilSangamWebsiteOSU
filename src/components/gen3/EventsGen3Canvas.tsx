@@ -16,6 +16,7 @@ import { Environment, BakeShadows, View } from "@react-three/drei";
 import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 import { useWarmup } from "@/components/gl/useWarmup";
 import { governor } from "@/engine/governor";
+import { SceneRegistrar } from "@/director/wireframe";
 
 // The strict blueprint mandate: magenta error state on failure, no silent fallbacks.
 class CanvasErrorBoundary extends Component<
@@ -145,7 +146,8 @@ export function EventsGen3Canvas() {
   return (
     <div ref={containerRef} className="w-full h-full min-h-[100dvh] absolute top-0 left-0 bg-transparent pointer-events-none">
       <CanvasErrorBoundary>
-        <View className="w-full h-full pointer-events-auto">
+        <View className="w-full h-full pointer-events-auto" index={2}>
+          <SceneRegistrar />
           <EventsConcertScene bespokeEnv={bespokeEnv} />
         </View>
       </CanvasErrorBoundary>

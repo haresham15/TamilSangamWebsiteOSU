@@ -1,295 +1,523 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useMemo, useSyncExternalStore } from "react";
-import { useLocale } from "@/context/LocaleContext";
-import { useLiteMode } from "@/context/LiteModeContext";
-import { Users, ArrowRight, Calendar } from "lucide-react";
-import { PalagaiButton } from "@/components/ui/PalagaiButton";
-import { Magnetic } from "@/components/ui/Magnetic";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, { useRef, useEffect, useMemo, useSyncExternalStore } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { PerspectiveCamera, View } from "@react-three/drei";
-import { governor } from "@/engine/governor";
+import { PerspectiveCamera, View, Text3D, Center, Environment, Lightformer } from "@react-three/drei";
+import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
+import { SceneRegistrar } from "@/director/wireframe";
+import { heroScrollProgress, heroDirectorState } from "@/engine/heroScrollStore";
+import { governor } from "@/engine/governor";
+import { buildSymmetricKolamHalves } from "./kolamGeometry";
 
-// Authentic Mathematical Tamil Pulli & Sikku Kamalam Kolam Generator
-function generateKolamPoints(isMobile: boolean) {
-  const points: number[] = [];
-  const colors: number[] = [];
+/**
+ * Shared Safe Frame Hook enforcing Safeguard 2 (Delta Clamping)
+ */
+function useSafeFrame(callback: (state: any, safeDelta: number) => void) {
+  useFrame((state, delta) => {
+    const safeDelta = Math.min(delta, 0.05);
+    callback(state, safeDelta);
+  });
+}
 
-  const colorWhite = new THREE.Color("#ffffff");
-  const colorMint = new THREE.Color("#55CCA2");
-  const colorGold = new THREE.Color("#FFC526");
-  const colorRose = new THREE.Color("#fb7185");
+/**
+ * Quintic C2-continuous smootherstep: 6x^5 - 15x^4 + 10x^3
+ */
+function smootherstep(x: number): number {
+  const c = Math.max(0, Math.min(1, x));
+  return c * c * c * (c * (c * 6 - 15) + 10);
+}
 
-  const addPoint = (x: number, y: number, z: number, color: THREE.Color) => {
-    points.push(x, y, z);
-    colors.push(color.r, color.g, color.b);
+/**
+ * Kolam Shader Material Patched via onBeforeCompile (§MASTER DIRECTIVE)
+ * Retains complete Three.js PBR pipeline, HDR bloom emissive response, and fog.
+ * Injects:
+ * - Travelling light wave pulses along the continuous threads
+ * - Draw-on emergence transition factor
+ * - Diagnostic Wireframe Companion for Director's Viewport (§6.3)
+ */
+function createSymmetricKolamMaterial() {
+  const uniforms = {
+    uTime: { value: 0 },
+    uDraw: { value: 0 },
   };
 
-  // 1. PULLI (The Foundation Dot Grid) - Authentic 13-to-1 Isometric Sandhu Pulli Diamond
-  // In classical Tamil culture, dots are placed first with white rice flour (Arisi Maavu)
-  const pulliSpacing = isMobile ? 0.48 : 0.52;
-  const maxN = isMobile ? 6 : 8;
-  for (let row = -maxN; row <= maxN; row++) {
-    const colsInRow = (maxN * 2 + 1) - Math.abs(row) * 2;
-    for (let c = 0; c < colsInRow; c++) {
-      const col = -(colsInRow - 1) / 2 + c;
-      const px = col * pulliSpacing;
-      const py = row * (pulliSpacing * 0.866); // 60-degree isometric lattice
-
-      // Tight cluster of particles for each pulli dot to render crisp circular rice flour marks
-      const dotDensity = isMobile ? 4 : 6;
-      for (let p = 0; p < dotDensity; p++) {
-        const angle = (p / dotDensity) * Math.PI * 2;
-        const rad = p === 0 ? 0 : 0.042;
-        const x = px + Math.cos(angle) * rad;
-        const y = py + Math.sin(angle) * rad;
-        const z = 0.02;
-
-        const distFromCenter = Math.sqrt(px * px + py * py);
-        const dotColor = distFromCenter < 0.8 ? colorGold : colorWhite;
-        addPoint(x, y, z, dotColor);
-      }
-    }
-  }
-
-  // 2. INNER KAMALAM (8-Petal Sacred Lotus Weave)
-  const innerSteps = isMobile ? 600 : 1200;
-  for (let i = 0; i <= innerSteps; i++) {
-    const t = (i / innerSteps) * Math.PI * 2;
-    // 8-petal modulated rose with sharp lotus petal cusps
-    const r = 1.38 * (0.68 + 0.32 * Math.cos(8 * t)) * (1.0 + 0.12 * Math.sin(16 * t));
-    const x = r * Math.cos(t);
-    const y = r * Math.sin(t);
-    const z = Math.sin(t * 8) * 0.06;
-    addPoint(x, y, z, colorMint);
-  }
-
-  // 3. MID-TIER SIKKU RIBBONS (Continuous Loops Weaving Around the Pulli)
-  const sikkuSteps = isMobile ? 800 : 1600;
-  for (let i = 0; i <= sikkuSteps; i++) {
-    const t = (i / sikkuSteps) * Math.PI * 2;
-
-    // Primary 8-fold ribbon looping between dots
-    const r1 = 2.65 * (0.84 + 0.24 * Math.sin(4 * t + Math.PI / 4) + 0.14 * Math.cos(8 * t));
-    const x1 = r1 * Math.cos(t);
-    const y1 = r1 * Math.sin(t);
-    const z1 = Math.cos(t * 4) * 0.08;
-    const c1 = new THREE.Color().copy(colorMint).lerp(colorWhite, 0.45);
-    addPoint(x1, y1, z1, c1);
-
-    // Complementary cross-weave ribbon (offset by 45 degrees, Brahma Mudi knot)
-    const r2 = 2.65 * (0.84 + 0.24 * Math.cos(4 * t) + 0.14 * Math.sin(8 * t));
-    const x2 = r2 * Math.cos(t);
-    const y2 = r2 * Math.sin(t);
-    const z2 = -Math.cos(t * 4) * 0.08;
-    const c2 = new THREE.Color().copy(colorGold).lerp(colorWhite, 0.35);
-    addPoint(x2, y2, z2, c2);
-  }
-
-  // 4. OUTER 16-LOBE THIRAI & ALANKARAM BORDER (Scalloped Framing Garland)
-  const outerSteps = isMobile ? 700 : 1500;
-  for (let i = 0; i <= outerSteps; i++) {
-    const t = (i / outerSteps) * Math.PI * 2;
-    const r = 4.25 * (0.91 + 0.15 * Math.sin(16 * t) + 0.07 * Math.cos(8 * t));
-    const x = r * Math.cos(t);
-    const y = r * Math.sin(t);
-    const z = Math.sin(t * 16) * 0.05;
-
-    const colorRatio = (Math.sin(t * 4) + 1) * 0.5;
-    const c = new THREE.Color().copy(colorMint).lerp(colorRose, colorRatio * 0.45);
-    addPoint(x, y, z, c);
-  }
-
-  // 5. FOUR CARDINAL GOPURAM STEP FINIALS (Traditional Temple Altar Points)
-  const cardinalAngles = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2];
-  const finialSteps = isMobile ? 25 : 45;
-  cardinalAngles.forEach((baseAngle) => {
-    for (let f = 1; f <= 3; f++) {
-      const dist = 4.45 + f * 0.4;
-      const width = (4 - f) * 0.22;
-      for (let s = 0; s <= finialSteps; s++) {
-        const u = (s / finialSteps) * 2 - 1;
-        const offset = u * width;
-        const cosB = Math.cos(baseAngle);
-        const sinB = Math.sin(baseAngle);
-        const lx = dist;
-        const ly = offset;
-        const x = lx * cosB - ly * sinB;
-        const y = lx * sinB + ly * cosB;
-        addPoint(x, y, 0.03, colorGold);
-      }
-    }
+  const mat = new THREE.MeshStandardMaterial({
+    color: "#F6EED8",
+    emissive: new THREE.Color("#FFD270"),
+    emissiveIntensity: 0.50,
+    roughness: 0.30,
+    metalness: 0.18,
+    fog: true,
   });
 
-  // 6. AMBIENT RICE FLOUR DUST PARTICLES (Subtle Micro-Sparkles)
-  let seed = 42;
-  const rand = () => {
-    seed = (seed * 9301 + 49297) % 233280;
-    return seed / 233280;
-  };
-  const dustCount = isMobile ? 250 : 600;
-  for (let i = 0; i < dustCount; i++) {
-    const rad = 0.4 + Math.sqrt(rand()) * 5.4;
-    const theta = rand() * Math.PI * 2;
-    const x = Math.cos(theta) * rad;
-    const y = Math.sin(theta) * rad;
-    const z = (rand() - 0.5) * 0.7;
-    const c = rand() > 0.6 ? colorMint : (rand() > 0.3 ? colorWhite : colorGold);
-    addPoint(x, y, z, c);
-  }
+  mat.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms);
 
-  return {
-    positions: new Float32Array(points),
-    colors: new Float32Array(colors),
+    shader.vertexShader = `
+      uniform float uDraw;
+      attribute float aArc;
+      varying float vArc;
+    ` + shader.vertexShader;
+
+    shader.vertexShader = shader.vertexShader.replace(
+      "#include <begin_vertex>",
+      `
+      #include <begin_vertex>
+      vArc = aArc;
+      float drawFactor = uDraw >= 1.0 ? 1.0 : smoothstep(aArc, aArc + 0.08, uDraw);
+      transformed = position * drawFactor;
+      `
+    );
+
+    shader.fragmentShader = `
+      uniform float uTime;
+      varying float vArc;
+    ` + shader.fragmentShader;
+
+    shader.fragmentShader = shader.fragmentShader.replace(
+      "#include <emissivemap_fragment>",
+      `
+      #include <emissivemap_fragment>
+      // Slow travelling light pulses along the continuous threads
+      float wave = sin(vArc * 6.283185 * 3.5 - uTime * 1.1) * 0.5 + 0.5;
+      float crest = smoothstep(0.90, 1.0, wave);
+      vec3 crestColor = vec3(1.0, 0.74, 0.32); // Temple amber gold
+      totalEmissiveRadiance *= (1.0 + 1.25 * crest);
+      totalEmissiveRadiance = mix(totalEmissiveRadiance, crestColor * 2.2, crest * 0.65);
+      `
+    );
   };
+
+  // Diagnostic wireframe material variant (§6.3)
+  const wireMat = new THREE.MeshBasicMaterial({
+    color: 0x00ff41,
+    wireframe: true,
+    toneMapped: false,
+  });
+
+  wireMat.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms);
+    shader.vertexShader = `
+      uniform float uDraw;
+      attribute float aArc;
+      varying float vArc;
+    ` + shader.vertexShader;
+
+    shader.vertexShader = shader.vertexShader.replace(
+      "#include <begin_vertex>",
+      `
+      #include <begin_vertex>
+      vArc = aArc;
+      float drawFactor = uDraw >= 1.0 ? 1.0 : smoothstep(aArc, aArc + 0.08, uDraw);
+      transformed = position * drawFactor;
+      `
+    );
+  };
+
+  return { material: mat, wireMaterial: wireMat, uniforms };
 }
 
-const kolamPointsCache: Record<string, { positions: Float32Array; colors: Float32Array }> = {};
-function getKolamPoints(isMobile: boolean) {
-  const key = isMobile ? "mobile" : "desktop";
-  if (!kolamPointsCache[key]) {
-    kolamPointsCache[key] = generateKolamPoints(isMobile);
-  }
-  return kolamPointsCache[key];
-}
+/**
+ * Top-Severed Peeling Wreath Component (§MASTER DIRECTIVE)
+ * Two symmetrical halves (Left and Right) that mate flush at scrollProgress = 0 with zero seam.
+ * Rigged with double hinges at the bottom-center base [0, -5, 0] with mesh offset [0, 5, 0].
+ * As scroll advances:
+ * 1. Immediately disconnects exclusively at the top seam.
+ * 2. Left hinge rotates z to -Math.PI * 0.55; Right hinge rotates z to +Math.PI * 0.55.
+ * 3. Meshes bend downward (position.y -= scrollProgress * 3) and curve outward to form the Wreath cradle.
+ * 4. Master Kolam group translates upward on Y from 0 to 9.2 (cinematic downward camera pan illusion).
+ */
+function TopSeveredKolamHeroMesh({ isMobile, tier }: { isMobile: boolean; tier: string }) {
+  const masterKolamGroupRef = useRef<THREE.Group>(null);
+  const leftHingeRef = useRef<THREE.Group>(null);
+  const rightHingeRef = useRef<THREE.Group>(null);
+  const leftMeshOffsetRef = useRef<THREE.Group>(null);
+  const rightMeshOffsetRef = useRef<THREE.Group>(null);
 
-// Custom GPU Vertex Shader (Maintains Kolam Geometry at Rest, Lifts into 3D on Scroll)
-const vertexShader = `
-  uniform float uTime;
-  uniform float uScrollProgress;
-  uniform float uPointSize;
+  const leftDotsRef = useRef<THREE.InstancedMesh>(null);
+  const rightDotsRef = useRef<THREE.InstancedMesh>(null);
 
-  attribute vec3 aColor;
-  varying vec3 vColor;
-  varying float vAlpha;
+  const introStartTimeRef = useRef<number | null>(null);
 
-  void main() {
-    vColor = aColor;
-    vec3 pos = position;
-
-    float dist = length(pos.xy);
-
-    // Serene living respiration preserving geometric integrity at rest
-    float breath = sin(dist * 2.2 - uTime * 1.4) * 0.07;
-    // On scroll: dynamic 3D vortex expansion into the letter portal
-    float vortex = uScrollProgress * sin(dist * 2.2 - uTime * 2.6) * 2.8;
-    float twist = sin(atan(pos.y, pos.x) * 8.0 + uTime * 0.6) * (0.05 + uScrollProgress * 0.25);
-
-    pos.z += breath + vortex + twist;
-
-    // Smooth GPU Rotation on Scroll
-    float angle = uScrollProgress * 1.8;
-    float cosA = cos(angle);
-    float sinA = sin(angle);
-    pos.xy = mat2(cosA, -sinA, sinA, cosA) * pos.xy;
-
-    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-    gl_Position = projectionMatrix * mvPosition;
-
-    // Perspective point attenuation for crisp rice-flour particle clarity
-    gl_PointSize = (uPointSize / -mvPosition.z) * (1.0 + uScrollProgress * 0.65);
-    vAlpha = smoothstep(22.0, 1.5, -mvPosition.z);
-  }
-`;
-
-// Custom Fragment Shader for Soft Emissive Rice Flour Particles
-const fragmentShader = `
-  varying vec3 vColor;
-  varying float vAlpha;
-
-  void main() {
-    vec2 coord = gl_PointCoord - vec2(0.5);
-    float dist = length(coord);
-    if (dist > 0.5) discard;
-
-    // Soft radial falloff for natural rice flour glow
-    float strength = pow(1.0 - (dist * 2.0), 1.5);
-    gl_FragColor = vec4(vColor, strength * vAlpha);
-  }
-`;
-
-// GPU-Driven Shader Mesh Component
-function GPUKolamParticles({
-  scrollProgressRef,
-  isMobile,
-}: {
-  scrollProgressRef: React.RefObject<number>;
-  isMobile: boolean;
-}) {
-  const pointsRef = useRef<THREE.Points>(null);
-  const data = useMemo(() => getKolamPoints(isMobile), [isMobile]);
-
-  const uniforms = useMemo(
-    () => ({
-      uTime: { value: 0 },
-      uScrollProgress: { value: 0 },
-      uPointSize: { value: isMobile ? 36.0 : 44.0 },
-    }),
-    [isMobile]
+  const radialSegments = tier === "A" ? 10 : 8;
+  const data = useMemo(
+    () => buildSymmetricKolamHalves(isMobile, radialSegments),
+    [isMobile, radialSegments]
   );
 
-  // Buttery 60-120 FPS GPU uniform update via R3F useFrame (0 CPU buffer writes)
-  useFrame(({ clock }, delta) => {
-    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
-    if (pointsRef.current) {
-      const mat = pointsRef.current.material as THREE.ShaderMaterial;
-      mat.uniforms.uTime.value += safeDelta;
-      mat.uniforms.uScrollProgress.value = scrollProgressRef.current;
+  const { material, wireMaterial, uniforms } = useMemo(
+    () => createSymmetricKolamMaterial(),
+    []
+  );
+
+  // Instanced sphere dot materials
+  const dotGeo = useMemo(() => new THREE.SphereGeometry(0.026, 10, 8), []);
+  const dotMat = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#FFF4D0",
+        emissive: "#FFC526",
+        emissiveIntensity: 0.45,
+        roughness: 0.25,
+        metalness: 0.6,
+      }),
+    []
+  );
+
+  const dotWireMat = useMemo(
+    () =>
+      new THREE.MeshBasicMaterial({
+        color: 0x00ff41,
+        wireframe: true,
+        toneMapped: false,
+      }),
+    []
+  );
+
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+
+  // Initialize initial dot matrices
+  useEffect(() => {
+    if (leftDotsRef.current && rightDotsRef.current) {
+      // Left dots
+      for (let i = 0; i < data.leftDotCount; i++) {
+        const x = data.leftPulliPositions[i * 3];
+        const y = data.leftPulliPositions[i * 3 + 1];
+        const z = data.leftPulliPositions[i * 3 + 2];
+        dummy.position.set(x, y, z);
+        dummy.scale.setScalar(1);
+        dummy.updateMatrix();
+        leftDotsRef.current.setMatrixAt(i, dummy.matrix);
+      }
+      leftDotsRef.current.instanceMatrix.needsUpdate = true;
+
+      // Right dots
+      for (let i = 0; i < data.rightDotCount; i++) {
+        const x = data.rightPulliPositions[i * 3];
+        const y = data.rightPulliPositions[i * 3 + 1];
+        const z = data.rightPulliPositions[i * 3 + 2];
+        dummy.position.set(x, y, z);
+        dummy.scale.setScalar(1);
+        dummy.updateMatrix();
+        rightDotsRef.current.setMatrixAt(i, dummy.matrix);
+      }
+      rightDotsRef.current.instanceMatrix.needsUpdate = true;
+    }
+  }, [data, dummy]);
+
+  // Hot loop execution (Safe Delta clamped)
+  useSafeFrame((state, safeDelta) => {
+    const time = state.clock.elapsedTime;
+    if (introStartTimeRef.current === null) {
+      introStartTimeRef.current = time;
+    }
+    const startTime = introStartTimeRef.current ?? time;
+    const elapsedSinceIntro = time - startTime;
+
+    // 1. Draw-on intro factor (0 -> 1 over 2.4s)
+    const targetDraw = Math.min(1.05, elapsedSinceIntro / 2.4);
+    uniforms.uDraw.value = THREE.MathUtils.lerp(uniforms.uDraw.value, targetDraw, 0.15);
+
+    // 2. Pulse waves with Director speed multiplier
+    const speedMult = heroDirectorState.speedMultiplier;
+    uniforms.uTime.value = time * speedMult;
+
+    // 3. Scroll progress (Director override if active, else live page scroll)
+    const p = heroDirectorState.scrubActive
+      ? heroDirectorState.scrubProgress
+      : heroScrollProgress.current;
+
+    // Act II progression: 0.00 -> 0.50 drives complete unravelling and wreath cradle
+    const q = THREE.MathUtils.clamp(p / 0.50, 0, 1);
+    const s = smootherstep(q);
+
+    // =========================================================================
+    // PHASE 2, ITEM 1: UNLINKING THE TOP SEAM (DOUBLE-HINGE TRANSFORMATIONS)
+    // =========================================================================
+    // Left Hinge (pivots outward to left)
+    // Left Hinge (pivots outward to left)
+    if (leftHingeRef.current) {
+      // Outward base movement as top unlinks
+      leftHingeRef.current.position.x = -1.4 * s;
+      leftHingeRef.current.position.y = -5.0 + 0.35 * s;
+
+      // Rotation: Z rolls from 0 to +Math.PI * 0.55 (peeling the left tip outward and downward)
+      leftHingeRef.current.rotation.z = Math.PI * 0.55 * s;
+      // 3D tactile depth roll: tips curl slightly toward camera and flare outward
+      leftHingeRef.current.rotation.y = -0.28 * Math.sin(Math.PI * s);
+      leftHingeRef.current.rotation.x = -0.16 * s;
+    }
+
+    // Right Hinge (pivots outward to right)
+    if (rightHingeRef.current) {
+      // Outward base movement as top unlinks
+      rightHingeRef.current.position.x = 1.4 * s;
+      rightHingeRef.current.position.y = -5.0 + 0.35 * s;
+
+      // Rotation: Z rolls from 0 to -Math.PI * 0.55 (peeling the right tip outward and downward)
+      rightHingeRef.current.rotation.z = -Math.PI * 0.55 * s;
+      // 3D tactile depth roll
+      rightHingeRef.current.rotation.y = 0.28 * Math.sin(Math.PI * s);
+      rightHingeRef.current.rotation.x = -0.16 * s;
+    }
+
+    // =========================================================================
+    // PHASE 2, ITEM 2: THE BEND (SIMULATED SPLINE UNROLL & MESH OFFSET)
+    // =========================================================================
+    // Translate meshes downward relative to hinges (position.y -= scrollProgress * 3)
+    const meshOffsetY = 5.0 - q * 3.0; // Dropping top corners down into the wreath cradle
+    const stretchX = 1.0 + 0.32 * Math.sin(Math.PI * s) + 0.12 * s;
+    const scaleZ = 1.0 + 0.35 * s;
+    const scaleY = 1.0 - 0.08 * s;
+
+    if (leftMeshOffsetRef.current) {
+      leftMeshOffsetRef.current.position.y = meshOffsetY;
+      leftMeshOffsetRef.current.scale.set(stretchX, scaleY, scaleZ);
+    }
+
+    if (rightMeshOffsetRef.current) {
+      rightMeshOffsetRef.current.position.y = meshOffsetY;
+      rightMeshOffsetRef.current.scale.set(stretchX, scaleY, scaleZ);
+    }
+
+    // =========================================================================
+    // PHASE 2, ITEM 3: CAMERA PAN (PARENT WEBGL SCENE TRANSLATION)
+    // =========================================================================
+    // Master Kolam group translates on Y: 0 -> 3.2, aligning the unrolled wreath
+    // at the bottom edge of the screen (Y ≈ -3.3 to -1.8) cradling Thirukkural 81
+    if (masterKolamGroupRef.current) {
+      masterKolamGroupRef.current.position.y = THREE.MathUtils.lerp(0, 3.2, s);
+
+      // Subtle breathing rotation during Act I idle (when closed at p = 0)
+      if (p < 0.02) {
+        masterKolamGroupRef.current.rotation.z = Math.sin(time * 0.35) * 0.015;
+      } else {
+        masterKolamGroupRef.current.rotation.z = 0;
+      }
+    }
+
+    // Dots visibility & draw scaling
+    const drawFactor = uniforms.uDraw.value;
+    const dotScale = Math.max(0.001, (1.0 - 0.25 * s) * drawFactor);
+
+    if (leftDotsRef.current) {
+      leftDotsRef.current.visible = heroDirectorState.dotsVisible;
+    }
+    if (rightDotsRef.current) {
+      rightDotsRef.current.visible = heroDirectorState.dotsVisible;
     }
   });
 
-  // Complete unmount lifecycle disposal for particle geometry and material
-  useEffect(() => {
-    const currentPoints = pointsRef.current;
-    return () => {
-      if (currentPoints) {
-        currentPoints.geometry.dispose();
-        if (Array.isArray(currentPoints.material)) {
-          currentPoints.material.forEach((m) => m.dispose());
-        } else {
-          currentPoints.material.dispose();
-        }
+  return (
+    <group ref={masterKolamGroupRef} name="MasterKolamContainer" position={[0, 0, 0]}>
+      {/* =======================================================================
+          LEFT HALF HINGE: Pivot at bottom-center base [0, -5, 0]
+          ======================================================================= */}
+      <group ref={leftHingeRef} name="LeftHinge" position={[0, -5, 0]}>
+        <group ref={leftMeshOffsetRef} name="LeftMeshOffset" position={[0, 5, 0]}>
+          {/* Left Kolam Tube Mesh */}
+          <mesh
+            geometry={data.leftGeometry}
+            material={material}
+            userData={{ wireMaterial }}
+            castShadow
+            receiveShadow
+          />
+          {/* Left Pulli Dots */}
+          <instancedMesh
+            ref={leftDotsRef}
+            args={[dotGeo, dotMat, data.leftDotCount]}
+            userData={{ wireMaterial: dotWireMat }}
+          />
+        </group>
+      </group>
+
+      {/* =======================================================================
+          RIGHT HALF HINGE: Pivot at bottom-center base [0, -5, 0]
+          ======================================================================= */}
+      <group ref={rightHingeRef} name="RightHinge" position={[0, -5, 0]}>
+        <group ref={rightMeshOffsetRef} name="RightMeshOffset" position={[0, 5, 0]}>
+          {/* Right Kolam Tube Mesh */}
+          <mesh
+            geometry={data.rightGeometry}
+            material={material}
+            userData={{ wireMaterial }}
+            castShadow
+            receiveShadow
+          />
+          {/* Right Pulli Dots */}
+          <instancedMesh
+            ref={rightDotsRef}
+            args={[dotGeo, dotMat, data.rightDotCount]}
+            userData={{ wireMaterial: dotWireMat }}
+          />
+        </group>
+      </group>
+    </group>
+  );
+}
+
+/**
+ * 3D Golden "அ" Emblem Component (§MASTER DIRECTIVE)
+ * High-fidelity single-glyph Tamil letter "அ" from Mukta Malar font,
+ * suspended at [0, 0, 0] inside the protected central void (R >= 2.05).
+ * At scrollProgress 0.0 -> 0.38: translates z from 0 -> -30 and dissolves opacity to 0.
+ */
+function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const materialRef = useRef<THREE.MeshPhysicalMaterial>(null);
+  const introStartRef = useRef<number | null>(null);
+
+  const emblemWireMat = useMemo(
+    () =>
+      new THREE.MeshBasicMaterial({
+        color: 0x00ff41,
+        wireframe: true,
+        toneMapped: false,
+      }),
+    []
+  );
+
+  useSafeFrame((state, safeDelta) => {
+    const time = state.clock.elapsedTime;
+    if (introStartRef.current === null) {
+      introStartRef.current = time;
+    }
+    const startTime = introStartRef.current ?? time;
+    const elapsed = time - startTime;
+
+    const p = heroDirectorState.scrubActive
+      ? heroDirectorState.scrubProgress
+      : heroScrollProgress.current;
+
+    // Kinematics: Exits cleanly over scrollProgress 0.0 -> 0.38
+    const tExit = THREE.MathUtils.clamp(p / 0.38, 0, 1);
+    const sExit = THREE.MathUtils.smoothstep(tExit, 0, 1);
+
+    if (groupRef.current) {
+      // Intro emergence: from z = -8 to z = 0 over 1.8s
+      let introZ = 0;
+      if (elapsed < 2.4) {
+        const introT = THREE.MathUtils.clamp((elapsed - 0.6) / 1.8, 0, 1);
+        introZ = THREE.MathUtils.lerp(-8, 0, THREE.MathUtils.smoothstep(introT, 0, 1));
       }
-    };
-  }, []);
+
+      // Idle float (damped as emblem exits)
+      const floatFactor = 1.0 - sExit;
+      const floatY = Math.sin(time * 1.05) * 0.08 * floatFactor;
+      const wobbleY = Math.sin(time * 0.75) * 0.07 * floatFactor; // ±4 deg wobble
+      const tiltX = Math.sin(time * 0.50) * 0.03 * floatFactor;
+
+      // Scroll recession: deep into fog to z = -30 (§MASTER DIRECTIVE)
+      const scrollZ = THREE.MathUtils.lerp(0, -30, sExit * sExit);
+
+      groupRef.current.position.set(0, floatY, introZ + scrollZ);
+      groupRef.current.rotation.set(tiltX, wobbleY, 0);
+
+      // Material dissolve to 0 opacity
+      if (materialRef.current) {
+        materialRef.current.opacity = 1.0 - sExit;
+        materialRef.current.transparent = true;
+      }
+    }
+  });
+
+  const letterSize = isMobile ? 1.4 : 1.85;
 
   return (
-    <points ref={pointsRef} frustumCulled={false}>
+    <group ref={groupRef} position={[0, 0, 0]}>
+      <Center>
+        <Text3D
+          font="/fonts/mukta-malar-tamil.json"
+          size={letterSize}
+          height={0.32}
+          curveSegments={64}
+          bevelEnabled
+          bevelSize={0.018}
+          bevelThickness={0.032}
+          bevelSegments={16}
+          rotation={[0, 0, 0]}
+          userData={{ wireMaterial: emblemWireMat }}
+          castShadow
+          receiveShadow
+        >
+          அ
+          <meshPhysicalMaterial
+            ref={materialRef}
+            color="#f59e0b"
+            emissive="#4a2c0c"
+            emissiveIntensity={0.28}
+            metalness={0.94}
+            roughness={0.16}
+            clearcoat={1.0}
+            clearcoatRoughness={0.08}
+            reflectivity={0.95}
+            envMapIntensity={2.0}
+          />
+        </Text3D>
+      </Center>
+    </group>
+  );
+}
+
+/**
+ * Dust Motes Atmospheric Layer (§PRD 6.4)
+ * Subtle golden dust particles drifting in the ambient void.
+ */
+function DustMotes({ isMobile, tier }: { isMobile: boolean; tier: string }) {
+  const pointsRef = useRef<THREE.Points>(null);
+  const count = tier === "A" ? (isMobile ? 60 : 120) : (isMobile ? 30 : 60);
+
+  const positions = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 1.8 + Math.random() * 3.5;
+      pos[i * 3] = Math.cos(angle) * radius;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 6.5;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 1.5;
+    }
+    return pos;
+  }, [count]);
+
+  useSafeFrame((_, safeDelta) => {
+    if (pointsRef.current) {
+      pointsRef.current.rotation.z += 0.04 * safeDelta;
+    }
+  });
+
+  return (
+    <points ref={pointsRef}>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[data.positions, 3]} />
-        <bufferAttribute attach="attributes-aColor" args={[data.colors, 3]} />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <shaderMaterial
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        uniforms={uniforms}
+      <pointsMaterial
+        size={0.035}
+        color="#FFD074"
         transparent
-        depthWrite={false}
+        opacity={0.45}
         blending={THREE.AdditiveBlending}
+        depthWrite={false}
       />
     </points>
   );
 }
 
-
-export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) {
-  const { locale } = useLocale();
+export function DigitalKolamHero() {
   const { isLiteMode } = useLiteMode();
   const tier = useTier();
   const isWebglEnabled = !isLiteMode && tier !== "C";
 
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const textGroupRef = useRef<SVGGElement>(null);
-  const contourGroupRef = useRef<SVGGElement>(null);
-  const fullRevealRef = useRef<SVGRectElement>(null);
-  const foregroundRef = useRef<HTMLDivElement>(null);
-  const contourRef = useRef<HTMLDivElement>(null);
-
-  const scrollProgressRef = useRef<number>(0);
+  const isMobile = useSyncExternalStore(
+    (callback) => {
+      window.addEventListener("resize", callback);
+      return () => window.removeEventListener("resize", callback);
+    },
+    () => (typeof window !== "undefined" ? window.innerWidth < 768 : false),
+    () => false
+  );
 
   const mounted = useSyncExternalStore(
     () => () => {},
@@ -297,372 +525,143 @@ export function DigitalKolamHero({ nextEventSlug }: { nextEventSlug?: string }) 
     () => false
   );
 
-  const isMobile = useSyncExternalStore(
-    (callback) => {
-      window.addEventListener("resize", callback);
-      return () => window.removeEventListener("resize", callback);
-    },
-    () => window.innerWidth < 768,
-    () => false
-  );
-
   useEffect(() => {
     if (!isWebglEnabled) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      if (!sectionRef.current || !textGroupRef.current) return;
-
-      // GSAP ScrollTrigger timeline pinning hero section (100dvh) with silky real-time Lenis sync
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "+=1400",
-          pin: true,
-          scrub: true,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            scrollProgressRef.current = self.progress;
-            governor.request("home-kolam", Math.abs(self.getVelocity()) > 10 ? 2 : 1);
-          },
-        },
-      });
-
-      // Desktop: 'ம்' counter is centered at approx x=460, y=210 (in 1400x350 viewBox) -> ~33% 60%
-      // Mobile: 'ழ்' counter is centered at approx x=250, y=160 -> 50% 40%
-      const originX = isMobile ? "50%" : "33%";
-      const originY = isMobile ? "40%" : "60%";
-
-      // 0. Synchronize teal contour scaling in exact parity with text cutout mask
-      if (contourGroupRef.current) {
-        tl.to(
-          contourGroupRef.current,
-          {
-            scale: 65,
-            transformOrigin: `${originX} ${originY}`,
-            duration: 0.85,
-            ease: "power2.in",
-            force3D: true,
-          },
-          0
-        );
-      }
-
-      // 1. Fade out contour as letter expands so browser never composites off-screen edges
-      if (contourRef.current) {
-        tl.to(
-          contourRef.current,
-          {
-            opacity: 0,
-            duration: 0.2,
-            ease: "power1.inOut",
-          },
-          0.35
-        );
-      }
-
-      // 2. Fade out foreground UI elements quickly as scale begins (0 - 0.22)
-      if (foregroundRef.current) {
-        tl.to(
-          foregroundRef.current,
-          {
-            opacity: 0,
-            y: -30,
-            duration: 0.22,
-            ease: "power2.out",
-          },
-          0
-        );
-      }
-
-      // 3. Scale up authentic Tamil text mask ~10,000% (scale 65) with hardware transform
-      tl.to(
-        textGroupRef.current,
-        {
-          scale: 65,
-          transformOrigin: `${originX} ${originY}`,
-          duration: 0.85,
-          ease: "power2.in",
-          force3D: true,
-        },
-        0
-      );
-
-      // 4. Once the letter counter swallows viewport, blossom into 100% full screen
-      if (fullRevealRef.current) {
-        tl.to(
-          fullRevealRef.current,
-          {
-            opacity: 1,
-            duration: 0.25,
-            ease: "power1.inOut",
-          },
-          0.7
-        );
-      }
-
-      // Refresh ScrollTrigger and resize Lenis for the newly added pin spacer
-      ScrollTrigger.refresh();
-      if (typeof window !== "undefined" && window.__lenis) {
-        window.__lenis.resize();
-      }
-    }, sectionRef);
-
+    governor.request("home-hero", 2);
     return () => {
-      ctx.revert();
-      if (typeof window !== "undefined" && window.__lenis) {
-        window.__lenis.resize();
-      }
+      governor.request("home-hero", 0);
     };
-  }, [isWebglEnabled, isMobile]);
-
-  const [inView, setInView] = useState(true);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setInView(entry.isIntersecting);
-      },
-      { threshold: 0.01 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    governor.request("home-kolam", inView ? 1 : 0);
-    return () => {
-      governor.request("home-kolam", 0);
-    };
-  }, [inView]);
+  }, [isWebglEnabled]);
 
   return (
-    <div
-      ref={sectionRef}
-      className={`relative w-full h-[100dvh] overflow-hidden text-white flex flex-col justify-between ${
-        isWebglEnabled ? "bg-transparent" : "bg-[#10061a]"
-      }`}
-      style={{ minHeight: "100dvh" }}
-    >
-      {/* 1. Full-Screen 3D Particle Canvas with Pure GPU Shader Turbulence */}
-      <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
-        {mounted && isWebglEnabled && (
-          <View className="w-full h-full pointer-events-auto">
-            <PerspectiveCamera makeDefault position={[0, 0, 7.5]} fov={50} />
-            <ambientLight intensity={0.4} />
-            <GPUKolamParticles scrollProgressRef={scrollProgressRef} isMobile={isMobile} />
-          </View>
-        )}
-      </div>
+    <div className="absolute inset-0 z-0 pointer-events-none w-full h-full overflow-hidden">
+      {mounted && isWebglEnabled && (
+        <View className="w-full h-full pointer-events-auto" index={2}>
+          <SceneRegistrar />
+          <color attach="background" args={["#050201"]} />
+          <fogExp2 attach="fog" args={["#050201", 0.03]} />
+          <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={35} />
 
-      {/* 2. SVG Mask Layer: Authentic Tamil Typography Window (தமிழ் சங்கம்) */}
-      <div className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center">
-        <svg
-          viewBox={isMobile ? "0 0 500 400" : "0 0 1400 350"}
-          className="w-full h-full object-contain"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          <defs>
-            <mask id="kolam-tamil-window-mask">
-              {/* White shield with black Tamil-script windows into the WebGL kolam. */}
-              <rect width="100%" height="100%" fill="white" />
-
-              {/* Black text cuts through the shield to reveal the 3D kolam behind it. */}
-              <g ref={textGroupRef} style={{ willChange: "transform" }}>
-                {isMobile ? (
-                  // Mobile stacked layout adhering to tamil-text skill
-                  <text
-                    lang="ta"
-                    x="250"
-                    y="170"
-                    textAnchor="middle"
-                    fill="black"
-                    fontFamily="var(--font-mukta-malar), 'Mukta Malar', var(--font-tamil), sans-serif"
-                    fontWeight="800"
-                    fontSize="94"
-                    letterSpacing="0"
-                    style={{ letterSpacing: 0, fontFamily: "var(--font-mukta-malar), 'Mukta Malar', sans-serif" }}
-                  >
-                    தமிழ்
-                    <tspan x="250" y="275">
-                      சங்கம்
-                    </tspan>
-                  </text>
-                ) : (
-                  // Desktop single wide lockup adhering to tamil-text skill
-                  <text
-                    lang="ta"
-                    x="700"
-                    y="235"
-                    textAnchor="middle"
-                    fill="black"
-                    fontFamily="var(--font-mukta-malar), 'Mukta Malar', var(--font-tamil), sans-serif"
-                    fontWeight="800"
-                    fontSize="155"
-                    letterSpacing="0"
-                    style={{ letterSpacing: 0, fontFamily: "var(--font-mukta-malar), 'Mukta Malar', sans-serif" }}
-                  >
-                    தமிழ் சங்கம்
-                  </text>
-                )}
-              </g>
-
-              {/* Full reveal rectangle fading in at 75%+ scroll */}
-              <rect
-                ref={fullRevealRef}
-                width="100%"
-                height="100%"
-                fill="white"
-                style={{ opacity: 0 }}
-              />
-            </mask>
-          </defs>
-
-          {/* Deep Navy/Purple Shield with Cutout Tamil Text Window */}
-          <rect
-            width="100%"
-            height="100%"
-            fill="#12071d"
-            mask="url(#kolam-tamil-window-mask)"
-            opacity={0.96}
-          />
-        </svg>
-      </div>
-
-      {/* 3. Soft Ambient Architectural Contour of the Tamil Script (Mukta Malar Option 1) */}
-      <div
-        ref={contourRef}
-        className="absolute inset-0 z-10 pointer-events-none w-full h-full flex items-center justify-center opacity-90 drop-shadow-[0_0_8px_rgba(85,204,162,0.4)]"
-      >
-        <svg
-          viewBox={isMobile ? "0 0 500 400" : "0 0 1400 350"}
-          className="w-full h-full object-contain overflow-visible"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          <g ref={contourGroupRef} style={{ willChange: "transform" }}>
-            {isMobile ? (
-              <text
-                lang="ta"
-                x="250"
-                y="170"
-                textAnchor="middle"
-                fill="none"
-                stroke="#55CCA2"
-                strokeWidth="1.8"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                fontFamily="var(--font-mukta-malar), 'Mukta Malar', var(--font-tamil), sans-serif"
-                fontWeight="800"
-                fontSize="94"
-                letterSpacing="0"
-                style={{ letterSpacing: 0, fontFamily: "var(--font-mukta-malar), 'Mukta Malar', sans-serif" }}
-              >
-                தமிழ்
-                <tspan x="250" y="275">
-                  சங்கம்
-                </tspan>
-              </text>
-            ) : (
-              <text
-                lang="ta"
-                x="700"
-                y="235"
-                textAnchor="middle"
-                fill="none"
-                stroke="#55CCA2"
-                strokeWidth="2"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                fontFamily="var(--font-mukta-malar), 'Mukta Malar', var(--font-tamil), sans-serif"
-                fontWeight="800"
-                fontSize="155"
-                letterSpacing="0"
-                style={{ letterSpacing: 0, fontFamily: "var(--font-mukta-malar), 'Mukta Malar', sans-serif" }}
-              >
-                தமிழ் சங்கம்
-              </text>
-            )}
-          </g>
-        </svg>
-      </div>
-
-      {/* 4. Foreground Interactive Content: Fades out as user scrolls */}
-      <div
-        ref={foregroundRef}
-        className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 pt-24 sm:pt-32 pb-8 flex flex-col justify-end h-full pointer-events-auto"
-      >
-
-        {/* Center Bilingual Inscription: Protective Glass Scrim for Crisp Readability */}
-        <div className="my-auto py-4 sm:py-8 px-4 sm:px-8 space-y-2.5 sm:space-y-3.5 text-center sm:text-left max-w-2xl bg-[#10061a]/85 backdrop-blur-md border border-purple-500/25 shadow-[4px_4px_0px_#250d38] sm:shadow-[6px_6px_0px_#250d38]">
-          <p
-            lang="ta"
-            style={{ letterSpacing: 0 }}
-            className="text-[clamp(0.875rem,0.5rem+1vw,1.25rem)] font-bold text-[#FFC526] font-tamil"
-          >
-            ஆட்டம் · பாட்டம் · கொண்டாட்டம்
-          </p>
-          <h1 className="text-[length:var(--text-display)] font-extrabold font-display tracking-tight text-white leading-[1.08] [text-wrap:balance] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] [text-shadow:0_0_24px_rgba(85,204,162,0.4)]">
-            Start the Aatam, Paatam, and Kondatam!
-            <span className="sr-only"> — OSU Tamil Sangam at The Ohio State University</span>
-          </h1>
-          <p className="text-[length:var(--text-body)] text-purple-100/90 font-body leading-relaxed max-w-xl drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
-            {locale === "ta"
-              ? "ஓஹியோ பல்கலைக்கழகத்தில் தமிழ் மாணவர்கள் மற்றும் அனைத்து நண்பர்களையும் ஒன்றிணைக்கும் கலாச்சாரப் பாலம். மொழி பேதமின்றி அனைவரும் அன்போடு வரவேற்கப்படுகிறீர்கள்!"
-              : "A welcoming campus hub for Tamil culture, good food, casual hangouts, and collegiate celebration in Columbus. Open to all students, majors, and languages."}
-          </p>
-        </div>
-
-        {/* Bottom CTA Action Bar */}
-        <div className="pt-3 sm:pt-4 border-t border-purple-500/20 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
-            <Magnetic>
-              <PalagaiButton
-                href="/join"
-                variant="mint"
-                size="md"
-                primaryText={locale === "ta" ? "இணையுங்கள்" : "Join The Club"}
-                secondaryText={locale === "ta" ? "Join The Club" : "இணையுங்கள்"}
-                icon={<Users className="w-4 h-4 text-[#250d38]" />}
-                iconPosition="left"
-                className="w-full sm:w-auto justify-center"
-              />
-            </Magnetic>
-
-            <PalagaiButton
-              href="/board"
-              variant="white"
-              size="md"
-              primaryText={locale === "ta" ? "நிர்வாகக் குழு" : "Meet The Board"}
-              secondaryText={locale === "ta" ? "Meet The Board" : "நிர்வாகக் குழு"}
-              icon={<ArrowRight className="w-3.5 h-3.5 text-[#250d38]" />}
-              iconPosition="right"
-              className="w-full sm:w-auto justify-center"
+          {/* Local Lightformer Environment rendered once (frames={1}, zero CDN dependency) */}
+          <Environment frames={1} resolution={256} background={false}>
+            {/* Upper-left warm softbox */}
+            <Lightformer
+              form="rect"
+              intensity={4.0}
+              color="#FFD9A0"
+              position={[-6, 6, 4]}
+              scale={[10, 10, 1]}
             />
+            {/* Right narrow cool strip rim light */}
+            <Lightformer
+              form="rect"
+              intensity={1.5}
+              color="#9FD6FF"
+              position={[6, 2, 3]}
+              scale={[2, 12, 1]}
+            />
+            {/* Low warm kicker flare */}
+            <Lightformer
+              form="rect"
+              intensity={2.2}
+              color="#FFB84D"
+              position={[0, -5, 3]}
+              scale={[12, 3, 1]}
+            />
+          </Environment>
 
-            {nextEventSlug && (
-              <Magnetic>
-                <PalagaiButton
-                  href={`/events/${nextEventSlug}`}
-                  variant="primary"
-                  size="md"
-                  primaryText={locale === "ta" ? "அடுத்த விழா" : "Next Event"}
-                  secondaryText={locale === "ta" ? "Next Event" : "அடுத்த விழா"}
-                  icon={<Calendar className="w-3.5 h-3.5 text-[#250d38]" />}
-                  iconPosition="right"
-                  className="w-full sm:w-auto justify-center"
-                />
-              </Magnetic>
-            )}
-          </div>
-        </div>
-      </div>
+          {/* Studio Key & Ambient Lighting */}
+          <ambientLight intensity={0.8} color="#2a1a08" />
+          <directionalLight position={[5, 8, 5]} intensity={3.0} color="#FFF8E7" castShadow />
+          <directionalLight position={[-5, 4, 4]} intensity={1.8} color="#FFE8B5" />
+          <pointLight position={[0, 0, 4.0]} intensity={4.5} color="#FFF5DE" distance={16} />
+          <pointLight position={[0, -2, 2.0]} intensity={3.0} color="#FFB84D" distance={12} />
 
-      {/* Bottom overlay gradient blending agent */}
-      <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#10061a] via-[#10061a]/80 to-transparent pointer-events-none z-10" />
+          {/* Ambient Floating Dust Motes */}
+          <DustMotes isMobile={isMobile} tier={tier} />
+
+          {/* Top-Severed Peeling Wreath Kolam Halves (§MASTER DIRECTIVE) */}
+          <TopSeveredKolamHeroMesh isMobile={isMobile} tier={tier} />
+
+          {/* Golden "அ" Emblem in Protected Central Void (R >= 2.05) */}
+          <GoldenTamilEmblem isMobile={isMobile} />
+        </View>
+      )}
+
+      {/* Tier C / Lite Mode / reduced-motion SVG Fallback (§PRD 10) */}
+      {mounted && !isWebglEnabled && (
+        <StaticKolamFallback isMobile={isMobile} />
+      )}
     </div>
   );
 }
+
+/**
+ * Static Kolam Fallback Component (§PRD 10)
+ * High-fidelity 2D vector composition rendered when WebGL is unavailable,
+ * disabled by Lite Mode, or when the user prefers reduced motion.
+ */
+function StaticKolamFallback({ isMobile }: { isMobile: boolean }) {
+  const dots: { x: number; y: number }[] = [];
+  const rings = [180, 225, 270, 315, 360, 405];
+  rings.forEach((r, ringIdx) => {
+    const count = 16 + ringIdx * 8;
+    for (let i = 0; i < count; i++) {
+      const angle = (i / count) * Math.PI * 2;
+      dots.push({
+        x: Math.round(Math.cos(angle) * r),
+        y: Math.round(Math.sin(angle) * r),
+      });
+    }
+  });
+
+  return (
+    <div className="absolute inset-0 z-0 flex items-center justify-center bg-[#050201] overflow-hidden select-none pointer-events-none">
+      <svg
+        viewBox="-480 -480 960 960"
+        className="w-full h-full max-w-[900px] max-h-[900px] object-contain opacity-90"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="goldFallbackGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#fde68a" />
+            <stop offset="40%" stopColor="#f59e0b" />
+            <stop offset="80%" stopColor="#d97706" />
+            <stop offset="100%" stopColor="#92400e" />
+          </linearGradient>
+          <radialGradient id="voidVignette" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#050201" stopOpacity="0.85" />
+            <stop offset="45%" stopColor="#050201" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#050201" stopOpacity="0" />
+          </radialGradient>
+          <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="8" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
+
+        {/* Central Void Shadow */}
+        <circle cx="0" cy="0" r="170" fill="url(#voidVignette)" />
+
+        {/* Pulli Dots Lattice */}
+        <g fill="#FFB84D" opacity="0.45">
+          {dots.map((d, i) => (
+            <circle key={i} cx={d.x} cy={d.y} r="2.5" />
+          ))}
+        </g>
+
+        {/* Sikku Concentric Braided Loops */}
+        <g fill="none" stroke="#F1E9D2" strokeWidth="2.8" opacity="0.82" strokeLinecap="round">
+          {/* Inner Laurel Loop */}
+          <path d="M 0,-185 C 100,-185 185,-100 185,0 C 185,100 100,185 0,185 C -100,185 -185,100 -185,0 C -185,-100 -100,-185 0,-185 Z" />
+
+          {/* Undulating Sikku Braids */}
+          <path d="M 0,-240 C 70,-260 140,-210 200,-160 C 260,-110 280,-40 270,30 C 260,100 200,160 140,210 C 80,260 0,270 0,270 C 0,270 -80,260 -140,210 C -200,160 -260,100 -270,30 C -280,-40 -260,-110 -200,-160 C -140,-210 -70,-260 0,-240 Z" />
+          <path d="M 0,-310 C 100,-330 200,-270 280,-200 C 350,-130 370,-30 350,60 C 330,150 250,230 170,290 C 90,340 0,350 0,350 C 0,350 -90,340 -170,290 C -250,230 -330,150 -350,60 C -370,-30 -350,-130 -280,-200 C -200,-270 -100,-330 0,-310 Z" />
+          <path d="M 0,-380 C 120,-410 250,-330 350,-240 C 430,-150 450,-30 420,80 C 390,190 290,290 190,360 C 90,420 0,430 0,430 C 0,430 -90,420 -190,360 C -290,290 -390,190 -420,80 C -450,-30 -430,-150 -350,-240 C -250,-330 -120,-410 0,-380 Z" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+export default DigitalKolamHero;
