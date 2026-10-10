@@ -82,10 +82,11 @@ export function SplitFlapMiniHeader({ onSearchFocus }: SplitFlapMiniHeaderProps)
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3 text-xs font-mono">
         {/* Left: Mechanical Split-Flap Letter Tiles (~28 cells) */}
-        <div
+        <button
+          type="button"
           onClick={scrollToHero}
-          className="flex items-center gap-2.5 shrink-0 cursor-pointer group"
-          title="Scroll back to departure board"
+          className="flex items-center gap-2.5 shrink-0 cursor-pointer group appearance-none bg-transparent border-none p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] text-left"
+          aria-label="Scroll back to departure board"
         >
           {/* Status pip */}
           <span className="w-2 h-2 rounded-full bg-[#55CCA2] animate-pulse shrink-0 hidden sm:inline-block" />
@@ -112,7 +113,7 @@ export function SplitFlapMiniHeader({ onSearchFocus }: SplitFlapMiniHeaderProps)
               );
             })}
           </div>
-        </div>
+        </button>
 
         {/* Right: Quick Actions */}
         <div className="flex items-center gap-2 shrink-0">
