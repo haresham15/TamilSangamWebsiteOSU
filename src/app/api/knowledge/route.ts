@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const saved = saveKnowledgeItem({
+    const saved = await saveKnowledgeItem({
       id,
       titleEn,
       titleTa,
@@ -88,7 +88,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const deleted = deleteKnowledgeItem(id);
+    const deleted = await deleteKnowledgeItem(id);
 
     if (!deleted) {
       return NextResponse.json(
