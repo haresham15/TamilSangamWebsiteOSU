@@ -1,3 +1,3 @@
-## 2024-10-24 - Accessibility Enhancements
-**Learning:** Found several buttons lacking context or proper aria states for screen readers (e.g. `aria-pressed`, `aria-expanded`).
-**Action:** Always ensure interactive elements with toggle states or symbolic text (like '✕') have proper `aria-` attributes.
+## 2023-10-11 - [ARIA Labels on Icon-Only Buttons]
+**Learning:** Found an icon-only button used to flip the `HolographicCard` 3D component on the board page which lacked an `aria-label`. It's crucial for screen reader users that any interactive elements without text have a descriptive `aria-label` so their purpose is clear.
+**Action:** Applied `aria-label="Flip Card"` to the `<button>` to ensure screen readers correctly interpret its function. In the future, always inspect buttons containing only icons (e.g. `<RotateCw />`) for missing accessibility labels.
