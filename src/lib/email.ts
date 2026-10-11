@@ -170,6 +170,15 @@ export async function getSubscribersStats(): Promise<{
 /**
  * Generates an accessible, branded HTML welcome email
  */
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 export function generateWelcomeEmailHtml(params: {
   email: string;
   name?: string;
@@ -177,10 +186,11 @@ export function generateWelcomeEmailHtml(params: {
   interests?: string[];
 }): { html: string; text: string } {
   const { email, name, isBuckeye, interests } = params;
-  const greeting = name ? `Vanakkam, ${name}!` : isBuckeye ? "Vanakkam, Fellow Buckeye!" : "Vanakkam & Welcome!";
+  const safeName = name ? escapeHtml(name) : undefined;
+  const greeting = safeName ? `Vanakkam, ${safeName}!` : isBuckeye ? "Vanakkam, Fellow Buckeye!" : "Vanakkam & Welcome!";
 
   const interestsList = interests && interests.length > 0
-    ? interests.map((i) => `<li>• ${i.charAt(0).toUpperCase() + i.slice(1)}</li>`).join("")
+    ? interests.map((i) => `<li>• ${escapeHtml(i.charAt(0).toUpperCase() + i.slice(1))}</li>`).join("")
     : "<li>• Flagship cultural festivals & ticket drops</li><li>• Authentic street food feasts & chai socials</li><li>• Casual Oval lawn kickbacks & games</li>";
 
   const html = `<!DOCTYPE html>

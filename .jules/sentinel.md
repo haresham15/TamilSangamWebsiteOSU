@@ -2,3 +2,8 @@
 **Vulnerability:** Found multiple instances where structured data (JSON-LD) was directly serialized using `JSON.stringify(data)` and injected via `dangerouslySetInnerHTML`. An attacker could theoretically inject a `</script>` tag inside user-provided JSON-LD data and execute arbitrary JavaScript.
 **Learning:** React's standard `dangerouslySetInnerHTML` for `<script type="application/ld+json">` is vulnerable to XSS if the JSON payload is not escaped, because the HTML parser sees the closing `</script>` string before the JSON parser finishes.
 **Prevention:** Always escape the `<` character in JSON payload strings when injecting them into script tags. Using a pattern like `JSON.stringify(data).replace(/</g, '\\u003c')` securely neutralizes the attack vector while preserving valid JSON-LD structure.
+
+## 2025-02-28 - [Email Template HTML Injection (Spoofing/XSS)]
+**Vulnerability:** The `/api/stay-in-sangam` endpoint ingested user parameters (`name` and `interests`) and injected them directly into an HTML template (`generateWelcomeEmailHtml`) without escaping. An attacker could inject malicious `<script>` tags, phishing links, or spoofed HTML that would be emailed out from the Sangam's official address, leading to a highly credible phishing or injection attack.
+**Learning:** Never trust user input, even if it's meant for an automated email receipt. String concatenation in email HTML payloads functions the same way as `dangerouslySetInnerHTML` or raw DOM injection and is susceptible to injection payloads.
+**Prevention:** Implement and apply a robust `escapeHtml` function that sanitizes input (replacing `<, >, &, ", '` with entity equivalents) before passing it into any HTML template, especially those leaving the system boundary like emails.
