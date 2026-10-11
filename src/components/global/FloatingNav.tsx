@@ -106,6 +106,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
     };
 
     let heroThreshold = getHeroScrollThreshold();
+    let currentNavState: "visible" | "hidden" | "uninitialized" = "uninitialized";
 
     const glassClasses = [
       "backdrop-blur-md",
@@ -116,8 +117,12 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
 
     const applyScrollState = (scrollY: number) => {
       const isPastHero = scrollY >= heroThreshold;
+      const nextState = (isPastHero || isMobileMenuOpen) ? "visible" : "hidden";
 
-      if (isPastHero || isMobileMenuOpen) {
+      if (nextState === currentNavState) return;
+      currentNavState = nextState;
+
+      if (nextState === "visible") {
         // Scrolled through the hero one full time: Navbar is FULLY VISIBLE & pinned!
         // It NEVER hides on down-scroll!
         header.classList.remove(
@@ -146,6 +151,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
     // Recalculate on resize
     const handleResize = () => {
       heroThreshold = getHeroScrollThreshold();
+      currentNavState = "uninitialized"; // Force re-evaluation
       applyScrollState(window.scrollY);
     };
 
@@ -155,6 +161,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
       if (window.scrollY < heroThreshold && !isMobileMenuOpen) {
         if (e.clientY <= 36 && !isHoveringTop) {
           isHoveringTop = true;
+          currentNavState = "visible";
           header.classList.remove(
             "-translate-y-full",
             "opacity-0",
@@ -166,6 +173,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
           glassClasses.forEach((cls) => header.classList.add(cls));
         } else if (e.clientY > 80 && isHoveringTop) {
           isHoveringTop = false;
+          currentNavState = "uninitialized"; // Force re-evaluation
           applyScrollState(window.scrollY);
         }
       }
