@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Audit · Framer-Style Layout Board · OSU Tamil Sangam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0c10;
+      --card-bg: #141318;
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #FFB84D;
+      --accent-subtle: rgba(255, 184, 77, 0.15);
+      --purple: #8B5CF6;
+      --text-primary: #F4F4F6;
+      --text-secondary: #9E9EA8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
+        radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 100% 100%, 32px 32px;
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      padding: 40px 32px 100px;
+      overflow-x: auto;
+    }
+    header {
+      max-width: 1600px;
+      margin: 0 auto 48px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 24px;
+    }
+    .brand-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+    .meta-pills {
+      display: flex;
+      gap: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+    .pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      color: var(--text-secondary);
+    }
+    .pill strong { color: var(--text-primary); }
+
+    /* Framer Canvas Artboard Strip */
+    .framer-canvas {
+      display: flex;
+      gap: 40px;
+      overflow-x: auto;
+      padding: 20px 8px 60px;
+      scroll-snap-type: x mandatory;
+    }
+    .artboard-card {
+      flex: 0 0 460px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      scroll-snap-align: start;
+    }
+    .artboard-card:hover {
+      border-color: rgba(255, 184, 77, 0.4);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 184, 77, 0.1);
+      transform: translateY(-4px);
+    }
+    .artboard-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .artboard-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .artboard-ta {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .artboard-route {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: var(--text-secondary);
+    }
+    .artboard-preview {
+      width: 100%;
+      height: 720px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #000;
+      position: relative;
+    }
+    .artboard-preview::-webkit-scrollbar {
+      width: 6px;
+    }
+    .artboard-preview::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+    }
+    .artboard-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .artboard-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .artboard-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+    .btn-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-decoration: none;
+      color: var(--accent);
+      border: 1px solid var(--accent-subtle);
+      background: rgba(255, 184, 77, 0.05);
+      padding: 5px 12px;
+      border-radius: 6px;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .btn-link:hover {
+      background: var(--accent);
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand-eyebrow">OSU Tamil Sangam · Design Engineering</div>
+      <h1>Navbar Content Audit Board</h1>
+    </div>
+    <div class="meta-pills">
+      <div class="pill">Scope: <strong>8 Navbar Pages</strong></div>
+      <div class="pill">Mode: <strong>Content Only (Hero 3D Omitted)</strong></div>
+      <div class="pill">Viewport: <strong>1440px Desktop</strong></div>
+    </div>
+  </header>
+
+  <div class="framer-canvas">
+    
+      <div class="artboard-card" id="card-01-home">
+        <div class="artboard-header">
+          <div class="artboard-title">
+            <span>Home</span>
+            <span class="artboard-ta">முகப்பு</span>
+          </div>
+          <span class="artboard-route">/</span>
+        </div>
+        <div class="artboard-preview">
+          <img src="./01-home.png" alt="Home Content Screenshot" loading="lazy">
+        </div>
+        <div class="artboard-footer">
+          <p>Monolith prologue, featured flagship festival, filter coffee card, recent gatherings, cultural glossary & community join CTA</p>
+          <div class="artboard-actions">
+            <a href="./01-home.png" target="_blank" class="btn-link">View Full Image ↗</a>
+            <a href="http://localhost:3000/" target="_blank" class="btn-link">Open Live Route ↗</a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="artboard-card" id="card-02-events">
+        <div class="artboard-header">
+          <div class="artboard-title">
+            <span>Events</span>
+            <span class="artboard-ta">நிகழ்வுகள்</span>
+          </div>
+          <span class="artboard-route">/events</span>
+        </div>
+        <div class="artboard-preview">
+          <img src="./02-events.png" alt="Events Content Screenshot" loading="lazy">
+        </div>
+        <div class="artboard-footer">
+          <p>Festival arena, academic year timeline filter, event cards (dates, venues, ticket links) & memory archive</p>
+          <div class="artboard-actions">
+            <a href="./02-events.png" target="_blank" class="btn-link">View Full Image ↗</a>
+            <a href="http://localhost:3000/events" target="_blank" class="btn-link">Open Live Route ↗</a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="artboard-card" id="card-03-about">
+        <div class="artboard-header">
+          <div class="artboard-title">
+            <span>About</span>
+            <span class="artboard-ta">அறிமுகம்</span>
+          </div>
+          <span class="artboard-route">/about</span>
+        </div>
+        <div class="artboard-preview">
+          <img src="./03-about.png" alt="About Content Screenshot" loading="lazy">
+        </div>
+        <div class="artboard-footer">
+          <p>Ethos & constitution, 4 pillars of Sangam, founding timeline (2021-2026), partner affiliations & FAQs</p>
+          <div class="artboard-actions">
+            <a href="./03-about.png" target="_blank" class="btn-link">View Full Image ↗</a>
+            <a href="http://localhost:3000/about" target="_blank" class="btn-link">Open Live Route ↗</a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="artboard-card" id="card-04-board">
+        <div class="artboard-header">
+          <div class="artboard-title">
+            <span>Board</span>
+            <span class="artboard-ta">அவை</span>
+          </div>
+          <span class="artboard-route">/board</span>
+        </div>
+        <div class="artboard-preview">
+          <img src="./04-board.png" alt="Board Content Screenshot" loading="lazy">
+        </div>
+        <div class="artboard-footer">
+          <p>Executive board roster (9 officers), liquid roster, subcommittee councils, constitutional governance & officer cards</p>
+          <div class="artboard-actions">
+            <a href="./04-board.png" target="_blank" class="btn-link">View Full Image ↗</a>
+            <a href="http://localhost:3000/board" target="_blank" class="btn-link">Open Live Route ↗</a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="artboard-card" id="card-05-gallery">
+        <div class="artboard-header">
+          <div class="artboard-title">
+            <span>Gallery</span>
+            <span class="artboard-ta">நினைவுகள்</span>
+          </div>
+          <span class="artboard-route">/gallery</span>
+        </div>
+        <div class="artboard-preview">
+          <img src="./05-gallery.png" alt="Gallery Content Screenshot" loading="lazy">
+        </div>
+        <div class="artboard-footer">
+          <p>Collegiate memory archive, album era filters, photo stories (Picnic, Sapad, Jathara), and photo mosaics</p>
+          <div class="artboard-actions">
+            <a href="./05-gallery.png" target="_blank" class="btn-link">View Full Image ↗</a>
+            <a href="http://localhost:3000/gallery" target="_blank" class="btn-link">Open Live Route ↗</a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="artboard-card" id="card-06-guide">
+        <div class="artboard-header">
+          <div class="artboard-title">
+            <span>Guide</span>
+            <span class="artboard-ta">வழிகாட்டி</span>
+          </div>
+          <span class="artboard-route">/guide</span>
+        </div>
+        <div class="artboard-preview">
+          <img src="./06-guide.png" alt="Guide Content Screenshot" loading="lazy">
+        </div>
+        <div class="artboard-footer">
+          <p>Student handbook, Columbus Tamil guide, categorized knowledge base & searchable FAQ question bank</p>
+          <div class="artboard-actions">
+            <a href="./06-guide.png" target="_blank" class="btn-link">View Full Image ↗</a>
+            <a href="http://localhost:3000/guide" target="_blank" class="btn-link">Open Live Route ↗</a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="artboard-card" id="card-07-suggestions">
+        <div class="artboard-header">
+          <div class="artboard-title">
+            <span>Ideas</span>
+            <span class="artboard-ta">கருத்து</span>
+          </div>
+          <span class="artboard-route">/suggestions</span>
+        </div>
+        <div class="artboard-preview">
+          <img src="./07-suggestions.png" alt="Ideas Content Screenshot" loading="lazy">
+        </div>
+        <div class="artboard-footer">
+          <p>Initiatives & suggestions portal, community category selector, interactive submission form & feedback guidelines</p>
+          <div class="artboard-actions">
+            <a href="./07-suggestions.png" target="_blank" class="btn-link">View Full Image ↗</a>
+            <a href="http://localhost:3000/suggestions" target="_blank" class="btn-link">Open Live Route ↗</a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="artboard-card" id="card-08-join">
+        <div class="artboard-header">
+          <div class="artboard-title">
+            <span>Join</span>
+            <span class="artboard-ta">இணையுங்கள்</span>
+          </div>
+          <span class="artboard-route">/join</span>
+        </div>
+        <div class="artboard-preview">
+          <img src="./08-join.png" alt="Join Content Screenshot" loading="lazy">
+        </div>
+        <div class="artboard-footer">
+          <p>Buckeye membership gateway, 3-step brutalist application form (General, Performer, Committee), community links</p>
+          <div class="artboard-actions">
+            <a href="./08-join.png" target="_blank" class="btn-link">View Full Image ↗</a>
+            <a href="http://localhost:3000/join" target="_blank" class="btn-link">Open Live Route ↗</a>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+</body>
+</html>
