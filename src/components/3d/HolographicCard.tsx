@@ -196,6 +196,7 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
                 type="button"
                 onClick={handleFlip}
                 className="w-7 h-7 flex items-center justify-center border border-[#6b4a32] bg-[#24140b] hover:bg-[#3d2714] text-[#e0b968] rounded transition-colors"
+                aria-label="Flip Card"
               >
                 <RotateCw className="w-3.5 h-3.5 text-[#D4AF37]" />
               </button>
