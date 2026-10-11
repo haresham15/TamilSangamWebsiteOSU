@@ -218,13 +218,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
             filteredItems.map((item, idx) => {
               const isSelected = idx === selectedIndex;
               return (
-                <div
+                <button
+                  type="button"
                   key={item.id}
                   role="option"
                   aria-selected={isSelected}
                   onClick={() => handleSelect(item)}
                   onMouseEnter={() => setSelectedIndex(idx)}
-                  className={`flex items-center justify-between px-4 py-3 cursor-pointer border-2 transition-[background-color,border-color,box-shadow,color] duration-150 ease-out ${
+                  className={`appearance-none text-left w-full flex items-center justify-between px-4 py-3 cursor-pointer border-2 transition-[background-color,border-color,box-shadow,color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2] ${
                     isSelected ? "bg-[#250d38] border-[#55CCA2] shadow-[3px_3px_0px_#55CCA2] text-white" : "border-transparent text-white/90 hover:bg-white/5"
                   }`}
                 >
@@ -243,7 +244,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                     </div>
                   </div>
                   <ArrowRight className={`w-4 h-4 shrink-0 transition-opacity ${isSelected ? "opacity-100 text-[#55CCA2]" : "opacity-0"}`} />
-                </div>
+                </button>
               );
             })
           )}

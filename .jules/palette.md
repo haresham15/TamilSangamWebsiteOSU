@@ -1,3 +1,3 @@
-## 2024-10-24 - Accessibility Enhancements
-**Learning:** Found several buttons lacking context or proper aria states for screen readers (e.g. `aria-pressed`, `aria-expanded`).
-**Action:** Always ensure interactive elements with toggle states or symbolic text (like '✕') have proper `aria-` attributes.
+## 2024-10-09 - Accessible Command Palettes
+**Learning:** Found an accessibility issue pattern in custom command palettes where search results are rendered as `<div role="option" onClick={...}>`. While `role="option"` and JS keyboard event handling provide some accessibility, they lack native browser benefits like semantic structural meaning, automatic focus styles, and form participation.
+**Action:** Always replace interactive `<div onClick={...}>` components with `<button type="button">`. Use reset classes like `appearance-none text-left w-full focus-visible:outline-none focus-visible:ring-2` to maintain the visual design without compromising structural accessibility.
