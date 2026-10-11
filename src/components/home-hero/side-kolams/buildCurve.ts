@@ -94,8 +94,8 @@ export function sampleSegment(
   const [sx, sy] = gridToLocal(cFrom.x, cFrom.y, d, rotate45);
   const [ex, ey] = gridToLocal(cTo.x, cTo.y, d, rotate45);
 
-  let a0 = Math.atan2(sy - cy, sx - cx);
-  let a1 = Math.atan2(ey - cy, ex - cx);
+  const a0 = Math.atan2(sy - cy, sx - cx);
+  const a1 = Math.atan2(ey - cy, ex - cx);
 
   // Normalize angle delta based on segment type
   let delta = a1 - a0;

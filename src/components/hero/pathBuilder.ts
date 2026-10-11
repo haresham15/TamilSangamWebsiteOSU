@@ -136,7 +136,7 @@ export function generateStrandWaypoints(
     const y = topY - i * dy;
     const progressY = i / numSteps; // 0 at top (tail), 1 at bottom (head)
 
-    let x = baseColX;
+    const x = baseColX;
 
     // Weaving swerve around dots: harmonic Sikku trochoid
     const theta = progressY * 12 * Math.PI + phaseOffset;

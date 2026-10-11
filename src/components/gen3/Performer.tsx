@@ -6,7 +6,7 @@ import { useFrame } from "@react-three/fiber";
 import { getScrollProgress } from "./useScrollCinematic";
 import { useRimShaderMaterial } from "./useRimShaderMaterial";
 import * as THREE from "three";
-import { KTX2Loader } from "three-stdlib";
+import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 
 // Human deliverable required for this to load successfully.
 const MODEL_URL = "/models/performer.glb";
