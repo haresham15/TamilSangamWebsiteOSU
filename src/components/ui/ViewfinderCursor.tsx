@@ -1,12 +1,12 @@
 // src/components/ui/ViewfinderCursor.tsx
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
 /**
  * FLOATING TAMIL "அ" (A) CURSOR
- * Replaces the technical viewfinder crosshair with a floating, organic Tamil letter 'அ'.
+ * Organic, floating Tamil letter 'அ' accompanied by a precision focal point.
  * - 60fps tracking driven by GSAP quickTo without React state lag.
  * - Dynamic color inversion via mix-blend-difference ensuring high contrast over light & dark sections.
  * - Gentle ambient floating sine wave drift.
@@ -17,7 +17,6 @@ export function ViewfinderCursor() {
   const containerRef = useRef<HTMLDivElement>(null);
   const glyphRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -32,8 +31,8 @@ export function ViewfinderCursor() {
     if (!container || !glyph) return;
 
     // GSAP quickTo kinematics for buttery 60fps cursor positioning
-    const xTo = gsap.quickTo(container, "x", { duration: 0.1, ease: "power3" });
-    const yTo = gsap.quickTo(container, "y", { duration: 0.1, ease: "power3" });
+    const xTo = gsap.quickTo(container, "x", { duration: 0.08, ease: "power3" });
+    const yTo = gsap.quickTo(container, "y", { duration: 0.08, ease: "power3" });
 
     // Subtle organic floating float animation on the Tamil letter
     const floatTween = gsap.to(glyph, {
@@ -46,9 +45,13 @@ export function ViewfinderCursor() {
     });
 
     let isFocused = false;
+    let hasMoved = false;
 
     const onPointerMove = (e: PointerEvent) => {
-      if (!isVisible) setIsVisible(true);
+      if (!hasMoved) {
+        hasMoved = true;
+        gsap.to(container, { opacity: 1, duration: 0.15, overwrite: "auto" });
+      }
       xTo(e.clientX);
       yTo(e.clientY);
     };
@@ -119,7 +122,8 @@ export function ViewfinderCursor() {
     };
 
     const onPointerLeaveWindow = () => {
-      setIsVisible(false);
+      hasMoved = false;
+      gsap.to(container, { opacity: 0, duration: 0.15, overwrite: "auto" });
     };
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -136,7 +140,7 @@ export function ViewfinderCursor() {
       document.removeEventListener("mouseover", onPointerOver);
       document.removeEventListener("mouseleave", onPointerLeaveWindow);
     };
-  }, [isVisible]);
+  }, []);
 
   return (
     <div
@@ -150,8 +154,7 @@ export function ViewfinderCursor() {
         zIndex: 999999,
         mixBlendMode: "difference",
         transform: "translate(-50%, -50%)",
-        opacity: isVisible ? 1 : 0,
-        transition: "opacity 0.15s ease-out",
+        opacity: 0,
       }}
       className="hidden md:flex items-center justify-center select-none"
     >
