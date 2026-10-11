@@ -277,18 +277,18 @@ export default function HomePage() {
             className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center px-4 sm:px-8 text-center"
             style={{ opacity: 0 }}
           >
-            <div className="max-w-3xl mx-auto flex flex-col items-center justify-center translate-y-8 sm:translate-y-12 lg:translate-y-14">
+            <div className="max-w-2xl mx-auto flex flex-col items-center justify-center">
               {/* Tier 1: Tamil Inscription (Strictly 2 Lines, Blur 10px -> 0px, y: 35 -> 0, NO shadow) */}
               <blockquote
                 ref={kuralTamilRef}
                 lang="ta"
-                className="font-noto-serif-tamil text-[clamp(1.35rem,2.4vw,2.25rem)] text-[#FAFAFA] font-medium tracking-wide"
-                style={{ letterSpacing: "0.02em" }}
+                className="font-noto-serif-tamil text-[clamp(1.15rem,1.65vw,1.55rem)] text-[#FAFAFA] font-medium"
+                style={{ letterSpacing: "0px" }}
               >
                 <span className="block sm:whitespace-nowrap leading-[1.8] sm:leading-[1.9]">
                   இருந்தோம்பி இல்வாழ்வ தெல்லாம் விருந்தோம்பி
                 </span>
-                <span className="block sm:whitespace-nowrap mt-4 sm:mt-5 leading-[1.8] sm:leading-[1.9]">
+                <span className="block sm:whitespace-nowrap mt-3 sm:mt-4 leading-[1.8] sm:leading-[1.9]">
                   வேளாண்மை செய்தற் பொருட்டு.
                 </span>
               </blockquote>
@@ -296,7 +296,7 @@ export default function HomePage() {
               {/* Tier 2: Translation (SplitText word-by-word cascade) */}
               <p
                 ref={kuralEnglishRef}
-                className="font-space-mono text-xs sm:text-sm text-white/80 max-w-xl mt-8 sm:mt-10 leading-relaxed sm:leading-loose tracking-wide"
+                className="font-space-mono text-xs sm:text-sm text-white/80 max-w-lg mt-6 sm:mt-7 leading-relaxed sm:leading-loose tracking-wide"
               >
                 &ldquo;The entire virtue of establishing a home is to welcome guests with an open heart and extend generosity.&rdquo;
               </p>
@@ -304,7 +304,7 @@ export default function HomePage() {
               {/* Tier 3: Clean, unboxed monospace line (§MASTER DIRECTIVE) */}
               <div
                 ref={kuralMetaRef}
-                className="mt-6 sm:mt-8 font-space-mono text-[10px] sm:text-[11px] text-[#FFB84D]/85 tracking-[0.22em] uppercase"
+                className="mt-5 sm:mt-6 font-space-mono text-[10px] sm:text-[11px] text-[#FFB84D]/85 tracking-[0.22em] uppercase"
               >
                 THIRUKKURAL 81 // ADHIGAARAM 9
               </div>
