@@ -4,28 +4,30 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence, Variants } from "framer-motion";
 import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS, BoardMember } from "@/data/board";
-import { CLUB_PURPOSE, MEMBERSHIP_GOVERNANCE } from "@/data/constitution";
-import { HolographicCard } from "@/components/3d/HolographicCard";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { ArrowUpRight, Mail, ArrowRight, X, Crown } from "lucide-react";
-import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
+import { audioLayer } from "@/utils/audioLayer";
+import { Crown, Mail, ArrowUpRight } from "lucide-react";
 import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
+import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 
-
-// Dynamically load 3D Chola Darbar corridor hero without SSR
+// =========================================================================
+// CRITICAL & IMMUTABLE: 3D Chola Darbar corridor hero scene
+// HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES
+// =========================================================================
 const BoardHeroCanvas = dynamic(
   () => import("@/components/board/BoardHeroCanvas").then((m) => m.BoardHeroCanvas),
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[70dvh] bg-[#120A06] flex flex-col items-center justify-center text-[#FFB84D] font-cyber-mono text-xs lowercase gap-3 border-b border-[#3d2714]">
+      <div className="w-full h-[70dvh] bg-[#120A06] flex flex-col items-center justify-center text-[#E5A93C] font-sans text-sm gap-3 border-b border-[#3d2714]">
         <div className="flex items-center gap-2">
-          <Crown className="w-4 h-4 text-[#FFB84D] animate-pulse" />
+          <Crown className="w-5 h-5 text-[#E5A93C] animate-pulse" />
           <span className="tracking-widest">
-            awakening ponniyin selvan chola darbar colonnade... [ webgl core ]
+            Loading student leadership colonnade...
           </span>
         </div>
       </div>
@@ -33,514 +35,213 @@ const BoardHeroCanvas = dynamic(
   }
 );
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.06,
-      delayChildren: 0.08,
-    },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const },
-  },
-};
-
 export default function BoardPage() {
   const { locale } = useLocale();
-  const { playClick, playWoodClick } = useAudio();
+  const { playClick } = useAudio();
 
-  const [activeTab, setActiveTab] = useState<"current" | "liquid" | "subcommittee" | "governance" | "join-board">("current");
   const [hoveredMember, setHoveredMember] = useState<BoardMember>(CURRENT_BOARD[0]);
-  const [activeModalCard, setActiveModalCard] = useState<BoardMember | null>(null);
-
-  const committees = [
-    {
-      titleEn: "Cultural & Performance Committee (Aatam & Paatam)",
-      titleTa: "கலாச்சார & கலைக் குழு",
-      descriptionEn: "Choreographing group dances, curating live acoustic concerts, managing stage lighting, and coaching new performers.",
-      descriptionTa: "நடனப் பயிற்சி, நேரடி இசைக் குழுக்கள், மற்றும் மேடை கலை நிகழ்ச்சிகளை வடிவமைக்கும் பிரிவு.",
-      roles: ["Student Choreographer", "Music Director", "Stage Manager"],
-    },
-    {
-      titleEn: "Media, Visuals & Marketing Crew",
-      titleTa: "ஊடகம் & விளம்பரக் குழு",
-      descriptionEn: "Creating cinematic event posters, managing Instagram & TikTok (@osutamilsangam), shooting event photos, and designing promotional trailers.",
-      descriptionTa: "சமூக வலைதள விளம்பரங்கள், புகைப்படக் கலை, மற்றும் போஸ்டர் வடிவமைப்பு.",
-      roles: ["Graphic Designer", "Social Media Coordinator", "Event Photographer"],
-    },
-    {
-      titleEn: "Festival Operations & Logistics",
-      titleTa: "நிகழ்வு ஒருங்கிணைப்பு & வரவேற்புக் குழு",
-      descriptionEn: "Coordinating venue setup at the Ohio Union, catering authentic banana leaf meals, ticketing, and welcoming guests.",
-      descriptionTa: "விழா அரங்க மேலாண்மை, தலைவாழை இலை உணவு ஏற்பாடு, மற்றும் விருந்தினர் வரவேற்பு.",
-      roles: ["Logistics Coordinator", "Hospitality Lead", "Volunteer Coordinator"],
-    },
-    {
-      titleEn: "Community Outreach & Freshman Welcoming",
-      titleTa: "மாணவர் தொடர்பு & வழிகாட்டல்",
-      descriptionEn: "Connecting incoming undergraduate and graduate students, planning campus chai socials, and hosting study nights.",
-      descriptionTa: "புதிய மாணவர்களுக்கான வழிகாட்டல் மற்றும் நட்புச் சந்திப்புகள்.",
-      roles: ["Freshman Ambassador", "Graduate Student Liaison", "Mentorship Lead"],
-    },
-  ];
 
   return (
-    <main className="relative w-full min-h-screen bg-transparent text-[#faf5ed]">
-      {/* ========================================================================= */}
-      {/* 1. CINEMATIC 3D HERO: PONNIYIN SELVAN CHOLA DARBAR CRANE CORRIDOR         */}
-      {/* ========================================================================= */}
-      <section
-        id="chola-darbar-hero"
+    <div className="w-full text-left bg-transparent">
+      {/* 1. Cinematic 3D Chola Darbar Hero - IMMUTABLE */}
+      <div
+        id="board-hero-trigger"
         data-hero-container="true"
-        className="relative w-full overflow-hidden bg-transparent"
+        className="w-full h-[100dvh] relative z-10 overflow-hidden bg-transparent"
       >
         <BoardHeroCanvas />
-      </section>
+      </div>
 
-      {/* Color Gradient Transition from 3D Chola Darbar (#120A06) to Warm Sandstone Ledger (#F7F0E4) */}
+      {/* Hero to Content Gradient Transition */}
       <HeroGradientTransition variant="board" className="-mt-32 relative z-20" />
 
-      {/* ========================================================================= */}
-      {/* 2. EDITORIAL ROSTER GRID & ARCHITECTURAL LEDGER                           */}
-      {/* ========================================================================= */}
-      <div className="relative z-20 w-full bg-[#F7F0E4] text-[#1C120A] pt-16 pb-24 overflow-hidden">
-        {/* Structural Tamil Background Watermarks */}
-        <WatermarkGlyph text="அவை" opacity={0.04} align="right" theme="light" />
-        <WatermarkGlyph text="சபை" opacity={0.032} align="left" theme="light" className="top-[65%]" />
+      {/* =========================================================================
+          THE WARM PORTRAITS: AIRY, SUNLIT LEADERSHIP GALLERY
+          Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
+          ========================================================================= */}
+      <div className="relative z-20 w-full bg-[#FAF9F6] text-[#2A2825] overflow-hidden">
+        
+        <div className="w-full max-w-6xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
+          
+          {/* Centered Airy Section Header */}
+          <CourtyardHeader
+            align="center"
+            eyebrow="Democratic Council · 2026–2027"
+            title={locale === "ta" ? "நிர்வாகக் குழு & வழிகாட்டிகள்" : "The Executive Board"}
+            tamilTitle={locale !== "ta" ? "ஆளுமை · மாணவர் தலைமை" : undefined}
+            description="Democratic student governance serving 120+ Buckeye members. Meet the officers leading community festivals, language workshops, and student advocacy across Columbus."
+          />
 
-        <div
-          id="board-editorial-roster"
-          className="w-full max-w-6xl mx-auto px-4 sm:px-6 text-left font-body relative z-10"
-        >
-          {/* Header */}
-          <div className="max-w-3xl mb-12">
-            <h1 className="text-4xl sm:text-6xl font-extrabold text-[#250d38] tracking-tight font-display mb-4">
-              {locale === "ta" ? "நிர்வாகக் குழு & தலைமைப் பொறுப்புகள்" : "Executive Board & Leadership"}
-            </h1>
-            <p className="text-sm sm:text-base text-[#7c2d12] font-medium leading-relaxed font-body">
-              {locale === "ta"
-                ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தை வழிநடத்தும் 9 முதன்மை நிர்வாகிகள், துணைக் குழு உறுப்பினர்கள், மற்றும் அதிகாரப்பூர்வ சட்டதிட்டங்கள்."
-                : "Meet the 9 student executive officers, dedicated subcommittee leaders, and constitutional governance guiding The Ohio State University Tamil Sangam."}
-            </p>
-          </div>
-
-        {/* Architectural Ledger Console Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 max-w-4xl mx-auto mb-12 rounded-none bg-[#1c1008] border border-[#3d2714] shadow-[4px_4px_0px_#250d38] ticket-chamfer-tl-br blueprint-node">
-          {[
-            { id: "current" as const, label: locale === "ta" ? "செயற்குழு 2025–26 (9)" : "Executive Board 2025–26 (9)" },
-            { id: "liquid" as const, label: locale === "ta" ? "பெயர் அரங்கம் (Liquid Roster)" : "Liquid Roster (Editorial)" },
-            { id: "subcommittee" as const, label: locale === "ta" ? "துணைக் குழு (Subcommittee)" : "Subcommittee Council (9)" },
-            { id: "governance" as const, label: locale === "ta" ? "அரசியலமைப்பு & வாக்குரிமை" : "Governance & Voting Rights" },
-            { id: "join-board" as const, label: locale === "ta" ? "பொறுப்புகளில் இணையுங்கள்" : "Join Leadership Pathways" },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => {
-                playWoodClick();
-                setActiveTab(tab.id);
-              }}
-              className={`min-h-[42px] px-4 py-2 rounded-none text-xs font-mono uppercase tracking-wider font-bold transition-all border ${
-                activeTab === tab.id
-                  ? "bg-[#D4AF37] text-[#120A06] border-[#D4AF37] shadow-[2px_2px_0px_#250d38]"
-                  : "text-[#a89078] hover:text-[#faf5ed] hover:bg-[#2a170d] border-transparent"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-      {/* 1. 3D Holographic Trading Cards Grid (9 Executive Officers) */}
-      {activeTab === "current" && (
-        <div>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {CURRENT_BOARD.map((member) => (
-              <motion.div
-                key={member.id}
-                variants={itemVariants}
-                layoutId={`board-card-container-${member.id}`}
-                className="flex justify-center"
-              >
-                <HolographicCard
-                  member={member}
-                  onExpand={() => {
-                    playClick();
-                    setActiveModalCard(member);
-                  }}
+          {/* Main Layout: Sticky Warm Portrait + Airy Officer Names */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start mt-16 sm:mt-24">
+            
+            {/* Left 5 Columns: The Warm, Sharp Photographic Portrait sitting naked on background */}
+            <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-6">
+              {/* Sharp Physical Photographic Print */}
+              <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#F4EFE6] border border-[#E5DDD0]">
+                <Image
+                  src={hoveredMember.photoUrl}
+                  alt={hoveredMember.nameEn}
+                  fill
+                  className="object-cover transition-all duration-700 ease-out"
+                  sizes="(max-width: 1024px) 100vw, 450px"
                 />
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      )}
-
-      {/* 2. Liquid Roster View (Split-Screen Editorial Inspection) */}
-      {activeTab === "liquid" && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column: Vertical Interactive Officer List */}
-          <div className="lg:col-span-7 space-y-3">
-            {CURRENT_BOARD.map((member) => {
-              const isHovered = hoveredMember.id === member.id;
-              return (
-                <div
-                  key={member.id}
-                  onMouseEnter={() => setHoveredMember(member)}
-                  onClick={() => {
-                    playClick();
-                    setActiveModalCard(member);
-                  }}
-                  className={`p-4 sm:p-5 border-2 transition-all cursor-pointer text-left ticket-chamfer-tl-br blueprint-node ${
-                    isHovered
-                      ? "bg-[#250d38] border-[#55CCA2] shadow-[4px_4px_0px_#55CCA2] glow-halogen-mint translate-x-1"
-                      : "bg-[#160d26]/80 border-white/10 hover:border-white/25 shadow-[2px_2px_0px_rgba(0,0,0,0.4)]"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <span className="text-xs font-mono text-[#55CCA2] font-bold">
-                        0{CURRENT_BOARD.indexOf(member) + 1}
-                      </span>
-                      <div>
-                        <h3 className="text-xl sm:text-2xl font-bold font-display text-white tracking-tight">
-                          {member.nameEn}
-                        </h3>
-                        <p className="text-xs text-[#55CCA2] font-mono">
-                          {member.nameTa} · {member.roleEn} ({member.roleTa})
-                        </p>
-                      </div>
-                    </div>
-                    <ArrowUpRight className={`w-4 h-4 transition-opacity ${isHovered ? "opacity-100 text-[#55CCA2]" : "opacity-30"}`} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Right Column: Dynamic Morphed Portrait Display */}
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="ticket-chamfer-tr-bl blueprint-node relative w-full max-w-sm bg-[#160d26] border-2 border-white/20 shadow-[6px_6px_0px_#4c2472] hover:glow-sodium p-6 flex flex-col justify-between transition-all duration-300">
-              <div className="relative w-full h-52 overflow-hidden shadow-inner bg-black/40 border-2 border-white/10 flex items-center justify-center p-4">
-                <div className="relative w-24 h-24">
-                  <Image
-                    src={hoveredMember.photoUrl}
-                    alt={hoveredMember.nameEn}
-                    fill
-                    className="object-contain"
-                    sizes="96px"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-4">
-                  <div>
-                    <span className="text-2xl font-display font-bold text-white block">
-                      {hoveredMember.nameTa}
-                    </span>
-                    <span className="text-xs text-[#55CCA2] font-mono">
-                      {hoveredMember.roleTa}
-                    </span>
-                  </div>
-                </div>
               </div>
 
-              <div className="space-y-1 mt-4">
-                <p className="text-xs text-white font-semibold">{hoveredMember.committeeEn}</p>
-                <p className="text-[11px] text-slate-400 line-clamp-2">{hoveredMember.bioEn}</p>
-              </div>
+              {/* Officer Bio & Info sitting directly on global background */}
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center justify-between border-b border-[#E5DDD0] pb-2">
+                  <span className="text-xs font-mono font-semibold text-[#B85C38] tracking-widest uppercase">
+                    {hoveredMember.roleEn}
+                  </span>
+                  <span className="font-tamil text-sm text-[#8C827A]" lang="ta">
+                    {hoveredMember.nameTa}
+                  </span>
+                </div>
 
-              <div className="flex items-center justify-between pt-3 mt-4 text-xs font-mono text-slate-300 border-t border-white/10">
-                <span className="flex items-center gap-1">
-                  <Mail className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span>{hoveredMember.email}</span>
-                </span>
-                <span className="text-[#D4AF37] font-bold">{hoveredMember.term}</span>
+                <h3 className="text-3xl sm:text-4xl font-serif text-[#2A2825]">
+                  {hoveredMember.nameEn}
+                </h3>
+
+                <p className="text-base font-sans text-[#57524C] leading-relaxed">
+                  {hoveredMember.bioEn}
+                </p>
+
+                {hoveredMember.quote && (
+                  <blockquote className="text-sm font-serif italic text-[#2A2825] border-l-2 border-[#B85C38] pl-4 py-1">
+                    &ldquo;{hoveredMember.quote}&rdquo;
+                  </blockquote>
+                )}
+
+                <div className="pt-2">
+                  <a
+                    href={`mailto:${hoveredMember.email}`}
+                    className="inline-flex items-center gap-2 text-xs font-sans font-medium text-[#B85C38] hover:text-[#2A2825] transition-colors border-b border-transparent hover:border-[#B85C38]"
+                  >
+                    <Mail className="w-3.5 h-3.5" />
+                    <span>{hoveredMember.email}</span>
+                  </a>
+                </div>
               </div>
             </div>
+
+            {/* Right 7 Columns: Borderless Officer Rows Separated by 1px Hairlines */}
+            <div className="lg:col-span-7 space-y-12 sm:space-y-16">
+              {CURRENT_BOARD.map((member, idx) => {
+                const isSelected = hoveredMember.id === member.id;
+
+                return (
+                  <div
+                    key={member.id}
+                    onMouseEnter={() => {
+                      audioLayer.playTapeClack();
+                      setHoveredMember(member);
+                    }}
+                    onClick={() => {
+                      playClick();
+                      setHoveredMember(member);
+                    }}
+                    className={`group cursor-pointer select-none transition-all duration-300 pb-12 sm:pb-16 border-b border-[#E5DDD0] ${
+                      isSelected ? "border-l-2 border-l-[#B85C38] pl-6" : "pl-0 hover:border-l-2 hover:border-l-[#E5DDD0] hover:pl-6"
+                    }`}
+                  >
+                    {/* Role Tag & Number */}
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="font-mono text-xs text-[#8C827A]">
+                        0{idx + 1}
+                      </span>
+                      <span className="font-sans text-xs tracking-widest uppercase font-semibold text-[#B85C38]">
+                        {member.roleEn}
+                      </span>
+                    </div>
+
+                    {/* Massive Elegant Serif Name */}
+                    <div className="flex items-baseline gap-4 flex-wrap">
+                      <h2 className={`text-3xl sm:text-5xl font-serif font-normal transition-colors leading-tight ${
+                        isSelected ? "text-[#B85C38]" : "text-[#2A2825] group-hover:text-[#B85C38]"
+                      }`}>
+                        {member.nameEn}
+                      </h2>
+                      <span
+                        lang="ta"
+                        className="text-xl sm:text-2xl font-serif text-[#2A2825]/40 group-hover:text-[#2A2825]/70 transition-colors"
+                      >
+                        {member.nameTa}
+                      </span>
+                    </div>
+
+                    {/* Short Description */}
+                    <p className="mt-3 text-sm sm:text-base font-sans text-[#57524C] leading-relaxed line-clamp-2">
+                      {member.bioEn}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
           </div>
-        </div>
-      )}
 
-      {/* 3. Subcommittee Council (9 Dedicated Members) */}
-      {activeTab === "subcommittee" && (
-        <div className="space-y-8">
-          <div className="ticket-chamfer-tl-br blueprint-node p-8 border-2 border-white/20 shadow-[5px_5px_0px_#4c2472] bg-[#160d26]">
-            <h2 className="text-2xl sm:text-3xl font-bold font-display text-white mb-3">
-              {locale === "ta" ? "துணைக் குழு உறுப்பினர்கள்" : "Subcommittee Working Council"}
-            </h2>
-            <p className="text-sm text-slate-300 max-w-3xl leading-relaxed">
-              {locale === "ta"
-                ? "கலாச்சார நிகழ்ச்சிகள், மேடை தொழில்நுட்பம், மென்பொருள் கட்டமைப்பு, உணவு விருந்தோம்பல் மற்றும் புதிய மாணவர் வழிகாட்டலை முன்னெடுக்கும் அர்ப்பணிப்புள்ள 9 துணைக் குழு உறுப்பினர்கள்."
-                : "Our 9 appointed subcommittee members form the backbone of daily club operations, spearheading stage engineering, web systems, performance rehearsals, ticketing, and student outreach."}
-            </p>
-          </div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {SUBCOMMITTEE_MEMBERS.map((sub) => (
-              <motion.div
-                key={sub.id}
-                variants={itemVariants}
-                className="ticket-chamfer-tl-br blueprint-node p-6 bg-[#160d26] border-2 border-white/15 hover:border-[#55CCA2] shadow-[4px_4px_0px_rgba(76,36,114,0.4)] hover:shadow-[5px_5px_0px_#55CCA2] hover:glow-halogen-mint transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <h3 className="text-xl font-bold font-display text-white tracking-tight mb-1">
-                    {sub.nameEn}
-                  </h3>
-                  <p className="text-xs text-[#55CCA2] font-tamil mb-4">
-                    {sub.nameTa}
-                  </p>
-                </div>
-
-                <div className="pt-3 border-t-2 border-white/10">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-1">
-                    Focus Domain
-                  </span>
-                  <p className="text-xs font-semibold text-slate-200">
-                    {sub.areaEn}
-                  </p>
-                  <p className="text-[11px] text-slate-400 font-tamil mt-0.5">
-                    {sub.areaTa}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      )}
-
-      {/* 4. Constitution, Governance & Voting Rights */}
-      {activeTab === "governance" && (
-        <div className="space-y-8">
-          {/* Key Rule: 2 Meetings + 2 Events for Voting & Shadowing */}
-          <div className="ticket-chamfer-tl-br blueprint-node p-8 sm:p-10 bg-[#160d26] border-2 border-[#55CCA2] shadow-[6px_6px_0px_#55CCA2] hover:glow-sodium transition-all duration-300 relative overflow-hidden">
-            <h2 className="text-2xl sm:text-4xl font-bold font-display text-white mb-4">
-              {locale === "ta" ? "வாக்குரிமை & நிர்வாக வழிகாட்டல் தகுதிகள்" : "Voting Rights & Executive Board Shadowing"}
-            </h2>
-            <div className="p-5 border-2 border-white/15 bg-black/50 mb-6 max-w-3xl shadow-[3px_3px_0px_rgba(0,0,0,0.4)]">
-              <p className="text-sm sm:text-base font-semibold text-[#55CCA2] leading-relaxed font-mono">
-                {locale === "ta"
-                  ? MEMBERSHIP_GOVERNANCE.votingRequirementTa
-                  : MEMBERSHIP_GOVERNANCE.votingRequirementEn}
+          {/* Working Subcommittee Councils: Borderless Typographic Grid */}
+          <div className="mt-28 sm:mt-40 pt-16 border-t border-[#E5DDD0] space-y-16">
+            <div className="text-center space-y-3">
+              <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
+                Working Groups · துணைக் குழுக்கள்
+              </span>
+              <h3 className="text-3xl sm:text-5xl font-serif font-normal text-[#2A2825]">
+                Subcommittee Coordinators
+              </h3>
+              <p className="text-base text-[#57524C] font-sans max-w-xl mx-auto leading-relaxed">
+                Dedicated student organizers leading choreography, social media trailers, campus catering, and community service.
               </p>
             </div>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
-              Active engagement is the hallmark of Sangam democracy. By attending meetings and events, general members build firsthand understanding of event production and club finances, earning the right to elect officers and propose constitutional amendments.
-            </p>
-          </div>
 
-          {/* 4 Core Constitutional Pillars */}
-          <div>
-            <h3 className="text-xl sm:text-2xl font-bold font-display text-white mb-6">
-              {locale === "ta" ? "சங்கத்தின் நான்கு முதன்மை நோக்கங்கள்" : "The Four Pillars of Club Purpose"}
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {CLUB_PURPOSE.map((p) => (
-                <div key={p.id} className="ticket-chamfer-tl-br blueprint-node p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] bg-[#160d26] hover:glow-halogen-mint transition-all">
-                  <h4 className="text-lg font-bold font-display text-white mb-2">
-                    {locale === "ta" ? p.titleTa : p.titleEn}
-                  </h4>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    {locale === "ta" ? p.descriptionTa : p.descriptionEn}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 text-left">
+              {SUBCOMMITTEE_MEMBERS.map((sub, i) => (
+                <div key={sub.id || i} className="pb-8 border-b border-[#E5DDD0] space-y-2">
+                  <span className="font-mono text-xs text-[#B85C38] uppercase tracking-widest font-semibold block">
+                    {sub.areaEn}
+                  </span>
+                  <h4 className="text-2xl sm:text-3xl font-serif text-[#2A2825]">{sub.nameEn}</h4>
+                  <p className="text-sm font-sans text-[#57524C]" lang="ta">
+                    {sub.nameTa} · {sub.areaTa}
                   </p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Membership Demographics & Policy 1.15 Compliance */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="ticket-chamfer-tl-br blueprint-node p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] bg-[#160d26] space-y-3">
-              <span className="text-xs font-mono uppercase tracking-wider text-[#55CCA2] block font-bold">
-                Student Quota & Year-Round Enrollment
-              </span>
-              <h4 className="text-base font-bold font-display text-white">
-                90% Ohio State Student Composition
-              </h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                {locale === "ta" ? MEMBERSHIP_GOVERNANCE.studentQuotaTa : MEMBERSHIP_GOVERNANCE.studentQuotaEn}
-              </p>
-              <p className="text-xs text-slate-400 leading-relaxed pt-2 border-t-2 border-white/10">
-                {locale === "ta" ? MEMBERSHIP_GOVERNANCE.communityPolicyTa : MEMBERSHIP_GOVERNANCE.communityPolicyEn}
-              </p>
-            </div>
-
-            <div className="ticket-chamfer-tl-br blueprint-node p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] bg-[#160d26] space-y-3">
-              <span className="text-xs font-mono uppercase tracking-wider text-rose-400 block font-bold">
-                Safety & University Compliance
-              </span>
-              <h4 className="text-base font-bold font-display text-white">
-                University Policy 1.15 & Non-Discrimination
-              </h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                {locale === "ta" ? MEMBERSHIP_GOVERNANCE.policy115ComplianceTa : MEMBERSHIP_GOVERNANCE.policy115ComplianceEn}
-              </p>
-              <p className="text-[11px] text-slate-400 leading-relaxed pt-2 border-t-2 border-white/10">
-                Strict adherence to Ohio State guidelines ensures our club is an inclusive, welcoming sanctuary free from discrimination, harassment, or bias.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 5. Get Involved in Leadership & Student Committees */}
-      {activeTab === "join-board" && (
-        <div className="space-y-8">
-          <div className="ticket-chamfer-tl-br blueprint-node p-8 border-2 border-white/20 shadow-[5px_5px_0px_#4c2472] bg-[#160d26]">
-            <h2 className="text-2xl sm:text-3xl font-bold font-display text-white mb-3">
-              {locale === "ta" ? "செயற்குழுவில் இணையுங்கள்" : "Shape the Sangam — Join a Committee"}
-            </h2>
-            <p className="text-sm text-slate-300 max-w-3xl leading-relaxed mb-6">
-              {locale === "ta"
-                ? "எங்கள் சங்கத்தின் ஒவ்வொரு நிகழ்வும் மாணவர் தன்னார்வலர்கள் மற்றும் துணைக் குழுக்களின் உழைப்பால் மட்டுமே சாத்தியமாகிறது. முன் அனுபவம் தேவையில்லை; உங்கள் ஆர்வம் மட்டுமே போதுமானது."
-                : "All major productions and festivals are powered by student committee members. Whether you want to choreograph, design posters, coordinate dinner catering, or welcome new students, there is a place for you."}
+          {/* Plain-Language Democratic Governance: Architectural Statement Naked on Background */}
+          <div className="mt-28 pt-16 border-t border-[#E5DDD0] space-y-6 max-w-3xl">
+            <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
+              Democratic Governance · ஜனநாயக விதிகள்
+            </span>
+            <h4 className="text-3xl sm:text-4xl font-serif text-[#2A2825]">
+              Constitution of Tamil Sangam at Ohio State
+            </h4>
+            <p className="text-base sm:text-lg font-sans text-[#57524C] leading-relaxed">
+              Our organization is fully student-run and democratically governed under Ohio State University Student Activities guidelines. Executive officers are elected annually by general body vote, and all constitutional amendments are publicly accessible.
             </p>
-
-            <Link
-              href="/join#performer"
-              onClick={playClick}
-              className="btn-sangam-mint ticket-chamfer-tl-br inline-flex items-center gap-2 px-6 py-3 text-xs uppercase tracking-wider"
-            >
-              <span>Apply for Committee & Volunteer Roles</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            <div className="pt-2">
+              <MuttramButton href="/guide" variant="secondary" size="md" onClick={playClick}>
+                Read Organization FAQ & Guidelines →
+              </MuttramButton>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {committees.map((com, idx) => (
-              <div key={idx} className="ticket-chamfer-tl-br blueprint-node p-6 border-2 border-white/15 shadow-[3px_3px_0px_#4c2472] bg-[#160d26] text-left">
-                <h3 className="text-lg font-bold font-display text-white mb-2">
-                  {com.titleEn}
-                </h3>
-                <p className="text-xs text-slate-300 mb-4 leading-relaxed">
-                  {com.descriptionEn}
-                </p>
-                <div className="flex flex-wrap gap-2 pt-2 border-t-2 border-white/10">
-                  {com.roles.map((role, rIdx) => (
-                    <span
-                      key={rIdx}
-                      className="text-xs font-mono text-[#55CCA2] bg-[#250d38]/80 px-2 py-0.5 border border-[#55CCA2]/20"
-                    >
-                      {role}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
+          {/* Borderless Organic Transportation to Join */}
+          <div className="mt-28 sm:mt-36">
+            <OrganicRouteGateway
+              primaryHref="/join"
+              primaryLabel="Sign the Guestbook"
+              eyebrow="Step Across the Threshold · அடுத்த வாசல்"
+              title="Join the Sangam Fellowship"
+              tamilTitle="எங்களுடன் இணையுங்கள்"
+              description="Membership is open to every student, alumni, and community member in Columbus. Sign the digital guestbook and take your place at the hearth."
+            />
           </div>
-        </div>
-      )}
 
-      {/* Shared Element Detail Modal */}
-      <AnimatePresence>
-        {activeModalCard && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#120A06]/90 backdrop-blur-md"
-            onClick={() => setActiveModalCard(null)}
-          >
-            <motion.div
-              layoutId={`board-card-container-${activeModalCard.id}`}
-              transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="ticket-chamfer-tl-br blueprint-node relative w-full max-w-lg bg-[#1c1008] border-2 border-[#D4AF37] shadow-[8px_8px_0px_#6b4a32] hover:glow-sodium p-6 sm:p-8 text-left overflow-hidden rounded-none"
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-            >
-              <button
-                type="button"
-                onClick={() => setActiveModalCard(null)}
-                className="absolute top-6 right-6 w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center border border-[#6b4a32] bg-[#2a170d] hover:bg-[#3d2714] text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] transition-[background-color,transform] duration-150 active:scale-95 cursor-pointer shadow-[2px_2px_0px_#3d2714] rounded-none"
-                aria-label="Close officer modal"
-              >
-                <X className="w-5 h-5 text-[#D4AF37]" />
-              </button>
-
-
-              <div className="flex items-center gap-4 mb-6">
-                <div className="relative w-16 h-16 bg-[#0d0603] p-2 border border-[#6b4a32] rounded-none">
-                  <Image
-                    src={activeModalCard.photoUrl}
-                    alt={activeModalCard.nameEn}
-                    fill
-                    className="object-contain"
-                    sizes="64px"
-                  />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold font-display text-[#faf5ed]">
-                    {activeModalCard.nameEn}
-                  </h2>
-                  <p className="text-xs font-mono text-[#D4AF37]">
-                    <span lang="ta" style={{ letterSpacing: 0 }}>{activeModalCard.nameTa}</span> · {activeModalCard.roleEn} (<span lang="ta" style={{ letterSpacing: 0 }}>{activeModalCard.roleTa}</span>)
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-4 text-xs leading-relaxed text-[#d1c4b7] mb-6">
-                <div>
-                  <span className="font-mono text-[#a89078] uppercase tracking-wider block mb-1">
-                    Committee Leadership
-                  </span>
-                  <p className="font-semibold text-[#faf5ed]">{activeModalCard.committeeEn}</p>
-                  <p className="text-[#e0b968] font-tamil mt-0.5" lang="ta" style={{ letterSpacing: 0 }}>
-                    {activeModalCard.committeeTa}
-                  </p>
-                </div>
-
-                <div>
-                  <span className="font-mono text-[#a89078] uppercase tracking-wider block mb-1">
-                    Responsibilities & Mission
-                  </span>
-                  <p>{activeModalCard.bioEn}</p>
-                  <p className="font-tamil text-[#e0b968] mt-1" lang="ta" style={{ letterSpacing: 0 }}>
-                    {activeModalCard.bioTa}
-                  </p>
-                </div>
-
-                <div>
-                  <span className="font-mono text-[#a89078] uppercase tracking-wider block mb-1">
-                    Key Officer Responsibilities
-                  </span>
-                  <ul className="space-y-1 text-[#d1c4b7] list-disc list-inside">
-                    {activeModalCard.responsibilitiesEn.map((resp, rIdx) => (
-                      <li key={rIdx}>{resp}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-[#3d2714] flex items-center justify-between text-xs font-mono text-[#a89078]">
-                <a
-                  href={`mailto:${activeModalCard.email}`}
-                  className="flex items-center gap-1.5 text-[#D4AF37] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
-                >
-                  <Mail className="w-4 h-4" />
-                  <span>{activeModalCard.email}</span>
-                </a>
-                <span className="text-[#D4AF37] font-bold">{activeModalCard.term}</span>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

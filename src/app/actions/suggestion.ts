@@ -30,7 +30,7 @@ export async function submitSuggestion(
   formData: FormData
 ): Promise<SuggestionActionState> {
   try {
-    const hp = formData.get("hp") as string | null;
+    const hp = (formData.get("hp") || formData.get("website")) as string | null;
     // Honeypot bot protection: silent success for bots
     if (hp) {
       return {
@@ -45,7 +45,7 @@ export async function submitSuggestion(
     }
 
     // Minimum fill time check (prevents automated instant POST spam)
-    const timestampStr = formData.get("timestamp") as string | null;
+    const timestampStr = (formData.get("timestamp") || formData.get("form_timestamp")) as string | null;
     if (timestampStr) {
       const renderTime = parseInt(timestampStr, 10);
       const elapsedMs = Date.now() - renderTime;

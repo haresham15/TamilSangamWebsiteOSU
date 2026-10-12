@@ -202,10 +202,10 @@ export function DraggableMemoryArchive() {
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#87500e]">
             <span className="w-2 h-2 bg-[#55CCA2] inline-block animate-pulse" />
-            <span>PHYSICAL MEMORY ARCHIVE // PHASE 4 DRAGGABLE DESK</span>
+            <span>CAMPUS MEMORY DESK // புகைப்பட நினைவுகள்</span>
           </div>
           <p className="text-[11px] text-[#250d38]/70 font-sans">
-            Grab, rifle through, and throw physical collegiate snapshots across the workspace bounds.
+            Rifle through, move, and explore polaroids from our outdoor lawn picnics and cultural celebrations.
           </p>
         </div>
 
@@ -217,7 +217,7 @@ export function DraggableMemoryArchive() {
           className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-[#250d38]/40 bg-[#FAF6EE] hover:bg-[#250d38] hover:text-white text-[#250d38] text-[10px] font-mono uppercase tracking-wider transition-colors cursor-pointer select-none"
         >
           <RotateCcw className="w-3 h-3" />
-          <span>Re-Deal Artifacts</span>
+          <span>Reset Desk</span>
         </button>
       </div>
 
@@ -233,18 +233,18 @@ export function DraggableMemoryArchive() {
         }}
       >
         {/* Workspace Telemetry Markings */}
-        <div className="absolute top-3 left-4 text-[9px] text-[#FFB84D]/40 tracking-widest uppercase pointer-events-none select-none">
-          TABLE: 1920x1080 COLUMBUS DECK // 6 ARTIFACTS
+        <div className="absolute top-3 left-4 text-[9px] text-[#FFB84D]/60 tracking-widest uppercase pointer-events-none select-none">
+          COLUMBUS CAMPUS MEMORIES // SOUTH OVAL & UNION
         </div>
-        <div className="absolute top-3 right-4 text-[9px] text-white/30 tracking-widest uppercase pointer-events-none select-none flex items-center gap-1">
+        <div className="absolute top-3 right-4 text-[9px] text-white/50 tracking-widest uppercase pointer-events-none select-none flex items-center gap-1">
           <Move className="w-3 h-3 text-[#55CCA2]" />
-          <span>DRAG ENABLED (GSAP PHYSICS)</span>
+          <span>DRAGGABLE POLAROIDS</span>
         </div>
-        <div className="absolute bottom-3 left-4 text-[9px] text-white/20 tracking-widest uppercase pointer-events-none select-none">
+        <div className="absolute bottom-3 left-4 text-[9px] text-white/30 tracking-widest uppercase pointer-events-none select-none">
           LAT 40.0067° N · LON 83.0305° W
         </div>
-        <div className="absolute bottom-3 right-4 text-[9px] text-white/20 tracking-widest uppercase pointer-events-none select-none">
-          TAMIL SANGAM ARCHIVE REEL 01
+        <div className="absolute bottom-3 right-4 text-[9px] text-white/30 tracking-widest uppercase pointer-events-none select-none">
+          OSU TAMIL SANGAM ARCHIVE
         </div>
 
         {/* 6 Draggable Polaroid Frames */}

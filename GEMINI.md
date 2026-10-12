@@ -19,10 +19,11 @@ This file sets project-specific runtime behavior for the Antigravity agent in `T
 ## 3. Subagent Orchestration
 
 - Follow the orchestration pipeline defined in [`.agents/AGENTS.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/.agents/AGENTS.md):
-  - Phase 1–3: `design-architect`
-  - Phase 4: `ui-engineer`
-  - Phase 5: `motion-engineer`
-  - Review: `critique-agent` -> `a11y-auditor`
+  - Phase 1–3 Design & Tokens: `design-architect` (`design-system-generator`)
+  - Phase 4 Frontend Architecture: `frontend-planner` (`frontend-system-architect`, Smart vs Dumb decomposition)
+  - Phase 5 Component Implementation: `ui-engineer` (scaffolds shared dumb components first)
+  - Phase 6 Micro-Interactions & Physics: `motion-engineer`
+  - Phase 7 Second-Opinion Audit: `critique-agent` (`second-opinion-audit`) -> `a11y-auditor`
   - Enterprise Data & Cloud: `enterprise-data-architect`
   - Enterprise Security & Verification: `enterprise-security-auditor` -> `autonomous-verifier`
 - Never let an execution agent critique its own design homework.

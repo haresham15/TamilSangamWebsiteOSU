@@ -39,15 +39,28 @@ Do not reinvent standard behavior. Originality must be applied deliberately acro
 
 ---
 
-## 3. The Five-Phase Agentic Workflow
+## 3. The Seven-Step Autonomous UI/UX Architecture (The Developer's Guide to Stunning UI)
 
-When designing and generating user interfaces:
+When designing, generating, or refactoring user interfaces:
 
-1. **Phase 1: Text-Based Creative Planning**: Establish layout rhythms, brand voice, and spatial hierarchy in natural language before touching markup.
-2. **Phase 2: Visual Exploration**: Anchor visual directions using moodboards, cultural motifs, or diffusion models rather than defaulting to standard CSS frameworks.
-3. **Phase 3: Deterministic Token Extraction**: Codify exact OKLCH values, typography pairings, and spacing scales into [`DESIGN.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/DESIGN.md) and Tailwind CSS `@theme` variables before writing UI components.
-4. **Phase 4: Explicit Specification & Negative Constraints**: Enforce the Slop Checklist; explicitly forbid generic defaults in every generation turn.
-5. **Phase 5: Intentional Motion Engineering**: Sequence animations with parent variants (`staggerChildren`), use `layoutId` for shared-element morphs, and reserve spring physics for direct user interaction.
+1. **Step 1: Mock-First, Modular MVP Planning (`mock-first-prototype`)**:
+   - Prioritize high-fidelity UI/UX flows and interaction mechanics immediately using typed mock fixtures and simulated services (`delay()`, fake APIs, canned transcripts).
+   - Never block UI exploration on real database migrations or external API keys. Build discrete, testable units.
+2. **Step 2: Multi-Option Visual Exploration & Reverse-Engineering**:
+   - Leverage StitchMCP (`create_project`, `generate_screen_from_text`), Lovable (`https://mcp.lovable.dev`), or visual mockups to compare and fine-tune.
+   - Extract raw CSS stylesheets and screenshots. Reverse-engineer design foundations into code-ready assets.
+3. **Step 3 & 4: Design System Requirements Specification (`design-system-generator` / `/design-spec`)**:
+   - Synthesize tokens into three strict DTCG tiers: Primitive -> Semantic -> Component.
+   - Codify exact OKLCH values, typography clamp scales, and elevation into [`design/tokens.json`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/design/tokens.json) and `public/specs/DESIGN_SYSTEM.md`.
+4. **Step 5: Frontend System Architecture & Planning (`frontend-system-architect` / `/frontend-plan`)**:
+   - Deconstruct components into **Presentational "Dumb" Components** (buttons, badges, inputs, table rows) vs **Feature "Smart" Components** (containers, route coordinators).
+   - Produce the token-to-class translation layer mapping tokens to Tailwind v4 `@theme` directives or CSS variables.
+   - Mandate building shared dumb components *first* to eliminate AI code duplication. Output `public/specs/FRONTEND_PLANNING.md`.
+5. **Step 6: Disciplined Execution Protocol (`ui-engineer`)**:
+   - Tokens -> Shared Dumb Components -> Feature Screens -> Micro-Interactions (`motion-engineer`).
+   - Strictly forbid hallucinated primitives (`<Container>`, `<Stack>`, `<Box>`) and arbitrary inline hex codes (`#123456`).
+6. **Step 7: Second-Opinion Audit & Verification (`second-opinion-audit` / `/second-opinion`)**:
+   - Conduct an adversarial pre-ship review cross-referencing official library `llms.txt`, WCAG AA/AAA contrast math, responsive 375px viewports (zero horizontal overflow, mandatory `100dvh`), and anti-slop guidelines.
 
 ---
 

@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useMemo, useSyncExternalStore } from "react";
 import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, type RootState } from "@react-three/fiber";
 import { PerspectiveCamera, View, Text3D, Center, Environment, Lightformer } from "@react-three/drei";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
@@ -45,7 +45,7 @@ function HeroTruckCamera() {
 /**
  * Shared Safe Frame Hook enforcing Safeguard 2 (Delta Clamping)
  */
-function useSafeFrame(callback: (state: any, safeDelta: number) => void) {
+function useSafeFrame(callback: (state: RootState, safeDelta: number) => void) {
   useFrame((state, delta) => {
     const safeDelta = Math.min(delta, 0.05);
     callback(state, safeDelta);
@@ -55,7 +55,7 @@ function useSafeFrame(callback: (state: any, safeDelta: number) => void) {
 /**
  * Quintic C2-continuous smootherstep: 6x^5 - 15x^4 + 10x^3
  */
-function smootherstep(x: number): number {
+function _smootherstep(x: number): number {
   const c = Math.max(0, Math.min(1, x));
   return c * c * c * (c * (c * 6 - 15) + 10);
 }
@@ -74,7 +74,7 @@ function smootherstep(x: number): number {
  * Injects:
  * - Subtle travelling light pulse wave along the continuous woven threads
  */
-function createSymmetricKolamMaterial() {
+function _createSymmetricKolamMaterial() {
   const customMaterial = new THREE.MeshStandardMaterial({
     color: "#FFB84D",
     metalness: 0.55,
@@ -354,7 +354,7 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
     []
   );
 
-  useSafeFrame((state, safeDelta) => {
+  useSafeFrame((state, _safeDelta) => {
     const time = state.clock.elapsedTime;
     if (introStartRef.current === null) {
       introStartRef.current = time;
@@ -435,11 +435,21 @@ function DustMotes({ isMobile, tier }: { isMobile: boolean; tier: string }) {
   const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const radius = 1.8 + Math.random() * 3.5;
+      // Deterministic pseudo-random generation to adhere to pure render rules
+      const seed1 = Math.sin((i + 1) * 12.9898) * 43758.5453;
+      const frac1 = seed1 - Math.floor(seed1);
+      const seed2 = Math.sin((i + 1) * 78.233) * 43758.5453;
+      const frac2 = seed2 - Math.floor(seed2);
+      const seed3 = Math.sin((i + 1) * 45.164) * 43758.5453;
+      const frac3 = seed3 - Math.floor(seed3);
+      const seed4 = Math.sin((i + 1) * 93.719) * 43758.5453;
+      const frac4 = seed4 - Math.floor(seed4);
+
+      const angle = frac1 * Math.PI * 2;
+      const radius = 1.8 + frac2 * 3.5;
       pos[i * 3] = Math.cos(angle) * radius;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 6.5;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 1.5;
+      pos[i * 3 + 1] = (frac3 - 0.5) * 6.5;
+      pos[i * 3 + 2] = (frac4 - 0.5) * 1.5;
     }
     return pos;
   }, [count]);
@@ -566,7 +576,7 @@ export function DigitalKolamHero() {
  * High-fidelity 2D vector composition rendered when WebGL is unavailable,
  * disabled by Lite Mode, or when the user prefers reduced motion.
  */
-function StaticKolamFallback({ isMobile }: { isMobile: boolean }) {
+function StaticKolamFallback({ isMobile: _isMobile }: { isMobile: boolean }) {
   const dots: { x: number; y: number }[] = [];
   const rings = [180, 225, 270, 315, 360, 405];
   rings.forEach((r, ringIdx) => {

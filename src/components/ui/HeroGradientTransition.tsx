@@ -9,7 +9,8 @@ export type HeroGradientVariant =
   | "gallery"
   | "board"
   | "guide"
-  | "suggestions";
+  | "suggestions"
+  | "join";
 
 interface HeroGradientTransitionProps {
   variant: HeroGradientVariant;
@@ -78,6 +79,14 @@ const GRADIENT_CONFIGS: Record<
       "bg-gradient-to-b from-[#0F050A] via-[#120710] to-[#0F050A]",
     ambientGlow:
       "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,184,77,0.12) 0%, rgba(21,9,20,0.25) 50%, transparent 80%)",
+  },
+
+  // 8. Join: Campus Morning (#120A06) -> Warm Terracotta & Honey -> Warm Ivory (#FAF9F6)
+  join: {
+    gradientClass:
+      "bg-gradient-to-b from-[#120A06] via-[#250d38] via-40% via-[#a45d35] via-75% to-[#FAF9F6]",
+    ambientGlow:
+      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,184,77,0.18) 0%, rgba(184,92,56,0.15) 50%, transparent 80%)",
   },
 };
 

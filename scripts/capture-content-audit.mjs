@@ -20,25 +20,19 @@ const PAGES = [
     name: "Home",
     route: "/",
     ta: "முகப்பு",
-    description: "Monolith prologue, featured flagship festival, filter coffee card, recent gatherings, cultural glossary & community join CTA",
+    description: "Sunlit courtyard: Next flagship gathering, Five Pillars in airy vertical sections, Moments on the Olentangy organic collage, and cultural glossary",
     prepare: async (page) => {
       await page.evaluate(() => {
         if (window.__lenis) window.__lenis.destroy();
 
         const heroWrapper = document.getElementById("act-i-viewport-wrapper");
-        const monolith = document.getElementById("monolith");
-        
-        if (heroWrapper && monolith) {
-          monolith.style.position = "relative";
-          monolith.style.height = "auto";
-          monolith.style.minHeight = "auto";
-          monolith.style.transform = "none";
-          monolith.style.zIndex = "10";
-          heroWrapper.parentNode.insertBefore(monolith, heroWrapper);
-          heroWrapper.remove();
-        } else if (heroWrapper) {
-          heroWrapper.remove();
-        }
+        if (heroWrapper) heroWrapper.remove();
+
+        const transitions = document.querySelectorAll('[class*="HeroGradientTransition"]');
+        transitions.forEach((t) => t.remove());
+
+        const content = document.querySelector('[class*="bg-[#FAF9F6]"]');
+        if (content) content.style.marginTop = "0px";
 
         const chatbot = document.getElementById("global-sangam-chatbot");
         if (chatbot) chatbot.remove();
@@ -50,7 +44,7 @@ const PAGES = [
     name: "Events",
     route: "/events",
     ta: "நிகழ்வுகள்",
-    description: "Festival arena, academic year timeline filter, event cards (dates, venues, ticket links) & memory archive",
+    description: "The Gatherings River: Open list of gatherings, centered massive serif titles, soft sans dates, campus traditions, and memory archives",
     prepare: async (page) => {
       await page.evaluate(() => {
         if (window.__lenis) window.__lenis.destroy();
@@ -59,12 +53,10 @@ const PAGES = [
         if (hero) hero.remove();
         
         const transitions = document.querySelectorAll('[class*="HeroGradientTransition"]');
-        transitions.forEach(t => t.remove());
+        transitions.forEach((t) => t.remove());
 
-        const catalogueContainer = document.querySelector(".vignette-ambient-warm")?.closest(".w-full");
-        if (catalogueContainer) {
-          catalogueContainer.style.marginTop = "0px";
-        }
+        const content = document.querySelector('[class*="bg-[#FAF9F6]"]');
+        if (content) content.style.marginTop = "0px";
       });
     },
   },
@@ -73,7 +65,7 @@ const PAGES = [
     name: "About",
     route: "/about",
     ta: "அறிமுகம்",
-    description: "Ethos & constitution, 4 pillars of Sangam, founding timeline (2021-2026), partner affiliations & FAQs",
+    description: "The Organic Journey: Center-snaking SVG river timeline (2021-2026), 4 pillars of Sangam, campus alliances, and democratic constitution",
     prepare: async (page) => {
       await page.evaluate(() => {
         if (window.__lenis) window.__lenis.destroy();
@@ -84,12 +76,10 @@ const PAGES = [
         }
 
         const transitions = document.querySelectorAll('[class*="HeroGradientTransition"]');
-        transitions.forEach(t => t.remove());
+        transitions.forEach((t) => t.remove());
 
-        const content = document.querySelector(".bg-\\[\\#fffdfa\\]");
-        if (content) {
-          content.style.marginTop = "0px";
-        }
+        const content = document.querySelector('[class*="bg-[#FAF9F6]"]');
+        if (content) content.style.marginTop = "0px";
       });
     },
   },
@@ -98,7 +88,7 @@ const PAGES = [
     name: "Board",
     route: "/board",
     ta: "அவை",
-    description: "Executive board roster (9 officers), liquid roster, subcommittee councils, constitutional governance & officer cards",
+    description: "The Warm Portraits: Executive board roster with airy vertical gaps in serif typography, color portrait reveals, and constitutional governance",
     prepare: async (page) => {
       await page.evaluate(() => {
         if (window.__lenis) window.__lenis.destroy();
@@ -107,12 +97,10 @@ const PAGES = [
         if (hero) hero.remove();
 
         const transitions = document.querySelectorAll('[class*="HeroGradientTransition"]');
-        transitions.forEach(t => t.remove());
+        transitions.forEach((t) => t.remove());
 
-        const roster = document.querySelector(".bg-\\[\\#F7F0E4\\]");
-        if (roster) {
-          roster.style.marginTop = "0px";
-        }
+        const content = document.querySelector('[class*="bg-[#FAF9F6]"]');
+        if (content) content.style.marginTop = "0px";
       });
     },
   },
@@ -121,7 +109,7 @@ const PAGES = [
     name: "Gallery",
     route: "/gallery",
     ta: "நினைவுகள்",
-    description: "Collegiate memory archive, album era filters, photo stories (Picnic, Sapad, Jathara), and photo mosaics",
+    description: "The Canvas: Expansive interlocking masonry with wide ivory gaps, 35mm physical film memories, tag filters, and student consent policy",
     prepare: async (page) => {
       await page.evaluate(() => {
         if (window.__lenis) window.__lenis.destroy();
@@ -130,12 +118,10 @@ const PAGES = [
         if (hero) hero.remove();
 
         const transitions = document.querySelectorAll('[class*="HeroGradientTransition"]');
-        transitions.forEach(t => t.remove());
+        transitions.forEach((t) => t.remove());
 
-        const vault = document.getElementById("gallery-vault-content")?.parentElement;
-        if (vault) {
-          vault.style.marginTop = "0px";
-        }
+        const content = document.querySelector('[class*="bg-[#FAF9F6]"]');
+        if (content) content.style.marginTop = "0px";
       });
     },
   },
@@ -144,7 +130,7 @@ const PAGES = [
     name: "Guide",
     route: "/guide",
     ta: "வழிகாட்டி",
-    description: "Student handbook, Columbus Tamil guide, categorized knowledge base & searchable FAQ question bank",
+    description: "The Open Book: Generous padding between Q&A pairs, conversational questions in soft Terracotta, and searchable student knowledge base",
     prepare: async (page) => {
       await page.evaluate(() => {
         if (window.__lenis) window.__lenis.destroy();
@@ -153,10 +139,13 @@ const PAGES = [
         if (hero) hero.remove();
 
         const transitions = document.querySelectorAll('[class*="HeroGradientTransition"]');
-        transitions.forEach(t => t.remove());
+        transitions.forEach((t) => t.remove());
 
         const miniHeader = document.querySelector('[class*="SplitFlapMiniHeader"]') || document.querySelector("header.sticky");
         if (miniHeader) miniHeader.remove();
+
+        const content = document.querySelector('[class*="bg-[#FAF9F6]"]');
+        if (content) content.style.marginTop = "0px";
       });
     },
   },
@@ -165,7 +154,7 @@ const PAGES = [
     name: "Ideas",
     route: "/suggestions",
     ta: "கருத்து",
-    description: "Initiatives & suggestions portal, community category selector, interactive submission form & feedback guidelines",
+    description: "The Ideas Hearth: Conversational campus proposal form, category selectors, proven track record ledger, and leadership routing",
     prepare: async (page) => {
       await page.evaluate(() => {
         if (window.__lenis) window.__lenis.destroy();
@@ -174,7 +163,10 @@ const PAGES = [
         if (hero) hero.remove();
 
         const transitions = document.querySelectorAll('[class*="HeroGradientTransition"]');
-        transitions.forEach(t => t.remove());
+        transitions.forEach((t) => t.remove());
+
+        const content = document.querySelector('[class*="bg-[#FAF9F6]"]');
+        if (content) content.style.marginTop = "0px";
       });
     },
   },
@@ -183,7 +175,7 @@ const PAGES = [
     name: "Join",
     route: "/join",
     ta: "இணையுங்கள்",
-    description: "Buckeye membership gateway, 3-step brutalist application form (General, Performer, Committee), community links",
+    description: "The Welcoming Hearth: Guestbook-style membership form with conversational prompts, simple elegant underlines, and community links",
     prepare: async (page) => {
       await page.evaluate(() => {
         if (window.__lenis) window.__lenis.destroy();
@@ -191,10 +183,11 @@ const PAGES = [
         const hero = document.getElementById("nanban-gates-hero") || document.querySelector('[data-hero-container="true"]');
         if (hero) hero.remove();
 
-        const form = document.getElementById("membership-form");
-        if (form) {
-          form.style.marginTop = "0px";
-        }
+        const transitions = document.querySelectorAll('[class*="HeroGradientTransition"]');
+        transitions.forEach((t) => t.remove());
+
+        const form = document.getElementById("membership-form") || document.querySelector('[class*="bg-[#FAF9F6]"]');
+        if (form) form.style.marginTop = "0px";
       });
     },
   },
@@ -289,30 +282,31 @@ function generateFramerShowcase(pages) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Content Audit · Framer-Style Layout Board · OSU Tamil Sangam</title>
+  <title>Muttram Courtyard Content Audit · Layout Board · OSU Tamil Sangam</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Tamil:wght@400;600;700;800&family=Halant:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Mukta+Malar:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0d0c10;
-      --card-bg: #141318;
-      --border: rgba(255, 255, 255, 0.08);
-      --accent: #FFB84D;
-      --accent-subtle: rgba(255, 184, 77, 0.15);
-      --purple: #8B5CF6;
-      --text-primary: #F4F4F6;
-      --text-secondary: #9E9EA8;
+      --bg: #14100E;
+      --card-bg: #1C1714;
+      --border: rgba(229, 169, 60, 0.18);
+      --accent: #E5A93C;
+      --terracotta: #B85C38;
+      --sand: #F4EFE6;
+      --accent-subtle: rgba(229, 169, 60, 0.12);
+      --text-primary: #FAF9F6;
+      --text-secondary: #C2B6A6;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background-color: var(--bg);
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
-        radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        radial-gradient(circle at 50% 0%, rgba(184, 92, 56, 0.14) 0%, transparent 60%),
+        radial-gradient(rgba(229, 169, 60, 0.06) 1px, transparent 1px);
       background-size: 100% 100%, 32px 32px;
       color: var(--text-primary);
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Mukta Malar', sans-serif;
       min-height: 100vh;
       padding: 40px 32px 100px;
       overflow-x: auto;
@@ -348,11 +342,11 @@ function generateFramerShowcase(pages) {
       border-radius: 50%;
     }
     h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: #fff;
+      font-family: 'Halant', 'Anek Tamil', serif;
+      font-size: 34px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #FAF9F6;
     }
     .meta-pills {
       display: flex;
@@ -361,7 +355,7 @@ function generateFramerShowcase(pages) {
       font-size: 12px;
     }
     .pill {
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(229, 169, 60, 0.05);
       border: 1px solid var(--border);
       padding: 6px 14px;
       border-radius: 20px;
@@ -390,8 +384,8 @@ function generateFramerShowcase(pages) {
       scroll-snap-align: start;
     }
     .artboard-card:hover {
-      border-color: rgba(255, 184, 77, 0.4);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 184, 77, 0.1);
+      border-color: rgba(229, 169, 60, 0.5);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(229, 169, 60, 0.12);
       transform: translateY(-4px);
     }
     .artboard-header {
@@ -403,39 +397,42 @@ function generateFramerShowcase(pages) {
       align-items: center;
     }
     .artboard-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: #fff;
+      font-size: 17px;
+      font-family: 'Halant', serif;
+      font-weight: 600;
+      color: #FAF9F6;
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .artboard-ta {
-      font-size: 13px;
+      font-size: 14px;
       color: var(--accent);
       font-weight: 600;
+      font-family: 'Anek Tamil', sans-serif;
     }
     .artboard-route {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(229, 169, 60, 0.08);
+      border: 1px solid rgba(229, 169, 60, 0.15);
       padding: 3px 8px;
       border-radius: 6px;
-      color: var(--text-secondary);
+      color: var(--accent);
     }
     .artboard-preview {
       width: 100%;
       height: 720px;
       overflow-y: auto;
       overflow-x: hidden;
-      background: #000;
+      background: #FAF9F6;
       position: relative;
     }
     .artboard-preview::-webkit-scrollbar {
       width: 6px;
     }
     .artboard-preview::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(184, 92, 56, 0.3);
       border-radius: 3px;
     }
     .artboard-preview img {
@@ -447,7 +444,7 @@ function generateFramerShowcase(pages) {
       padding: 14px 20px;
       border-top: 1px solid var(--border);
       background: rgba(255, 255, 255, 0.02);
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text-secondary);
       line-height: 1.5;
     }
@@ -461,28 +458,28 @@ function generateFramerShowcase(pages) {
       font-size: 11px;
       text-decoration: none;
       color: var(--accent);
-      border: 1px solid var(--accent-subtle);
-      background: rgba(255, 184, 77, 0.05);
+      border: 1px solid var(--border);
+      background: rgba(229, 169, 60, 0.06);
       padding: 5px 12px;
       border-radius: 6px;
-      transition: background 0.2s ease, border-color 0.2s ease;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
     }
     .btn-link:hover {
       background: var(--accent);
-      color: #000;
+      color: #14100E;
     }
   </style>
 </head>
 <body>
   <header>
     <div>
-      <div class="brand-eyebrow">OSU Tamil Sangam · Design Engineering</div>
+      <div class="brand-eyebrow">OSU Tamil Sangam · முற்றம் (Muttram) Architecture</div>
       <h1>Navbar Content Audit Board</h1>
     </div>
     <div class="meta-pills">
-      <div class="pill">Scope: <strong>8 Navbar Pages</strong></div>
-      <div class="pill">Mode: <strong>Content Only (Hero 3D Omitted)</strong></div>
-      <div class="pill">Viewport: <strong>1440px Desktop</strong></div>
+      <div class="pill">Scope: <strong>8 Core Navbar Pages</strong></div>
+      <div class="pill">Aesthetic: <strong>Muttram Courtyard (#FAF9F6)</strong></div>
+      <div class="pill">Viewport: <strong>1440px Desktop Retina</strong></div>
     </div>
   </header>
 
@@ -553,6 +550,18 @@ ${pages
 `;
 
   fs.writeFileSync(path.join(OUTPUT_DIR, "README.md"), md, "utf-8");
+}
+
+if (process.argv.includes("--html-only")) {
+  const pages = PAGES.map((p) => ({
+    ...p,
+    filename: `${p.id}.png`,
+    filepath: path.join(OUTPUT_DIR, `${p.id}.png`),
+  }));
+  generateFramerShowcase(pages);
+  generateMarkdownSummary(pages);
+  console.log(`Updated index.html and README.md with Muttram Courtyard design tokens.`);
+  process.exit(0);
 }
 
 run().catch((err) => {

@@ -12,14 +12,12 @@ import * as path from 'path';
 import {
   TileType,
   Grid8x8,
-  FUNDAMENTAL_CELLS,
   expandFundamentalDomain,
   traceGridNetwork,
   meetsHardFilters,
   scoreCandidate,
   TracedNetwork,
   terminalCoords,
-  TerminalId,
 } from './tileGrammar';
 import { solveAlternatingWeave, CrossingAssignment } from './overUnder';
 
@@ -156,7 +154,7 @@ export function renderCandidateSvg(
   for (const seg of cand.network.segments) {
     if (seg.type === 'corner_wrap') {
       // 3/4 circle around corner dot outside
-      const [cx, cy] = seg.centerDot;
+      const [_cx, _cy] = seg.centerDot;
       const [p1x, p1y] = toSvg(terminalCoords(seg.from).x, terminalCoords(seg.from).y);
       const [p2x, p2y] = toSvg(terminalCoords(seg.to).x, terminalCoords(seg.to).y);
       // Construct arc via SVG arc command

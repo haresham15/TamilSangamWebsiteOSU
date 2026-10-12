@@ -1,567 +1,264 @@
 "use client";
 
 import React, { useState } from "react";
-
-import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence, Variants } from "framer-motion";
+import Link from "next/link";
 import { GALLERY_ALBUMS, PhotoItem } from "@/data/gallery";
-import { GlyphMosaicImage } from "@/components/ui/GlyphMosaicImage";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import {
-  Search,
-  Filter,
-  ShieldAlert,
-  Eye,
-  X,
-  Calendar,
-  ExternalLink,
-  ChevronLeft,
-  ChevronRight,
-  Maximize2,
-} from "lucide-react";
-import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
-
-import { GalleryHero } from "@/components/gallery-hero/GalleryHero";
-import { ImageGridView } from "@/components/gl/planes/ImageGridView";
-import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
-import { NleTimelineLightbox } from "@/components/gallery/NleTimelineLightbox";
 import { audioLayer } from "@/utils/audioLayer";
-
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.04,
-      delayChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const },
-  },
-};
+import { X, Search } from "lucide-react";
+import { GalleryHero } from "@/components/gallery-hero/GalleryHero";
+import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
 
 export default function GalleryPage() {
   const { locale } = useLocale();
-  const { playClick, playWoodClick } = useAudio();
+  const { playClick } = useAudio();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeYear, setActiveYear] = useState("all");
   const [activeTag, setActiveTag] = useState("all");
-  const [activeAlbum, setActiveAlbum] = useState("all");
-  const [visibleCount, setVisibleCount] = useState(24);
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
-  const [isRemovalModalOpen, setIsRemovalModalOpen] = useState(false);
-  const [removalReason, setRemovalReason] = useState("");
-  const [removalSent, setRemovalSent] = useState(false);
 
   // Extract all photos across albums
   const allPhotos = GALLERY_ALBUMS.flatMap((a) => a.photos);
 
-  // Academic Years (All photo albums belong to 2025-2026 last academic year)
-  const academicYears = [
-    { id: "all", labelEn: "All Event Vaults", labelTa: "அனைத்து நிகழ்வுகள்" },
-    { id: "2025-2026", labelEn: "2025–2026 (Last Academic Year)", labelTa: "2025–2026 (கடந்த கல்வியாண்டு)" },
-  ];
-
-  // Tags
   const tags = ["all", "picnic", "food", "jathara", "carnival", "dance", "games", "tradition", "friends"];
-
-  // Filtered albums
-  const filteredAlbums = GALLERY_ALBUMS.filter((album) => {
-    if (activeYear === "all") return true;
-    return album.academicYear === activeYear;
-  });
 
   // Filtered photos
   const filteredPhotos = allPhotos.filter((photo) => {
     const album = GALLERY_ALBUMS.find((a) => a.slug === photo.albumSlug);
-    const matchesYear = activeYear === "all" || album?.academicYear === activeYear;
     const matchesTag = activeTag === "all" || photo.tags.includes(activeTag);
-    const matchesAlbum = activeAlbum === "all" || photo.albumSlug === activeAlbum;
-
     const q = searchQuery.toLowerCase().trim();
-    if (!q) return matchesYear && matchesTag && matchesAlbum;
+    if (!q) return matchesTag;
 
-    const matchesQuery =
-      photo.titleEn.toLowerCase().includes(q) ||
-      photo.captionEn.toLowerCase().includes(q) ||
-      photo.tags.some((tag) => tag.toLowerCase().includes(q)) ||
-      (album && album.titleEn.toLowerCase().includes(q)) ||
-      (album && album.academicYear.toLowerCase().includes(q));
-
-    return matchesYear && matchesTag && matchesAlbum && matchesQuery;
+    return (
+      matchesTag &&
+      (photo.titleEn.toLowerCase().includes(q) ||
+        photo.captionEn.toLowerCase().includes(q) ||
+        photo.tags.some((tag) => tag.toLowerCase().includes(q)) ||
+        (album && album.titleEn.toLowerCase().includes(q)))
+    );
   });
 
-  // Lightbox Navigation
-  const currentPhotoIndex = selectedPhoto
-    ? filteredPhotos.findIndex((p) => p.id === selectedPhoto.id)
-    : -1;
-
-  const handlePrevPhoto = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (currentPhotoIndex > 0) {
-      setSelectedPhoto(filteredPhotos[currentPhotoIndex - 1]);
-    } else {
-      setSelectedPhoto(filteredPhotos[filteredPhotos.length - 1]);
-    }
-  };
-
-  const handleNextPhoto = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (currentPhotoIndex < filteredPhotos.length - 1) {
-      setSelectedPhoto(filteredPhotos[currentPhotoIndex + 1]);
-    } else {
-      setSelectedPhoto(filteredPhotos[0]);
-    }
-  };
-
-  const handleRemovalSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setRemovalSent(true);
-    setTimeout(() => {
-      setIsRemovalModalOpen(false);
-      setRemovalSent(false);
-      setSelectedPhoto(null);
-    }, 2500);
-  };
-
   return (
-    <div className="w-full bg-transparent min-h-screen text-left font-body">
-      {/* 3D Fretboard Highway Hero (§0 - §4) */}
+    <div className="w-full bg-transparent min-h-screen text-left">
+      {/* =========================================================================
+          CRITICAL / IMMUTABLE: 3D Fretboard Highway Hero
+          HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES.
+          ========================================================================= */}
       <div data-hero-container="true" id="gallery-hero" className="w-full relative">
         <GalleryHero />
       </div>
 
-      {/* Color Gradient Transition from 3D Fretboard Sunset (#1F0A05) to Warm Cream Archive */}
+      {/* Hero to Content Gradient Transition */}
       <HeroGradientTransition variant="gallery" className="-mt-32 relative z-20" />
 
-      <div id="gallery-vault-content" className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-24 text-left font-body overflow-hidden">
-        {/* Structural Tamil Background Watermarks */}
-        <WatermarkGlyph text="நினைவுகள்" opacity={0.04} align="right" theme="light" />
-        <WatermarkGlyph text="நிழற்படம்" opacity={0.032} align="left" theme="light" className="top-[60%]" />
+      {/* =========================================================================
+          THE CANVAS: SUNLIT EXPANSIVE MASONRY ON WARM IVORY
+          Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
+          ========================================================================= */}
+      <div className="relative z-20 w-full bg-[#FAF9F6] text-[#2A2825] overflow-hidden">
+        
+        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 py-24 sm:py-32">
+          
+          {/* Centered Airy Header */}
+          <CourtyardHeader
+            align="center"
+            eyebrow="Physical Archives · 35mm Memories"
+            title={locale === "ta" ? "நினைவுகள் & வரலாற்று புகைப்படத் தொகுப்பு" : "The Canvas"}
+            tamilTitle={locale !== "ta" ? "நிழற்படம் · நினைவுகள்" : undefined}
+            description="Messy, candid, and full of life. Photographs expand widely across the bright courtyard canvas, capturing student laughter, lawn blankets, and festive stages."
+          />
 
-        {/* Header with High-Contrast Deep Plum Brand Typography */}
-        <div className="max-w-3xl mb-12 relative z-10">
-
-          <h1 className="text-[clamp(2.5rem,5vw+1.5rem,5.5rem)] font-extrabold text-[#250d38] tracking-tight font-display mb-4 leading-[1.1]" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
-            {locale === "ta" ? "நினைவுகள் · வரலாற்று புகைப்படத் தொகுப்பு" : "Memories & Event Info Pages"}
-          </h1>
-          <p className="text-base sm:text-lg text-[#250d38] font-medium leading-relaxed font-body">
-            {locale === "ta"
-              ? "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் 2025–2026 கல்வியாண்டின் விழாக்கள், பிக்னிக், தெருவோரச் சாப்பாடு மற்றும் கலை நிகழ்ச்சிகளின் பிரத்யேக தகவல் பக்கங்கள் மற்றும் 5 புகைப்படக் கதைகள்."
-              : "Explore our collegiate archive of past events at Ohio State from the 2025–2026 academic year. Each event features a dedicated info page with 5 curated photographs capturing the full narrative, plus direct links to complete Google Photos albums."}
-          </p>
-        </div>
-
-        {/* 1. Academic Year Filter: Architectural Console Strip */}
-        <div className="flex flex-wrap items-center gap-2 mb-8 relative z-10">
-          <span className="text-xs font-mono font-bold text-[#250d38] mr-1 flex items-center gap-1.5">
-            <Calendar className="w-3.5 h-3.5 text-[#55CCA2]" />
-            <span>Timeline Era:</span>
-          </span>
-          <div className="box-tab-strip">
-            {academicYears.map((year) => (
-              <button
-                key={year.id}
-                onClick={() => {
-                  playWoodClick();
-                  setActiveYear(year.id);
-                  setVisibleCount(24);
-                }}
-                className={`box-tab-item ${activeYear === year.id ? "box-tab-item-active" : ""}`}
-              >
-                {locale === "ta" ? year.labelTa : year.labelEn}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* 2. Photo Archive Search & Filter Panel: Architectural Console */}
-        <div className="ticket-chamfer-tl-br blueprint-node border-2 border-[#250d38] bg-white p-6 sm:p-8 shadow-[5px_5px_0px_#4c2472] hover:glow-sodium transition-all duration-300 mb-12 relative z-10">
-          <div className="flex items-center justify-between gap-2 text-xs font-mono uppercase tracking-widest text-[#4c2472] font-bold mb-3 border-b-2 border-purple-200 pb-2">
-            <div className="flex items-center gap-2">
-              <Search className="w-4 h-4 text-[#55CCA2]" />
-              <span>Search Photo Vault</span>
+          {/* Search Bar & Tag Links (Zero Pill Buttons) */}
+          <div className="max-w-2xl mx-auto space-y-8 mb-20 sm:mb-28">
+            <div className="relative border-b-2 border-[#2A2825]/15 focus-within:border-[#B85C38] transition-colors pb-1">
+              <Search className="w-5 h-5 text-[#57524C] absolute left-0 top-3" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search memories by event name, food, or tradition..."
+                className="w-full pl-8 pr-4 py-2.5 bg-transparent text-[#2A2825] placeholder:text-[#2A2825]/35 text-base sm:text-lg font-sans outline-none"
+              />
             </div>
-            <span className="text-purple-900/80 font-mono text-xs font-bold">
-              {filteredPhotos.length} {filteredPhotos.length === 1 ? "photo" : "photos"} matched
-            </span>
-          </div>
 
-          <div className="relative w-full mb-4">
-            <Search className="w-5 h-5 text-purple-400 absolute left-4 top-3.5" />
-            <input
-              id="gallery-search-input"
-              name="gallery_search"
-              type="text"
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setVisibleCount(24);
-              }}
-              placeholder="Search by title, event, tag (e.g. 'picnic', 'sapad', 'dosa', 'jathara', 'dance', 'lawn')..."
-              aria-label="Search photos by event, tag, or title"
-              className="w-full pl-12 pr-4 py-3 bg-purple-50/50 border-2 border-[#250d38] text-[#250d38] placeholder-purple-900/40 text-sm font-mono outline-none focus:border-[#4c2472] focus:bg-white transition-all ticket-chamfer-tl-br"
-            />
-          </div>
-
-          {/* Quick Tag Ledger Chips */}
-          <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-xs font-mono text-[#250d38] mr-1 flex items-center gap-1 font-bold">
-              <Filter className="w-3.5 h-3.5 text-[#55CCA2]" />
-              <span>Tag:</span>
-            </span>
-            {tags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => {
-                  playWoodClick();
-                  setActiveTag(tag);
-                  setVisibleCount(24);
-                }}
-                className={`px-2.5 py-1 text-xs font-mono uppercase font-bold border transition-all ticket-chamfer-tl-br ${
-                  activeTag === tag
-                    ? "bg-[#250d38] text-[#55CCA2] border-[#250d38] shadow-[1px_1px_0px_#55CCA2]"
-                    : "bg-purple-50/80 text-[#4c2472] border-purple-300 hover:bg-purple-100"
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* 3. Featured Event Info & Photo Pages */}
-        <div className="mb-16 relative z-10">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#250d38] font-display">
-                {locale === "ta" ? "நிகழ்ச்சி தகவல் பக்கங்கள் & புகைப்படக் கதைகள்" : "Event Info Pages & Photo Stories"}
-              </h2>
-            </div>
-            <span className="text-xs font-mono text-[#4c2472] font-bold">
-              {filteredAlbums.length} {filteredAlbums.length === 1 ? "Event" : "Events"}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredAlbums.map((album) => (
-              <div
-                key={album.slug}
-                className="ticket-chamfer-tl-br blueprint-node border-2 border-[#250d38] bg-white p-6 flex flex-col justify-between group hover:border-[#55CCA2] hover:shadow-[6px_6px_0px_#55CCA2] hover:glow-halogen-mint transition-all duration-200 shadow-[4px_4px_0px_#4c2472]"
-              >
-
-              <div>
-                {/* Album Header & Tags */}
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                  <span className="px-2.5 py-1 bg-[#250d38] text-[10px] font-mono text-[#55CCA2] font-bold uppercase tracking-wider">
-                    {album.academicYear} Academic Year
-                  </span>
-                  <span className="text-[11px] font-mono font-bold text-purple-900/70">
-                    {album.eventDate}
-                  </span>
-                </div>
-
-                <Link
-                  href={`/gallery/${album.slug}`}
-                  onClick={playClick}
-                  className="block w-full h-52 relative border-2 border-[#250d38] overflow-hidden mb-3"
-                >
-                  <Image
-                    src={album.coverImage}
-                    alt={album.titleEn}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, 500px"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#250d38]/80 via-transparent to-transparent flex items-end p-3">
-                    <span className="text-xs font-mono text-white font-bold">
-                      {album.location.split(",")[0]} · {album.attendance}
-                    </span>
-                  </div>
-                </Link>
-
-                {/* 5-Photo Thumbnail Strip Preview */}
-                <div className="grid grid-cols-5 gap-1.5 mb-4">
-                  {album.photos.map((p) => (
-                    <div
-                      key={p.id}
-                      className="relative aspect-[4/3] border border-[#250d38] overflow-hidden bg-purple-950/10"
-                    >
-                      <Image
-                        src={p.imageUrl}
-                        alt={p.titleEn}
-                        fill
-                        className="object-cover"
-                        sizes="80px"
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                <h3 className="text-xl font-bold text-[#250d38] font-display mb-1 group-hover:text-[#4c2472] transition-colors">
-                  <Link href={`/gallery/${album.slug}`} onClick={playClick}>
-                    {locale === "ta" ? album.titleTa : album.titleEn}
-                  </Link>
-                </h3>
-                <p className="text-xs text-[#4c2472] font-tamil font-semibold mb-2">
-                  {album.titleTa}
-                </p>
-                <p className="text-xs text-[#250d38] line-clamp-2 leading-relaxed mb-4 font-body">
-                  {locale === "ta" ? album.descriptionTa : album.descriptionEn}
-                </p>
-              </div>
-
-              <div className="pt-4 border-t-2 border-purple-200 flex flex-wrap items-center justify-between gap-3 text-xs font-mono font-bold">
-                <Link
-                  href={`/gallery/${album.slug}`}
-                  onClick={playClick}
-                  className="px-4 py-2 bg-[#250d38] text-[#55CCA2] border border-[#250d38] hover:bg-[#3c1959] transition-colors uppercase tracking-wider flex items-center gap-1.5 shadow-[2px_2px_0px_#4c2472]"
-                >
-                  <span>View Event Info & Story →</span>
-                </Link>
-
-                {album.googlePhotosUrl && (
-                  <a
-                    href={album.googlePhotosUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-purple-900 hover:text-[#250d38] hover:underline"
-                    title="View on Google Photos"
-                  >
-                    <span>Google Photos</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-[#55CCA2]" />
-                  </a>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 4. Photo Stream with Seamless Album Filter Tabs */}
-      <div id="photo-stream" className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#250d38] font-display">
-            {locale === "ta" ? "புகைப்பட தொகுப்பு திரை" : "Seamless Photo Stream"}
-          </h2>
-          <p className="text-xs text-[#250d38] font-mono mt-0.5">
-            Edge-to-edge photo archive · Click any photo for full lightbox view
-          </p>
-        </div>
-        <span className="text-xs font-mono text-[#250d38] font-bold self-start sm:self-auto">
-          Showing {Math.min(visibleCount, filteredPhotos.length)} of {filteredPhotos.length}
-        </span>
-      </div>
-
-      {/* Seamless Album Switcher Tabs: Architectural Segmented Console */}
-      <div className="flex flex-wrap items-center gap-1.5 mb-8 p-1.5 bg-purple-50 border-2 border-[#250d38] shadow-[3px_3px_0px_#4c2472]">
-        <button
-          onClick={() => {
-            playWoodClick();
-            setActiveAlbum("all");
-            setVisibleCount(24);
-          }}
-          className={`px-3.5 py-1.5 text-xs font-mono font-bold uppercase tracking-wider transition-all ${
-            activeAlbum === "all"
-              ? "bg-[#250d38] text-[#55CCA2] border-b-2 border-b-[#55CCA2] shadow-sm"
-              : "text-[#3c1959] hover:text-[#250d38] hover:bg-purple-100"
-          }`}
-        >
-          All Albums ({allPhotos.length})
-        </button>
-        {GALLERY_ALBUMS.map((album) => (
-          <button
-            key={album.slug}
-            onClick={() => {
-              playWoodClick();
-              setActiveAlbum(album.slug);
-              setVisibleCount(24);
-            }}
-            className={`px-3.5 py-1.5 text-xs font-mono font-bold uppercase tracking-wider transition-all ${
-              activeAlbum === album.slug
-                ? "bg-[#250d38] text-[#55CCA2] border-b-2 border-b-[#55CCA2] shadow-sm"
-                : "text-[#3c1959] hover:text-[#250d38] hover:bg-purple-100"
-            }`}
-          >
-            {locale === "ta" ? album.titleTa : album.titleEn} ({album.photoCount})
-          </button>
-        ))}
-      </div>
-
-      {filteredPhotos.length === 0 ? (
-        <div className="py-20 text-center bg-white border-2 border-[#250d38] shadow-[4px_4px_0px_#4c2472] mb-16">
-          <p className="text-purple-900/80 font-mono text-sm">No photos found matching your search filter.</p>
-          <button
-            onClick={() => {
-              setSearchQuery("");
-              setActiveYear("all");
-              setActiveTag("all");
-              setActiveAlbum("all");
-            }}
-            className="mt-4 px-5 py-2.5 btn-sangam text-xs font-mono font-bold uppercase tracking-wider"
-          >
-            Reset All Filters
-          </button>
-        </div>
-      ) : (
-        <>
-          <ImageGridView
-            itemSelector="[data-plane-item]"
-            imgSelector="img"
-            radius={8}
-            className="mb-12"
-          >
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4"
-            >
-              {filteredPhotos.slice(0, visibleCount).map((photo) => {
-                const parentAlbum = GALLERY_ALBUMS.find((a) => a.slug === photo.albumSlug);
+            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
+              {tags.map((tag) => {
+                const isSelected = activeTag === tag;
                 return (
-                  <motion.div
-                    key={photo.id}
-                    variants={itemVariants}
-                    layoutId={`photo-card-${photo.id}`}
-                    data-plane-item
-                    data-plane-id={photo.id}
-                    data-cursor="bracket"
-                    className="relative aspect-[4/3] overflow-hidden group cursor-pointer data-[gl-ready=true]:bg-transparent bg-purple-950/10 border-2 border-[#250d38] shadow-[2px_2px_0px_#4c2472] hover:shadow-[4px_4px_0px_#55CCA2] hover:border-[#55CCA2] transition-all duration-200"
-                    onMouseEnter={() => audioLayer.playTapeClack(0.25)}
+                  <button
+                    key={tag}
                     onClick={() => {
                       playClick();
-                      audioLayer.playTapeClack(0.5);
-                      setSelectedPhoto(photo);
+                      setActiveTag(tag);
                     }}
+                    className={`font-sans text-xs tracking-widest uppercase font-semibold transition-colors duration-200 cursor-pointer pb-1 ${
+                      isSelected
+                        ? "text-[#B85C38] border-b-2 border-[#B85C38]"
+                        : "text-[#57524C] hover:text-[#2A2825] border-b-2 border-transparent"
+                    }`}
                   >
-                    {/* Image Container with Glyph Loader */}
-                    <GlyphMosaicImage
-                      src={photo.imageUrl}
-                      alt={photo.titleEn}
-                      aspectRatio="aspect-[4/3]"
-                    />
-
-                    {/* Subtle, seamless hover overlay showing album tag and expand icon */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#250d38]/90 via-[#250d38]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-3 sm:p-3.5 pointer-events-none">
-                      <div className="flex justify-end">
-                        <span className="p-1 bg-[#250d38] border border-[#55CCA2] text-white">
-                          <Eye className="w-3.5 h-3.5 text-[#55CCA2]" />
-                        </span>
-                      </div>
-                      <div className="text-left">
-                        <span className="text-[10px] font-mono text-[#55CCA2] font-semibold block truncate">
-                          {parentAlbum?.titleEn || photo.eventDate}
-                        </span>
-                        <span className="text-xs font-bold text-white font-display block truncate">
-                          {locale === "ta" ? photo.titleTa : photo.titleEn}
-                        </span>
-                      </div>
-                    </div>
-                  </motion.div>
+                    {tag}
+                  </button>
                 );
               })}
-            </motion.div>
-          </ImageGridView>
+            </div>
+          </div>
 
-          {/* Load More Button */}
-          {visibleCount < filteredPhotos.length && (
-            <div className="text-center mb-20">
+          {/* Analog Photo Table: Asymmetric Rotations, Physical Overlaps, Sharp Corners */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-14 items-start">
+            {filteredPhotos.map((photo, idx) => {
+              // Asymmetric aspect ratio patterns for dynamic physical photos
+              const aspect = idx % 5 === 0 ? "aspect-[4/5]" : idx % 3 === 0 ? "aspect-[16/10]" : "aspect-[4/3]";
+              const rotations = ["-rotate-1 md:-rotate-2", "rotate-1 md:rotate-2", "rotate-0", "-rotate-2 md:-rotate-1", "rotate-2 md:rotate-1", "-rotate-1"];
+              const rot = rotations[idx % rotations.length];
+              const overlap = idx % 3 === 1 ? "md:-mt-6" : idx % 3 === 2 ? "md:mt-4" : "";
+
+              return (
+                <div
+                  key={photo.id}
+                  onClick={() => {
+                    audioLayer.playTapeClack();
+                    setSelectedPhoto(photo);
+                  }}
+                  className={`group relative transition-all duration-500 cursor-pointer select-none ${rot} ${overlap} hover:rotate-0 hover:scale-[1.02] hover:z-30`}
+                >
+                  {/* Sharp Physical Photo Print (No rounded corners, no white card wrapper) */}
+                  <div className={`relative w-full ${aspect} overflow-hidden bg-[#F4EFE6] border border-stone-300/50 shadow-xl shadow-stone-900/10`}>
+                    <Image
+                      src={photo.imageUrl}
+                      alt={photo.titleEn}
+                      fill
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+
+                  {/* Captions Sitting Naked Directly Beneath Photo on Global Background */}
+                  <div className="pt-4 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-sans font-semibold text-[#B85C38] tracking-widest uppercase block">
+                        {photo.tags[0] || "Memory"}
+                      </span>
+                      <span className="text-stone-400">·</span>
+                      <span className="text-xs font-sans text-stone-500 uppercase tracking-wider">
+                        {photo.eventDate}
+                      </span>
+                    </div>
+
+                    <h3 className="text-xl sm:text-2xl font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors leading-snug">
+                      {locale === "ta" ? photo.titleTa : photo.titleEn}
+                    </h3>
+                    <p className="font-sans text-sm text-[#57524C] leading-relaxed line-clamp-2">
+                      {locale === "ta" ? photo.captionTa : photo.captionEn}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {filteredPhotos.length === 0 && (
+            <div className="py-24 text-center space-y-3 font-sans text-[#57524C]">
+              <p className="text-lg font-serif">No memories matched your search criteria.</p>
               <button
                 onClick={() => {
-                  playClick();
-                  audioLayer.playTapeClack(0.4);
-                  setVisibleCount((prev) => prev + 24);
+                  setSearchQuery("");
+                  setActiveTag("all");
                 }}
-                onMouseEnter={() => audioLayer.playTapeClack(0.2)}
-                data-cursor="bracket"
-                className="px-8 py-3.5 btn-sangam-white font-mono font-bold text-xs uppercase tracking-wider"
+                className="text-sm font-medium text-[#B85C38] underline cursor-pointer"
               >
-                Load More Photos ({filteredPhotos.length - visibleCount} Remaining) →
+                Clear all filters
               </button>
             </div>
           )}
-        </>
-      )}
 
-      {/* DaVinci Resolve NLE Timeline Lightbox (§PHASE 3) */}
+          {/* Student Photo Consent & Removal Notice (Unboxed, 1px Grounding Line) */}
+          <div className="mt-28 sm:mt-40 border-t border-[#E5DDD0] pt-16 text-center max-w-2xl mx-auto space-y-3 select-none">
+            <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
+              Student Privacy & Consent
+            </span>
+            <h4 className="text-2xl sm:text-3xl font-serif font-normal text-[#2A2825]">
+              Documenting Joy with Community Respect
+            </h4>
+            <p className="text-sm font-sans text-[#57524C] leading-relaxed">
+              We capture moments of genuine joy on campus. If you appear in any photograph and would prefer it removed, simply email{" "}
+              <a href="mailto:osutamilsangam@gmail.com" className="text-[#B85C38] underline font-medium hover:text-[#E5A93C]">
+                osutamilsangam@gmail.com
+              </a>{" "}
+              and we will take it down immediately with zero questions asked.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Lightbox Projection Modal */}
       {selectedPhoto && (
-        <NleTimelineLightbox
-          photo={selectedPhoto}
-          photos={filteredPhotos}
-          onSelectPhoto={(p) => setSelectedPhoto(p)}
-          onClose={() => setSelectedPhoto(null)}
-          onRequestRemoval={() => setIsRemovalModalOpen(true)}
-        />
-      )}
-
-      {/* Privacy Removal Request Modal: Architectural Alert Box */}
-      {isRemovalModalOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#250d38]/90 backdrop-blur-md">
-          <div className="w-full max-w-md bg-white p-6 sm:p-8 border-2 border-red-500 shadow-[6px_6px_0px_#dc2626] relative text-left">
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-stone-950/85 backdrop-blur-md animate-in fade-in duration-300"
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <div
+            className="relative max-w-5xl w-full max-h-[90vh] bg-[#FAF9F6] border border-stone-400/40 overflow-hidden shadow-2xl flex flex-col md:flex-row"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Top Right Close Button */}
             <button
-              onClick={() => setIsRemovalModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 p-1"
-              aria-label="Close removal modal"
+              onClick={() => setSelectedPhoto(null)}
+              aria-label="Close"
+              className="absolute top-4 right-4 z-20 w-11 h-11 bg-[#FAF9F6]/90 text-[#2A2825] hover:bg-[#B85C38] hover:text-[#FAF9F6] flex items-center justify-center border border-stone-300 shadow-md transition-colors cursor-pointer"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
 
-            {!removalSent ? (
-              <form onSubmit={handleRemovalSubmit} className="space-y-4">
-                <div className="flex items-center gap-2 text-red-600 text-xs font-mono uppercase font-bold">
-                  <ShieldAlert className="w-4 h-4" />
-                  <span>Student Photo Privacy Request</span>
-                </div>
-                <h3 className="text-xl font-bold text-[#250d38] font-display">Request Photo Removal</h3>
-                <p className="text-xs text-purple-950/80 leading-relaxed font-body">
-                  We respect everyone&apos;s privacy. Submit this form to have this image unlisted or your face blurred within 48 hours.
+            {/* Photo View */}
+            <div className="relative md:w-2/3 h-80 md:h-[75vh] bg-[#F4EFE6]">
+              <Image
+                src={selectedPhoto.imageUrl}
+                alt={selectedPhoto.titleEn}
+                fill
+                className="object-contain"
+                sizes="(max-width: 1024px) 100vw, 800px"
+              />
+            </div>
+
+            {/* Info View */}
+            <div className="p-8 md:w-1/3 flex flex-col justify-between space-y-6 overflow-y-auto">
+              <div className="space-y-4">
+                <span className="text-xs font-sans font-semibold text-[#B85C38] tracking-widest uppercase block">
+                  {selectedPhoto.eventDate}
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-serif text-[#2A2825]">
+                  {locale === "ta" ? selectedPhoto.titleTa : selectedPhoto.titleEn}
+                </h3>
+                <p className="text-base font-sans text-[#57524C] leading-relaxed">
+                  {locale === "ta" ? selectedPhoto.captionTa : selectedPhoto.captionEn}
                 </p>
-
-                <div>
-                  <label className="block text-xs font-mono text-purple-950/80 font-bold mb-1">
-                    Reason or Note for Officers
-                  </label>
-                  <textarea
-                    required
-                    rows={3}
-                    value={removalReason}
-                    onChange={(e) => setRemovalReason(e.target.value)}
-                    placeholder="I am in this photo and prefer not to have it on the website..."
-                    className="w-full p-3 bg-purple-50/50 border-2 border-purple-200 text-[#250d38] text-xs outline-none focus:border-red-500 font-body"
-                  />
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {selectedPhoto.tags.map((t) => (
+                    <span key={t} className="px-3 py-1 rounded-full bg-[#F4EFE6] text-xs font-sans text-[#2A2825]">
+                      #{t}
+                    </span>
+                  ))}
                 </div>
+              </div>
 
-                <button
-                  type="submit"
-                  className="w-full py-2.5 border-2 border-[#250d38] bg-red-600 text-white font-mono font-bold text-xs uppercase tracking-wider hover:bg-red-700 transition-colors shadow-[3px_3px_0px_#000]"
-                >
-                  Submit Removal Request
-                </button>
-              </form>
-            ) : (
-              <div className="text-center py-6 space-y-2">
-                <p className="text-emerald-600 font-bold text-base">Request Received</p>
-                <p className="text-xs text-purple-950/80">
-                  Our executive board has received your removal request and will action it within 48 hours.
+              <div className="pt-4 border-t border-[#2A2825]/10">
+                <p className="text-xs font-sans text-[#57524C]">
+                  Columbus, Ohio · The Ohio State University
                 </p>
               </div>
-            )}
+            </div>
           </div>
         </div>
       )}
-      </div>
     </div>
   );
 }
