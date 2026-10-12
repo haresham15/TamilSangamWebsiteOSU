@@ -1,26 +1,35 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useActionState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useFormStatus } from "react-dom";
 import {
-  MapPin,
+  Compass,
   ArrowDown,
   Mail,
-  Compass,
+  Lightbulb,
+  Check,
+  Loader2,
+  ArrowRight
 } from "lucide-react";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
-import { SuggestionForm } from "@/components/suggestions/SuggestionForm";
 import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
-import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 import type { BlueprintPin } from "@/components/suggestions/BlueprintSVG";
 import { OFFICIAL_DISCLAIMER, CONTACT_EMAIL } from "@/lib/constants";
-
+import { submitSuggestion, SuggestionActionState } from "@/app/actions/suggestion";
 import { governor } from "@/engine/governor";
+import { audioLayer } from "@/utils/audioLayer";
+import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
 
+// =========================================================================
+// CRITICAL & IMMUTABLE: 3D Blueprint Scene Hero
+// HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES
+// =========================================================================
 const BlueprintScene3D = dynamic(
   () => import("@/components/suggestions/BlueprintScene3D").then((m) => m.BlueprintScene3D),
   {
@@ -38,6 +47,34 @@ const BlueprintScene3D = dynamic(
   }
 );
 
+const initialState: SuggestionActionState = {
+  success: false,
+};
+
+function SubmitSuggestionButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="px-8 py-3.5 bg-[#E5A93C] text-[#1E1B18] font-sans text-sm font-semibold rounded-full hover:bg-[#B85C38] hover:text-[#FAF9F6] transition-all duration-300 flex items-center gap-2.5 shadow-md shadow-stone-900/5 cursor-pointer disabled:opacity-50"
+    >
+      {pending ? (
+        <>
+          <Loader2 className="w-4 h-4 animate-spin" />
+          <span>Sharing your idea...</span>
+        </>
+      ) : (
+        <>
+          <span>Submit Proposal</span>
+          <ArrowRight className="w-4 h-4" />
+        </>
+      )}
+    </button>
+  );
+}
+
 export default function SuggestionsPage() {
   const { locale } = useLocale();
   const { isLiteMode } = useLiteMode();
@@ -54,7 +91,14 @@ export default function SuggestionsPage() {
     y: number;
   } | null>(null);
 
-  // Register GSAP ScrollTrigger for the 3D Blueprint reveal sequence
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [timestamp, setTimestamp] = useState<number>(() => (typeof window !== "undefined" ? Date.now() : 0));
+
+  const [state, formAction] = useActionState(submitSuggestion, initialState);
+
+  // Register GSAP ScrollTrigger for the 3D Blueprint reveal sequence - IMMUTABLE
   useEffect(() => {
     if (isLiteMode) return;
 
@@ -76,7 +120,6 @@ export default function SuggestionsPage() {
         },
       });
 
-      // Refresh ScrollTrigger and update Lenis limit for pin spacer
       ScrollTrigger.refresh();
       if (typeof window !== "undefined" && window.__lenis) {
         window.__lenis.resize();
@@ -91,228 +134,312 @@ export default function SuggestionsPage() {
     };
   }, [isLiteMode]);
 
-
-  const handleSelectPin = (pin: BlueprintPin) => {
-    setActivePin(pin);
-    setSelectedCategory(pin.category);
-  };
+  useEffect(() => {
+    if (state.success && state.pin) {
+      setNewlyDroppedPin(state.pin);
+      audioLayer.playTapeClack();
+    }
+  }, [state.success, state.pin]);
 
   const scrollToForm = () => {
-    if (typeof window !== "undefined" && window.__lenis) {
-      window.__lenis.scrollTo(formSectionRef.current || "+=2400", {
-        offset: -40,
-        duration: 1.2,
-      });
-      return;
-    }
     if (formSectionRef.current) {
       formSectionRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  return (
-    <div className="relative min-h-screen bg-transparent text-[#f8f6f0] selection:bg-[#FFB84D] selection:text-[#150914] overflow-hidden">
-      {/* Structural Blueprint Watermark Glyphs */}
-      <WatermarkGlyph text="வரைபடம்" position="top-right" theme="dark" opacity={0.035} />
-      <WatermarkGlyph text="கருத்து" position="center" theme="dark" opacity={0.03} />
+  const categories = [
+    "Event idea",
+    "Website feedback",
+    "New initiative",
+    "Partnership",
+    "Something else",
+  ];
 
-      {/* 1. Sticky Hero Container with 3D Blueprint Extrusion */}
+  return (
+    <div className="relative min-h-screen bg-transparent text-white overflow-hidden">
+      
+      {/* =========================================================================
+          CRITICAL / IMMUTABLE: 3D Axonometric Blueprint Pin Scene
+          HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES
+          ========================================================================= */}
       <section
         ref={containerRef}
-        data-hero-pinned="suggestions"
-        className={`relative w-full ${
-          isLiteMode ? "min-h-auto pt-28 pb-16" : "h-[100dvh]"
-        } overflow-hidden flex flex-col justify-between select-none bg-transparent`}
-        style={{ minHeight: "100dvh" }}
+        data-hero-container="true"
+        id="blueprint-hero"
+        className="w-full h-screen relative overflow-hidden bg-[#0F050A]"
       >
-        {/* Background 3D Canvas / 2D SVG Fallback */}
-        <div className="absolute inset-0 z-0 w-full h-full">
+        <div className="absolute inset-0 w-full h-full">
           <BlueprintScene3D
             scrollProgress={scrollProgress}
-            isLiteMode={isLiteMode}
+            onSelectPin={(pin) => {
+              setActivePin(pin);
+              setSelectedCategory(pin.category);
+            }}
             newPin={newlyDroppedPin}
-            onSelectPin={handleSelectPin}
-            className="w-full h-full"
           />
         </div>
 
-        {/* Screen Reader Accessible Blueprint Landmarks */}
-        <div className="sr-only">
-          <h2>Interactive Ohio Stadium Blueprint Landmarks</h2>
-          <p>Explore ideas and initiatives anchored at authentic Ohio Stadium architectural zones:</p>
-          <ul>
-            <li>
-              <strong>50-Yard Line (The Turf):</strong> Campus events, athletic competitions, and outdoor lawn socials.
-            </li>
-            <li>
-              <strong>North Rotunda (Heritage Dome):</strong> Classical Tamil architecture, cultural exhibits, and arts showcase.
-            </li>
-            <li>
-              <strong>West Press Box (Executive Tower):</strong> Organizational leadership, campus initiatives, and student advocacy.
-            </li>
-          </ul>
-        </div>
-
-        {/* Bottom overlay gradient blending agent */}
-        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#0F050A] via-[#0F050A]/80 to-transparent pointer-events-none z-10" />
-
-        {/* Top Subtle Floating HUD: One Singular Cinematic Metaphor Title Placard
-            Smoothly fades as user scrolls so focus stays 100% on the rising stadium wireframe */}
-        <div
-          className="relative z-20 w-full max-w-xl mx-auto px-4 pt-24 sm:pt-20 flex justify-center pointer-events-auto transition-opacity duration-200"
-          style={{
-            opacity: Math.max(0, 1 - scrollProgress * 3.2),
-            transform: `translateY(-${Math.min(24, scrollProgress * 50)}px)`,
-            pointerEvents: scrollProgress > 0.15 ? "none" : "auto",
-          }}
-        >
-          <div className="ticket-chamfer-tl-br relative w-full bg-[#150914]/90 border border-[#FFB84D]/40 px-5 py-3.5 sm:px-6 sm:py-4 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.6)] text-center space-y-1.5 hover:glow-sodium transition-all">
-
-            {/* Cinematic Metaphor Title */}
-            <h1 className="text-lg sm:text-xl md:text-2xl font-bold font-display text-[#f8f6f0] tracking-tight leading-snug">
-              {locale === "ta" ? "ஓஹியோவில் நம் சமூகம் படைப்போம்" : "Building Our Community at Ohio State"}
-            </h1>
-
-            {/* Metaphor Subtitle */}
-            <p className="text-xs text-slate-300 font-body leading-relaxed max-w-md mx-auto">
-              {locale === "ta"
-                ? "ஒரு வரைபடம் போல, உங்கள் கருத்துக்களாலேயே நம் சமூகம் உருவாகிறது."
-                : "Just as an iconic structure rises line by line, our community is built by your voices and ideas."}
-            </p>
-          </div>
-        </div>
-
-        {/* Active Pin Callout Card Overlay (if a pin is clicked or active) */}
-        {activePin && (
-          <div className="relative z-30 max-w-md mx-auto my-auto px-4 pointer-events-auto animate-in fade-in zoom-in-95 duration-200">
-            <div className="ticket-chamfer-tr-bl relative bg-[#150914]/95 border-2 border-[#FFB84D] p-5 shadow-[6px_6px_0px_#8B5A2B] backdrop-blur-lg hover:glow-sodium transition-all">
-
-              <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#4A2038]">
-                <div className="inline-flex items-center gap-2 text-xs font-mono font-bold text-[#FFB84D]">
-                  <MapPin className="w-3.5 h-3.5" />
-                  <span>{locale === "ta" ? activePin.labelTa : activePin.labelEn}</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActivePin(null)}
-                  className="text-slate-400 hover:text-white text-xs font-mono px-2 py-0.5"
-                >
-                  ✕
-                </button>
-              </div>
-              <p className="text-xs sm:text-sm text-slate-200 font-body leading-relaxed mb-4">
-                {locale === "ta" ? activePin.questionTa : activePin.questionEn}
-              </p>
-              <button
-                type="button"
-                onClick={scrollToForm}
-                className="ticket-chamfer-tl-br w-full py-2 bg-[#FFB84D] hover:bg-[#ffc978] text-[#150914] font-mono text-xs font-bold uppercase tracking-wider transition-colors hover:glow-sodium"
-              >
-                Draft Suggestion for this Location →
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Bottom Jump-to-Form Trigger */}
-        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pb-8 flex items-center justify-end pointer-events-auto">
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-auto">
           <button
-            type="button"
             onClick={scrollToForm}
-            className="ticket-chamfer-tl-br ml-auto mb-16 sm:mb-0 inline-flex items-center gap-2 px-4 py-2 bg-[#150914]/95 hover:bg-[#241021] border-2 border-[#FFB84D] text-[#FFB84D] text-xs font-mono font-bold uppercase tracking-wider backdrop-blur-xl transition-all cursor-pointer shadow-[4px_4px_0px_#8B5A2B] hover:glow-sodium"
+            className="flex items-center gap-2 px-4 py-2 bg-black/60 border border-white/20 text-white font-mono text-xs uppercase tracking-widest hover:border-[#FFB84D] hover:text-[#FFB84D] transition-all backdrop-blur-sm"
           >
-            <span>Jump to Suggestion Box</span>
+            <span>DISPATCH SUGGESTION</span>
             <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
           </button>
         </div>
       </section>
 
-      {/* Color Gradient Transition from 3D Blueprint (#0F050A) to Form Section (#0F050A) */}
+      {/* Hero to Content Gradient Transition */}
       <HeroGradientTransition variant="suggestions" className="-mt-32 relative z-20" />
 
-      {/* 2. Interactive Suggestion Box Section */}
-      <section
+      {/* =========================================================================
+          THE THINNAI ANCHOR & THE BLUEPRINT IDEAS TERMINAL
+          Strict 12-Column Asymmetric Grid:
+          - Left 4 Columns: The Thinnai Anchor (Sticky resting space, 3% watermark,
+            page title in huge Serif, tiny monospace coordinates, proof records)
+          - Right 8 Columns: The Flow:
+            * NAKED IDEAS FORM ON DARK BACKGROUND (Zero containers, zero card boxes)
+            * 1px bottom-border inputs (border-b border-white/20)
+            * Massive questions: "WHAT IS YOUR CAMPUS PROPOSAL?"
+            * Huge glowing monospace user input text
+            * Keyboard mechanics: [ Press Enter ↵ ]
+          ========================================================================= */}
+      <div 
         ref={formSectionRef}
-        className="relative z-20 w-full min-h-screen bg-[#0F050A] py-20"
+        className="relative z-20 w-full bg-[#FAF9F6] text-[#2A2825] overflow-hidden"
       >
-        <div className="max-w-5xl mx-auto px-4 sm:px-8 space-y-12">
-          {/* Editorial Explainer Banner */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="ticket-chamfer-tl-br relative p-6 bg-[#150914] border border-[#4A2038] hover:border-[#FFB84D]/40 space-y-2 shadow-[4px_4px_0px_#0F050A] hover:glow-sodium transition-all">
-            <div className="w-8 h-8 bg-[#FFB84D]/20 border border-[#FFB84D] text-[#FFB84D] flex items-center justify-center font-mono font-bold text-xs">
-              01
-            </div>
-            <h4 className="text-base font-bold font-display text-white">
-              {locale === "ta" ? "மாணவர் வழிகாட்டல்" : "Student-Led Vision"}
-            </h4>
-            <p className="text-xs text-slate-300 font-body leading-relaxed">
-              Every initiative, festival, dance choreography, and guest lecture originates from student ideas.
-            </p>
-          </div>
+        <div className="w-full max-w-[1700px] mx-auto px-6 sm:px-10 lg:px-12 py-20 sm:py-28">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            
+            {/* ===================================================================
+                THE ANCHOR (LEFT 4 COLUMNS): THE THINNAI
+                Warm Ivory sidebar, soft serif headers, proven track record card
+                =================================================================== */}
+            <aside className="lg:col-span-4 lg:sticky lg:top-24 space-y-8 select-none">
+              <div className="relative z-10 space-y-4">
+                <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
+                  Campus Voices · Student Initiatives
+                </span>
+                <h1 className="text-4xl sm:text-5xl font-serif font-normal text-[#2A2825] leading-tight">
+                  The Ideas Hearth
+                </h1>
+                <p className="text-xs font-sans text-[#57524C] tracking-wider uppercase font-semibold" lang="ta">
+                  {locale === "ta" ? "விருப்பங்கள் & வரைபடம்" : "Student Proposal Portal"}
+                </p>
+                <p className="text-base font-sans text-[#57524C] leading-relaxed">
+                  Every festival, language circle, dinner gathering, and dance item began as an idea proposed by a student. Share yours directly with the executive board.
+                </p>
+              </div>
 
-          <div className="ticket-chamfer-tl-br relative p-6 bg-[#150914] border border-[#4A2038] hover:border-[#FFB84D]/40 space-y-2 shadow-[4px_4px_0px_#0F050A] hover:glow-sodium transition-all">
-            <div className="w-8 h-8 bg-[#FFB84D]/20 border border-[#FFB84D] text-[#FFB84D] flex items-center justify-center font-mono font-bold text-xs">
-              02
-            </div>
-            <h4 className="text-base font-bold font-display text-white">
-              {locale === "ta" ? "நேரடி மின்னஞ்சல்" : "Direct Dispatch"}
-            </h4>
-            <p className="text-xs text-slate-300 font-body leading-relaxed">
-              Your submission routes directly to{" "}
-              <span className="font-mono text-[#FFB84D]">{CONTACT_EMAIL}</span> and is discussed at our weekly executive meeting.
-            </p>
-          </div>
+              {/* Proven Track Record: Borderless Architectural Typography between 1px Hairlines */}
+              <div className="relative z-10 py-6 border-t border-b border-[#E5DDD0] space-y-4">
+                <div className="flex items-center justify-between border-b border-[#E5DDD0] pb-3">
+                  <span className="text-xs font-mono font-semibold text-[#B85C38] tracking-widest uppercase">
+                    Proven Track Record
+                  </span>
+                  <span className="text-[11px] font-sans text-[#8C827A]">You Said · We Did</span>
+                </div>
+                <div className="space-y-4 text-sm font-sans text-[#57524C]">
+                  <div>
+                    <span className="text-xs font-semibold text-[#2A2825] block uppercase tracking-wider mb-1">
+                      Conversational Workshops:
+                    </span>
+                    <p className="leading-relaxed">
+                      Launched bi-weekly Katral sessions covering everyday Tamil vocabulary, script fundamentals, and history.
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold text-[#2A2825] block uppercase tracking-wider mb-1">
+                      Joint Campus Festivals:
+                    </span>
+                    <p className="leading-relaxed">
+                      Co-produced Namma Jathara Spring Carnival with Telugu Tamasha, bringing together 200+ students.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </aside>
 
-          <div className="ticket-chamfer-tl-br relative p-6 bg-[#150914] border border-[#4A2038] hover:border-[#FFB84D]/40 space-y-2 shadow-[4px_4px_0px_#0F050A] hover:glow-sodium transition-all">
-            <div className="w-8 h-8 bg-[#8B5A2B]/25 border border-[#8B5A2B] text-[#FFB84D] flex items-center justify-center font-mono font-bold text-xs">
-              03
-            </div>
-            <h4 className="text-base font-bold font-display text-white">
-              {locale === "ta" ? "அநாமதேய சுதந்திரம்" : "Anonymous or Credited"}
-            </h4>
-            <p className="text-xs text-slate-300 font-body leading-relaxed">
-              Submit completely anonymously or leave your BuckeyeMail if you would like to collaborate or receive follow-up.
-            </p>
+            {/* ===================================================================
+                THE FLOW (RIGHT 8 COLUMNS): CONVERSATIONAL PROPOSAL FORM
+                Warm, open, conversational inputs without dark command-line syntax
+                =================================================================== */}
+            <main className="lg:col-span-8">
+              {!state.success ? (
+                <form action={formAction} className="space-y-12 py-2">
+                  {/* Honeypot & Timestamp Hidden Inputs */}
+                  <input type="hidden" name="form_timestamp" value={timestamp} />
+                  <div className="hidden" aria-hidden="true">
+                    <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+                  </div>
+                  <input type="hidden" name="category" value={selectedCategory} />
+
+                  {/* Question 01: Proposal Message */}
+                  <div className="space-y-3">
+                    <label 
+                      htmlFor="terminal-message" 
+                      className="block font-sans text-sm font-semibold text-[#2A2825] tracking-wide"
+                    >
+                      What is your campus proposal or idea? *
+                    </label>
+                    <p className="text-xs font-sans text-[#8C827A]">
+                      Describe what you would love to see happen (e.g., midnight filter coffee sessions, board game night, music jamming).
+                    </p>
+                    <textarea
+                      id="terminal-message"
+                      name="message"
+                      required
+                      rows={4}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="e.g. Host a midnight Tamil filter coffee & study session at Thompson Library during finals..."
+                      className="w-full py-3 bg-transparent border-b border-[#E5DDD0] text-[#2A2825] placeholder:text-[#8C827A] font-sans text-base outline-none focus:border-[#B85C38] transition-colors resize-none"
+                    />
+                  </div>
+
+                  {/* Question 02: Category Selection */}
+                  <div className="space-y-3">
+                    <span className="block font-sans text-sm font-semibold text-[#2A2825] tracking-wide">
+                      Select Proposal Category:
+                    </span>
+                    <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2">
+                      {categories.map((cat) => (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => {
+                            audioLayer.playTapeClack();
+                            setSelectedCategory(cat);
+                          }}
+                          className={`pb-1 text-xs sm:text-sm font-sans uppercase tracking-widest font-medium transition-all cursor-pointer ${
+                            selectedCategory === cat
+                              ? "text-[#B85C38] border-b-2 border-[#B85C38]"
+                              : "text-[#8C827A] hover:text-[#2A2825] border-b-2 border-transparent"
+                          }`}
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Question 03: Name (Optional) */}
+                  <div className="space-y-2">
+                    <label 
+                      htmlFor="terminal-user-name" 
+                      className="block font-sans text-sm font-semibold text-[#2A2825] tracking-wide"
+                    >
+                      Your Name (Optional)
+                    </label>
+                    <p className="text-xs font-sans text-[#8C827A]">
+                      Leave blank if you prefer to submit your idea anonymously.
+                    </p>
+                    <input
+                      id="terminal-user-name"
+                      name="name"
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="e.g. Brutus Buckeye"
+                      className="w-full py-3 bg-transparent border-b border-[#E5DDD0] text-[#2A2825] placeholder:text-[#8C827A] font-sans text-sm outline-none focus:border-[#B85C38] transition-colors"
+                    />
+                  </div>
+
+                  {/* Question 04: Email (Optional) */}
+                  <div className="space-y-2">
+                    <label 
+                      htmlFor="terminal-user-email" 
+                      className="block font-sans text-sm font-semibold text-[#2A2825] tracking-wide"
+                    >
+                      Your Buckeye Email (Optional)
+                    </label>
+                    <p className="text-xs font-sans text-[#8C827A]">
+                      Only needed if you would like the board to follow up with updates on your suggestion.
+                    </p>
+                    <input
+                      id="terminal-user-email"
+                      name="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="name.#@osu.edu"
+                      className="w-full py-3 bg-transparent border-b border-[#E5DDD0] text-[#2A2825] placeholder:text-[#8C827A] font-sans text-sm outline-none focus:border-[#B85C38] transition-colors"
+                    />
+                  </div>
+
+                  {/* Server Validation Error */}
+                  {state.error && (
+                    <div className="p-4 border-l-2 border-rose-500 bg-rose-50/50 text-rose-800 font-sans text-xs">
+                      {state.error}
+                    </div>
+                  )}
+
+                  {/* Submit Button */}
+                  <div className="pt-6 border-t border-[#E5DDD0] flex flex-wrap items-center justify-between gap-4">
+                    <SubmitSuggestionButton />
+
+                    <span className="font-sans text-xs text-[#8C827A]">
+                      Directly routed to the student executive board
+                    </span>
+                  </div>
+
+                </form>
+              ) : (
+                /* Warm Confirmation State - Borderless */
+                <div className="py-8 space-y-6 select-none animate-in fade-in duration-500">
+                  <div className="inline-flex items-center gap-2 text-[#B85C38] font-mono text-xs font-semibold uppercase tracking-widest">
+                    <Check className="w-4 h-4" />
+                    <span>Proposal Received · கோரிக்கை ஏற்றுக்கொள்ளப்பட்டது</span>
+                  </div>
+
+                  <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#2A2825] leading-tight">
+                    Idea Received by the Executive Board.
+                  </h2>
+
+                  <div className="space-y-2.5 font-sans text-sm text-[#57524C] border-t border-b border-[#E5DDD0] py-6 max-w-xl">
+                    <div className="flex justify-between">
+                      <span className="font-medium text-[#2A2825]">Category:</span>
+                      <span className="text-[#B85C38] font-semibold">{selectedCategory}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium text-[#2A2825]">Next Step:</span>
+                      <span className="text-[#2A2825]">Reviewed at our upcoming executive meeting</span>
+                    </div>
+                  </div>
+
+                  <p className="text-base text-[#57524C] font-sans leading-relaxed max-w-xl">
+                    Thank you for helping shape our campus community. We review all student proposals at our regular officer meetings.
+                  </p>
+
+                  <div className="pt-4">
+                    <MuttramButton href="/board" variant="secondary" size="md">
+                      Meet the Executive Board →
+                    </MuttramButton>
+                  </div>
+                </div>
+              )}
+            </main>
+
           </div>
         </div>
 
-        {/* Suggestion Form Container */}
-        <SuggestionForm
-          initialCategory={selectedCategory}
-          onSuccessPin={(pin) => {
-            setNewlyDroppedPin(pin);
-            // Optionally scroll up smoothly to show the pin drop in 3D scene
-            if (window.scrollY > 400) {
-              window.scrollTo({ top: 120, behavior: "smooth" });
-            }
-          }}
-        />
-
-        {/* Official Governance & University Entity Disclaimer */}
-        <div className="ticket-chamfer-tl-br relative p-6 sm:p-8 bg-[#150914] border border-[#4A2038] hover:border-white/20 space-y-3 transition-colors">
-          <h4 className="text-sm font-bold text-white font-display">
-            University Disclosure
-          </h4>
-
-          <p className="text-xs sm:text-sm text-slate-300 font-body leading-relaxed">
-            {OFFICIAL_DISCLAIMER}
-          </p>
-
-          <div className="pt-2 flex flex-wrap items-center gap-6 text-xs font-mono text-slate-400 border-t border-[#3D1B2E]">
-            <span className="flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-[#FFB84D]" />
-              <span>Contact: {CONTACT_EMAIL}</span>
-            </span>
-            <Link
-              href="/about"
-              className="text-[#FFB84D] hover:underline"
-            >
-              Learn about our constitution & mission →
-            </Link>
-          </div>
+        {/* =========================================================================
+            WARM ORGANIC ROUTING TO EXECUTIVE LEADERSHIP
+            ========================================================================= */}
+        <div className="mt-16">
+          <OrganicRouteGateway
+            primaryHref="/board"
+            primaryLabel="Step into Board Roster"
+            eyebrow="Community Leadership · அடுத்த வாசல்"
+            title="Meet the Executive Board"
+            tamilTitle="செயற்குழு உறுப்பினர்களை சந்தியுங்கள்"
+            description="Discover the student executive officers who bring these community proposals and campus festivals to life."
+          />
         </div>
+
       </div>
-    </section>
-  </div>
-);
+    </div>
+  );
 }

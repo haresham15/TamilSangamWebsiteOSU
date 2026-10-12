@@ -1,28 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { EVENTS } from "@/data/events";
+import gsap from "gsap";
+import { EVENTS, SangamEvent } from "@/data/events";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { audioLayer } from "@/utils/audioLayer";
-import { DraggableMemoryArchive } from "@/components/events/DraggableMemoryArchive";
-import { 
-  Calendar, 
-  MapPin, 
-  Clock 
-} from "lucide-react";
-import { PalagaiButton } from "@/components/ui/PalagaiButton";
-import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
-import { CulturalGlossaryTerm } from "@/components/ui/CulturalGlossaryTerm";
-import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
 import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
-
-
-
+import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
+import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import dynamic from "next/dynamic";
 
+// =========================================================================
+// CRITICAL & IMMUTABLE: 3D Sodium-Vapor Amber Events Hero Scene
+// HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES
+// =========================================================================
 const EventsGen3Canvas = dynamic(
   () =>
     import("@/components/gen3/EventsGen3Canvas").then(
@@ -36,17 +31,55 @@ export default function EventsPage() {
   const { playClick } = useAudio();
 
   const [filterYear, setFilterYear] = useState<string>("all");
+  const [hoveredEvent, setHoveredEvent] = useState<SangamEvent | null>(null);
+
+  // GSAP Cursor Floating Image Coordinates
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const xTo = useRef<((val: number) => void) | null>(null);
+  const yTo = useRef<((val: number) => void) | null>(null);
+
+  useEffect(() => {
+    if (!cursorRef.current) return;
+
+    // Center cursor card on mouse pointer
+    gsap.set(cursorRef.current, { xPercent: -50, yPercent: -50, opacity: 0 });
+
+    xTo.current = gsap.quickTo(cursorRef.current, "x", { duration: 0.25, ease: "power3.out" });
+    yTo.current = gsap.quickTo(cursorRef.current, "y", { duration: 0.25, ease: "power3.out" });
+
+    const handlePointerMove = (e: PointerEvent) => {
+      if (xTo.current && yTo.current) {
+        xTo.current(e.clientX);
+        yTo.current(e.clientY);
+      }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+    };
+  }, []);
+
+  // Update cursor image opacity when hoveredEvent changes
+  useEffect(() => {
+    if (!cursorRef.current) return;
+    if (hoveredEvent) {
+      gsap.to(cursorRef.current, { opacity: 1, scale: 1, duration: 0.25, ease: "power2.out" });
+    } else {
+      gsap.to(cursorRef.current, { opacity: 0, scale: 0.95, duration: 0.2, ease: "power2.in" });
+    }
+  }, [hoveredEvent]);
 
   const filteredEvents = EVENTS.filter((evt) => {
     if (filterYear === "all") return true;
     return evt.academicYear.includes(filterYear);
   });
 
-  const years = ["all", "2025-2026"];
+  const years = ["all", "2026-2027", "2025-2026"];
 
   return (
     <div className="w-full text-left bg-transparent">
-      {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene (Festival Arena) */}
+      {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene - UNTOUCHED */}
       <div
         id="events-hero-trigger"
         data-hero-container="true"
@@ -55,235 +88,214 @@ export default function EventsPage() {
         <EventsGen3Canvas />
       </div>
 
-      {/* Color Gradient Transition from 3D Festival Arena (#0c0a08) to Warm Cream (#FAF6EE) */}
+      {/* Hero to Content Gradient Transition */}
       <HeroGradientTransition variant="events" className="-mt-32 relative z-20" />
 
-      {/* 2. Events Catalogue Container with Warm Cream Background (#FAF6EE) & Tactile Sandstone Texture */}
-      <div className="relative z-20 w-full bg-[#FAF6EE] overflow-hidden vignette-ambient-warm">
-        {/* Tactile Sandstone Texture Overlay */}
-        <HeritageTextureOverlay variant="sandstone" opacity={0.02} />
-
-        {/* Structural Tamil Background Watermarks */}
-        <WatermarkGlyph text="திருவிழா" opacity={0.04} align="right" theme="light" />
-        <WatermarkGlyph text="கொண்டாட்டம்" opacity={0.032} align="left" theme="light" className="top-[70%]" />
-
-        <div id="events-catalogue" className="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-24 text-left relative z-10">
-          {/* Page Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-            <div className="max-w-2xl">
-              <h1 className="text-[clamp(2.5rem,5vw+1.5rem,5.5rem)] font-extrabold text-[#250d38] tracking-tight font-display mb-4 leading-[1.1]" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
-                {locale === "ta" ? "நிகழ்வுகள் & சந்திப்புகள்" : "Events & Campus Gatherings"}
-              </h1>
-              <p className="text-sm sm:text-base text-[#250d38] font-medium leading-relaxed font-body" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
-                {locale === "ta" ? (
-                  <span>
-                    <CulturalGlossaryTerm termKey="aatam" className="text-[#87500e]">ஆட்டம்</CulturalGlossaryTerm>,{" "}
-                    <CulturalGlossaryTerm termKey="paatam" className="text-[#87500e]">பாட்டம்</CulturalGlossaryTerm>,{" "}
-                    <CulturalGlossaryTerm termKey="kondatam" className="text-[#87500e]">கொண்டாட்டம்</CulturalGlossaryTerm>! ஓவல் புல்வெளி பிக்னிக், தெருவோர உணவு திருவிழாக்கள் முதல் நம்ம ஜாதரா வசந்தகால விழா வரை — மொழி பேதமின்றி அனைவரும் ஒன்றிணையும் களம்.
-                  </span>
-                ) : (
-                  <span>
-                    Start the <CulturalGlossaryTerm termKey="aatam" className="text-[#87500e]">Aatam</CulturalGlossaryTerm>,{" "}
-                    <CulturalGlossaryTerm termKey="paatam" className="text-[#87500e]">Paatam</CulturalGlossaryTerm>, and{" "}
-                    <CulturalGlossaryTerm termKey="kondatam" className="text-[#87500e]">Kondatam</CulturalGlossaryTerm>! From casual lawn picnics on the Oval and street food nights to spring cultural carnivals — our events are relaxed, social, and open to all students regardless of language or background.
-                  </span>
-                )}
-              </p>
+      {/* =========================================================================
+          THE FLOWING RIVER: OPEN, BREATHABLE GATHERINGS LIST
+          Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
+          ========================================================================= */}
+      <div className="relative z-20 w-full bg-[#FAF9F6] text-[#2A2825] overflow-hidden">
+        {/* Floating Tactile Photo Following Mouse Cursor (Warm Organic Card) */}
+        <div
+          ref={cursorRef}
+          aria-hidden="true"
+          className="fixed top-0 left-0 pointer-events-none z-50 w-72 sm:w-96 h-52 sm:h-64 overflow-hidden rounded-2xl shadow-2xl shadow-stone-900/25 bg-white border border-[#2A2825]/10"
+          style={{ willChange: "transform, opacity" }}
+        >
+          {hoveredEvent && (
+            <div className="relative w-full h-full">
+              <Image
+                src={hoveredEvent.posterImage || hoveredEvent.hoverImage}
+                alt={hoveredEvent.titleEn}
+                fill
+                className="object-cover"
+                sizes="400px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent" />
+              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs font-sans text-white">
+                <span className="font-serif font-medium truncate text-[#FAF9F6]">{hoveredEvent.titleEn}</span>
+                <span className="text-[#E5A93C] shrink-0 ml-2 font-medium">{hoveredEvent.academicYear}</span>
+              </div>
             </div>
+          )}
+        </div>
 
-            {/* Academic Year Filter: Architectural Console Strip */}
-            <div className="box-tab-strip">
-              {years.map((yr) => (
+        {/* Content Container with Generous Negative Space */}
+        <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
+          
+          {/* Centered Airy Header */}
+          <CourtyardHeader
+            align="center"
+            eyebrow="Campus Gatherings & Almanac"
+            title={locale === "ta" ? "நிகழ்வுகள் & பண்பாட்டு சந்திப்புகள்" : "The Gatherings River"}
+            tamilTitle={locale !== "ta" ? "பஞ்சாங்கம் · நற்கூடல்" : undefined}
+            description="Start the Aatam, Paatam, and Kondatam! From casual lawn picnics on the Oval and street food nights to spring cultural carnivals — our events are relaxed, social, and open to all students regardless of language or background."
+          />
+
+          {/* Academic Year Filter Links (Zero Pill Buttons) */}
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mb-20 sm:mb-28">
+            {years.map((yr) => {
+              const isSelected = filterYear === yr;
+              return (
                 <button
                   key={yr}
                   onClick={() => {
                     playClick();
                     setFilterYear(yr);
                   }}
-                  className={`box-tab-item ${filterYear === yr ? "box-tab-item-active" : ""}`}
+                  className={`font-sans text-xs tracking-widest uppercase font-semibold transition-colors duration-200 cursor-pointer pb-1 ${
+                    isSelected
+                      ? "text-[#B85C38] border-b-2 border-[#B85C38]"
+                      : "text-[#57524C] hover:text-[#2A2825] border-b-2 border-transparent"
+                  }`}
                 >
-                  {yr === "all" ? "All Years" : yr}
+                  {yr === "all" ? "All Gatherings" : yr}
                 </button>
-              ))}
-            </div>
+              );
+            })}
           </div>
 
-          {/* 1. Welcoming Community Hub Banner: Open to All Languages */}
-          <div className="p-6 bg-[#250d38] border border-[#B5A642]/50 rounded-none shadow-[0_0_30px_rgba(255,184,77,0.18)] hover-glow-kuthuvilakku transition-all duration-300 mb-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-white relative overflow-hidden">
-            {/* Tactile Kanjeevaram Texture Overlay */}
-            <HeritageTextureOverlay variant="kanjeevaram" opacity={0.035} />
-
-            <div className="relative z-10">
-              <h3 className="text-lg font-bold text-white font-display mt-0.5" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
-                {locale === "ta" ? "அனைவரையும் அன்போடு வரவேற்கிறோம்!" : "A Casual Cultural Hub for Everyone"}
-              </h3>
-              <p className="text-xs text-purple-200/90 mt-1 font-body max-w-2xl" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
-                {locale === "ta"
-                  ? "எங்கள் நிகழ்வுகள் எப்போதும் எளிமையானவை மற்றும் உற்சாகமானவை. தமிழ் பேசுபவர்கள் மட்டுமின்றி, நல்ல உணவு, இசை மற்றும் நட்பை விரும்பும் அனைத்து மாணவர்களையும் மனதார வரவேற்கிறோம்!"
-                  : "Our club is a welcoming social hub for Tamil students and friends from every walk of campus life. Whether you speak the language, want to learn, or just want to eat good food and hang out — you belong here!"}
-              </p>
-            </div>
-            <div className="relative z-10 shrink-0">
-              <PalagaiButton
-                href="/join"
-                primaryText={locale === "ta" ? "குடும்பத்தில் இணைக →" : "Join The Family →"}
-                secondaryText={locale === "ta" ? "Join The Family →" : "குடும்பத்தில் இணைக →"}
-                variant="gold-foil"
-                size="sm"
-              />
-            </div>
-          </div>
-
-          {/* 2. Events Main Feed: Dossier Ribbons with Tactile Hardware Clack */}
-          <div className="space-y-8 mb-24">
-            {filteredEvents.map((evt) => (
-              <div
-                key={evt.slug}
-                onMouseEnter={() => audioLayer.playTapeClack()}
-                data-cursor="bracket"
-                className="dossier-ribbon rounded-none border border-[#B5A642]/35 bg-white p-6 sm:p-8 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.22)] hover:border-[#FFB84D] transition-all duration-300 ease-out grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left relative overflow-hidden"
-              >
-                {/* Perforated vertical railway ticket divider for desktop */}
-                <div className="hidden lg:block absolute left-[41.66%] top-0 bottom-0 w-0 border-r-2 border-dashed border-[#B5A642]/35 pointer-events-none" />
-                <div className="hidden lg:block absolute left-[41.66%] -top-3 -translate-x-1/2 w-6 h-6 bg-[#FAF6EE] border border-[#B5A642]/40 rotate-45 z-20 pointer-events-none" />
-                <div className="hidden lg:block absolute left-[41.66%] -bottom-3 -translate-x-1/2 w-6 h-6 bg-[#FAF6EE] border border-[#B5A642]/40 rotate-45 z-20 pointer-events-none" />
-
-                {/* Event Poster / Visual: Brutalist Framing */}
-                <div className="lg:col-span-5 relative h-64 sm:h-72 rounded-none border border-[#B5A642]/40 overflow-hidden shadow-[3px_3px_0px_#4c2472] group">
-                  <Image
-                    src={evt.posterImage}
-                    alt={evt.titleEn}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500 rounded-none"
-                    sizes="(max-width: 1024px) 100vw, 500px"
-                  />
-                  <div className="absolute top-2 left-2 flex flex-wrap gap-1.5 z-10">
-                    <span className="px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider bg-[#250d38]/90 text-[#FFB84D] border border-[#B5A642]/60 rounded-sm">
-                      {evt.status === "upcoming" ? "Upcoming" : "Past Celebration"}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Event Details */}
-                <div className="lg:col-span-7 space-y-4">
-                  <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-bold">
-                    <span className="text-[#11694c]" lang="ta" style={{ letterSpacing: 0 }}>
-                      {evt.tamilDate}
-                    </span>
-                    <span className="text-[#B5A642]/60">·</span>
-                    <span className="text-[#4c2472]">
-                      {evt.academicYear}
-                    </span>
-                  </div>
-
-                  <h2 className="text-[clamp(1.5rem,3vw+0.5rem,2.5rem)] font-extrabold text-[#250d38] font-display tracking-tight leading-[1.2]" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
-                    {locale === "ta" ? evt.titleTa : evt.titleEn}
-                  </h2>
-
-                  <p className="text-xs sm:text-sm text-[#250d38] leading-relaxed font-body line-clamp-3" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
-                    {locale === "ta" ? evt.descriptionTa : evt.descriptionEn}
-                  </p>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs font-mono text-purple-900 font-medium">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-[#4c2472] shrink-0" />
-                      <span>{evt.date}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-[#4c2472] shrink-0" />
-                      <span>{evt.time}</span>
-                    </div>
-                    <div className="flex items-center gap-2 sm:col-span-2">
-                      <MapPin className="w-4 h-4 text-[#4c2472] shrink-0" />
-                      <span>{evt.location}</span>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 flex flex-wrap items-center gap-3">
-                    <PalagaiButton
-                      href={`/events/${evt.slug}`}
-                      primaryText={evt.status === "upcoming" ? "Event Details & Schedule" : "Event Overview"}
-                      secondaryText={evt.status === "upcoming" ? "நிகழ்வு விவரங்கள் & அட்டவணை" : "நிகழ்வு விவரம்"}
-                      variant={evt.status === "upcoming" ? "gold-foil" : "primary"}
-                      size="sm"
-                    />
-
-                    <PalagaiButton
-                      href={evt.albumSlug ? `/gallery/${evt.albumSlug}` : `/events/${evt.slug}`}
-                      primaryText={evt.albumSlug ? "5-Photo Story →" : "Full Schedule →"}
-                      secondaryText={evt.albumSlug ? "புகைப்படத் தொகுப்பு →" : "முழு அட்டவணை →"}
-                      variant="white"
-                      size="sm"
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* 3. Physical Physics: GSAP Draggable Memory Archive (§PHASE 4) */}
-          <div id="memory-archive" className="pt-12 mb-16 border-t border-[#B5A642]/30 relative z-10">
-            <DraggableMemoryArchive />
-          </div>
-
-          {/* 4. Signature Feature: Events Hall of Fame (Hover Swap Poster-to-Photo Grid) */}
-          <div id="hall-of-fame" className="pt-8 border-t border-[#B5A642]/20 relative z-10">
-            <div className="max-w-2xl mb-10">
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-[#250d38] font-display tracking-tight">
-                {locale === "ta" ? "புகழ் அரங்கம் · Events Hall of Fame" : "Events Hall of Fame"}
-              </h2>
-              <p className="text-xs sm:text-sm text-[#250d38] font-medium mt-1 font-body">
-                Rest shows official festival artwork, hover seamlessly swaps to crowd photography.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {EVENTS.map((evt) => (
+          {/* Flowing Open List of Events: 1px Razor-Thin Grounding Lines, Naked Typography */}
+          <div className="border-t border-[#E5DDD0] divide-y divide-[#E5DDD0]">
+            {filteredEvents.map((evt) => {
+              return (
                 <Link
                   key={evt.slug}
                   href={`/events/${evt.slug}`}
                   onClick={playClick}
-                  onMouseEnter={() => audioLayer.playTapeClack()}
-                  data-cursor="bracket"
-                  className="group relative h-80 overflow-hidden border border-[#B5A642]/40 shadow-[4px_4px_0px_#4c2472] hover:shadow-[0_0_35px_rgba(255,184,77,0.25)] hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] focus-visible:ring-offset-2 transition-all duration-300 ease-out block rounded-none"
+                  onMouseEnter={() => {
+                    audioLayer.playTapeClack();
+                    setHoveredEvent(evt);
+                  }}
+                  onMouseLeave={() => setHoveredEvent(null)}
+                  className="group block py-14 sm:py-20 text-center relative select-none transition-colors"
                 >
-                  {/* Base Poster at rest */}
-                  <Image
-                    src={evt.posterImage}
-                    alt={evt.titleEn}
-                    fill
-                    className="object-cover transition-opacity duration-500 group-hover:opacity-0 rounded-none"
-                    sizes="(max-width: 768px) 100vw, 400px"
-                  />
-
-                  {/* Action Photo on hover */}
-                  <Image
-                    src={evt.hoverImage}
-                    alt={evt.titleEn}
-                    fill
-                    className="object-cover transition-opacity duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-105 rounded-none"
-                    sizes="(max-width: 768px) 100vw, 400px"
-                  />
-
-                  {/* Scrim and metadata */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#250d38]/95 via-[#250d38]/40 to-transparent flex flex-col justify-end p-5 text-white">
-                    <span className="text-[10px] font-mono text-[#FFB84D] uppercase font-bold tracking-wider">
+                  {/* Floating Date Lockup */}
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <span className="font-sans text-xs sm:text-sm font-semibold text-[#B85C38] uppercase tracking-widest">
                       {evt.date}
                     </span>
-                    <h4 className="text-base font-bold text-white tracking-tight font-display" {...(locale === "ta" ? { lang: "ta", style: { letterSpacing: 0 } } : {})}>
-                      {locale === "ta" ? evt.titleTa : evt.titleEn}
-                    </h4>
-                    <p className="text-[11px] text-purple-200/90 line-clamp-1 mt-0.5 font-body">
-                      {evt.location}
-                    </p>
+                    <span className="text-stone-300">·</span>
+                    <span className="font-sans text-xs sm:text-sm text-[#57524C]">
+                      {evt.time}
+                    </span>
+                  </div>
+
+                  {/* Centered Massive Serif Event Title */}
+                  <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors leading-[1.15] tracking-tight max-w-3xl mx-auto">
+                    {locale === "ta" ? evt.titleTa : evt.titleEn}
+                  </h2>
+
+                  {/* Tamil Subscript Date */}
+                  <p className="mt-2 font-tamil text-sm sm:text-base text-[#E5A93C] font-medium" lang="ta">
+                    {evt.tamilDate}
+                  </p>
+
+                  {/* Narrative Description & Location */}
+                  <p className="mt-5 text-base sm:text-lg text-[#57524C] font-sans leading-relaxed max-w-2xl mx-auto line-clamp-2 group-hover:text-[#2A2825] transition-colors">
+                    {locale === "ta" ? evt.descriptionTa : evt.descriptionEn}
+                  </p>
+
+                  <div className="mt-8 inline-flex items-center gap-2 text-xs font-sans font-semibold text-[#B85C38] group-hover:text-[#E5A93C] tracking-wider uppercase border-b border-[#B85C38] pb-0.5">
+                    <span>{evt.location}</span>
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">
+                      →
+                    </span>
                   </div>
                 </Link>
-              ))}
+              );
+            })}
+          </div>
+
+          {/* Annual Recurring Traditions (Staggered Typographic List, Zero Beige Boxes) */}
+          <div className="mt-28 sm:mt-40 space-y-12">
+            <div className="text-center space-y-2">
+              <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
+                Recurring Cycles // ஆண்டு சுழற்சி
+              </span>
+              <h3 className="text-3xl sm:text-4xl font-serif font-normal text-[#2A2825]">
+                Annual Campus Traditions
+              </h3>
+              <p className="text-base text-[#57524C] font-sans max-w-xl mx-auto">
+                Signature gatherings uniting generations of Buckeyes through harvests, sparklers, and feast tables.
+              </p>
+            </div>
+
+            <div className="border-t border-[#E5DDD0] divide-y divide-[#E5DDD0] text-left">
+              <div className="py-10 sm:py-14 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline">
+                <div className="md:col-span-4 space-y-1">
+                  <span className="font-sans text-xs text-[#B85C38] uppercase tracking-widest font-semibold block">
+                    Early Autumn · South Oval
+                  </span>
+                  <h4 className="text-2xl sm:text-3xl font-serif text-[#2A2825]">Welcome Chai & Lawn Social</h4>
+                </div>
+                <div className="md:col-span-8">
+                  <p className="text-base font-sans text-[#57524C] leading-relaxed">
+                    Casual welcome mixer on the grass with filter coffee, samosas, icebreakers, and connecting freshmen with upperclassmen mentors.
+                  </p>
+                </div>
+              </div>
+
+              <div className="py-10 sm:py-14 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline md:pl-8">
+                <div className="md:col-span-4 space-y-1">
+                  <span className="font-sans text-xs text-[#E5A93C] uppercase tracking-widest font-semibold block">
+                    Late Autumn · Ohio Union
+                  </span>
+                  <h4 className="text-2xl sm:text-3xl font-serif text-[#2A2825]">Diwali Sparkler Night & Festive Feast</h4>
+                </div>
+                <div className="md:col-span-8">
+                  <p className="text-base font-sans text-[#57524C] leading-relaxed">
+                    Our signature autumn festival featuring authentic catered South Indian dinner, live student acoustic film jams, and sparklers on the plaza.
+                  </p>
+                </div>
+              </div>
+
+              <div className="py-10 sm:py-14 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline">
+                <div className="md:col-span-4 space-y-1">
+                  <span className="font-sans text-xs text-[#B85C38] uppercase tracking-widest font-semibold block">
+                    Mid Winter · Campus Plaza
+                  </span>
+                  <h4 className="text-2xl sm:text-3xl font-serif text-[#2A2825]">Pongal Harvest Gathering (தைப்பொங்கல்)</h4>
+                </div>
+                <div className="md:col-span-8">
+                  <p className="text-base font-sans text-[#57524C] leading-relaxed">
+                    Traditional sweet pongal pot cooking, festive kolam sidewalk chalk competitions, and celebration of the Tamil harvest season.
+                  </p>
+                </div>
+              </div>
+
+              <div className="py-10 sm:py-14 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline md:pl-8">
+                <div className="md:col-span-4 space-y-1">
+                  <span className="font-sans text-xs text-[#E5A93C] uppercase tracking-widest font-semibold block">
+                    Mid Spring · Recreation Grounds
+                  </span>
+                  <h4 className="text-2xl sm:text-3xl font-serif text-[#2A2825]">Namma Jathara Spring Carnival</h4>
+                </div>
+                <div className="md:col-span-8">
+                  <p className="text-base font-sans text-[#57524C] leading-relaxed">
+                    Joint collegiate carnival co-hosted with Telugu Tamasha, uniting 200+ students for Indian street food stalls, outdoor games, and dance.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* Gateway Section to The Canvas Gallery (Organic Route Gateway) */}
+          <OrganicRouteGateway
+            eyebrow="35mm Memories"
+            tamilEyebrow="நிழற்படம்"
+            title="Step Into The Canvas Gallery"
+            tamilTitle="நினைவுகள் மற்றும் கல்லூரி புகைப்படத் தொகுப்பு"
+            description="Explore candid photographs from our South Oval picnics, rehearsal stages, and late-night library study breaks."
+            primaryHref="/gallery"
+            primaryLabel="View Photo Canvas"
+            secondaryHref="/join"
+            secondaryLabel="Sign the Guestbook"
+          />
+
         </div>
       </div>
     </div>
   );
 }
-

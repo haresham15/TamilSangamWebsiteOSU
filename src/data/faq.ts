@@ -144,4 +144,32 @@ export const FAQS: FaqItem[] = [
     flapLabel: "PHOTO PRIVACY",
     tags: ["photo", "privacy", "gallery", "removal", "facial recognition", "புகைப்படம்", "தனியுரிமை", "நீக்கம்"],
   },
+  {
+    id: "faq-10",
+    category: "Governance",
+    catCode: "LEAD",
+    boardText: "HOW ARE OFFICERS CHOSEN? SPRING APPLICATIONS & BOARD VOTE",
+    questionEn: "How are executive board officers selected?",
+    questionTa: "நிர்வாகக் குழு நிர்வாகிகள் எவ்வாறு தேர்ந்தெடுக்கப்படுகிறார்கள்?",
+    answerEn:
+      "Officer selection occurs each spring. Current enrolled students in good standing who have actively participated for at least one semester can apply or self-nominate. The President and Vice President review applications and interview candidates, after which a shortlist is voted on by the Executive Board, requiring a simple majority.",
+    answerTa:
+      "ஒவ்வொரு வசந்த காலத்திலும் புதிய நிர்வாகிகள் தேர்வு செய்யப்படுகிறார்கள். குறைந்தது ஒரு பருவம் தீவிரமாகப் பங்கேற்ற நடப்பு மாணவர்கள் விண்ணப்பிக்கலாம். விண்ணப்பங்கள் பரிசீலிக்கப்பட்டு, நேர்காணலுக்குப் பின் நிர்வாகக் குழுவின் பெரும்பான்மை வாக்குகள் மூலம் முடிவெடுக்கப்படுகிறது.",
+    flapLabel: "OFFICER SELECT",
+    tags: ["officer", "leadership", "elections", "selection", "president", "board", "நிர்வாகி", "தேர்வு"],
+  },
+  {
+    id: "faq-11",
+    category: "Governance",
+    catCode: "DOCS",
+    boardText: "WHERE IS THE CONSTITUTION? FULL 2026-2027 RATIFIED PDF",
+    questionEn: "Where can I read the official OSU Tamil Sangam Constitution?",
+    questionTa: "சங்கத்தின் அதிகாரப்பூர்வ அரசியல் சாசனத்தை எங்கு வாசிக்கலாம்?",
+    answerEn:
+      "Our ratified 2026–2027 Constitution is publicly available for all Buckeyes and community members. You can view or download the complete PDF directly from our website footer or through the Governance tab on our Board page.",
+    answerTa:
+      "எங்கள் 2026–2027 அங்கீகரிக்கப்பட்ட அரசியல் சாசனத்தின் முழுமையான பிடிஎஃப் (PDF) ஆவணம் வலைத்தளத்தின் அடிப்பகுதியிலும் நிர்வாகப் பக்கத்திலும் பதிவிறக்கம் செய்யக் கிடைக்கிறது.",
+    flapLabel: "CONSTITUTION",
+    tags: ["constitution", "rules", "pdf", "governance", "bylaws", "சாசனம்", "விதிகள்"],
+  },
 ];

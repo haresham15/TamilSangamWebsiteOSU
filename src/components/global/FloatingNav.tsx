@@ -29,7 +29,7 @@ const navLinks = [
   { href: "/about", en: "About", ta: "அறிமுகம்", labelKey: "nav.about" },
   { href: "/board", en: "Board", ta: "அவை", labelKey: "nav.board" },
   { href: "/gallery", en: "Gallery", ta: "நினைவுகள்", labelKey: "nav.gallery" },
-  { href: "/guide", en: "Guide", ta: "வழிகாட்டி", labelKey: "nav.guide" },
+  { href: "/guide", en: "Guide & FAQ", ta: "வழிகாட்டி & கேள்வி-பதில்", labelKey: "nav.guide" },
   { href: "/suggestions", en: "Ideas", ta: "கருத்து", labelKey: "nav.suggestions" },
   { href: "/join", en: "Join", ta: "இணையுங்கள்", labelKey: "nav.join", isCta: true },
 ];
@@ -109,9 +109,10 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
 
     const glassClasses = [
       "backdrop-blur-md",
-      "bg-[#050201]/95",
-      "border-white/10",
-      "shadow-[0_4px_30px_rgba(0,0,0,0.5)]",
+      "bg-[#1e0e30]/95",
+      "border-b",
+      "border-amber-500/15",
+      "shadow-[0_4px_24px_rgba(30,14,48,0.25)]",
     ];
 
     const applyScrollState = (scrollY: number) => {

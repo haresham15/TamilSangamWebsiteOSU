@@ -14,14 +14,14 @@ Open [`index.html`](./index.html) in any browser to inspect all 8 page artboards
 
 | # | Page | Route | Image Artifact | Content Scope |
 |---|---|---|---|---|
-| **01-home** | **Home** (முகப்பு) | `/` | [01-home.png](./01-home.png) | Monolith prologue, featured flagship festival, filter coffee card, recent gatherings, cultural glossary & community join CTA |
-| **02-events** | **Events** (நிகழ்வுகள்) | `/events` | [02-events.png](./02-events.png) | Festival arena, academic year timeline filter, event cards (dates, venues, ticket links) & memory archive |
-| **03-about** | **About** (அறிமுகம்) | `/about` | [03-about.png](./03-about.png) | Ethos & constitution, 4 pillars of Sangam, founding timeline (2021-2026), partner affiliations & FAQs |
-| **04-board** | **Board** (அவை) | `/board` | [04-board.png](./04-board.png) | Executive board roster (9 officers), liquid roster, subcommittee councils, constitutional governance & officer cards |
-| **05-gallery** | **Gallery** (நினைவுகள்) | `/gallery` | [05-gallery.png](./05-gallery.png) | Collegiate memory archive, album era filters, photo stories (Picnic, Sapad, Jathara), and photo mosaics |
-| **06-guide** | **Guide** (வழிகாட்டி) | `/guide` | [06-guide.png](./06-guide.png) | Student handbook, Columbus Tamil guide, categorized knowledge base & searchable FAQ question bank |
-| **07-suggestions** | **Ideas** (கருத்து) | `/suggestions` | [07-suggestions.png](./07-suggestions.png) | Initiatives & suggestions portal, community category selector, interactive submission form & feedback guidelines |
-| **08-join** | **Join** (இணையுங்கள்) | `/join` | [08-join.png](./08-join.png) | Buckeye membership gateway, 3-step brutalist application form (General, Performer, Committee), community links |
+| **01-home** | **Home** (முகப்பு) | `/` | [01-home.png](./01-home.png) | Sunlit courtyard: Next flagship gathering, Five Pillars in airy vertical sections, Moments on the Olentangy organic collage, and cultural glossary |
+| **02-events** | **Events** (நிகழ்வுகள்) | `/events` | [02-events.png](./02-events.png) | The Gatherings River: Open list of gatherings, centered massive serif titles, soft sans dates, campus traditions, and memory archives |
+| **03-about** | **About** (அறிமுகம்) | `/about` | [03-about.png](./03-about.png) | The Organic Journey: Center-snaking SVG river timeline (2021-2026), 4 pillars of Sangam, campus alliances, and democratic constitution |
+| **04-board** | **Board** (அவை) | `/board` | [04-board.png](./04-board.png) | The Warm Portraits: Executive board roster with airy vertical gaps in serif typography, color portrait reveals, and constitutional governance |
+| **05-gallery** | **Gallery** (நினைவுகள்) | `/gallery` | [05-gallery.png](./05-gallery.png) | The Canvas: Expansive interlocking masonry with wide ivory gaps, 35mm physical film memories, tag filters, and student consent policy |
+| **06-guide** | **Guide** (வழிகாட்டி) | `/guide` | [06-guide.png](./06-guide.png) | The Open Book: Generous padding between Q&A pairs, conversational questions in soft Terracotta, and searchable student knowledge base |
+| **07-suggestions** | **Ideas** (கருத்து) | `/suggestions` | [07-suggestions.png](./07-suggestions.png) | The Ideas Hearth: Conversational campus proposal form, category selectors, proven track record ledger, and leadership routing |
+| **08-join** | **Join** (இணையுங்கள்) | `/join` | [08-join.png](./08-join.png) | The Welcoming Hearth: Guestbook-style membership form with conversational prompts, simple elegant underlines, and community links |
 
 ---
 

@@ -85,13 +85,29 @@
   --color-station-practical: oklch(0.82 0.16 73);
   --color-station-rim: oklch(0.68 0.08 240);
 
-  /* Hero-to-Content DTCG Semantic Transitions */
-  --color-surface-hero-join: oklch(0.975 0.015 85);
-  --color-surface-hero-board: oklch(0.18 0.04 45);
-  --color-surface-hero-events: oklch(0.14 0.03 285);
-  --color-surface-hero-gallery: oklch(0.96 0.018 75);
-  --color-surface-hero-guide: oklch(0.16 0.02 260);
-  --color-surface-hero-about: oklch(0.15 0.02 55);
+  /* Hero-to-Content DTCG Semantic Transitions (Sunlit Muttram Courtyard) */
+  --color-surface-hero-join: #FAF9F6;
+  --color-surface-hero-board: #FAF9F6;
+  --color-surface-hero-events: #FAF9F6;
+  --color-surface-hero-gallery: #FAF9F6;
+  --color-surface-hero-guide: #FAF9F6;
+  --color-surface-hero-about: #FAF9F6;
+
+  /* Muttram Courtyard Sunlit Color Palette */
+  --color-warm-ivory: #FAF9F6;
+  --color-sunbaked-sand: #F4EFE6;
+  --color-charcoal-espresso: #2A2825;
+  --color-espresso-muted: #57524C;
+  --color-turmeric-gold: #E5A93C;
+  --color-turmeric-gold-hover: #D6972B;
+  --color-terracotta-earth: #B85C38;
+  --color-terracotta-earth-hover: #A04A27;
+
+  /* Muttram Semantic Aliases */
+  --color-surface-courtyard: #FAF9F6;
+  --color-surface-sand: #F4EFE6;
+  --color-text-courtyard: #2A2825;
+  --color-text-courtyard-muted: #6B655D;
 }
 
 @layer components {

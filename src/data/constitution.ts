@@ -19,36 +19,47 @@ export const CLUB_PURPOSE: GovernanceRule[] = [
     category: "purpose",
   },
   {
-    id: "purpose-exchange",
-    titleEn: "Cultural & Linguistic Inclusivity",
-    titleTa: "மொழி & கலாச்சார நல்லுறவு",
+    id: "purpose-learning",
+    titleEn: "Language & Heritage Learning (கற்றல்)",
+    titleTa: "மொழி & பாரம்பரியக் கற்றல்",
     descriptionEn:
-      "Welcomes students of all languages to experience Tamil culture, music, phrases, and customs in a casual, supportive, and fun collegiate environment.",
+      "Hosts conversational Tamil workshops, pronunciation circles, diaspora history discussions, and Sangam literature explorations accessible to all experience levels.",
     descriptionTa:
-      "அனைத்து மொழி பேசும் மாணவர்களுக்கும் தமிழ் பண்பாடு, இசை, மற்றும் மரபுகளை எளிய மற்றும் உற்சாகமான முறையில் அறிமுகப்படுத்துதல்.",
+      "அனைத்து நிலை மாணவர்களுக்கும் எளிய உரையாடல் தமிழ் பயிற்சி, வரலாற்று கலந்துரையாடல் மற்றும் சங்க இலக்கிய வாசிப்பு பட்டறைகள் நடத்துதல்.",
     category: "purpose",
   },
   {
     id: "purpose-fellowship",
-    titleEn: "Good Food, Music & Celebration",
-    titleTa: "உணவு, இசை & கொண்டாட்டம்",
+    titleEn: "Food, Music & Performing Arts",
+    titleTa: "உணவு, இசை & கலைகள்",
     descriptionEn:
-      "Brings people together through casual lawn picnics, street food feasts, film music jams, dance, and annual celebrations like our collaborative Diwali party.",
+      "Celebrates authentic South Indian cuisine, cinematic and acoustic student jam sessions, folk arts, and collegiate dance circles.",
     descriptionTa:
-      "புல்வெளி பிக்னிக், தெருவோர உணவு திருவிழாக்கள், இசை மாலைகள் மற்றும் தீபாவளிக் கொண்டாட்டங்கள் மூலம் மாணவர் நட்பைப் பலப்படுத்துதல்.",
+      "தென் இந்திய உணவு விருந்துகள், திரைப்பட மற்றும் செவ்வியல் இசை மாலைகள், மற்றும் நடனக் கலைகள் மூலம் மாணவர் ஆற்றலை வெளிக்கொணருதல்.",
+    category: "purpose",
+  },
+  {
+    id: "purpose-festivals",
+    titleEn: "Cultural Festivals & Gatherings",
+    titleTa: "வளாகப் பெருவிழாக்கள்",
+    descriptionEn:
+      "Brings the Ohio State campus together for major cultural moments including Diwali, Pongal harvest festivities, and collaborative spring carnivals.",
+    descriptionTa:
+      "தீபாவளி, பொங்கல் அறுவடைத் திருநாள், மற்றும் பிற மாணவர் அமைப்புகளுடன் இணைந்த வசந்த காலக் கொண்டாட்டங்களை நடத்துதல்.",
     category: "purpose",
   },
   {
     id: "purpose-philanthropy",
-    titleEn: "Peer Support & Campus Giving",
+    titleEn: "Peer Mentorship & Civic Action",
     titleTa: "மாணவர் வழிகாட்டல் & சமூக சேவை",
     descriptionEn:
-      "Fosters peer mentorship for incoming Buckeyes, study groups, community volunteering with Columbus food banks, and charitable initiatives.",
+      "Fosters peer guidance for incoming freshmen, study circles, community volunteering with Columbus food partners, and cultural philanthropy.",
     descriptionTa:
-      "புதிய மாணவர்களுக்கான வழிகாட்டல், படிப்பு வட்டங்கள், மற்றும் கொலம்பஸ் உள்ளூர் தொண்டு நிறுவனங்களுடன் இணைந்து சமூக சேவை ஆற்றுதல்.",
+      "புதிய மாணவர்களுக்கான வழிகாட்டல், படிப்பு வட்டங்கள், மற்றும் கொலம்பஸ் உள்ளூர் தொண்டு அமைப்புகளுடன் இணைந்து சமூக சேவை ஆற்றுதல்.",
     category: "purpose",
   },
 ];
+
 
 export const CLUB_ACTIVITIES: GovernanceRule[] = [
   {
