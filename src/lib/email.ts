@@ -38,6 +38,19 @@ export interface EmailPayload {
 }
 
 /**
+ * Escapes HTML characters in user input to prevent HTML injection and XSS
+ */
+export function escapeHtml(unsafe: string): string {
+  if (!unsafe) return "";
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/**
  * Validates and normalizes an email address, checking for OSU BuckeyeMail
  */
 export function validateEmail(input: string): {
@@ -177,10 +190,13 @@ export function generateWelcomeEmailHtml(params: {
   interests?: string[];
 }): { html: string; text: string } {
   const { email, name, isBuckeye, interests } = params;
-  const greeting = name ? `Vanakkam, ${name}!` : isBuckeye ? "Vanakkam, Fellow Buckeye!" : "Vanakkam & Welcome!";
+
+  const safeName = name ? escapeHtml(name) : undefined;
+  const safeEmail = escapeHtml(email);
+  const greeting = safeName ? `Vanakkam, ${safeName}!` : isBuckeye ? "Vanakkam, Fellow Buckeye!" : "Vanakkam & Welcome!";
 
   const interestsList = interests && interests.length > 0
-    ? interests.map((i) => `<li>• ${i.charAt(0).toUpperCase() + i.slice(1)}</li>`).join("")
+    ? interests.map((i) => `<li>• ${escapeHtml(i.charAt(0).toUpperCase() + i.slice(1))}</li>`).join("")
     : "<li>• Flagship cultural festivals & ticket drops</li><li>• Authentic street food feasts & chai socials</li><li>• Casual Oval lawn kickbacks & games</li>";
 
   const html = `<!DOCTYPE html>
@@ -248,7 +264,7 @@ export function generateWelcomeEmailHtml(params: {
         <p>© ${new Date().getFullYear()} The Ohio State University Tamil Sangam.</p>
         <p>Columbus, OH · A registered student organization at Ohio State.</p>
         <p style="font-size: 10px; color: #7a6a8a; margin-top: 8px;">
-          You received this because ${email} was subscribed via the Stay in Sangam portal.
+          You received this because ${safeEmail} was subscribed via the Stay in Sangam portal.
         </p>
       </div>
     </div>
@@ -273,7 +289,7 @@ Instagram: @osutamilsangam
 Website: https://osutamilsangam.org
 
 (c) ${new Date().getFullYear()} OSU Tamil Sangam · Columbus, OH
-Subscribed email: ${email}`;
+Subscribed email: ${safeEmail}`;
 
   return { html, text };
 }
