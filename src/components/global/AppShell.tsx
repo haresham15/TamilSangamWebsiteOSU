@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { FloatingNav } from "./FloatingNav";
 import { CommandPalette } from "./CommandPalette";
 import { Footer } from "./Footer";
+import { CornerUtilityDrawer } from "./CornerUtilityDrawer";
 import { SangamChatbot } from "@/components/chat/SangamChatbot";
 import { DirectorHUD } from "@/director/DirectorHUD";
 
@@ -18,12 +19,26 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
+  // Global ⌘K / Ctrl+K Command Palette Keyboard Trigger
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
+        e.preventDefault();
+        setIsSearchOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const isLinksPage = pathname === "/links";
+  const isHomePage = pathname === "/";
 
   return (
     <div className="relative min-h-screen flex flex-col justify-between overflow-x-clip">
       {/* 1. Global Floating Nav (Skipped on /links to preserve Linktree simplicity) */}
-      {!isLinksPage && <FloatingNav onOpenSearch={() => setIsSearchOpen(true)} />}
+      {/* 1. Global Floating Nav: Pure routing only */}
+      {!isLinksPage && <FloatingNav />}
 
       {/* 2. ⌘K Command Palette Modal */}
       <CommandPalette isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
@@ -32,8 +47,8 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
       <main className="flex-1 w-full flex flex-col">
         <motion.div
           key={pathname}
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={false}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}
           className="flex-1 w-full flex flex-col"
         >
@@ -41,13 +56,16 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
         </motion.div>
       </main>
 
-      {/* 4. Bounded Free-Tier AI Chatbot (Skipped on /links) */}
-      {!isLinksPage && <SangamChatbot />}
+      {/* 4. Bounded Free-Tier AI Chatbot (Skipped on /links and homepage) */}
+      {!isLinksPage && !isHomePage && <SangamChatbot />}
 
-      {/* 5. Footer (Skipped on /links) */}
-      {!isLinksPage && <Footer />}
+      {/* 5. Minimalist Corner Utility Drawer (Relocated search, theme, language, audio) */}
+      {!isLinksPage && <CornerUtilityDrawer onOpenSearch={() => setIsSearchOpen(true)} />}
 
-      {/* 6. Director's Viewport Diagnostics HUD (§6) */}
+      {/* 6. Footer (Skipped on /links) */}
+      {!isLinksPage && <Footer onOpenSearch={() => setIsSearchOpen(true)} />}
+
+      {/* 7. Director's Viewport Diagnostics HUD (§6) */}
       <DirectorHUD />
     </div>
   );

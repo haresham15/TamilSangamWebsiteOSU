@@ -32,7 +32,7 @@ export function scheduleImpact(
       buckets.delete(key);
 
       const delayMs = Math.max(0, atMs - performance.now());
-      const blendedGain = Math.min(1.0, 0.35 + 0.18 * Math.sqrt(g.n));
+      const blendedGain = Math.min(0.65, 0.22 + 0.12 * Math.sqrt(g.n));
       const avgPan = g.n > 0 ? g.pan / g.n : 0;
       const rateJitter = 0.94 + Math.random() * 0.12;
 

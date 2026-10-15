@@ -82,7 +82,9 @@ export function HeroEventPedestalCard({
   };
 
   // Subtle breathing float in 3D space
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (cardGroupRef.current) {
       const t = clock.getElapsedTime();
       cardGroupRef.current.position.y = position[1] + Math.sin(t * 1.6) * 0.04;

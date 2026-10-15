@@ -261,7 +261,9 @@ export function FlapCells({
   }, [cols, rows, setBoardTarget]);
 
   // 9. Frame Kinematics Loop (PRD §5.1, §5.2, §5.3)
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const fsm = fsmStateRef.current;
     const targetArr = targetArrayRef.current;
     const now = performance.now();

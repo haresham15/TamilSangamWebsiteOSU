@@ -55,7 +55,7 @@ export function GradeStack({
   if (tier !== "A" || !lut) return null;
 
   return (
-    <EffectComposer multisampling={4} enableNormalPass={false}>
+    <EffectComposer multisampling={0} enableNormalPass={false}>
       <Bloom
         mipmapBlur={gradeConfig.bloom.mipmapBlur}
         luminanceThreshold={gradeConfig.bloom.luminanceThreshold}

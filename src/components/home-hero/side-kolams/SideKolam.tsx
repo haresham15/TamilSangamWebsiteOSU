@@ -47,27 +47,22 @@ export function SideKolam({
   const haloMatRef = useRef<THREE.MeshBasicMaterial>(null);
   const specklesMatRef = useRef<THREE.PointsMaterial>(null);
 
-  // Compute lattice spacing d so kolam fits 0.40 * Hv (§5.1), clamped by Wv on mobile
-  const Hv = viewport.height;
+  // Authentic size: 9x9 lattice spans ~12.5 * d across diagonal lobes.
+  // d = 0.225 yields ~2.80 world units diameter, exactly matching previous traditional side kolams.
+  const d = 0.225;
   const Wv = viewport.width;
 
-  // 9x9 lattice rotated 45 deg spans approx 12.31 * d including outer scalloped arcs
-  const d = useMemo(() => {
-    if (isMobile || Wv < Hv) {
-      // On narrow/mobile screens, scale to fit the margin outside the central emblem
-      const mobileSpan = Math.min(0.25 * Hv, 0.22 * Wv);
-      return mobileSpan / 12.31;
-    }
-    return (0.40 * Hv) / 12.31;
-  }, [Hv, Wv, isMobile]);
+  // Stationary world placement in the open space on the flanks (§PRD §5.1)
+  // Central weave spans |x| <= 3.5, dots <= 4.8.
+  // x = ±5.4, y = 0.20, z = -0.15 restores the authentic flank coordinates.
+  const posX = useMemo(() => {
+    const xBase = Math.max(5.4, Math.min(7.0, (Wv / 2) - 1.5));
+    return side === "left" ? -xBase : xBase;
+  }, [side, Wv]);
 
-  // Center placement: x = ±0.70 * (Wv / 2), y = 0, z = -0.2 (§5.1)
   const position = useMemo((): [number, number, number] => {
-    const xMult = side === "left" ? -1 : 1;
-    const factor = (isMobile || Wv < Hv) ? 0.82 : 0.70;
-    const x = xMult * factor * (Wv / 2);
-    return [x, 0, -0.2];
-  }, [side, Wv, Hv, isMobile]);
+    return [posX, 0.20, -0.15];
+  }, [posX]);
 
   // Build static geometries once on CPU
   const { mainTubeGeometry, apexBeadPositions } = useMemo(() => {
@@ -174,17 +169,10 @@ export function SideKolam({
     inst.instanceMatrix.needsUpdate = true;
   }, [apexBeadPositions, d]);
 
-  // Static world placement: freeze transformation matrices (§5.1)
-  useEffect(() => {
-    if (groupRef.current) {
-      groupRef.current.position.set(...position);
-      groupRef.current.updateMatrix();
-      groupRef.current.matrixAutoUpdate = false;
-    }
-  }, [position]);
-
   // Scroll fade uniform: fades smoothly to alpha 0 between p = 0.20 and 0.38 (§5.1)
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const p = heroDirectorState.scrubActive
       ? heroDirectorState.scrubProgress
       : heroScrollProgress.current;
@@ -217,6 +205,11 @@ export function SideKolam({
       specklesMatRef.current.transparent = true;
     }
   });
+
+  // Guard: Hide on mobile or narrow viewports to avoid crowding the central weave
+  if (isMobile || Wv < 11.5) {
+    return null;
+  }
 
   return (
     <group ref={groupRef} position={position}>
@@ -315,6 +308,13 @@ export function SideKolamsGroup({
   isMobile?: boolean;
   phase2FlatColor?: boolean;
 }) {
+  const { viewport } = useThree();
+  const Wv = viewport.width;
+
+  if (isMobile || Wv < 11.5) {
+    return null;
+  }
+
   return (
     <group name="side-kolams-group">
       <SideKolam

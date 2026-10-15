@@ -2,73 +2,42 @@
 
 import React, { useRef, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
-import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { DigitalKolamHero } from "@/components/hero/DigitalKolamHero";
 import { SilkHoverPillars } from "@/components/home/SilkHoverPillars";
-import { FilterKaapiGlyph } from "@/components/ui/KolamIcons";
-import { PalagaiButton } from "@/components/ui/PalagaiButton";
-import { Magnetic } from "@/components/ui/Magnetic";
-import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
-import { CulturalGlossaryTerm } from "@/components/ui/CulturalGlossaryTerm";
 import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
-import { setHeroScrollProgress } from "@/engine/heroScrollStore";
-import { governor } from "@/engine/governor";
-import { getNextFlagshipEvent } from "@/data/events";
-import { SITE_CONFIG } from "@/data/siteConfig";
-import { Calendar, MapPin } from "lucide-react";
+import { setHeroScrollProgress, heroScrollProgress } from "@/engine/heroScrollStore";
+import { registerSystem } from "@/engine/masterTick";
+import { motion, useReducedMotion } from "framer-motion";
+import CountUp from "@/components/CountUp";
+import { useLiteMode } from "@/context/LiteModeContext";
+import { useTier } from "@/components/providers/TierProvider";
 import { audioLayer } from "@/utils/audioLayer";
-import { SANGAM_CIPHER_CHARS, triggerTerminalDecode } from "@/utils/scrambleTerminal";
+import { SANGAM_CIPHER_CHARS } from "@/utils/scrambleTerminal";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
-import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
-import { MuttramButton } from "@/components/muttram/MuttramButton";
-import { OrganicPhotoCollage } from "@/components/muttram/OrganicPhotoCollage";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
-
-const COLLAGE_PHOTOS = [
-  {
-    href: "/gallery/berry-cute-picnic",
-    imageSrc:
-      "https://lh3.googleusercontent.com/pw/AP1GczPlVkHkFW39BMqHGdeuYa0EwT1OOXOGWweSVgrPMbn24CSvrUlwF8CS_x787kPudpRyXEgtSMteYmBp6Zbad4uzMgeqB6LfISOvbS0AO1-qHsPKtEoC=w1200-h800-no",
-    alt: "A Berry Cute Picnic",
-    title: "A Berry Cute Picnic",
-    subtitle: "South Oval Lawn",
-    description:
-      "Lawn blankets on the Oval with fresh strawberries, card games, and fellowship.",
-    tag: "Picnic & Fellowship",
-  },
-  {
-    href: "/gallery/streetside-sapad",
-    imageSrc:
-      "https://lh3.googleusercontent.com/pw/AP1GczPoDEE5ppMuBlStSn71wmY-vnb9sbDehdzKVvxu_QvEJZfJ8hGCig4Bkxoe8Rx8-xpnXzZA02iZ2EZid-qciQ4V85WQKl44j_Ed6YLD25GTunQbulMG=w1200-h800-no",
-    alt: "Streetside Sapad",
-    title: "Streetside Sapad (தெருவோர சாப்பாடு)",
-    subtitle: "Banquet Feast",
-    description:
-      "Hot sizzling kothu parotta, fresh dosas, and authentic filter coffee.",
-    tag: "Food & Feasts",
-  },
-  {
-    href: "/gallery/namma-jathara",
-    imageSrc:
-      "https://lh3.googleusercontent.com/pw/AP1GczMckOLKN2caITiN5K1TOGffHjjgJrfgVuOLzMp4vuZ6J7kgf1CQB-PChurpUnPfiexScEG44wZkP-PWanuwwdRE3STuUUNN6LLQoe-ioZJ3MeSMpkCC=w1200-h800-no",
-    alt: "Namma Jathara",
-    title: "Namma Jathara (with Telugu Tamasha)",
-    subtitle: "Campus Alliance",
-    description:
-      "Joint spring campus carnival uniting 200+ students for games, dance, and music.",
-    tag: "Spring Carnival",
-  },
-];
+import { EventsDepthShowcase } from "@/components/home/EventsDepthShowcase";
+import { NextFlagshipGathering } from "@/components/home/NextFlagshipGathering";
 
 export default function HomePage() {
-  const { locale } = useLocale();
   const { playClick } = useAudio();
-  const nextEvent = getNextFlagshipEvent();
+  const { isLiteMode } = useLiteMode();
+  const tier = useTier();
+  const reducedMotion = useReducedMotion();
+  const staticHero = isLiteMode || tier === "C" || !!reducedMotion;
+  const handoffRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => registerSystem({ order: 60, step: () => {
+    if (handoffRef.current) handoffRef.current.style.opacity = String(Math.max(0, Math.min(1, (heroScrollProgress.current - 0.85) / 0.15)));
+    if (monolithRef.current) {
+      const hidden = staticHero || heroScrollProgress.current < 0.8 || heroScrollProgress.current > 0.96;
+      monolithRef.current.inert = hidden;
+      monolithRef.current.setAttribute("aria-hidden", String(hidden));
+    }
+  } }), [staticHero]);
 
   const pinnedWrapperRef = useRef<HTMLDivElement>(null);
   const pinnedViewportRef = useRef<HTMLDivElement>(null);
@@ -104,6 +73,7 @@ export default function HomePage() {
 
   // GSAP 3-Act Scroll-Telling Setup (Zero React Re-renders on Scroll)
   useEffect(() => {
+    if (staticHero) { setHeroScrollProgress(0); return; }
     gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin);
 
     const wrapper = pinnedWrapperRef.current;
@@ -133,58 +103,59 @@ export default function HomePage() {
           start: "top top",
           end: "bottom bottom",
           pin: viewport,
-          anticipatePin: 1,
-          scrub: 0.6, // PRD §9: scrub 0.6
-          onUpdate: (self) => {
-            // Hot loop state update without triggering React reconciliation
-            setHeroScrollProgress(self.progress);
-
-            // Toggle hero purge dataset attribute (active during Acts I & II up to 0.60)
-            if (self.progress < 0.60) {
-              document.body.dataset.heroPurge = "true";
-              delete document.body.dataset.heroPassed;
-            } else {
-              delete document.body.dataset.heroPurge;
-              document.body.dataset.heroPassed = "true";
-
-              // Terminal Boot Sequence (GSAP ScrambleText) on Act III Monolith
-              if (!decodedMonolithRef.current) {
-                decodedMonolithRef.current = true;
-                if (monolithPrologueRef.current) {
-                  gsap.to(monolithPrologueRef.current, {
-                    duration: 0.8,
-                    scrambleText: {
-                      text: monolithPrologueRef.current.innerText,
-                      chars: SANGAM_CIPHER_CHARS,
-                      speed: 1.2,
-                      revealDelay: 0.1,
-                    },
-                  });
-                }
-                if (monolithTamilRef.current) {
-                  gsap.to(monolithTamilRef.current, {
-                    duration: 0.8,
-                    scrambleText: {
-                      text: monolithTamilRef.current.innerText,
-                      chars: SANGAM_CIPHER_CHARS,
-                      speed: 1.2,
-                      revealDelay: 0.1,
-                    },
-                  });
-                }
-              }
-            }
-
-            // Governor render pause & inert focus trap guard
-            if (self.progress >= 0.95) {
-              governor.request("home-kolam", 0);
-              if (kural) kural.setAttribute("inert", "");
-            } else {
-              governor.request("home-kolam", Math.abs(self.getVelocity()) > 10 ? 2 : 1);
-              if (kural) kural.removeAttribute("inert");
-            }
-          },
+          invalidateOnRefresh: true,
+          anticipatePin: 0, // 0 eliminates 1px twitch at start of scroll
+          scrub: 0.8, // Smooth GSAP scrub
         },
+      });
+
+      // Synchronize 3D scene, frame overlay, and dataset attributes on the scrubbed timeline
+      tl.eventCallback("onUpdate", () => {
+        const scrubbedP = tl.progress();
+        setHeroScrollProgress(scrubbedP);
+
+        // Toggle hero purge dataset attribute (active during Acts I & II up to 0.60)
+        if (scrubbedP < 0.60) {
+          document.body.dataset.heroPurge = "true";
+          delete document.body.dataset.heroPassed;
+        } else {
+          delete document.body.dataset.heroPurge;
+          document.body.dataset.heroPassed = "true";
+
+          // Terminal Boot Sequence (GSAP ScrambleText) on Act III Monolith
+          if (!decodedMonolithRef.current) {
+            decodedMonolithRef.current = true;
+            if (monolithPrologueRef.current) {
+              gsap.to(monolithPrologueRef.current, {
+                duration: 0.8,
+                scrambleText: {
+                  text: monolithPrologueRef.current.innerText,
+                  chars: SANGAM_CIPHER_CHARS,
+                  speed: 1.2,
+                  revealDelay: 0.1,
+                },
+              });
+            }
+            if (monolithTamilRef.current) {
+              gsap.to(monolithTamilRef.current, {
+                duration: 0.8,
+                scrambleText: {
+                  text: monolithTamilRef.current.innerText,
+                  chars: SANGAM_CIPHER_CHARS,
+                  speed: 1.2,
+                  revealDelay: 0.1,
+                },
+              });
+            }
+          }
+        }
+
+        // Governor render pause & inert focus trap guard
+        if (scrubbedP >= 0.95) {
+          if (kural) kural.setAttribute("inert", "");
+        } else {
+          if (kural) kural.removeAttribute("inert");
+        }
       });
 
       // =========================================================================
@@ -279,14 +250,17 @@ export default function HomePage() {
     return () => {
       if (split) split.revert();
       ctx.revert();
+      setHeroScrollProgress(0);
+      delete document.body.dataset.heroPurge;
+      delete document.body.dataset.heroPassed;
     };
-  }, []);
+  }, [staticHero]);
 
   return (
-    <div className="relative w-full overflow-hidden font-body text-left">
+    <div className="relative w-full overflow-clip font-body text-left">
       {/* Accessible Skip Link (PRD §7.11) */}
       <a
-        href="#monolith"
+        href={staticHero ? "#flagship-gathering" : "#monolith"}
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#FFB84D] focus:text-black focus:font-space-mono focus:text-xs focus:font-bold focus:outline-none"
       >
         SKIP TO CONTENT &rarr;
@@ -302,12 +276,12 @@ export default function HomePage() {
         ref={pinnedWrapperRef}
         data-hero-pinned="home"
         id="act-i-viewport-wrapper"
-        className="relative w-full h-[520dvh]"
+        className={`relative w-full bg-hero-espresso ${staticHero ? "h-dvh" : "h-[300dvh]"}`}
       >
         {/* Pinned 100dvh Viewport Container */}
         <div
           ref={pinnedViewportRef}
-          className="w-full h-[100dvh] overflow-hidden bg-transparent text-white"
+          className="relative z-[2] w-full h-[100dvh] overflow-hidden bg-transparent text-white"
         >
           {/* Act I: WebGL Canvas Layer (Digital Kolam + 3D Emblem) */}
           <DigitalKolamHero />
@@ -356,6 +330,8 @@ export default function HomePage() {
               ACT III: THE MONOLITH SPLIT ("CURTAIN RISE" SLIDE-UP AT SCROLL 0.66)
               ========================================================================= */}
           <section
+            hidden={staticHero}
+            style={staticHero ? { display: "none" } : undefined}
             id="monolith"
             ref={monolithRef}
             className="absolute inset-0 z-20 w-full h-[100dvh] overflow-y-auto lg:overflow-hidden grid grid-cols-1 lg:grid-cols-12 bg-[#050201] border-t border-white/10 text-white"
@@ -542,6 +518,11 @@ export default function HomePage() {
               </div>
             </div>
           </section>
+          <div ref={handoffRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-30 bg-paper opacity-0 flex items-center justify-center">
+            <svg viewBox="-100 -100 200 200" className="w-3/4 max-w-3xl text-hearth-terracotta opacity-[0.08]" fill="none" stroke="currentColor" strokeWidth="0.5">
+              {[0, 30, 60, 90, 120, 150].map(rotation => <ellipse key={rotation} rx="84" ry="30" transform={`rotate(${rotation})`} />)}
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -569,141 +550,42 @@ export default function HomePage() {
         </div>
 
         {/* =========================================================================
-            WHAT'S NEXT: SUNLIT FLAGSHIP SPOTLIGHT
+            WHAT'S NEXT: DYNAMIC FLAGSHIP EVENT ENGINE & DITHER-VEIL ART INSTALLATION
             ========================================================================= */}
-        <section className="relative w-full py-24 sm:py-32 px-6 sm:px-12 max-w-[1600px] mx-auto">
-          <CourtyardHeader
-            eyebrow="Upcoming Gathering"
-            title={locale === "ta" ? "அடுத்த முக்கிய சங்கமம்" : "Next Flagship Gathering"}
-            tamilTitle={locale !== "ta" ? "அடுத்த முக்கிய சங்கமம்" : undefined}
-            description="Our calendar brings together authentic food, live performance, and fellowship beneath Columbus skies. Open to every Buckeye regardless of language or background."
-          />
-
-          {nextEvent ? (
-            <div className="relative w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center border-b border-[#E5DDD0] pb-24 sm:pb-32">
-              {/* Photo Side - Sharp Physical Print */}
-              <div className="lg:col-span-6 relative aspect-[16/10] lg:aspect-[4/3] w-full overflow-hidden bg-[#F4EFE6] shadow-2xl shadow-stone-900/10 border border-stone-300/40">
-                <Image
-                  src={nextEvent.posterImage}
-                  alt={nextEvent.titleEn}
-                  fill
-                  className="object-cover transition-transform duration-700 ease-out hover:scale-105"
-                  priority
-                />
-              </div>
-
-              {/* Information Side - Naked on Global Background */}
-              <div className="lg:col-span-6 flex flex-col justify-center space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-xs font-sans font-semibold text-[#B85C38] uppercase tracking-widest">
-                    <span>{nextEvent.date}</span>
-                    <span className="text-stone-400">·</span>
-                    <span>{nextEvent.time}</span>
-                    <span className="text-stone-400">·</span>
-                    <span>{nextEvent.location}</span>
-                  </div>
-
-                  <h3 className="text-3xl sm:text-5xl md:text-6xl font-serif font-normal text-[#2A2825] leading-tight">
-                    {locale === "ta" ? nextEvent.titleTa : nextEvent.titleEn}
-                  </h3>
-
-                  <p className="text-base sm:text-lg font-sans text-[#57524C] leading-relaxed pt-2 max-w-xl">
-                    {locale === "ta" ? nextEvent.descriptionTa : nextEvent.descriptionEn}
-                  </p>
-                </div>
-
-                <div className="pt-4 flex flex-wrap items-center gap-6 text-sm font-sans">
-                  <Link
-                    href={`/events/${nextEvent.slug}`}
-                    onClick={playClick}
-                    className="font-semibold text-[#B85C38] border-b-2 border-[#B85C38] pb-1 hover:border-[#E5A93C] hover:text-[#E5A93C] transition-colors cursor-pointer"
-                  >
-                    {locale === "ta" ? "விவரங்கள் & பதிவு ↗" : "View Gathering Details ↗"}
-                  </Link>
-                  <Link
-                    href="/events"
-                    onClick={playClick}
-                    className="font-medium text-[#57524C] hover:text-[#2A2825] border-b border-[#2A2825]/20 pb-1 hover:border-[#2A2825] transition-colors cursor-pointer"
-                  >
-                    {locale === "ta" ? "முழு நாட்காட்டி →" : "Full Calendar →"}
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="border-t border-b border-[#E5DDD0] py-16 text-center max-w-2xl mx-auto space-y-4">
-              <span className="text-xs font-sans font-semibold text-[#B85C38] tracking-widest uppercase block">
-                2026–2027 Academic Year
-              </span>
-              <h3 className="text-3xl sm:text-4xl font-serif text-[#2A2825]">
-                Next Gathering Announced Soon
-              </h3>
-              <p className="text-base font-sans text-[#57524C] leading-relaxed">
-                Our fall and spring schedules are currently being reserved with the Ohio Union. Join the student GroupMe to hear dates the minute they drop.
-              </p>
-              <div className="pt-4">
-                <a
-                  href={SITE_CONFIG.groupMeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={playClick}
-                  className="inline-flex font-semibold text-[#B85C38] border-b-2 border-[#B85C38] pb-1 hover:text-[#E5A93C] hover:border-[#E5A93C] transition-colors"
-                >
-                  Join the Student GroupMe ↗
-                </a>
-              </div>
-            </div>
-          )}
-        </section>
+        <NextFlagshipGathering />
 
         {/* The Pillars: Airy Vertical Sections (Zero Rigid Borders) */}
         <SilkHoverPillars />
 
         {/* =========================================================================
-            MOMENTS ON THE OLENTANGY: ORGANIC SUNLIT COLLAGE
+            MOMENTS ON THE OLENTANGY: REACT BITS DEPTH CAROUSEL & EVENT CHRONICLE
             ========================================================================= */}
-        <section className="relative w-full py-24 sm:py-32 px-6 sm:px-12 max-w-[1600px] mx-auto overflow-hidden select-none">
-          <CourtyardHeader
-            eyebrow="Physical Archives · 35mm Memories"
-            title={locale === "ta" ? "கல்லூரி நினைவுகள்" : "Moments On The Olentangy"}
-            tamilTitle={locale !== "ta" ? "கல்லூரி நினைவுகள்" : undefined}
-            description="Lawn blankets on the South Oval with fresh strawberries, sizzling kothu parotta, and collaborative campus festivals loosely scattered on a sunlit table."
-            action={
-              <Link
-                href="/gallery"
-                onClick={playClick}
-                className="font-semibold text-sm font-sans text-[#B85C38] border-b-2 border-[#B85C38] pb-1 hover:border-[#E5A93C] hover:text-[#E5A93C] transition-colors cursor-pointer"
-              >
-                Enter The Canvas →
-              </Link>
-            }
-          />
-
-          {/* Organic Asymmetrical Overlapping Photo Collage */}
-          <OrganicPhotoCollage photos={COLLAGE_PHOTOS} onPhotoClick={playClick} />
-        </section>
+        <EventsDepthShowcase />
 
         {/* =========================================================================
             COMMUNITY KINSHIP PROOF STRIP (Zero Bounding Boxes, 1px Grounding Line)
             ========================================================================= */}
         <section className="py-24 sm:py-32 px-6 sm:px-12 max-w-[1600px] mx-auto">
           <div className="border-t border-b border-[#E5DDD0] py-16 sm:py-24 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 text-left">
-            <div className="space-y-3">
-              <span className="font-serif text-5xl sm:text-6xl font-light text-[#B85C38] block">120+</span>
+            <div className="relative space-y-3">
+              <motion.span aria-hidden="true" className="absolute -left-6 top-0 hidden h-full w-px origin-top bg-hearth-terracotta/30 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
+              <span className="font-serif tabular-nums text-5xl sm:text-6xl font-light text-[#B85C38] block"><span aria-hidden="true"><CountUp to={120} />+</span><span className="sr-only">120+</span></span>
               <span className="font-sans text-xs uppercase tracking-widest text-[#2A2825] block font-semibold">Buckeyes & Community</span>
               <p className="text-sm text-[#57524C] font-sans leading-relaxed">
                 Undergraduate and graduate students from every college, alumni, and friends across Columbus.
               </p>
             </div>
-            <div className="space-y-3">
-              <span className="font-serif text-5xl sm:text-6xl font-light text-[#E5A93C] block">04+</span>
+            <div className="relative space-y-3">
+              <motion.span aria-hidden="true" className="absolute -left-6 top-0 hidden h-full w-px origin-top bg-hearth-terracotta/30 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
+              <span className="font-serif text-5xl sm:text-6xl font-light text-[#E5A93C] block"><span aria-hidden="true">0<CountUp to={4} />+</span><span className="sr-only">04+</span></span>
               <span className="font-sans text-xs uppercase tracking-widest text-[#2A2825] block font-semibold">Years of Kinship</span>
               <p className="text-sm text-[#57524C] font-sans leading-relaxed">
                 Informally founded in 2021; chartered as a recognized student organization at Ohio State in 2024.
               </p>
             </div>
-            <div className="space-y-3">
-              <span className="font-serif text-5xl sm:text-6xl font-light text-[#2A2825] block">100%</span>
+            <div className="relative space-y-3">
+              <motion.span aria-hidden="true" className="absolute -left-6 top-0 hidden h-full w-px origin-top bg-hearth-terracotta/30 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
+              <span className="font-serif text-5xl sm:text-6xl font-light text-[#2A2825] block"><span aria-hidden="true"><CountUp to={100} />%</span><span className="sr-only">100%</span></span>
               <span className="font-sans text-xs uppercase tracking-widest text-[#2A2825] block font-semibold">Zero Dues · Open Hearth</span>
               <p className="text-sm text-[#57524C] font-sans leading-relaxed">
                 Membership is completely voluntary and free. No language test. No attendance quotas to participate.

@@ -1,207 +1,340 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLocale } from "@/context/LocaleContext";
-import { useTinai, TINAIS, Tinai } from "@/context/TinaiContext";
 import { useAudio } from "@/context/AudioContext";
-import { useLiteMode } from "@/context/LiteModeContext";
-import { 
-  Volume2, 
-  VolumeX, 
-  Search, 
-  Layers, 
-  Menu, 
-  X,
-  ExternalLink,
-  ChevronDown
-} from "lucide-react";
+import { Menu, X } from "lucide-react";
 
-// Ordered strictly by importance: Home -> Events -> Join -> About -> Board -> Gallery -> Guide -> Feedback
-const navLinks = [
-  { href: "/", en: "Home", ta: "முகப்பு", labelKey: "nav.home" },
-  { href: "/events", en: "Events", ta: "நிகழ்வுகள்", labelKey: "nav.events" },
-  { href: "/about", en: "About", ta: "அறிமுகம்", labelKey: "nav.about" },
-  { href: "/board", en: "Board", ta: "அவை", labelKey: "nav.board" },
-  { href: "/gallery", en: "Gallery", ta: "நினைவுகள்", labelKey: "nav.gallery" },
-  { href: "/guide", en: "Guide & FAQ", ta: "வழிகாட்டி & கேள்வி-பதில்", labelKey: "nav.guide" },
-  { href: "/suggestions", en: "Ideas", ta: "கருத்து", labelKey: "nav.suggestions" },
-  { href: "/join", en: "Join", ta: "இணையுங்கள்", labelKey: "nav.join", isCta: true },
-];
-
-interface FloatingNavProps {
-  onOpenSearch: () => void;
+// ============================================================================
+// 1. NAVIGATION ROUTE CONFIGURATION
+// ============================================================================
+interface NavRoute {
+  href: string;
+  en: string;
+  ta: string;
 }
 
-export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
+const NAV_ROUTES: NavRoute[] = [
+  { href: "/", en: "Home", ta: "முகப்பு" },
+  { href: "/events", en: "Events", ta: "நிகழ்வுகள்" },
+  { href: "/about", en: "About", ta: "அறிமுகம்" },
+  { href: "/board", en: "Board", ta: "அவை" },
+  { href: "/gallery", en: "Gallery", ta: "நினைவுகள்" },
+  { href: "/guide", en: "Guide & FAQ", ta: "வழிகாட்டி & கேள்வி-பதில்" },
+  { href: "/suggestions", en: "Ideas", ta: "கருத்து" },
+];
+
+export const FloatingNav: React.FC = () => {
   const pathname = usePathname();
-  const { locale, toggleLocale, t } = useLocale();
-  const { currentTinai, isManualPin, setTinai, resetToLiveTime, meta } = useTinai();
-  const { isSoundEnabled, toggleSound, playClick, playBell } = useAudio();
-  const { isLiteMode, toggleLiteMode } = useLiteMode();
+  const { locale } = useLocale();
+  const { playClick, playSilkSwish } = useAudio();
 
-  const [isTinaiMenuOpen, setIsTinaiMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isFlickering, setIsFlickering] = useState(false);
+
+  // Visibility & Contextual Backdrop State
+  const [isPastHero, setIsPastHero] = useState(false);
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+
+  // Dark 3D Hero sections at the top of specific pages
+  const darkHeroRoutes = ["/", "/events", "/about", "/board"];
+  const isDarkHero = darkHeroRoutes.includes(pathname) && !isPastHero;
+
+  // References for Gooey Active Indicator & Magnetic Mechanics
   const headerRef = useRef<HTMLElement>(null);
+  const navContainerRef = useRef<HTMLElement>(null);
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const innerRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+  const quickToXRefs = useRef<Record<string, (val: number) => void>>({});
+  const quickToYRefs = useRef<Record<string, (val: number) => void>>({});
 
+  const mainDotRef = useRef<HTMLSpanElement>(null);
+  const trailDotRef = useRef<HTMLSpanElement>(null);
+  const previousHrefRef = useRef<string | null>(null);
+
+  // Determine current active route key
+  const getActiveRouteHref = useCallback((): string | null => {
+    if (pathname === "/") return "/";
+    if (pathname === "/join") return null; // CTA is separate
+    const matched = NAV_ROUTES.find(
+      (r) => r.href !== "/" && (pathname === r.href || pathname.startsWith(`${r.href}/`))
+    );
+    return matched ? matched.href : null;
+  }, [pathname]);
+
+  const activeHref = getActiveRouteHref();
+
+  // ============================================================================
+  // 2. HERO ANIMATION SCROLL THRESHOLD & ADAPTIVE BACKDROP ENGINE
+  // ============================================================================
   useEffect(() => {
-    const header = headerRef.current;
-    if (!header) return;
-
-    // Calculate when the hero animation on the current page is scrolled through one full time
-    const getHeroScrollThreshold = (): number => {
-      if (typeof window === "undefined") return 40;
-
-      // 1. Home page: 3-Act pinned Kolam Hero (Acts I & II finish, Act III curtain rises at ~0.64)
-      if (pathname === "/") {
-        const homePinned = document.querySelector<HTMLElement>(
-          '[data-hero-pinned="home"], #act-i-viewport-wrapper'
-        );
-        if (homePinned) {
-          const scrollDistance = homePinned.offsetHeight - window.innerHeight;
-          return Math.max(800, scrollDistance * 0.62);
-        }
-        return window.innerHeight * 2.0;
-      }
-
-      // 2. About page: Gopuram Z-axis flight pinned for 2200px
-      if (pathname === "/about") {
-        const aboutPinned = document.querySelector<HTMLElement>(
-          '[data-hero-pinned="about"], #gopuram-hero-wrapper'
-        );
-        if (aboutPinned) {
-          return 1900;
-        }
-        return 1800;
-      }
-
-      // 3. Ideas/Suggestions page: Blueprint pinned for 2200px
-      if (pathname === "/suggestions") {
-        const suggPinned = document.querySelector<HTMLElement>(
-          '[data-hero-pinned="suggestions"]'
-        );
-        if (suggPinned) {
-          return 1900;
-        }
-        return 1800;
-      }
-
-      // 4. Other pages with standard hero canvases/viewports (Events, Board, Gallery, Join, Guide)
-      const heroEl = document.querySelector<HTMLElement>(
-        '[data-hero-container="true"], #events-hero-trigger, #chola-darbar-hero, #nanban-gates-hero, #guide-station-hero, #gallery-hero, [data-hero-scope]'
-      );
-      if (heroEl) {
-        // Once scrolled through 75% of the hero element, it's considered scrolled through
-        return Math.max(200, heroEl.offsetHeight * 0.75);
-      }
-
-      // 5. Fallback for static/content-only pages without hero animations
-      return 30;
+    const getHeroThreshold = (): number => {
+      if (typeof window === "undefined") return 0;
+      if (pathname === "/") return 850;
+      if (pathname === "/about") return 2200;
+      if (pathname === "/events") return 450;
+      if (pathname === "/board") return 500;
+      return 0;
     };
 
-    let heroThreshold = getHeroScrollThreshold();
-    let currentNavState: "visible" | "hidden" | "uninitialized" = "uninitialized";
-
-    const glassClasses = [
-      "backdrop-blur-md",
-      "bg-[#1e0e30]/95",
-      "border-b",
-      "border-amber-500/15",
-      "shadow-[0_4px_24px_rgba(30,14,48,0.25)]",
-    ];
-
-    const applyScrollState = (scrollY: number) => {
-      const isPastHero = scrollY >= heroThreshold;
-      const nextState = (isPastHero || isMobileMenuOpen) ? "visible" : "hidden";
-
-      if (nextState === currentNavState) return;
-      currentNavState = nextState;
-
-      if (nextState === "visible") {
-        // Scrolled through the hero one full time: Navbar is FULLY VISIBLE & pinned!
-        // It NEVER hides on down-scroll!
-        header.classList.remove(
-          "-translate-y-full",
-          "opacity-0",
-          "pointer-events-none",
-          "bg-transparent",
-          "border-transparent"
-        );
-        header.classList.add("translate-y-0", "opacity-100", "pointer-events-auto");
-        glassClasses.forEach((cls) => header.classList.add(cls));
-      } else {
-        // Inside the hero animation: Navbar stays hidden to preserve full-bleed cinematic focus
-        header.classList.remove("translate-y-0", "opacity-100", "pointer-events-auto");
-        glassClasses.forEach((cls) => header.classList.remove(cls));
-        header.classList.add(
-          "-translate-y-full",
-          "opacity-0",
-          "pointer-events-none",
-          "bg-transparent",
-          "border-transparent"
-        );
-      }
+    const evaluateScroll = () => {
+      const scrollY = window.scrollY;
+      const threshold = getHeroThreshold();
+      setIsPastHero(threshold === 0 || scrollY >= threshold);
+      setIsScrolledDown(scrollY > 20);
     };
 
-    // Recalculate on resize
-    const handleResize = () => {
-      heroThreshold = getHeroScrollThreshold();
-      currentNavState = "uninitialized"; // Force re-evaluation
-      applyScrollState(window.scrollY);
-    };
-
-    // Top-edge cursor hover reveal on desktop (for accessibility if user wants nav while in hero)
-    let isHoveringTop = false;
-    const handleMouseMove = (e: MouseEvent) => {
-      if (window.scrollY < heroThreshold && !isMobileMenuOpen) {
-        if (e.clientY <= 36 && !isHoveringTop) {
-          isHoveringTop = true;
-          currentNavState = "visible";
-          header.classList.remove(
-            "-translate-y-full",
-            "opacity-0",
-            "pointer-events-none",
-            "bg-transparent",
-            "border-transparent"
-          );
-          header.classList.add("translate-y-0", "opacity-100", "pointer-events-auto");
-          glassClasses.forEach((cls) => header.classList.add(cls));
-        } else if (e.clientY > 80 && isHoveringTop) {
-          isHoveringTop = false;
-          currentNavState = "uninitialized"; // Force re-evaluation
-          applyScrollState(window.scrollY);
-        }
-      }
-    };
-
-    const handleScroll = () => {
-      applyScrollState(window.scrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleResize, { passive: true });
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-
-    // Initial check (with a small timeout to allow pinned layouts to mount)
-    applyScrollState(window.scrollY);
-    const tId = setTimeout(() => {
-      heroThreshold = getHeroScrollThreshold();
-      applyScrollState(window.scrollY);
-    }, 200);
+    evaluateScroll();
+    window.addEventListener("scroll", evaluateScroll, { passive: true });
+    window.addEventListener("resize", evaluateScroll, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("mousemove", handleMouseMove);
-      clearTimeout(tId);
+      window.removeEventListener("scroll", evaluateScroll);
+      window.removeEventListener("resize", evaluateScroll);
     };
-  }, [pathname, isMobileMenuOpen]);
+  }, [pathname]);
+
+  // ============================================================================
+  // 3. REACTBITS KINEMATICS: GOOEY ACTIVE INDICATOR
+  // ============================================================================
+  const updateGooeyIndicator = useCallback(
+    (animate = true) => {
+      const navContainer = navContainerRef.current;
+      const mainDot = mainDotRef.current;
+      const trailDot = trailDotRef.current;
+
+      if (!navContainer || !mainDot || !trailDot) return;
+
+      if (!activeHref || !itemRefs.current[activeHref]) {
+        // No active center route (e.g. on /join or 404): gently hide indicator
+        gsap.to([mainDot, trailDot], {
+          opacity: 0,
+          scale: 0,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+        return;
+      }
+
+      const activeEl = itemRefs.current[activeHref];
+      if (!activeEl) return;
+
+      const navRect = navContainer.getBoundingClientRect();
+      const elRect = activeEl.getBoundingClientRect();
+
+      // Calculate center coordinate relative to nav container
+      const targetCenterX = elRect.left - navRect.left + elRect.width / 2;
+      const dotRadius = 4; // 8px diameter -> 4px radius
+      const targetX = targetCenterX - dotRadius;
+
+      // Check for user-preferred reduced motion
+      const prefersReducedMotion =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      const prevHref = previousHrefRef.current;
+      const isInitialMount = prevHref === null;
+      previousHrefRef.current = activeHref;
+
+      if (isInitialMount || !animate || prefersReducedMotion) {
+        // Direct placement without morphing transition
+        gsap.killTweensOf([mainDot, trailDot]);
+        gsap.set(mainDot, {
+          x: targetX,
+          opacity: 1,
+          scaleX: 1,
+          scaleY: 1,
+        });
+        gsap.set(trailDot, {
+          opacity: 0,
+          scale: 0,
+          x: targetX,
+        });
+        return;
+      }
+
+      // Route change with Gooey stretch & snap physics
+      const prevEl = prevHref ? itemRefs.current[prevHref] : null;
+      let startX = targetX;
+      if (prevEl) {
+        const prevRect = prevEl.getBoundingClientRect();
+        startX = prevRect.left - navRect.left + prevRect.width / 2 - dotRadius;
+      }
+
+      const deltaX = targetX - startX;
+      const distance = Math.abs(deltaX);
+
+      // Kill any running transitions
+      gsap.killTweensOf([mainDot, trailDot]);
+
+      // Set trail droplet at origin
+      gsap.set(trailDot, {
+        x: startX,
+        opacity: 0.95,
+        scale: 1,
+      });
+
+      // Elongation stretch factor based on distance traveled (up to 2.4x)
+      const stretchFactor = Math.min(2.4, 1 + distance / 70);
+
+      // Main dot flies to target, stretching along the travel vector
+      gsap.fromTo(
+        mainDot,
+        {
+          x: startX,
+          scaleX: stretchFactor,
+          scaleY: 0.75,
+          opacity: 1,
+        },
+        {
+          x: targetX,
+          scaleX: 1.15,
+          scaleY: 0.9,
+          duration: 0.45,
+          ease: "power2.inOut",
+          onComplete: () => {
+            // Settle with subtle spring rebound
+            gsap.to(mainDot, {
+              scaleX: 1,
+              scaleY: 1,
+              duration: 0.35,
+              ease: "elastic.out(1.2, 0.5)",
+            });
+          },
+        }
+      );
+
+      // Trailing droplet holds briefly, then collapses into gooey threshold
+      gsap.to(trailDot, {
+        scale: 0,
+        opacity: 0,
+        x: startX + deltaX * 0.22,
+        duration: 0.26,
+        delay: 0.08,
+        ease: "power2.in",
+      });
+    },
+    [activeHref]
+  );
+
+  useEffect(() => {
+    updateGooeyIndicator(true);
+
+    const handleResize = () => updateGooeyIndicator(false);
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, [updateGooeyIndicator]);
+
+  // When nav theme or hero boundaries shift, re-synchronize dot placement
+  useEffect(() => {
+    updateGooeyIndicator(false);
+  }, [isPastHero, isDarkHero, isMobileMenuOpen, updateGooeyIndicator]);
+
+  // ============================================================================
+  // 4. REACTBITS KINEMATICS: MAGNETIC PROXIMITY ENGINE (<= 50px Threshold)
+  // ============================================================================
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const isFinePointer = window.matchMedia("(pointer: fine) and (hover: hover)").matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!isFinePointer || prefersReducedMotion) return;
+
+    const navContainer = navContainerRef.current;
+    if (!navContainer) return;
+
+    // Initialize GSAP quickTo setters for 120fps frictionless tracking
+    NAV_ROUTES.forEach((route) => {
+      const inner = innerRefs.current[route.href];
+      if (inner) {
+        quickToXRefs.current[route.href] = gsap.quickTo(inner, "x", {
+          duration: 0.35,
+          ease: "power2.out",
+        });
+        quickToYRefs.current[route.href] = gsap.quickTo(inner, "y", {
+          duration: 0.35,
+          ease: "power2.out",
+        });
+      }
+    });
+
+    const PROXIMITY_THRESHOLD = 50; // 50px proximity radius per Master Directive
+    const MAX_PULL_OFFSET = 7; // Max subtle tactile shift (in px)
+
+    const handlePointerMove = (e: PointerEvent) => {
+      if (e.pointerType === "touch") return;
+
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      NAV_ROUTES.forEach((route) => {
+        const item = itemRefs.current[route.href];
+        const inner = innerRefs.current[route.href];
+        const quickX = quickToXRefs.current[route.href];
+        const quickY = quickToYRefs.current[route.href];
+
+        if (!item || !inner || !quickX || !quickY) return;
+
+        const rect = item.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        const diffX = mouseX - centerX;
+        const diffY = mouseY - centerY;
+        const dist = Math.hypot(diffX, diffY);
+
+        const activationRadius = PROXIMITY_THRESHOLD + rect.width / 2;
+
+        if (dist <= activationRadius) {
+          // As cursor approaches within 50px, pull text smoothly toward cursor
+          const pullRatio = 1 - dist / activationRadius;
+          const shiftX = (diffX / dist) * pullRatio * MAX_PULL_OFFSET;
+          const shiftY = (diffY / dist) * pullRatio * (MAX_PULL_OFFSET * 0.75);
+
+          quickX(shiftX);
+          quickY(shiftY);
+        } else {
+          // Outside proximity: spring back to zero
+          quickX(0);
+          quickY(0);
+        }
+      });
+    };
+
+    const handlePointerLeave = () => {
+      NAV_ROUTES.forEach((route) => {
+        const inner = innerRefs.current[route.href];
+        if (inner) {
+          gsap.to(inner, {
+            x: 0,
+            y: 0,
+            duration: 0.5,
+            ease: "elastic.out(1, 0.4)",
+            overwrite: "auto",
+          });
+        }
+      });
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    navContainer.addEventListener("pointerleave", handlePointerLeave);
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      navContainer.removeEventListener("pointerleave", handlePointerLeave);
+      NAV_ROUTES.forEach((route) => {
+        const inner = innerRefs.current[route.href];
+        if (inner) {
+          gsap.killTweensOf(inner);
+          inner.style.transform = "";
+        }
+      });
+    };
+  }, []);
 
   const handleLinkClick = () => {
     playClick();
@@ -209,298 +342,214 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
   };
 
   const handleToggleMobileMenu = () => {
-    playClick();
-    setIsFlickering(true);
-    setTimeout(() => setIsFlickering(false), 240);
+    playSilkSwish();
     setIsMobileMenuOpen((prev) => !prev);
   };
 
-  const handleTinaiSelect = (id: Tinai) => {
-    playBell(660);
-    setTinai(id, true);
-    setIsTinaiMenuOpen(false);
-  };
 
   return (
     <>
+      {/* ========================================================================= */}
+      {/* SVG GOOEY NAV FILTER DEFINITION (ReactBits Liquid Metrology)              */}
+      {/* ========================================================================= */}
+      <svg
+        className="absolute w-0 h-0 pointer-events-none -z-50 opacity-0 overflow-hidden"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <defs>
+          <filter id="muttram-gooey-nav" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3.8" result="blur" />
+            <feColorMatrix
+              in="blur"
+              mode="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
+              result="goo"
+            />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          </filter>
+        </defs>
+      </svg>
+
+      {/* ========================================================================= */}
+      {/* THE "FLUID MUTTRAM" NAVBAR: Always Visible, Crystal Clear Navigation      */}
+      {/* ========================================================================= */}
       <header
         id="global-floating-nav"
         ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-50 w-full border-b border-transparent bg-transparent -translate-y-full opacity-0 pointer-events-none transition-[transform,opacity,background-color,border-color,backdrop-filter] duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        className={`fixed top-0 left-0 right-0 z-50 w-full transition-[padding,background-color,backdrop-filter,border-color,box-shadow,color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-0 opacity-100 pointer-events-auto ${
+          isDarkHero
+            ? "pt-3.5 pb-3.5 px-6 sm:px-10 lg:px-16 bg-[#0c0814]/85 backdrop-blur-md border-b border-amber-500/20 text-[#FAF9F6] shadow-lg"
+            : isScrolledDown
+            ? "pt-3.5 pb-3.5 px-6 sm:px-10 lg:px-16 bg-[#FAF9F6]/92 backdrop-blur-md border-b border-[#2A2825]/8 text-[#2A2825] shadow-[0_4px_24px_rgba(42,40,37,0.06)]"
+            : "pt-5 sm:pt-6 pb-3.5 px-6 sm:px-10 lg:px-16 bg-[#FAF9F6]/85 backdrop-blur-xs border-b border-[#2A2825]/5 text-[#2A2825]"
+        }`}
       >
-        <div className="max-w-[1440px] mx-auto flex items-center h-16 px-4 sm:px-6 relative">
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between relative">
 
-          {/* ========================================================================= */}
-          {/* 1. BRAND LOCKUP — flush left, no pill, no border                           */}
-          {/* ========================================================================= */}
-          <Link
-            href="/"
-            onClick={playClick}
-            aria-label="OSU Tamil Sangam Home"
-            className="group flex items-center gap-2.5 shrink-0 mr-6 xl:mr-8"
-          >
-            <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden shrink-0 flex items-center justify-center">
-              <Image
-                src="/emblem.svg"
-                alt="Official OSU Tamil Sangam Emblem"
-                fill
-                className="object-cover"
-                sizes="32px"
-                priority
-              />
-            </div>
-            <div className="flex flex-col text-left leading-tight">
-              <span className="text-[12.5px] sm:text-[13px] font-bold text-[#faf5ed] group-hover:text-[#e0b968] transition-colors font-display tracking-tight">
+          {/* ----------------------------------------------------------------------- */}
+          {/* 1. THE LOGO (LEFT): Heavy Serif in Charcoal/Espresso or Warm Ivory      */}
+          {/* ----------------------------------------------------------------------- */}
+          <div className="flex items-center shrink-0">
+            <Link
+              href="/"
+              onClick={handleLinkClick}
+              aria-label="OSU Tamil Sangam Home"
+              className="group flex flex-col text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-xs"
+            >
+              <span
+                className={`font-serif font-bold text-xl sm:text-2xl tracking-tight transition-colors leading-none ${
+                  isDarkHero ? "text-[#FAF9F6] group-hover:text-[#E5A93C]" : "text-[#2A2825] group-hover:text-[#B85C38]"
+                }`}
+              >
                 {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"}
               </span>
               <span
                 lang="ta"
                 style={{ letterSpacing: 0 }}
-                className="text-[9px] sm:text-[9.5px] font-tamil font-medium text-[#D4AF37]/75 group-hover:text-[#D4AF37] transition-colors"
+                className={`font-tamil text-[10px] sm:text-[11px] transition-opacity mt-1 leading-none font-medium ${
+                  isDarkHero
+                    ? "text-[#E5A93C]/85 group-hover:text-[#E5A93C]"
+                    : "text-[#57524C] opacity-65 group-hover:opacity-100"
+                }`}
               >
                 {locale === "ta" ? "The Ohio State University" : "ஓஹியோ மாநிலப் பல்கலைக்கழகம்"}
               </span>
-            </div>
-          </Link>
+            </Link>
+          </div>
 
-          {/* ========================================================================= */}
-          {/* 2. DESKTOP NAV LINKS — inline, no pill wrapper, bottom-border active state */}
-          {/* ========================================================================= */}
+          {/* ----------------------------------------------------------------------- */}
+          {/* 2. THE LINKS (CENTER): Generous gap-x-12, Bilingual Stack, Magnetic      */}
+          {/* ----------------------------------------------------------------------- */}
           <nav
+            ref={navContainerRef}
             aria-label="Primary Navigation"
-            className="hidden lg:flex items-center gap-0 flex-1"
+            className="hidden lg:flex items-center gap-x-10 xl:gap-x-12 relative py-2"
           >
-            {navLinks.map((item) => {
-              const isActive = pathname === item.href;
-              const isJoin = item.isCta;
+            {/* Gooey Active Indicator Track (rests above active link) */}
+            <div
+              className="absolute -top-2 left-0 w-full h-3 pointer-events-none overflow-visible"
+              style={{ filter: "url(#muttram-gooey-nav)" }}
+              aria-hidden="true"
+            >
+              {/* Main Indicator Dot */}
+              <span
+                ref={mainDotRef}
+                className={`absolute top-0 w-2 h-2 rounded-full ${
+                  isDarkHero
+                    ? "bg-[#E5A93C] shadow-[0_0_10px_rgba(229,169,60,0.7)]"
+                    : "bg-[#B85C38] shadow-[0_0_8px_rgba(184,92,56,0.45)]"
+                }`}
+                style={{ willChange: "transform, opacity" }}
+              />
+              {/* Trailing Liquid Droplet for Gooey Morph */}
+              <span
+                ref={trailDotRef}
+                className={`absolute top-0 w-1.5 h-1.5 rounded-full ${
+                  isDarkHero ? "bg-[#E5A93C]" : "bg-[#B85C38]"
+                }`}
+                style={{ willChange: "transform, opacity", opacity: 0 }}
+              />
+            </div>
 
-              if (isJoin) {
-                return (
+            {NAV_ROUTES.map((route) => {
+              const isActive = activeHref === route.href;
+
+              return (
+                <div
+                  key={route.href}
+                  ref={(el) => {
+                    itemRefs.current[route.href] = el;
+                  }}
+                  className="relative group py-1"
+                >
                   <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={playClick}
-                    className={`ml-3 flex items-center gap-1.5 px-4 py-1.5 text-xs font-display font-bold transition-[background-color,color,border-color,box-shadow,transform] duration-300 border ${
-                      isActive
-                        ? "btn-gold-foil text-[#1a0b2e] border-amber-200/90 shadow-[0_0_20px_rgba(255,184,77,0.45)]"
-                        : "btn-gold-foil text-[#1a0b2e] border-amber-300/70 hover-glow-kuthuvilakku hover:scale-[1.02] active:scale-[0.98]"
-                    }`}
+                    href={route.href}
+                    ref={(el) => {
+                      innerRefs.current[route.href] = el;
+                    }}
+                    onClick={handleLinkClick}
+                    className="flex flex-col items-center justify-center text-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-xs"
+                    style={{ willChange: "transform" }}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#1a0b2e] animate-pulse" />
-                    <span>{locale === "ta" ? item.ta : item.en}</span>
+                    {/* English: Soft modern Sans-Serif */}
+                    <span
+                      className={`font-sans text-[13px] xl:text-[14px] leading-tight tracking-tight transition-colors duration-200 ${
+                        isDarkHero
+                          ? isActive
+                            ? "font-semibold text-[#FAF9F6]"
+                            : "font-medium text-[#FAF9F6]/85 group-hover:text-[#FAF9F6]"
+                          : isActive
+                          ? "font-semibold text-[#2A2825]"
+                          : "font-medium text-[#2A2825]/85 group-hover:text-[#2A2825]"
+                      }`}
+                    >
+                      {locale === "ta" ? route.ta : route.en}
+                    </span>
+
+                    {/* Tamil: Elegant shadow below, opacity-50, smaller text */}
                     <span
                       lang="ta"
                       style={{ letterSpacing: 0 }}
-                      className="text-[10px] opacity-80 font-tamil font-normal hidden xl:inline text-[#2b104a]"
+                      className={`font-tamil text-[10px] xl:text-[11px] leading-none mt-1 transition-opacity duration-200 pointer-events-none ${
+                        isDarkHero
+                          ? isActive
+                            ? "text-[#E5A93C] opacity-95 font-medium"
+                            : "text-[#d1b8e6] opacity-60 group-hover:opacity-85"
+                          : isActive
+                          ? "text-[#B85C38] opacity-90 font-medium"
+                          : "text-[#57524C] opacity-50 group-hover:opacity-75"
+                      }`}
                     >
-                      {locale === "ta" ? item.en : item.ta}
+                      {locale === "ta" ? route.en : route.ta}
                     </span>
                   </Link>
-                );
-              }
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={playClick}
-                  className={`group relative flex flex-col items-center justify-center px-3 xl:px-3.5 h-12 sm:h-14 transition-colors duration-150 ${
-                    isActive
-                      ? "text-[#faf5ed]"
-                      : "text-[#b8a0cc] hover:text-[#faf5ed]"
-                  }`}
-                >
-                  <span className="text-[12px] xl:text-[12.5px] font-display font-semibold tracking-normal leading-tight">
-                    {locale === "ta" ? item.ta : item.en}
-                  </span>
-                  <span
-                    lang="ta"
-                    style={{ letterSpacing: 0 }}
-                    className={`text-[8.5px] xl:text-[9px] font-tamil leading-none transition-colors ${
-                      isActive ? "text-[#D4AF37]" : "text-[#8a6fa5] group-hover:text-[#e0b968]"
-                    }`}
-                  >
-                    {locale === "ta" ? item.en : item.ta}
-                  </span>
-
-                  {/* Active indicator: bottom gold stroke, not a background pill */}
-                  {isActive && (
-                    <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#D4AF37] shadow-[0_0_6px_oklch(0.82_0.18_85/0.5)]" />
-                  )}
-                </Link>
+                </div>
               );
             })}
           </nav>
 
-          {/* ========================================================================= */}
-          {/* 3. CONTROLS — right-aligned, no pill wrapper, thin vertical divider        */}
-          {/* ========================================================================= */}
-          <div className="flex items-center gap-1 sm:gap-1.5 ml-auto pl-3 sm:pl-4 border-l border-[#D4AF37]/15">
-            {/* Search ⌘K Trigger */}
-            <button
-              onClick={() => {
-                playClick();
-                onOpenSearch();
-              }}
-              title={t("control.search")}
-              aria-label="Open search command palette (⌘K)"
-              className="w-8 h-8 sm:w-9 sm:h-9 text-[#b8a0cc] hover:text-[#faf5ed] hover:bg-[#250d38]/60 flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
-            >
-              <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            </button>
-
-            {/* Language Switcher */}
-            <button
-              onClick={() => {
-                playClick();
-                toggleLocale();
-              }}
-              title="Switch Language / மொழியை மாற்ற"
-              aria-label={locale === "en" ? "Switch language to Tamil" : "Switch language to English"}
-              className="px-2.5 sm:px-3 py-1 text-xs font-display font-bold border border-[#D4AF37]/30 hover:border-[#D4AF37]/60 bg-[#250d38]/40 hover:bg-[#250d38]/70 text-[#faf5ed] flex items-center gap-1.5 transition-[border-color,background-color,color] duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
-            >
-              <span className="text-[9px] font-mono px-1 py-0.5 bg-[#D4AF37] text-[#120a06] font-extrabold leading-none">
-                {locale === "en" ? "TA" : "EN"}
-              </span>
-              <span
-                lang="ta"
-                style={{ letterSpacing: 0 }}
-                className="font-tamil text-[11px] text-[#e0b968] font-bold"
-              >
-                {locale === "en" ? "தமிழ்" : "English"}
-              </span>
-            </button>
-
-            {/* Tinai & Time-of-Day Chip */}
-            <div className="relative">
-              <button
-                onClick={() => {
-                  playClick();
-                  setIsTinaiMenuOpen(!isTinaiMenuOpen);
-                }}
-                title={locale === "ta" ? meta.timeLabelTa : meta.timeLabelEn}
-                aria-label="Select Tamil landscape (Tinai) and time of day"
-                aria-expanded={isTinaiMenuOpen}
-                aria-haspopup="true"
-                className="hidden md:flex items-center gap-1.5 px-2.5 py-1 text-xs font-display border border-[#D4AF37]/20 hover:border-[#D4AF37]/40 bg-[#250d38]/30 hover:bg-[#250d38]/60 text-[#faf5ed] transition-[border-color,background-color,color] duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
-              >
-                <span
-                  className="w-2 h-2 rounded-none border border-black/40 animate-pulse shrink-0"
-                  style={{ backgroundColor: meta.accentColor }}
-                />
-                <span className="text-[#faf5ed] font-medium text-[11px]">
-                  {locale === "ta" ? meta.nameTa : meta.nameEn}
-                </span>
-                <ChevronDown className="w-3 h-3 text-[#D4AF37] opacity-75" />
-              </button>
-
-              {/* Tinai Dropdown Menu */}
-              <AnimatePresence>
-                {isTinaiMenuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 6, scale: 0.96 }}
-                    transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute right-0 mt-2 w-64 bg-[#180d24]/97 backdrop-blur-xl p-3 border border-[#D4AF37]/40 shadow-2xl z-50 text-left"
-                  >
-                    <div className="p-2 border-b border-[#D4AF37]/20 mb-2 bg-[#250d38]/60">
-                      <p className="text-[10px] uppercase font-mono tracking-wider text-[#D4AF37] font-bold">
-                        {locale === "ta" ? "ஐந்திணை நிலங்கள் & பொழுது" : "5 Landscapes & Time of Day"}
-                      </p>
-                      <p className="text-xs text-[#d1b8e6] mt-0.5 font-body">
-                        {isManualPin
-                          ? (locale === "ta" ? "நிலம் தேர்வு செய்யப்பட்டுள்ளது" : "Manual landscape pinned")
-                          : (locale === "ta" ? "நேரத்துடன் ஒத்திசைக்கப்பட்டது" : "Syncing with your local clock")}
-                      </p>
-                    </div>
-
-                    <div className="space-y-1">
-                      {(Object.keys(TINAIS) as Tinai[]).map((key) => {
-                        const tMeta = TINAIS[key];
-                        const isSelected = currentTinai === key;
-                        return (
-                          <button
-                            key={key}
-                            onClick={() => handleTinaiSelect(key)}
-                            className={`w-full flex items-center justify-between px-3 py-2 text-xs text-left transition-[background-color,color,border-color,box-shadow] duration-150 cursor-pointer ${
-                              isSelected
-                                ? "bg-[#2e1644] text-[#faf5ed] font-bold border border-[#D4AF37]/60 shadow-sm"
-                                : "text-[#d1b8e6] hover:bg-[#250d38]/50 hover:text-[#faf5ed]"
-                            }`}
-                          >
-                            <div className="flex items-center gap-2">
-                              <span
-                                className="w-2.5 h-2.5 rounded-none border border-black/30 shrink-0"
-                                style={{ backgroundColor: tMeta.accentColor }}
-                              />
-                              <div>
-                                <span className="font-display font-semibold">
-                                  {locale === "ta" ? tMeta.nameTa : tMeta.nameEn}
-                                </span>
-                                <span
-                                  lang="ta"
-                                  style={{ letterSpacing: 0 }}
-                                  className={`block text-[10px] font-tamil ${
-                                    isSelected ? "text-[#e0b968]" : "text-[#a88bbd]"
-                                  }`}
-                                >
-                                  {locale === "ta" ? tMeta.landscapeTa : tMeta.landscapeEn}
-                                </span>
-                              </div>
-                            </div>
-                            {isSelected && <span className="text-[#D4AF37] font-bold text-xs">✓</span>}
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {isManualPin && (
-                      <button
-                        onClick={() => {
-                          playClick();
-                          resetToLiveTime();
-                          setIsTinaiMenuOpen(false);
-                        }}
-                        className="w-full mt-2 py-1.5 text-center text-[10.5px] font-display font-bold text-[#D4AF37] hover:text-[#faf5ed] border-t border-[#D4AF37]/20 pt-2 transition-colors uppercase tracking-wider cursor-pointer"
-                      >
-                        {locale === "ta" ? "நேரடி நேரத்திற்கு மீட்டமை" : "Reset to Live Clock"}
-                      </button>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Sound Toggle */}
-            <button
-              onClick={toggleSound}
-              title={isSoundEnabled ? t("control.soundOff") : t("control.soundOn")}
-              aria-label={isSoundEnabled ? "Mute interactive audio effects" : "Enable interactive audio effects"}
-              className={`w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center transition-[background-color,color,border-color] duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] ${
-                isSoundEnabled
-                  ? "bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/40"
-                  : "text-[#b8a0cc] hover:text-[#faf5ed] hover:bg-[#250d38]/60"
+          {/* ----------------------------------------------------------------------- */}
+          {/* 3. THE CALL TO ACTION (RIGHT): Stark text link "Join the Hearth ↗"     */}
+          {/* ----------------------------------------------------------------------- */}
+          <div className="flex items-center gap-4 shrink-0">
+            <Link
+              href="/join"
+              onClick={handleLinkClick}
+              className={`group hidden sm:inline-flex items-center gap-1.5 font-sans text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-xs py-1 px-1.5 ${
+                isDarkHero
+                  ? "text-[#FAF9F6] hover:text-[#E5A93C]"
+                  : "text-[#2A2825] hover:text-[#B85C38]"
               }`}
             >
-              {isSoundEnabled ? <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
-            </button>
+              <span>{locale === "ta" ? "இணைந்திருங்கள்" : "Join the Hearth"}</span>
+              <span className={`text-sm transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${
+                isDarkHero ? "text-[#E5A93C]" : "text-[#B85C38]"
+              }`}>
+                ↗
+              </span>
+            </Link>
 
-            {/* Mobile Menu Toggle */}
+            {/* Mobile Menu Hamburger Trigger */}
             <button
               onClick={handleToggleMobileMenu}
               aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMobileMenuOpen}
-              className="lg:hidden w-8 h-8 sm:w-9 sm:h-9 text-[#b8a0cc] hover:text-[#faf5ed] hover:bg-[#250d38]/60 flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
+              className={`lg:hidden w-10 h-10 flex items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] ${
+                isDarkHero
+                  ? "text-[#FAF9F6] hover:bg-white/10"
+                  : "text-[#2A2825] hover:text-[#B85C38] hover:bg-[#FAF9F6]/80"
+              }`}
             >
-              {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
+
         </div>
       </header>
 
       {/* ========================================================================= */}
-      {/* 4. MOBILE DRAWER NAVIGATION: TACTILE ARCHITECTURAL VIEWFINDER PANEL       */}
+      {/* 5. MOBILE NAVIGATION DRAWER (Clean Sunlit Courtyard Aesthetic)             */}
       {/* ========================================================================= */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -508,110 +557,78 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className={`fixed inset-0 z-40 bg-[#0d0716]/98 backdrop-blur-2xl lg:hidden flex flex-col pt-24 px-5 sm:px-6 pb-12 justify-between overflow-y-auto border-b border-white/20 shadow-2xl ${
-              isFlickering ? "crt-flicker" : ""
-            }`}
+            transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-40 bg-[#FAF9F6]/98 backdrop-blur-xl lg:hidden flex flex-col pt-28 px-6 pb-12 justify-between overflow-y-auto pointer-events-auto"
           >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-white/15">
-                <div className="flex flex-col text-left">
-                  <span className="text-sm font-bold text-[#faf5ed] font-display">
+            <div className="space-y-6">
+              <div className="pb-4 border-b border-[#2A2825]/10 flex items-center justify-between">
+                <div>
+                  <span className="font-serif font-bold text-lg text-[#2A2825] block">
                     {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"}
                   </span>
                   <span
                     lang="ta"
                     style={{ letterSpacing: 0 }}
-                    className="text-[11px] font-tamil text-[#D4AF37]"
+                    className="font-tamil text-xs text-[#B85C38]"
                   >
                     வழிகாட்டி & பக்க அட்டவணை
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-none bg-[#250d38] text-[#55CCA2] border border-[#55CCA2]/40">
-                    MENU
-                  </span>
-                </div>
+                <button
+                  onClick={handleToggleMobileMenu}
+                  aria-label="Close menu"
+                  className="w-8 h-8 flex items-center justify-center text-[#2A2825] hover:text-[#B85C38]"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
 
-              <div className="grid grid-cols-1 gap-2">
-                {navLinks.map((item) => {
-                  const isActive = pathname === item.href;
-                  const isJoin = item.isCta;
+              {/* Mobile Links List */}
+              <div className="flex flex-col space-y-2">
+                {NAV_ROUTES.map((route) => {
+                  const isActive = activeHref === route.href;
 
                   return (
                     <Link
-                      key={item.href}
-                      href={item.href}
+                      key={route.href}
+                      href={route.href}
                       onClick={handleLinkClick}
-                      className={`flex items-center justify-between px-4 py-3 min-h-[48px] rounded-none text-sm font-display transition-[background-color,color,border-color,box-shadow,transform] duration-150 ${
-                        isJoin
-                          ? "btn-gold-foil text-[#1a0b2e] font-bold border border-amber-300/80 shadow-[0_0_25px_rgba(255,184,77,0.3)]"
-                          : isActive
-                          ? "bg-[#29143d] text-[#faf5ed] border-l-4 border-l-[#55CCA2] border-y border-r border-[#55CCA2]/40 shadow-[2px_2px_0px_#55CCA2]"
-                          : "bg-[#160b24]/85 text-[#d1b8e6] hover:bg-[#250d38] hover:text-[#faf5ed] border border-white/10"
+                      className={`flex items-center justify-between px-3 py-3 min-h-[48px] transition-colors rounded-xs ${
+                        isActive
+                          ? "bg-[#F4EFE6] text-[#2A2825] font-semibold"
+                          : "text-[#2A2825]/85 hover:bg-[#F4EFE6]/60"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <span
-                          className={`font-semibold text-base ${
-                            isJoin && !isActive ? "text-[#120a06]" : ""
-                          }`}
-                        >
-                          {locale === "ta" ? item.ta : item.en}
+                      <div className="flex flex-col text-left">
+                        <span className="font-sans text-base font-medium">
+                          {locale === "ta" ? route.ta : route.en}
                         </span>
                         <span
                           lang="ta"
                           style={{ letterSpacing: 0 }}
-                          className={`text-xs font-tamil ${
-                            isJoin && !isActive
-                              ? "text-[#120a06]/80 font-medium"
-                              : isActive
-                              ? "text-[#D4AF37] font-medium"
-                              : "text-[#a88bbd]"
-                          }`}
+                          className="font-tamil text-xs opacity-60 text-[#57524C]"
                         >
-                          {locale === "ta" ? item.en : item.ta}
+                          {locale === "ta" ? route.en : route.ta}
                         </span>
                       </div>
-                      <span className={`text-sm ${isJoin && !isActive ? "text-[#120a06]" : "text-[#D4AF37]"}`}>
-                        {isJoin ? "★ →" : "→"}
-                      </span>
+                      {isActive && (
+                        <span className="w-2 h-2 rounded-full bg-[#B85C38]" />
+                      )}
                     </Link>
                   );
                 })}
               </div>
-
-              <div className="pt-2 border-t border-[#D4AF37]/20">
-                <Link
-                  href="/links"
-                  onClick={handleLinkClick}
-                  className="flex items-center justify-between px-4 py-3 rounded-none border border-[#D4AF37]/30 bg-[#250d38]/50 text-sm font-display font-semibold text-[#faf5ed] hover:bg-[#250d38] transition-colors"
-                >
-                  <span className="flex items-center gap-2">
-                    <span>{t("nav.links")}</span>
-                    <span className="text-[11px] font-normal text-[#a88bbd]">(Linktree Bio Mode)</span>
-                  </span>
-                  <ExternalLink className="w-4 h-4 text-[#D4AF37]" />
-                </Link>
-              </div>
             </div>
 
-            <div className="pt-6 border-t border-[#D4AF37]/20 flex items-center justify-between text-xs text-[#a88bbd]">
-              <button
-                onClick={toggleLiteMode}
-                className="px-3.5 py-2 rounded-none border border-[#D4AF37]/30 bg-[#250d38]/50 text-[#faf5ed] font-display font-medium flex items-center gap-2 hover:bg-[#250d38] transition-colors"
-              >
-                <Layers className="w-4 h-4 text-[#D4AF37]" />
-                <span>{isLiteMode ? "Lite Mode (Active)" : "3D Mode"}</span>
-              </button>
-
+            {/* Mobile CTA */}
+            <div className="pt-6 border-t border-[#2A2825]/10">
               <Link
-                href="/about#faq"
+                href="/join"
                 onClick={handleLinkClick}
-                className="font-display font-semibold text-[#D4AF37] hover:text-[#faf5ed] transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 min-h-[48px] bg-[#B85C38] text-[#FAF9F6] font-sans font-semibold text-sm hover:bg-[#A04A27] transition-colors shadow-sm"
               >
-                {locale === "ta" ? "உதவி அரங்கம்" : "Help & FAQ"}
+                <span>{locale === "ta" ? "இணைந்திருங்கள்" : "Join the Hearth"}</span>
+                <span>↗</span>
               </Link>
             </div>
           </motion.div>

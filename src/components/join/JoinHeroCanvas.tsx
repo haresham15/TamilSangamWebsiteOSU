@@ -3,7 +3,8 @@
 import React, { Suspense, useState, useEffect, useRef, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { View, PerspectiveCamera, BakeShadows, Sky } from "@react-three/drei";
+import { PerspectiveCamera, BakeShadows, Sky } from "@react-three/drei";
+import { SceneView as View } from "@/components/canvas/SceneView";
 import { useWarmup } from "@/components/gl/useWarmup";
 import { governor } from "@/engine/governor";
 import { useLocale } from "@/context/LocaleContext";
@@ -36,6 +37,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
   const { locale } = useLocale();
 
   const pinWrapperRef = useRef<HTMLDivElement>(null);
+  const inViewRef = useRef(false);
 
   const [reducedMotion, setReducedMotion] = useState(() => 
     typeof window !== "undefined" ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false
@@ -112,15 +114,17 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
   useEffect(() => {
     if (!pinWrapperRef.current) return;
     const observer = new IntersectionObserver(
-       ([entry]) => {
-         governor.request("join-morning-gates", entry.isIntersecting ? 1 : 0);
+       (entries) => {
+         const entry = entries[entries.length - 1];
+         inViewRef.current = entry.isIntersecting;
+         governor.request("join-hero", inViewRef.current ? 1 : 0);
        },
        { threshold: 0.05 }
      );
      observer.observe(pinWrapperRef.current);
      return () => {
        observer.disconnect();
-       governor.request("join-morning-gates", 0);
+       governor.request("join-hero", 0);
      };
   }, []);
 
@@ -135,23 +139,20 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
     }
 
     const ctx = gsap.context(() => {
-      // Ambient frame request while mounted (§4.3)
-      governor.request("join-hero", 1);
-
       ScrollTrigger.create({
         trigger: pinWrapperRef.current,
         start: "top top",
         end: "+=130%",
         pin: true,
         pinSpacing: true,
-        scrub: true,
-        anticipatePin: 1,
+        scrub: 0.8, // Smooth GSAP scrub
+        anticipatePin: 0, // 0 eliminates initial pin twitch
         onUpdate: (self) => {
           const p = self.progress;
           scrollProgressRef.current = p;
 
           // Request level 2 on active scrolling (§4.3)
-          governor.request("join-hero", Math.abs(self.getVelocity()) > 10 ? 2 : 1);
+          governor.request("join-hero", inViewRef.current ? (Math.abs(self.getVelocity()) > 10 ? 2 : 1) : 0);
 
           // Gate swing kinematics:
           // Closed from p = 0 to 0.18

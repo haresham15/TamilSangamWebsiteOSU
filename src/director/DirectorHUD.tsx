@@ -106,13 +106,17 @@ export function DirectorHUD() {
       });
     }, 300);
 
+    let stopped = false;
+    let reqId = 0;
     const frameCounter = () => {
+      if (stopped) return;
       frames++;
-      if (open && enabled) requestAnimationFrame(frameCounter);
+      reqId = requestAnimationFrame(frameCounter);
     };
-    const reqId = requestAnimationFrame(frameCounter);
+    reqId = requestAnimationFrame(frameCounter);
 
     return () => {
+      stopped = true;
       clearInterval(interval);
       cancelAnimationFrame(reqId);
     };

@@ -3,6 +3,7 @@
 ## Join Hero — "The Morning Campus" (`/join`)
 
 All Tamil strings rendered in 3D canvas textures follow the `tamil-text` skill guidelines:
+
 - Rendered via 2D Canvas context with Unicode grapheme-cluster preservation.
 - Loaded after `document.fonts.ready` using Mukta Malar (`var(--font-tamil)`).
 - Zero uppercase or capitalization transforms applied.
@@ -11,6 +12,7 @@ All Tamil strings rendered in 3D canvas textures follow the `tamil-text` skill g
 ---
 
 ### String 1: "வாங்க நண்பா"
+
 - **Surface**: Tag on the 4th empty chai tumbler at the morning bench ($x = +7.26, z = +3.96$) & blackboard chalk note.
 - **Transliteration**: *Vaanga Nanba*
 - **Literal Meaning**: "Come in, friend" / "Welcome, friend"
@@ -23,6 +25,7 @@ All Tamil strings rendered in 3D canvas textures follow the `tamil-text` skill g
 ---
 
 ### String 2: "அனைத்தும் நலம்" / "ALL IS WELL"
+
 - **Surface**: Blackboard easel chalk heading.
 - **Transliteration**: *Anaithum Nalam*
 - **Literal Meaning**: "All is well" / "Everything is peaceful and prosperous"
@@ -32,6 +35,7 @@ All Tamil strings rendered in 3D canvas textures follow the `tamil-text` skill g
 ---
 
 ### String 3: "ஓஹியோ தமிழ் சங்கம்"
+
 - **Surface**: Entrance transom banner and tin trunk luggage tag.
 - **Transliteration**: *Ohio Tamil Sangam*
 - **Literal Meaning**: Ohio Tamil Sangam

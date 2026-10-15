@@ -83,7 +83,9 @@ export function ArenaLightingEnvironment({
 
   // Subtle flicker effect on pyre lights to simulate burning factory flames
   const pyreRefs = useRef<(THREE.SpotLight | null)[]>([]);
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const t = clock.getElapsedTime();
     pyreRefs.current.forEach((light, i) => {
       if (light) {
@@ -148,6 +150,7 @@ export function ArenaLightingEnvironment({
   }, []);
 
   useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
     if (!emberPointsRef.current) return;
     const posAttr = emberPointsRef.current.geometry.attributes.position;
     const array = posAttr.array as Float32Array;
@@ -155,7 +158,7 @@ export function ArenaLightingEnvironment({
 
     for (let i = 0; i < emberCount; i++) {
       // Upward drift
-      array[i * 3 + 1] += emberVelocities[i * 3 + 1] * delta;
+      array[i * 3 + 1] += emberVelocities[i * 3 + 1] * dt;
 
       // Gentle orbital swirl based on elapsed time and initial offset
       const initialAngle = emberOriginalData[i * 2 + 1];

@@ -59,7 +59,9 @@ export function Pick() {
   }, [geometry]);
 
   // Per-frame transform sync from strum state machine
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const isVisible = currentStrumState.visible;
 
     // Lead pick

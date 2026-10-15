@@ -1,7 +1,7 @@
 // src/audio/AudioController.ts
 "use client";
 
-export type SoundId = "thud" | "clack" | "toggle" | "shutter";
+export type SoundId = "thud" | "clack" | "toggle" | "shutter" | "whoosh" | "swish" | "chime";
 
 export interface PlayOpts {
   gain?: number;
@@ -13,7 +13,7 @@ export interface PlayOpts {
 const MAX_VOICES = 24;
 
 /**
- * Seeded pseudo-random number generator for deterministic clack generation (§4.3)
+ * Seeded pseudo-random number generator for deterministic buffer generation
  */
 function seededRandom(seed: number) {
   let s = seed % 2147483647;
@@ -25,13 +25,14 @@ function seededRandom(seed: number) {
 }
 
 /**
- * Generates an authentic mechanical Solari split-flap clack AudioBuffer (§4.2)
- * Recipe:
- *   20 ms buffer: white noise * exp(-380t) + 180 Hz sine * exp(-260t)
+ * Generates an authentic, warm acoustic wooden tile flap AudioBuffer
+ * Replaces harsh Solari split-flap metal clatter with comforting Teak/Rosewood acoustic physics:
+ * - 32 ms buffer: warm 440Hz body + 720Hz acoustic wood tap
+ * - Smooth attack to prevent transient clipping
  */
 function makeClackBuffer(ctx: AudioContext, seed: number): AudioBuffer {
   const rand = seededRandom(seed);
-  const durationSec = 0.02; // 20 ms
+  const durationSec = 0.032; // 32 ms
   const sampleRate = ctx.sampleRate;
   const length = Math.floor(sampleRate * durationSec);
   const buffer = ctx.createBuffer(1, length, sampleRate);
@@ -39,19 +40,21 @@ function makeClackBuffer(ctx: AudioContext, seed: number): AudioBuffer {
 
   for (let i = 0; i < length; i++) {
     const t = i / sampleRate;
-    const noise = (rand() * 2 - 1) * Math.exp(-380 * t);
-    const sine = Math.sin(2 * Math.PI * 180 * t) * Math.exp(-260 * t);
-    data[i] = noise * 0.7 + sine * 0.3;
+    const attack = t < 0.002 ? t / 0.002 : 1.0;
+    const woodBody = Math.sin(2 * Math.PI * (440 + 80 * Math.exp(-200 * t)) * t) * Math.exp(-110 * t);
+    const woodTap = Math.sin(2 * Math.PI * 720 * t) * Math.exp(-220 * t);
+    const softFriction = (rand() * 2 - 1) * Math.exp(-320 * t) * 0.15;
+    data[i] = attack * (woodBody * 0.55 + woodTap * 0.35 + softFriction);
   }
 
   return buffer;
 }
 
 /**
- * AudioController (§4.1, §4.3)
+ * AudioController
  * Exactly ONE audio context for the entire application:
  * - Lazy client initialization; suspended until explicit user gesture
- * - Master gain = 0 until user opts in via nav sound toggle
+ * - Master gain managed dynamically via user preference
  * - Hardware mastering chain: voice -> masterGain -> DynamicsCompressor -> destination
  * - Deterministic synthesis (zero external audio file dependencies)
  * - Automatic suspension on visibilitychange (tab backgrounding)
@@ -76,28 +79,29 @@ export class AudioController {
     const ctx = new AudioContextClass({ latencyHint: "interactive" });
     this.ctx = ctx;
 
-    // Master Gain (silent until user explicitly opts in)
+    // Master Gain (silent until user explicitly opts in or unmuted)
     const master = ctx.createGain();
     master.gain.value = 0;
     this.master = master;
 
-    // Hardware Mastering Dynamics Compressor (-24 dB threshold, 12:1 ratio)
+    // Hardware Mastering Dynamics Compressor (Comforting mastering: -16 dB threshold, soft knee, 4:1 ratio)
     const comp = ctx.createDynamicsCompressor();
-    comp.threshold.value = -24;
-    comp.ratio.value = 12;
-    comp.attack.value = 0.003;
-    comp.release.value = 0.12;
+    comp.threshold.value = -16;
+    comp.knee.value = 16;
+    comp.ratio.value = 4;
+    comp.attack.value = 0.005;
+    comp.release.value = 0.14;
     this.comp = comp;
 
     master.connect(comp);
     comp.connect(ctx.destination);
 
-    // Pre-bake 8 deterministic clack variants
+    // Pre-bake 8 deterministic acoustic wood clack variants
     this.clacks = Array.from({ length: 8 }, (_, i) =>
       makeClackBuffer(ctx, 1234 + i * 77)
     );
 
-    // Tab visibility handling (§4.7)
+    // Tab visibility handling
     if (typeof document !== "undefined") {
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
@@ -112,7 +116,7 @@ export class AudioController {
   }
 
   /**
-   * Unlock AudioContext on user gesture (§4.4)
+   * Unlock AudioContext on user gesture
    * Must be called synchronously inside a pointerdown/keydown/touchend handler.
    */
   public unlock() {
@@ -124,9 +128,9 @@ export class AudioController {
   }
 
   /**
-   * Set user opt-in sound preference (§4.1)
+   * Set user opt-in sound preference
    */
-  public setEnabled(on: boolean, volume = 0.35) {
+  public setEnabled(on: boolean, volume = 0.4) {
     const c = this.ensure();
     this.enabled = on;
 
@@ -147,7 +151,7 @@ export class AudioController {
   }
 
   /**
-   * Calculates audio clock time for sample-accurate scheduling (§4.3)
+   * Calculates audio clock time for sample-accurate scheduling
    */
   public when(inMs = 0): number {
     if (!this.ctx) return 0;
@@ -155,7 +159,7 @@ export class AudioController {
   }
 
   /**
-   * Main dispatch for synthesized audio events (§4.2)
+   * Main dispatch for synthesized audio events
    */
   public play(id: SoundId, o: PlayOpts = {}) {
     // Early return: zero audio nodes allocated while muted or over voice cap
@@ -175,22 +179,27 @@ export class AudioController {
     };
 
     if (id === "thud") {
-      this.playThud(t, o.gain ?? 0.9, done);
+      this.playThud(t, o.gain ?? 0.8, done);
     } else if (id === "clack") {
       this.playClack(t, o, done);
     } else if (id === "toggle") {
       this.playToggle(t, done);
     } else if (id === "shutter") {
       this.playShutter(t, done);
+    } else if (id === "whoosh") {
+      this.playWhoosh(t, o.gain ?? 0.6, done);
+    } else if (id === "swish") {
+      this.playSwish(t, o.gain ?? 0.35, done);
+    } else if (id === "chime") {
+      this.playChime(t, done);
     } else {
       done();
     }
   }
 
   /**
-   * Synthesized Amplifier Thud (P0 CTA Hover - §4.2)
-   * Sine sweeping 95 -> 42 Hz over 90 ms, 4 ms attack, 160 ms decay, low-pass 220 Hz Q 0.7
-   * plus a 12 ms low-passed noise tick for the mechanical relay.
+   * Comforting Hearth / Mridangam Bass Thud
+   * Smooth 85 -> 48 Hz pitch glide with rounded attack and soft lowpass 140 Hz
    */
   private playThud(t: number, gainLevel: number, done: () => void) {
     if (!this.ctx || !this.master) return done();
@@ -201,49 +210,30 @@ export class AudioController {
     const lpf = ctx.createBiquadFilter();
 
     lpf.type = "lowpass";
-    lpf.frequency.setValueAtTime(220, t);
-    lpf.Q.setValueAtTime(0.7, t);
+    lpf.frequency.setValueAtTime(140, t);
+    lpf.Q.setValueAtTime(1.1, t);
 
     osc.type = "sine";
-    osc.frequency.setValueAtTime(95, t);
-    osc.frequency.exponentialRampToValueAtTime(42, t + 0.09);
+    osc.frequency.setValueAtTime(85, t);
+    osc.frequency.exponentialRampToValueAtTime(48, t + 0.11);
 
-    // 4 ms attack, 160 ms exponential decay
+    // 5 ms gentle attack, 180 ms exponential decay
     oscGain.gain.setValueAtTime(0.0001, t);
-    oscGain.gain.linearRampToValueAtTime(gainLevel * 0.45, t + 0.004);
-    oscGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+    oscGain.gain.linearRampToValueAtTime(gainLevel * 0.45, t + 0.005);
+    oscGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
 
     osc.connect(oscGain);
     oscGain.connect(lpf);
     lpf.connect(this.master);
 
-    // 12 ms relay click noise
-    const noiseLen = Math.floor(ctx.sampleRate * 0.012);
-    const noiseBuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
-    const nData = noiseBuf.getChannelData(0);
-    for (let i = 0; i < noiseLen; i++) {
-      nData[i] = (Math.random() * 2 - 1) * Math.exp(-200 * (i / ctx.sampleRate));
-    }
-    const noiseSrc = ctx.createBufferSource();
-    noiseSrc.buffer = noiseBuf;
-    const noiseGain = ctx.createGain();
-    noiseGain.gain.setValueAtTime(0.12, t);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.012);
-
-    noiseSrc.connect(noiseGain);
-    noiseGain.connect(lpf);
-
     osc.start(t);
-    noiseSrc.start(t);
-    osc.stop(t + 0.18);
-    noiseSrc.stop(t + 0.014);
-
+    osc.stop(t + 0.20);
     osc.onended = () => done();
   }
 
   /**
-   * Synthesized Flap Clack (P0 Guide Board - §4.2)
-   * 20 ms buffer, band-pass 2.8 - 4.2 kHz Q 3, pan by column, playback-rate jitter
+   * Warm Acoustic Wooden Tile Flap (Guide Board)
+   * Bandpass 480 - 750 Hz (comforting wooden range, removing harsh 3kHz buzz)
    */
   private playClack(t: number, o: PlayOpts, done: () => void) {
     if (!this.ctx || !this.master || this.clacks.length === 0) return done();
@@ -254,14 +244,14 @@ export class AudioController {
     src.buffer = this.clacks[bufIdx];
     src.playbackRate.setValueAtTime(o.rate ?? 1.0, t);
 
-    // Bandpass filter 2.8 - 4.2 kHz
+    // Warm wooden bandpass (520 - 780 Hz) instead of harsh 3500 Hz
     const bpf = ctx.createBiquadFilter();
     bpf.type = "bandpass";
-    bpf.frequency.setValueAtTime(2800 + Math.random() * 1400, t);
-    bpf.Q.setValueAtTime(3.0, t);
+    bpf.frequency.setValueAtTime(520 + Math.random() * 260, t);
+    bpf.Q.setValueAtTime(1.4, t);
 
     const gainNode = ctx.createGain();
-    gainNode.gain.setValueAtTime(o.gain ?? 0.5, t);
+    gainNode.gain.setValueAtTime(o.gain ?? 0.45, t);
 
     // Stereo Panner (if supported)
     if (typeof ctx.createStereoPanner === "function" && o.pan !== undefined) {
@@ -278,13 +268,13 @@ export class AudioController {
     }
 
     src.start(t);
-    src.stop(t + 0.03);
+    src.stop(t + 0.04);
     src.onended = () => done();
   }
 
   /**
-   * Diagnostic / Nav Toggle Click (P1 - §4.2)
-   * 6 ms square wave at 1.8 kHz, tiny gain
+   * Comforting Nav / Diagnostic Toggle (Gentle Marimba / Bamboo Ping)
+   * Replaces harsh 1800 Hz square wave with 528 Hz pure harmonic bell ping
    */
   private playToggle(t: number, done: () => void) {
     if (!this.ctx || !this.master) return done();
@@ -293,33 +283,47 @@ export class AudioController {
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
 
-    osc.type = "square";
-    osc.frequency.setValueAtTime(1800, t);
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(528, t);
+    osc.frequency.exponentialRampToValueAtTime(512, t + 0.06);
 
-    gainNode.gain.setValueAtTime(0.08, t);
-    gainNode.gain.exponentialRampToValueAtTime(0.0001, t + 0.006);
+    gainNode.gain.setValueAtTime(0.0001, t);
+    gainNode.gain.linearRampToValueAtTime(0.12, t + 0.003);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
 
     osc.connect(gainNode);
     gainNode.connect(this.master);
 
     osc.start(t);
-    osc.stop(t + 0.007);
+    osc.stop(t + 0.08);
     osc.onended = () => done();
   }
 
   /**
-   * Route/Boot Shutter Swell (P2 - §4.2)
-   * 400 ms filtered noise swell
+   * Cinematic Route / Boot Shutter Swell
+   * Low-mid resonant whoosh swell (180 Hz -> 680 Hz -> 220 Hz)
    */
   private playShutter(t: number, done: () => void) {
+    this.playWhoosh(t, 0.55, done);
+  }
+
+  /**
+   * Cinematic Sound Whoosh
+   * Atmospheric low-mid air sweep for animations and view transitions
+   */
+  private playWhoosh(t: number, gainLevel: number, done: () => void) {
     if (!this.ctx || !this.master) return done();
 
     const ctx = this.ctx;
-    const len = Math.floor(ctx.sampleRate * 0.4);
+    const len = Math.floor(ctx.sampleRate * 0.42);
     const buf = ctx.createBuffer(1, len, ctx.sampleRate);
     const d = buf.getChannelData(0);
+
+    let pink = 0;
     for (let i = 0; i < len; i++) {
-      d[i] = Math.random() * 2 - 1;
+      const white = Math.random() * 2 - 1;
+      pink = 0.95 * pink + 0.05 * white;
+      d[i] = pink;
     }
 
     const src = ctx.createBufferSource();
@@ -327,26 +331,112 @@ export class AudioController {
 
     const bpf = ctx.createBiquadFilter();
     bpf.type = "bandpass";
-    bpf.frequency.setValueAtTime(400, t);
-    bpf.frequency.exponentialRampToValueAtTime(1400, t + 0.4);
-    bpf.Q.setValueAtTime(2.0, t);
+    bpf.frequency.setValueAtTime(160, t);
+    bpf.frequency.exponentialRampToValueAtTime(720, t + 0.20);
+    bpf.frequency.exponentialRampToValueAtTime(220, t + 0.42);
+    bpf.Q.setValueAtTime(1.8, t);
 
     const gainNode = ctx.createGain();
     gainNode.gain.setValueAtTime(0.001, t);
-    gainNode.gain.linearRampToValueAtTime(0.15, t + 0.2);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+    gainNode.gain.linearRampToValueAtTime(gainLevel * 0.4, t + 0.18);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, t + 0.42);
+
+    // Warm sub rumble for cinematic heft
+    const sub = ctx.createOscillator();
+    const subGain = ctx.createGain();
+    sub.type = "sine";
+    sub.frequency.setValueAtTime(80, t);
+    sub.frequency.exponentialRampToValueAtTime(120, t + 0.18);
+    sub.frequency.exponentialRampToValueAtTime(60, t + 0.42);
+
+    subGain.gain.setValueAtTime(0.001, t);
+    subGain.gain.linearRampToValueAtTime(gainLevel * 0.25, t + 0.18);
+    subGain.gain.exponentialRampToValueAtTime(0.001, t + 0.42);
+
+    src.connect(bpf);
+    bpf.connect(gainNode);
+    gainNode.connect(this.master);
+
+    sub.connect(subGain);
+    subGain.connect(this.master);
+
+    src.start(t);
+    sub.start(t);
+    src.stop(t + 0.44);
+    sub.stop(t + 0.44);
+
+    src.onended = () => done();
+  }
+
+  /**
+   * Kanchipuram Silk Swish (Pillar hovers and drawer flips)
+   */
+  private playSwish(t: number, gainLevel: number, done: () => void) {
+    if (!this.ctx || !this.master) return done();
+
+    const ctx = this.ctx;
+    const len = Math.floor(ctx.sampleRate * 0.20);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+
+    let pink = 0;
+    for (let i = 0; i < len; i++) {
+      const white = Math.random() * 2 - 1;
+      pink = 0.9 * pink + 0.1 * white;
+      d[i] = pink;
+    }
+
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+
+    const bpf = ctx.createBiquadFilter();
+    bpf.type = "bandpass";
+    bpf.frequency.setValueAtTime(380, t);
+    bpf.frequency.exponentialRampToValueAtTime(980, t + 0.10);
+    bpf.frequency.exponentialRampToValueAtTime(450, t + 0.20);
+    bpf.Q.setValueAtTime(1.5, t);
+
+    const gainNode = ctx.createGain();
+    gainNode.gain.setValueAtTime(0.001, t);
+    gainNode.gain.linearRampToValueAtTime(gainLevel * 0.35, t + 0.08);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, t + 0.20);
 
     src.connect(bpf);
     bpf.connect(gainNode);
     gainNode.connect(this.master);
 
     src.start(t);
-    src.stop(t + 0.42);
+    src.stop(t + 0.22);
     src.onended = () => done();
   }
 
   /**
-   * Diagnostic Telemetry (§4.8)
+   * Meditative Bronze Chime
+   */
+  private playChime(t: number, done: () => void) {
+    if (!this.ctx || !this.master) return done();
+
+    const ctx = this.ctx;
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(432, t);
+
+    gainNode.gain.setValueAtTime(0.001, t);
+    gainNode.gain.linearRampToValueAtTime(0.18, t + 0.008);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, t + 1.2);
+
+    osc.connect(gainNode);
+    gainNode.connect(this.master);
+
+    osc.start(t);
+    osc.stop(t + 1.25);
+    osc.onended = () => done();
+  }
+
+  /**
+   * Diagnostic Telemetry
    */
   public getMetrics() {
     return {

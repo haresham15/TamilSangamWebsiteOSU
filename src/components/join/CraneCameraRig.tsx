@@ -10,6 +10,7 @@ interface CraneCameraRigProps {
 
 export function CraneCameraRig({ scrollProgressRef }: CraneCameraRigProps) {
   useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
     const p = scrollProgressRef.current ?? 0;
     const camera = state.camera;
 
@@ -39,17 +40,16 @@ export function CraneCameraRig({ scrollProgressRef }: CraneCameraRigProps) {
     }
 
     // Frame-rate independent damped inertia (§1.3)
-    const smoothDelta = Math.min(Math.max(delta, 0), 0.05);
     camera.position.x = 0;
-    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 4.8, smoothDelta);
-    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 4.8, smoothDelta);
+    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 4.8, dt);
+    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 4.8, dt);
 
     camera.lookAt(0, targetLookY, -6);
 
     if ("fov" in camera) {
       const targetFov = THREE.MathUtils.lerp(42, 46, p);
       const persCamera = camera as THREE.PerspectiveCamera;
-      persCamera.fov = THREE.MathUtils.damp(persCamera.fov, targetFov, 4.0, smoothDelta);
+      persCamera.fov = THREE.MathUtils.damp(persCamera.fov, targetFov, 4.0, dt);
       persCamera.updateProjectionMatrix();
     }
   });

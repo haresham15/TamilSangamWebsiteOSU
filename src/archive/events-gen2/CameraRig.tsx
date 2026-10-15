@@ -79,7 +79,9 @@ export function CameraRig() {
   const { camera, scene } = useThree();
   const scrollStore = useScrollProgress();
 
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const p = scrollStore.current;
     const { x, y, z, fov, fog, lookY } = interpolateKeyframes(p);
 

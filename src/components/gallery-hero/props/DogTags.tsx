@@ -312,7 +312,9 @@ export function DogTags() {
   ]);
 
   // Per-frame dissolve sync and string vibration coupling
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const liveRefs = getSharedHeroRefs();
     const dVal = liveRefs.tags.uDissolve.value;
     uniformsRef.current.uDissolve.value = dVal;

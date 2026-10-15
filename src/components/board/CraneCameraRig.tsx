@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, type RefObject } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useBoardHeroStore } from "@/store/boardHeroStore";
 
 interface CraneCameraRigProps {
-  scrollProgress: number;
+  scrollProgress: RefObject<number>;
 }
 
 function easeInOutCubic(x: number): number {
@@ -25,8 +25,9 @@ export function CraneCameraRig({ scrollProgress }: CraneCameraRigProps) {
   const fpsRef = useRef({ frames: 0, lastTime: 0 });
 
   useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
     const { camera, scene } = state;
-    const p = Math.min(1.0, Math.max(0.0, scrollProgress));
+    const p = Math.min(1.0, Math.max(0.0, scrollProgress.current));
     const easedP = easeInOutCubic(p);
 
     // 1. Compute physical crane target position with noble entrance glide over the crown
@@ -41,7 +42,7 @@ export function CraneCameraRig({ scrollProgress }: CraneCameraRigProps) {
     targetPos.set(swayX, swayY, targetZ);
 
     // 2. Spring-follow crane inertia (frame-rate independent damping, clamped alpha in [0, 1])
-    const safeDelta = Math.min(Math.max(delta, 0.001), 0.1);
+    const safeDelta = Math.max(dt, 0.001);
     const alpha = Math.min(1.0, Math.max(0.0, 1 - Math.exp(-6.0 * safeDelta)));
     camera.position.lerp(targetPos, alpha);
 
@@ -72,10 +73,8 @@ export function CraneCameraRig({ scrollProgress }: CraneCameraRigProps) {
 
     // 6. Update diagnostics in store
     const store = useBoardHeroStore.getState();
-    store.setCameraZ(Math.max(0.8, Math.min(30.0, camera.position.z)));
-    store.setFogDensity(targetFog);
-
-    // 7. FPS tracking
+    // Diagnostics are sampled only when visible, leaving camera motion imperative.
+    if (!store.debugMode) return;
     fpsRef.current.frames++;
     const now = performance.now();
     if (fpsRef.current.lastTime === 0) {
@@ -85,6 +84,8 @@ export function CraneCameraRig({ scrollProgress }: CraneCameraRigProps) {
         (fpsRef.current.frames * 1000) / (now - fpsRef.current.lastTime)
       );
       store.setFps(currentFps);
+      store.setCameraZ(Math.max(0.8, Math.min(30.0, camera.position.z)));
+      store.setFogDensity(targetFog);
       fpsRef.current.frames = 0;
       fpsRef.current.lastTime = now;
     }

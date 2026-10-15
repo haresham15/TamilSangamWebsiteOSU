@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, type RefObject } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import gsap from "gsap";
@@ -8,7 +8,7 @@ import { useBoardHeroStore } from "@/store/boardHeroStore";
 import { OilLamp } from "./OilLamp";
 
 interface EmblemFinaleProps {
-  scrollProgress: number;
+  scrollProgress: RefObject<number>;
   onFinaleTriggered?: () => void;
 }
 
@@ -33,8 +33,10 @@ export function EmblemFinale({ scrollProgress, onFinaleTriggered }: EmblemFinale
     }
   }, []);
 
-  useFrame(() => {
-    const p = scrollProgress;
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
+    const p = scrollProgress.current;
 
     // Check trigger threshold (§7: at p=1.0)
     if (p >= 0.98 && !hasFiredRef.current) {

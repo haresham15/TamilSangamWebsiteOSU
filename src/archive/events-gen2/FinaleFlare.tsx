@@ -180,7 +180,9 @@ export function FinaleFlare({
     });
   }, [executeFinaleSequence]);
 
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const p = scrollStore.current;
     if (p >= 0.92 && !hasFiredRef.current) {
       executeFinaleSequence();

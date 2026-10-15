@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useTransition } from "react";
-import { View, PerspectiveCamera } from "@react-three/drei";
+import { PerspectiveCamera } from "@react-three/drei";
+import { SceneView as View } from "@/components/canvas/SceneView";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useTier, Tier } from "@/components/providers/TierProvider";
@@ -29,10 +30,10 @@ function InteractiveKnot({
   useWarmup("spike-knot");
 
   useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
     if (meshRef.current) {
-      const safeDelta = Math.min(Math.max(delta, 0), 0.05);
-      meshRef.current.rotation.x += safeDelta * (hovered ? 1.5 : 0.5);
-      meshRef.current.rotation.y += safeDelta * (hovered ? 2.0 : 0.8);
+      meshRef.current.rotation.x += dt * (hovered ? 1.5 : 0.5);
+      meshRef.current.rotation.y += dt * (hovered ? 2.0 : 0.8);
     }
   });
 
@@ -69,10 +70,10 @@ function AlignmentBox({ index }: { index: number }) {
   useWarmup(`spike-grid-${index}`);
 
   useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
     if (boxRef.current) {
-      const safeDelta = Math.min(Math.max(delta, 0), 0.05);
-      boxRef.current.rotation.y += safeDelta * 0.7;
-      boxRef.current.rotation.x += safeDelta * 0.35;
+      boxRef.current.rotation.y += dt * 0.7;
+      boxRef.current.rotation.x += dt * 0.35;
     }
   });
 
@@ -93,9 +94,9 @@ function GlowingDiamond({ useShaderGlow }: { useShaderGlow: boolean }) {
   useWarmup("spike-diamond");
 
   useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
     if (diamondRef.current) {
-      const safeDelta = Math.min(Math.max(delta, 0), 0.05);
-      diamondRef.current.rotation.y += safeDelta * 0.8;
+      diamondRef.current.rotation.y += dt * 0.8;
       diamondRef.current.position.y = Math.sin(state.clock.elapsedTime * 2) * 0.15;
     }
   });

@@ -1,198 +1,78 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import dynamic from "next/dynamic";
-import { HeroCanvas } from "./HeroCanvas";
-import { buildMasterTimeline } from "./timeline";
-import { getSharedHeroRefs } from "./props/types";
-import { initStrumStateMachine, updateStrumScrollIntent } from "./props/strumStateMachine";
-
-const DebugHUD = dynamic(
-  () => import("./debug/HUD").then((m) => m.DebugHUD),
-  { ssr: false }
-);
-import { WashOverlay } from "./fx/WashOverlay";
-import { registerTimelineProgressSetter, unregisterTimelineProgressSetter, heroState } from "./state";
-import { governor } from "@/engine/governor";
+import { useReducedMotion } from "framer-motion";
+import { HeroScrollStage } from "@/components/canvas/HeroScrollStage";
+import { useTier } from "@/components/providers/TierProvider";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useLocale } from "@/context/LocaleContext";
-import { ChevronDown } from "lucide-react";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
+const PHOTOS = [
+  "/events/berry-cute-picnic/picnic-01.jpg",
+  "/events/berry-cute-picnic/picnic-02.jpg",
+  "/events/berry-cute-picnic/picnic-03.jpg",
+  "/events/berry-cute-picnic/picnic-04.jpg",
+  "/events/berry-cute-picnic/picnic-05.jpg",
+  "/events/berry-cute-picnic/picnic-06.jpg",
+  "/events/berry-cute-picnic/picnic-07.jpg",
+  "/events/berry-cute-picnic/picnic-08.jpg",
+];
+
+function StaticGalleryHero() {
+  return (
+    <div data-gallery-static aria-hidden="true" className="absolute inset-0 grid grid-cols-2 gap-4 p-5 opacity-45 sm:grid-cols-4 sm:gap-7 sm:p-12">
+      {PHOTOS.slice(0, 4).map((src, index) => (
+        <div key={src} className={`relative self-center aspect-[3/4] ${index % 2 ? "translate-y-20 rotate-6" : "-translate-y-20 -rotate-6"}`}>
+          <Image src={src} alt="" fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover" />
+        </div>
+      ))}
+    </div>
+  );
 }
+
+const PhotoTunnel = dynamic(() => import("./PhotoTunnel"), {
+  ssr: false,
+  loading: () => <StaticGalleryHero />
+});
 
 export function GalleryHero() {
   const { locale } = useLocale();
   const { isLiteMode } = useLiteMode();
-
-  const pinWrapperRef = useRef<HTMLDivElement>(null);
-  const timelineRef = useRef<gsap.core.Timeline | null>(null);
-  const [scrollProgress, setLocalProgress] = useState(0);
-
+  const tier = useTier();
+  const reducedMotion = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    if (isLiteMode) return;
-
-    const ctx = gsap.context(() => {
-      if (!pinWrapperRef.current) return;
-
-      // 1. Build master timeline (§5)
-      const tl = buildMasterTimeline(getSharedHeroRefs(), (p) => {
-        setLocalProgress(p);
-      });
-      timelineRef.current = tl;
-
-      // 2. Initialize strum state machine with mid-page refresh guard (§5.3)
-      const initialScroll = typeof window !== "undefined" ? window.scrollY : 0;
-      initStrumStateMachine(initialScroll / (window.innerHeight * 4));
-
-      // 3. Exactly ONE ScrollTrigger instance owns this hero (§4.1)
-      const st = ScrollTrigger.create({
-        trigger: pinWrapperRef.current,
-        start: "top top",
-        end: "+=400%", // 400vh pinned runway
-        pin: true,
-        pinSpacing: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        scrub: 0.6,
-        animation: tl,
-        onUpdate: (self) => {
-          heroState.rawVelocity = self.getVelocity();
-          heroState.lastScrollTime = performance.now();
-
-          // Governor request: level 2 on active scroll, level 1 when idle ambient (§4.3)
-          governor.request("gallery-hero", Math.abs(self.getVelocity()) > 10 ? 2 : 1);
-
-          // Strum State Machine: first forward scroll detection (§5.3)
-          updateStrumScrollIntent(self.progress, self.direction);
-        },
-      });
-
-      // Ambient frame request while mounted (§4.3)
-      governor.request("gallery-hero", 1);
-
-      // 4. Register programmatic progress setter for debug HUD / tests (§9)
-      registerTimelineProgressSetter((p) => {
-        if (st && st.start !== undefined && st.end !== undefined) {
-          const targetY = st.start + p * (st.end - st.start);
-          st.scroll(targetY);
-          window.scrollTo(0, targetY);
-        }
-        if (timelineRef.current) {
-          timelineRef.current.progress(p);
-        }
-      });
-
-      if (typeof window !== "undefined") {
-        const gh = (window as unknown as { __galleryHero?: { refresh?: () => void } }).__galleryHero;
-        if (gh) {
-          gh.refresh = () => {
-            ScrollTrigger.refresh();
-          };
-        }
-      }
-
-      // Prevent mobile address-bar resize jitter
-      ScrollTrigger.config({ ignoreMobileResize: true });
-      ScrollTrigger.refresh();
-    }, pinWrapperRef);
-
-    return () => {
-      governor.request("gallery-hero", 0);
-      unregisterTimelineProgressSetter();
-      ctx.revert();
-    };
-  }, [isLiteMode]);
-
-  const handleSkipToGallery = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const vault = document.getElementById("gallery-vault-content");
-    if (vault) {
-      if (typeof window !== "undefined" && window.__lenis) {
-        window.__lenis.scrollTo(vault, { offset: -30, duration: 1.2 });
-      } else {
-        vault.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  };
+    setMounted(true);
+  }, []);
+  const progress = useRef(0);
+  const title = useRef<HTMLDivElement>(null);
+  const isStatic = mounted ? (isLiteMode || tier === "C" || Boolean(reducedMotion)) : false;
 
   return (
-    <div
-      ref={pinWrapperRef}
-      className="relative w-full h-[100dvh] overflow-hidden bg-transparent select-none"
-    >
-      {/* 3D WebGL Canvas Layer */}
-      <HeroCanvas />
-
-      {/* Solar Whiteout Wash & Anamorphic Flare Overlay (Phase 8 Finale) */}
-      <WashOverlay progress={scrollProgress} />
-
-      {/* Accessible DOM Content & Skip Link (§8) */}
-      <div className="absolute inset-0 pointer-events-none z-20 flex flex-col justify-between p-6 sm:p-10">
-        {/* Top Header Row with Skip Link */}
-        <div className="flex items-center justify-between w-full max-w-6xl mx-auto pt-16 sm:pt-14">
-          <a
-            href="#gallery-vault-content"
-            onClick={handleSkipToGallery}
-            className="pointer-events-auto px-3.5 py-1.5 bg-[#170D2B]/90 border border-[#FFB84D]/40 text-[#FFB84D] font-mono text-xs uppercase tracking-wider hover:bg-[#FFB84D] hover:text-[#170D2B] transition-colors focus:ring-2 focus:ring-[#55CCA2] outline-none"
-          >
-            {locale === "ta" ? "நேரடியாக புகைப்படங்களுக்குச் செல் ↓" : "Skip to Gallery Archive ↓"}
-          </a>
-
-          <div className="hidden sm:flex items-center gap-2 font-mono text-[11px] text-[#FFB84D]/80">
-            <span className="w-2 h-2 rounded-full bg-[#55CCA2] animate-pulse" />
-            <span>FRETBOARD HIGHWAY · 24-FRET KINEMATICS</span>
-          </div>
-        </div>
-
-        {/* Center / Lower Cinematic Title Placard
-            Smoothly fades as user journeys down the neck */}
-        <div
-          className="w-full max-w-2xl mx-auto text-center space-y-2.5 transition-opacity duration-300"
-          style={{
-            opacity: Math.max(0, 1.0 - scrollProgress * 3.5),
-            transform: `translateY(-${Math.min(30, scrollProgress * 60)}px)`,
-          }}
-        >
-          <div className="inline-block px-3 py-1 bg-[#170D2B]/80 border border-[#FFB84D]/30 backdrop-blur-sm mb-1">
-            <span className="font-mono text-xs text-[#FFB84D] tracking-widest uppercase">
-              {locale === "ta" ? "காலத்தின் நரம்புகள்" : "THE CORRIDOR OF MEMORIES"}
-            </span>
-          </div>
-
-          <h1 className="text-[clamp(2.5rem,5vw+1.5rem,6rem)] font-extrabold font-display text-[#FFF8E7] tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
-            {locale === "ta" ? "நினைவுகள் · நினைவலைகள்" : "Memories · நினைவுகள்"}
+    <HeroScrollStage id="gallery-hero" progressRef={progress} static={isStatic} tone="indigo">
+      {isStatic ? (
+        <StaticGalleryHero />
+      ) : (
+        <PhotoTunnel photos={PHOTOS} progressRef={progress} titleRef={title} />
+      )}
+      <div className="pointer-events-none absolute inset-0 z-10 flex min-h-dvh flex-col items-center justify-center px-6 text-center text-sangam-cream">
+        <div key={String(isStatic)} ref={title} className="w-full max-w-3xl py-12" style={{ background: "radial-gradient(ellipse, var(--color-hero-indigo) 0%, transparent 72%)" }}>
+          <p className="mb-7 font-mono text-[10px] uppercase tracking-[0.25em] text-sangam-gold sm:text-xs">Vaaranam Aayiram · Memory Archive</p>
+          <h1 className="font-display text-[clamp(3.75rem,11vw,10rem)] leading-[1.05] tracking-tight">
+            {locale === "ta" ? <span lang="ta" className="font-tamil leading-relaxed tracking-normal">நினைவுகள்</span> : "The Canvas"}
           </h1>
-
-          <p className="text-xs sm:text-sm text-[#F0C98A]/90 font-body max-w-lg mx-auto drop-shadow-md">
-            {locale === "ta"
-              ? "கிதார் நரம்புகளின் அதிர்வுகளில் சங்கமத்தின் வரலாற்று நிகழ்வுகளை நோக்கி ஒரு பயணம்."
-              : "Journey down the 24-fret highway through college, shared triumphs, and the stories that define OSU Tamil Sangam."}
-          </p>
-
-          {/* Scroll Cue Indicator */}
-          <div className="pt-4 flex flex-col items-center gap-1.5 text-[#FFB84D]/80 animate-bounce">
-            <span className="text-[11px] font-mono tracking-widest uppercase">
-              {locale === "ta" ? "கீழே உருட்டவும்" : "Scroll to Journey"}
-            </span>
-            <ChevronDown className="w-4 h-4 text-[#55CCA2]" />
-          </div>
+          {locale !== "ta" && <p lang="ta" className="mt-4 font-tamil text-2xl leading-relaxed tracking-normal text-sangam-lilac sm:text-4xl">நினைவுகள்</p>}
+          <p className="mx-auto mt-6 max-w-sm font-body text-sm leading-relaxed text-sangam-cream/85 sm:text-base">Campus afternoons. Shared tables. Stories we keep.</p>
         </div>
-
-        {/* Bottom edge gradient blend into DOM gallery */}
-        <div
-          className="w-full max-w-6xl mx-auto h-8 transition-opacity duration-300 pointer-events-none"
-          style={{
-            opacity: scrollProgress > 0.85 ? (scrollProgress - 0.85) / 0.15 : 0,
-          }}
-        />
+        <a
+          href="#gallery-vault-content"
+          className="pointer-events-auto absolute bottom-10 inline-flex min-h-12 items-center gap-4 border-b border-sangam-cream/40 px-4 font-mono text-xs uppercase tracking-widest text-sangam-cream transition-colors hover:text-sangam-gold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sangam-mint"
+        >
+          Explore the archive <span aria-hidden="true">↓</span>
+        </a>
       </div>
-
-      {/* Developer Telemetry HUD (active on ?debug=1) */}
-      <DebugHUD />
-    </div>
+    </HeroScrollStage>
   );
 }

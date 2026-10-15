@@ -32,11 +32,11 @@ export function Strings() {
   }, []);
 
   useFrame((state, delta) => {
-    const clampedDelta = Math.min(Math.max(delta, 0), 0.05);
+    const dt = Math.min(delta, 0.05);
     const time = state.clock.getElapsedTime();
 
     // 2. Advance pluck energy model decay (e *= exp(-dt/τ))
-    pluckBus.update(clampedDelta);
+    pluckBus.update(dt);
 
     // 3. Handle scroll velocity strums
     pluckBus.handleScrollVelocity(galleryScrollState.velocity, performance.now());
@@ -54,10 +54,10 @@ export function Strings() {
 
     // 5. Interactive Pointer / Touch Cross Pluck Trigger (PRD Section 5.3.3)
     const currentPointerY = pointer.y; // -1.0 to +1.0
-    const dt = time - prevTime.current;
+    const sampleDt = time - prevTime.current;
 
-    if (dt > 0.005 && dt < 0.2) {
-      const pointerSpeed = Math.abs(currentPointerY - prevPointerY.current) / dt;
+    if (sampleDt > 0.005 && sampleDt < 0.2) {
+      const pointerSpeed = Math.abs(currentPointerY - prevPointerY.current) / sampleDt;
 
       // Check if pointer crossed any string's screen Y band
       STRINGS_CONFIG.forEach((str) => {

@@ -187,7 +187,9 @@ export function CholaCrown3D({
   }, [assets]);
 
   // Gentle levitation bob and slow imperial axial rotation
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const t = clock.getElapsedTime();
     if (crownMeshRef.current) {
       // Slow imperial axial spin

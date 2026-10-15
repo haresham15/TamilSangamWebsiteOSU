@@ -1,9 +1,10 @@
 "use server";
 
-import fs from "fs/promises";
-import path from "path";
 import { CONTACT_EMAIL } from "@/lib/constants";
-import { dispatchEmail, validateEmail } from "@/lib/email";
+import { dispatchEmail, validateEmail, generateIdeasHearthConfirmationHtml } from "@/lib/email";
+import { getLedgerStore } from "@/lib/ledgerStore";
+import { escapeHtml } from "@/lib/html";
+import { dispatchBoardNotification } from "@/lib/webhooks";
 
 export interface SuggestionRecord {
   id: string;
@@ -111,45 +112,43 @@ export async function submitSuggestion(
     };
 
     // 1. Log to local data/suggestions.json ledger (Admin pattern)
-    const dataDir = path.join(process.cwd(), "data");
-    const suggestionsFile = path.join(dataDir, "suggestions.json");
-
-    try {
-      let existing: SuggestionRecord[] = [];
-      try {
-        const raw = await fs.readFile(suggestionsFile, "utf-8");
-        existing = JSON.parse(raw);
-      } catch {
-        // file doesn't exist yet
-      }
-
+    getLedgerStore().update("suggestions.json", (): SuggestionRecord[] => [], (existing) => {
       existing.unshift(newRecord);
-      if (existing.length > 500) existing = existing.slice(0, 500);
+      if (existing.length > 500) existing.length = 500;
+    });
 
-      await fs.writeFile(suggestionsFile, JSON.stringify(existing, null, 2), "utf-8");
-    } catch (err) {
-      console.error("[Suggestions] Failed to save to data/suggestions.json:", err);
-    }
+    // 2. Dispatch executive board notification card to Discord / Slack / GroupMe
+    await dispatchBoardNotification("suggestion", {
+      id: newRecord.id,
+      category: sanitizedCategory,
+      message,
+      name: name || undefined,
+      email: verifiedEmail || undefined,
+      submittedAt: newRecord.submittedAt,
+    }).catch((err) => console.warn("[Suggestions] Board webhook dispatch error:", err));
 
-    // 2. Dispatch notification email to official executive board contact address
+    // 3. Dispatch brutalist notification email to official executive board contact address
     const emailHtml = `
-      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 8px;">
-        <h2 style="color: #250d38; margin-top: 0;">New Community Suggestion Received</h2>
-        <p style="font-size: 14px; color: #64748b;">A visitor submitted a new idea via the <strong>/suggestions</strong> blueprint portal:</p>
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 2px solid #1A1614; background-color: #FAF9F6; box-shadow: 4px 4px 0px #1A1614;">
+        <div style="background-color: #1A1614; color: #FAF9F6; padding: 12px 16px; margin: -24px -24px 20px -24px;">
+          <span style="font-family: monospace; font-size: 10px; letter-spacing: 2px; color: #D99B26; text-transform: uppercase;">THE IDEAS HEARTH · INTERNAL OFFICER ALERT</span>
+          <h2 style="margin: 4px 0 0 0; font-size: 18px; color: #FAF9F6; font-family: Georgia, serif;">New Community Proposal Pinned</h2>
+        </div>
+        <p style="font-size: 14px; color: #57524C;">A visitor submitted a new proposal via the <strong>/suggestions</strong> blueprint matrix:</p>
         
-        <div style="background-color: #f8fafc; border-left: 4px solid #f59e0b; padding: 16px; margin: 16px 0;">
-          <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: bold; color: #475569;">
-            CATEGORY: <span style="color: #b45309;">${sanitizedCategory}</span>
+        <div style="background-color: #F4EFEA; border: 2px solid #1A1614; padding: 16px; margin: 16px 0;">
+          <p style="margin: 0 0 8px 0; font-size: 12px; font-family: monospace; text-transform: uppercase; color: #C85A32; font-weight: bold;">
+            [CATEGORY]: <span>${sanitizedCategory}</span>
           </p>
-          <p style="margin: 0 0 8px 0; font-size: 13px; color: #475569;">
-            FROM: <strong>${name || "Anonymous"}</strong> ${verifiedEmail ? `&lt;${verifiedEmail}&gt;` : "(No email provided)"}
+          <p style="margin: 0 0 8px 0; font-size: 12px; font-family: monospace; text-transform: uppercase; color: #57524C;">
+            [FROM]: <strong>${escapeHtml(name || "Anonymous")}</strong> ${verifiedEmail ? `&lt;${escapeHtml(verifiedEmail)}&gt;` : "(No email provided)"}
           </p>
-          <p style="margin: 12px 0 0 0; font-size: 15px; color: #1e293b; line-height: 1.5; white-space: pre-wrap;">${message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>
+          <p style="margin: 12px 0 0 0; font-size: 14px; color: #1A1614; line-height: 1.6; white-space: pre-wrap; font-family: Georgia, serif;">${escapeHtml(message)}</p>
         </div>
 
-        <p style="font-size: 12px; color: #94a3b8; margin-top: 24px;">
+        <p style="font-family: monospace; font-size: 11px; color: #78716C; margin-top: 24px; border-top: 1px solid #E5DDD0; padding-top: 12px;">
           Submitted at: ${newRecord.submittedAt}<br/>
-          OSU Tamil Sangam · Blueprint Suggestion Engine
+          OSU Tamil Sangam · Presiding: President Meenakshi Varadarajan
         </p>
       </div>
     `;
@@ -164,40 +163,36 @@ ${message}
 `;
 
     // Fire and await dispatch using existing provider
-    await dispatchEmail({
+    const notification = await dispatchEmail({
       to: CONTACT_EMAIL,
       subject: `[Sangam Suggestion] ${sanitizedCategory}: ${message.substring(0, 50)}...`,
       html: emailHtml,
       text: emailText,
     });
 
-    // Optional confirmation receipt if user provided email
+    // 4. Dispatch brutalist confirmation receipt if user provided email
     if (verifiedEmail) {
+      const confirmationEmail = generateIdeasHearthConfirmationHtml({
+        name: name || undefined,
+        email: verifiedEmail,
+        category: sanitizedCategory,
+        message,
+        id: newRecord.id,
+      });
+
       await dispatchEmail({
         to: verifiedEmail,
-        subject: "We received your suggestion! · OSU Tamil Sangam",
-        html: `
-          <div style="font-family: sans-serif; max-width: 540px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 8px;">
-            <h3 style="color: #250d38; margin-top: 0;">Vanakkam${name ? ` ${name}` : ""}!</h3>
-            <p style="font-size: 14px; color: #334155; line-height: 1.6;">
-              Thank you for sharing your thoughts with the OSU Tamil Sangam executive board. Your idea has been pinned to our digital blueprint ledger under <strong>${sanitizedCategory}</strong>.
-            </p>
-            <p style="font-size: 14px; color: #334155; line-height: 1.6;">
-              Our student board reviews all community ideas during our weekly planning meetings.
-            </p>
-            <p style="font-size: 12px; color: #64748b; margin-top: 20px;">
-              OSU Tamil Sangam · The Ohio State University<br/>
-              Registered student organization at Ohio State. Not an official university entity.
-            </p>
-          </div>
-        `,
-        text: `Vanakkam!\n\nThank you for sharing your idea (${sanitizedCategory}) with OSU Tamil Sangam. Our student board reviews all suggestions during weekly planning.\n\nOSU Tamil Sangam · Registered student organization at Ohio State.`,
-      });
+        subject: `Proposal Pinned to the Hearth: [${sanitizedCategory}] · OSU Tamil Sangam`,
+        html: confirmationEmail.html,
+        text: confirmationEmail.text,
+      }).catch((err) => console.warn("[Suggestions] Submitter receipt email error:", err));
     }
 
     return {
       success: true,
-      message: "Your suggestion has been pinned to the blueprint and sent to the board!",
+      message: notification.success
+        ? "Your suggestion has been pinned to the blueprint and sent to the board!"
+        : "Your suggestion has been saved for the board to review. Email notification is currently unavailable.",
       pin: {
         id: newRecord.id,
         // Calculate a harmonious position in the blueprint quad area

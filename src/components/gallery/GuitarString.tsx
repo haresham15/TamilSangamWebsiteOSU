@@ -152,7 +152,9 @@ export function GuitarString({ index, radius, y, isWound, baseColor }: GuitarStr
     };
   }, [geometry, material]);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     // Read energy directly from pluckBus Float32Array (no allocations)
     const energy = pluckBus.energies[index];
     const timeline = getHeroTimelineValues(galleryScrollState.progress);

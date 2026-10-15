@@ -32,6 +32,7 @@ export function useScrollPluck(config: ScrollPluckConfig = {}) {
   const lastScrollY = useRef(0);
 
   useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
     // 1. Acquire scroll velocity (Lenis preferred, with scrollY fallback)
     let rawVelocity = 0;
     if (typeof window !== "undefined") {
@@ -39,8 +40,8 @@ export function useScrollPluck(config: ScrollPluckConfig = {}) {
         rawVelocity = window.__lenis.velocity;
       } else {
         const curY = window.scrollY;
-        const dt = Math.max(0.001, delta);
-        rawVelocity = ((curY - lastScrollY.current) / dt) * 0.01;
+        const velocityDt = Math.max(0.001, dt);
+        rawVelocity = ((curY - lastScrollY.current) / velocityDt) * 0.01;
         lastScrollY.current = curY;
       }
     }
@@ -63,7 +64,7 @@ export function useScrollPluck(config: ScrollPluckConfig = {}) {
       currentAmplitude.current,
       targetAmplitude,
       cfg.dampingLambda,
-      delta
+      dt
     );
 
     // 5. Update state in store for HUD & reactive components

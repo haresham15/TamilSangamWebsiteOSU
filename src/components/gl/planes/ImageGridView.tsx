@@ -2,7 +2,8 @@
 "use client";
 
 import React, { useRef, useEffect, useState, useSyncExternalStore } from "react";
-import { View, OrthographicCamera } from "@react-three/drei";
+import { OrthographicCamera } from "@react-three/drei";
+import { SceneView as View } from "@/components/canvas/SceneView";
 import { useTierContext } from "@/components/providers/TierProvider";
 import {
   getActivePlanes,

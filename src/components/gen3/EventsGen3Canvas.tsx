@@ -12,10 +12,11 @@ import { LeoScrollController } from "./LeoScrollController";
 import { DustCloud } from "./DustCloud";
 import { LeoFactoryEnvironment } from "./LeoFactoryEnvironment";
 import { JumpingCrowdSilhouettes } from "./JumpingCrowdSilhouettes";
-import { Environment, BakeShadows, View } from "@react-three/drei";
+import { Environment, BakeShadows } from "@react-three/drei";
+import { SceneView as View } from "@/components/canvas/SceneView";
 import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 import { useWarmup } from "@/components/gl/useWarmup";
-import { governor } from "@/engine/governor";
+import { useHeroStageVisibility } from "@/components/canvas/HeroScrollStage";
 import { SceneRegistrar } from "@/director/wireframe";
 
 // The strict blueprint mandate: magenta error state on failure, no silent fallbacks.
@@ -84,7 +85,7 @@ function DepthTextureProvider({ children }: { children: React.ReactNode }) {
   return <DepthContext.Provider value={depthTarget}>{children}</DepthContext.Provider>;
 }
 
-function EventsConcertScene({ bespokeEnv }: { bespokeEnv: THREE.Texture | null }) {
+function EventsConcertScene({ bespokeEnv, progressRef }: { bespokeEnv: THREE.Texture | null; progressRef: React.RefObject<number> }) {
   useWarmup("events-arena");
 
   return (
@@ -102,7 +103,7 @@ function EventsConcertScene({ bespokeEnv }: { bespokeEnv: THREE.Texture | null }
         <React.Suspense fallback={null}>
           <BakeShadows />
           <LeoCameraRig />
-          <LeoScrollController />
+          <LeoScrollController progressRef={progressRef} />
           <LeoFactoryEnvironment />
           <VolumetricCones />
           <DustCloud />
@@ -116,39 +117,23 @@ function EventsConcertScene({ bespokeEnv }: { bespokeEnv: THREE.Texture | null }
   );
 }
 
-export function EventsGen3Canvas() {
-  const containerRef = React.useRef<HTMLDivElement>(null);
+export function EventsGen3Canvas({ progressRef }: { progressRef: React.RefObject<number> }) {
   // Bespoke scene-matched environment reflections (§1.1b PRD Mandate)
   const bespokeEnv = useMemo(() => createBespokeEnvironmentTexture("arena-concert"), []);
-  const [inView, setInView] = React.useState(true);
+  const visible = useHeroStageVisibility();
 
   React.useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setInView(entry.isIntersecting);
-      },
-      { threshold: 0.01 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  React.useEffect(() => {
-    governor.request("events-arena", inView ? 2 : 0);
     return () => {
-      governor.request("events-arena", 0);
       bespokeEnv?.dispose();
     };
-  }, [inView, bespokeEnv]);
+  }, [bespokeEnv]);
 
   return (
-    <div ref={containerRef} className="w-full h-full min-h-[100dvh] absolute top-0 left-0 bg-transparent pointer-events-none">
+    <div className="w-full h-full min-h-[100dvh] absolute top-0 left-0 bg-transparent pointer-events-none">
       <CanvasErrorBoundary>
-        <View className="w-full h-full pointer-events-auto" index={2}>
+        <View className="w-full h-full pointer-events-auto" index={2} visible={visible}>
           <SceneRegistrar />
-          <EventsConcertScene bespokeEnv={bespokeEnv} />
+          <EventsConcertScene bespokeEnv={bespokeEnv} progressRef={progressRef} />
         </View>
       </CanvasErrorBoundary>
       {/* High-performance CSS Vignette overlay to crush corner bleeding (§Spike S3) */}

@@ -33,7 +33,9 @@ export function OilLamp({
     }
   }, []);
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const time = clock.getElapsedTime();
     // Smooth noise-driven flicker with per-lamp phase offset
     const n = noise1D(time * 4.2 + phaseOffset * 17.3);

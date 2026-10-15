@@ -64,11 +64,16 @@ export function NleTimelineLightbox({
     return () => clearInterval(interval);
   }, []);
 
+  // Cinematic sound whoosh on open
+  useEffect(() => {
+    audioLayer.playCinematicWhoosh(0.5);
+  }, []);
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        audioLayer.playTapeClack(0.4);
+        audioLayer.playSilkSwish(0.35);
         onClose();
       } else if (e.key === "ArrowLeft") {
         e.preventDefault();
@@ -184,7 +189,7 @@ export function NleTimelineLightbox({
           <button
             type="button"
             onClick={() => {
-              audioLayer.playTapeClack(0.4);
+              audioLayer.playSilkSwish(0.35);
               onClose();
             }}
             data-cursor="bracket"

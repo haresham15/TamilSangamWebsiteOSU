@@ -56,9 +56,9 @@ export function RainStreaks() {
   }, [bokehTransforms]);
 
   useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
     const mesh = meshRef.current;
     if (!mesh) return;
-    const dt = Math.min(Math.max(delta, 0), 0.05);
     for (let i = 0; i < RAIN_COUNT; i++) {
       const d = rainData[i];
       d.currentY -= d.speed * dt;

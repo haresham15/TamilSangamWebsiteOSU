@@ -25,13 +25,13 @@ export function LeoCameraRig() {
   }, [set]);
 
   useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
     const cam = cameraRef.current || state.camera;
     if (!cam) return;
 
     // 1. Frame-rate independent exponential shock absorber damping
     // Clamp delta to prevent overshooting on tab-switches or severe frame drops
-    const safeDelta = Math.min(Math.max(delta, 0.001), 0.05);
-    const dampFactor = 1.0 - Math.exp(-8.0 * safeDelta);
+    const dampFactor = 1.0 - Math.exp(-8.0 * dt);
 
     // 2. Smoothly glide camera position toward targetPosition without allocations
     cam.position.lerp(leoKinematics.targetPosition, dampFactor);

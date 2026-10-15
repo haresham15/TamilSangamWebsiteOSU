@@ -5,10 +5,16 @@
  */
 export const heroScrollProgress = {
   current: 0,
+  target: 0,
 };
 
 export function setHeroScrollProgress(progress: number) {
-  heroScrollProgress.current = progress;
+  const clamped = Math.max(0, Math.min(1, progress));
+  heroScrollProgress.target = clamped;
+  // If at resting start, synchronize directly to avoid first-frame jump
+  if (heroScrollProgress.current === 0 && clamped === 0) {
+    heroScrollProgress.current = 0;
+  }
 }
 
 /**

@@ -27,7 +27,9 @@ export function PhoneTorches({ count = 300 }) {
     return [pos, ph];
   }, [count]);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (!meshRef.current) return;
     
     const time = state.clock.elapsedTime;

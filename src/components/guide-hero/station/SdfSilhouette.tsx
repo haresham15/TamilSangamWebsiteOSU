@@ -132,7 +132,9 @@ export function SdfSilhouette({ kind, position, scale }: SdfSilhouetteProps) {
     return () => media.removeEventListener("change", update);
   }, []);
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     resources.material.uniforms.uPose.value = reduceMotion
       ? 0.5
       : 0.5 + Math.sin(clock.elapsedTime * 0.72 + (kind === "woman" ? 0 : Math.PI / 2)) * 0.32;

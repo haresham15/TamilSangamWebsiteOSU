@@ -1,47 +1,17 @@
-import fs from "fs";
-import path from "path";
 import { BASELINE_KNOWLEDGE, KnowledgeItem } from "@/data/knowledgeBase";
-
-const DATA_DIR = path.join(process.cwd(), "data");
-const CUSTOM_KB_FILE = path.join(DATA_DIR, "custom_knowledge.json");
-
-// In-memory cache fallback for serverless or fast read
-let inMemoryCustomKB: KnowledgeItem[] = [];
-let isInitialized = false;
-
-function ensureCustomKnowledgeFile(): void {
-  try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
-    }
-    if (!fs.existsSync(CUSTOM_KB_FILE)) {
-      fs.writeFileSync(CUSTOM_KB_FILE, JSON.stringify([], null, 2), "utf-8");
-    }
-  } catch (err) {
-    console.warn("[KnowledgeBase] Unable to access filesystem, using in-memory store:", err);
-  }
-}
+import { getLedgerStore } from "./ledgerStore";
 
 export function loadCustomKnowledge(): KnowledgeItem[] {
   try {
-    ensureCustomKnowledgeFile();
-    if (fs.existsSync(CUSTOM_KB_FILE)) {
-      const raw = fs.readFileSync(CUSTOM_KB_FILE, "utf-8");
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        inMemoryCustomKB = parsed;
-        isInitialized = true;
-        return parsed;
-      }
-    }
+    return getLedgerStore().read("custom_knowledge.json", (): KnowledgeItem[] => []);
   } catch (err) {
     console.warn("[KnowledgeBase] Error reading custom_knowledge.json:", err);
   }
-  return inMemoryCustomKB;
+  return [];
 }
 
 export function getKnowledgeBase(): KnowledgeItem[] {
-  const custom = isInitialized ? inMemoryCustomKB : loadCustomKnowledge();
+  const custom = loadCustomKnowledge();
   
   // Merge: custom items override baseline if they share ID, otherwise append
   const customMap = new Map<string, KnowledgeItem>();
@@ -65,8 +35,6 @@ export function getKnowledgeBase(): KnowledgeItem[] {
 }
 
 export async function saveKnowledgeItem(item: Partial<KnowledgeItem> & { titleEn: string; contentEn: string }): Promise<KnowledgeItem> {
-  const customList = loadCustomKnowledge();
-  
   const id = item.id || `kb-custom-${Date.now()}`;
   const newItem: KnowledgeItem = {
     id,
@@ -83,40 +51,22 @@ export async function saveKnowledgeItem(item: Partial<KnowledgeItem> & { titleEn
     isCustom: true,
   };
 
-  const existingIdx = customList.findIndex((k) => k.id === id);
-  if (existingIdx >= 0) {
-    customList[existingIdx] = newItem;
-  } else {
-    customList.unshift(newItem);
-  }
-
-  inMemoryCustomKB = customList;
-
-  try {
-    ensureCustomKnowledgeFile();
-    await fs.promises.writeFile(CUSTOM_KB_FILE, JSON.stringify(customList, null, 2), "utf-8");
-  } catch (err) {
-    console.warn("[KnowledgeBase] Unable to persist to disk:", err);
-  }
+  getLedgerStore().update("custom_knowledge.json", (): KnowledgeItem[] => [], (customList) => {
+    const existingIdx = customList.findIndex((k) => k.id === id);
+    if (existingIdx >= 0) customList[existingIdx] = newItem;
+    else customList.unshift(newItem);
+  });
 
   return newItem;
 }
 
 export async function deleteKnowledgeItem(id: string): Promise<boolean> {
-  const customList = loadCustomKnowledge();
-  const filtered = customList.filter((k) => k.id !== id);
-  
-  if (filtered.length !== customList.length) {
-    inMemoryCustomKB = filtered;
-    try {
-      ensureCustomKnowledgeFile();
-      await fs.promises.writeFile(CUSTOM_KB_FILE, JSON.stringify(filtered, null, 2), "utf-8");
-    } catch (err) {
-      console.warn("[KnowledgeBase] Unable to persist delete to disk:", err);
-    }
+  return getLedgerStore().update("custom_knowledge.json", (): KnowledgeItem[] => [], (customList) => {
+    const index = customList.findIndex((item) => item.id === id);
+    if (index < 0) return false;
+    customList.splice(index, 1);
     return true;
-  }
-  return false;
+  });
 }
 
 /**
@@ -127,7 +77,7 @@ export function searchKnowledge(query: string, limit: number = 4): { item: Knowl
   if (!cleanQuery) return [];
 
   const tokens = cleanQuery
-    .replace(/[^\w\s]/gi, " ")
+    .replace(/[^\p{L}\p{M}\p{N}\s]/gu, " ")
     .split(/\s+/)
     .filter((t) => t.length > 1);
 
@@ -138,11 +88,12 @@ export function searchKnowledge(query: string, limit: number = 4): { item: Knowl
     const titleLower = item.titleEn.toLowerCase();
     const titleTaLower = item.titleTa.toLowerCase();
     const contentLower = item.contentEn.toLowerCase();
+    const contentTaLower = item.contentTa.toLowerCase();
     const keywords = item.keywords.map((k) => k.toLowerCase());
 
     // 1. Exact phrase match
-    if (titleLower.includes(cleanQuery)) score += 40;
-    if (contentLower.includes(cleanQuery)) score += 25;
+    if (titleLower.includes(cleanQuery) || titleTaLower.includes(cleanQuery)) score += 40;
+    if (contentLower.includes(cleanQuery) || contentTaLower.includes(cleanQuery)) score += 25;
 
     // 2. Token matches
     for (const token of tokens) {
@@ -158,7 +109,7 @@ export function searchKnowledge(query: string, limit: number = 4): { item: Knowl
         score += 12;
       }
       // Content token match
-      if (contentLower.includes(token)) {
+      if (contentLower.includes(token) || contentTaLower.includes(token)) {
         score += 4;
       }
       // Category match

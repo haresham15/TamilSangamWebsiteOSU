@@ -15,7 +15,9 @@ export function WhiteoutFinale({ scrollProgressRef }: WhiteoutFinaleProps) {
   const materialRef = useRef<THREE.MeshBasicMaterial>(null);
   const forwardVec = useRef(new THREE.Vector3());
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const p = scrollProgressRef.current ?? 0;
     const camera = state.camera;
 

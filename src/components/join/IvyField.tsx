@@ -69,9 +69,9 @@ function PillarIvy({ pillarX }: IvyClusterProps) {
 
   const swayTime = useRef(0);
   useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
     if (!meshRef.current) return;
-    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
-    swayTime.current += safeDelta;
+    swayTime.current += dt;
     // Gentle campus breeze sway
     meshRef.current.rotation.y = Math.sin(swayTime.current * 0.6 + pillarX) * 0.02;
   });

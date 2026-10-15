@@ -276,7 +276,9 @@ export function GoldDustBurst({ burstDuration = 3.2 }: GoldDustBurstProps) {
   }, [geometry, material]);
 
   // Per-frame uniform updates
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (matRef.current) {
       const u = matRef.current.uniforms;
       const t = state.clock.getElapsedTime();

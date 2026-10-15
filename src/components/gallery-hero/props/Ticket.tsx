@@ -93,7 +93,9 @@ export function Ticket() {
   }, [geometry, material]);
 
   // Per-frame dissolve sync and dynamic wind flutter
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const dVal = heroRefs.ticket.uDissolve.value;
     uniformsRef.current.uDissolve.value = dVal;
 

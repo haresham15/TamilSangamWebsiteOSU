@@ -240,7 +240,9 @@ export function PolaroidCard({ data, onSelect }: PolaroidCardProps) {
     };
   }, [geometry, material]);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (meshRef.current) {
       meshRef.current.position.set(data.x, data.y, data.z);
       meshRef.current.rotation.set(data.rotX, data.rotY, data.rotZ);

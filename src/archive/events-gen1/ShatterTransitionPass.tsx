@@ -138,7 +138,9 @@ export function ShatterTransitionPass({
     }
   }, [triggerState, camera]);
 
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (!startTime.current || completedRef.current || !materialRef.current?.uniforms) return;
 
     const elapsed = (performance.now() - startTime.current) / 1000;

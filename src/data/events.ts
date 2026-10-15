@@ -30,40 +30,6 @@ export interface SangamEvent {
 
 export const EVENTS: SangamEvent[] = [
   {
-    slug: "diwali-sangam-2026",
-    titleEn: "Diwali Sparkler Night & Festive Feast",
-    titleTa: "தீபாவளி சங்கமம் & சிறப்பு விருந்து",
-    taglineEn: "Sparklers, festive dinner, acoustic film jams, and light under Columbus skies.",
-    taglineTa: "மத்தாப்பு, அறுசுவை உணவு, மற்றும் கல்லூரி தீபாவளி கொண்டாட்டம்.",
-    date: "November 12, 2026",
-    time: "6:00 PM - 9:30 PM EST",
-    tamilDate: "ஐப்பசி 26, பராபவ ஆண்டு",
-    location: "Ohio Union Performance Hall",
-    venueAddress: "1739 N High St, Columbus, OH 43210",
-    price: "Free Admission (Student BuckID RSVP)",
-    statusBadgeEn: "Flagship Fall Festival",
-    statusBadgeTa: "முதன்மை இலையுதிர் விழா",
-    status: "upcoming",
-    academicYear: "2026-2027",
-    descriptionEn:
-      "Our annual campus Diwali gathering featuring sparklers on the plaza, fresh South Indian dinner, acoustic jams, and celebration for all Buckeyes and friends of every background. No Tamil required.",
-    descriptionTa:
-      "ஓஹியோ பல்கலைக்கழகத்தில் அனைத்து மாணவர்களும் ஒன்றிணைந்து கொண்டாடும் தீபாவளி திருவிழா — மத்தாப்பு, அறுசுவை உணவு, இசை மற்றும் தோழமை.",
-    dressCodeEn: "Festive Indian traditional or comfortable celebratory wear",
-    dressCodeTa: "பாரம்பரிய பண்டிகை ஆடை அல்லது வசதியான கொண்டாட்ட ஆடை",
-    schedule: [
-      { time: "6:00 PM", activityEn: "Doors Open, Kaapi & Sweet Table", activityTa: "அரங்கம் திறப்பு, காபி & இனிப்புகள்" },
-      { time: "6:45 PM", activityEn: "Traditional Feast & Dinner Spread", activityTa: "தென்னிந்திய அறுசுவை உணவு" },
-      { time: "7:45 PM", activityEn: "Acoustic Jams & Cultural Showcase", activityTa: "இசை மாலை & நடன அரங்கம்" },
-      { time: "8:45 PM", activityEn: "Sparklers on the Plaza (Outdoor)", activityTa: "பிளாசாவில் மத்தாப்பு கொண்டாட்டம்" },
-    ],
-    posterImage: "https://lh3.googleusercontent.com/pw/AP1GczPoDEE5ppMuBlStSn71wmY-vnb9sbDehdzKVvxu_QvEJZfJ8hGCig4Bkxoe8Rx8-xpnXzZA02iZ2EZid-qciQ4V85WQKl44j_Ed6YLD25GTunQbulMG=w1200-h800-no",
-    hoverImage: "https://lh3.googleusercontent.com/pw/AP1GczNF_2udq2E6IEtC1s-XVUq1UlKrrxNA-C9qkOWeup2hGMg4_Ko3Q9ht3_c1lkPum7Lgba0THDhb1XA0xYowvs8HWdckVTnrjuYhVIir9-CRqrRwocXs=w1200-h800-no",
-    ticketUrl: "https://groupme.com/join_group/osutamilsangam",
-    interestFormUrl: "https://groupme.com/join_group/osutamilsangam",
-    tags: ["diwali", "flagship", "food", "music", "festive", "sparklers"],
-  },
-  {
     slug: "berry-cute-picnic",
     titleEn: "A Berry Cute Picnic",
     titleTa: "பெர்ரி க்யூட் பிக்னிக் (இலையுதிர் சங்கமம்)",

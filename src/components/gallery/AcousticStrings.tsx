@@ -115,7 +115,9 @@ export function AcousticStrings({ amplitude, amplitudeRef }: AcousticStringsProp
     };
   }, [stringsData, anchorGeo, anchorMat]);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const t = state.clock.getElapsedTime();
     const amp = amplitudeRef?.current ?? amplitude ?? 0;
 

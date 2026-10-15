@@ -135,13 +135,13 @@ export function Roadside() {
   }, [geometry, material, initialTransforms]);
 
   useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
     if (!meshRef.current) return;
-    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
     const speed = 1.2 + Math.min(2.8, Math.abs(galleryScrollState.velocity) * 0.003);
 
     for (let i = 0; i < INSTANCE_COUNT; i++) {
       // Advance toward camera
-      zPositions.current[i] += safeDelta * speed * 2.0;
+      zPositions.current[i] += dt * speed * 2.0;
 
       // Recycle when behind camera
       if (zPositions.current[i] > 10.0) {

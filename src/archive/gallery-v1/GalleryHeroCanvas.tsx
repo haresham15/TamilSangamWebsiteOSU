@@ -17,6 +17,7 @@ import { Terminal } from "lucide-react";
 import { Environment } from "@react-three/drei";
 import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 import { useGalleryHeroStore } from "@/store/galleryHeroStore";
+import { useInView } from "framer-motion";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -99,7 +100,7 @@ export function GalleryHeroCanvas({ onFinaleComplete }: GalleryHeroCanvasProps) 
   const stickyContainerRef = useRef<HTMLDivElement>(null);
   const whiteoutOverlayRef = useRef<HTMLDivElement>(null);
 
-  const [inView, setInView] = useState(true);
+  const inView = useInView(pinWrapperRef, { margin: "200px 0px" });
   const [reducedMotion, setReducedMotion] = useState(() => {
     if (typeof window !== "undefined") {
       return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -135,19 +136,6 @@ export function GalleryHeroCanvas({ onFinaleComplete }: GalleryHeroCanvasProps) 
       return () => mediaQuery.removeEventListener("change", handler);
     }
   }, [debugActive]);
-
-  // IntersectionObserver to set frameloop="demand" when hero leaves viewport (§12)
-  useEffect(() => {
-    if (!pinWrapperRef.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setInView(entry.isIntersecting);
-      },
-      { threshold: 0.05 }
-    );
-    observer.observe(pinWrapperRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   // §10: GSAP ScrollTrigger 150vh Pinned Timeline
   useEffect(() => {
@@ -225,8 +213,8 @@ export function GalleryHeroCanvas({ onFinaleComplete }: GalleryHeroCanvasProps) 
         {/* ========================================================================= */}
         <div className="absolute inset-0 z-0">
           <Canvas
-            dpr={[1, Math.min(2, typeof window !== "undefined" ? window.devicePixelRatio : 1)]}
-            frameloop={inView ? "always" : "demand"}
+            dpr={[1, 1.75]}
+            frameloop={inView ? "always" : "never"}
             gl={{
               toneMapping: THREE.ACESFilmicToneMapping,
               toneMappingExposure: 1.05,

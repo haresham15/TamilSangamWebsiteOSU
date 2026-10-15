@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { View } from "@react-three/drei";
+import { SceneView as View } from "@/components/canvas/SceneView";
 import { useSearchParams } from "next/navigation";
 import { parseGuideStationDebug } from "./station/debug";
 import { governor } from "@/engine/governor";

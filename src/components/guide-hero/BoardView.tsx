@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { View } from "@react-three/drei";
+import { SceneView as View } from "@/components/canvas/SceneView";
 import type { BoardProps } from "./Board";
 import { governor } from "@/engine/governor";
 import { useWarmup } from "@/components/gl/useWarmup";

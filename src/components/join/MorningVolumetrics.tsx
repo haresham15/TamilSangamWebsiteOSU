@@ -12,7 +12,9 @@ export function MorningVolumetrics({ gateProgressRef }: MorningVolumetricsProps)
   const shaftGroupRef = useRef<THREE.Group>(null);
   const beamMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const p = gateProgressRef.current ?? 0;
     const time = state.clock.getElapsedTime();
 

@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import Link from "next/link";
+import React, { useState, useCallback, useEffect } from "react";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { FAQS, FaqItem } from "@/data/faq";
@@ -11,9 +10,9 @@ import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 import type { RankedFaq } from "@/lib/faq-engagement/contracts";
 import { audioLayer } from "@/utils/audioLayer";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
-import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
-import { Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
+import styles from "./guide.module.css";
 
 export interface GuideClientProps {
   initialPopularRanking?: RankedFaq[];
@@ -23,19 +22,42 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
   const { locale } = useLocale();
   const { playClick } = useAudio();
 
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategory, setSelectedCategory] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      const pending = (window as unknown as { __pendingGuideCategory?: string }).__pendingGuideCategory;
+      if (pending) {
+        return pending;
+      }
+    }
+    return "Overview";
+  });
   const [searchQuery, setSearchQuery] = useState("");
 
-  const categories = ["All", "General", "Membership", "Events", "Performances", "Governance"];
+  const categories = ["Overview", "Membership", "Culture", "Governance"];
+  const [expandedFaqs, setExpandedFaqs] = useState<Set<string>>(() => new Set([FAQS[0].id]));
 
-  // Broadcast to 3D Split-Flap Board without collapsing or hiding DOM text
+  // Support early interaction prior to client hydration completion
+  useEffect(() => {
+    const onGuideClick = (e: Event) => {
+      const cat = (e as CustomEvent).detail;
+      if (cat) setSelectedCategory(cat);
+    };
+    const globalWin = typeof window !== "undefined" ? (window as unknown as { __pendingGuideCategory?: string }) : undefined;
+    if (globalWin?.__pendingGuideCategory) {
+      setSelectedCategory(globalWin.__pendingGuideCategory);
+    }
+    window.addEventListener("guide-category-click", onGuideClick);
+    return () => window.removeEventListener("guide-category-click", onGuideClick);
+  }, []);
+
+  // Keep the station board in sync with the inspected question.
   const handleInspectFaq = useCallback((faq: FaqItem) => {
     audioLayer.playTapeClack();
     useGuideStore.getState().selectFaq(faq, "accordion");
   }, []);
 
   const filteredFaqs = FAQS.filter((faq) => {
-    const matchesCategory = selectedCategory === "All" || faq.category === selectedCategory;
+    const matchesCategory = selectedCategory === "Overview" || (selectedCategory === "Culture" ? ["Events", "Performances"].includes(faq.category) : faq.category === selectedCategory);
     const q = searchQuery.toLowerCase().trim();
     if (!q) return matchesCategory;
 
@@ -58,7 +80,7 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
         data-hero-container="true"
         className="relative z-10 w-full overflow-hidden bg-transparent"
       >
-        <GuideHero />
+        <GuideHero initialPopularRanking={initialPopularRanking} />
       </div>
 
       {/* Hero to Content Gradient Transition */}
@@ -68,106 +90,82 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
           THE OPEN BOOK: BREATHABLE Q&A MANUSCRIPT ON WARM IVORY
           Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
           ========================================================================= */}
-      <div className="relative z-20 w-full bg-[#FAF9F6] text-[#2A2825] overflow-hidden">
+      <div className={styles.content}>
         
-        <div className="w-full max-w-4xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
           
           {/* Centered Airy Header */}
           <CourtyardHeader
-            align="center"
+            align="left"
             eyebrow="The Open Book · Student Guide"
             title={locale === "ta" ? "ஓலைச்சுவடி · திறந்த வழிகாட்டி" : "Frequently Asked Questions"}
             tamilTitle={locale !== "ta" ? "வழிகாட்டி · கேள்வி & பதில்கள்" : undefined}
             description="Everything you need to know about joining Tamil Sangam, attending our festivals, performing on campus, and democratic student membership. Completely open, honest, and free."
           />
 
-          {/* Search Bar & Category Filter Links: Grounded Underline & Typographic Links */}
-          <div className="space-y-8 mb-20 sm:mb-28">
-            <div className="relative max-w-2xl mx-auto">
-              <Search className="w-5 h-5 text-[#8C827A] absolute left-0 top-4" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search questions by topic, language, or festival..."
-                className="w-full pl-8 pr-4 py-3.5 bg-transparent border-b border-[#E5DDD0] text-[#2A2825] placeholder:text-[#8C827A] text-base font-sans outline-none focus:border-[#B85C38] transition-colors"
-              />
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 pt-2">
-              {categories.map((cat) => {
-                const isSelected = selectedCategory === cat;
+          <div className={styles.layout}>
+            <nav className={styles.nav} aria-label="Guide categories">
+              <p className="font-mono text-xs uppercase tracking-widest text-hearth-terracotta w-full">Find your answer</p>
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  data-guide-category={category}
+                  className={styles.category}
+                  aria-pressed={selectedCategory === category}
+                  onClick={() => { playClick(); setSelectedCategory(category); }}
+                >
+                  {category}
+                </button>
+              ))}
+            </nav>
+            <div className="min-w-0">
+              <div className="relative mb-8">
+                <label htmlFor="guide-search" className="sr-only">Search questions</label>
+                <Search aria-hidden="true" className="size-5 absolute left-0 top-4 text-hearth-terracotta" />
+                <input id="guide-search" type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Search questions by topic, language, or festival..."
+                  className="w-full pl-8 pr-4 py-3.5 bg-transparent border-b border-hearth-espresso/30 text-base outline-none focus:border-hearth-terracotta focus-visible:outline-2 focus-visible:outline-offset-4" />
+              </div>
+              <p role="status" className="font-mono text-xs text-hearth-espresso/70 mb-6">{filteredFaqs.length} questions</p>
+              {filteredFaqs.map((faq) => {
+                const isOpen = expandedFaqs.has(faq.id);
                 return (
-                  <button
-                    key={cat}
-                    onClick={() => {
-                      playClick();
-                      setSelectedCategory(cat);
-                    }}
-                    className={`pb-1 text-xs sm:text-sm font-sans uppercase tracking-widest font-medium transition-all cursor-pointer ${
-                      isSelected
-                        ? "text-[#B85C38] border-b-2 border-[#B85C38]"
-                        : "text-[#8C827A] hover:text-[#2A2825] border-b-2 border-transparent"
-                    }`}
-                  >
-                    {cat}
-                  </button>
+                  <article key={faq.id} className={styles.faq} onMouseEnter={() => handleInspectFaq(faq)}>
+                    <p className="font-mono text-xs uppercase tracking-widest text-hearth-terracotta mb-3">{faq.category}</p>
+                    <h2>
+                      <button type="button" id={faq.id + "-question"} aria-expanded={isOpen} aria-controls={faq.id + "-answer"}
+                        className={styles.question} onClick={() => {
+                          handleInspectFaq(faq);
+                          setExpandedFaqs((current) => {
+                            const next = new Set(current);
+                            if (next.has(faq.id)) next.delete(faq.id); else next.add(faq.id);
+                            return next;
+                          });
+                        }}>
+                        <span>
+                          <span lang={locale === "ta" ? "ta" : undefined} className="block text-2xl sm:text-3xl font-serif leading-snug">{locale === "ta" ? faq.questionTa : faq.questionEn}</span>
+                          {locale !== "ta" && faq.questionTa && <span lang="ta" className="block font-tamil text-base leading-relaxed mt-3 text-hearth-espresso/70">{faq.questionTa}</span>}
+                        </span>
+                        <Plus aria-hidden="true" className={styles.plus} />
+                      </button>
+                    </h2>
+                    <div id={faq.id + "-answer"} role="region" aria-labelledby={faq.id + "-question"} aria-hidden={!isOpen} inert={!isOpen} className={styles.answer} data-open={isOpen}>
+                      <div className={styles.answerInner}>
+                        <p lang={locale === "ta" ? "ta" : undefined} className="pt-6 pb-2 text-base sm:text-lg leading-loose text-hearth-espresso/80">{locale === "ta" ? faq.answerTa : faq.answerEn}</p>
+                      </div>
+                    </div>
+                  </article>
                 );
               })}
+              {filteredFaqs.length === 0 && (
+                <div className="py-16 space-y-4">
+                  <p className="text-xl font-serif">No questions found matching your search.</p>
+                  <button type="button" className="min-h-12 underline text-hearth-terracotta" onClick={() => { setSearchQuery(""); setSelectedCategory("Overview"); }}>Reset search filters</button>
+                </div>
+              )}
             </div>
           </div>
-
-          {/* The Open Book Flowing Questions: 1px Full-Width Grounding Line Between Pairs */}
-          <div className="space-y-16 sm:space-y-24">
-            {filteredFaqs.map((faq, idx) => (
-              <article
-                key={faq.id || idx}
-                onMouseEnter={() => handleInspectFaq(faq)}
-                className="group relative select-none border-b border-[#E5DDD0] pb-16 sm:pb-20"
-              >
-                {/* Category Typographic Tag */}
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-xs font-mono uppercase tracking-widest text-[#B85C38] font-semibold">
-                    {faq.category}
-                  </span>
-                </div>
-
-                {/* Question in Soft Terracotta Color (Conversational & Inviting) */}
-                <h2 className="text-2xl sm:text-4xl font-serif font-normal text-[#B85C38] group-hover:text-[#a04a27] transition-colors leading-snug">
-                  {locale === "ta" ? faq.questionTa : faq.questionEn}
-                </h2>
-
-                {/* Tamil Question Subscript */}
-                {locale !== "ta" && faq.questionTa && (
-                  <p className="mt-2 font-tamil text-base sm:text-lg text-[#2A2825]/50" lang="ta">
-                    {faq.questionTa}
-                  </p>
-                )}
-
-                {/* Answer in Deep Charcoal Espresso with Loose Leading */}
-                <div className="mt-6 pt-2">
-                  <p className="text-lg sm:text-xl font-sans text-[#57524C] leading-loose">
-                    {locale === "ta" ? faq.answerTa : faq.answerEn}
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          {filteredFaqs.length === 0 && (
-            <div className="py-24 text-center space-y-3 font-sans text-[#57524C]">
-              <p className="text-lg font-serif">No questions found matching your search.</p>
-              <button
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedCategory("All");
-                }}
-                className="text-sm font-medium text-[#B85C38] underline cursor-pointer"
-              >
-                Reset search filters
-              </button>
-            </div>
-          )}
 
           {/* Borderless Organic Transportation to Suggestions */}
           <div className="mt-24 sm:mt-32">

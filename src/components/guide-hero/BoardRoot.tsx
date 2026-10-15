@@ -101,7 +101,11 @@ export function BoardRoot({
     }
   };
 
-  useFrame(applyFogPolicy);
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
+    applyFogPolicy();
+  });
 
   useEffect(() => {
     appliedRef.current = false;
