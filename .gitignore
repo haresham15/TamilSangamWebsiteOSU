@@ -46,3 +46,6 @@ next-env.d.ts
 # local subscriber records and dispatches
 /data/
 !.env.example
+
+# local tools & agent cache
+.codegraph/
