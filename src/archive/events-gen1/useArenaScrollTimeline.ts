@@ -160,7 +160,9 @@ export function useArenaScrollTimeline({
   }, [isTransitioning, onTransitionComplete]);
 
   // 3. Frame loop: Apply interpolated coordinates & landing micro-shake
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const s = cameraState.current;
     let shakeOffset = 0;
 

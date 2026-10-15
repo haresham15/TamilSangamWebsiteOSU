@@ -32,7 +32,14 @@ export function GuideHero({
   const { isLiteMode } = useLiteMode();
   const tier = useTier();
   const sectionRef = useRef<HTMLElement>(null);
-  const [reduceMotion, setReduceMotion] = React.useState(false);
+  const [reduceMotion, setReduceMotion] = React.useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      } catch {}
+    }
+    return false;
+  });
   const [showSkip, setShowSkip] = React.useState(false);
   const activeItem = useGuideStore((state) => state.activeItem);
   const source = useGuideStore((state) => state.source);
@@ -117,7 +124,7 @@ export function GuideHero({
   };
 
   return (
-    <section ref={sectionRef} id={id} aria-label="FAQ Departure Board" className={`relative w-full select-none bg-transparent ${isFallback ? "min-h-[100dvh]" : "min-h-[380dvh] md:min-h-[440dvh]"}`}>
+    <section ref={sectionRef} id={id} aria-label="FAQ Departure Board" className={`relative w-full select-none bg-transparent ${isFallback ? "min-h-[100dvh]" : "min-h-[380dvh] md:min-h-[440dvh]"}`} suppressHydrationWarning>
       <div className="sticky top-0 h-[100dvh] min-h-[480px] overflow-hidden">
         <p aria-live="polite" className="sr-only">
           {source === "station" ? `Most asked: ${liveTitle}` : `Showing: ${liveTitle}`}

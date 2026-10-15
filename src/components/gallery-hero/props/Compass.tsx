@@ -66,7 +66,9 @@ export function Compass() {
   }, [brassMat, steelMat]);
 
   // Per-frame dissolve sync
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const dVal = heroRefs.compass.uDissolve.value;
     uniformsRef.current.uDissolve.value = dVal;
 

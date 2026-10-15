@@ -19,7 +19,9 @@ interface WhiteoutFinaleProps {
 export function WhiteoutFinale({ scrollProgress, onFinaleTrigger }: WhiteoutFinaleProps) {
   const hasFiredRef = useRef(false);
 
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const p = scrollProgress;
 
     if (p >= 0.98 && !hasFiredRef.current) {

@@ -7,6 +7,7 @@ import {
   dispatchEmail,
   getSubscribersStats,
 } from "@/lib/email";
+import { dispatchBoardNotification } from "@/lib/webhooks";
 
 
 
@@ -45,16 +46,25 @@ export async function POST(req: NextRequest) {
       email: validation.normalizedEmail,
       name: typeof name === "string" ? name.trim() : undefined,
       isBuckeye: validation.isBuckeye,
-      interests: Array.isArray(interests) ? interests : ["events", "food", "social"],
+      interests: Array.isArray(interests) ? interests.filter((item): item is string => typeof item === "string").slice(0, 10) : ["events", "food", "social"],
       source: typeof source === "string" ? source : "stay-in-sangam",
     });
 
-    // Render HTML & text confirmation email
+    // Dispatch executive board notification to Discord / Slack / GroupMe
+    await dispatchBoardNotification("newsletter", {
+      email: validation.normalizedEmail,
+      name: typeof name === "string" ? name.trim() : undefined,
+      isBuckeye: validation.isBuckeye,
+      interests: Array.isArray(interests) ? interests.filter((item): item is string => typeof item === "string").slice(0, 10) : undefined,
+      submittedAt: new Date().toISOString(),
+    }).catch((err) => console.warn("[StayInSangam] Board webhook error:", err));
+
+    // Render HTML & text confirmation email (brutalist Muttram aesthetic)
     const emailContent = generateWelcomeEmailHtml({
       email: validation.normalizedEmail,
       name: typeof name === "string" ? name.trim() : undefined,
       isBuckeye: validation.isBuckeye,
-      interests: Array.isArray(interests) ? interests : undefined,
+      interests: Array.isArray(interests) ? interests.filter((item): item is string => typeof item === "string").slice(0, 10) : undefined,
     });
 
     // Dispatch email via Resend, Webhook, or local receipt
@@ -69,14 +79,17 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: validation.isBuckeye
-        ? "Vanakkam Buckeye! Welcome to the Stay in Sangam Loop. Check your inbox for your confirmation dispatch."
-        : "Vanakkam! Welcome to the Stay in Sangam Loop. Check your inbox for your confirmation dispatch.",
+      message: dispatchResult.success
+        ? (validation.isBuckeye
+          ? "Vanakkam Buckeye! Welcome to the Stay in Sangam Loop. Check your inbox for your confirmation dispatch."
+          : "Vanakkam! Welcome to the Stay in Sangam Loop. Check your inbox for your confirmation dispatch.")
+        : "Vanakkam! Your subscription is saved. Confirmation email is currently unavailable.",
       isBuckeye: validation.isBuckeye,
       email: validation.normalizedEmail,
       isNew: saveResult.isNew,
       totalSubscribers: saveResult.total,
       deliveryProvider: dispatchResult.provider,
+      emailDelivered: dispatchResult.success,
     });
   } catch (error) {
     console.error("[StayInSangam API Error]:", error);

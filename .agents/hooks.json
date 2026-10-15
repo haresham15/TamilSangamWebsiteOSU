@@ -1,0 +1,11 @@
+{
+  "autonomous-director": {
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "node .agents/scripts/hooks/autonomous_director.js",
+        "timeout": 5
+      }
+    ]
+  }
+}

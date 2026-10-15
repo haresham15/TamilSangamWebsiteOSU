@@ -12,7 +12,9 @@ export function CameraRig() {
   const lookTargetRef = useRef(new THREE.Vector3(10.0, 4.5, -380));
   const { pointer } = useThree();
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (!cameraRef.current) return;
     const time = state.clock.getElapsedTime();
 

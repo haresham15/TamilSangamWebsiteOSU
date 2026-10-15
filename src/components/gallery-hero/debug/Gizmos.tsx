@@ -76,7 +76,9 @@ export function StringGizmo() {
     return geo;
   }, []);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (!active) return;
     const mesh = lineRef.current;
     if (!mesh) return;

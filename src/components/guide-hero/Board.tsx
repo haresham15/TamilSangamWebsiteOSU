@@ -76,7 +76,9 @@ export default function Board({
   const sceneGroupRef = useRef<THREE.Group>(null);
 
   // Smooth scroll recede interpolation driven by masterTick scroll (PRD §8)
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (sceneGroupRef.current && typeof window !== "undefined") {
       const p = Math.max(0, Math.min(1, scroll.y / (window.innerHeight * 0.7)));
       const t = p < 0.15 ? 0 : Math.min(1, (p - 0.15) / 0.45);

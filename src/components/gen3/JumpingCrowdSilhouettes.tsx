@@ -465,6 +465,7 @@ function createCrowdMaterial(texture: THREE.Texture | null) {
       attribute float aPhase;
       uniform float uTime;
       varying vec2 vCrowdUv;
+      varying vec3 vCrowdView;
     ` + shader.vertexShader;
 
     shader.vertexShader = shader.vertexShader.replace(
@@ -496,6 +497,7 @@ function createCrowdMaterial(texture: THREE.Texture | null) {
       vec3 instancePos = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
       vec4 mvPosition = modelViewMatrix * vec4(instancePos, 1.0);
       mvPosition.xy += transformed.xy * vec2(scaleX, scaleY);
+      vCrowdView = -mvPosition.xyz;
       gl_Position = projectionMatrix * mvPosition;
       `
     );
@@ -503,17 +505,26 @@ function createCrowdMaterial(texture: THREE.Texture | null) {
     shader.fragmentShader =
       `
       varying vec2 vCrowdUv;
+      varying vec3 vCrowdView;
     ` + shader.fragmentShader;
 
     shader.fragmentShader = shader.fragmentShader.replace(
       "#include <map_fragment>",
       `
       #include <map_fragment>
-      // Clean cutout alpha
-      if (diffuseColor.a < 0.08) discard;
-
-      // Pure unlit dark silhouette (#050302) with zero specular reflection
-      diffuseColor.rgb = vec3(0.0196, 0.0117, 0.0078);
+      // Feather feet into the floor; retain only the texture's actual silhouette.
+      diffuseColor.a *= smoothstep(0.0, 0.18, vCrowdUv.y);
+      if (diffuseColor.a < 0.015) discard;
+      vec2 texel = vec2(1.0) / vec2(textureSize(map, 0));
+      float leftAlpha = texture2D(map, vMapUv - vec2(texel.x, 0.0)).a;
+      float rightAlpha = texture2D(map, vMapUv + vec2(texel.x, 0.0)).a;
+      float downAlpha = texture2D(map, vMapUv - vec2(0.0, texel.y)).a;
+      float upAlpha = texture2D(map, vMapUv + vec2(0.0, texel.y)).a;
+      vec2 edge = vec2(leftAlpha - rightAlpha, downAlpha - upAlpha);
+      vec3 normal = normalize(vec3(edge * 4.0, 0.25));
+      float fresnel = pow(1.0 - abs(dot(normal, normalize(vCrowdView))), 3.0);
+      float contour = clamp(length(edge) * 3.0, 0.0, 1.0);
+      diffuseColor.rgb = vec3(0.0196, 0.0117, 0.0078) + vec3(0.784, 0.353, 0.196) * fresnel * contour * 0.65;
       `
     );
   };
@@ -604,8 +615,9 @@ export function JumpingCrowdSilhouettes() {
     trioMaterial,
   ]);
 
-  useFrame((state) => {
-    crowdUniforms.uTime.value = state.clock.elapsedTime;
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    crowdUniforms.uTime.value += dt;
   });
 
   return (

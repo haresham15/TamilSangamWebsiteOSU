@@ -8,11 +8,15 @@ import { EVENTS, SangamEvent } from "@/data/events";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { audioLayer } from "@/utils/audioLayer";
-import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
-import { MuttramButton } from "@/components/muttram/MuttramButton";
+import { Magnetic } from "@/components/ui/Magnetic";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import dynamic from "next/dynamic";
+import { HeroScrollStage } from "@/components/canvas/HeroScrollStage";
+import { useLiteMode } from "@/context/LiteModeContext";
+import { useTier } from "@/components/providers/TierProvider";
+import { useReducedMotion } from "framer-motion";
 
 // =========================================================================
 // CRITICAL & IMMUTABLE: 3D Sodium-Vapor Amber Events Hero Scene
@@ -29,17 +33,44 @@ const EventsGen3Canvas = dynamic(
 export default function EventsPage() {
   const { locale } = useLocale();
   const { playClick } = useAudio();
+  const eventsProgress = useRef(0);
+  const { isLiteMode } = useLiteMode();
+  const tier = useTier();
+  const reducedMotion = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const staticHero = mounted ? (isLiteMode || tier === "C" || !!reducedMotion) : false;
 
   const [filterYear, setFilterYear] = useState<string>("all");
   const [hoveredEvent, setHoveredEvent] = useState<SangamEvent | null>(null);
 
+  // Support keyboard and click filtering prior to client hydration completion
+  useEffect(() => {
+    const onYearEvent = (e: Event) => {
+      const yr = (e as CustomEvent).detail;
+      if (yr) setFilterYear(yr);
+    };
+    const globalWin = typeof window !== "undefined" ? (window as unknown as { __pendingEventYear?: string }) : undefined;
+    if (globalWin?.__pendingEventYear) {
+      setFilterYear(globalWin.__pendingEventYear);
+      delete globalWin.__pendingEventYear;
+    }
+    window.addEventListener("event-year-select", onYearEvent);
+    return () => window.removeEventListener("event-year-select", onYearEvent);
+  }, []);
+
   // GSAP Cursor Floating Image Coordinates
+  const riverRef = useRef<HTMLDivElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const xTo = useRef<((val: number) => void) | null>(null);
   const yTo = useRef<((val: number) => void) | null>(null);
 
   useEffect(() => {
-    if (!cursorRef.current) return;
+    if (!cursorRef.current || reducedMotion || !matchMedia("(pointer: fine)").matches) return;
+    const cursor = cursorRef.current;
 
     // Center cursor card on mouse pointer
     gsap.set(cursorRef.current, { xPercent: -50, yPercent: -50, opacity: 0 });
@@ -57,8 +88,9 @@ export default function EventsPage() {
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
+      gsap.killTweensOf(cursor);
     };
-  }, []);
+  }, [reducedMotion]);
 
   // Update cursor image opacity when hoveredEvent changes
   useEffect(() => {
@@ -68,34 +100,48 @@ export default function EventsPage() {
     } else {
       gsap.to(cursorRef.current, { opacity: 0, scale: 0.95, duration: 0.2, ease: "power2.in" });
     }
-  }, [hoveredEvent]);
+  }, [hoveredEvent, reducedMotion]);
 
   const filteredEvents = EVENTS.filter((evt) => {
     if (filterYear === "all") return true;
     return evt.academicYear.includes(filterYear);
   });
 
+  useEffect(() => {
+    if (reducedMotion || !pathRef.current) return;
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => gsap.fromTo(pathRef.current,
+      { strokeDashoffset: 1 }, { strokeDashoffset: 0, ease: "none",
+        scrollTrigger: { trigger: riverRef.current, start: "top 80%", end: "bottom 60%", scrub: true, invalidateOnRefresh: true },
+      }));
+    return () => ctx.revert();
+  }, [reducedMotion, filterYear]);
+
   const years = ["all", "2026-2027", "2025-2026"];
 
   return (
     <div className="w-full text-left bg-transparent">
       {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene - UNTOUCHED */}
-      <div
+      <HeroScrollStage
         id="events-hero-trigger"
-        data-hero-container="true"
-        className="w-full h-[100dvh] relative z-10 overflow-hidden bg-transparent"
+        progressRef={eventsProgress}
+        static={staticHero}
+        tone="espresso"
       >
-        <EventsGen3Canvas />
-      </div>
+        {!staticHero && <EventsGen3Canvas progressRef={eventsProgress} />}
+        <div className="absolute inset-0 z-10 flex flex-col justify-end px-6 pb-20 text-paper pointer-events-none">
+          <h1 className="font-display text-5xl sm:text-8xl">{locale === "ta" ? "நிகழ்வுகள்" : "Together, in celebration."}</h1>
+          <a href="#gatherings-river" className="pointer-events-auto mt-6 inline-flex min-h-12 items-center underline w-fit">Explore the gatherings</a>
+        </div>
+      </HeroScrollStage>
 
       {/* Hero to Content Gradient Transition */}
-      <HeroGradientTransition variant="events" className="-mt-32 relative z-20" />
 
       {/* =========================================================================
           THE FLOWING RIVER: OPEN, BREATHABLE GATHERINGS LIST
           Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
           ========================================================================= */}
-      <div className="relative z-20 w-full bg-[#FAF9F6] text-[#2A2825] overflow-hidden">
+      <div id="gatherings-river" className="relative z-20 w-full bg-paper text-hearth-espresso overflow-hidden">
         {/* Floating Tactile Photo Following Mouse Cursor (Warm Organic Card) */}
         <div
           ref={cursorRef}
@@ -122,7 +168,7 @@ export default function EventsPage() {
         </div>
 
         {/* Content Container with Generous Negative Space */}
-        <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
           
           {/* Centered Airy Header */}
           <CourtyardHeader
@@ -134,17 +180,25 @@ export default function EventsPage() {
           />
 
           {/* Academic Year Filter Links (Zero Pill Buttons) */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(){if(typeof window==='undefined')return;function handle(e){var b=e.target&&e.target.closest?e.target.closest('[data-event-year]'):null;if(b){var y=b.getAttribute('data-event-year');window.__pendingEventYear=y;window.dispatchEvent(new CustomEvent('event-year-select',{detail:y}));}}document.addEventListener('click',handle,true);document.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){handle(e);}},true);})();`,
+            }}
+          />
           <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mb-20 sm:mb-28">
             {years.map((yr) => {
               const isSelected = filterYear === yr;
               return (
                 <button
                   key={yr}
+                  type="button"
+                  data-event-year={yr}
+                  aria-pressed={isSelected}
                   onClick={() => {
                     playClick();
                     setFilterYear(yr);
                   }}
-                  className={`font-sans text-xs tracking-widest uppercase font-semibold transition-colors duration-200 cursor-pointer pb-1 ${
+                  className={`font-sans text-xs tracking-widest uppercase font-semibold transition-colors duration-200 cursor-pointer min-h-12 pb-1 ${
                     isSelected
                       ? "text-[#B85C38] border-b-2 border-[#B85C38]"
                       : "text-[#57524C] hover:text-[#2A2825] border-b-2 border-transparent"
@@ -157,22 +211,26 @@ export default function EventsPage() {
           </div>
 
           {/* Flowing Open List of Events: 1px Razor-Thin Grounding Lines, Naked Typography */}
-          <div className="border-t border-[#E5DDD0] divide-y divide-[#E5DDD0]">
-            {filteredEvents.map((evt) => {
+          <div ref={riverRef} className="relative border-t border-hearth-espresso/20">
+            <svg aria-hidden="true" viewBox="0 0 100 1000" preserveAspectRatio="none" className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-24 -translate-x-1/2 text-hearth-terracotta/50 lg:block" fill="none">
+              <path ref={pathRef} d="M50 0 C-15 120 115 210 50 330 S-15 540 50 660 S115 880 50 1000" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" pathLength="1" strokeDasharray="1" />
+            </svg>
+            {filteredEvents.map((evt, index) => {
               return (
                 <Link
+                  data-cursor="view"
                   key={evt.slug}
                   href={`/events/${evt.slug}`}
                   onClick={playClick}
                   onMouseEnter={() => {
                     audioLayer.playTapeClack();
-                    setHoveredEvent(evt);
+                    if (!reducedMotion && matchMedia("(pointer: fine)").matches) setHoveredEvent(evt);
                   }}
                   onMouseLeave={() => setHoveredEvent(null)}
-                  className="group block py-14 sm:py-20 text-center relative select-none transition-colors"
+                  className={`group block relative py-14 sm:py-20 border-b border-hearth-espresso/20 lg:w-5/12 ${index % 2 ? "lg:ml-auto" : ""} focus-visible:outline-2 focus-visible:outline-hearth-terracotta`}
                 >
                   {/* Floating Date Lockup */}
-                  <div className="flex items-center justify-center gap-2 mb-4">
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
                     <span className="font-sans text-xs sm:text-sm font-semibold text-[#B85C38] uppercase tracking-widest">
                       {evt.date}
                     </span>
@@ -198,10 +256,8 @@ export default function EventsPage() {
                   </p>
 
                   <div className="mt-8 inline-flex items-center gap-2 text-xs font-sans font-semibold text-[#B85C38] group-hover:text-[#E5A93C] tracking-wider uppercase border-b border-[#B85C38] pb-0.5">
-                    <span>{evt.location}</span>
-                    <span className="transition-transform duration-300 group-hover:translate-x-1">
-                      →
-                    </span>
+                    <span>Open event dossier</span>
+                    <Magnetic className="inline-flex"><span aria-hidden="true" className="magnetic-inner inline-block p-3">→</span></Magnetic>
                   </div>
                 </Link>
               );

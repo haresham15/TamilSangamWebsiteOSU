@@ -34,7 +34,7 @@ const QUICK_PROMPTS = [
 
 export const SangamChatbot: React.FC = () => {
   const { locale } = useLocale();
-  const { playClick, playWoodClick, playBell } = useAudio();
+  const { playClick, playWoodClick, playBell, playWhoosh, playSilkSwish } = useAudio();
 
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessageUI[]>([
@@ -205,7 +205,11 @@ export const SangamChatbot: React.FC = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => {
-            playWoodClick();
+            if (!isOpen) {
+              playWhoosh(0.45);
+            } else {
+              playSilkSwish(0.35);
+            }
             setIsOpen(!isOpen);
           }}
           aria-label="Ask Nanba - OSU Tamil Sangam AI Bot"

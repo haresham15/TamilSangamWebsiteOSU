@@ -178,7 +178,9 @@ export function CrowdInstancedSimulation({
   }, [crowdTexture]);
 
   // 4. Per-frame time update
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     uniformsRef.current.uTime.value = clock.getElapsedTime();
   });
 

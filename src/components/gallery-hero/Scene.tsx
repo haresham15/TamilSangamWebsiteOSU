@@ -3,7 +3,7 @@
 
 import React, { useRef } from "react";
 import * as THREE from "three";
-import { View } from "@react-three/drei";
+import { SceneView as View } from "@/components/canvas/SceneView";
 import { CameraRig } from "./CameraRig";
 import { LightingRig } from "./fx/LightingRig";
 import { Fretboard } from "./neck/Fretboard";

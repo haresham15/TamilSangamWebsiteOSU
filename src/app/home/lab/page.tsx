@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { PerspectiveCamera, OrbitControls } from "@react-three/drei";
+import { useInView } from "framer-motion";
 import * as THREE from "three";
 import {
   calcStrandFeed,
@@ -56,7 +57,9 @@ function LabConveyorController({
   rightConveyor: any;
   leftConveyor: any;
 }) {
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const time = state.clock.elapsedTime;
     if (rightConveyor?.uniforms) {
       rightConveyor.uniforms.uP.value = p;
@@ -71,6 +74,8 @@ function LabConveyorController({
 }
 
 export default function HomeLabPage() {
+  const viewportRef = React.useRef<HTMLDivElement>(null);
+  const inView = useInView(viewportRef, { margin: "200px 0px" });
   const [p, setP] = useState(0.0);
   const [followCamera, setFollowCamera] = useState(true);
   const [showWeave, setShowWeave] = useState(true);
@@ -185,8 +190,8 @@ export default function HomeLabPage() {
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#050201] text-white font-mono text-xs">
       {/* 3D WebGL Canvas */}
-      <div className="relative flex-1 h-full">
-        <Canvas>
+      <div ref={viewportRef} className="relative flex-1 h-full">
+        <Canvas dpr={[1, 1.75]} frameloop={inView ? "always" : "never"}>
           <LabConveyorController p={p} rightConveyor={rightConveyor} leftConveyor={leftConveyor} />
           {followCamera ? (
             <PerspectiveCamera

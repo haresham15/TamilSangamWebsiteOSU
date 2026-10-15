@@ -348,7 +348,9 @@ export function CorridorTreadmill() {
   const nearestLampIndicesRef = useRef<Set<number>>(new Set([0, 1]));
   const lastUpdatedZRef = useRef(30);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const camZ = state.camera.position.z;
 
     // Dynamic light assignment: find the closest active lamps to camera Z (fully reversible)

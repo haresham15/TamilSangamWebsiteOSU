@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import React, { memo, useId } from "react";
 
 interface HeritageTextureOverlayProps {
   /** Texture variant: 'kanjeevaram' (woven silk micro-texture) or 'sandstone' (aged architectural grain) */
@@ -23,6 +23,7 @@ export const HeritageTextureOverlay = memo(function HeritageTextureOverlay({
   blendMode = "overlay",
   className = "",
 }: HeritageTextureOverlayProps) {
+  const filterId = useId();
   // Variant parameters for procedural grain
   const baseFrequency = variant === "kanjeevaram" ? "0.85 0.72" : "0.55 0.65";
   const numOctaves = variant === "kanjeevaram" ? "3" : "4";
@@ -43,7 +44,7 @@ export const HeritageTextureOverlay = memo(function HeritageTextureOverlay({
         height="100%"
       >
         <defs>
-          <filter id={`heritage-grain-${variant}`} x="0%" y="0%" width="100%" height="100%">
+          <filter id={filterId} x="0%" y="0%" width="100%" height="100%">
             <feTurbulence
               type="fractalNoise"
               baseFrequency={baseFrequency}
@@ -63,8 +64,8 @@ export const HeritageTextureOverlay = memo(function HeritageTextureOverlay({
         <rect
           width="100%"
           height="100%"
-          filter={`url(#heritage-grain-${variant})`}
-          fill="#faf5ed"
+          filter={`url(#${filterId})`}
+          className="fill-paper"
         />
       </svg>
     </div>

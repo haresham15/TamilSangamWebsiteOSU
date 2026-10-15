@@ -22,7 +22,9 @@ import { globalStringEnergy } from "../strings/Strings";
  */
 export function PropPlaceholders() {
   // Per-frame string energy sync
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const liveRefs = getSharedHeroRefs();
 
     // Sync timeline string controls to energy model

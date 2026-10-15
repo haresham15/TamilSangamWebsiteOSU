@@ -1,8 +1,9 @@
 # Join Hero — "The Morning Campus"
-### Execution-grade PRD v2 + agent directive (supersedes the "Nanban Gates Visual Overhaul" directive)
 
-**Route:** `/join` · **Date:** October 2, 2026
-**Scope:** environment, lighting, materials, particles, and a new memorabilia vignette. **The existing GSAP scroll animation and the swinging-gate mechanics are frozen** (§1.1).
+## Execution-grade PRD v2 + agent directive (supersedes the "Nanban Gates Visual Overhaul" directive)
+
+**Route:** `/join` · **Date:** October 2, 2026  
+**Scope:** environment, lighting, materials, particles, and a new memorabilia vignette. **The existing GSAP scroll animation and the swinging-gate mechanics are frozen** (§1.1).  
 **Code samples** are reference implementations written for this spec and **not run**. Test them.
 
 ---
@@ -10,7 +11,7 @@
 ## 0. What changed from your directive, and why
 
 | # | Your directive | v2 | Reason |
-|---|---|---|---|
+| :--- | :--- | :--- | :--- |
 | 1 | "Next.js 15" | **Next.js 16.3.5 / React 19.2** | What `package.json` shows. R3F must be **v9** (see the Gallery PRD §0 for the version plan). |
 | 2 | Drei `<Sky/>` + a fog color that "matches the canvas background exactly" | **Custom gradient sky dome whose horizon color is the fog color** (drei `<Sky/>` kept as fallback) | Drei's Sky draws a blue Rayleigh sky. Fog tints distant geometry toward `#F4EEDD`, but the sky behind it stays blue, so you get a visible band at the horizon. Making the dome's horizon *be* the fog color guarantees a seamless blend. |
 | 3 | `<Environment preset="dawn"/>` | **Procedural `Lightformer` environment** (self-hosted CC0 HDRI as optional upgrade) | Drei presets are fetched from a CDN at runtime. That adds a network dependency, can fail under CSP or offline, and breaks the site's "procedural, no external fetch" convention. |
@@ -27,19 +28,24 @@
 ## 1. Guardrails
 
 ### 1.1 Frozen scope
+
 Do not modify: the GSAP timeline(s) that drive the gate and scroll, the gate rig and its swing, or any file that defines them. Phase 0 lists these as `PROTECTED_PATHS`. **Every gate review must show `git diff --stat main -- <PROTECTED_PATHS>` empty.** New objects may *read* the gate progress value to react (e.g. bunting sways more as the gates open) but may not add tweens to existing timelines or reparent gate parts. Everything new lives outside the gate's swing arc (keep-out volume in §5.3).
 
 ### 1.2 Film and IP
+
 *Nanban* (2012, dir. Shankar) is a copyrighted film, and a remake of *3 Idiots*. The vignette is **visual evocation for people who know the film, plain meaning for everyone else**:
+
 - No stills, poster art, title lettering, music, song lyrics, dialogue, or actor/character likenesses.
 - No character names, actor names, or the film's fictional college name in shipped UI, alt text, metadata, or filenames. The Tamil word நண்பன் / "nanban" means "friend" and is fine as a word; the film's logo and typography are not.
 - "All is well" is a widely used phrase and the film's tagline. Use it only as hand-chalked text on a blackboard prop, never set in the film's lettering.
 - No Block O, OSU seal, or mascot. A plain buckeye nut and buckeye leaves are natural objects and fine.
 
 ### 1.3 Material that stays out
+
 The film touches student suicide and ragging, among other heavy material. **Do not depict** any of it: no ropes, ceiling fans as props, hospital or childbirth imagery, bullying scenes, or anything referencing a character's death. The vignette is warm and light by design.
 
 ### 1.4 Culture
+
 Tamil text on props (blackboard, trunk) is rendered with Canvas 2D after `document.fonts.ready`, follows the `tamil-text` skill, and is logged to `docs/redesign/tamil-review.md` for a native reader. Any 3D Tamil letterforms use the HarfBuzz → SVG path → extrusion pipeline, never `TextGeometry`.
 
 ---
@@ -53,7 +59,7 @@ Tamil text on props (blackboard, trunk) is rendered with Canvas 2D after `docume
 **Palette (sRGB):**
 
 | Role | Value |
-|---|---|
+| :--- | :--- |
 | Fog / horizon | `#F4EEDD` |
 | Sky mid (haze) | `#F7E7C6` |
 | Sky zenith | `#9CC4E8` |
@@ -63,60 +69,15 @@ Tamil text on props (blackboard, trunk) is rendered with Canvas 2D after `docume
 | Iron | `#141414` base |
 | Club accents (bunting, tassel, ribbons) | site purple, mint, gold tokens |
 
-**This hero is fixed "morning"** and deliberately ignores the global time-of-day/tinai system. Note it in a code comment so nobody "fixes" it.
-
 ---
 
-## 3. Environment
-
-### 3.1 One sun
-
-```ts
-// env/sun.ts
-import { Vector3 } from "three";
-
-const ELEV = (22 * Math.PI) / 180;   // low morning sun
-const AZIM = (45 * Math.PI) / 180;   // back-right of the camera view axis
-export const SUN_DIR = new Vector3(
-  Math.cos(ELEV) * Math.sin(AZIM),   //  0.656
-  Math.sin(ELEV),                    //  0.375
- -Math.cos(ELEV) * Math.cos(AZIM),   // -0.656
-).normalize();
-export const SUN_DIST = 40;
-export const SUN_POS: [number, number, number] = SUN_DIR.clone().multiplyScalar(SUN_DIST).toArray();
-```
-
-### 3.2 Sky dome and fog
-
-```glsl
-// sky fragment (dome mesh: BackSide, depthWrite false, fog false, renderOrder -1)
-varying vec3 vDir;
-uniform vec3 uHorizon;  // = FOG_COLOR  (#F4EEDD)
-uniform vec3 uMid;      // #F7E7C6
-uniform vec3 uZenith;   // #9CC4E8
-uniform vec3 uSunDir;
-void main() {
-  vec3 d = normalize(vDir);
-  float h = clamp(d.y, 0.0, 1.0);
-  vec3 c = mix(uHorizon, uMid, smoothstep(0.00, 0.18, h));
-  c = mix(c, uZenith, smoothstep(0.12, 0.85, h));
-  float s = max(dot(d, uSunDir), 0.0);
-  c += vec3(1.0, 0.86, 0.62) * (pow(s, 64.0) * 0.8 + pow(s, 6.0) * 0.18);   // disc + halo
-  gl_FragColor = vec4(c, 1.0);
-  #include <tonemapping_fragment>
-  #include <colorspace_fragment>
-}
-```
-
-Fog: `scene.fog = new THREE.FogExp2(FOG_COLOR, 0.015)` and `<color attach="background" args={[FOG_COLOR]} />`. Both use the **same constant**.
-
-### 3.3 Environment light (no network)
+## 3. Lighting Rig (Procedural Lightformer Environment)
 
 ```tsx
-<Environment resolution={256} frames={1} background={false}>
-  {/* sun softbox, back-right */}
-  <Lightformer form="rect" intensity={6} color="#FFF3D6" scale={[14, 10, 1]} position={SUN_POS} target={[0, 0, 0]} />
-  {/* cool sky dome overhead */}
+<Environment frames={1} resolution={256}>
+  {/* low directional sun key */}
+  <Lightformer form="circle" intensity={3.5} color="#FFEAC2" scale={8} position={[15, 8, -20]} target={[0, 0, 0]} />
+  {/* cool zenith fill */}
   <Lightformer form="ring" intensity={1.4} color="#BFD9F2" scale={30} position={[0, 24, 0]} target={[0, 0, 0]} />
   {/* warm ground bounce */}
   <Lightformer form="rect" intensity={0.9} color="#E8D9B8" scale={[30, 30, 1]} rotation-x={-Math.PI / 2} position={[0, -2, 0]} />
@@ -130,7 +91,7 @@ Fog: `scene.fog = new THREE.FogExp2(FOG_COLOR, 0.015)` and `<color attach="backg
 ## 4. Materials
 
 | Surface | Spec |
-|---|---|
+| :--- | :--- |
 | **Stone pillars** | CC0 limestone/block PBR set (map, normal, roughness), **1k KTX2** desktop and **512** mobile, `anisotropy 8`. Triplanar or per-face UV. Color `#E8E4D9`, roughness ~0.9. Fallback: procedural noise bump + roughness 0.9. |
 | **Pathway** | Cobblestone or concrete set, color `#D1CCC0`, roughness 1.0 with a roughness map. Optional "morning dew": a few darker, low-roughness patches (0.35) to catch sky glints. |
 | **Iron, Variant A** | `metalness 0.9, roughness 0.25, color #1A1A1A`. |

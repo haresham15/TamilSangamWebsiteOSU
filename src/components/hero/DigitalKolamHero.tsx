@@ -3,12 +3,14 @@
 import React, { useRef, useEffect, useMemo, useSyncExternalStore } from "react";
 import * as THREE from "three";
 import { useFrame, type RootState } from "@react-three/fiber";
-import { PerspectiveCamera, View, Text3D, Center, Environment, Lightformer } from "@react-three/drei";
+import { PerspectiveCamera, Text3D, Center, Environment, Lightformer } from "@react-three/drei";
+import { SceneView as View } from "@/components/canvas/SceneView";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
 import { SceneRegistrar } from "@/director/wireframe";
 import { heroScrollProgress, heroDirectorState } from "@/engine/heroScrollStore";
 import { governor } from "@/engine/governor";
+import { registerSystem } from "@/engine/masterTick";
 import { evalCamera, STRAND_COUNT, WREATH_CY, WREATH_R_IN } from "./flowMath";
 import {
   generatePulliLattice,
@@ -21,6 +23,10 @@ import {
 } from "./pathBuilder";
 import { createPeelConveyorMaterial } from "./peelConveyorShader";
 import { SideKolamsGroup } from "@/components/home-hero/side-kolams/SideKolam";
+import { playCinematicWhoosh } from "@/audio/sounds";
+import { useReducedMotion } from "framer-motion";
+
+const STUDIO_LIGHT = { ivory: "#FAF7F2", terracotta: "#C85A32", gold: "#D4AF37" };
 
 /**
  * Camera Vertical Truck Glide (§PRD 5.2)
@@ -28,14 +34,21 @@ import { SideKolamsGroup } from "@/components/home-hero/side-kolams/SideKolam";
  */
 function HeroTruckCamera() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
+  const currentPos = useRef(new THREE.Vector3(0, 0, 12));
 
-  useSafeFrame((state) => {
+  useSafeFrame((state, safeDelta) => {
     const p = heroDirectorState.scrubActive
       ? heroDirectorState.scrubProgress
       : heroScrollProgress.current;
 
     const { camY, camZ, pitchDeg } = evalCamera(p);
-    state.camera.position.set(0, camY, camZ);
+
+    // Smooth camera damping shock absorber
+    const damp = 1 - Math.exp(-22 * safeDelta);
+    currentPos.current.y += (camY - currentPos.current.y) * damp;
+    currentPos.current.z += (camZ - currentPos.current.z) * damp;
+
+    state.camera.position.set(0, currentPos.current.y, currentPos.current.z);
     state.camera.rotation.set(pitchDeg * (Math.PI / 180), 0, 0);
   });
 
@@ -47,8 +60,8 @@ function HeroTruckCamera() {
  */
 function useSafeFrame(callback: (state: RootState, safeDelta: number) => void) {
   useFrame((state, delta) => {
-    const safeDelta = Math.min(delta, 0.05);
-    callback(state, safeDelta);
+    const dt = Math.min(delta, 0.05);
+    callback(state, dt);
   });
 }
 
@@ -174,7 +187,7 @@ function GroundedPulliPoints({ lattice }: { lattice: PulliDotLattice }) {
          float dimFactor = mix(1.0, 0.12, kuralFormT * insideVoid);
 
          // Soft glow pulse following peel front down the lattice
-         float peelFrontY = mix(4.5, -9.08, smoothstep(0.04, 0.60, uP));
+         float peelFrontY = mix(4.5, -9.08, smoothstep(0.12, 0.60, uP));
          float peelDist = abs(vDotPos.y - peelFrontY);
          float pulse = exp(-peelDist * peelDist / 1.4) * (1.0 - kuralFormT * 0.85);
 
@@ -333,16 +346,166 @@ function PeelAndFlowKolamMesh({ isMobile, tier }: { isMobile: boolean; tier: str
 }
 
 /**
- * 3D Golden "அ" Emblem Component (§MASTER DIRECTIVE)
+ * React Bits ScrollExpand Intro Title & Scroll Cue Overlay (p in [0.00, 0.12])
+ * Renders the expanding visible black frame with thick solid black bezel borders,
+ * the headline held over the frame that lifts away as the media takes over,
+ * and the subtle scroll hint.
+ */
+function ScrollExpandIntroOverlay() {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const hintRef = useRef<HTMLDivElement>(null);
+  const hasTriggeredWhoosh = useRef(false);
+  const lastP = useRef(-1);
+  const hasInitialized = useRef(false);
+
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      const p = heroDirectorState.scrubActive
+        ? heroDirectorState.scrubProgress
+        : heroScrollProgress.current;
+
+      // Skip redundant DOM mutations when progress is stationary
+      if (hasInitialized.current && Math.abs(p - lastP.current) < 0.00008) {
+        raf = requestAnimationFrame(update);
+        return;
+      }
+      lastP.current = p;
+      hasInitialized.current = true;
+
+      const EXPAND_END = 0.12;
+      const expandT = Math.min(1, Math.max(0, p / EXPAND_END));
+      const easeE = expandT * expandT * (3 - 2 * expandT);
+      const borderOpacity = 1 - easeE;
+
+      // Cinematic sound whoosh on hero frame expansion
+      if (p > 0.015 && p < EXPAND_END && !hasTriggeredWhoosh.current) {
+        hasTriggeredWhoosh.current = true;
+        playCinematicWhoosh(0.55);
+      } else if (p <= 0.005) {
+        hasTriggeredWhoosh.current = false;
+      }
+
+      // Expanding Visible Black Frame with thick solid black bezel matte
+      if (frameRef.current) {
+        if (p >= EXPAND_END) {
+          frameRef.current.style.opacity = "0";
+          frameRef.current.style.visibility = "hidden";
+        } else {
+          frameRef.current.style.visibility = "visible";
+          const isMobile = window.innerWidth < 768;
+          const startW = isMobile ? 56 : 28;
+          const startH = isMobile ? 38 : 38;
+          const w = startW + (100 - startW) * easeE;
+          const h = startH + (100 - startH) * easeE;
+          const r = (isMobile ? 18 : 22) * (1 - easeE);
+          const borderW = 10 * (1 - easeE);
+
+          frameRef.current.style.width = `${w}vw`;
+          frameRef.current.style.height = `${h}vh`;
+          frameRef.current.style.borderRadius = `${r}px`;
+          frameRef.current.style.borderWidth = `${borderW}px`;
+          frameRef.current.style.borderColor = "#050201";
+          frameRef.current.style.outline = `${2 * borderOpacity}px solid rgba(255, 184, 77, ${0.85 * borderOpacity})`;
+          frameRef.current.style.boxShadow = `0 0 0 9999px #050201, inset 0 0 0 ${2 * borderOpacity}px rgba(255, 184, 77, ${0.7 * borderOpacity}), 0 0 ${35 * (1 - easeE)}px rgba(255, 184, 77, ${0.25 * borderOpacity})`;
+          frameRef.current.style.opacity = `${borderOpacity}`;
+        }
+      }
+
+      // Title lifts and fades as scroll begins
+      if (titleRef.current) {
+        if (p >= EXPAND_END) {
+          titleRef.current.style.opacity = "0";
+          titleRef.current.style.visibility = "hidden";
+          titleRef.current.style.pointerEvents = "none";
+        } else {
+          titleRef.current.style.visibility = "visible";
+          const out = Math.min(1, Math.max(0, (p - 0.01) / 0.07));
+          const easeOut = out * out * (3 - 2 * out);
+          titleRef.current.style.opacity = `${1 - easeOut}`;
+          titleRef.current.style.transform = `translate3d(0, ${-28 * easeOut}px, 0)`;
+        }
+      }
+
+      // Hint fades immediately on scroll
+      if (hintRef.current) {
+        if (p >= 0.05) {
+          hintRef.current.style.opacity = "0";
+          hintRef.current.style.visibility = "hidden";
+          hintRef.current.style.pointerEvents = "none";
+        } else {
+          hintRef.current.style.visibility = "visible";
+          const gone = Math.min(1, Math.max(0, p / 0.035));
+          const easeGone = gone * gone * (3 - 2 * gone);
+          hintRef.current.style.opacity = `${1 - easeGone}`;
+          hintRef.current.style.transform = `translate3d(0, ${10 * easeGone}px, 0)`;
+        }
+      }
+
+      raf = requestAnimationFrame(update);
+    };
+
+    raf = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden select-none">
+      {/* Expanding Visible Black Frame with Thick Black Bezel Matte */}
+      <div
+        ref={frameRef}
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        style={{
+          width: "28vw",
+          height: "38vh",
+          borderRadius: "22px",
+          border: "10px solid #050201",
+          outline: "2px solid rgba(255, 184, 77, 0.85)",
+          boxShadow: "0 0 0 9999px #050201, inset 0 0 0 2px rgba(255, 184, 77, 0.7), 0 0 35px rgba(255, 184, 77, 0.25)",
+          willChange: "width, height, border-radius, opacity",
+        }}
+      />
+
+      {/* Title held at upper portion above the frame */}
+      <div
+        ref={titleRef}
+        className="absolute top-0 left-0 right-0 pt-7 sm:pt-9 text-center transition-opacity"
+        style={{ willChange: "opacity, transform" }}
+      >
+        <span className="block font-space-mono text-[10px] sm:text-xs tracking-[0.28em] text-[#FFB84D]/90 uppercase mb-1 sm:mb-2">
+          THE OHIO STATE UNIVERSITY // EST. 2021
+        </span>
+        <h1 className="font-anek-tamil text-[clamp(2.2rem,5.5vw,4.5rem)] font-bold text-white tracking-tight leading-none drop-shadow-[0_4px_32px_rgba(0,0,0,0.85)]">
+          TAMIL SANGAM
+        </h1>
+      </div>
+
+      {/* Scroll Hint held at bottom */}
+      <div
+        ref={hintRef}
+        className="absolute bottom-6 sm:bottom-8 left-0 right-0 text-center transition-opacity"
+        style={{ willChange: "opacity, transform" }}
+      >
+        <p className="font-space-mono text-[11px] sm:text-xs tracking-[0.22em] text-[#FFB84D]/85 uppercase">
+          SCROLL TO ENTER · கீழே உருட்டவும் &darr;
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 3D Golden "அ" Emblem Component (§MASTER DIRECTIVE & ScrollExpand)
  * High-fidelity single-glyph Tamil letter "அ" from Mukta Malar font,
- * suspended stationary at [0, 0, 0] inside the protected central void.
- * - Stays completely stagnant at its coordinates without shrinking or flying away.
- * - Fades out its opacity smoothly between scrollProgress 0.00 -> 0.35.
+ * suspended stationary in the central void at [0, 0, 0.05].
+ * - Standard normal scale 1.0x (per user request).
+ * - Gentle micro-motion, leaving the frame purely as the camera descends.
  */
 function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const materialRef = useRef<THREE.MeshPhysicalMaterial>(null);
-  const introStartRef = useRef<number | null>(null);
+  const elapsed = useRef(0);
 
   const emblemWireMat = useMemo(
     () =>
@@ -354,30 +517,21 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
     []
   );
 
-  useSafeFrame((state, _safeDelta) => {
-    const time = state.clock.elapsedTime;
-    if (introStartRef.current === null) {
-      introStartRef.current = time;
-    }
-    const startTime = introStartRef.current ?? time;
-    const elapsed = time - startTime;
+  useEffect(() => () => emblemWireMat.dispose(), [emblemWireMat]);
+
+  useSafeFrame((_, dt) => {
+    const time = elapsed.current += dt;
 
     if (groupRef.current) {
-      // Intro emergence: from z = -8 to z = 0 over 1.8s
-      let introZ = 0;
-      if (elapsed < 2.4) {
-        const introT = THREE.MathUtils.clamp((elapsed - 0.6) / 1.8, 0, 1);
-        introZ = THREE.MathUtils.lerp(-8, 0, THREE.MathUtils.smoothstep(introT, 0, 1));
-      }
+      // Gentle micro-motion
+      const floatY = Math.sin(time * 1.05) * 0.025;
+      const wobbleY = Math.sin(time * 0.75) * 0.015;
+      const tiltX = Math.sin(time * 0.50) * 0.01;
 
-      // World-static with micro-motion (A <= 0.04, tilt <= 3 deg, §PRD 5.1 & 5.3)
-      // NO z-recede, NO fade. Leaves the frame purely because the camera descends.
-      const floatY = Math.sin(time * 1.05) * 0.03;
-      const wobbleY = Math.sin(time * 0.75) * 0.02;
-      const tiltX = Math.sin(time * 0.50) * 0.015;
-
-      groupRef.current.position.set(0, floatY, introZ);
+      // Positioned at z = 0.05 inside the central void
+      groupRef.current.position.set(0, floatY, 0.05);
       groupRef.current.rotation.set(tiltX, wobbleY, 0);
+      groupRef.current.scale.setScalar(1.0);
 
       if (materialRef.current) {
         materialRef.current.opacity = 1.0;
@@ -389,7 +543,7 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
   const letterSize = isMobile ? 1.4 : 1.85;
 
   return (
-    <group ref={groupRef} position={[0, 0, 0]}>
+    <group ref={groupRef} position={[0, 0, 0.05]}>
       <Center>
         <Text3D
           font="/fonts/mukta-malar-tamil.json"
@@ -408,10 +562,8 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
           அ
           <meshPhysicalMaterial
             ref={materialRef}
-            color="#f59e0b"
-            emissive="#4a2c0c"
-            emissiveIntensity={0.28}
-            metalness={0.94}
+            color={STUDIO_LIGHT.ivory}
+            metalness={1}
             roughness={0.16}
             clearcoat={1.0}
             clearcoatRoughness={0.08}
@@ -478,9 +630,11 @@ function DustMotes({ isMobile, tier }: { isMobile: boolean; tier: string }) {
 }
 
 export function DigitalKolamHero() {
+  const viewportRef = useRef<HTMLDivElement>(null);
   const { isLiteMode } = useLiteMode();
   const tier = useTier();
-  const isWebglEnabled = !isLiteMode && tier !== "C";
+  const reducedMotion = useReducedMotion();
+  const isWebglEnabled = !isLiteMode && tier !== "C" && !reducedMotion;
 
   const isMobile = useSyncExternalStore(
     (callback) => {
@@ -499,14 +653,26 @@ export function DigitalKolamHero() {
 
   useEffect(() => {
     if (!isWebglEnabled) return;
-    governor.request("home-hero", 2);
+    let inView = true;
+    const stop = registerSystem({
+      order: 50,
+      step: () => governor.request("home-hero", inView && heroScrollProgress.current < 0.95 ? 2 : 0),
+    });
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[entries.length - 1];
+      inView = entry.isIntersecting;
+      if (!inView) governor.request("home-hero", 0);
+    });
+    if (viewportRef.current) observer.observe(viewportRef.current);
     return () => {
+      stop();
+      observer.disconnect();
       governor.request("home-hero", 0);
     };
   }, [isWebglEnabled]);
 
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none w-full h-full overflow-hidden">
+    <div ref={viewportRef} className="absolute inset-0 z-0 pointer-events-none w-full h-full overflow-hidden">
       {mounted && isWebglEnabled && (
         <View className="w-full h-full pointer-events-auto" index={2}>
           <SceneRegistrar />
@@ -516,19 +682,18 @@ export function DigitalKolamHero() {
 
           {/* Local Lightformer Environment rendered once (frames={1}, zero CDN dependency) */}
           <Environment frames={1} resolution={256} background={false}>
-            {/* Upper-left warm softbox */}
+            {/* Three local studio strips captured once into the reflection map. */}
             <Lightformer
               form="rect"
               intensity={4.0}
-              color="#FFD9A0"
+              color={STUDIO_LIGHT.ivory}
               position={[-6, 6, 4]}
-              scale={[10, 10, 1]}
+              scale={[2, 10, 1]}
             />
-            {/* Right narrow cool strip rim light */}
             <Lightformer
               form="rect"
               intensity={1.5}
-              color="#9FD6FF"
+              color={STUDIO_LIGHT.terracotta}
               position={[6, 2, 3]}
               scale={[2, 12, 1]}
             />
@@ -536,7 +701,7 @@ export function DigitalKolamHero() {
             <Lightformer
               form="rect"
               intensity={2.2}
-              color="#FFB84D"
+              color={STUDIO_LIGHT.gold}
               position={[0, -5, 3]}
               scale={[12, 3, 1]}
             />
@@ -558,10 +723,13 @@ export function DigitalKolamHero() {
           {/* Authentic Stationary Side Kolams (Option A: Kolam L #46815 & Kolam R #46895) */}
           <SideKolamsGroup isMobile={isMobile} />
 
-          {/* Golden "அ" Emblem in Protected Central Void (R >= 2.05) */}
+          {/* Golden "அ" Emblem in Protected Central Void */}
           <GoldenTamilEmblem isMobile={isMobile} />
         </View>
       )}
+
+      {/* React Bits ScrollExpand Title & Hint DOM Overlay */}
+      {mounted && <ScrollExpandIntroOverlay />}
 
       {/* Tier C / Lite Mode / reduced-motion SVG Fallback (§PRD 10) */}
       {mounted && !isWebglEnabled && (
@@ -577,6 +745,8 @@ export function DigitalKolamHero() {
  * disabled by Lite Mode, or when the user prefers reduced motion.
  */
 function StaticKolamFallback({ isMobile: _isMobile }: { isMobile: boolean }) {
+  const letterScale = 1.0;
+
   const dots: { x: number; y: number }[] = [];
   const rings = [180, 225, 270, 315, 360, 405];
   rings.forEach((r, ringIdx) => {
@@ -592,6 +762,16 @@ function StaticKolamFallback({ isMobile: _isMobile }: { isMobile: boolean }) {
 
   return (
     <div className="absolute inset-0 z-0 flex items-center justify-center bg-[#050201] overflow-hidden select-none pointer-events-none">
+      {/* Central 2D Gold Fallback Letter "அ" scaling with scroll */}
+      <div
+        className="absolute z-10 flex items-center justify-center transition-transform"
+        style={{ transform: `scale(${letterScale})` }}
+      >
+        <span className="font-noto-serif-tamil text-7xl sm:text-9xl font-bold bg-gradient-to-br from-[#FFE599] via-[#FFB84D] to-[#92400e] bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(255,184,77,0.4)]">
+          அ
+        </span>
+      </div>
+
       <svg
         viewBox="-480 -480 960 960"
         className="w-full h-full max-w-[900px] max-h-[900px] object-contain opacity-90"

@@ -1,178 +1,53 @@
-// src/components/ui/ViewfinderCursor.tsx
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
 
-/**
- * FLOATING TAMIL "அ" (A) CURSOR
- * Organic, floating Tamil letter 'அ' accompanied by a precision focal point.
- * - 60fps tracking driven by GSAP quickTo without React state lag.
- * - Dynamic color inversion via mix-blend-difference ensuring high contrast over light & dark sections.
- * - Gentle ambient floating sine wave drift.
- * - Interactive focus expansion & tactile spring compression on click/hover.
- * - Graceful degradation: completely disabled on touch devices ((hover: none)).
- */
 export function ViewfinderCursor() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const glyphRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
-
+  const ringRef = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLSpanElement>(null);
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    // Disable custom cursor on touch/mobile devices
-    const isTouch = window.matchMedia("(hover: none)").matches;
-    if (isTouch) return;
-
-    const container = containerRef.current;
-    const glyph = glyphRef.current;
-    const dot = dotRef.current;
-    if (!container || !glyph) return;
-
-    // GSAP quickTo kinematics for buttery 60fps cursor positioning
-    const xTo = gsap.quickTo(container, "x", { duration: 0.08, ease: "power3" });
-    const yTo = gsap.quickTo(container, "y", { duration: 0.08, ease: "power3" });
-
-    // Subtle organic floating float animation on the Tamil letter
-    const floatTween = gsap.to(glyph, {
-      y: -4,
-      rotation: 3,
-      duration: 1.8,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
+    const media = gsap.matchMedia();
+    media.add("(pointer: fine) and (hover: hover) and (prefers-reduced-motion: no-preference)", () => {
+      const dot = dotRef.current, ring = ringRef.current, label = labelRef.current;
+      if (!dot || !ring || !label) return;
+      gsap.set([dot, ring], { xPercent: -50, yPercent: -50 });
+      const dx = gsap.quickTo(dot, "x", { duration: 0.06 });
+      const dy = gsap.quickTo(dot, "y", { duration: 0.06 });
+      const rx = gsap.quickTo(ring, "x", { duration: 0.22, ease: "power3.out" });
+      const ry = gsap.quickTo(ring, "y", { duration: 0.22, ease: "power3.out" });
+      let viewing = false;
+      const move = (event: PointerEvent) => {
+        dx(event.clientX); dy(event.clientY); rx(event.clientX); ry(event.clientY);
+        gsap.set([dot, ring], { opacity: 1 });
+      };
+      const over = (event: PointerEvent) => {
+        const next = event.target instanceof Element && !!event.target.closest('[data-cursor="view"]');
+        if (viewing === next) return;
+        viewing = next;
+        gsap.to(ring, { width: next ? 68 : 36, height: next ? 68 : 36, duration: 0.2, overwrite: true });
+        gsap.to(label, { opacity: next ? 1 : 0, duration: 0.15, overwrite: true });
+      };
+      const leave = () => gsap.set([dot, ring], { opacity: 0 });
+      window.addEventListener("pointermove", move, { passive: true });
+      document.addEventListener("pointerover", over, { passive: true });
+      document.documentElement.addEventListener("pointerleave", leave);
+      return () => {
+        window.removeEventListener("pointermove", move);
+        document.removeEventListener("pointerover", over);
+        document.documentElement.removeEventListener("pointerleave", leave);
+        [dx, dy, rx, ry].forEach((setter) => setter.tween.kill());
+        gsap.killTweensOf([dot, ring, label]);
+        gsap.set([dot, ring], { opacity: 0 });
+      };
     });
-
-    let isFocused = false;
-    let hasMoved = false;
-
-    const onPointerMove = (e: PointerEvent) => {
-      if (!hasMoved) {
-        hasMoved = true;
-        gsap.to(container, { opacity: 1, duration: 0.15, overwrite: "auto" });
-      }
-      xTo(e.clientX);
-      yTo(e.clientY);
-    };
-
-    const onPointerDown = () => {
-      gsap.to(glyph, {
-        scale: 0.85,
-        duration: 0.1,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-    };
-
-    const onPointerUp = () => {
-      gsap.to(glyph, {
-        scale: isFocused ? 1.4 : 1,
-        duration: 0.25,
-        ease: "back.out(2)",
-        overwrite: "auto",
-      });
-    };
-
-    const onPointerOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (!target) return;
-
-      const interactive = target.closest(
-        'a, button, input, select, textarea, [role="button"], [data-cursor="bracket"], .dossier-ribbon, [data-plane-item], .cursor-pointer'
-      );
-
-      if (interactive && !isFocused) {
-        isFocused = true;
-        // Focus state: Floating letter expands and tilts with magnetic presence
-        gsap.to(glyph, {
-          scale: 1.4,
-          rotation: -8,
-          duration: 0.22,
-          ease: "power2.out",
-          overwrite: "auto",
-        });
-        if (dot) {
-          gsap.to(dot, {
-            scale: 1.8,
-            duration: 0.2,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-        }
-      } else if (!interactive && isFocused) {
-        isFocused = false;
-        // Resting state: Gentle floating letter
-        gsap.to(glyph, {
-          scale: 1,
-          rotation: 0,
-          duration: 0.25,
-          ease: "power2.out",
-          overwrite: "auto",
-        });
-        if (dot) {
-          gsap.to(dot, {
-            scale: 1,
-            duration: 0.2,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-        }
-      }
-    };
-
-    const onPointerLeaveWindow = () => {
-      hasMoved = false;
-      gsap.to(container, { opacity: 0, duration: 0.15, overwrite: "auto" });
-    };
-
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerdown", onPointerDown, { passive: true });
-    window.addEventListener("pointerup", onPointerUp, { passive: true });
-    document.addEventListener("mouseover", onPointerOver, { passive: true });
-    document.addEventListener("mouseleave", onPointerLeaveWindow);
-
-    return () => {
-      floatTween.kill();
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("pointerup", onPointerUp);
-      document.removeEventListener("mouseover", onPointerOver);
-      document.removeEventListener("mouseleave", onPointerLeaveWindow);
-    };
+    return () => media.revert();
   }, []);
-
-  return (
-    <div
-      ref={containerRef}
-      aria-hidden="true"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        pointerEvents: "none",
-        zIndex: 999999,
-        mixBlendMode: "difference",
-        transform: "translate(-50%, -50%)",
-        opacity: 0,
-      }}
-      className="hidden md:flex items-center justify-center select-none"
-    >
-      {/* Precision Focal Point Dot at pointer center */}
-      <div
-        ref={dotRef}
-        className="w-1.5 h-1.5 rounded-full bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-[0_0_4px_white]"
-      />
-
-      {/* Floating Tamil "அ" Letter */}
-      <div
-        ref={glyphRef}
-        lang="ta"
-        style={{ letterSpacing: 0 }}
-        className="relative -top-3.5 -right-3 text-[22px] sm:text-[25px] font-noto-serif-tamil font-bold text-white leading-none select-none drop-shadow-[0_2px_8px_rgba(255,255,255,0.4)]"
-      >
-        அ
-      </div>
+  return <>
+    <div ref={dotRef} aria-hidden="true" className="pointer-events-none fixed left-0 top-0 z-[100] h-1.5 w-1.5 rounded-full bg-hearth-terracotta opacity-0" />
+    <div ref={ringRef} aria-hidden="true" className="pointer-events-none fixed left-0 top-0 z-[100] flex h-9 w-9 items-center justify-center rounded-full border border-hearth-terracotta text-hearth-terracotta opacity-0">
+      <span ref={labelRef} className="text-center font-mono text-[9px] opacity-0">VIEW<br /><span lang="ta" className="font-tamil tracking-normal">பார்</span></span>
     </div>
-  );
+  </>;
 }

@@ -248,7 +248,9 @@ export function LeafDrift({
 
   const matRef = useRef<THREE.ShaderMaterial>(null);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (!reducedMotion && matRef.current) {
       matRef.current.uniforms.uTime.value = state.clock.getElapsedTime();
     }

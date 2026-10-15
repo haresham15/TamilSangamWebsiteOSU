@@ -11,11 +11,19 @@ type AdvanceFn = (timestamp: number, runGlobalEffects?: boolean) => void;
 let currentGl: THREE.WebGLRenderer | null = null;
 let currentAdvance: AdvanceFn | null = null;
 let currentClock: THREE.Clock | null = null;
+const visibleScenes = new Set<string>();
+
+export function setSceneVisible(key: string, visible: boolean) {
+  if (visible) visibleScenes.add(key);
+  else visibleScenes.delete(key);
+  if (currentGl) currentGl.domElement.style.visibility = visibleScenes.size ? "visible" : "hidden";
+}
 
 export function registerRenderer(gl: THREE.WebGLRenderer, advance: AdvanceFn, clock?: THREE.Clock) {
   currentGl = gl;
   currentAdvance = advance;
   currentClock = clock ?? null;
+  gl.domElement.style.visibility = visibleScenes.size ? "visible" : "hidden";
   if (typeof window !== "undefined") {
     (window as unknown as { __r3fRenderer?: THREE.WebGLRenderer }).__r3fRenderer = gl;
   }
@@ -39,6 +47,7 @@ export function getRendererClock(): THREE.Clock | null {
 }
 
 export function rendererAdvance(timestamp: number, runGlobalEffects = true) {
+  if (visibleScenes.size === 0 || (typeof document !== "undefined" && document.hidden)) return;
   if (currentAdvance) {
     currentAdvance(timestamp, runGlobalEffects);
   }

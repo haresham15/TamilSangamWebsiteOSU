@@ -70,10 +70,10 @@ export function CameraRig({ propRigRef, children }: CameraRigProps) {
   }, [tier]);
 
   useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
     const cam = state.camera;
     if (!cam) return;
 
-    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
     const p = heroState.progress;
     const isReduced = prefersReducedMotion.current || tier === "C";
 
@@ -92,7 +92,7 @@ export function CameraRig({ propRigRef, children }: CameraRigProps) {
     if (isReduced || Math.abs(sDiff) < 0.05) {
       sCurrent.current = sTarget;
     } else {
-      const maxStep = MAX_CAMERA_WORLD_SPEED * safeDelta;
+      const maxStep = MAX_CAMERA_WORLD_SPEED * dt;
       const step = Math.sign(sDiff) * Math.min(Math.abs(sDiff), maxStep);
       sCurrent.current += step;
     }
@@ -120,11 +120,11 @@ export function CameraRig({ propRigRef, children }: CameraRigProps) {
       const c = 2.0 * omega; // critical damping
 
       const accel = -k * (fovCurrent.current - targetFov) - c * fovVelocity.current;
-      fovVelocity.current += accel * safeDelta;
+      fovVelocity.current += accel * dt;
 
       // Rate limit: <= 40 deg/s
       fovVelocity.current = Math.max(-MAX_FOV_SLEW_RATE, Math.min(MAX_FOV_SLEW_RATE, fovVelocity.current));
-      fovCurrent.current += fovVelocity.current * safeDelta;
+      fovCurrent.current += fovVelocity.current * dt;
     } else {
       fovCurrent.current = 35.0;
       fovVelocity.current = 0.0;
@@ -153,7 +153,7 @@ export function CameraRig({ propRigRef, children }: CameraRigProps) {
     const sLookAhead = sCam + 14.0;
     targetLookAt.set(0.0, 0.3, -sLookAhead);
 
-    currentLookAt.current.lerp(targetLookAt, Math.min(1.0, 9.0 * safeDelta));
+    currentLookAt.current.lerp(targetLookAt, Math.min(1.0, 9.0 * dt));
     cam.lookAt(currentLookAt.current);
 
     // 7. Update PropRig position (anchored 14 su ahead of camera)

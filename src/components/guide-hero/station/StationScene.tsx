@@ -38,8 +38,8 @@ function StationCamera({ getProgress, getTargetProgress }: { getProgress: () => 
 
   const simTime = useRef(0);
   useFrame((_, delta) => {
-    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
-    simTime.current += safeDelta;
+    const dt = Math.min(delta, 0.05);
+    simTime.current += dt;
     const camera = cameraRef.current;
     if (!camera) return;
     const frame = sampleGuideRail(getProgress());
@@ -78,7 +78,9 @@ function StationBoard({ getProgress, board }: { getProgress: () => number; board
     if (carouselInterval.current) clearInterval(carouselInterval.current);
   }, []);
 
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const group = revealRef.current;
     if (!group) return;
     const progress = getProgress();
@@ -341,7 +343,9 @@ function BoardHangers() {
 
 function TrainSet({ getProgress }: { getProgress: () => number }) {
   const trainRef = useRef<THREE.Group>(null);
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (!trainRef.current) return;
     const frame = sampleGuideRail(getProgress());
     trainRef.current.position.x = frame.departureOffset * 35;

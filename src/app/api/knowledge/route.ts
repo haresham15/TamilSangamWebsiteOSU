@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getKnowledgeBase, saveKnowledgeItem, deleteKnowledgeItem } from "@/lib/knowledge";
+import { isKnowledgeAdmin } from "@/lib/adminAuth";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  if (!isKnowledgeAdmin(req)) {
+    return NextResponse.json({ success: false, error: "Administrator authorization required" }, { status: 401 });
+  }
   try {
     const body = await req.json();
 
@@ -32,6 +36,12 @@ export async function POST(req: NextRequest) {
     }
 
     const { id, titleEn, titleTa, category, contentEn, contentTa, keywords, route } = body;
+
+    if ([id, titleTa, category, contentTa, route].some((value) => value !== undefined && typeof value !== "string") ||
+        (Array.isArray(keywords) && keywords.some((value: unknown) => typeof value !== "string")) ||
+        (route && (!route.startsWith("/") || route.startsWith("//")))) {
+      return NextResponse.json({ success: false, error: "Invalid knowledge fields" }, { status: 400 });
+    }
 
     if (!titleEn || typeof titleEn !== "string" || !titleEn.trim()) {
       return NextResponse.json(
@@ -77,6 +87,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  if (!isKnowledgeAdmin(req)) {
+    return NextResponse.json({ success: false, error: "Administrator authorization required" }, { status: 401 });
+  }
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");

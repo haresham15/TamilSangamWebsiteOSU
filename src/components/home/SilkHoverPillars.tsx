@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
@@ -92,11 +92,17 @@ const PILLAR_ROWS: PillarRow[] = [
 
 export function SilkHoverPillars() {
   const { locale } = useLocale();
-  const { playClick, playWoodClick } = useAudio();
+  const { playClick, playSilkSwish } = useAudio();
   const [activeRow, setActiveRow] = useState<string | null>(null);
 
+  const reduced = useReducedMotion();
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const x = useSpring(pointerX, { stiffness: 160, damping: 22 });
+  const y = useSpring(pointerY, { stiffness: 160, damping: 22 });
+  const active = PILLAR_ROWS.find((row) => row.id === activeRow);
   return (
-    <section className="relative w-full bg-[#FAF9F6] text-[#2A2825] py-24 sm:py-32 overflow-hidden select-none">
+    <section className="relative w-full bg-paper text-hearth-espresso py-24 sm:py-32 overflow-hidden select-none">
       <div className="max-w-[1600px] mx-auto px-6 sm:px-12">
         {/* Airy Courtyard Section Header */}
         <CourtyardHeader
@@ -117,10 +123,13 @@ export function SilkHoverPillars() {
                 onClick={playClick}
                 onMouseEnter={() => {
                   setActiveRow(pillar.id);
-                  playWoodClick();
+                  playSilkSwish(0.35);
                 }}
                 onMouseLeave={() => setActiveRow(null)}
-                className="group relative block w-full py-12 sm:py-16 border-b border-[#E5DDD0] transition-colors duration-300"
+                onFocus={() => setActiveRow(pillar.id)}
+                onBlur={() => setActiveRow(null)}
+                onPointerMove={(event) => { pointerX.set(event.clientX + 28); pointerY.set(event.clientY - 80); }}
+                className="pillar-curtain group relative block w-full py-12 sm:py-16 border-b border-hearth-espresso/20 transition-[padding,background-color,color] duration-300 hover:py-20 focus-visible:py-20 hover:bg-hearth-espresso focus-visible:bg-hearth-espresso focus-visible:outline-2 focus-visible:outline-hearth-terracotta motion-reduce:transition-none"
               >
                 {/* Content Layout: Strict CSS Grid Hanging Indent */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-baseline">
@@ -166,6 +175,10 @@ export function SilkHoverPillars() {
           })}
         </div>
       </div>
+      {!reduced && active && <motion.div aria-hidden="true" style={{ x, y }} className="pillar-preview pointer-events-none fixed left-0 top-0 z-50 h-32 w-32 rounded-full border border-antique-gold bg-hearth-terracotta text-paper flex flex-col items-center justify-center">
+        <span className="font-mono text-xs">{active.num}</span>
+        <span lang="ta" className="font-tamil text-xl leading-relaxed tracking-normal">{active.nameTa}</span>
+      </motion.div>}
     </section>
   );
 }

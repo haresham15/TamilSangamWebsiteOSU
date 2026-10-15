@@ -3,7 +3,8 @@
 import React, { Suspense, useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { View, PerspectiveCamera, Environment, BakeShadows } from "@react-three/drei";
+import { PerspectiveCamera, Environment, BakeShadows } from "@react-three/drei";
+import { SceneView as View } from "@/components/canvas/SceneView";
 import { CraneCameraRig } from "./CraneCameraRig";
 import { CorridorTreadmill } from "./CorridorTreadmill";
 import { EmblemFinale } from "./EmblemFinale";
@@ -26,14 +27,15 @@ function BoardSceneWarmup() {
 
 interface BoardHeroCanvasProps {
   onFinaleComplete?: () => void;
+  bezel?: React.ReactNode;
 }
 
-export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
+export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const goldOverlayRef = useRef<HTMLDivElement>(null);
 
-  const [inView, setInView] = useState(true);
+  const inViewRef = useRef(false);
   const [reducedMotion, setReducedMotion] = useState(() => {
     if (typeof window !== "undefined") {
       return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -54,27 +56,20 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
     }
     return false;
   });
-  const [localProgress, setLocalProgress] = useState(() => (reducedMotion ? 1.0 : 0));
+  const localProgress = useRef(reducedMotion ? 1.0 : 0);
 
-  // Store diagnostics for ?debug=1 HUD
-  const scrollProgress = useBoardHeroStore((s) => s.scrollProgress);
-  const cameraZ = useBoardHeroStore((s) => s.cameraZ);
-  const fogDensity = useBoardHeroStore((s) => s.fogDensity);
-  const recycledCount = useBoardHeroStore((s) => s.recycledCount);
-  const activeRealLights = useBoardHeroStore((s) => s.activeRealLights);
-  const finaleFired = useBoardHeroStore((s) => s.finaleFired);
-  const fps = useBoardHeroStore((s) => s.fps);
 
   // Sync debugMode and listen to prefers-reduced-motion changes
   useEffect(() => {
-    if (debugActive) {
-      useBoardHeroStore.getState().setDebugMode(true);
-    }
+    useBoardHeroStore.getState().setDebugMode(debugActive);
     if (typeof window !== "undefined") {
       const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
       mediaQuery.addEventListener("change", handler);
-      return () => mediaQuery.removeEventListener("change", handler);
+      return () => {
+        mediaQuery.removeEventListener("change", handler);
+        useBoardHeroStore.getState().setDebugMode(false);
+      };
     }
   }, [debugActive]);
 
@@ -82,25 +77,24 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
   useEffect(() => {
     if (!sectionRef.current) return;
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setInView(entry.isIntersecting);
+      (entries) => {
+        const entry = entries[entries.length - 1];
+        inViewRef.current = entry.isIntersecting;
+        governor.request("board-corridor", inViewRef.current ? 1 : 0);
       },
       { threshold: 0.05 }
     );
     observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    governor.request("board-corridor", inView ? 1 : 0);
     return () => {
+      observer.disconnect();
       governor.request("board-corridor", 0);
     };
-  }, [inView]);
+  }, []);
 
   // §6: GSAP ScrollTrigger Pinned Timeline (Pins sectionRef with +=1600 scroll distance)
   useEffect(() => {
     if (reducedMotion || !sectionRef.current) {
+      if (reducedMotion) localProgress.current = 1;
       return;
     }
 
@@ -114,9 +108,9 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
         anticipatePin: 1,
         onUpdate: (self) => {
           const p = self.progress;
-          setLocalProgress(p);
-          useBoardHeroStore.getState().setScrollProgress(p);
-          governor.request("board-corridor", Math.abs(self.getVelocity()) > 10 ? 2 : 1);
+          localProgress.current = p;
+          if (debugActive) useBoardHeroStore.getState().setScrollProgress(p);
+          governor.request("board-corridor", inViewRef.current ? (Math.abs(self.getVelocity()) > 10 ? 2 : 1) : 0);
 
           // If user scrolls back up into corridor, smoothly restore canvas opacity & reset gold flash
           if (p < 0.96) {
@@ -144,7 +138,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
         window.__lenis.resize();
       }
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, debugActive]);
 
   // Handle Finale Golden Dissolve (§7)
   const handleFinaleTriggered = () => {
@@ -211,7 +205,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
             <BakeShadows />
 
             {/* Crane Camera Rig with spring-lag inertia (§6) */}
-            <CraneCameraRig scrollProgress={reducedMotion ? 1.0 : localProgress} />
+            <CraneCameraRig scrollProgress={localProgress} />
 
             {/* Floating Imperial Chola Crown placed lower near stone floor so camera glides above it (z = 23.5) */}
             <CholaCrown3D position={[0, 0.65, 23.5]} scale={0.88} />
@@ -223,7 +217,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
 
             {/* Chola Imperial Tiger Emblem Finale at z = 0 (§7) */}
             <EmblemFinale
-              scrollProgress={reducedMotion ? 1.0 : localProgress}
+              scrollProgress={localProgress}
               onFinaleTriggered={handleFinaleTriggered}
             />
           </View>
@@ -244,48 +238,7 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
         {/* ========================================================================= */}
         {/* 3. ?debug=1 ENGINEERING HUD (§9 Verification)                             */}
         {/* ========================================================================= */}
-        {debugActive && (
-          <div className="absolute top-24 left-6 z-30 p-3 rounded-none bg-[#140b06]/92 border border-[#D4AF37]/40 backdrop-blur-md font-mono text-[11px] text-[#fef3c7] shadow-[4px_4px_0px_#250d38] flex flex-col gap-1.5 pointer-events-none">
-            <div className="flex items-center gap-2 pb-1 border-b border-[#3d2714] text-[#D4AF37] font-bold">
-              <Terminal className="w-3.5 h-3.5" />
-              <span>CHOLA DARBAR CINEMATIC CRANE HUD</span>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-[#a89078]">Scroll Progress (p):</span>
-              <span className="font-bold text-[#38bdf8]">{scrollProgress.toFixed(3)}</span>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-[#a89078]">Camera Position Z:</span>
-              <span className="font-bold text-[#e0b968]">{cameraZ.toFixed(2)}m</span>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-[#a89078]">FogExp2 Density:</span>
-              <span className="font-bold text-emerald-400">{fogDensity.toFixed(4)}</span>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-[#a89078]">Treadmill Recycles:</span>
-              <span className="font-bold text-amber-400">{recycledCount}</span>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-[#a89078]">Active Real Lights:</span>
-              <span className="font-bold text-amber-300">{activeRealLights} / 3</span>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-[#a89078]">Finale Fired:</span>
-              <span
-                className={`font-bold uppercase ${
-                  finaleFired ? "text-emerald-400" : "text-zinc-500"
-                }`}
-              >
-                {finaleFired ? "TRUE" : "FALSE"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between gap-4 pt-1 border-t border-[#3d2714]">
-              <span className="text-[#a89078]">Render FPS:</span>
-              <span className="font-bold text-emerald-400">{fps}</span>
-            </div>
-          </div>
-        )}
+        {debugActive && <BoardDiagnostics />}
 
         {/* ========================================================================= */}
         {/* 4. ACCESSIBILITY (A11y) SCREEN READER SHADOW DOM (§9)                     */}
@@ -299,6 +252,61 @@ export function BoardHeroCanvas({ onFinaleComplete }: BoardHeroCanvasProps) {
           </p>
         </div>
       </div>
+      <div className="absolute inset-x-0 bottom-0 z-20">{bezel}</div>
     </div>
+  );
+}
+
+function BoardDiagnostics() {
+  // Store diagnostics for ?debug=1 HUD
+  const scrollProgress = useBoardHeroStore((s) => s.scrollProgress);
+  const cameraZ = useBoardHeroStore((s) => s.cameraZ);
+  const fogDensity = useBoardHeroStore((s) => s.fogDensity);
+  const recycledCount = useBoardHeroStore((s) => s.recycledCount);
+  const activeRealLights = useBoardHeroStore((s) => s.activeRealLights);
+  const finaleFired = useBoardHeroStore((s) => s.finaleFired);
+  const fps = useBoardHeroStore((s) => s.fps);
+
+  return (
+  <div className="absolute top-24 left-6 z-30 p-3 rounded-none bg-[#140b06]/92 border border-[#D4AF37]/40 backdrop-blur-md font-mono text-[11px] text-[#fef3c7] shadow-[4px_4px_0px_#250d38] flex flex-col gap-1.5 pointer-events-none">
+    <div className="flex items-center gap-2 pb-1 border-b border-[#3d2714] text-[#D4AF37] font-bold">
+      <Terminal className="w-3.5 h-3.5" />
+      <span>CHOLA DARBAR CINEMATIC CRANE HUD</span>
+    </div>
+    <div className="flex items-center justify-between gap-4">
+      <span className="text-[#a89078]">Scroll Progress (p):</span>
+      <span className="font-bold text-[#38bdf8]">{scrollProgress.toFixed(3)}</span>
+    </div>
+    <div className="flex items-center justify-between gap-4">
+      <span className="text-[#a89078]">Camera Position Z:</span>
+      <span className="font-bold text-[#e0b968]">{cameraZ.toFixed(2)}m</span>
+    </div>
+    <div className="flex items-center justify-between gap-4">
+      <span className="text-[#a89078]">FogExp2 Density:</span>
+      <span className="font-bold text-emerald-400">{fogDensity.toFixed(4)}</span>
+    </div>
+    <div className="flex items-center justify-between gap-4">
+      <span className="text-[#a89078]">Treadmill Recycles:</span>
+      <span className="font-bold text-amber-400">{recycledCount}</span>
+    </div>
+    <div className="flex items-center justify-between gap-4">
+      <span className="text-[#a89078]">Active Real Lights:</span>
+      <span className="font-bold text-amber-300">{activeRealLights} / 3</span>
+    </div>
+    <div className="flex items-center justify-between gap-4">
+      <span className="text-[#a89078]">Finale Fired:</span>
+      <span
+        className={`font-bold uppercase ${
+          finaleFired ? "text-emerald-400" : "text-zinc-500"
+        }`}
+      >
+        {finaleFired ? "TRUE" : "FALSE"}
+      </span>
+    </div>
+    <div className="flex items-center justify-between gap-4 pt-1 border-t border-[#3d2714]">
+      <span className="text-[#a89078]">Render FPS:</span>
+      <span className="font-bold text-emerald-400">{fps}</span>
+    </div>
+  </div>
   );
 }

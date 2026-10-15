@@ -49,6 +49,7 @@ export const WovenBorderMarquee: React.FC<WovenBorderMarqueeProps> = ({
         className="flex whitespace-nowrap gap-8 text-xs font-mono font-bold tracking-widest uppercase items-center"
         style={{
           animation: `marquee-${direction} ${speedSeconds}s linear infinite`,
+          willChange: "transform",
         }}
       >
         {items.map((str, idx) => (

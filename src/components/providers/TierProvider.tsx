@@ -22,62 +22,79 @@ export const useTier = () => useContext(TierContext).tier;
 export const useTierContext = () => useContext(TierContext);
 
 export function TierProvider({ children }: { children: React.ReactNode }) {
-  const [tier, setTierState] = useState<Tier>("A");
+  const [tier, setTierState] = useState<Tier>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("sangam_tier");
+        if (saved === "A" || saved === "B" || saved === "C") return saved;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "C";
+      } catch {}
+    }
+    return "A";
+  });
   const [isInAppBrowser, setIsInAppBrowser] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const frameId = requestAnimationFrame(() => {
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let contextLost = false;
+    let webglAvailable: boolean | undefined;
+    const selectTier = () => {
       const ua = navigator.userAgent || "";
       // Detect Instagram, TikTok, Facebook in-app webviews (§2)
       const inApp = /Instagram|FBAN|FBAV|musical_ly|BytedanceWebview|TikTok/i.test(ua);
       setIsInAppBrowser(inApp);
 
       // Reduced motion or Save-Data preference
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const connection = (navigator as unknown as { connection?: { saveData?: boolean } }).connection;
       const saveData = connection?.saveData;
 
-      // Check manual override
-      const saved = localStorage.getItem("sangam_tier");
-      if (saved === "A" || saved === "B" || saved === "C") {
-        setTierState(saved as Tier);
+      if (motionQuery.matches || saveData || contextLost) {
+        setTierState("C");
         return;
       }
 
-      if (prefersReducedMotion || saveData) {
+      // Check manual override
+      const saved = localStorage.getItem("sangam_tier");
+      if (saved === "C") {
         setTierState("C");
-      } else if (inApp) {
-        setTierState("B");
-      } else {
-        // Check WebGL2 availability
+        return;
+      }
+
+      // Probe once per mount; saved tiers cannot restore unsupported WebGL.
+      if (webglAvailable === undefined) {
         try {
           const canvas = document.createElement("canvas");
           const gl2 = canvas.getContext("webgl2");
-          if (!gl2) {
-            setTierState("C");
-            return;
-          }
+          webglAvailable = Boolean(gl2);
+          gl2?.getExtension("WEBGL_lose_context")?.loseContext();
         } catch {
-          setTierState("C");
-          return;
+          webglAvailable = false;
         }
-        setTierState("A");
       }
-    });
+      if (!webglAvailable) {
+        setTierState("C");
+        return;
+      }
+      setTierState(saved === "A" || saved === "B" ? saved : inApp ? "B" : "A");
+    };
+    const frameId = requestAnimationFrame(selectTier);
+    motionQuery.addEventListener("change", selectTier);
 
     // Context loss handler switch to Tier C
     const handleContextLost = (e: Event) => {
       e.preventDefault();
+      contextLost = true;
       console.warn("[TierProvider] WebGL Context Lost - degrading to Tier C (Lite)");
       setTierState("C");
     };
 
-    window.addEventListener("webglcontextlost", handleContextLost);
+    window.addEventListener("webglcontextlost", handleContextLost, true);
     return () => {
       cancelAnimationFrame(frameId);
-      window.removeEventListener("webglcontextlost", handleContextLost);
+      motionQuery.removeEventListener("change", selectTier);
+      window.removeEventListener("webglcontextlost", handleContextLost, true);
     };
   }, []);
 

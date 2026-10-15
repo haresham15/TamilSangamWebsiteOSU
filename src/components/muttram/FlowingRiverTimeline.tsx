@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 
 export interface TimelineMilestone {
   year: string;
@@ -63,12 +62,8 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
           const isLeft = idx % 2 === 0;
 
           return (
-            <motion.div
+            <div
               key={item.year}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className={`relative flex flex-col md:flex-row items-start ${
                 isLeft ? "md:flex-row" : "md:flex-row-reverse"
               } gap-8 md:gap-16`}
@@ -110,7 +105,7 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
 
               {/* Spacer for Alternate Side on Desktop */}
               <div className="hidden md:block md:w-[calc(50%-3rem)]" />
-            </motion.div>
+            </div>
           );
         })}
       </div>

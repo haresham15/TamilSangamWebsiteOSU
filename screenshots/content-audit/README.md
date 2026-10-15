@@ -22,6 +22,7 @@ Open [`index.html`](./index.html) in any browser to inspect all 8 page artboards
 | **06-guide** | **Guide** (வழிகாட்டி) | `/guide` | [06-guide.png](./06-guide.png) | The Open Book: Generous padding between Q&A pairs, conversational questions in soft Terracotta, and searchable student knowledge base |
 | **07-suggestions** | **Ideas** (கருத்து) | `/suggestions` | [07-suggestions.png](./07-suggestions.png) | The Ideas Hearth: Conversational campus proposal form, category selectors, proven track record ledger, and leadership routing |
 | **08-join** | **Join** (இணையுங்கள்) | `/join` | [08-join.png](./08-join.png) | The Welcoming Hearth: Guestbook-style membership form with conversational prompts, simple elegant underlines, and community links |
+| **09-event-dossier** | **Event Dossier** (நிகழ்ச்சி ஆவணம்) | `/events/berry-cute-picnic` | [09-event-dossier.png](./09-event-dossier.png) | The Sunlit Dossier: ReactBits SplitText header, randomized 5-8 photo scatter on light table with 0px radius, and magnetic Google Photos Vault gateway |
 
 ---
 

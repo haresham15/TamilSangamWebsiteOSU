@@ -2,12 +2,14 @@
 import type Lenis from "lenis";
 import { governor } from "./governor";
 import { rendererAdvance, getRendererClock } from "./renderer";
+import { heroScrollProgress } from "./heroScrollStore";
 
 /**
  * Master Clock & Ticker (§4.1)
  * One callback, explicit execution order:
  * 1) Lenis scroll update (triggers ScrollTrigger.update)
  * 2) Scroll state publication
+ * 2.5) Critical exponential damping of hero scroll progress
  * 3) Subsystem updates (ordered by System.order: springs, parallax, image planes, camera rigs)
  * 4) Governor evaluation and R3F advance()
  */
@@ -47,13 +49,15 @@ export function unregisterSystem(s: System) {
 }
 
 let last = 0;
-let frame = 0;
+let lastRenderTime = 0;
 let lastSyncedClock: unknown = null;
+let lastScrollActiveTime = 0;
 
 export function resetMasterClock() {
   last = 0;
-  frame = 0;
+  lastRenderTime = 0;
   lastSyncedClock = null;
+  lastScrollActiveTime = 0;
 }
 
 export function masterTick(timeSec: number, lenis: Lenis | null) {
@@ -76,6 +80,16 @@ export function masterTick(timeSec: number, lenis: Lenis | null) {
     scroll.progress = lenis ? lenis.progress : 0;
   }
 
+  // 2.5) Critical exponential damping of hero scroll progress (prevents mouse-wheel notch jitter)
+  const heroDiff = heroScrollProgress.target - heroScrollProgress.current;
+  const isHeroDamping = Math.abs(heroDiff) > 0.00005;
+  if (isHeroDamping) {
+    const heroDampFactor = 1 - Math.exp(-22 * dt);
+    heroScrollProgress.current += heroDiff * heroDampFactor;
+  } else {
+    heroScrollProgress.current = heroScrollProgress.target;
+  }
+
   // 3) Update subsystems in explicit order
   for (let i = 0; i < systems.length; i++) {
     systems[i].step(dt, timeSec);
@@ -87,14 +101,24 @@ export function masterTick(timeSec: number, lenis: Lenis | null) {
     return; // Completely paused / idle: no WebGL work
   }
 
-  // Active scroll or scrubbing automatically elevates to Level 2 (every tick)
-  // to prevent 30Hz/60Hz alternating frame stutter during scroll
-  const isScrolling = Math.abs(scroll.velocity) > 0.01;
-  const effectiveLevel = isScrolling ? 2 : baseLevel;
+  // Maintain full 60fps rendering during active scroll and throughout inertia settling (1000ms window)
+  const isVelocityActive = Math.abs(scroll.velocity) > 0.01;
+  const now = performance.now();
+  if (isVelocityActive || isHeroDamping) {
+    lastScrollActiveTime = now;
+  }
+  const isRecentlyActive = now - lastScrollActiveTime < 1000;
+  const effectiveLevel = (isVelocityActive || isHeroDamping || isRecentlyActive) ? 2 : baseLevel;
 
-  // 1 = ~30 fps ambient (skip every other frame, only when completely at rest)
-  if (effectiveLevel === 1 && (++frame & 1) !== 0) {
-    return;
+  // Ambient rendering follows elapsed time, independent of monitor refresh rate.
+  if (effectiveLevel === 1) {
+    const interval = 1000 / 30;
+    if (lastRenderTime === 0) lastRenderTime = now - interval;
+    const elapsed = now - lastRenderTime;
+    if (elapsed + 0.0001 < interval) return;
+    lastRenderTime += Math.floor((elapsed + 0.0001) / interval) * interval;
+  } else {
+    lastRenderTime = now;
   }
 
   // R3F manual timestamps are seconds. Keep the timestamp absolute so a

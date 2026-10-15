@@ -47,7 +47,9 @@ function Curtain() {
     return curtain;
   }, []);
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (!meshRef.current) return;
     const t = clock.getElapsedTime();
     meshRef.current.rotation.y = Math.sin(t * 3.2) * 0.035 + Math.sin(t * 7.1) * 0.012;
@@ -77,7 +79,9 @@ export function WindowAssembly({ progress, getProgress }: WindowAssemblyProps) {
     return () => gradient.dispose();
   }, [gradient]);
 
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (!spillMaterial.current || !getProgress) return;
     const nextOpacity = Math.min(0.28, Math.max(0, (getProgress() - 0.08) * 1.4));
     spillMaterial.current.opacity = nextOpacity;

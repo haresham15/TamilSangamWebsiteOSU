@@ -3,8 +3,7 @@
 import React, { useRef, useState, useEffect, useActionState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useReducedMotion } from "framer-motion";
 import { useFormStatus } from "react-dom";
 import {
   Compass,
@@ -17,11 +16,11 @@ import {
 } from "lucide-react";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
-import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { useTier } from "@/components/providers/TierProvider";
+import { HeroScrollStage } from "@/components/canvas/HeroScrollStage";
 import type { BlueprintPin } from "@/components/suggestions/BlueprintSVG";
 import { OFFICIAL_DISCLAIMER, CONTACT_EMAIL } from "@/lib/constants";
 import { submitSuggestion, SuggestionActionState } from "@/app/actions/suggestion";
-import { governor } from "@/engine/governor";
 import { audioLayer } from "@/utils/audioLayer";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { MuttramButton } from "@/components/muttram/MuttramButton";
@@ -78,11 +77,13 @@ function SubmitSuggestionButton() {
 export default function SuggestionsPage() {
   const { locale } = useLocale();
   const { isLiteMode } = useLiteMode();
+  const tier = useTier();
+  const reducedMotion = useReducedMotion();
+  const staticHero = isLiteMode || tier === "C" || !!reducedMotion;
 
-  const containerRef = useRef<HTMLDivElement>(null);
   const formSectionRef = useRef<HTMLDivElement>(null);
 
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const scrollProgress = useRef(0);
   const [selectedCategory, setSelectedCategory] = useState("Event idea");
   const [activePin, setActivePin] = useState<BlueprintPin | null>(null);
   const [newlyDroppedPin, setNewlyDroppedPin] = useState<{
@@ -98,42 +99,6 @@ export default function SuggestionsPage() {
 
   const [state, formAction] = useActionState(submitSuggestion, initialState);
 
-  // Register GSAP ScrollTrigger for the 3D Blueprint reveal sequence - IMMUTABLE
-  useEffect(() => {
-    if (isLiteMode) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      if (!containerRef.current) return;
-
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "top top",
-        end: "+=2200",
-        pin: true,
-        scrub: true,
-        anticipatePin: 1,
-        onUpdate: (self) => {
-          setScrollProgress(self.progress);
-          governor.request("ideas-blueprint", Math.abs(self.getVelocity()) > 10 ? 2 : 1);
-        },
-      });
-
-      ScrollTrigger.refresh();
-      if (typeof window !== "undefined" && window.__lenis) {
-        window.__lenis.resize();
-      }
-    }, containerRef);
-
-    return () => {
-      ctx.revert();
-      if (typeof window !== "undefined" && window.__lenis) {
-        window.__lenis.resize();
-      }
-    };
-  }, [isLiteMode]);
-
   useEffect(() => {
     if (state.success && state.pin) {
       setNewlyDroppedPin(state.pin);
@@ -143,7 +108,7 @@ export default function SuggestionsPage() {
 
   const scrollToForm = () => {
     if (formSectionRef.current) {
-      formSectionRef.current.scrollIntoView({ behavior: "smooth" });
+      formSectionRef.current.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
     }
   };
 
@@ -156,21 +121,22 @@ export default function SuggestionsPage() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-transparent text-white overflow-hidden">
+    <div className="relative min-h-screen bg-transparent text-white">
       
       {/* =========================================================================
           CRITICAL / IMMUTABLE: 3D Axonometric Blueprint Pin Scene
           HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES
           ========================================================================= */}
-      <section
-        ref={containerRef}
-        data-hero-container="true"
+      <HeroScrollStage
         id="blueprint-hero"
-        className="w-full h-screen relative overflow-hidden bg-[#0F050A]"
+        progressRef={scrollProgress}
+        tone="espresso"
+        static={staticHero}
       >
         <div className="absolute inset-0 w-full h-full">
           <BlueprintScene3D
             scrollProgress={scrollProgress}
+            isLiteMode={staticHero}
             onSelectPin={(pin) => {
               setActivePin(pin);
               setSelectedCategory(pin.category);
@@ -189,10 +155,7 @@ export default function SuggestionsPage() {
             <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
           </button>
         </div>
-      </section>
-
-      {/* Hero to Content Gradient Transition */}
-      <HeroGradientTransition variant="suggestions" className="-mt-32 relative z-20" />
+      </HeroScrollStage>
 
       {/* =========================================================================
           THE THINNAI ANCHOR & THE BLUEPRINT IDEAS TERMINAL

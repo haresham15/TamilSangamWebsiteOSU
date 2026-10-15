@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useRef, useEffect, useSyncExternalStore } from "react";
+import React, { useEffect, useRef, useSyncExternalStore } from "react";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useReducedMotion } from "framer-motion";
+import { useTier } from "@/components/providers/TierProvider";
+import { HeroScrollStage, useHeroStageVisibility } from "@/components/canvas/HeroScrollStage";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { View, PerspectiveCamera, Html } from "@react-three/drei";
-import { governor } from "@/engine/governor";
+import { PerspectiveCamera } from "@react-three/drei";
+import { SceneView as View } from "@/components/canvas/SceneView";
+import { registerSystem } from "@/engine/masterTick";
 import { useWarmup } from "@/components/gl/useWarmup";
 import { SceneRegistrar } from "@/director/wireframe";
 
@@ -129,30 +131,37 @@ const sharedTorusGeo = new THREE.TorusGeometry(4.0, 0.12, 32, 200);
 const sharedInnerRingGeo = new THREE.TorusGeometry(1.85, 0.04, 24, 120);
 const sharedCenterDotGeo = new THREE.SphereGeometry(0.22, 32, 24);
 
-const sharedRingMat = new THREE.MeshStandardMaterial({ color: "#b87333", metalness: 0.8, roughness: 0.2 });
-const sharedKolamMat = new THREE.MeshStandardMaterial({ color: "#c68642", metalness: 0.85, roughness: 0.18 });
-const sharedGoldMat = new THREE.MeshStandardMaterial({ color: "#e6a147", metalness: 0.9, roughness: 0.12 });
+const sharedRingMat = new THREE.MeshStandardMaterial({ color: "#b87333", metalness: 0.9, roughness: 0.18 });
+const sharedKolamMat = new THREE.MeshStandardMaterial({ color: "#c68642", metalness: 0.9, roughness: 0.18 });
+const sharedGoldMat = new THREE.MeshStandardMaterial({ color: "#e6a147", metalness: 0.9, roughness: 0.18 });
+const CURSOR_LIGHT_COLOR = "#FFB366";
 
 // Optimized abstract cinematic Bronze Rings with lightweight shared geometry
 function BronzeRing({
   position,
   scale = 1,
   rotation = [0, 0, 0] as [number, number, number],
+  scrollProgressRef,
 }: {
   position: [number, number, number];
   scale?: number;
   rotation?: [number, number, number];
+  scrollProgressRef: React.RefObject<number>;
 }) {
   const meshRef = useRef<THREE.Group>(null);
 
-  useFrame(({ clock }) => {
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
     if (meshRef.current) {
-      meshRef.current.rotation.z = clock.getElapsedTime() * 0.08 * (scale % 2 === 0 ? 1 : -1);
+      const alignment = 1 - THREE.MathUtils.smoothstep(scrollProgressRef.current, 0, 0.8);
+      meshRef.current.rotation.x = THREE.MathUtils.damp(meshRef.current.rotation.x, rotation[0] * alignment, 8, dt);
+      meshRef.current.rotation.y = THREE.MathUtils.damp(meshRef.current.rotation.y, rotation[1] * alignment, 8, dt);
+      meshRef.current.rotation.z = THREE.MathUtils.damp(meshRef.current.rotation.z, rotation[2] * alignment, 8, dt);
     }
   });
 
   return (
-    <group position={position} rotation={rotation} ref={meshRef}>
+    <group position={position} rotation={rotation} ref={meshRef} dispose={null}>
       {/* Outer Thiruvachi Torus with shared geometry and uniform scale */}
       <mesh
         geometry={sharedTorusGeo}
@@ -181,89 +190,60 @@ function BronzeRing({
   );
 }
 
-// Suspended Mission Statement Text with Distance-Culling for zero DOM thrashing
+// Keep editorial copy in the stage's DOM layer, independent of the ring perspective.
 function TierText({
   tier,
-  position,
-  isMobile,
+  index,
+  scrollProgressRef,
   locale,
 }: {
   tier: TierItem;
-  position: [number, number, number];
-  isMobile: boolean;
+  index: number;
+  scrollProgressRef: React.RefObject<number>;
   locale: string;
 }) {
   const textRef = useRef<HTMLDivElement>(null);
-
-  useFrame((state) => {
-    if (!textRef.current) return;
-    const dist = state.camera.position.z - position[2];
-
-    // Distance culling: hide tiers outside active range to eliminate DOM updates
-    if (dist < -6 || dist > 24) {
-      if (textRef.current.style.display !== "none") {
-        textRef.current.style.display = "none";
-      }
-      return;
-    }
-
-    if (textRef.current.style.display !== "block") {
-      textRef.current.style.display = "block";
-    }
-
-    let opacity = 0;
-    let scale = 0.8;
-
-    if (dist > 0 && dist < 18) {
-      // Approaching
-      const factor = 1 - Math.pow(dist / 18, 2);
-      opacity = factor;
-      scale = 0.8 + factor * 0.2;
-    } else if (dist <= 0 && dist > -5) {
-      // Passed through
-      const factor = Math.max(0, 1 - Math.abs(dist / 5));
-      opacity = factor;
-      scale = 1.0 + (1 - factor) * 0.15;
-    }
-
-    textRef.current.style.opacity = opacity.toString();
-    const yOffset = dist * 0.4;
-    const yCenter = isMobile ? "-28%" : "-50%";
-    textRef.current.style.transform = `translate3d(0, calc(${yCenter} + ${yOffset}px), 0) scale(${scale})`;
-  });
+  useEffect(() => registerSystem({
+    order: 51,
+    step: () => {
+      const element = textRef.current;
+      if (!element) return;
+      const distance = scrollProgressRef.current * TIERS.length - index;
+      const opacity = Math.max(0, Math.min(1, (distance + 0.2) / 0.2, (1 - distance) / 0.2));
+      element.style.opacity = String(opacity);
+      element.style.visibility = opacity > 0 ? "visible" : "hidden";
+    },
+  }), [index, scrollProgressRef]);
+  const Heading = index === 0 ? "h1" : "h2";
 
   return (
-    <Html position={position} center zIndexRange={[100, 0]} transform={false}>
       <div
         ref={textRef}
-        className="w-[88vw] sm:w-[85vw] max-w-2xl flex flex-col items-start pointer-events-none"
-        style={{ marginLeft: isMobile ? 0 : "10vw", willChange: "transform, opacity" }}
+        className="absolute inset-y-0 left-0 z-10 flex w-full flex-col justify-center px-6 py-24 pointer-events-none sm:px-12 lg:w-7/12 lg:pl-[7vw] lg:pr-12 bg-[radial-gradient(ellipse_at_35%_50%,var(--color-hero-indigo)_0%,transparent_74%)]"
+        style={{ opacity: index === 0 ? 1 : 0, visibility: index === 0 ? "visible" : "hidden" }}
       >
-        <div className="p-4 sm:p-8 bg-[#221036]/85 backdrop-blur-md border border-purple-300/35 shadow-[4px_4px_0px_#180826] sm:shadow-[6px_6px_0px_#180826]">
-          <h2 className="text-xl sm:text-4xl md:text-5xl font-extrabold font-display tracking-tight text-white mb-2 leading-[1.15] sm:leading-[1.1] drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+          <Heading lang={locale === "ta" ? "ta" : "en"} className={`text-3xl sm:text-5xl xl:text-6xl text-paper mb-5 ${locale === "ta" ? "font-tamil leading-relaxed tracking-normal" : "font-display leading-[1.12] tracking-tight"}`}>
             {locale === "ta" ? tier.titleTa : tier.titleEn}
-          </h2>
+          </Heading>
 
           <p
             lang="ta"
             style={{ letterSpacing: 0 }}
-            className="text-lg sm:text-2xl font-bold text-[#55CCA2] font-tamil mb-3"
+            className="text-lg sm:text-2xl text-warm-amber font-tamil leading-relaxed mb-5"
           >
             {tier.titleTa}
           </p>
 
           {tier.kuralQuote && (
-            <div className="text-xs font-mono text-[#FFC526] font-bold tracking-wider mb-3">
+            <div className="text-xs font-mono text-antique-gold tracking-wider mb-5">
               {tier.kuralQuote}
             </div>
           )}
 
-          <p className="text-sm sm:text-base text-purple-100/90 font-body leading-relaxed">
+          <p lang={locale === "ta" ? "ta" : "en"} className={`max-w-xl text-base sm:text-lg text-paper/90 leading-relaxed ${locale === "ta" ? "font-tamil tracking-normal" : "font-body"}`}>
             {locale === "ta" ? tier.descTa : tier.descEn}
           </p>
-        </div>
       </div>
-    </Html>
   );
 }
 
@@ -276,7 +256,7 @@ function AscendingGopuramCamera({
   isMobile: boolean;
 }) {
   useFrame((state, delta) => {
-    const clampedDelta = Math.min(delta, 0.1);
+    const dt = Math.min(delta, 0.05);
     const { camera } = state;
     // 5 rings spaced 15 units apart. Z goes from 12 to -68.
     const startZ = 12;
@@ -286,14 +266,14 @@ function AscendingGopuramCamera({
     const targetX = isMobile ? 0 : -2;
     const targetY = 0;
 
-    camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 16.0, clampedDelta);
-    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 16.0, clampedDelta);
-    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 16.0, clampedDelta);
+    camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 16.0, dt);
+    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 16.0, dt);
+    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 16.0, dt);
 
     // Natural subtle breeze sway
     const swayTime = camera.position.z * 0.08;
-    camera.position.x += Math.sin(swayTime) * 0.03;
-    camera.position.y += Math.cos(swayTime * 1.4) * 0.03;
+    camera.position.x += Math.sin(swayTime) * 0.03 * dt;
+    camera.position.y += Math.cos(swayTime * 1.4) * 0.03 * dt;
 
     camera.lookAt(targetX, targetY, targetZ - 10);
   });
@@ -306,13 +286,35 @@ function GopuramWarmup() {
   return null;
 }
 
+function CursorLight() {
+  const light = useRef<THREE.PointLight>(null);
+  const finePointer = useSyncExternalStore(
+    callback => {
+      const query = window.matchMedia("(hover: hover) and (pointer: fine)");
+      query.addEventListener("change", callback);
+      return () => query.removeEventListener("change", callback);
+    },
+    () => window.matchMedia("(hover: hover) and (pointer: fine)").matches,
+    () => false,
+  );
+  useFrame(({ camera, pointer }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (!light.current) return;
+    light.current.position.x = THREE.MathUtils.damp(light.current.position.x, camera.position.x + pointer.x * 7, 8, dt);
+    light.current.position.y = THREE.MathUtils.damp(light.current.position.y, pointer.y * 5, 8, dt);
+    light.current.position.z = camera.position.z - 4;
+  });
+  return finePointer ? <pointLight ref={light} color={CURSOR_LIGHT_COLOR} intensity={30} distance={22} decay={2} /> : null;
+}
+
 const emptySubscribe = () => () => {};
 
 export function GopuramZScroll() {
   const { locale } = useLocale();
   const { isLiteMode } = useLiteMode();
-
-  const containerRef = useRef<HTMLDivElement>(null);
+  const tier = useTier();
+  const reducedMotion = useReducedMotion();
+  const isStatic = isLiteMode || tier === "C" || !!reducedMotion;
   const scrollProgressRef = useRef(0);
 
   const mounted = useSyncExternalStore(
@@ -330,69 +332,37 @@ export function GopuramZScroll() {
     () => false
   );
 
-  // Culling observer to suspend rendering when scrolled off-screen
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        governor.request("about-gopuram", entry.isIntersecting ? 1 : 0);
-      },
-      { threshold: 0.02 }
-    );
-    observer.observe(containerRef.current);
-    return () => {
-      observer.disconnect();
-      governor.request("about-gopuram", 0);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (isLiteMode) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      if (!containerRef.current) return;
-
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "top top",
-        end: "+=2200", // Snappy, punchy flight duration without dragging
-        pin: true,
-        scrub: true,
-        anticipatePin: 1,
-        onUpdate: (self) => {
-          scrollProgressRef.current = self.progress;
-          governor.request("about-gopuram", 2);
-        },
-      });
-
-      // Refresh ScrollTrigger and update Lenis limit for pin spacer
-      ScrollTrigger.refresh();
-      if (typeof window !== "undefined" && window.__lenis) {
-        window.__lenis.resize();
-      }
-    }, containerRef);
-
-    return () => {
-      ctx.revert();
-      if (typeof window !== "undefined" && window.__lenis) {
-        window.__lenis.resize();
-      }
-    };
-  }, [isLiteMode]);
-
   return (
-    <div
-      ref={containerRef}
-      data-hero-pinned="about"
+    <HeroScrollStage
       id="gopuram-hero-wrapper"
-      className="relative w-full h-[100dvh] overflow-hidden bg-transparent text-white flex flex-col justify-between select-none"
-      style={{ minHeight: "100dvh" }}
+      progressRef={scrollProgressRef}
+      static={isStatic}
+      className="text-sangam-cream"
     >
-      <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
-        {mounted && !isLiteMode && (
-          <View className="w-full h-full pointer-events-auto" index={2}>
+      {mounted && !isStatic ? (
+        <GopuramScene scrollProgressRef={scrollProgressRef} isMobile={isMobile} locale={locale} />
+      ) : (
+        <div className="relative z-10 flex min-h-dvh flex-col justify-center gap-6 px-6 py-32 sm:px-16 max-w-4xl">
+          <h1 lang={locale === "ta" ? "ta" : "en"} className={`text-4xl sm:text-6xl ${locale === "ta" ? "font-tamil leading-relaxed" : "font-display"}`}>
+            {locale === "ta" ? TIERS[0].titleTa : TIERS[0].titleEn}
+          </h1>
+          <p lang="ta" className="font-tamil text-xl leading-relaxed text-sangam-mint">{TIERS[0].titleTa}</p>
+          <p lang={locale === "ta" ? "ta" : "en"} className="text-lg leading-relaxed">{locale === "ta" ? TIERS[0].descTa : TIERS[0].descEn}</p>
+        </div>
+      )}
+    </HeroScrollStage>
+  );
+}
+
+function GopuramScene({ scrollProgressRef, isMobile, locale }: {
+  scrollProgressRef: React.RefObject<number>;
+  isMobile: boolean;
+  locale: string;
+}) {
+  const visible = useHeroStageVisibility();
+  return (
+    <>
+          <View className="absolute inset-0 w-full h-full pointer-events-none" index={2} visible={visible}>
             <SceneRegistrar />
             <GopuramWarmup />
             <color attach="background" args={["#120a1f"]} />
@@ -402,28 +372,22 @@ export function GopuramZScroll() {
             <directionalLight position={[10, 20, 10]} intensity={2.5} color="#ffe5b4" />
             <ambientLight intensity={1.5} color="#dcbef8" />
             <directionalLight position={[-10, 5, -10]} intensity={1.0} color="#ba93e3" />
+            <CursorLight />
 
             {/* Z-Axis Rings mapping */}
             {TIERS.map((tier, idx) => (
-              <React.Fragment key={tier.id}>
                 <BronzeRing
-                  position={[0, 0, -idx * 15]}
+                  key={tier.id}
+                  position={[isMobile ? 1.2 : 3.2, 0, -idx * 15]}
                   scale={1 + idx * 0.1}
-                  rotation={[0, 0, (idx * Math.PI) / 4]}
+                  rotation={[0.25, -0.35, (idx * Math.PI) / 4]}
+                  scrollProgressRef={scrollProgressRef}
                 />
-                <TierText
-                  tier={tier}
-                  position={[0, isMobile ? -0.85 : 0, -idx * 15 + 2]}
-                  isMobile={isMobile}
-                  locale={locale}
-                />
-              </React.Fragment>
             ))}
 
             <AscendingGopuramCamera scrollProgressRef={scrollProgressRef} isMobile={isMobile} />
           </View>
-        )}
-      </div>
-    </div>
+          {TIERS.map((tier, index) => <TierText key={tier.id} tier={tier} index={index} scrollProgressRef={scrollProgressRef} locale={locale} />)}
+    </>
   );
 }

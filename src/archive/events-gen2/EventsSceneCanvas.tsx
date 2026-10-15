@@ -12,6 +12,7 @@ import { DebugHUD } from "./DebugHUD";
 import { debugStore } from "./debugState";
 import { ArrowDown, Sparkles } from "lucide-react";
 import { useLocale } from "@/context/LocaleContext";
+import { useInView } from "framer-motion";
 
 const subscribeResize = (callback: () => void) => {
   window.addEventListener("resize", callback);
@@ -131,6 +132,7 @@ function SceneContent({
 export function EventsSceneCanvas() {
   const { locale } = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(containerRef, { margin: "200px 0px" });
   const keyLightMeshRef = useRef<THREE.Mesh>(null);
   const isMobile = useSyncExternalStore(
     subscribeResize,
@@ -222,6 +224,7 @@ export function EventsSceneCanvas() {
         <WebGLCanvasErrorBoundary>
           <Canvas
             dpr={[1, isMobile ? 1.25 : 1.5]}
+            frameloop={inView && !canvasHidden ? "always" : "never"}
             gl={{
               antialias: false,
               powerPreference: "high-performance",

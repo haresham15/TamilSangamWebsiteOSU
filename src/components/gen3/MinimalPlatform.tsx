@@ -1,10 +1,36 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useMemo } from "react";
+import * as THREE from "three";
+import { generateProceduralKolam } from "@/lib/kolamMath";
 
 export function MinimalPlatform() {
+  const kolam = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 512;
+    const context = canvas.getContext("2d");
+    if (!context) return null;
+    context.strokeStyle = "#FAF7F2";
+    context.lineWidth = 3;
+    context.lineCap = "round";
+    for (const path of generateProceduralKolam("Tamil Sangam", 256, 256, 230)) {
+      context.beginPath();
+      path.forEach((point, index) => index === 0 ? context.moveTo(point.x, point.y) : context.lineTo(point.x, point.y));
+      context.stroke();
+    }
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return texture;
+  }, []);
+  useEffect(() => () => kolam?.dispose(), [kolam]);
   return (
     <group position={[0, 0, 0]}>
+      {kolam && (
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 8]}>
+          <planeGeometry args={[5, 5]} />
+          <meshBasicMaterial map={kolam} transparent opacity={0.85} depthWrite={false} toneMapped={false} />
+        </mesh>
+      )}
       {/* Heavy Industrial Octagonal Steel Platform Base */}
       <mesh position={[0, 0.08, 0]} receiveShadow castShadow>
         <cylinderGeometry args={[3.2, 3.4, 0.16, 8]} />

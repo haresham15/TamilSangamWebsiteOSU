@@ -1,208 +1,138 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import Link from "next/link";
-import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS, BoardMember } from "@/data/board";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS } from "@/data/board";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { audioLayer } from "@/utils/audioLayer";
-import { Crown, Mail, ArrowUpRight } from "lucide-react";
-import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { Crown, Mail } from "lucide-react";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
+import CountUp from "@/components/CountUp";
+import styles from "./board.module.css";
 
-// =========================================================================
-// CRITICAL & IMMUTABLE: 3D Chola Darbar corridor hero scene
-// HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES
-// =========================================================================
 const BoardHeroCanvas = dynamic(
   () => import("@/components/board/BoardHeroCanvas").then((m) => m.BoardHeroCanvas),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-[70dvh] bg-[#120A06] flex flex-col items-center justify-center text-[#E5A93C] font-sans text-sm gap-3 border-b border-[#3d2714]">
-        <div className="flex items-center gap-2">
-          <Crown className="w-5 h-5 text-[#E5A93C] animate-pulse" />
-          <span className="tracking-widest">
-            Loading student leadership colonnade...
-          </span>
-        </div>
-      </div>
-    ),
-  }
+  { ssr: false, loading: () => <div className="h-dvh bg-hero-espresso text-antique-gold grid place-items-center"><Crown aria-label="Loading student leadership colonnade" /></div> }
 );
 
 export default function BoardPage() {
   const { locale } = useLocale();
   const { playClick } = useAudio();
+  const reduceMotion = useReducedMotion();
+  const [hoveredMember, setHoveredMember] = useState(CURRENT_BOARD[0]);
+  const officersRef = useRef<HTMLDivElement>(null);
 
-  const [hoveredMember, setHoveredMember] = useState<BoardMember>(CURRENT_BOARD[0]);
+  useEffect(() => {
+    const rows = officersRef.current?.querySelectorAll<HTMLButtonElement>("[data-officer-id]");
+    if (!rows) return;
+    const visible = new Map<Element, IntersectionObserverEntry>();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) visible.set(entry.target, entry);
+        else visible.delete(entry.target);
+      });
+      const nearest = [...visible.values()].sort((a, b) =>
+        Math.abs(a.target.getBoundingClientRect().top - window.innerHeight * .3) -
+        Math.abs(b.target.getBoundingClientRect().top - window.innerHeight * .3)
+      )[0];
+      const id = (nearest?.target as HTMLElement | undefined)?.dataset.officerId;
+      const member = CURRENT_BOARD.find((item) => item.id === id);
+      if (member) setHoveredMember(member);
+    }, { rootMargin: "-15% 0px -35% 0px", threshold: [0, .25, .5] });
+    rows.forEach((row) => observer.observe(row));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="w-full text-left bg-transparent">
-      {/* 1. Cinematic 3D Chola Darbar Hero - IMMUTABLE */}
-      <div
-        id="board-hero-trigger"
-        data-hero-container="true"
-        className="w-full h-[100dvh] relative z-10 overflow-hidden bg-transparent"
-      >
-        <BoardHeroCanvas />
+      <div id="board-hero-trigger" data-hero-container="true" className="relative z-10 w-full">
+        <BoardHeroCanvas bezel={
+          <dl className={styles.bezel} aria-label="Tamil Sangam at a glance">
+            <div><dt>Buckeye Members</dt><dd>{reduceMotion ? 120 : <CountUp to={120} duration={2} />}+</dd></div>
+            <div><dt>Executive Officers</dt><dd>{reduceMotion ? 8 : <CountUp to={8} duration={1.5} />}</dd></div>
+            <div><dt>Campus Galas & Events</dt><dd>{reduceMotion ? 14 : <CountUp to={14} duration={1.8} />}</dd></div>
+            <div><dt>Est. at Ohio State</dt><dd>{reduceMotion ? 2018 : <CountUp to={2018} from={2000} duration={2.2} separator="" />}</dd></div>
+          </dl>
+        } />
       </div>
-
-      {/* Hero to Content Gradient Transition */}
-      <HeroGradientTransition variant="board" className="-mt-32 relative z-20" />
-
-      {/* =========================================================================
-          THE WARM PORTRAITS: AIRY, SUNLIT LEADERSHIP GALLERY
-          Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
-          ========================================================================= */}
-      <div className="relative z-20 w-full bg-[#FAF9F6] text-[#2A2825] overflow-hidden">
-        
-        <div className="w-full max-w-6xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
-          
-          {/* Centered Airy Section Header */}
+      <div className={styles.content}>
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
           <CourtyardHeader
-            align="center"
+            align="left"
             eyebrow="Democratic Council · 2026–2027"
             title={locale === "ta" ? "நிர்வாகக் குழு & வழிகாட்டிகள்" : "The Executive Board"}
             tamilTitle={locale !== "ta" ? "ஆளுமை · மாணவர் தலைமை" : undefined}
             description="Democratic student governance serving 120+ Buckeye members. Meet the officers leading community festivals, language workshops, and student advocacy across Columbus."
           />
-
-          {/* Main Layout: Sticky Warm Portrait + Airy Officer Names */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start mt-16 sm:mt-24">
-            
-            {/* Left 5 Columns: The Warm, Sharp Photographic Portrait sitting naked on background */}
-            <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-6">
-              {/* Sharp Physical Photographic Print */}
-              <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#F4EFE6] border border-[#E5DDD0]">
-                <Image
-                  src={hoveredMember.photoUrl}
-                  alt={hoveredMember.nameEn}
-                  fill
-                  className="object-cover transition-all duration-700 ease-out"
-                  sizes="(max-width: 1024px) 100vw, 450px"
-                />
-              </div>
-
-              {/* Officer Bio & Info sitting directly on global background */}
-              <div className="space-y-4 pt-2">
-                <div className="flex items-center justify-between border-b border-[#E5DDD0] pb-2">
-                  <span className="text-xs font-mono font-semibold text-[#B85C38] tracking-widest uppercase">
-                    {hoveredMember.roleEn}
-                  </span>
-                  <span className="font-tamil text-sm text-[#8C827A]" lang="ta">
-                    {hoveredMember.nameTa}
-                  </span>
-                </div>
-
-                <h3 className="text-3xl sm:text-4xl font-serif text-[#2A2825]">
-                  {hoveredMember.nameEn}
-                </h3>
-
-                <p className="text-base font-sans text-[#57524C] leading-relaxed">
-                  {hoveredMember.bioEn}
-                </p>
-
-                {hoveredMember.quote && (
-                  <blockquote className="text-sm font-serif italic text-[#2A2825] border-l-2 border-[#B85C38] pl-4 py-1">
-                    &ldquo;{hoveredMember.quote}&rdquo;
-                  </blockquote>
-                )}
-
-                <div className="pt-2">
-                  <a
-                    href={`mailto:${hoveredMember.email}`}
-                    className="inline-flex items-center gap-2 text-xs font-sans font-medium text-[#B85C38] hover:text-[#2A2825] transition-colors border-b border-transparent hover:border-[#B85C38]"
-                  >
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>{hoveredMember.email}</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Right 7 Columns: Borderless Officer Rows Separated by 1px Hairlines */}
-            <div className="lg:col-span-7 space-y-12 sm:space-y-16">
-              {CURRENT_BOARD.map((member, idx) => {
-                const isSelected = hoveredMember.id === member.id;
-
-                return (
-                  <div
-                    key={member.id}
-                    onMouseEnter={() => {
-                      audioLayer.playTapeClack();
-                      setHoveredMember(member);
-                    }}
-                    onClick={() => {
-                      playClick();
-                      setHoveredMember(member);
-                    }}
-                    className={`group cursor-pointer select-none transition-all duration-300 pb-12 sm:pb-16 border-b border-[#E5DDD0] ${
-                      isSelected ? "border-l-2 border-l-[#B85C38] pl-6" : "pl-0 hover:border-l-2 hover:border-l-[#E5DDD0] hover:pl-6"
-                    }`}
-                  >
-                    {/* Role Tag & Number */}
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="font-mono text-xs text-[#8C827A]">
-                        0{idx + 1}
-                      </span>
-                      <span className="font-sans text-xs tracking-widest uppercase font-semibold text-[#B85C38]">
-                        {member.roleEn}
-                      </span>
-                    </div>
-
-                    {/* Massive Elegant Serif Name */}
-                    <div className="flex items-baseline gap-4 flex-wrap">
-                      <h2 className={`text-3xl sm:text-5xl font-serif font-normal transition-colors leading-tight ${
-                        isSelected ? "text-[#B85C38]" : "text-[#2A2825] group-hover:text-[#B85C38]"
-                      }`}>
-                        {member.nameEn}
-                      </h2>
-                      <span
-                        lang="ta"
-                        className="text-xl sm:text-2xl font-serif text-[#2A2825]/40 group-hover:text-[#2A2825]/70 transition-colors"
-                      >
-                        {member.nameTa}
-                      </span>
-                    </div>
-
-                    {/* Short Description */}
-                    <p className="mt-3 text-sm sm:text-base font-sans text-[#57524C] leading-relaxed line-clamp-2">
-                      {member.bioEn}
-                    </p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start mt-16 sm:mt-24">
+            <aside className={styles.portrait + " lg:col-span-5"} aria-label="Selected officer" data-testid="officer-portrait">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div key={hoveredMember.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : .2 }}>
+                  <div className={styles.portraitPrint}>
+                    {hoveredMember.photoUrl && hoveredMember.photoUrl !== "/emblem.svg" ? (
+                      <Image src={hoveredMember.photoUrl} alt={hoveredMember.nameEn} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 450px" />
+                    ) : (
+                      <span className={styles.monogram} aria-label={hoveredMember.nameEn + " monogram"}>{hoveredMember.nameEn.split(/\s+/).map((part) => part[0]).join("")}</span>
+                    )}
                   </div>
-                );
-              })}
+                  <div className="space-y-3 pt-6">
+                    <p className="font-mono text-xs text-hearth-terracotta uppercase tracking-widest">{hoveredMember.roleEn}</p>
+                    <p lang="ta" className="font-tamil text-base leading-relaxed">{hoveredMember.roleTa} · {hoveredMember.nameTa}</p>
+                    <h2 className="text-3xl font-serif">{hoveredMember.nameEn}</h2>
+                    <p className="text-sm leading-relaxed" lang={locale === "ta" ? "ta" : undefined}>{locale === "ta" ? hoveredMember.bioTa : hoveredMember.bioEn}</p>
+                    {hoveredMember.quote && <blockquote className="text-sm font-serif italic border-l-2 border-hearth-terracotta pl-4">{hoveredMember.quote}</blockquote>}
+                    <a href={"mailto:" + hoveredMember.email} className="min-h-12 inline-flex items-center gap-2 text-sm text-hearth-terracotta break-all focus-visible:outline-2 focus-visible:outline-offset-4"><Mail className="size-4 shrink-0" aria-hidden="true" />{hoveredMember.email}</a>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </aside>
+            <div ref={officersRef} className="lg:col-span-7">
+              {CURRENT_BOARD.map((member, index) => (
+                <button key={member.id} type="button" data-officer-id={member.id} aria-pressed={hoveredMember.id === member.id}
+                  onMouseEnter={() => setHoveredMember(member)} onFocus={() => setHoveredMember(member)}
+                  onClick={() => { playClick(); setHoveredMember(member); }} className={styles.officer}>
+                  <span className="flex gap-4 text-xs font-mono uppercase tracking-widest text-hearth-terracotta"><span>{String(index + 1).padStart(2, "0")}</span>{member.roleEn}</span>
+                  <span className="block font-serif text-3xl sm:text-5xl leading-tight mt-4">{member.nameEn}</span>
+                  <span lang="ta" className="block font-tamil text-lg leading-relaxed mt-2">{member.nameTa} · {member.roleTa}</span>
+                  <span className="block text-sm leading-relaxed mt-4 max-w-xl">{member.bioEn}</span>
+                </button>
+              ))}
             </div>
-
           </div>
-
           {/* Working Subcommittee Councils: Borderless Typographic Grid */}
-          <div className="mt-28 sm:mt-40 pt-16 border-t border-[#E5DDD0] space-y-16">
+          <div className="mt-28 sm:mt-40 pt-16 border-t border-hearth-espresso/20 space-y-16">
             <div className="text-center space-y-3">
-              <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
+              <span className="font-sans text-xs font-semibold text-hearth-terracotta tracking-widest uppercase block">
                 Working Groups · துணைக் குழுக்கள்
               </span>
-              <h3 className="text-3xl sm:text-5xl font-serif font-normal text-[#2A2825]">
+              <h3 className="text-3xl sm:text-5xl font-serif font-normal text-hearth-espresso">
                 Subcommittee Coordinators
               </h3>
-              <p className="text-base text-[#57524C] font-sans max-w-xl mx-auto leading-relaxed">
+              <p className="text-base text-hearth-espresso/80 font-sans max-w-xl mx-auto leading-relaxed">
                 Dedicated student organizers leading choreography, social media trailers, campus catering, and community service.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 text-left">
               {SUBCOMMITTEE_MEMBERS.map((sub, i) => (
-                <div key={sub.id || i} className="pb-8 border-b border-[#E5DDD0] space-y-2">
-                  <span className="font-mono text-xs text-[#B85C38] uppercase tracking-widest font-semibold block">
+                <div key={sub.id || i} className={styles.coordinator + " space-y-2"} onPointerMove={(event) => {
+                  if (!window.matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)").matches) return;
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  event.currentTarget.style.setProperty("--pointer-x", (event.clientX - rect.left) + "px");
+                  event.currentTarget.style.setProperty("--pointer-y", (event.clientY - rect.top) + "px");
+                }} onPointerLeave={(event) => {
+                  event.currentTarget.style.removeProperty("--pointer-x");
+                  event.currentTarget.style.removeProperty("--pointer-y");
+                }}>
+                  <span className="font-mono text-xs text-hearth-terracotta uppercase tracking-widest font-semibold block">
                     {sub.areaEn}
                   </span>
-                  <h4 className="text-2xl sm:text-3xl font-serif text-[#2A2825]">{sub.nameEn}</h4>
-                  <p className="text-sm font-sans text-[#57524C]" lang="ta">
+                  <h4 className="text-2xl sm:text-3xl font-serif text-hearth-espresso">{sub.nameEn}</h4>
+                  <p className="text-sm font-sans text-hearth-espresso/80" lang="ta">
                     {sub.nameTa} · {sub.areaTa}
                   </p>
                 </div>
@@ -211,14 +141,14 @@ export default function BoardPage() {
           </div>
 
           {/* Plain-Language Democratic Governance: Architectural Statement Naked on Background */}
-          <div className="mt-28 pt-16 border-t border-[#E5DDD0] space-y-6 max-w-3xl">
-            <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
+          <div className="mt-28 pt-16 border-t border-hearth-espresso/20 space-y-6 max-w-3xl">
+            <span className="font-sans text-xs font-semibold text-hearth-terracotta tracking-widest uppercase block">
               Democratic Governance · ஜனநாயக விதிகள்
             </span>
-            <h4 className="text-3xl sm:text-4xl font-serif text-[#2A2825]">
+            <h4 className="text-3xl sm:text-4xl font-serif text-hearth-espresso">
               Constitution of Tamil Sangam at Ohio State
             </h4>
-            <p className="text-base sm:text-lg font-sans text-[#57524C] leading-relaxed">
+            <p className="text-base sm:text-lg font-sans text-hearth-espresso/80 leading-relaxed">
               Our organization is fully student-run and democratically governed under Ohio State University Student Activities guidelines. Executive officers are elected annually by general body vote, and all constitutional amendments are publicly accessible.
             </p>
             <div className="pt-2">

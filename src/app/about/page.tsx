@@ -1,19 +1,36 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+import { useReducedMotion } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
-import { useAudio } from "@/context/AudioContext";
 import { GopuramZScroll } from "@/components/about/GopuramZScroll";
-import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { FlowingRiverTimeline } from "@/components/muttram/FlowingRiverTimeline";
-import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 
 export default function AboutPage() {
   const { locale } = useLocale();
-  const { playClick } = useAudio();
+  const quoteRef = useRef<HTMLQuoteElement>(null);
+  const watermarkRef = useRef<HTMLSpanElement>(null);
+  const reduced = useReducedMotion();
+  useEffect(() => {
+    if (reduced || !quoteRef.current) return;
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+    const split = new SplitText(quoteRef.current, { type: "words" });
+    const ctx = gsap.context(() => {
+      gsap.fromTo(split.words, { opacity: 0.18, filter: "blur(4px)" }, {
+        opacity: 1, filter: "blur(0px)", stagger: 0.08,
+        scrollTrigger: { trigger: quoteRef.current, start: "top 85%", end: "bottom 45%", scrub: true, invalidateOnRefresh: true },
+      });
+      gsap.fromTo(watermarkRef.current, { xPercent: -8 }, { xPercent: 8,
+        scrollTrigger: { trigger: quoteRef.current, start: "top bottom", end: "bottom top", scrub: true, invalidateOnRefresh: true },
+      });
+    });
+    return () => { ctx.revert(); split.revert(); };
+  }, [reduced, locale]);
 
   const timelineMilestones = [
     {
@@ -83,18 +100,17 @@ export default function AboutPage() {
           CRITICAL / IMMUTABLE: Cinematic 3D Gopuram Z-Axis Mission Fly-Through Hero
           HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES.
           ========================================================================= */}
-      <div className="relative w-full overflow-hidden bg-transparent">
+      <div className="relative w-full overflow-clip bg-transparent">
         <GopuramZScroll />
       </div>
 
       {/* Hero to Content Gradient Transition */}
-      <HeroGradientTransition variant="about" className="-mt-32 relative z-20" />
 
       {/* =========================================================================
           THE ORGANIC JOURNEY: CENTRAL RIVER TIMELINE ON WARM IVORY
           Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
           ========================================================================= */}
-      <div className="relative z-20 w-full bg-[#FAF9F6] text-[#2A2825] overflow-hidden">
+      <div className="relative z-20 w-full bg-paper text-hearth-espresso overflow-hidden">
         
         <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
           
@@ -108,11 +124,12 @@ export default function AboutPage() {
           />
 
           {/* The Hero Quote: Naked Architectural Monument Against Global Background */}
-          <div className="my-24 sm:my-36 text-center space-y-8 max-w-4xl mx-auto select-none">
+          <div className="relative my-24 sm:my-36 text-center space-y-8 max-w-4xl mx-auto">
             <span className="font-sans text-xs uppercase tracking-widest text-[#B85C38] font-semibold block">
               Core Motto // புறநானூறு 192
             </span>
-            <blockquote className="text-3xl sm:text-5xl lg:text-6xl font-serif font-light text-[#2A2825] leading-snug tracking-tight">
+            <span ref={watermarkRef} aria-hidden="true" lang="ta" className="pointer-events-none absolute inset-x-0 top-1/3 font-tamil text-8xl text-hearth-terracotta/5 whitespace-nowrap tracking-normal">யாதும் ஊரே யாவரும் கேளிர்</span>
+            <blockquote ref={quoteRef} className="text-3xl sm:text-5xl lg:text-6xl font-serif font-light text-[#2A2825] leading-snug tracking-tight">
               &ldquo;<strong className="font-medium text-[#B85C38]">To Us All Towns Are Home, Everyone Our Kin.</strong> Born from the deep longing for home-cooked meals, steaming cups of filter coffee, and the resonant cadence of <strong className="font-medium text-[#E5A93C]">Sangam verses</strong> beneath Midwest skies.&rdquo;
             </blockquote>
             <p className="font-tamil text-xl sm:text-2xl text-[#B85C38]" lang="ta">

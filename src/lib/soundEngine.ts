@@ -28,108 +28,252 @@ class SoundEngine {
     return this.isMuted;
   }
 
-  // 1. Soft Temple Bell / Metal Tick
-  public playTempleBell(freq: number = 880) {
+  // 1. Soothing Temple Bronze Bell / Singing Bowl Chime (432Hz meditative scale)
+  public playTempleBell(freq: number = 432) {
     if (this.isMuted) return;
     const ctx = this.getContext();
     if (!ctx) return;
 
+    const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
     osc.type = "sine";
-    osc.frequency.setValueAtTime(freq, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(freq * 0.98, ctx.currentTime + 1.2);
+    osc.frequency.setValueAtTime(freq, now);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.995, now + 1.6);
 
-    // Harmonic overtone
+    // Harmonic warm overtone (2.0x fundamental)
     const oscHarmonic = ctx.createOscillator();
     oscHarmonic.type = "sine";
-    oscHarmonic.frequency.setValueAtTime(freq * 2.76, ctx.currentTime);
+    oscHarmonic.frequency.setValueAtTime(freq * 2.0, now);
 
     const harmGain = ctx.createGain();
-    harmGain.gain.setValueAtTime(0.2, ctx.currentTime);
-    harmGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+    harmGain.gain.setValueAtTime(0.0001, now);
+    harmGain.gain.linearRampToValueAtTime(0.12, now + 0.005);
+    harmGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
 
-    gain.gain.setValueAtTime(0.25, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.22, now + 0.006);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+
+    // Soft low-pass filter for velvety warmth
+    const lpf = ctx.createBiquadFilter();
+    lpf.type = "lowpass";
+    lpf.frequency.setValueAtTime(2400, now);
 
     osc.connect(gain);
     oscHarmonic.connect(harmGain);
     harmGain.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(lpf);
+    lpf.connect(ctx.destination);
 
-    osc.start();
-    oscHarmonic.start();
-    osc.stop(ctx.currentTime + 1.6);
-    oscHarmonic.stop(ctx.currentTime + 1.6);
+    osc.start(now);
+    oscHarmonic.start(now);
+    osc.stop(now + 1.85);
+    oscHarmonic.stop(now + 1.85);
   }
 
-  // 2. Parai / Thavil Deep Resonant Thump
+  // 2. Parai / Thavil Deep Resonant Thump (Smooth rounded skin drum)
   public playParaiThump(pitch: number = 75) {
     if (this.isMuted) return;
     const ctx = this.getContext();
     if (!ctx) return;
 
+    const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
+    const lpf = ctx.createBiquadFilter();
 
-    osc.type = "triangle";
-    osc.frequency.setValueAtTime(pitch * 2.4, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(pitch, ctx.currentTime + 0.08);
+    lpf.type = "lowpass";
+    lpf.frequency.setValueAtTime(160, now);
 
-    gain.gain.setValueAtTime(0.4, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(pitch * 1.8, now);
+    osc.frequency.exponentialRampToValueAtTime(pitch, now + 0.06);
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.38, now + 0.004);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
 
     osc.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(lpf);
+    lpf.connect(ctx.destination);
 
-    osc.start();
-    osc.stop(ctx.currentTime + 0.4);
+    osc.start(now);
+    osc.stop(now + 0.35);
   }
 
-  // 3. Crisp Wood / Reed Click (Button & Micro-interaction)
+  // 3. Comforting Rosewood / Palagai Wood Tap (Replaces harsh square wave)
   public playWoodClick() {
     if (this.isMuted) return;
     const ctx = this.getContext();
     if (!ctx) return;
 
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    const now = ctx.currentTime;
+    const oscBody = ctx.createOscillator();
+    const oscSnap = ctx.createOscillator();
+    const gainBody = ctx.createGain();
+    const gainSnap = ctx.createGain();
+    const masterGain = ctx.createGain();
+    const lpf = ctx.createBiquadFilter();
 
-    osc.type = "square";
-    osc.frequency.setValueAtTime(420, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.04);
+    lpf.type = "lowpass";
+    lpf.frequency.setValueAtTime(1400, now);
 
-    gain.gain.setValueAtTime(0.12, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+    // Warm wooden fundamental (480Hz -> 420Hz)
+    oscBody.type = "sine";
+    oscBody.frequency.setValueAtTime(480, now);
+    oscBody.frequency.exponentialRampToValueAtTime(420, now + 0.03);
 
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+    gainBody.gain.setValueAtTime(0.0001, now);
+    gainBody.gain.linearRampToValueAtTime(0.24, now + 0.002);
+    gainBody.gain.exponentialRampToValueAtTime(0.001, now + 0.038);
 
-    osc.start();
-    osc.stop(ctx.currentTime + 0.06);
+    // Subtle wooden snap overtone (960Hz)
+    oscSnap.type = "triangle";
+    oscSnap.frequency.setValueAtTime(960, now);
+    oscSnap.frequency.exponentialRampToValueAtTime(640, now + 0.015);
+
+    gainSnap.gain.setValueAtTime(0.0001, now);
+    gainSnap.gain.linearRampToValueAtTime(0.08, now + 0.0015);
+    gainSnap.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+
+    masterGain.gain.setValueAtTime(0.8, now);
+
+    oscBody.connect(gainBody);
+    oscSnap.connect(gainSnap);
+    gainBody.connect(masterGain);
+    gainSnap.connect(masterGain);
+    masterGain.connect(lpf);
+    lpf.connect(ctx.destination);
+
+    oscBody.start(now);
+    oscSnap.start(now);
+    oscBody.stop(now + 0.045);
+    oscSnap.stop(now + 0.025);
   }
 
-  // 4. Rice Flour / Kolam Scratch Sound (Soft noise burst)
+  // 4. Rice Flour / Kolam Scratch Sound (Soft, comforting whisper)
   public playFlourChime() {
     if (this.isMuted) return;
     const ctx = this.getContext();
     if (!ctx) return;
 
+    const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
     osc.type = "sine";
-    osc.frequency.setValueAtTime(1200 + Math.random() * 400, ctx.currentTime);
+    osc.frequency.setValueAtTime(840 + Math.random() * 200, now);
 
-    gain.gain.setValueAtTime(0.08, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.06, now + 0.003);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
 
     osc.connect(gain);
     gain.connect(ctx.destination);
 
-    osc.start();
-    osc.stop(ctx.currentTime + 0.15);
+    osc.start(now);
+    osc.stop(now + 0.14);
+  }
+
+  // 4b. Cinematic Sound Whoosh
+  public playWhoosh(volume: number = 0.5) {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    const len = Math.floor(ctx.sampleRate * 0.42);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+
+    let pink = 0;
+    for (let i = 0; i < len; i++) {
+      const white = Math.random() * 2 - 1;
+      pink = 0.94 * pink + 0.06 * white;
+      d[i] = pink;
+    }
+
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+
+    const bpf = ctx.createBiquadFilter();
+    bpf.type = "bandpass";
+    bpf.frequency.setValueAtTime(160, now);
+    bpf.frequency.exponentialRampToValueAtTime(700, now + 0.2);
+    bpf.frequency.exponentialRampToValueAtTime(220, now + 0.42);
+    bpf.Q.setValueAtTime(1.8, now);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(volume * 0.45, now + 0.18);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+
+    // Warm sub rumble
+    const sub = ctx.createOscillator();
+    const subGain = ctx.createGain();
+    sub.type = "sine";
+    sub.frequency.setValueAtTime(80, now);
+    sub.frequency.exponentialRampToValueAtTime(110, now + 0.18);
+    sub.frequency.exponentialRampToValueAtTime(60, now + 0.42);
+
+    subGain.gain.setValueAtTime(0.0001, now);
+    subGain.gain.linearRampToValueAtTime(volume * 0.28, now + 0.18);
+    subGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+
+    src.connect(bpf);
+    bpf.connect(gain);
+    gain.connect(ctx.destination);
+
+    sub.connect(subGain);
+    subGain.connect(ctx.destination);
+
+    src.start(now);
+    sub.start(now);
+    src.stop(now + 0.44);
+    sub.stop(now + 0.44);
+  }
+
+  // 4c. Kanchipuram Silk Swish
+  public playSilkSwish(volume: number = 0.35) {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    const len = Math.floor(ctx.sampleRate * 0.22);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+
+    let pink = 0;
+    for (let i = 0; i < len; i++) {
+      const white = Math.random() * 2 - 1;
+      pink = 0.9 * pink + 0.1 * white;
+      d[i] = pink;
+    }
+
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+
+    const bpf = ctx.createBiquadFilter();
+    bpf.type = "bandpass";
+    bpf.frequency.setValueAtTime(360, now);
+    bpf.frequency.exponentialRampToValueAtTime(950, now + 0.11);
+    bpf.frequency.exponentialRampToValueAtTime(420, now + 0.22);
+    bpf.Q.setValueAtTime(1.5, now);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(volume * 0.35, now + 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+    src.connect(bpf);
+    bpf.connect(gain);
+    gain.connect(ctx.destination);
+
+    src.start(now);
+    src.stop(now + 0.23);
   }
 
   // 5. Solkattu Syllables Synthesizer

@@ -6,6 +6,7 @@ export interface PhotoItem {
   captionEn: string;
   captionTa: string;
   imageUrl: string;
+  crop?: { position: string; scale: number; label: string };
   photographer: string;
   eventDate: string;
   tags: string[];
@@ -161,6 +162,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
       },
       {
         id: "streetside-sapad-02",
+        crop: { position: "25% 50%", scale: 1.12, label: "Cooking detail · alternate crop" },
         albumSlug: "streetside-sapad",
         titleEn: "Tawa Cooking",
         titleTa: "தவா சமையல்",
@@ -174,6 +176,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
       },
       {
         id: "streetside-sapad-03",
+        crop: { position: "30% 60%", scale: 1.08, label: "Table detail · alternate crop" },
         albumSlug: "streetside-sapad",
         titleEn: "Banana Leaf Dinner",
         titleTa: "வாழை இலை உணவு",
@@ -187,6 +190,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
       },
       {
         id: "streetside-sapad-04",
+        crop: { position: "75% 35%", scale: 1.35, label: "Close detail · alternate crop" },
         albumSlug: "streetside-sapad",
         titleEn: "Filter Coffee & Chai",
         titleTa: "பில்டர் காபி & டீ",
@@ -200,6 +204,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
       },
       {
         id: "streetside-sapad-05",
+        crop: { position: "75% 50%", scale: 1.3, label: "Gathering detail · alternate crop" },
         albumSlug: "streetside-sapad",
         titleEn: "Dinner with Friends",
         titleTa: "தோழர்களுடன் உணவு",
@@ -265,6 +270,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
       },
       {
         id: "namma-jathara-03",
+        crop: { position: "25% 55%", scale: 1.1, label: "Wide detail · alternate crop" },
         albumSlug: "namma-jathara",
         titleEn: "Carnival Games",
         titleTa: "திருவிழா விளையாட்டுகள்",
@@ -278,6 +284,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
       },
       {
         id: "namma-jathara-04",
+        crop: { position: "75% 40%", scale: 1.35, label: "Close detail · alternate crop" },
         albumSlug: "namma-jathara",
         titleEn: "Open Dance Circle",
         titleTa: "நடன வட்டம்",

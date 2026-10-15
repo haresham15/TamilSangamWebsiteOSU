@@ -247,7 +247,9 @@ export function Rose() {
   ]);
 
   // Per-frame dissolve sync and Low E string vibration coupling
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const dVal = heroRefs.rose.uDissolve.value;
     uniformsRef.current.uDissolve.value = dVal;
 

@@ -6,7 +6,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { CheckCircle2, ArrowRight, Loader2, AlertCircle, ExternalLink } from "lucide-react";
+import { useTinai } from "@/context/TinaiContext";
+import { CheckCircle2, ArrowRight, Loader2, AlertCircle, ExternalLink, Volume2, VolumeX, Globe, Search } from "lucide-react";
 import { getNextFlagshipEvent } from "@/data/events";
 import { SITE_CONFIG } from "@/data/siteConfig";
 import { CURRENT_BOARD, BoardMember } from "@/data/board";
@@ -26,10 +27,15 @@ const subscribeStorage = (callback: () => void) => {
   return () => window.removeEventListener("storage", callback);
 };
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onOpenSearch?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
   const pathname = usePathname();
-  const { locale, t } = useLocale();
-  const { playClick, playBell } = useAudio();
+  const { locale, toggleLocale, t } = useLocale();
+  const { isSoundEnabled, toggleSound, playClick, playBell } = useAudio();
+  const { currentTinai, meta, setTinai } = useTinai();
   const savedEmail = useSyncExternalStore(subscribeStorage, getSavedEmail, () => "");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -327,8 +333,75 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
+        {/* Relocated Utilities Bar (Purged from Naked Header) */}
+        <div className="pt-8 pb-4 border-b border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs font-sans">
+          <div className="flex items-center gap-2 text-white/50 font-mono text-[11px] uppercase tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#E5A93C]" />
+            <span>{locale === "ta" ? "தள கருவிகள் & சூழல்" : "Quick Tools & Ambience"}</span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Search ⌘K Trigger */}
+            {onOpenSearch && (
+              <button
+                onClick={() => {
+                  playClick();
+                  onOpenSearch();
+                }}
+                className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/15 text-white/90 hover:text-white transition-colors flex items-center gap-2 cursor-pointer"
+                title="Search (⌘K)"
+              >
+                <Search className="w-3.5 h-3.5 text-[#E5A93C]" />
+                <span>{locale === "ta" ? "தேடல்" : "Search"}</span>
+                <kbd className="text-[10px] font-mono px-1 py-0.2 bg-white/10 rounded-xs text-white/60">⌘K</kbd>
+              </button>
+            )}
+
+            {/* Language Switcher */}
+            <button
+              onClick={() => {
+                playClick();
+                toggleLocale();
+              }}
+              className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/15 text-white/90 hover:text-white transition-colors flex items-center gap-2 cursor-pointer"
+              title="Toggle Language (EN / தமிழ்)"
+            >
+              <Globe className="w-3.5 h-3.5 text-[#E5A93C]" />
+              <span className="font-mono text-[11px] font-bold text-[#E5A93C]">
+                {locale === "en" ? "TA" : "EN"}
+              </span>
+              <span>{locale === "en" ? "தமிழ் பதிப்பு" : "English"}</span>
+            </button>
+
+            {/* Interactive Audio Toggle */}
+            <button
+              onClick={toggleSound}
+              className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/15 text-white/90 hover:text-white transition-colors flex items-center gap-2 cursor-pointer"
+              title={isSoundEnabled ? "Mute interactive audio" : "Enable interactive audio"}
+            >
+              {isSoundEnabled ? (
+                <Volume2 className="w-3.5 h-3.5 text-[#E5A93C]" />
+              ) : (
+                <VolumeX className="w-3.5 h-3.5 text-white/40" />
+              )}
+              <span>{isSoundEnabled ? "Audio On" : "Audio Muted"}</span>
+            </button>
+
+            {/* Active Tinai Landscape */}
+            <div className="px-3 py-1.5 bg-white/5 border border-white/15 text-white/80 flex items-center gap-2">
+              <span
+                className="w-2.5 h-2.5 shrink-0"
+                style={{ backgroundColor: meta.accentColor }}
+              />
+              <span className="text-[11px]">
+                {locale === "ta" ? meta.nameTa : meta.nameEn} ({locale === "ta" ? meta.timeLabelTa : meta.timeLabelEn})
+              </span>
+            </div>
+          </div>
+        </div>
+
         {/* Links & Bottom Navigation Bar */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-white/70">
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-white/70">
           <nav aria-label="Footer Navigation" className="flex flex-wrap items-center gap-6 font-sans font-medium">
             <Link href="/" className="hover:text-[#E5A93C] transition-colors">{t("nav.home")}</Link>
             <Link href="/events" className="hover:text-[#E5A93C] transition-colors">{t("nav.events")}</Link>

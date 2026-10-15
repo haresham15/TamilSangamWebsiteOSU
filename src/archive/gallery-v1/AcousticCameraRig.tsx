@@ -19,6 +19,7 @@ export function AcousticCameraRig({ scrollProgress }: AcousticCameraRigProps) {
   const fpsRef = useRef({ frames: 0, lastTime: 0 });
 
   useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
     const { camera, scene } = state;
     const t = state.clock.getElapsedTime();
     const p = Math.min(1.0, Math.max(0.0, scrollProgress));
@@ -50,7 +51,7 @@ export function AcousticCameraRig({ scrollProgress }: AcousticCameraRigProps) {
     targetPos.set(targetX, targetY, targetZ);
 
     // Spring-follow damping for physical inertia (§6 & §10)
-    const damping = 1 - Math.pow(0.001, delta);
+    const damping = 1 - Math.pow(0.001, dt);
     camera.position.lerp(targetPos, damping * 4.0);
 
     if ("fov" in camera) {

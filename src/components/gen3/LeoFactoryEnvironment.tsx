@@ -1417,11 +1417,12 @@ function FactorySparks({ count = 140 }) {
     };
   }, [geometry, material]);
 
-  useFrame((state) => {
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
     if (pointsRef.current) {
       const mat = pointsRef.current.material as THREE.ShaderMaterial;
       if (mat?.uniforms?.uTime) {
-        mat.uniforms.uTime.value = state.clock.getElapsedTime();
+        mat.uniforms.uTime.value += dt;
       }
     }
   });

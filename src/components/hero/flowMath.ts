@@ -62,9 +62,9 @@ export function calcStrandFeed(
   p: number,
   rank: number,
   totalFeed: number,
-  pA = 0.04,
-  gamma = 0.16,
-  dP = 0.42,
+  pA = 0.12,
+  gamma = 0.14,
+  dP = 0.38,
   jitter = 0
 ): { feed: number; normalizedX: number; p0: number } {
   const p0 = pA + gamma * rank + jitter;
@@ -122,12 +122,12 @@ export function calcPeelLift(
 export function evalCamera(
   p: number,
   Hv = WORLD_HV,
-  pC0 = 0.04,
+  pC0 = 0.12,
   pC1 = 0.60
 ): { camY: number; camZ: number; pitchDeg: number } {
   const t = Math.max(0, Math.min(1, (p - pC0) / (pC1 - pC0)));
   const s = smootherstep(t);
-  const camY = 0.35 + (-1.2 * Hv - 0.35) * s;
+  const camY = 0.0 + (-1.2 * Hv) * s;
   const camZ = 12 + (11.2 - 12) * s;
   const pitchDeg = 0; // Pure level pitch eliminates keystoning
   return { camY, camZ, pitchDeg };

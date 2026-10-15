@@ -108,7 +108,7 @@ export function DraggableMemoryArchive() {
     const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
     if (cards.length === 0) return;
 
-    audioLayer.playTapeClack(0.7);
+    audioLayer.playCinematicWhoosh(0.55);
 
     // Animate the cards being dealt onto the table
     gsap.killTweensOf(cards);
@@ -158,7 +158,7 @@ export function DraggableMemoryArchive() {
       cursor: "grab",
       activeCursor: "grabbing",
       onDragStart: function () {
-        audioLayer.playTapeClack(0.6);
+        audioLayer.playSilkSwish(0.4);
         maxZIndexRef.current += 1;
         this.target.style.zIndex = maxZIndexRef.current.toString();
         gsap.to(this.target, {

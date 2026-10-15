@@ -246,7 +246,9 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
   }, []);
 
   // Frame tick: update GPU attributes if GSAP tweens modified them
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (hasUpdatesRef.current) {
       const flapProgressAttr = flapGeometry.getAttribute("aFlipProgress") as THREE.InstancedBufferAttribute;
       const flapCurrentAttr = flapGeometry.getAttribute("aUvCurrent") as THREE.InstancedBufferAttribute;

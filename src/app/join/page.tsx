@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { audioLayer } from "@/utils/audioLayer";
-import { Check, Loader2, ArrowRight } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { GuestbookField } from "@/components/muttram/GuestbookField";
-import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { SITE_CONFIG } from "@/data/siteConfig";
+import styles from "./join.module.css";
 
 // =========================================================================
 // CRITICAL & IMMUTABLE: R3F Nanban Hero Canvas
@@ -22,9 +22,9 @@ const JoinHeroCanvas = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[70dvh] flex flex-col items-center justify-center bg-[#120A06] text-[#E5A93C] font-sans text-sm gap-3">
+      <div className="w-full h-[70dvh] flex flex-col items-center justify-center bg-hero-espresso text-antique-gold font-sans text-sm gap-3">
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-[#E5A93C] animate-pulse" />
+          <span className="w-3 h-3 rounded-full bg-antique-gold animate-pulse" />
           <span className="tracking-widest">
             Entering the morning campus...
           </span>
@@ -48,9 +48,33 @@ export default function JoinPage() {
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const emailInputRef = useRef<HTMLInputElement>(null);
-  const majorInputRef = useRef<HTMLInputElement>(null);
-  const notesInputRef = useRef<HTMLInputElement>(null);
+  // Sync inputs or pathway selections made before hydration
+  useEffect(() => {
+    const syncState = () => {
+      const win = typeof window !== "undefined" ? (window as unknown as Record<string, string | undefined>) : undefined;
+      const n = win?.__pendingGuestbookName || (document.getElementById("guestbook-name") as HTMLInputElement | null)?.value;
+      if (n) setName((prev) => prev || n);
+      const e = win?.__pendingGuestbookEmail || (document.getElementById("guestbook-email") as HTMLInputElement | null)?.value;
+      if (e) setEmail((prev) => prev || e);
+      const m = win?.__pendingGuestbookMajor || (document.getElementById("guestbook-major") as HTMLInputElement | null)?.value;
+      if (m) setMajor((prev) => prev || m);
+      if (win?.__pendingMembershipType) {
+        setMembershipType(win.__pendingMembershipType as "general" | "performer" | "committee");
+      }
+    };
+    syncState();
+    window.addEventListener("guestbook-input-sync", syncState);
+    const onMembership = (e: Event) => {
+      const t = (e as CustomEvent).detail;
+      if (t) setMembershipType(t as "general" | "performer" | "committee");
+    };
+    window.addEventListener("membership-type-select", onMembership);
+    return () => {
+      window.removeEventListener("guestbook-input-sync", syncState);
+      window.removeEventListener("membership-type-select", onMembership);
+    };
+  }, []);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,17 +104,15 @@ export default function JoinPage() {
         }),
       });
 
-      if (!res.ok) {
-        // Fallback simulation for mock-first approach
-        console.warn("API returned non-200, simulating mock submission success.");
+      const result = await res.json();
+      if (!res.ok || result.success !== true) {
+        throw new Error(result.error || "Unable to save your membership request. Please try again.");
       }
 
       playBell(880);
       setSubmitted(true);
     } catch (err) {
-      console.warn("Network error during submission, simulating mock-first success:", err);
-      playBell(880);
-      setSubmitted(true);
+      setErrorMessage(err instanceof Error ? err.message : "Unable to save your membership request. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -102,7 +124,7 @@ export default function JoinPage() {
       <div
         id="nanban-gates-hero"
         data-hero-container="true"
-        className="w-full h-[100dvh] relative z-10 overflow-hidden bg-transparent"
+        className="w-full relative z-10 bg-transparent"
       >
         <JoinHeroCanvas />
       </div>
@@ -114,21 +136,22 @@ export default function JoinPage() {
           THE WELCOMING HEARTH: SUNLIT GUESTBOOK ON WARM IVORY
           Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
           ========================================================================= */}
-      <div className="relative z-20 w-full bg-[#FAF9F6] text-[#2A2825] overflow-hidden">
+      <div className={styles.content}>
         
-        <div className="w-full max-w-3xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
           
           {/* Centered Airy Header */}
           <CourtyardHeader
-            align="center"
+            align="left"
             eyebrow="The Welcoming Hearth · Membership"
             title={locale === "ta" ? "எங்களுடன் இணையுங்கள்" : "Sign Our Guestbook"}
             tamilTitle={locale !== "ta" ? "இணைவு · நல்வரவு" : undefined}
             description="100% Free · Zero Dues · Open to every Ohio State student and friend regardless of language. Pull up a chair and become part of our campus community."
           />
 
+          <div className={styles.layout}>
           {!submitted ? (
-            <form onSubmit={handleSubmit} className="space-y-16 mt-16 max-w-2xl mx-auto">
+            <form onSubmit={handleSubmit} className={styles.form + " space-y-16"}>
               
               {/* Prompt 01: Name */}
               <GuestbookField
@@ -166,10 +189,10 @@ export default function JoinPage() {
               {/* Prompt 04: Pathway / Involvement */}
               <div className="space-y-6">
                 <div>
-                  <span className="text-xl sm:text-2xl font-serif font-normal text-[#2A2825] block">
+                  <span className="text-xl sm:text-2xl font-serif font-normal text-hearth-espresso block">
                     How would you like to participate?
                   </span>
-                  <span className="text-sm font-sans text-[#57524C] block mt-1">
+                  <span className="text-sm font-sans text-hearth-espresso/80 block mt-1">
                     Select whichever track feels most exciting to you right now.
                   </span>
                 </div>
@@ -185,20 +208,22 @@ export default function JoinPage() {
                       <button
                         key={type.id}
                         type="button"
+                        data-membership-type={type.id}
+                        aria-pressed={isSelected}
                         onClick={() => {
                           audioLayer.playTapeClack();
                           setMembershipType(type.id as typeof membershipType);
                         }}
                         className={`w-full text-left py-4 pl-6 transition-all duration-300 cursor-pointer border-l-2 ${
                           isSelected
-                            ? "border-[#B85C38]"
-                            : "border-[#E5DDD0] hover:border-[#2A2825]/40"
+                            ? "border-hearth-terracotta"
+                            : "border-hearth-espresso/20 hover:border-hearth-espresso/40"
                         }`}
                       >
-                        <span className={`text-xl sm:text-2xl font-serif font-normal block mb-1 ${isSelected ? "text-[#B85C38]" : "text-[#2A2825]"}`}>
+                        <span className={`text-xl sm:text-2xl font-serif font-normal block mb-1 ${isSelected ? "text-hearth-terracotta" : "text-hearth-espresso"}`}>
                           {type.label}
                         </span>
-                        <p className="text-sm font-sans text-[#57524C] leading-relaxed">
+                        <p className="text-sm font-sans text-hearth-espresso/80 leading-relaxed">
                           {type.desc}
                         </p>
                       </button>
@@ -221,17 +246,17 @@ export default function JoinPage() {
 
               {/* Error Message */}
               {errorMessage && (
-                <div className="p-4 border-l-2 border-rose-500 text-rose-700 text-sm font-sans font-medium">
+                <div role="alert" className="p-4 border-l-2 border-rose-500 text-rose-700 text-sm font-sans font-medium">
                   {errorMessage}
                 </div>
               )}
 
               {/* Submit Action */}
-              <div className="pt-8 border-t border-[#E5DDD0] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div className="pt-8 border-t border-hearth-espresso/20 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="font-serif text-2xl sm:text-3xl font-normal text-[#B85C38] hover:text-[#E5A93C] border-b-2 border-[#B85C38] hover:border-[#E5A93C] pb-1 transition-colors self-start cursor-pointer disabled:opacity-50"
+                  className="font-serif text-2xl sm:text-3xl font-normal text-hearth-terracotta hover:text-antique-gold border-b-2 border-hearth-terracotta hover:border-antique-gold pb-1 transition-colors self-start cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2 text-lg">
@@ -243,7 +268,7 @@ export default function JoinPage() {
                   )}
                 </button>
 
-                <p className="text-xs font-sans text-[#57524C]">
+                <p className="text-xs font-sans text-hearth-espresso/80">
                   The Ohio State University · Recognized Student Organization · 100% Free
                 </p>
               </div>
@@ -252,19 +277,19 @@ export default function JoinPage() {
           ) : (
             /* Warm Celebration Confirmation (Unboxed) */
             <div className="text-center space-y-6 py-16 max-w-xl mx-auto select-none animate-in fade-in duration-500">
-              <span className="font-sans text-xs uppercase tracking-widest text-[#B85C38] font-semibold block">
+              <span className="font-sans text-xs uppercase tracking-widest text-hearth-terracotta font-semibold block">
                 Guestbook Signed Successfully
               </span>
 
-              <h2 className="text-3xl sm:text-5xl font-serif text-[#2A2825]">
+              <h2 className="text-3xl sm:text-5xl font-serif text-hearth-espresso">
                 Welcome to the Family, {name}!
               </h2>
 
-              <p className="font-tamil text-xl text-[#B85C38]" lang="ta">
+              <p className="font-tamil text-xl text-hearth-terracotta" lang="ta">
                 வணக்கம் மற்றும் மனமார்ந்த நல்வரவு!
               </p>
 
-              <p className="text-base sm:text-lg text-[#57524C] font-sans leading-relaxed">
+              <p className="text-base sm:text-lg text-hearth-espresso/80 font-sans leading-relaxed">
                 You are officially plugged into the Tamil Sangam hearth at Ohio State. We will send you updates on upcoming Oval picnics, festival rehearsal calls, and banquet feasts.
               </p>
 
@@ -274,14 +299,14 @@ export default function JoinPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={playClick}
-                  className="font-semibold text-[#B85C38] border-b-2 border-[#B85C38] pb-1 hover:text-[#E5A93C] hover:border-[#E5A93C] transition-colors"
+                  className="font-semibold text-hearth-terracotta border-b-2 border-hearth-terracotta pb-1 hover:text-antique-gold hover:border-antique-gold transition-colors"
                 >
                   Join the Student GroupMe ↗
                 </a>
                 <Link
                   href="/events"
                   onClick={playClick}
-                  className="font-medium text-[#57524C] hover:text-[#2A2825] border-b border-[#2A2825]/20 pb-1 hover:border-[#2A2825] transition-colors"
+                  className="font-medium text-hearth-espresso/80 hover:text-hearth-espresso border-b border-hearth-espresso/20 pb-1 hover:border-hearth-espresso transition-colors"
                 >
                   Explore Upcoming Events →
                 </Link>
@@ -289,12 +314,28 @@ export default function JoinPage() {
             </div>
           )}
 
+          <aside className={styles.pass} aria-label="Live membership pass" data-testid="membership-pass">
+            <div className={styles.passHeader}>
+              <p className="font-mono text-xs tracking-widest uppercase text-antique-gold">Tamil Sangam / Ohio State</p>
+              <h2 className="font-serif text-2xl mt-4">Your membership pass</h2>
+              <p className="text-xs mt-2" role="status">{submitted ? "Guestbook signed" : "Draft preview"}</p>
+            </div>
+            <dl aria-live="polite" aria-atomic="false">
+              <dt>Name</dt><dd className={styles.passName}>{name.trim() || "Your name"}</dd>
+              <dt>Email</dt><dd>{email.trim() || "Not entered"}</dd>
+              <dt>Major / Program</dt><dd>{major.trim() || "Not entered (optional)"}</dd>
+              <dt>Participation</dt><dd>{membershipType === "general" ? "General Member" : membershipType === "performer" ? "Dance & Music" : "Working Council"}</dd>
+            </dl>
+            <p className={styles.passFoot}>{submitted ? "Your membership request has been saved." : "Preview only. Sign the guestbook to submit your membership request."}</p>
+          </aside>
+          </div>
+
           {/* Open Hearth Guarantee Notice (Unboxed, 1px Grounding Line) */}
-          <div className="mt-28 border-t border-[#E5DDD0] pt-12 text-center space-y-2 max-w-lg mx-auto">
-            <span className="font-sans text-xs uppercase tracking-widest text-[#B85C38] font-semibold block">
+          <div className="mt-28 border-t border-hearth-espresso/20 pt-12 text-center space-y-2 max-w-lg mx-auto">
+            <span className="font-sans text-xs uppercase tracking-widest text-hearth-terracotta font-semibold block">
               Open Hearth Commitment
             </span>
-            <p className="text-sm font-sans text-[#57524C] leading-relaxed">
+            <p className="text-sm font-sans text-hearth-espresso/80 leading-relaxed">
               Membership in Tamil Sangam is completely open and free to all Buckeyes, undergraduate or graduate, of any major, language, or heritage.
             </p>
           </div>

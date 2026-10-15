@@ -91,7 +91,7 @@ export function Performer() {
   }, [scene, actions, animations, rimMaterial]);
 
   useFrame((_, delta) => {
-    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
+    const dt = Math.min(delta, 0.05);
     const isDebug = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug") === "1";
     const progress = getScrollProgress();
     
@@ -118,7 +118,7 @@ export function Performer() {
         proxyHandEuler.current.set(0.0, progress * Math.PI * 2, 0.2);
         proxyHandQuat.current.setFromEuler(proxyHandEuler.current);
 
-        const slerpStep = Math.min(1.0, blendFactor * (safeDelta / 0.016));
+        const slerpStep = Math.min(1.0, blendFactor * (dt / 0.016));
         rightForeArm.quaternion.slerp(proxyForeArmQuat.current, slerpStep);
         rightHand.quaternion.slerp(proxyHandQuat.current, slerpStep);
       }

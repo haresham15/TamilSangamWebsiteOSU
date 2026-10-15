@@ -53,6 +53,7 @@ export function CameraChoreography() {
   );
 
   useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
     if (!cameraRef.current) return;
 
     // 1. Fetch raw progress from GSAP ScrollTrigger
@@ -60,12 +61,11 @@ export function CameraChoreography() {
     const clampedProgress = Math.min(1.0, Math.max(0.0, rawProgress));
 
     // 2. Exponential damp progress to absorb any micro frame timing variations
-    const safeDelta = Math.min(Math.max(delta, 0.001), 0.05);
     currentProgress.current = THREE.MathUtils.damp(
       currentProgress.current,
       clampedProgress,
       12.0,
-      safeDelta
+      dt
     );
 
     // 3. Evaluate single global easing curve

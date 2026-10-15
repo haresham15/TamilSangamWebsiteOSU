@@ -8,6 +8,7 @@ export function SceneLighting() {
   const godLightRef = useRef<THREE.DirectionalLight>(null);
   const sweepSpot1Ref = useRef<THREE.SpotLight>(null);
   const sweepSpot2Ref = useRef<THREE.SpotLight>(null);
+  const elapsed = useRef(0);
 
   // Cinematic floor sweep targets moving smoothly across the arena floor
   const sweepTarget1Ref = useRef<THREE.Object3D>(null);
@@ -22,8 +23,9 @@ export function SceneLighting() {
     }
   }, []);
 
-  useFrame(({ clock }) => {
-    const time = clock.getElapsedTime();
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    const time = elapsed.current += dt;
     if (godLightRef.current) {
       godLightRef.current.position.x = Math.sin(time * 0.35) * 1.5;
       godLightRef.current.intensity = 4.2 + Math.sin(time * 1.2) * 0.4;

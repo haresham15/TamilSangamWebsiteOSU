@@ -20,6 +20,7 @@ import { HeroEventPedestalCard } from "./HeroEventPedestalCard";
 import { useArenaScrollTimeline } from "./useArenaScrollTimeline";
 import { ArrowDown, Sparkles } from "lucide-react";
 import { useLocale } from "@/context/LocaleContext";
+import { useInView } from "framer-motion";
 
 interface ArenaSceneProps {
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -144,6 +145,7 @@ export function EventsArenaCanvas() {
   const router = useRouter();
   const { locale } = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(containerRef, { margin: "200px 0px" });
   const isMobile = useSyncExternalStore(
     subscribeResize,
     getIsMobileSnapshot,
@@ -214,7 +216,8 @@ export function EventsArenaCanvas() {
       {/* 1. Fullscreen Pinned Three.js Canvas */}
       <div className="sticky top-0 w-full h-[100dvh] overflow-hidden">
         <Canvas
-          dpr={[1, isMobile ? 1.5 : 2]}
+          dpr={[1, isMobile ? 1.5 : 1.75]}
+          frameloop={inView ? "always" : "never"}
           gl={{
             antialias: true,
             powerPreference: "high-performance",

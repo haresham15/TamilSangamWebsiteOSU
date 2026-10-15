@@ -89,7 +89,9 @@ export function SunDisc({ scrollProgress = 0, bloomBoost = 1.0 }: SunDiscProps) 
     };
   }, [sunGeo, sunMat, streakGeo, streakMat, secondaryStreakMat, haloGeo, haloMat]);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const t = state.clock.getElapsedTime();
     const p = scrollProgress;
 

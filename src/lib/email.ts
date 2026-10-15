@@ -1,5 +1,5 @@
-import fs from "fs/promises";
-import path from "path";
+import { getLedgerStore } from "./ledgerStore";
+import { escapeHtml } from "./html";
 
 export interface SubscriberRecord {
   id: string;
@@ -69,7 +69,7 @@ export function validateEmail(input: string): {
 }
 
 /**
- * Persists subscriber record to data/subscribers.json
+ * Persists subscriber records transactionally, importing the legacy JSON ledger on first update.
  */
 export async function saveSubscriber(data: {
   email: string;
@@ -78,26 +78,10 @@ export async function saveSubscriber(data: {
   interests?: string[];
   source?: string;
 }): Promise<{ total: number; isNew: boolean; record: SubscriberRecord }> {
-  const dataDir = path.join(process.cwd(), "data");
-  const filePath = path.join(dataDir, "subscribers.json");
-
-  try {
-    await fs.mkdir(dataDir, { recursive: true });
-  } catch {
-    // directory exists or cannot be created
-  }
-
-  let ledger: SubscriberLedger = {
+  return getLedgerStore().update("subscribers.json", (): SubscriberLedger => ({
     subscribers: [],
     stats: { total: 0, buckeyes: 0, lastUpdated: new Date().toISOString() },
-  };
-
-  try {
-    const raw = await fs.readFile(filePath, "utf-8");
-    ledger = JSON.parse(raw);
-  } catch {
-    // file does not exist yet; default ledger initialized
-  }
+  }), (ledger) => {
 
   const existingIdx = ledger.subscribers.findIndex((s) => s.email === data.email);
   const now = new Date().toISOString();
@@ -140,13 +124,8 @@ export async function saveSubscriber(data: {
     lastUpdated: now,
   };
 
-  try {
-    await fs.writeFile(filePath, JSON.stringify(ledger, null, 2), "utf-8");
-  } catch (err) {
-    console.error("[StayInSangam] Failed to persist subscriber file:", err);
-  }
-
   return { total: ledger.stats.total, isNew, record };
+  });
 }
 
 /**
@@ -157,18 +136,26 @@ export async function getSubscribersStats(): Promise<{
   buckeyes: number;
   lastUpdated: string;
 }> {
-  const filePath = path.join(process.cwd(), "data", "subscribers.json");
-  try {
-    const raw = await fs.readFile(filePath, "utf-8");
-    const ledger: SubscriberLedger = JSON.parse(raw);
-    return ledger.stats;
-  } catch {
-    return { total: 0, buckeyes: 0, lastUpdated: new Date().toISOString() };
-  }
+  return getLedgerStore().read("subscribers.json", (): SubscriberLedger => ({
+    subscribers: [],
+    stats: { total: 0, buckeyes: 0, lastUpdated: new Date().toISOString() },
+  })).stats;
 }
 
+import {
+  generateStayInSangamConfirmationHtml,
+  generateGuestbookConfirmationHtml,
+  generateIdeasHearthConfirmationHtml,
+} from "./brutalistEmailTemplates";
+
+export {
+  generateGuestbookConfirmationHtml,
+  generateIdeasHearthConfirmationHtml,
+  generateStayInSangamConfirmationHtml,
+};
+
 /**
- * Generates an accessible, branded HTML welcome email
+ * Generates an accessible, branded brutalist HTML welcome email for Stay in Sangam
  */
 export function generateWelcomeEmailHtml(params: {
   email: string;
@@ -176,106 +163,7 @@ export function generateWelcomeEmailHtml(params: {
   isBuckeye: boolean;
   interests?: string[];
 }): { html: string; text: string } {
-  const { email, name, isBuckeye, interests } = params;
-  const greeting = name ? `Vanakkam, ${name}!` : isBuckeye ? "Vanakkam, Fellow Buckeye!" : "Vanakkam & Welcome!";
-
-  const interestsList = interests && interests.length > 0
-    ? interests.map((i) => `<li>• ${i.charAt(0).toUpperCase() + i.slice(1)}</li>`).join("")
-    : "<li>• Flagship cultural festivals & ticket drops</li><li>• Authentic street food feasts & chai socials</li><li>• Casual Oval lawn kickbacks & games</li>";
-
-  const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to the OSU Tamil Sangam Family</title>
-  <style>
-    body { margin: 0; padding: 0; background-color: #1c082b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #ffffff; }
-    .container { max-width: 600px; margin: 0 auto; background-color: #250d38; border: 2px solid #55CCA2; box-shadow: 6px 6px 0px #55CCA2; }
-    .header { padding: 32px 24px 20px; text-align: center; border-bottom: 2px solid rgba(85, 204, 162, 0.4); }
-    .subhead { font-family: monospace; font-size: 11px; text-transform: uppercase; color: #55CCA2; letter-spacing: 2px; font-weight: bold; margin-bottom: 8px; }
-    .title { font-size: 26px; font-weight: 800; color: #ffffff; margin: 0; line-height: 1.2; }
-    .content { padding: 28px 24px; font-size: 14px; line-height: 1.6; color: #e2d9eb; }
-    .greeting { font-size: 18px; font-weight: bold; color: #55CCA2; margin-bottom: 12px; }
-    .badge { display: inline-block; padding: 4px 10px; background-color: #160724; border: 1px solid #55CCA2; color: #55CCA2; font-family: monospace; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 16px; }
-    .box { background-color: #190927; border: 1px solid rgba(255, 255, 255, 0.15); padding: 16px; margin: 18px 0; border-left: 4px solid #55CCA2; }
-    .box-title { font-weight: bold; color: #ffffff; font-size: 13px; text-transform: uppercase; margin-bottom: 6px; font-family: monospace; }
-    .btn { display: inline-block; background-color: #55CCA2; color: #1b0d28; text-decoration: none; padding: 12px 24px; font-weight: bold; font-size: 13px; text-transform: uppercase; font-family: monospace; letter-spacing: 1px; border: 2px solid #1b0d28; box-shadow: 3px 3px 0px #ffffff; margin-top: 10px; }
-    .footer { padding: 24px; text-align: center; font-size: 11px; color: #9c8aab; border-top: 1px solid rgba(255, 255, 255, 0.1); font-family: monospace; }
-    ul { margin: 8px 0 12px; padding-left: 20px; list-style-type: none; }
-    li { margin-bottom: 4px; }
-  </style>
-</head>
-<body>
-  <div style="padding: 24px 12px;">
-    <div class="container">
-      <div class="header">
-        <div class="subhead">The Ohio State University · Student Cultural Hub</div>
-        <h1 class="title">OSU Tamil Sangam · Stay in Sangam</h1>
-      </div>
-
-      <div class="content">
-        <div class="greeting">${greeting}</div>
-        <div class="badge">${isBuckeye ? "✓ Verified Buckeye Mail" : "✓ Sangam Member"}</div>
-
-        <p>
-          You are now officially plugged into the <strong>Stay in Sangam</strong> loop! Whether you speak Tamil or just love great food, energetic music, casual hangouts, and friendly people — our club is an open home for all Buckeyes.
-        </p>
-
-        <div class="box">
-          <div class="box-title">What You Will Receive:</div>
-          <ul>
-            ${interestsList}
-          </ul>
-        </div>
-
-        <p>
-          Our day-to-day announcements, rideshares, lunch kickbacks, and ticket drop links are shared on our active student GroupMe:
-        </p>
-
-        <div style="text-align: center; margin: 24px 0;">
-          <a href="https://groupme.com/join_group/osutamilsangam" class="btn" target="_blank">
-            Join Official Student GroupMe →
-          </a>
-        </div>
-
-        <p style="font-size: 12px; color: #bcaec9;">
-          Have questions or ideas for events? Reply directly to this email or DM us on Instagram at <strong>@osutamilsangam</strong>.
-        </p>
-      </div>
-
-      <div class="footer">
-        <p>© ${new Date().getFullYear()} The Ohio State University Tamil Sangam.</p>
-        <p>Columbus, OH · A registered student organization at Ohio State.</p>
-        <p style="font-size: 10px; color: #7a6a8a; margin-top: 8px;">
-          You received this because ${email} was subscribed via the Stay in Sangam portal.
-        </p>
-      </div>
-    </div>
-  </div>
-</body>
-</html>`;
-
-  const text = `${greeting}
-
-You are officially connected to the OSU Tamil Sangam family!
-
-What to expect:
-- Early bird tickets for flagship campus showcases and celebrations
-- Free food & chai alerts (Streetside Sapad, Oval picnics)
-- Casual student meetups, Uno games, and cultural celebrations
-- Open and welcoming to students of all languages and backgrounds
-
-Join our official student GroupMe:
-https://groupme.com/join_group/osutamilsangam
-
-Instagram: @osutamilsangam
-Website: https://osutamilsangam.org
-
-(c) ${new Date().getFullYear()} OSU Tamil Sangam · Columbus, OH
-Subscribed email: ${email}`;
-
-  return { html, text };
+  return generateStayInSangamConfirmationHtml(params);
 }
 
 /**
@@ -303,6 +191,7 @@ export async function dispatchEmail(payload: EmailPayload): Promise<EmailDispatc
           html: payload.html,
           text: payload.text,
         }),
+        signal: AbortSignal.timeout(6000),
       });
 
       if (res.ok) {
@@ -333,7 +222,10 @@ export async function dispatchEmail(payload: EmailPayload): Promise<EmailDispatc
           subject: payload.subject,
           timestamp: new Date().toISOString(),
           snippet: payload.text.substring(0, 200),
+          html: payload.html,
+          text: payload.text,
         }),
+        signal: AbortSignal.timeout(6000),
       });
 
       if (webhookRes.ok) {
@@ -350,33 +242,22 @@ export async function dispatchEmail(payload: EmailPayload): Promise<EmailDispatc
 
   // Provider 3: Local Dispatch Receipt
   // Saves dispatch payload to data/dispatches.json and logs receipt
-  const dispatchesPath = path.join(process.cwd(), "data", "dispatches.json");
-  try {
-    let dispatches: Array<{ to: string; subject: string; sentAt: string }> = [];
-    try {
-      const raw = await fs.readFile(dispatchesPath, "utf-8");
-      dispatches = JSON.parse(raw);
-    } catch {
-      // file does not exist yet
-    }
-
+  const providerConfigured = Boolean(process.env.RESEND_API_KEY || process.env.NEWSLETTER_WEBHOOK_URL);
+  // A local receipt records the attempt, never claims an email was delivered.
+  getLedgerStore().update("dispatches.json", (): Array<{ to: string; subject: string; sentAt: string }> => [], (dispatches) => {
     dispatches.unshift({
       to: payload.to,
       subject: payload.subject,
       sentAt: new Date().toISOString(),
     });
 
-    if (dispatches.length > 100) dispatches = dispatches.slice(0, 100);
-    await fs.writeFile(dispatchesPath, JSON.stringify(dispatches, null, 2), "utf-8");
-  } catch (err) {
-    console.error("[StayInSangam] Failed to record local dispatch:", err);
-  }
-
-  console.log(`[StayInSangam Dispatch] Dispatched email to: ${payload.to} | Subject: "${payload.subject}"`);
+    if (dispatches.length > 100) dispatches.length = 100;
+  });
 
   return {
-    success: true,
+    success: false,
     provider: "local-receipt",
     messageId: `receipt_${Date.now()}`,
+    error: providerConfigured ? "Email provider failed" : "Email delivery is not configured",
   };
 }

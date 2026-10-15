@@ -46,3 +46,14 @@ next-env.d.ts
 # local subscriber records and dispatches
 /data/
 !.env.example
+
+# Runtime data files (generated at runtime, not committed)
+data/*.sqlite
+data/*.sqlite-shm
+data/*.sqlite-wal
+data/subscribers.json
+data/suggestions.json
+data/dispatches.json
+public/audio/
+public/videos/
+

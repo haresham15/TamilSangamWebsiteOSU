@@ -160,7 +160,9 @@ export function DomPlane({ entry, viewRect }: DomPlaneProps) {
     };
   }, [entry, w, h]);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (!materialRef.current) return;
     const mat = materialRef.current;
 

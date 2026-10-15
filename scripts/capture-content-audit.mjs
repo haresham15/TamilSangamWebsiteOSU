@@ -191,6 +191,20 @@ const PAGES = [
       });
     },
   },
+  {
+    id: "09-event-dossier",
+    name: "Event Dossier",
+    route: "/events/berry-cute-picnic",
+    ta: "நிகழ்ச்சி ஆவணம்",
+    description: "The Sunlit Dossier: ReactBits SplitText header, randomized 5-8 photo scatter on light table with 0px radius, and magnetic Google Photos Vault gateway",
+    prepare: async (page) => {
+      await page.evaluate(() => {
+        if (window.__lenis) window.__lenis.destroy();
+        const chatbot = document.getElementById("global-sangam-chatbot");
+        if (chatbot) chatbot.remove();
+      });
+    },
+  },
 ];
 
 async function run() {

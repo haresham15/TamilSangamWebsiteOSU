@@ -46,12 +46,12 @@ describe("flowMath — Core Analytic Primitives", () => {
 
   it("calcStrandFeed enforces seam-first stagger and monotonic rope feed", () => {
     const totalFeed = 12.0;
-    const inner = calcStrandFeed(0.08, 0, totalFeed); // rank 0: seam
-    const outer = calcStrandFeed(0.08, 1, totalFeed); // rank 1: flank
+    const inner = calcStrandFeed(0.18, 0, totalFeed); // rank 0: seam
+    const outer = calcStrandFeed(0.18, 1, totalFeed); // rank 1: flank
 
     // Inner strand starts feeding earlier than outer
     assert.ok(inner.p0 < outer.p0, "Inner strand p0 must be strictly less than outer strand p0");
-    assert.ok(inner.feed > outer.feed, "At p=0.08, inner strand must feed more than outer strand");
+    assert.ok(inner.feed > outer.feed, "At p=0.18, inner strand must feed more than outer strand");
 
     // Monotonicity during draw phase (normalizedX <= 0.9)
     let prevFeed = 0;
@@ -92,7 +92,7 @@ describe("flowMath — Core Analytic Primitives", () => {
 
   it("evalCamera executes smooth vertical descent and level pitch settle", () => {
     const camStart = evalCamera(0.0);
-    assert.equal(camStart.camY, 0.35);
+    assert.equal(camStart.camY, 0.0);
     assert.equal(camStart.camZ, 12);
     assert.equal(camStart.pitchDeg, 0);
 

@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTier } from "./TierProvider";
 import { masterTick } from "@/engine/masterTick";
+import { useLiteMode } from "@/context/LiteModeContext";
 
 interface MotionContextValue {
   lenis: Lenis | null;
@@ -22,6 +23,7 @@ export const getActiveLenis = () => activeLenis;
 
 export function MotionProvider({ children }: { children: React.ReactNode }) {
   const tier = useTier();
+  const { isLiteMode } = useLiteMode();
   const pathname = usePathname();
   const [lenisInstance, setLenisInstance] = useState<Lenis | null>(null);
   const lenisRef = useRef<Lenis | null>(null);
@@ -34,11 +36,11 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     // Tier C or reduced motion mounts NO Lenis (§2, §4.1)
-    if (tier === "C" || reduce) {
+    if (tier === "C" || isLiteMode || reduce) {
       lenisRef.current = null;
       activeLenis = null;
-      requestAnimationFrame(() => setLenisInstance(null));
-      return;
+      const frameId = requestAnimationFrame(() => setLenisInstance(null));
+      return () => cancelAnimationFrame(frameId);
     }
 
     // Initialize Lenis strictly without autoRaf (§4.1)
@@ -52,7 +54,7 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
 
     lenisRef.current = lenis;
     activeLenis = lenis;
-    requestAnimationFrame(() => setLenisInstance(lenis));
+    const frameId = requestAnimationFrame(() => setLenisInstance(lenis));
     window.__lenis = lenis;
 
     // Synchronize ScrollTrigger updates with Lenis scroll emissions (§4.1)
@@ -64,17 +66,18 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
     };
 
     gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0); // Kept with delta clamp in masterTick (§0.6)
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
       gsap.ticker.remove(tick);
+      cancelAnimationFrame(frameId);
       lenis.destroy();
       lenisRef.current = null;
       activeLenis = null;
       setLenisInstance(null);
       delete window.__lenis;
     };
-  }, [tier]);
+  }, [tier, isLiteMode]);
 
   // Route-change scroll reset, resize, and ScrollTrigger refresh (§4.4)
   useEffect(() => {
@@ -86,6 +89,25 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
     }
 
     let isMounted = true;
+    let refreshFrame = 0;
+    let lastHeight = 0;
+    let lastWidth = 0;
+    const refresh = () => {
+      cancelAnimationFrame(refreshFrame);
+      refreshFrame = requestAnimationFrame(() => {
+        if (!isMounted) return;
+        lenisRef.current?.resize();
+        ScrollTrigger.refresh();
+      });
+    };
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      if (width === lastWidth && height === lastHeight) return;
+      lastWidth = width;
+      lastHeight = height;
+      refresh();
+    });
+    observer.observe(document.body);
     (async () => {
       if (typeof document !== "undefined" && document.fonts) {
         try {
@@ -95,12 +117,13 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
         }
       }
       if (!isMounted) return;
-      lenisRef.current?.resize();
-      ScrollTrigger.refresh();
+      refresh();
     })();
 
     return () => {
       isMounted = false;
+      observer.disconnect();
+      cancelAnimationFrame(refreshFrame);
     };
   }, [pathname]);
 

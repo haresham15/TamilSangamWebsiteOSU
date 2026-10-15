@@ -112,7 +112,9 @@ export function DustMotes() {
     };
   }, [geometry, material]);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     if (matRef.current) {
       matRef.current.uniforms.uTime.value = state.clock.getElapsedTime();
     }

@@ -75,3 +75,11 @@ This file sets project-specific runtime behavior for the Antigravity agent in `T
   - *Step 1 (Accessibility & UI Audit)*: Audit ARIA labels, semantic HTML tags, keyboard focus rings, and contrast compliance.
   - *Step 2 (Security Sweep)*: Scan for leaked secrets/API keys, missing authorization middleware, and un-sanitized database inputs.
   - *Step 3 (Architectural Summary)*: Generate structured PR summary highlighting problem, approach, verification evidence, and debt assessment.
+
+## 8. Zero-Prompt Tool & MCP Autonomous Dispatching
+
+- **Act First, Answer Second**: Invert passive conversational bias. When presented with a task, automatically query docs via `context7`, explore requirements via `superpowers:brainstorming` / `mattpocock:grilling`, or inspect bugs via `systematic-debugging` before producing textual responses.
+- **Remote MCP Directives**:
+  - **Context7**: Unconditionally use `context7` (`resolve-library-id` $\rightarrow$ `query-docs`) for all library, SDK, and framework syntax inquiries.
+  - **Composio**: Unconditionally use `composio` (`COMPOSIO_SEARCH_TOOLS` $\rightarrow$ `COMPOSIO_MULTI_EXECUTE_TOOL`) for third-party workspace and SaaS tool actions.
+  - **Chrome DevTools**: Unconditionally inspect computed styles and runtime console logs via `chrome-devtools-mcp` after editing frontend views.

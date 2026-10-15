@@ -76,7 +76,7 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
   }, []);
 
   useFrame((_, delta) => {
-    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
+    const dt = Math.min(delta, 0.05);
     const p = gateProgressRef.current ?? 0;
     const maxAngle = Math.PI * 0.44; // ~79 degrees open
     const targetAngle = p * maxAngle;
@@ -86,7 +86,7 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
         leftHingeRef.current.rotation.y,
         -targetAngle,
         10.0,
-        safeDelta
+        dt
       );
     }
     if (rightHingeRef.current) {
@@ -94,7 +94,7 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
         rightHingeRef.current.rotation.y,
         targetAngle,
         10.0,
-        safeDelta
+        dt
       );
     }
   });

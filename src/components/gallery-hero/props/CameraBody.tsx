@@ -207,7 +207,9 @@ export function CameraBody() {
   ]);
 
   // Per-frame dissolve sync
-  useFrame(() => {
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const dVal = heroRefs.cam.uDissolve.value;
     uniformsRef.current.uDissolve.value = dVal;
 

@@ -189,6 +189,21 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
               setQuery(e.target.value);
               setSelectedIndex(0);
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                onClose();
+              } else if (e.key === "ArrowDown") {
+                e.preventDefault();
+                setSelectedIndex((prev) => (prev + 1) % (filteredItems.length || 1));
+              } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                setSelectedIndex((prev) => (prev - 1 + filteredItems.length) % (filteredItems.length || 1));
+              } else if (e.key === "Enter" && filteredItems[selectedIndex]) {
+                e.preventDefault();
+                handleSelect(filteredItems[selectedIndex]);
+              }
+            }}
             placeholder={locale === "ta" ? "நிகழ்வுகள், குழு, பக்கங்கள் தேடுங்கள்..." : "Search events, people, pages, or FAQs..."}
             aria-label="Search query"
             className="w-full bg-transparent text-white placeholder-slate-400 text-sm sm:text-base outline-none font-mono"

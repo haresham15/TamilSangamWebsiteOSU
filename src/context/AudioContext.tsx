@@ -3,7 +3,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { soundEngine } from "@/lib/soundEngine";
 import { audio } from "@/audio/AudioController";
+import { audioLayer } from "@/utils/audioLayer";
 import { armAudioUnlock } from "@/audio/armUnlock";
+import { playHearthAmbience, stopHearthAmbience, playKuralChime } from "@/audio/sounds";
 
 interface AudioContextType {
   isSoundEnabled: boolean;
@@ -13,6 +15,8 @@ interface AudioContextType {
   playClick: () => void;
   playWoodClick: () => void;
   playFlour: () => void;
+  playWhoosh: (gain?: number) => void;
+  playSilkSwish: (gain?: number) => void;
   playSyllable: (syllable: string) => void;
   playAcousticString: (stringIndex: number, strength?: number) => void;
 }
@@ -23,7 +27,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const [isSoundEnabled, setIsSoundEnabled] = useState<boolean>(false);
 
   useEffect(() => {
-    // Arm first-gesture passive unlock listener (§4.4)
+    // Arm first-gesture passive unlock listener
     armAudioUnlock();
 
     queueMicrotask(() => {
@@ -34,6 +38,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       setIsSoundEnabled(enabled);
       audio.setEnabled(enabled);
       soundEngine.setMuted(!enabled);
+      audioLayer.setMuted(!enabled);
     });
   }, []);
 
@@ -42,6 +47,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     setIsSoundEnabled(nextState);
     audio.setEnabled(nextState);
     soundEngine.setMuted(!nextState);
+    audioLayer.setMuted(!nextState);
 
     try {
       localStorage.setItem("sound", nextState ? "1" : "0");
@@ -51,7 +57,11 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     }
 
     if (nextState) {
-      audio.play("toggle");
+      // Kural chime confirms audio-on; hearth ambience begins fading in
+      playKuralChime();
+      playHearthAmbience();
+    } else {
+      stopHearthAmbience();
     }
   };
 
@@ -62,9 +72,23 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
         toggleSound,
         playBell: (freq) => soundEngine.playTempleBell(freq),
         playThump: (pitch) => soundEngine.playParaiThump(pitch),
-        playClick: () => soundEngine.playWoodClick(),
-        playWoodClick: () => soundEngine.playWoodClick(),
+        playClick: () => {
+          soundEngine.playWoodClick();
+          audioLayer.playWarmWoodClick();
+        },
+        playWoodClick: () => {
+          soundEngine.playWoodClick();
+          audioLayer.playWarmWoodClick();
+        },
         playFlour: () => soundEngine.playFlourChime(),
+        playWhoosh: (gain) => {
+          soundEngine.playWhoosh(gain);
+          audioLayer.playCinematicWhoosh(gain);
+        },
+        playSilkSwish: (gain) => {
+          soundEngine.playSilkSwish(gain);
+          audioLayer.playSilkSwish(gain);
+        },
         playSyllable: (s) => soundEngine.playSolkattuSyllable(s),
         playAcousticString: (idx, strength) => soundEngine.playAcousticString(idx, strength),
       }}

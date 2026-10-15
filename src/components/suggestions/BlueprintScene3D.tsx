@@ -3,9 +3,10 @@
 import React, { useRef, useMemo, useState, useEffect, useSyncExternalStore } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, View, PerspectiveCamera } from "@react-three/drei";
+import { ContactShadows, PerspectiveCamera } from "@react-three/drei";
+import { SceneView as View } from "@/components/canvas/SceneView";
 import { useWarmup } from "@/components/gl/useWarmup";
-import { governor } from "@/engine/governor";
+import { useHeroStageVisibility } from "@/components/canvas/HeroScrollStage";
 import { SceneRegistrar } from "@/director/wireframe";
 import { BlueprintPin, BLUEPRINT_PINS, BlueprintSVG } from "./BlueprintSVG";
 import { buildOhioStadiumLines, StadiumGeometryData } from "./OhioStadiumWireframe";
@@ -17,7 +18,7 @@ interface EphemeralPin {
 }
 
 interface BlueprintScene3DProps {
-  scrollProgress: number; // 0 to 1
+  scrollProgress: React.MutableRefObject<number>; // 0 to 1
   isLiteMode?: boolean;
   newPin?: EphemeralPin | null;
   onSelectPin?: (pin: BlueprintPin) => void;
@@ -200,7 +201,7 @@ const StadiumLineShader = {
 };
 
 // 3D Ohio Stadium Real-Time Wireframe Component
-function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: number }) {
+function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: React.MutableRefObject<number> }) {
   const lineMeshRef = useRef<THREE.LineSegments>(null);
 
   // Generate the complete Ohio Stadium wireframe geometry once
@@ -244,17 +245,18 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: number }
   // Laser elevation ring at the active construction height
   const laserRingRef = useRef<THREE.Mesh>(null);
 
-  useFrame((state) => {
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
     const mesh = lineMeshRef.current;
     if (!mesh) return;
     const mat = mesh.material as THREE.ShaderMaterial;
     if (!mat?.uniforms) return;
 
-    const time = state.clock.getElapsedTime();
-    mat.uniforms.uTime.value = time;
+    mat.uniforms.uTime.value += dt;
+    const time = mat.uniforms.uTime.value;
     
     // Progress smoothly interpolates from 0 to 1 as user scrolls
-    const p = Math.min(1, Math.max(0, scrollProgress));
+    const p = Math.min(1, Math.max(0, scrollProgress.current));
     mat.uniforms.uProgress.value = p;
 
     // Move the laser construction scan plane to current elevation
@@ -299,7 +301,8 @@ function SteadyIsometricCamera() {
   const lookTarget = useMemo(() => new THREE.Vector3(0.0, 1.4, -1.2), []);
   const targetPos = useRef(new THREE.Vector3(16.0, 13.5, 18.5));
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
     // Subtle, organic breathing parallax to keep the scene alive
     const mouseX = state.mouse.x * 0.35;
     const mouseY = state.mouse.y * 0.20;
@@ -310,7 +313,7 @@ function SteadyIsometricCamera() {
       basePos.z
     );
 
-    camera.position.lerp(targetPos.current, 0.05);
+    camera.position.lerp(targetPos.current, 1 - Math.exp(-3 * dt));
     camera.lookAt(lookTarget);
   });
 
@@ -327,7 +330,7 @@ function StadiumCalloutPins({
   onSelectPin?: (pin: BlueprintPin) => void;
   hoveredPinId: string | null;
   setHoveredPinId: (id: string | null) => void;
-  scrollProgress: number;
+  scrollProgress: React.MutableRefObject<number>;
 }) {
   // Pins positioned at authentic landmarks:
   // Pin 1: 50-Yard Line (The Turf & Events)
@@ -343,16 +346,17 @@ function StadiumCalloutPins({
   );
 
   const ringRef = useRef<THREE.Group>(null);
+  const [visible, setVisible] = useState(false);
 
   useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    const revealed = scrollProgress.current > 0.15;
+    if (revealed !== visible) setVisible(revealed);
     if (ringRef.current) {
-      const safeDelta = Math.min(Math.max(delta, 0), 0.05);
-      ringRef.current.rotation.y += safeDelta * 0.6;
+      ringRef.current.rotation.y += dt * 0.6;
     }
   });
 
-  // Pins reveal as the stadium constructs
-  const visible = scrollProgress > 0.15;
   if (!visible) return null;
 
   return (
@@ -427,11 +431,11 @@ function NewlyDroppedPin({ pin }: { pin: EphemeralPin }) {
   const posZ = (pin.y / 4) * 3.5;
 
   useFrame((_, delta) => {
-    const safeDelta = Math.min(Math.max(delta, 0), 0.05);
+    const dt = Math.min(delta, 0.05);
     if (altitudeRef.current > 0.05 || Math.abs(velocityRef.current) > 0.05) {
       const gravity = 18;
-      const nextVel = velocityRef.current - gravity * safeDelta;
-      let nextAlt = altitudeRef.current + nextVel * safeDelta;
+      const nextVel = velocityRef.current - gravity * dt;
+      let nextAlt = altitudeRef.current + nextVel * dt;
 
       if (nextAlt <= 0) {
         nextAlt = 0;
@@ -535,11 +539,12 @@ function FloatingParticles() {
 
   const uniforms = useMemo(() => ({ uTime: { value: 0 } }), []);
 
-  useFrame((state) => {
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
     if (pointsRef.current) {
       const mat = pointsRef.current.material as THREE.ShaderMaterial;
       if (mat?.uniforms?.uTime) {
-        mat.uniforms.uTime.value = state.clock.getElapsedTime();
+        mat.uniforms.uTime.value += dt;
       }
     }
   });
@@ -1068,7 +1073,7 @@ function BlueprintSceneContent({
   newPin,
 }: {
   groundTexture: THREE.CanvasTexture | null;
-  scrollProgress: number;
+  scrollProgress: React.MutableRefObject<number>;
   onSelectPin?: (pin: BlueprintPin) => void;
   hoveredPinId: string | null;
   setHoveredPinId: (id: string | null) => void;
@@ -1180,28 +1185,7 @@ export function BlueprintScene3D({
     };
   }, [groundTexture]);
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(true);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setInView(entry.isIntersecting);
-      },
-      { threshold: 0.01 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    governor.request("ideas-blueprint", inView ? 1 : 0);
-    return () => {
-      governor.request("ideas-blueprint", 0);
-    };
-  }, [inView]);
+  const visible = useHeroStageVisibility();
 
   // Lite Mode or Pre-mount fallback: Static 2D Blueprint SVG
   if (isLiteMode || !mounted) {
@@ -1220,8 +1204,8 @@ export function BlueprintScene3D({
   }
 
   return (
-    <div ref={containerRef} className={`relative w-full h-full bg-transparent ${className}`}>
-      <View className="w-full h-full pointer-events-auto" index={2}>
+    <div className={`relative w-full h-full bg-transparent ${className}`}>
+      <View className="w-full h-full pointer-events-auto" index={2} visible={visible}>
         <SceneRegistrar />
         <BlueprintSceneContent
           groundTexture={groundTexture}

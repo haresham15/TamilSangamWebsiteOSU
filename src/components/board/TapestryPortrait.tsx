@@ -271,7 +271,9 @@ export function TapestryPortrait({
     return mat;
   }, [texture]);
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const time = clock.getElapsedTime();
     uniformsRef.current.uTime.value = time;
 
