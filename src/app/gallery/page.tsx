@@ -9,7 +9,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { audioLayer } from "@/utils/audioLayer";
 import { X, Search } from "lucide-react";
-import { GalleryHeroCanvas } from "@/components/gallery/GalleryHeroCanvas";
+import { GalleryHero } from "@/components/gallery-hero/GalleryHero";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { useLiteMode } from "@/context/LiteModeContext";
 
@@ -74,8 +74,8 @@ export default function GalleryPage() {
       {/* =========================================================================
           Vaaranam Aayiram 6-String Acoustic Guitar Hero
           ========================================================================= */}
-      <div data-hero-container="true" id="gallery-hero" className="w-full relative">
-        <GalleryHeroCanvas />
+      <div data-hero-container="true" className="w-full relative">
+        <GalleryHero />
       </div>
 
       {/* Hero to Content Gradient Transition */}

@@ -186,8 +186,8 @@ export function CholaCrown3D({
     };
   }, [assets]);
 
-  // Gentle levitation bob and slow imperial axial rotation
-  useFrame(({ clock }, delta) => {
+  // Gentle levitation bob, slow imperial axial rotation, and overhead crane clearance
+  useFrame(({ clock, camera }, delta) => {
     const dt = Math.min(delta, 0.05);
     if (dt <= 0) return;
     const t = clock.getElapsedTime();
@@ -198,6 +198,18 @@ export function CholaCrown3D({
       crownMeshRef.current.position.y = Math.sin(t * 1.5) * 0.045;
       // Subtle imperial pitch/roll sway
       crownMeshRef.current.rotation.z = Math.sin(t * 0.8) * 0.02;
+    }
+    // Graceful descent as crane camera passes overhead to prevent near-plane clipping
+    if (groupRef.current) {
+      const targetZ = Array.isArray(position) ? position[2] : 23.5;
+      const targetY = Array.isArray(position) ? position[1] : 0.65;
+      const zDiff = camera.position.z - targetZ;
+      if (zDiff < 4.0 && zDiff > -4.0) {
+        const sink = Math.max(0, (2.5 - zDiff) * 0.28);
+        groupRef.current.position.y = targetY - sink;
+      } else {
+        groupRef.current.position.y = targetY;
+      }
     }
   });
 

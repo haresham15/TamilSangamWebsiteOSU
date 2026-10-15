@@ -32,7 +32,7 @@ function StaticGalleryHero() {
   );
 }
 
-const PhotoTunnel = dynamic(() => import("./PhotoTunnel"), {
+const GuitarScene = dynamic(() => import("./Scene"), {
   ssr: false,
   loading: () => <StaticGalleryHero />
 });
@@ -50,12 +50,26 @@ export function GalleryHero() {
   const title = useRef<HTMLDivElement>(null);
   const isStatic = mounted ? (isLiteMode || tier === "C" || Boolean(reducedMotion)) : false;
 
+  useEffect(() => {
+    if (isStatic) return;
+    let rafId: number;
+    const updateTitleOpacity = () => {
+      if (title.current) {
+        const p = progress.current || 0;
+        title.current.style.opacity = String(Math.max(0, 1.0 - p * 3.5));
+      }
+      rafId = requestAnimationFrame(updateTitleOpacity);
+    };
+    rafId = requestAnimationFrame(updateTitleOpacity);
+    return () => cancelAnimationFrame(rafId);
+  }, [isStatic]);
+
   return (
     <HeroScrollStage id="gallery-hero" progressRef={progress} static={isStatic} tone="indigo">
       {isStatic ? (
         <StaticGalleryHero />
       ) : (
-        <PhotoTunnel photos={PHOTOS} progressRef={progress} titleRef={title} />
+        <GuitarScene progressRef={progress} />
       )}
       <div className="pointer-events-none absolute inset-0 z-10 flex min-h-dvh flex-col items-center justify-center px-6 text-center text-sangam-cream">
         <div key={String(isStatic)} ref={title} className="w-full max-w-3xl py-12" style={{ background: "radial-gradient(ellipse, var(--color-hero-indigo) 0%, transparent 72%)" }}>

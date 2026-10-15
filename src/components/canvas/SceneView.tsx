@@ -7,15 +7,23 @@ import { governor } from "@/engine/governor";
 import { setSceneVisible } from "@/engine/renderer";
 
 export function SceneView({ children, index = 2, visible = true, ...props }: ComponentProps<typeof View>) {
-  const element = useRef<HTMLElement>(null);
-  const [intersecting, setIntersecting] = useState(false);
+  const [element, setElement] = useState<HTMLElement | null>(null);
+  const [intersecting, setIntersecting] = useState(true);
   const key = useId();
   useEffect(() => {
-    if (!element.current) return;
-    const observer = new IntersectionObserver(([entry]) => setIntersecting(entry.isIntersecting), { rootMargin: "200px 0px" });
-    observer.observe(element.current);
+    if (!element) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.rootBounds && entry.target.isConnected) {
+        const r = entry.target.getBoundingClientRect();
+        const isIn = r.width > 0 && r.height > 0 && r.bottom > -200 && r.top < window.innerHeight + 200;
+        setIntersecting(isIn);
+        return;
+      }
+      setIntersecting(entry.isIntersecting);
+    }, { rootMargin: "200px 0px" });
+    observer.observe(element);
     return () => observer.disconnect();
-  }, []);
+  }, [element, visible]);
   const active = visible && intersecting;
   useEffect(() => {
     setSceneVisible(key, active);
@@ -23,7 +31,18 @@ export function SceneView({ children, index = 2, visible = true, ...props }: Com
     return () => { governor.request(key, 0); setSceneVisible(key, false); };
   }, [active, key]);
   return (
-    <View index={index} {...props} ref={element} visible={active}>
+    <View
+      index={index}
+      {...props}
+      ref={(node) => {
+        if (typeof HTMLElement !== "undefined" && node instanceof HTMLElement) {
+          setElement(node);
+        } else if (!node) {
+          setElement(null);
+        }
+      }}
+      visible={active}
+    >
       <SceneRegistrar />
       {children}
     </View>

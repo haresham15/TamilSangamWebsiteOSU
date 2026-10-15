@@ -15,8 +15,18 @@ import { PropPlaceholders } from "./props/Placeholders";
 import { Pick } from "./props/Pick";
 import { GoldDustBurst } from "./fx/GoldDustBurst";
 import { useWarmup } from "@/components/gl/useWarmup";
-import { useThree } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
 import { registerScene } from "@/director/wireframe";
+import { setHeroProgress } from "./state";
+
+function ScrollProgressSync({ progressRef }: { progressRef?: React.MutableRefObject<number> }) {
+  useFrame(() => {
+    if (progressRef && typeof progressRef.current === "number") {
+      setHeroProgress(progressRef.current);
+    }
+  });
+  return null;
+}
 
 /**
  * Scene (§1, §3)
@@ -44,7 +54,7 @@ function SceneRegistrar() {
   return null;
 }
 
-export default function Scene() {
+export default function Scene({ progressRef }: { progressRef?: React.MutableRefObject<number> }) {
   const propRigRef = useRef<THREE.Group>(null);
 
   return (
@@ -52,6 +62,7 @@ export default function Scene() {
       <View className="w-full h-full pointer-events-auto" index={2}>
         <SceneWarmup />
         <SceneRegistrar />
+        <ScrollProgressSync progressRef={progressRef} />
         {/* Dynamic Scene Background & Exponential Squared Fog */}
         <color attach="background" args={["#F0C98A"]} />
         <fogExp2 attach="fog" args={["#F0C98A", 0.004]} />
