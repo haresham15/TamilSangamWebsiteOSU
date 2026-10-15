@@ -279,6 +279,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                   <Link
                     key={item.href}
                     href={item.href}
+                    aria-current={isActive ? "page" : undefined}
                     onClick={playClick}
                     className={`ml-3 flex items-center gap-1.5 px-4 py-1.5 text-xs font-display font-bold transition-[background-color,color,border-color,box-shadow,transform] duration-300 border ${
                       isActive
@@ -303,6 +304,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-current={isActive ? "page" : undefined}
                   onClick={playClick}
                   className={`group relative flex flex-col items-center justify-center px-3 xl:px-3.5 h-12 sm:h-14 transition-colors duration-150 ${
                     isActive
@@ -543,6 +545,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({ onOpenSearch }) => {
                     <Link
                       key={item.href}
                       href={item.href}
+                      aria-current={isActive ? "page" : undefined}
                       onClick={handleLinkClick}
                       className={`flex items-center justify-between px-4 py-3 min-h-[48px] rounded-none text-sm font-display transition-[background-color,color,border-color,box-shadow,transform] duration-150 ${
                         isJoin
