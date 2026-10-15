@@ -9,7 +9,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { audioLayer } from "@/utils/audioLayer";
 import { X, Search } from "lucide-react";
-import { GalleryHero } from "@/components/gallery-hero/GalleryHero";
+import { GalleryHeroCanvas } from "@/components/gallery/GalleryHeroCanvas";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { useLiteMode } from "@/context/LiteModeContext";
 
@@ -72,11 +72,10 @@ export default function GalleryPage() {
   return (
     <div className="w-full bg-transparent min-h-screen text-left">
       {/* =========================================================================
-          CRITICAL / IMMUTABLE: 3D Fretboard Highway Hero
-          HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES.
+          Vaaranam Aayiram 6-String Acoustic Guitar Hero
           ========================================================================= */}
       <div data-hero-container="true" id="gallery-hero" className="w-full relative">
-        <GalleryHero />
+        <GalleryHeroCanvas />
       </div>
 
       {/* Hero to Content Gradient Transition */}

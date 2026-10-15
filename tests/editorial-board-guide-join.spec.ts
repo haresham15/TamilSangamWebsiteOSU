@@ -33,7 +33,10 @@ test("guide categories retain source questions and accordion works with keyboard
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto("/guide", { waitUntil: "domcontentloaded" });
   const category = page.getByRole("navigation", { name: "Guide categories" });
-  await category.getByRole("button", { name: "Culture", exact: true }).click();
+  const cultureBtn = category.getByRole("button", { name: "Culture", exact: true });
+  await cultureBtn.waitFor({ state: "visible" });
+  await page.waitForTimeout(300);
+  await cultureBtn.click();
   const culture = FAQS.filter((faq) => ["Events", "Performances"].includes(faq.category));
   const questions = page.locator("button[aria-controls$='-answer']");
   await expect(questions).toHaveCount(culture.length);

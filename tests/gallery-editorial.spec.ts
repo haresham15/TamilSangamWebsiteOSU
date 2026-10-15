@@ -47,7 +47,10 @@ test("mobile gallery preserves native controls and fits viewport", async ({ page
   await page.goto("/gallery");
   const vault = page.locator("#gallery-vault-content");
   await vault.scrollIntoViewIfNeeded();
-  await vault.getByRole("button", { name: "dance", exact: true }).click();
+  const danceBtn = vault.getByRole("button", { name: "dance", exact: true });
+  await danceBtn.waitFor({ state: "visible" });
+  await page.waitForTimeout(300);
+  await danceBtn.click();
   await expect(vault.locator("[data-gallery-print]")).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
@@ -58,6 +61,8 @@ test("dossier shuffle preserves unique selected samples and keyboard focus", asy
   expect(await plates.count()).toBeGreaterThanOrEqual(5);
   const before = await plates.evaluateAll(nodes => nodes.map(node => node.getAttribute("data-dossier-photo")));
   const shuffle = page.getByRole("button", { name: "SHUFFLE ARCHIVE" });
+  await shuffle.waitFor({ state: "visible" });
+  await page.waitForTimeout(300);
   await shuffle.focus();
   await page.keyboard.press("Enter");
   await expect(shuffle).toBeFocused();

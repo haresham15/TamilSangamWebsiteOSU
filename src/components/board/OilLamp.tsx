@@ -126,10 +126,6 @@ export function OilLamp({
           intensity={2.4}
           distance={9.0}
           decay={2.0}
-          castShadow
-          shadow-bias={-0.001}
-          shadow-mapSize-width={512}
-          shadow-mapSize-height={512}
         />
       )}
     </group>

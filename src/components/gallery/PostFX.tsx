@@ -7,10 +7,11 @@ import { BlendFunction } from "postprocessing";
 import { HERO_CONSTANTS } from "./heroTimeline";
 
 interface PostFXProps {
-  sunMesh: THREE.Mesh | null;
+  sunMesh?: THREE.Mesh | null;
+  bloomIntensity?: number;
 }
 
-export function PostFX({ sunMesh }: PostFXProps) {
+export function PostFX({ sunMesh = null, bloomIntensity = HERO_CONSTANTS.bloomIntensityBase }: PostFXProps) {
   return (
     <EffectComposer multisampling={0}>
       {/* 1. Volumetric GodRays streaming from the setting sun */}
@@ -31,7 +32,7 @@ export function PostFX({ sunMesh }: PostFXProps) {
       <Bloom
         luminanceThreshold={HERO_CONSTANTS.bloomThreshold}
         luminanceSmoothing={0.3}
-        intensity={HERO_CONSTANTS.bloomIntensityBase}
+        intensity={bloomIntensity}
         mipmapBlur
         radius={0.75}
       />

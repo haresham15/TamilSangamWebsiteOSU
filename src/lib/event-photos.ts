@@ -38,7 +38,7 @@ export async function getRandomizedEventPhotos(
 
   for (const dir of candidateDirs) {
     try {
-      const entries = await fs.readdir(dir, { withFileTypes: true });
+      const entries = await fs.readdir(/*turbopackIgnore: true*/ dir, { withFileTypes: true });
       const validFiles = entries
         .filter((entry) => entry.isFile() && IMAGE_EXTENSIONS.has(path.extname(entry.name).toLowerCase()))
         .map((entry) => entry.name);

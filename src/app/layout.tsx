@@ -42,6 +42,7 @@ const syne = Syne({
   variable: "--font-syne",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+  preload: false,
 });
 
 // Cultural Tamil & Indic Display Typefaces (replaces cold futuristic fonts)
@@ -55,6 +56,7 @@ const halant = Halant({
   variable: "--font-halant",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
+  preload: false,
 });
 
 // Cinematic English Serifs & Heritage Scripts
@@ -62,12 +64,14 @@ const marcellus = Marcellus({
   variable: "--font-marcellus",
   subsets: ["latin"],
   weight: "400",
+  preload: false,
 });
 
 const prata = Prata({
   variable: "--font-prata",
   subsets: ["latin"],
   weight: "400",
+  preload: false,
 });
 
 const cormorant = Cormorant({
@@ -75,52 +79,61 @@ const cormorant = Cormorant({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
   style: ["normal", "italic"],
+  preload: false,
 });
 
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
+  preload: false,
 });
 
 const kavivanar = Kavivanar({
   variable: "--font-kavivanar",
   subsets: ["latin", "tamil"],
   weight: "400",
+  preload: false,
 });
 
 const tiroTamil = Tiro_Tamil({
   variable: "--font-tiro-tamil",
   subsets: ["latin", "tamil"],
   weight: "400",
+  preload: false,
 });
 
 const azeretMono = Azeret_Mono({
   variable: "--font-azeret-mono",
   subsets: ["latin"],
+  preload: false,
 });
 
 const fragmentMono = Fragment_Mono({
   variable: "--font-fragment-mono",
   subsets: ["latin"],
   weight: "400",
+  preload: false,
 });
 
 const majorMono = Major_Mono_Display({
   variable: "--font-major-mono",
   subsets: ["latin"],
   weight: "400",
+  preload: false,
 });
 
 const notoSerifTamil = Noto_Serif_Tamil({
   variable: "--font-noto-serif-tamil",
   subsets: ["tamil"],
   weight: ["400", "700"],
+  preload: false,
 });
 
 const spaceMono = Space_Mono({
   variable: "--font-space-mono",
   subsets: ["latin"],
   weight: ["400", "700"],
+  preload: false,
 });
 
 export const viewport: Viewport = {

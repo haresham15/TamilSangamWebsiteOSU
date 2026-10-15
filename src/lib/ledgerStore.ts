@@ -55,7 +55,7 @@ let store: LedgerStore | undefined;
 let storeDirectory = "";
 
 export function getLedgerStore() {
-  const directory = resolve(process.env.SANGAM_DATA_DIR || join(process.cwd(), "data"));
+  const directory = resolve(/*turbopackIgnore: true*/ process.env.SANGAM_DATA_DIR || join(process.cwd(), "data"));
   if (!store || directory !== storeDirectory) {
     const nextStore = new LedgerStore(directory);
     store?.close();
