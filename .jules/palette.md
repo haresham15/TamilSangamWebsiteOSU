@@ -1,3 +1,3 @@
-## 2023-10-11 - [ARIA Labels on Icon-Only Buttons]
-**Learning:** Found an icon-only button used to flip the `HolographicCard` 3D component on the board page which lacked an `aria-label`. It's crucial for screen reader users that any interactive elements without text have a descriptive `aria-label` so their purpose is clear.
-**Action:** Applied `aria-label="Flip Card"` to the `<button>` to ensure screen readers correctly interpret its function. In the future, always inspect buttons containing only icons (e.g. `<RotateCw />`) for missing accessibility labels.
+## 2024-11-20 - [GuestbookField form a11y]
+**Learning:** React form inputs without native `<fieldset>` groupings or proper `aria-describedby` silently fail for screen reader users when contextual sublabels or dynamic validation errors appear. Even if visually adjacent, sublabels and errors are disconnected from the input element's tab-focus node.
+**Action:** Always map sublabels and error nodes to an explicit DOM `id`, and inject those ids into the input's `aria-describedby` string while toggling `aria-invalid`. Add `role="alert"` for the error node.
