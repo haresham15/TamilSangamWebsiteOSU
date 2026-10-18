@@ -97,6 +97,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                       onOpenSearch();
                       setIsOpen(false);
                     }}
+                    aria-label={t("control.search")}
                     className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#F4EFE6] transition-colors text-left"
                   >
                     <span className="flex items-center gap-2">
@@ -115,6 +116,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                     playClick();
                     toggleLocale();
                   }}
+                  aria-label={locale === "en" ? "தமிழ் பதிப்பு" : "English Version"}
                   className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#F4EFE6] transition-colors text-left"
                 >
                   <span className="flex items-center gap-2">
@@ -133,6 +135,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                   onClick={() => {
                     toggleSound();
                   }}
+                  aria-label={isSoundEnabled ? "Interactive Audio (On)" : "Interactive Audio (Muted)"}
                   className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#F4EFE6] transition-colors text-left"
                 >
                   <span className="flex items-center gap-2">
@@ -158,6 +161,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                     playClick();
                     setIsTinaiSubmenuOpen(true);
                   }}
+                  aria-label={locale === "ta" ? meta.nameTa : meta.nameEn}
                   className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#F4EFE6] transition-colors text-left"
                 >
                   <span className="flex items-center gap-2">
@@ -180,6 +184,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                     playClick();
                     setIsTinaiSubmenuOpen(false);
                   }}
+                  aria-label={locale === "ta" ? "பின்செல்" : "Back to Utilities"}
                   className="w-full text-left text-[11px] font-mono text-[#57524C] hover:text-[#2A2825] pb-1.5 mb-1 border-b border-[#2A2825]/10 flex items-center gap-1"
                 >
                   <span>←</span>
@@ -193,6 +198,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                     <button
                       key={key}
                       onClick={() => handleTinaiSelect(key)}
+                      aria-label={locale === "ta" ? tMeta.nameTa : tMeta.nameEn}
                       className={`w-full flex items-center justify-between px-2.5 py-1.5 transition-colors text-left ${
                         isSelected ? "bg-[#F4EFE6] font-semibold text-[#2A2825]" : "hover:bg-[#F4EFE6]/60 text-[#57524C]"
                       }`}
@@ -216,6 +222,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                       resetToLiveTime();
                       setIsTinaiSubmenuOpen(false);
                     }}
+                    aria-label={locale === "ta" ? "நேரடி நேரத்திற்கு மீட்டமை" : "Reset to Live Clock"}
                     className="w-full mt-2 pt-2 border-t border-[#2A2825]/10 text-center text-[10px] font-mono text-[#B85C38] hover:underline"
                   >
                     {locale === "ta" ? "நேரடி நேரத்திற்கு மீட்டமை" : "Reset to Live Clock"}
