@@ -208,6 +208,15 @@ export default function EventsPage() {
                 </button>
               );
             })}
+            <a
+              href="/calendars/gatherings-river.ics"
+              download="gatherings-river.ics"
+              onClick={() => playClick()}
+              className="font-mono text-xs tracking-widest uppercase text-[#B85C38] hover:text-[#2A2825] transition-colors duration-200 min-h-12 pb-1 inline-flex items-center gap-1.5 border-b-2 border-transparent hover:border-[#B85C38]"
+              title="Download all Gatherings River events to your calendar"
+            >
+              <span>↓ Export Almanac (.ics)</span>
+            </a>
           </div>
 
           {/* Flowing Open List of Events: 1px Razor-Thin Grounding Lines, Naked Typography */}

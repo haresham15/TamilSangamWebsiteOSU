@@ -19,6 +19,8 @@ interface AudioContextType {
   playSilkSwish: (gain?: number) => void;
   playSyllable: (syllable: string) => void;
   playAcousticString: (stringIndex: number, strength?: number) => void;
+  playMarimba: (freq?: number) => void;
+  playCardSlide: (volume?: number) => void;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -91,6 +93,8 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
         },
         playSyllable: (s) => soundEngine.playSolkattuSyllable(s),
         playAcousticString: (idx, strength) => soundEngine.playAcousticString(idx, strength),
+        playMarimba: (freq) => soundEngine.playMarimbaTransient(freq),
+        playCardSlide: (vol) => soundEngine.playCardSlideSwoosh(vol),
       }}
     >
       {children}

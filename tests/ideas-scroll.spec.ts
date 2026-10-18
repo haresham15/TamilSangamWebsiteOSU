@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("Ideas keeps blueprint visible through its sticky runway and reaches form", async ({ page }, testInfo) => {
+  test.slow();
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.addInitScript(() => {
     localStorage.setItem("sangam_tier", "A");

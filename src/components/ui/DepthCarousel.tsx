@@ -454,6 +454,10 @@ export const DepthCarousel: React.FC<DepthCarouselProps> = ({
               src={item.image}
               alt={item.alt || ""}
               draggable={false}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "/events/berry-cute-picnic/picnic-01.jpg";
+              }}
             />
             {/* Subtle Gradient & Border Frame */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />

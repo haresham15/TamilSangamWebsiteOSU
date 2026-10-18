@@ -15,7 +15,7 @@ import { useLiteMode } from "@/context/LiteModeContext";
 
 export default function GalleryPage() {
   const { locale } = useLocale();
-  const { playClick } = useAudio();
+  const { playClick, playCardSlide } = useAudio();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTag, setActiveTag] = useState("all");
@@ -121,6 +121,7 @@ export default function GalleryPage() {
                     aria-pressed={isSelected}
                     onClick={() => {
                       playClick();
+                      playCardSlide();
                       setActiveTag(tag);
                     }}
                     className={`min-h-12 min-w-12 font-sans text-xs tracking-widest uppercase font-semibold transition-colors duration-200 cursor-pointer pb-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-hearth-terracotta ${

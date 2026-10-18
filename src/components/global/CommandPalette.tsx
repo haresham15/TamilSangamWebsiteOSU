@@ -8,6 +8,7 @@ import { EVENTS } from "@/data/events";
 import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS } from "@/data/board";
 import { GALLERY_ALBUMS } from "@/data/gallery";
 import { FAQS } from "@/data/faq";
+import { getSynonymMatches } from "@/data/searchSynonyms";
 import { Search, Calendar, Users, Image as ImageIcon, HelpCircle, ArrowRight, X, Sparkles, BookOpen, Bot } from "lucide-react";
 
 interface CommandPaletteProps {
@@ -100,6 +101,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
   const filteredItems = items.filter((item) => {
     const q = query.toLowerCase().trim();
     if (!q) return true;
+    const { targetIds, matchedKeywords } = getSynonymMatches(q);
+    if (targetIds.has(item.id)) return true;
+    for (const kw of matchedKeywords) {
+      if (item.title.toLowerCase().includes(kw.toLowerCase()) || item.subtitle.toLowerCase().includes(kw.toLowerCase())) {
+        return true;
+      }
+    }
     return (
       item.title.toLowerCase().includes(q) ||
       item.subtitle.toLowerCase().includes(q) ||

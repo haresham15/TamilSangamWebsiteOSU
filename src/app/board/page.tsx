@@ -21,7 +21,7 @@ const BoardHeroCanvas = dynamic(
 
 export default function BoardPage() {
   const { locale } = useLocale();
-  const { playClick } = useAudio();
+  const { playClick, playMarimba } = useAudio();
   const reduceMotion = useReducedMotion();
   const [hoveredMember, setHoveredMember] = useState(CURRENT_BOARD[0]);
   const officersRef = useRef<HTMLDivElement>(null);
@@ -93,7 +93,7 @@ export default function BoardPage() {
             <div ref={officersRef} className="lg:col-span-7">
               {CURRENT_BOARD.map((member, index) => (
                 <button key={member.id} type="button" data-officer-id={member.id} aria-pressed={hoveredMember.id === member.id}
-                  onMouseEnter={() => setHoveredMember(member)} onFocus={() => setHoveredMember(member)}
+                  onMouseEnter={() => { playMarimba(); setHoveredMember(member); }} onFocus={() => setHoveredMember(member)}
                   onClick={() => { playClick(); setHoveredMember(member); }} className={styles.officer}>
                   <span className="flex gap-4 text-xs font-mono uppercase tracking-widest text-hearth-terracotta"><span>{String(index + 1).padStart(2, "0")}</span>{member.roleEn}</span>
                   <span className="block font-serif text-3xl sm:text-5xl leading-tight mt-4">{member.nameEn}</span>

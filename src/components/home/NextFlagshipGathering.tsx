@@ -152,7 +152,7 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
           </div>
 
           {/* Magnetic Call to Action: Borderless Typographic Link Aligned to Canvas Bottom */}
-          <div className="pt-4 border-t border-stone-300/40 sm:border-t-0">
+          <div className="pt-4 border-t border-stone-300/40 sm:border-t-0 flex flex-wrap items-center justify-between gap-4">
             <Link
               className="group inline-flex items-center gap-3 text-xl sm:text-2xl font-serif text-[#2A2825] hover:text-[#B85C38] transition-colors cursor-pointer"
               href={config.action.href}
@@ -168,6 +168,15 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
                 ↗
               </span>
             </Link>
+            <a
+              href="/calendars/kollywood-kollai.ics"
+              download="kollywood-kollai.ics"
+              onClick={() => playClick?.()}
+              className="text-xs font-mono uppercase tracking-widest text-[#B85C38] hover:text-[#2A2825] transition-colors duration-200 border-b border-[#B85C38] pb-0.5 inline-flex items-center gap-1.5"
+              title="Add Kollywood Kollai to your calendar"
+            >
+              <span>+ Add to Calendar (.ics)</span>
+            </a>
           </div>
         </div>
       </div>

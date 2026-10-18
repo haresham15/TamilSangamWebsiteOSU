@@ -92,7 +92,7 @@ const PILLAR_ROWS: PillarRow[] = [
 
 export function SilkHoverPillars() {
   const { locale } = useLocale();
-  const { playClick, playSilkSwish } = useAudio();
+  const { playClick, playSilkSwish, playMarimba } = useAudio();
   const [activeRow, setActiveRow] = useState<string | null>(null);
 
   const reduced = useReducedMotion();
@@ -124,6 +124,7 @@ export function SilkHoverPillars() {
                 onMouseEnter={() => {
                   setActiveRow(pillar.id);
                   playSilkSwish(0.35);
+                  playMarimba();
                 }}
                 onMouseLeave={() => setActiveRow(null)}
                 onFocus={() => setActiveRow(pillar.id)}

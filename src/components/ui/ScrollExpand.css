@@ -6,7 +6,7 @@
 
 .scroll-expand--scroller {
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: clip;
   scrollbar-width: none;
   -ms-overflow-style: none;
   overscroll-behavior: contain;

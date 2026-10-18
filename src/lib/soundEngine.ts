@@ -20,8 +20,165 @@ class SoundEngine {
     return this.ctx;
   }
 
+  private ambientDroneNodes: {
+    osc1: OscillatorNode;
+    osc2: OscillatorNode;
+    lfo: OscillatorNode;
+    masterGain: GainNode;
+  } | null = null;
+
   public setMuted(muted: boolean) {
     this.isMuted = muted;
+    if (muted) {
+      this.stopAmbientDrone();
+    } else {
+      this.startAmbientDrone();
+    }
+  }
+
+  // Ambient Drone: Warm low-passed (<650Hz) harmonic fifth oscillator pad at -28 dB
+  public startAmbientDrone() {
+    if (this.isMuted || this.ambientDroneNodes) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+    if (ctx.state === "suspended") void ctx.resume();
+
+    const now = ctx.currentTime;
+    const masterGain = ctx.createGain();
+    // -28 dB is approximately 0.0398 (~0.04) gain
+    masterGain.gain.setValueAtTime(0.0001, now);
+    masterGain.gain.linearRampToValueAtTime(0.04, now + 1.8);
+
+    const lpf = ctx.createBiquadFilter();
+    lpf.type = "lowpass";
+    lpf.frequency.setValueAtTime(650, now);
+    lpf.Q.setValueAtTime(0.7, now);
+
+    // Root: 110 Hz (A2)
+    const osc1 = ctx.createOscillator();
+    osc1.type = "sine";
+    osc1.frequency.setValueAtTime(110, now);
+    const g1 = ctx.createGain();
+    g1.gain.setValueAtTime(0.55, now);
+
+    // Harmonic fifth: 165 Hz (E3) with subtle slow detune
+    const osc2 = ctx.createOscillator();
+    osc2.type = "sine";
+    osc2.frequency.setValueAtTime(165, now);
+    const lfo = ctx.createOscillator();
+    lfo.type = "sine";
+    lfo.frequency.setValueAtTime(1 / 7, now);
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.setValueAtTime(3, now);
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc2.detune);
+    const g2 = ctx.createGain();
+    g2.gain.setValueAtTime(0.35, now);
+
+    osc1.connect(g1);
+    g1.connect(lpf);
+    osc2.connect(g2);
+    g2.connect(lpf);
+    lpf.connect(masterGain);
+    masterGain.connect(ctx.destination);
+
+    osc1.start(now);
+    osc2.start(now);
+    lfo.start(now);
+
+    this.ambientDroneNodes = { osc1, osc2, lfo, masterGain };
+  }
+
+  public stopAmbientDrone() {
+    if (!this.ambientDroneNodes) return;
+    const ctx = this.getContext();
+    if (ctx) {
+      const now = ctx.currentTime;
+      this.ambientDroneNodes.masterGain.gain.linearRampToValueAtTime(0.0001, now + 0.6);
+      const nodes = this.ambientDroneNodes;
+      setTimeout(() => {
+        try {
+          nodes.osc1.stop();
+          nodes.osc2.stop();
+          nodes.lfo.stop();
+          nodes.osc1.disconnect();
+          nodes.osc2.disconnect();
+          nodes.lfo.disconnect();
+        } catch {}
+      }, 700);
+    }
+    this.ambientDroneNodes = null;
+  }
+
+  // Micro-Foley: Soft marimba/mridangam-style pitched sine-burst transient (25ms)
+  public playMarimbaTransient(freq: number = 260) {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const lpf = ctx.createBiquadFilter();
+
+    lpf.type = "lowpass";
+    lpf.frequency.setValueAtTime(1200, now);
+
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq * 1.35, now);
+    osc.frequency.exponentialRampToValueAtTime(freq, now + 0.025);
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.18, now + 0.003);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
+
+    osc.connect(gain);
+    gain.connect(lpf);
+    lpf.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.03);
+  }
+
+  // Micro-Foley: Filtered noise card-slide swoosh (120ms)
+  public playCardSlideSwoosh(volume: number = 0.3) {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    const len = Math.floor(ctx.sampleRate * 0.12);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+
+    let pink = 0;
+    for (let i = 0; i < len; i++) {
+      const white = Math.random() * 2 - 1;
+      pink = 0.88 * pink + 0.12 * white;
+      d[i] = pink;
+    }
+
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+
+    const bpf = ctx.createBiquadFilter();
+    bpf.type = "bandpass";
+    bpf.frequency.setValueAtTime(450, now);
+    bpf.frequency.exponentialRampToValueAtTime(950, now + 0.06);
+    bpf.frequency.exponentialRampToValueAtTime(520, now + 0.12);
+    bpf.Q.setValueAtTime(1.2, now);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(volume * 0.3, now + 0.04);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+
+    src.connect(bpf);
+    bpf.connect(gain);
+    gain.connect(ctx.destination);
+
+    src.start(now);
+    src.stop(now + 0.13);
   }
 
   public getMuted(): boolean {

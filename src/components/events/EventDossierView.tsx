@@ -28,7 +28,7 @@ interface EventDossierViewProps {
  */
 export function EventDossierView({ event, photos }: EventDossierViewProps) {
   const { locale } = useLocale();
-  const { playClick } = useAudio();
+  const { playClick, playCardSlide } = useAudio();
   const reducedMotion = useReducedMotion();
   const { isLiteMode } = useLiteMode();
   const [downloadFeedback, setDownloadFeedback] = useState(false);
@@ -37,6 +37,7 @@ export function EventDossierView({ event, photos }: EventDossierViewProps) {
 
   const shuffleArchive = () => {
     playClick();
+    playCardSlide();
     setSelectedPhotos(current => {
       const next = [...current];
       for (let i = next.length - 1; i > 0; i--) {
