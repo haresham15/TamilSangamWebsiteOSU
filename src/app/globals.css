@@ -26,29 +26,6 @@ html.sangam-fallback #guide-station-hero section { min-height: 100dvh !important
   --color-kumkumam-crimson: oklch(0.62 0.22 25);
   --color-sandhanam-silk: oklch(0.98 0.015 85);
 
-  /* 1. Cultural Display Serifs (Warm, Inviting Primary English & Bilingual Headers) */
-  --font-halant: var(--font-halant), 'Halant', serif;
-  --font-anek-tamil: var(--font-anek-tamil), 'Anek Tamil', sans-serif;
-  --font-marcellus: var(--font-marcellus), serif;
-  --font-prata: var(--font-prata), serif;
-  --font-cormorant: var(--font-cormorant), serif;
-
-  /* 2. Palm-Leaf & Press (Tamil Displays & Classical Script) */
-  --font-mukta-malar: var(--font-mukta-malar), 'Mukta Malar', sans-serif;
-  --font-noto-serif-tamil: var(--font-noto-serif-tamil), 'Noto Serif Tamil', serif;
-  --font-tiro-tamil: var(--font-tiro-tamil), serif;
-  --font-kavivanar: var(--font-kavivanar), cursive, serif;
-
-  /* 3. Camera Viewfinder (High-Tech Metadata) */
-  --font-space-mono: var(--font-space-mono), 'Space Mono', monospace;
-  --font-fragment-mono: var(--font-fragment-mono), monospace;
-  --font-azeret-mono: var(--font-azeret-mono), monospace;
-  --font-major-mono: var(--font-major-mono), monospace;
-
-  /* 4. Architectural Bridge (UI Elements) */
-  --font-outfit: var(--font-outfit), sans-serif;
-  --font-syne: var(--font-syne), sans-serif;
-
   /* Systemic Typography Scale - Restored to Clean Sangam Aesthetics (Marcellus, Prata, Cormorant & Outfit) */
   --font-display: var(--font-marcellus), var(--font-prata), var(--font-cormorant), serif;
   --font-editorial: var(--font-prata), serif;
@@ -57,7 +34,7 @@ html.sangam-fallback #guide-station-hero section { min-height: 100dvh !important
   --font-sans: var(--font-outfit), sans-serif;
   --font-body: var(--font-outfit), sans-serif;
   --font-tamil: var(--font-mukta-malar), var(--font-tiro-tamil), var(--font-kavivanar), serif;
-  --font-mono: var(--font-fragment-mono), var(--font-azeret-mono), monospace;
+  --font-mono: var(--font-mono), var(--font-fragment-mono), var(--font-azeret-mono), monospace;
   --font-ui: var(--font-syne), var(--font-outfit), sans-serif;
 
   /* Fluid Typography Tokens (§7.1) */
@@ -113,6 +90,80 @@ html.sangam-fallback #guide-station-hero section { min-height: 100dvh !important
   --color-surface-sand: #F4EFE6;
   --color-text-courtyard: #2A2825;
   --color-text-courtyard-muted: #6B655D;
+}
+
+/* Explicit Typography Utilities for Tailwind v4 */
+@utility font-anek-tamil {
+  font-family: var(--font-anek-tamil), sans-serif;
+}
+@utility font-noto-serif-tamil {
+  font-family: var(--font-noto-serif-tamil), serif;
+}
+@utility font-mukta-malar {
+  font-family: var(--font-mukta-malar), sans-serif;
+}
+@utility font-space-mono {
+  font-family: var(--font-space-mono), monospace;
+}
+@utility font-marcellus {
+  font-family: var(--font-marcellus), serif;
+}
+@utility font-prata {
+  font-family: var(--font-prata), serif;
+}
+@utility font-cormorant {
+  font-family: var(--font-cormorant), serif;
+}
+@utility font-outfit {
+  font-family: var(--font-outfit), sans-serif;
+}
+@utility font-halant {
+  font-family: var(--font-halant), serif;
+}
+@utility font-syne {
+  font-family: var(--font-syne), sans-serif;
+}
+@utility font-kavivanar {
+  font-family: var(--font-kavivanar), cursive, serif;
+}
+@utility font-tiro-tamil {
+  font-family: var(--font-tiro-tamil), serif;
+}
+@utility font-fragment-mono {
+  font-family: var(--font-fragment-mono), monospace;
+}
+@utility font-azeret-mono {
+  font-family: var(--font-azeret-mono), monospace;
+}
+@utility font-major-mono {
+  font-family: var(--font-major-mono), monospace;
+}
+@utility font-tamil {
+  font-family: var(--font-tamil), serif;
+}
+@utility font-display {
+  font-family: var(--font-display);
+}
+@utility font-editorial {
+  font-family: var(--font-editorial);
+}
+@utility font-romantic {
+  font-family: var(--font-romantic);
+}
+@utility font-body {
+  font-family: var(--font-body);
+}
+@utility font-ui {
+  font-family: var(--font-ui);
+}
+@utility font-mono {
+  font-family: var(--font-mono);
+}
+@utility font-sans {
+  font-family: var(--font-sans);
+}
+@utility font-serif {
+  font-family: var(--font-serif);
 }
 
 @layer components {
@@ -428,8 +479,10 @@ body {
   outline-offset: 2px;
 }
 
-h1, h2, h3, h4, .font-display, .font-serif {
-  font-family: var(--font-display), var(--font-body);
+@layer base {
+  h1, h2, h3, h4 {
+    font-family: var(--font-display), var(--font-body);
+  }
 }
 
 /* Non-negotiable Tamil Typography Standards */
