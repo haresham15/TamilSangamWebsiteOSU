@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useEffect, useRef, useSyncExternalStore } from "react";
+import React, { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
 import { useGuideStore } from "./store/guideStore";
 import { GuideHeroPoster } from "./GuideHeroPoster";
 import type { RankedFaq } from "@/lib/faq-engagement/contracts";
+import { getGuideStationProgress } from "./station/useGuideStationTimeline";
 
 const BoardView = dynamic(() => import("./BoardView"), {
   ssr: false,
-  loading: () => <div className="h-full w-full bg-surface-hero-guide" aria-hidden="true" />,
+  loading: () => <div className="h-full w-full bg-[#0A0F14]" aria-hidden="true" />,
 });
 
 interface GuideHeroProps {
@@ -21,7 +22,10 @@ interface GuideHeroProps {
   initialPopularRanking?: RankedFaq[];
 }
 
-/** Scroll-pinned station sequence with a semantic DOM title and a canvas-only atmosphere layer. */
+/**
+ * Scroll-pinned station sequence with a semantic DOM title and a canvas-only atmosphere layer.
+ * Sticky 100dvh viewport locked across 340vh desktop / 280vh mobile scroll runway (PRD §4 & §16).
+ */
 export function GuideHero({
   id = "guide-station-hero",
   activeTitle = "SANGAM JUNCTION · FAQ DEPARTURE BOARD",
@@ -29,7 +33,10 @@ export function GuideHero({
 }: GuideHeroProps) {
   const { isLiteMode } = useLiteMode();
   const tier = useTier();
-  const sectionRef = useRef<HTMLElement>(null);
+  const runwayRef = useRef<HTMLElement>(null);
+  const stickyViewportRef = useRef<HTMLDivElement>(null);
+  const handoffGradientRef = useRef<HTMLDivElement>(null);
+
   const [reduceMotion, setReduceMotion] = React.useState<boolean>(() => {
     if (typeof window !== "undefined") {
       try {
@@ -67,20 +74,45 @@ export function GuideHero({
     return () => media.removeEventListener("change", update);
   }, []);
 
-
+  // Update hand-off gradient at p >= 0.92
+  useEffect(() => {
+    let frameId: number;
+    const checkHandoff = () => {
+      const p = getGuideStationProgress();
+      if (handoffGradientRef.current) {
+        if (p >= 0.92) {
+          const opacity = Math.min(1.0, (p - 0.92) / 0.08);
+          handoffGradientRef.current.style.opacity = String(opacity);
+        } else {
+          handoffGradientRef.current.style.opacity = "0";
+        }
+      }
+      frameId = requestAnimationFrame(checkHandoff);
+    };
+    frameId = requestAnimationFrame(checkHandoff);
+    return () => cancelAnimationFrame(frameId);
+  }, []);
 
   useEffect(() => {
-    const element = sectionRef.current;
+    const element = runwayRef.current;
     if (!element) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const isPast = entry.boundingClientRect.top < 0 && entry.intersectionRatio < 0.4;
+        const isPast = entry.boundingClientRect.top < 0 && entry.intersectionRatio < 0.2;
         useGuideStore.getState().setIsPastHero(isPast);
       },
-      { threshold: [0, 0.4, 1] }
+      { threshold: [0, 0.2, 1] }
     );
     observer.observe(element);
     return () => observer.disconnect();
+  }, []);
+
+  const handleSkipToBoard = useCallback(() => {
+    const runway = runwayRef.current;
+    if (!runway) return;
+    // Scroll directly to board arrival (p = 0.90)
+    const top = runway.offsetTop + (runway.offsetHeight - window.innerHeight) * 0.90;
+    window.scrollTo({ top, behavior: "smooth" });
   }, []);
 
   const breakpoint = useSyncExternalStore(
@@ -104,16 +136,51 @@ export function GuideHero({
   }, [breakpoint]);
 
   return (
-    <section ref={sectionRef} id={id} aria-label="FAQ Departure Board" className="relative w-full select-none bg-[#14110F] min-h-[120dvh]" suppressHydrationWarning>
-      <div className="sticky top-0 h-[100dvh] min-h-[480px] overflow-hidden">
+    <section
+      ref={runwayRef}
+      id={id}
+      aria-label="Sangam Junction Departure Board Introduction"
+      className="relative w-full h-[340vh] max-md:h-[280vh] bg-transparent select-none"
+      suppressHydrationWarning
+    >
+      {/* Sticky 100dvh viewport that stays locked for the entire 340vh runway */}
+      <div
+        ref={stickyViewportRef}
+        className="sticky top-0 left-0 h-dvh w-full overflow-hidden bg-transparent"
+      >
         <p aria-live="polite" className="sr-only">
           {source === "station" ? `Most asked: ${liveTitle}` : `Showing: ${liveTitle}`}
         </p>
-        <div className="absolute inset-0 z-0 h-full w-full" aria-hidden="true">
-          <GuideHeroPoster fallback={isFallback} title={liveTitle} status={source === "station" ? "MOST ASKED" : "FAQ DEPARTURE"} />
-          {!isFallback && <BoardView sequenceElement={sectionRef} {...board} />}
+
+        {/* Immediate Frame-0 Dark Blue-Hour Poster (Prevents white flash on load) */}
+        <GuideHeroPoster
+          fallback={isFallback}
+          title={liveTitle}
+          status={source === "station" ? "MOST ASKED" : "FAQ DEPARTURE"}
+        />
+
+        {/* Tracked 3D View scene */}
+        {!isFallback && <BoardView sequenceElement={runwayRef} {...board} />}
+
+        {/* Accessible Skip Intro Control (48x48px min target, visible on focus & dwell) */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-8 z-20 flex justify-between items-end px-8">
+          <button
+            type="button"
+            onClick={handleSkipToBoard}
+            className="pointer-events-auto min-h-12 px-5 py-2.5 rounded-full bg-[#0A0F14]/85 text-[#f1e9d2] border border-[#f1e9d2]/20 backdrop-blur-md text-xs uppercase tracking-widest hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] transition-all"
+          >
+            Skip to Board ↓
+          </button>
         </div>
-        <div className="guide-station-handoff pointer-events-none absolute inset-0 z-10 h-full w-full" />
+
+        {/* Bottom Hand-off Gradient Mask (Active only in S5: p >= 0.92 -> 1.00) */}
+        <div
+          ref={handoffGradientRef}
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-32 opacity-0 transition-opacity duration-300"
+          style={{
+            background: "linear-gradient(to bottom, transparent 0%, #FAF7F2 100%)",
+          }}
+        />
       </div>
     </section>
   );

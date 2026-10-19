@@ -42,10 +42,6 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
       const cat = (e as CustomEvent).detail;
       if (cat) setSelectedCategory(cat);
     };
-    const globalWin = typeof window !== "undefined" ? (window as unknown as { __pendingGuideCategory?: string }) : undefined;
-    if (globalWin?.__pendingGuideCategory) {
-      setSelectedCategory(globalWin.__pendingGuideCategory);
-    }
     window.addEventListener("guide-category-click", onGuideClick);
     return () => window.removeEventListener("guide-category-click", onGuideClick);
   }, []);
@@ -70,15 +66,14 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
   });
 
   return (
-    <div className="w-full bg-transparent min-h-screen text-left">
+    <div className="w-full bg-transparent min-h-screen text-left overflow-x-clip">
       {/* =========================================================================
           CRITICAL / IMMUTABLE: 3D Split-Flap Departure Board Hero Scene
           HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES.
           ========================================================================= */}
       <div
-        id="guide-station-hero"
         data-hero-container="true"
-        className="relative z-10 w-full overflow-hidden bg-transparent"
+        className="relative z-10 w-full bg-transparent overflow-x-clip"
       >
         <GuideHero initialPopularRanking={initialPopularRanking} />
       </div>

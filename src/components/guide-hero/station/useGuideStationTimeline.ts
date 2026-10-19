@@ -4,7 +4,8 @@ import { useEffect, type RefObject } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { registerSystem } from "@/engine/masterTick";
-import { GUIDE_HERO_SCROLL_VH, sampleGuideRail } from "./guideRail";
+import { sampleGuideRail } from "./guideRail";
+import { parseGuideStationDebug } from "./debug";
 
 const progressState = { current: 0, target: 0 };
 
@@ -16,23 +17,30 @@ export function getGuideStationTargetProgress() {
   return progressState.target;
 }
 
-function isMobileViewport() {
-  return typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
-}
-
-/** One ScrollTrigger owns the target value; the master tick performs critically damped following. */
+/**
+ * Single GSAP ScrollTrigger owns the target progress value;
+ * the master tick performs critically damped following (λ ≈ 6).
+ */
 export function useGuideStationTimeline(sequenceElement: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const element = sequenceElement.current;
     if (!element) return;
 
     gsap.registerPlugin(ScrollTrigger);
-    progressState.current = 0;
-    progressState.target = 0;
-    const initialFrame = sampleGuideRail(0);
+
+    // Check for deterministic debug query param (?debug=p=0.00, etc.)
+    const search = typeof window !== "undefined" ? window.location.search : "";
+    const debug = parseGuideStationDebug(search);
+    const isFrozen = debug.progress !== undefined;
+
+    const initialProgress = isFrozen ? debug.progress! : 0;
+    progressState.current = initialProgress;
+    progressState.target = initialProgress;
+
+    const initialFrame = sampleGuideRail(initialProgress);
     window.__guideStationCamera = {
-      progress: 0,
-      targetProgress: 0,
+      progress: initialProgress,
+      targetProgress: initialProgress,
       position: [...initialFrame.position],
       lookAt: [...initialFrame.lookAt],
     };
@@ -40,27 +48,35 @@ export function useGuideStationTimeline(sequenceElement: RefObject<HTMLElement |
     const stopSystem = registerSystem({
       order: 45,
       step: (dt) => {
+        if (isFrozen) {
+          progressState.current = initialProgress;
+          progressState.target = initialProgress;
+          return;
+        }
         const damping = 1 - Math.exp(-6 * dt);
         progressState.current += (progressState.target - progressState.current) * damping;
       },
     });
 
-    const trigger = ScrollTrigger.create({
-      trigger: element,
-      start: "top top",
-      end: () => `+=${Math.max(0, element.offsetHeight - window.innerHeight)}`,
-      scrub: 0.8,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        progressState.target = self.progress;
-        if (window.__guideStationCamera) {
-          window.__guideStationCamera.targetProgress = self.progress;
-        }
-      },
-    });
+    let trigger: ScrollTrigger | null = null;
+    if (!isFrozen) {
+      trigger = ScrollTrigger.create({
+        trigger: element,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 0.8,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          progressState.target = self.progress;
+          if (window.__guideStationCamera) {
+            window.__guideStationCamera.targetProgress = self.progress;
+          }
+        },
+      });
+    }
 
     return () => {
-      trigger.kill();
+      trigger?.kill();
       stopSystem();
       progressState.current = 0;
       progressState.target = 0;

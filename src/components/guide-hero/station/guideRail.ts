@@ -25,10 +25,13 @@ export const GUIDE_BOARD_WORLD_POSITION: GuideVec3 = [0, 14, -6];
 export const GUIDE_STATION_TIME_OF_DAY = "pre-dawn" as const;
 export const GUIDE_HERO_SCROLL_VH = { desktop: 340, mobile: 280 } as const;
 
-/** The complete Phase 3 rail source of truth; all station camera values are keyed to p ∈ [0, 1]. */
+/**
+ * The calibrated CatmullRom crane rail keyframes strictly adhering to PRD §6.2.
+ * All curves are keyed to progress p ∈ [0, 1].
+ */
 export const GUIDE_RAIL_KEYFRAMES: readonly GuideRailKeyframe[] = [
   {
-    progress: 0,
+    progress: 0.0,
     position: [0.2, 1.55, 5.6],
     lookAt: [-0.25, 1.7, 0],
     fov: 32,
@@ -43,7 +46,7 @@ export const GUIDE_RAIL_KEYFRAMES: readonly GuideRailKeyframe[] = [
   },
   {
     progress: 0.14,
-    position: [0.1, 1.6, 5],
+    position: [0.1, 1.6, 5.0],
     lookAt: [-0.2, 1.7, 0],
     fov: 31,
     roll: -0.002,
@@ -56,37 +59,51 @@ export const GUIDE_RAIL_KEYFRAMES: readonly GuideRailKeyframe[] = [
     departureOffset: 0,
   },
   {
-    progress: 0.45,
-    position: [4.8, 6.2, 19.5],
-    lookAt: [0, 2.2, -0.8],
+    progress: 0.30,
+    position: [1.6, 2.5, 8.8],
+    lookAt: [-0.1, 2.3, 0],
+    fov: 33,
+    roll: 0.001,
+    focusTarget: [0, 2.0, 0],
+    exposure: 1.05,
+    bloom: 0.8,
+    drizzle: 0.32,
+    godRays: 0.25,
+    handheldAmplitude: 0.009,
+    departureOffset: 0,
+  },
+  {
+    progress: 0.48,
+    position: [3.0, 3.6, 12.5],
+    lookAt: [0, 3.2, 0],
     fov: 34,
     roll: 0.002,
-    focusTarget: [0, 2.2, -0.8],
+    focusTarget: [0, 2.5, 0],
     exposure: 1.1,
     bloom: 0.7,
     drizzle: 0.3,
     godRays: 0.3,
     handheldAmplitude: 0.007,
-    departureOffset: 0,
+    departureOffset: 0.2,
   },
   {
-    progress: 0.65,
-    position: [2.5, 8.4, 20.5],
-    lookAt: [0, 24, -5.5],
+    progress: 0.68,
+    position: [1.5, 5.2, 15.0],
+    lookAt: [0, 8.5, -3],
     fov: 35,
     roll: 0,
-    focusTarget: [0, 24, -5.5],
+    focusTarget: [0, 10, -4],
     exposure: 1.2,
     bloom: 0.55,
     drizzle: 0.25,
     godRays: 0.45,
     handheldAmplitude: 0.004,
-    departureOffset: 0,
+    departureOffset: 0.65,
   },
   {
-    progress: 0.8,
-    position: [0, 6.5, 17],
-    lookAt: [0, 12, -6],
+    progress: 0.80,
+    position: [0, 6.5, 17.0],
+    lookAt: [0, 12.0, -6],
     fov: 36,
     roll: 0,
     focusTarget: GUIDE_BOARD_WORLD_POSITION,
@@ -95,12 +112,12 @@ export const GUIDE_RAIL_KEYFRAMES: readonly GuideRailKeyframe[] = [
     drizzle: 0.2,
     godRays: 0.6,
     handheldAmplitude: 0.0025,
-    departureOffset: 0.08,
+    departureOffset: 1.0,
   },
   {
-    progress: 0.9,
+    progress: 0.90,
     position: [0, 6.8, 17.5],
-    lookAt: [0, 13, -6],
+    lookAt: [0, 13.0, -6],
     fov: 36,
     roll: 0,
     focusTarget: GUIDE_BOARD_WORLD_POSITION,
@@ -109,12 +126,12 @@ export const GUIDE_RAIL_KEYFRAMES: readonly GuideRailKeyframe[] = [
     drizzle: 0.15,
     godRays: 0.4,
     handheldAmplitude: 0.002,
-    departureOffset: 0.08,
+    departureOffset: 1.0,
   },
   {
-    progress: 1,
+    progress: 1.0,
     position: [0, 6.8, 17.5],
-    lookAt: [0, 13, -6],
+    lookAt: [0, 13.0, -6],
     fov: 36,
     roll: 0,
     focusTarget: GUIDE_BOARD_WORLD_POSITION,
@@ -123,96 +140,102 @@ export const GUIDE_RAIL_KEYFRAMES: readonly GuideRailKeyframe[] = [
     drizzle: 0,
     godRays: 0.35,
     handheldAmplitude: 0,
-    departureOffset: 0.08,
+    departureOffset: 1.0,
   },
 ] as const;
 
-const positionCurves = GUIDE_RAIL_KEYFRAMES.slice(0, -1).map((_, index) => {
-  const previous = GUIDE_RAIL_KEYFRAMES[Math.max(0, index - 1)].position;
-  const current = GUIDE_RAIL_KEYFRAMES[index].position;
-  const next = GUIDE_RAIL_KEYFRAMES[index + 1].position;
-  const following = GUIDE_RAIL_KEYFRAMES[Math.min(GUIDE_RAIL_KEYFRAMES.length - 1, index + 2)].position;
-  return new THREE.CatmullRomCurve3(
-    [previous, current, next, following].map(([x, y, z]) => new THREE.Vector3(x, y, z)),
-    false,
-    "centripetal"
-  );
-});
+// Centripetal Catmull-Rom splines for smooth, overshoot-free camera motion
+const positionSpline = new THREE.CatmullRomCurve3(
+  GUIDE_RAIL_KEYFRAMES.map((kf) => new THREE.Vector3(...kf.position)),
+  false,
+  "centripetal"
+);
 
-const lookAtCurves = GUIDE_RAIL_KEYFRAMES.slice(0, -1).map((_, index) => {
-  const previous = GUIDE_RAIL_KEYFRAMES[Math.max(0, index - 1)].lookAt;
-  const current = GUIDE_RAIL_KEYFRAMES[index].lookAt;
-  const next = GUIDE_RAIL_KEYFRAMES[index + 1].lookAt;
-  const following = GUIDE_RAIL_KEYFRAMES[Math.min(GUIDE_RAIL_KEYFRAMES.length - 1, index + 2)].lookAt;
-  return new THREE.CatmullRomCurve3(
-    [previous, current, next, following].map(([x, y, z]) => new THREE.Vector3(x, y, z)),
-    false,
-    "centripetal"
-  );
-});
+const lookAtSpline = new THREE.CatmullRomCurve3(
+  GUIDE_RAIL_KEYFRAMES.map((kf) => new THREE.Vector3(...kf.lookAt)),
+  false,
+  "centripetal"
+);
 
-const focusCurves = GUIDE_RAIL_KEYFRAMES.slice(0, -1).map((_, index) => {
-  const previous = GUIDE_RAIL_KEYFRAMES[Math.max(0, index - 1)].focusTarget;
-  const current = GUIDE_RAIL_KEYFRAMES[index].focusTarget;
-  const next = GUIDE_RAIL_KEYFRAMES[index + 1].focusTarget;
-  const following = GUIDE_RAIL_KEYFRAMES[Math.min(GUIDE_RAIL_KEYFRAMES.length - 1, index + 2)].focusTarget;
-  return new THREE.CatmullRomCurve3(
-    [previous, current, next, following].map(([x, y, z]) => new THREE.Vector3(x, y, z)),
-    false,
-    "centripetal"
-  );
-});
+const focusSpline = new THREE.CatmullRomCurve3(
+  GUIDE_RAIL_KEYFRAMES.map((kf) => new THREE.Vector3(...kf.focusTarget)),
+  false,
+  "centripetal"
+);
 
 function clampProgress(progress: number) {
   return Math.min(1, Math.max(0, progress));
 }
 
-function findSegment(progress: number) {
-  const index = GUIDE_RAIL_KEYFRAMES.findIndex((frame) => frame.progress >= progress);
-  return Math.max(0, Math.min(positionCurves.length - 1, index - 1));
+function findSegment(p: number) {
+  for (let i = 0; i < GUIDE_RAIL_KEYFRAMES.length - 1; i++) {
+    if (p <= GUIDE_RAIL_KEYFRAMES[i + 1].progress) {
+      return i;
+    }
+  }
+  return GUIDE_RAIL_KEYFRAMES.length - 2;
 }
 
-function sampleNumber(from: number, to: number, amount: number) {
-  return from + (to - from) * amount;
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
 }
 
-const targetPos = new THREE.Vector3();
-const targetLookAt = new THREE.Vector3();
-const targetFocus = new THREE.Vector3();
+const tempPos = new THREE.Vector3();
+const tempLookAt = new THREE.Vector3();
+const tempFocus = new THREE.Vector3();
 
 let cachedProgress = -1;
 let cachedFrame: GuideRailFrame | null = null;
 
-/** Catmull-Rom position/look-at/focus rails with scalar values sampled over the same progress segments. */
-export function sampleGuideRail(progress: number): GuideRailFrame {
+/**
+ * Samples the crane camera rail at scroll progress p ∈ [0, 1].
+ */
+export function sampleGuideRail(progress: number, aspect = 1.6): GuideRailFrame {
   const p = clampProgress(progress);
-  if (cachedFrame && Math.abs(p - cachedProgress) < 0.00001) {
+  if (cachedFrame && Math.abs(p - cachedProgress) < 0.0001) {
     return cachedFrame;
   }
-  const segmentIndex = findSegment(p);
-  const from = GUIDE_RAIL_KEYFRAMES[segmentIndex];
-  const to = GUIDE_RAIL_KEYFRAMES[segmentIndex + 1];
-  const amount = to.progress === from.progress ? 0 : (p - from.progress) / (to.progress - from.progress);
-  const curveAmount = (1 + amount) / 3;
 
-  positionCurves[segmentIndex].getPoint(curveAmount, targetPos);
-  lookAtCurves[segmentIndex].getPoint(curveAmount, targetLookAt);
-  focusCurves[segmentIndex].getPoint(curveAmount, targetFocus);
+  // Sample CatmullRom spline
+  positionSpline.getPoint(p, tempPos);
+  lookAtSpline.getPoint(p, tempLookAt);
+  focusSpline.getPoint(p, tempFocus);
+
+  // Linear interpolation of scalar properties between keyframes
+  const segIndex = findSegment(p);
+  const from = GUIDE_RAIL_KEYFRAMES[segIndex];
+  const to = GUIDE_RAIL_KEYFRAMES[segIndex + 1];
+  const span = to.progress - from.progress;
+  const t = span <= 0 ? 0 : (p - from.progress) / span;
+
+  // Aspect-aware distance adjustment for mobile portrait (aspect < 0.7)
+  const posX = tempPos.x;
+  const posY = tempPos.y;
+  let posZ = tempPos.z;
+  let fov = lerp(from.fov, to.fov, t);
+
+  if (aspect < 0.7 && p < 0.3) {
+    // Back up camera slightly and widen FOV so both figures stay in vertical frame
+    const mobileFactor = (1.0 - p / 0.3);
+    posZ += 3.2 * mobileFactor;
+    fov += 6.0 * mobileFactor;
+  }
 
   cachedProgress = p;
   cachedFrame = {
     progress: p,
-    position: [targetPos.x, targetPos.y, targetPos.z],
-    lookAt: [targetLookAt.x, targetLookAt.y, targetLookAt.z],
-    focusTarget: [targetFocus.x, targetFocus.y, targetFocus.z],
-    fov: sampleNumber(from.fov, to.fov, amount),
-    roll: sampleNumber(from.roll, to.roll, amount),
-    exposure: sampleNumber(from.exposure, to.exposure, amount),
-    bloom: sampleNumber(from.bloom, to.bloom, amount),
-    drizzle: sampleNumber(from.drizzle, to.drizzle, amount),
-    godRays: sampleNumber(from.godRays, to.godRays, amount),
-    handheldAmplitude: sampleNumber(from.handheldAmplitude, to.handheldAmplitude, amount),
-    departureOffset: sampleNumber(from.departureOffset, to.departureOffset, amount),
+    position: [posX, posY, posZ],
+    lookAt: [tempLookAt.x, tempLookAt.y, tempLookAt.z],
+    focusTarget: [tempFocus.x, tempFocus.y, tempFocus.z],
+    fov,
+    roll: lerp(from.roll, to.roll, t),
+    exposure: lerp(from.exposure, to.exposure, t),
+    bloom: lerp(from.bloom, to.bloom, t),
+    drizzle: lerp(from.drizzle, to.drizzle, t),
+    godRays: lerp(from.godRays, to.godRays, t),
+    handheldAmplitude: lerp(from.handheldAmplitude, to.handheldAmplitude, t),
+    departureOffset: lerp(from.departureOffset, to.departureOffset, t),
   };
+
   return cachedFrame;
 }

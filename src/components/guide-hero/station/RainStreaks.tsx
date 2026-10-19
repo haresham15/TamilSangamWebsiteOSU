@@ -1,31 +1,37 @@
 "use client";
 
-import React, { useLayoutEffect, useMemo, useRef } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { guideStationPalette } from "./palette";
 
-const RAIN_COUNT = 96;
-const BOKEH_COUNT = 16;
+const RAIN_COUNT = 480;
 
-/** Animated cone-confined drizzle on the master tick; zero steady-state allocations. */
+/**
+ * Procedural cinematic drizzle: streaks only catch light in the window
+ * and overhead station lamp cones (PRD §5.4).
+ */
 export function RainStreaks() {
   const meshRef = useRef<THREE.InstancedMesh>(null);
-  const bokehRef = useRef<THREE.InstancedMesh>(null);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduceMotion(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
 
   const rainData = useMemo(() => {
     return Array.from({ length: RAIN_COUNT }, (_, index) => {
-      const lane = ((index * 37) % 97) / 97 - 0.5;
-      const depth = ((index * 53) % 89) / 89;
-      const x = lane * (3.2 - depth * 1.8);
-      const y = 3.25 - depth * 2.05;
-      const z = 0.78 + (index % 4) * 0.035;
-      const rotZ = 0.13 + ((index % 5) - 2) * 0.015;
-      const scaleX = 0.014;
-      const scaleY = 0.28 + (index % 7) * 0.045;
-      const scaleZ = 0.014;
-      const speed = 3.8 + (index % 5) * 0.6;
-      return { x, y, z, rotZ, scaleX, scaleY, scaleZ, speed, currentY: y };
+      // Concentrate streaks in front of the coach and platform (x: -5 to +5, z: 0.2 to 5.0)
+      const x = (((index * 37) % 100) / 100 - 0.5) * 8.0;
+      const y = 0.5 + (((index * 53) % 100) / 100) * 5.0;
+      const z = 0.4 + (((index * 79) % 100) / 100) * 4.6;
+      const rotZ = -0.06 + (((index % 7) - 3) * 0.01); // Subtle wind angle
+      const speed = 5.5 + (index % 5) * 0.4;
+      return { x, y, z, rotZ, speed, currentY: y };
     });
   }, []);
 
@@ -34,58 +40,101 @@ export function RainStreaks() {
   const tempRot = useMemo(() => new THREE.Euler(), []);
   const tempQuat = useMemo(() => new THREE.Quaternion(), []);
   const tempScale = useMemo(() => new THREE.Vector3(), []);
+  const colorArray = useMemo(() => new Float32Array(RAIN_COUNT * 3), []);
 
-  const bokehTransforms = useMemo(() => {
-    const matrix = new THREE.Matrix4();
-    const position = new THREE.Vector3();
-    const scale = new THREE.Vector3();
-    return Array.from({ length: BOKEH_COUNT }, (_, index) => {
-      position.set((((index * 19) % 31) / 31 - 0.5) * 3.5, 1.35 + ((index * 11) % 19) / 19 * 1.8, 0.83);
-      const size = 0.025 + (index % 4) * 0.012;
-      scale.setScalar(size);
-      matrix.compose(position, new THREE.Quaternion(), scale);
-      return matrix;
-    });
-  }, []);
-
-  useLayoutEffect(() => {
-    const mesh = bokehRef.current;
-    if (!mesh) return;
-    bokehTransforms.forEach((matrix, index) => mesh.setMatrixAt(index, matrix));
-    mesh.instanceMatrix.needsUpdate = true;
-  }, [bokehTransforms]);
+  // Compute instanced colors: alpha / brightness depends on proximity to window light cone
+  const lightConeOrigin = useMemo(() => new THREE.Vector3(0, 1.7, 0.0), []);
 
   useFrame((_, delta) => {
+    if (reduceMotion) return;
     const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const mesh = meshRef.current;
     if (!mesh) return;
+
     for (let i = 0; i < RAIN_COUNT; i++) {
       const d = rainData[i];
       d.currentY -= d.speed * dt;
-      if (d.currentY < 0.6) {
-        d.currentY += 2.8;
+      if (d.currentY < 0.1) {
+        d.currentY += 5.2;
       }
+
+      // Check distance to window light cone
+      const dx = d.x - lightConeOrigin.x;
+      const dy = d.currentY - lightConeOrigin.y;
+      const dz = d.z - lightConeOrigin.z;
+
+      // Inside warm window light cone: z > 0, angle within light spread
+      const distFromConeAxis = Math.hypot(dx, dy * 1.5);
+      const coneRadiusAtZ = 0.5 + dz * 0.65;
+      const inWindowCone = dz > 0 && distFromConeAxis < coneRadiusAtZ;
+
+      // Brightness: warm golden when catching window light, faint cool blue elsewhere
+      let r = 0.15, g = 0.22, b = 0.30; // Ambient cool
+      let scaleY = 0.22;
+
+      if (inWindowCone) {
+        const intensity = Math.max(0, 1.0 - distFromConeAxis / coneRadiusAtZ);
+        r = 1.0 * intensity + 0.15 * (1 - intensity);
+        g = 0.72 * intensity + 0.22 * (1 - intensity);
+        b = 0.35 * intensity + 0.30 * (1 - intensity);
+        scaleY = 0.28 + intensity * 0.12;
+      }
+
+      colorArray[i * 3] = r;
+      colorArray[i * 3 + 1] = g;
+      colorArray[i * 3 + 2] = b;
+
       tempPos.set(d.x, d.currentY, d.z);
       tempRot.set(0, 0, d.rotZ);
       tempQuat.setFromEuler(tempRot);
-      tempScale.set(d.scaleX, d.scaleY, d.scaleZ);
+      tempScale.set(0.0018, scaleY, 0.0018);
       tempMatrix.compose(tempPos, tempQuat, tempScale);
       mesh.setMatrixAt(i, tempMatrix);
+    }
+
+    if (mesh.instanceColor) {
+      mesh.instanceColor.needsUpdate = true;
     }
     mesh.instanceMatrix.needsUpdate = true;
   });
 
+  if (reduceMotion) {
+    return null;
+  }
+
   return (
-    <>
-      <instancedMesh ref={meshRef} args={[undefined, undefined, RAIN_COUNT]} name="WindowConeDrizzle" frustumCulled>
+    <group name="DrizzleAndShafts">
+      {/* Soft volumetric warm light shaft emerging from window onto the platform */}
+      <mesh position={[0, 1.2, 1.5]} rotation={[Math.PI / 2 + 0.2, 0, 0]} renderOrder={6}>
+        <cylinderGeometry args={[0.55, 1.6, 2.8, 16, 1, true]} />
+        <meshBasicMaterial
+          color={guideStationPalette.windowGlow}
+          transparent
+          opacity={0.035}
+          blending={THREE.AdditiveBlending}
+          side={THREE.DoubleSide}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Instanced thin rain streaks catching light */}
+      <instancedMesh
+        ref={meshRef}
+        args={[undefined, undefined, RAIN_COUNT]}
+        name="LightMaskedDrizzle"
+        frustumCulled={false}
+        renderOrder={12}
+      >
         <boxGeometry args={[1, 1, 1]} />
-        <meshBasicMaterial color={guideStationPalette.practicalWarm} transparent opacity={0.16} depthWrite={false} />
+        <meshBasicMaterial
+          transparent
+          opacity={0.25}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
       </instancedMesh>
-      <instancedMesh ref={bokehRef} args={[undefined, undefined, BOKEH_COUNT]} name="WindowRainBokeh" frustumCulled>
-        <sphereGeometry args={[1, 10, 10]} />
-        <meshBasicMaterial color={guideStationPalette.practicalWarm} transparent opacity={0.2} depthWrite={false} />
-      </instancedMesh>
-    </>
+    </group>
   );
 }
 
