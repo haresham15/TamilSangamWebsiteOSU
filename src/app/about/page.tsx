@@ -10,6 +10,7 @@ import { GopuramZScroll } from "@/components/about/GopuramZScroll";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { FlowingRiverTimeline } from "@/components/muttram/FlowingRiverTimeline";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
+import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 
 export default function AboutPage() {
   const { locale } = useLocale();
@@ -109,8 +110,13 @@ export default function AboutPage() {
       {/* =========================================================================
           THE ORGANIC JOURNEY: CENTRAL RIVER TIMELINE ON WARM IVORY
           Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
+          Glides up over the bronze rings stage (p = 0.84 -> 1.00)
           ========================================================================= */}
-      <div className="relative z-20 w-full bg-paper text-hearth-espresso overflow-hidden">
+      <EditorialSheetHandoff
+        badge="THE SANGAM EPIC"
+        sublabel="MISSION & ROOTS"
+        className="text-hearth-espresso"
+      >
         
         <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
           
@@ -209,7 +215,7 @@ export default function AboutPage() {
           />
 
         </div>
-      </div>
+      </EditorialSheetHandoff>
     </div>
   );
 }

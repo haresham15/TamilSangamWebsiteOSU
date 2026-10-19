@@ -12,6 +12,7 @@ import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import CountUp from "@/components/CountUp";
+import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import styles from "./board.module.css";
 
 const BoardHeroCanvas = dynamic(
@@ -50,17 +51,21 @@ export default function BoardPage() {
   return (
     <div className="w-full text-left bg-transparent">
       <div id="board-hero-trigger" data-hero-container="true" className="relative z-10 w-full">
-        <BoardHeroCanvas bezel={
-          <dl className={styles.bezel} aria-label="Tamil Sangam at a glance">
-            <div><dt>Buckeye Members</dt><dd>{reduceMotion ? 120 : <CountUp to={120} duration={2} />}+</dd></div>
-            <div><dt>Executive Officers</dt><dd>{reduceMotion ? 9 : <CountUp to={9} duration={1.5} />}</dd></div>
-            <div><dt>Campus Galas & Events</dt><dd>{reduceMotion ? 14 : <CountUp to={14} duration={1.8} />}</dd></div>
-            <div><dt>Est. at Ohio State</dt><dd>{reduceMotion ? 2021 : <CountUp to={2021} from={2000} duration={2.2} separator="" />}</dd></div>
-          </dl>
-        } />
+        <BoardHeroCanvas bezel={null} />
       </div>
-      <div className={styles.content}>
-        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 pt-36 sm:pt-44 pb-24 sm:pb-32 scroll-mt-32">
+      <EditorialSheetHandoff
+        badge="DEMOCRATIC COUNCIL"
+        sublabel="OFFICERS 2026–2027"
+        className="text-hearth-espresso"
+      >
+        {/* Physical Top Border Metrics Bezel */}
+        <dl className={styles.bezel} aria-label="Tamil Sangam at a glance">
+          <div><dt>Buckeye Members</dt><dd>{reduceMotion ? 120 : <CountUp to={120} duration={2} />}+</dd></div>
+          <div><dt>Executive Officers</dt><dd>{reduceMotion ? 9 : <CountUp to={9} duration={1.5} />}</dd></div>
+          <div><dt>Campus Galas & Events</dt><dd>{reduceMotion ? 14 : <CountUp to={14} duration={1.8} />}</dd></div>
+          <div><dt>Est. at Ohio State</dt><dd>{reduceMotion ? 2021 : <CountUp to={2021} from={2000} duration={2.2} separator="" />}</dd></div>
+        </dl>
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 pt-28 sm:pt-36 pb-24 sm:pb-32 scroll-mt-32">
           <CourtyardHeader
             align="left"
             eyebrow="Democratic Council · 2026–2027"
@@ -171,7 +176,7 @@ export default function BoardPage() {
           </div>
 
         </div>
-      </div>
+      </EditorialSheetHandoff>
     </div>
   );
 }

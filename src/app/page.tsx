@@ -21,6 +21,7 @@ import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { EventsDepthShowcase } from "@/components/home/EventsDepthShowcase";
 import { NextFlagshipGathering } from "@/components/home/NextFlagshipGathering";
+import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 
 export default function HomePage() {
   const { playClick } = useAudio();
@@ -28,12 +29,9 @@ export default function HomePage() {
   const tier = useTier();
   const reducedMotion = useReducedMotion();
   const staticHero = isLiteMode || tier === "C" || !!reducedMotion;
-  const handoffRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => registerSystem({ order: 60, step: () => {
-    if (handoffRef.current) handoffRef.current.style.opacity = String(Math.max(0, Math.min(1, (heroScrollProgress.current - 0.85) / 0.15)));
     if (monolithRef.current) {
-      const hidden = staticHero || heroScrollProgress.current < 0.8 || heroScrollProgress.current > 0.96;
+      const hidden = staticHero || heroScrollProgress.current < 0.66;
       monolithRef.current.inert = hidden;
       monolithRef.current.setAttribute("aria-hidden", String(hidden));
     }
@@ -223,26 +221,27 @@ export default function HomePage() {
         );
       }
 
-      // Dwell period (0.66 -> 0.762): Reading pause with wreath formed.
-      // Exit of Kural at start of curtain rise (0.74 -> 0.762)
+      // Dwell period (0.62 -> 0.64): Reading pause with wreath formed.
+      // Exit of Kural at start of curtain rise (0.64 -> 0.67)
       if (kural) {
         tl.to(
           kural,
-          { opacity: 0, y: -20, filter: "blur(6px)", duration: 0.022, ease: "power1.in" },
-          0.74
+          { opacity: 0, y: -20, filter: "blur(6px)", duration: 0.03, ease: "power1.in" },
+          0.64
         );
       }
 
       // =========================================================================
-      // ACT III: 0.762 -> 1.00 Scroll ("Curtain Rise", §PRD 9, ACT3_START = 0.762)
+      // ACT III: 0.67 -> 0.77 Scroll ("Curtain Rise", slides up and settles)
       // Monolith slides UP (yPercent: 100 -> 0) naturally covering the WebGL scene
+      // and stays resting and visible through 0.77 -> 1.00
       // =========================================================================
       if (monolith) {
         tl.fromTo(
           monolith,
           { yPercent: 100 },
-          { yPercent: 0, duration: 0.238, ease: "none" },
-          0.762
+          { yPercent: 0, duration: 0.10, ease: "power2.out" },
+          0.67
         );
       }
     }, wrapper);
@@ -518,19 +517,15 @@ export default function HomePage() {
               </div>
             </div>
           </section>
-          <div ref={handoffRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-30 bg-paper opacity-0 flex items-center justify-center">
-            <svg viewBox="-100 -100 200 200" className="w-3/4 max-w-3xl text-hearth-terracotta opacity-[0.08]" fill="none" stroke="currentColor" strokeWidth="0.5">
-              {[0, 30, 60, 90, 120, 150].map(rotation => <ellipse key={rotation} rx="84" ry="30" transform={`rotate(${rotation})`} />)}
-            </svg>
-          </div>
         </div>
       </div>
 
       {/* =========================================================================
           THE SUNLIT MUTTRAM (COURTYARD) ARCHITECTURE
-          Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
+          Warm Ivory (#FAF7F2), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
+          Glides up over the pinned stage (p = 0.88 -> 1.00)
           ========================================================================= */}
-      <div className="relative z-20 w-full bg-[#FAF9F6] text-[#2A2825]">
+      <EditorialSheetHandoff id="flagship-gathering" badge="CAMPUS HEARTH" sublabel="COLUMBUS, OH">
 
         {/* Puranaanuru 192 Sunlit Wisdom Banner */}
         <div className="bg-[#F4EFE6] py-6 px-6 text-center select-none">
@@ -608,7 +603,7 @@ export default function HomePage() {
           secondaryHref="/join"
           secondaryLabel="Sign the Guestbook"
         />
-      </div>
+      </EditorialSheetHandoff>
     </div>
   );
 }

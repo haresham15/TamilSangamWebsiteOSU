@@ -6,7 +6,7 @@ import { useAudio } from "@/context/AudioContext";
 import { FAQS, FaqItem } from "@/data/faq";
 import { useGuideStore } from "@/components/guide-hero/store/guideStore";
 import { GuideHero } from "@/components/guide-hero/GuideHero";
-import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import type { RankedFaq } from "@/lib/faq-engagement/contracts";
 import { audioLayer } from "@/utils/audioLayer";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
@@ -78,14 +78,16 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
         <GuideHero initialPopularRanking={initialPopularRanking} />
       </div>
 
-      {/* Hero to Content Gradient Transition */}
-      <HeroGradientTransition variant="guide" className="-mt-32 relative z-20" />
-
       {/* =========================================================================
           THE OPEN BOOK: BREATHABLE Q&A MANUSCRIPT ON WARM IVORY
           Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
+          Glides up over the station hero runway (p = 0.88 -> 1.00)
           ========================================================================= */}
-      <div className={styles.content}>
+      <EditorialSheetHandoff
+        badge="STUDENT GUIDE"
+        sublabel="FREQUENTLY ASKED QUESTIONS"
+        className="text-hearth-espresso"
+      >
         
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
           
@@ -175,7 +177,7 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
           </div>
 
         </div>
-      </div>
+      </EditorialSheetHandoff>
     </div>
   );
 }

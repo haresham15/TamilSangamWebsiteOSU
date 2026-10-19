@@ -161,10 +161,10 @@ const sharedCoreMat = new THREE.MeshPhysicalMaterial({
 const CURSOR_LIGHT_COLOR = "#FFB366";
 
 const STAGE_RANGES = [
-  { start: 0.00, end: 0.22 },
-  { start: 0.26, end: 0.48 },
-  { start: 0.52, end: 0.74 },
-  { start: 0.78, end: 0.95 },
+  { start: 0.00, end: 0.20 },
+  { start: 0.24, end: 0.44 },
+  { start: 0.48, end: 0.68 },
+  { start: 0.72, end: 0.86 },
 ];
 
 // Optimized abstract cinematic Bronze Rings with lightweight shared geometry
@@ -184,7 +184,7 @@ function BronzeRing({
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.05);
     if (meshRef.current) {
-      const alignment = 1 - THREE.MathUtils.smoothstep(scrollProgressRef.current, 0, 0.8);
+      const alignment = 1 - THREE.MathUtils.smoothstep(scrollProgressRef.current, 0.76, 0.96);
       meshRef.current.rotation.x = THREE.MathUtils.damp(meshRef.current.rotation.x, rotation[0] * alignment, 8, dt);
       meshRef.current.rotation.y = THREE.MathUtils.damp(meshRef.current.rotation.y, rotation[1] * alignment, 8, dt);
       meshRef.current.rotation.z = THREE.MathUtils.damp(meshRef.current.rotation.z, rotation[2] * alignment, 8, dt);
@@ -314,10 +314,10 @@ function AscendingGopuramCamera({
 }) {
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
-    const { camera } = state;
-    // 5 rings spaced 15 units apart. Z goes from 12 to -68.
+    const camera = state.camera;
+    // 5 rings spaced 20 units apart. Z goes from 12 to -52.
     const startZ = 12;
-    const endZ = -68;
+    const endZ = -52;
     const targetZ = THREE.MathUtils.lerp(startZ, endZ, scrollProgressRef.current);
 
     const targetX = isMobile ? 0 : -2;
@@ -424,7 +424,7 @@ function GopuramScene({ scrollProgressRef, isMobile, locale }: {
             <GopuramWarmup />
             <color attach="background" args={["#14110F"]} />
             <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={50} near={0.05} far={150} />
-            <fog attach="fog" args={["#14110F", 10, 48]} />
+            <fog attach="fog" args={["#14110F", 10, 95]} />
 
             <SangamStudioEnvironment />
             <directionalLight position={[10, 20, 10]} intensity={2.2} color="#FFF8EB" />

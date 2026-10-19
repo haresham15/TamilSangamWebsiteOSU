@@ -7,7 +7,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { audioLayer } from "@/utils/audioLayer";
 import { Loader2 } from "lucide-react";
-import { HeroGradientTransition } from "@/components/ui/HeroGradientTransition";
+import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { GuestbookField } from "@/components/muttram/GuestbookField";
 import { SITE_CONFIG } from "@/data/siteConfig";
@@ -129,14 +129,16 @@ export default function JoinPage() {
         <JoinHeroCanvas />
       </div>
 
-      {/* Hero to Content Gradient Transition */}
-      <HeroGradientTransition variant="join" className="-mt-32 relative z-20" />
-
       {/* =========================================================================
           THE WELCOMING HEARTH: SUNLIT GUESTBOOK ON WARM IVORY
-          Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
+          Glides up over the morning campus gates (p = 0.84 -> 1.00)
           ========================================================================= */}
-      <div className={styles.content}>
+      <EditorialSheetHandoff
+        id="membership-form"
+        badge="STUDENT FELLOWSHIP"
+        sublabel="GUESTBOOK REGISTRATION"
+        className="text-hearth-espresso"
+      >
         
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
           
@@ -341,7 +343,7 @@ export default function JoinPage() {
           </div>
 
         </div>
-      </div>
+      </EditorialSheetHandoff>
     </div>
   );
 }

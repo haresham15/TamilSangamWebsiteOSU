@@ -49,15 +49,22 @@ export function GalleryHero() {
   );
   const progress = useRef(0);
   const title = useRef<HTMLDivElement>(null);
+  const cta = useRef<HTMLAnchorElement>(null);
   const isStatic = mounted ? (isLiteMode || tier === "C" || Boolean(reducedMotion)) : false;
 
   useEffect(() => {
     if (isStatic) return;
     let rafId: number;
     const updateTitleOpacity = () => {
+      const p = progress.current || 0;
       if (title.current) {
-        const p = progress.current || 0;
         title.current.style.opacity = String(Math.max(0, 1.0 - p * 3.5));
+      }
+      if (cta.current) {
+        const exit = Math.max(0, Math.min(1, (p - 0.70) / 0.10));
+        cta.current.style.opacity = String(1 - exit);
+        cta.current.style.transform = `translateY(${-20 * exit}px)`;
+        cta.current.style.pointerEvents = exit >= 1 ? "none" : "auto";
       }
       rafId = requestAnimationFrame(updateTitleOpacity);
     };
@@ -82,6 +89,7 @@ export function GalleryHero() {
           <p className="mx-auto mt-6 max-w-sm font-body text-sm leading-relaxed text-sangam-cream/85 sm:text-base">Campus afternoons. Shared tables. Stories we keep.</p>
         </div>
         <a
+          ref={cta}
           href="#gallery-vault-content"
           className="pointer-events-auto absolute bottom-16 inline-flex min-h-12 items-center gap-4 border-b border-sangam-cream/40 px-4 font-mono text-xs uppercase tracking-widest text-sangam-cream transition-colors hover:text-sangam-gold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sangam-mint"
         >

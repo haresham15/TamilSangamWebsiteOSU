@@ -74,18 +74,18 @@ export function GuideHero({
     return () => media.removeEventListener("change", update);
   }, []);
 
-  // Update hand-off gradient at p >= 0.92
+  const ctaRef = useRef<HTMLButtonElement>(null);
+
+  // Fade out Skip CTA between p = 0.70 and 0.78
   useEffect(() => {
     let frameId: number;
     const checkHandoff = () => {
       const p = getGuideStationProgress();
-      if (handoffGradientRef.current) {
-        if (p >= 0.92) {
-          const opacity = Math.min(1.0, (p - 0.92) / 0.08);
-          handoffGradientRef.current.style.opacity = String(opacity);
-        } else {
-          handoffGradientRef.current.style.opacity = "0";
-        }
+      if (ctaRef.current) {
+        const exit = Math.max(0, Math.min(1, (p - 0.70) / 0.08));
+        ctaRef.current.style.opacity = String(1 - exit);
+        ctaRef.current.style.transform = `translateY(${-16 * exit}px)`;
+        ctaRef.current.style.pointerEvents = exit >= 1 ? "none" : "auto";
       }
       frameId = requestAnimationFrame(checkHandoff);
     };
@@ -165,22 +165,14 @@ export function GuideHero({
         {/* Accessible Skip Intro Control (48x48px min target, visible on focus & dwell) */}
         <div className="pointer-events-none absolute inset-x-0 bottom-8 z-20 flex justify-between items-end px-8">
           <button
+            ref={ctaRef}
             type="button"
             onClick={handleSkipToBoard}
-            className="pointer-events-auto min-h-12 px-5 py-2.5 rounded-full bg-[#0A0F14]/85 text-[#f1e9d2] border border-[#f1e9d2]/20 backdrop-blur-md text-xs uppercase tracking-widest hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] transition-all"
+            className="pointer-events-auto min-h-12 px-5 py-2.5 rounded-full bg-[#0A0F14]/85 text-[#f1e9d2] border border-[#f1e9d2]/20 backdrop-blur-md text-xs uppercase tracking-widest hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] transition-transform will-change-[transform,opacity]"
           >
             Skip to Board ↓
           </button>
         </div>
-
-        {/* Bottom Hand-off Gradient Mask (Active only in S5: p >= 0.92 -> 1.00) */}
-        <div
-          ref={handoffGradientRef}
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-32 opacity-0 transition-opacity duration-300"
-          style={{
-            background: "linear-gradient(to bottom, transparent 0%, #FAF7F2 100%)",
-          }}
-        />
       </div>
     </section>
   );

@@ -52,17 +52,35 @@ export function HeroScrollStage({ children, className = "", id, runway = 280, pr
       invalidateOnRefresh: true,
       onUpdate: ({ progress }) => {
         if (progressRef) progressRef.current = progress;
-        if (melt.current) melt.current.style.opacity = String(Math.min(1, Math.max(0, (progress - 0.88) / 0.12)));
+        if (stage.current) {
+          // AWWWARDS Recessive Camera & Stage Push (p = 0.84 -> 1.00)
+          if (progress >= 0.84) {
+            const t = (progress - 0.84) / 0.16;
+            const scale = 1.0 - 0.05 * t;
+            const yOffset = -6 * t;
+            const opacity = 1.0 - 0.75 * t;
+            stage.current.style.transform = `scale(${scale.toFixed(3)}) translateY(${yOffset.toFixed(2)}vh)`;
+            stage.current.style.opacity = opacity.toFixed(3);
+          } else {
+            stage.current.style.transform = "";
+            stage.current.style.opacity = "";
+          }
+        }
       },
     });
-    return () => trigger.kill();
+    return () => {
+      trigger.kill();
+      if (stage.current) {
+        stage.current.style.transform = "";
+        stage.current.style.opacity = "";
+      }
+    };
   }, [effectiveStatic, progressRef]);
 
   return (
     <section ref={section} id={id} data-hero-stage data-tone={tone} className={`hero-scroll-stage ${className}`} style={{ minHeight: effectiveStatic ? "100dvh" : `${runway}dvh` }} suppressHydrationWarning>
-      <div ref={stage} data-hero-viewport className={effectiveStatic ? "relative z-[2] min-h-dvh w-full overflow-hidden" : "sticky top-0 z-[2] h-dvh w-full overflow-hidden"} suppressHydrationWarning>
+      <div ref={stage} data-hero-viewport className={effectiveStatic ? "relative z-[1] min-h-dvh w-full overflow-hidden" : "sticky top-0 z-[1] h-dvh w-full overflow-hidden"} suppressHydrationWarning>
         <VisibilityContext.Provider value={!effectiveStatic && visible}>{children}</VisibilityContext.Provider>
-        {!effectiveStatic && <div ref={melt} aria-hidden="true" className="hero-stage-melt" />}
       </div>
     </section>
   );

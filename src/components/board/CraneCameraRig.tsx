@@ -30,8 +30,8 @@ export function CraneCameraRig({ scrollProgress }: CraneCameraRigProps) {
     const p = Math.min(1.0, Math.max(0.0, scrollProgress.current));
     const easedP = easeInOutCubic(p);
 
-    // 1. Compute physical crane target position with noble entrance glide over the crown
-    const targetZ = THREE.MathUtils.lerp(30, 0.8, easedP);
+    // 1. Compute physical crane target position framing the Chola centerpiece and lamps
+    const targetZ = THREE.MathUtils.lerp(30, 5.2, easedP);
     const swayX = Math.sin(p * 6.0) * 0.12;
 
     // Camera cranes from an elevated 2.22m vantage point to glide above the Chola crown

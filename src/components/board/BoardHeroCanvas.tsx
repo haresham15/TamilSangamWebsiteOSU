@@ -140,27 +140,11 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
     };
   }, [reducedMotion, debugActive]);
 
-  // Handle Finale Golden Dissolve (§7)
+  // Handle Finale
   const handleFinaleTriggered = () => {
-    if (!goldOverlayRef.current || !canvasContainerRef.current) return;
-
-    // Pulse gold flash in and smoothly fade out to 0
-    gsap.timeline()
-      .to(goldOverlayRef.current, {
-        opacity: 0.5,
-        duration: 0.2,
-        ease: "power2.in",
-      })
-      .to(goldOverlayRef.current, {
-        opacity: 0,
-        duration: 0.45,
-        ease: "power2.out",
-        onComplete: () => {
-          if (onFinaleComplete) {
-            onFinaleComplete();
-          }
-        },
-      });
+    if (onFinaleComplete) {
+      onFinaleComplete();
+    }
   };
 
   return (
@@ -224,12 +208,6 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
 
           {/* Optical Post-Processing: CSS Vignette Overlay (§1, Spike S3) */}
           <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(20,10,5,0.45)_100%)]" />
-
-          {/* Additive Gold Finale Flash Overlay (§7) */}
-          <div
-            ref={goldOverlayRef}
-            className="pointer-events-none absolute inset-0 bg-[#D4AF37] opacity-0 z-20"
-          />
 
           {/* Bottom Vignette Gradient to dissolve floor into DOM */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#120A06] via-[#120A06]/70 to-transparent z-10" />

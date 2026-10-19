@@ -41,9 +41,6 @@ export function PropPlaceholders() {
       {/* 2. Procedural Brass Drafting Compass (Era 1: 0–33%) */}
       <Compass />
 
-      {/* 3. Procedural Mirrorless Camera Body (Era 2: 33–66%) */}
-      <CameraBody />
-
       {/* 4. Procedural Dried Red Rose (Era 2: 33–66%) */}
       <Rose />
 

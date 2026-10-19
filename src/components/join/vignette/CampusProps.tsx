@@ -115,17 +115,7 @@ export function CampusProps() {
     []
   );
 
-  // 3. Distant Silhouette Material
-  const silhouetteMaterial = useMemo(
-    () =>
-      new THREE.MeshBasicMaterial({
-        color: "#B4A998",
-        fog: true,
-      }),
-    []
-  );
-
-  // 4. Bunting Pennant Materials (Flat 2D cloth flags)
+  // 3. Bunting Pennant Materials (Flat 2D cloth flags)
   const buntingMaterials = useMemo(
     () => [
       new THREE.MeshStandardMaterial({ color: "#6B3BA7", roughness: 0.65, side: THREE.DoubleSide }), // Purple
@@ -165,7 +155,6 @@ export function CampusProps() {
       bikeChromeMaterial.dispose();
       leatherSaddleMaterial.dispose();
       ropeMaterial.dispose();
-      silhouetteMaterial.dispose();
       buntingMaterials.forEach((m) => m.dispose());
       pennantGeometry.dispose();
     };
@@ -180,7 +169,6 @@ export function CampusProps() {
     bikeChromeMaterial,
     leatherSaddleMaterial,
     ropeMaterial,
-    silhouetteMaterial,
     buntingMaterials,
     pennantGeometry,
   ]);

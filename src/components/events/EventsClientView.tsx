@@ -17,6 +17,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import dynamic from "next/dynamic";
 import { HeroScrollStage } from "@/components/canvas/HeroScrollStage";
+import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
+import { registerSystem } from "@/engine/masterTick";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
 import { useReducedMotion } from "framer-motion";
@@ -46,6 +48,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
   const tier = useTier();
   const reducedMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
+  const heroOverlayRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -55,6 +58,20 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
     setMounted(true);
   }, []);
   const staticHero = mounted ? (isLiteMode || tier === "C" || !!reducedMotion) : false;
+
+  useEffect(() => {
+    return registerSystem({
+      order: 45,
+      step: () => {
+        if (!heroOverlayRef.current) return;
+        const p = eventsProgress.current;
+        const exit = Math.max(0, Math.min(1, (p - 0.72) / 0.10));
+        heroOverlayRef.current.style.opacity = String(1 - exit);
+        heroOverlayRef.current.style.transform = `translateY(${-24 * exit}px)`;
+        heroOverlayRef.current.style.pointerEvents = exit >= 1 ? "none" : "auto";
+      },
+    });
+  }, []);
 
   // View mode: 'list' or 'calendar' (default to 'list' unless ?view=calendar in URL)
   const currentView = searchParams.get("view") === "calendar" ? "calendar" : "list";
@@ -155,7 +172,10 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
         tone="espresso"
       >
         {!staticHero && <EventsGen3Canvas progressRef={eventsProgress} />}
-        <div className="absolute inset-0 z-10 flex flex-col justify-end px-6 pb-20 text-paper pointer-events-none">
+        <div
+          ref={heroOverlayRef}
+          className="absolute inset-0 z-10 flex flex-col justify-end px-6 pb-20 text-paper pointer-events-none transition-transform will-change-[transform,opacity]"
+        >
           <h1 className="font-display text-5xl sm:text-8xl">{locale === "ta" ? "நிகழ்வுகள்" : "Together, in celebration."}</h1>
           <a href="#gatherings-river" className="pointer-events-auto mt-6 inline-flex min-h-12 items-center underline w-fit">Explore the gatherings</a>
         </div>
@@ -164,8 +184,14 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
       {/* =========================================================================
           THE FLOWING RIVER & LIVE CALENDAR
           Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
+          Glides up as an architectural paper sheet (p = 0.84 -> 1.00)
           ========================================================================= */}
-      <div id="gatherings-river" className="relative z-20 w-full bg-paper text-hearth-espresso overflow-hidden">
+      <EditorialSheetHandoff
+        id="gatherings-river"
+        badge="CAMPUS GATHERINGS"
+        sublabel="ALMANAC 2026–2027"
+        className="text-hearth-espresso"
+      >
         {/* Floating Tactile Photo Following Mouse Cursor (List View Only) */}
         {currentView === "list" && (
           <div
@@ -195,6 +221,11 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
 
         {/* Content Container with Generous Negative Space */}
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
+          {/* Central Vertical Golden-Terracotta Hairline extending from stage centerpiece */}
+          <div aria-hidden="true" className="w-full flex justify-center -mt-8 mb-6">
+            <div className="w-px h-12 bg-gradient-to-b from-[#D4AF37] via-[#B85C38] to-transparent" />
+          </div>
+
           {/* Centered Airy Header */}
           <CourtyardHeader
             align="center"
@@ -435,7 +466,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
             secondaryLabel="Sign the Guestbook"
           />
         </div>
-      </div>
+      </EditorialSheetHandoff>
     </div>
   );
 }

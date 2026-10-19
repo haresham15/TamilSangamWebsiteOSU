@@ -78,7 +78,7 @@ export const FloatingNav: React.FC = () => {
       if (pathname === "/events") return 1400;
       if (pathname === "/board") return 800;
       if (pathname === "/gallery") return 800;
-      if (pathname === "/guide") return 700;
+      if (pathname === "/guide") return 2400;
       if (pathname === "/suggestions") return 800;
       if (pathname === "/join") return 800;
       return 0;
@@ -86,8 +86,14 @@ export const FloatingNav: React.FC = () => {
 
     const evaluateScroll = () => {
       const scrollY = window.scrollY;
-      const threshold = getHeroThreshold();
-      setIsPastHero(threshold === 0 || scrollY >= threshold);
+      const sheet = document.querySelector<HTMLElement>("[data-editorial-sheet]");
+      if (sheet) {
+        const top = sheet.getBoundingClientRect().top;
+        setIsPastHero(top <= 72);
+      } else {
+        const threshold = getHeroThreshold();
+        setIsPastHero(threshold === 0 || scrollY >= threshold);
+      }
       setIsScrolledDown(scrollY > 20);
     };
 

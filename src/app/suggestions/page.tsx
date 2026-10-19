@@ -24,6 +24,8 @@ import { submitSuggestion, SuggestionActionState } from "@/app/actions/suggestio
 import { audioLayer } from "@/utils/audioLayer";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { MuttramButton } from "@/components/muttram/MuttramButton";
+import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
+import { registerSystem } from "@/engine/masterTick";
 
 // =========================================================================
 // CRITICAL & IMMUTABLE: 3D Blueprint Scene Hero
@@ -79,8 +81,24 @@ export default function SuggestionsPage() {
   const staticHero = isLiteMode || tier === "C" || !!reducedMotion;
 
   const formSectionRef = useRef<HTMLDivElement>(null);
+  const dispatchCtaRef = useRef<HTMLDivElement>(null);
 
   const scrollProgress = useRef(0);
+
+  useEffect(() => {
+    return registerSystem({
+      order: 48,
+      step: () => {
+        if (!dispatchCtaRef.current) return;
+        const p = scrollProgress.current;
+        // Fade out cleanly between p = 0.72 and p = 0.80
+        const exit = Math.max(0, Math.min(1, (p - 0.72) / 0.08));
+        dispatchCtaRef.current.style.opacity = String(1 - exit);
+        dispatchCtaRef.current.style.transform = `translate(-50%, ${-16 * exit}px)`;
+        dispatchCtaRef.current.style.pointerEvents = exit >= 1 ? "none" : "auto";
+      },
+    });
+  }, []);
   const [selectedCategory, setSelectedCategory] = useState("Event idea");
   const [activePin, setActivePin] = useState<BlueprintPin | null>(null);
   const [newlyDroppedPin, setNewlyDroppedPin] = useState<{
@@ -159,7 +177,10 @@ export default function SuggestionsPage() {
         </div>
 
         {/* Clean Architectural Bottom Bezel Dispatch Button */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-auto">
+        <div
+          ref={dispatchCtaRef}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-auto transition-transform will-change-[transform,opacity]"
+        >
           <button
             onClick={scrollToForm}
             className="flex items-center gap-2.5 px-5 py-2.5 bg-[#161210]/90 border border-[#D4AF37]/40 text-[#FAF7F2] font-mono text-xs uppercase tracking-widest hover:border-[#C85A32] hover:bg-[#1E1815] transition-all rounded-full shadow-lg backdrop-blur-md cursor-pointer"
@@ -173,19 +194,15 @@ export default function SuggestionsPage() {
       {/* =========================================================================
           THE THINNAI ANCHOR & THE BLUEPRINT IDEAS TERMINAL
           Strict 12-Column Asymmetric Grid:
-          - Left 4 Columns: The Thinnai Anchor (Sticky resting space, 3% watermark,
-            page title in huge Serif, tiny monospace coordinates, proof records)
-          - Right 8 Columns: The Flow:
-            * NAKED IDEAS FORM ON DARK BACKGROUND (Zero containers, zero card boxes)
-            * 1px bottom-border inputs (border-b border-white/20)
-            * Massive questions: "WHAT IS YOUR CAMPUS PROPOSAL?"
-            * Huge glowing monospace user input text
-            * Keyboard mechanics: [ Press Enter ↵ ]
+          Glides up over the blueprint stage (p = 0.82 -> 1.00)
           ========================================================================= */}
-      <div 
-        ref={formSectionRef}
-        className="relative z-20 w-full bg-[#FAF9F6] text-[#2A2825] overflow-hidden"
+      <EditorialSheetHandoff 
+        id="the-ideas-form"
+        badge="STUDENT PROPOSALS"
+        sublabel="CAMPUS INITIATIVES"
+        className="text-[#2A2825]"
       >
+        <div ref={formSectionRef} className="w-full">
         <div className="w-full max-w-[1700px] mx-auto px-6 sm:px-10 lg:px-12 py-20 sm:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             
@@ -414,8 +431,8 @@ export default function SuggestionsPage() {
             description="Discover the student executive officers who bring these community proposals and campus festivals to life."
           />
         </div>
-
       </div>
-    </div>
-  );
+    </EditorialSheetHandoff>
+  </div>
+);
 }

@@ -22,7 +22,6 @@ interface MorningCampusVignetteProps {
  * 4. Mortarboard + scroll with mint/purple tassel on left pillar finial (x = -3.88, y = 5.88, z = 0.05)
  * 5. Bunting catenary suspended along upper arch (y = 5.38)
  * 6. Leaning bicycle on outer wall (x = -6.2, z = 0.8)
- * 7. Distant rooftop water tank silhouette + 2 birds in morning mist (x = -16, z = -35)
  */
 export function MorningCampusVignette({ tier = "A" }: MorningCampusVignetteProps) {
   const rootRef = useRef<THREE.Group>(null);

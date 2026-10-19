@@ -17,40 +17,40 @@ import { heroState } from "../state";
  * Key light follows camera rig along Z.
  */
 
-// Era Presets (§3.6)
+// Era Presets (§3.6) — Unified Warm Obsidian & Phosphor Bronze Atmosphere
 const ERA_PRESETS = {
   era1: {
     keyColor: new THREE.Color("#FFB84D"),
     keyIntensity: 3.2,
     keyPosOffset: new THREE.Vector3(-4.0, 4.2, 5.0), // 18° front-left
     fillSky: new THREE.Color("#FFE8C2"),
-    fillGround: new THREE.Color("#5A3A20"),
+    fillGround: new THREE.Color("#3A2214"),
     fillIntensity: 0.6,
-    fogColor: new THREE.Color("#F0C98A"),
-    fogDensity: 0.004,
-    exposure: 1.1,
+    fogColor: new THREE.Color("#14110F"),
+    fogDensity: 0.006,
+    exposure: 1.05,
   },
   era2: {
-    keyColor: new THREE.Color("#FF5E3A"),
-    keyIntensity: 4.0,
-    keyPosOffset: new THREE.Vector3(3.5, 2.0, -12.0), // 6° behind-right backlight
-    fillSky: new THREE.Color("#B0306F"),
-    fillGround: new THREE.Color("#2A1030"),
-    fillIntensity: 0.8,
-    fogColor: new THREE.Color("#4A1738"),
+    keyColor: new THREE.Color("#FFA44D"),
+    keyIntensity: 3.6,
+    keyPosOffset: new THREE.Vector3(3.5, 3.0, -8.0), // backlight
+    fillSky: new THREE.Color("#FFD9AA"),
+    fillGround: new THREE.Color("#2E1A0F"),
+    fillIntensity: 0.7,
+    fogColor: new THREE.Color("#14110F"),
     fogDensity: 0.008,
-    exposure: 0.95,
+    exposure: 1.0,
   },
   era3: {
-    keyColor: new THREE.Color("#9DB7CC"),
-    keyIntensity: 0.9,
-    keyPosOffset: new THREE.Vector3(0.0, 7.0, -2.0), // 70° diffuse overhead
-    fillSky: new THREE.Color("#3B536B"),
-    fillGround: new THREE.Color("#10161D"),
-    fillIntensity: 0.5,
-    fogColor: new THREE.Color("#1A242F"),
-    fogDensity: 0.055,
-    exposure: 0.8,
+    keyColor: new THREE.Color("#FFC875"),
+    keyIntensity: 2.8,
+    keyPosOffset: new THREE.Vector3(0.0, 6.0, -2.0), // diffuse overhead
+    fillSky: new THREE.Color("#FBE8D0"),
+    fillGround: new THREE.Color("#24140B"),
+    fillIntensity: 0.6,
+    fogColor: new THREE.Color("#14110F"),
+    fogDensity: 0.010,
+    exposure: 0.98,
   },
 };
 

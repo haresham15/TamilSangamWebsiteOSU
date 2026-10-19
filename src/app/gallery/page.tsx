@@ -11,6 +11,7 @@ import { audioLayer } from "@/utils/audioLayer";
 import { X, Search } from "lucide-react";
 import { GalleryHero } from "@/components/gallery-hero/GalleryHero";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
+import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { useLiteMode } from "@/context/LiteModeContext";
 
 export default function GalleryPage() {
@@ -84,18 +85,28 @@ export default function GalleryPage() {
           THE CANVAS: SUNLIT EXPANSIVE MASONRY ON WARM IVORY
           Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
           ========================================================================= */}
-      <div id="gallery-vault-content" tabIndex={-1} className="relative z-20 w-full bg-paper text-hearth-espresso overflow-hidden">
-        
-        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 py-24 sm:py-32">
-          
-          {/* Centered Airy Header */}
-          <CourtyardHeader
-            align="center"
-            eyebrow="Physical Archives · 35mm Memories"
-            title={locale === "ta" ? "நினைவுகள் & வரலாற்று புகைப்படத் தொகுப்பு" : "The Canvas"}
-            tamilTitle={locale !== "ta" ? "நிழற்படம் · நினைவுகள்" : undefined}
-            description="Messy, candid, and full of life. Photographs expand widely across the bright courtyard canvas, capturing student laughter, lawn blankets, and festive stages."
-          />
+      <EditorialSheetHandoff
+        id="gallery-vault-content"
+        badge="35MM MEMORIES"
+        sublabel="PHYSICAL ARCHIVES"
+        className="text-hearth-espresso"
+      >
+        {/* Refined Archival Ledger Header (Eliminating Duplicate H1 Collision) */}
+        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 pt-10 pb-6 border-b border-[#161210]/10 flex flex-col md:flex-row items-start md:items-end justify-between gap-4">
+          <div>
+            <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] font-bold block mb-1">
+              Physical Archives · 35mm Memories
+            </span>
+            <p className="font-serif text-2xl sm:text-3xl text-[#161210] font-normal">
+              {locale === "ta" ? "மாணவர் நினைவுகள் & புகைப்படப் பெட்டகம்" : "Student Fellowship & Living Archive"}
+            </p>
+          </div>
+          <p className="font-mono text-xs text-[#161210]/60 tracking-wider">
+            {filteredPhotos.length} {filteredPhotos.length === 1 ? "EXPOSURE" : "EXPOSURES"} CATALOGED
+          </p>
+        </div>
+
+        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 py-16 sm:py-24">
 
           {/* Search Bar & Tag Links (Zero Pill Buttons) */}
           <div className="max-w-2xl mx-auto space-y-8 mb-20 sm:mb-28">
@@ -248,7 +259,7 @@ export default function GalleryPage() {
           </div>
 
         </div>
-      </div>
+      </EditorialSheetHandoff>
 
       {/* Lightbox Projection Modal */}
       {selectedPhoto && (

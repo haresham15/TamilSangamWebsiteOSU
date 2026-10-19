@@ -63,6 +63,8 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
   // Synchronized scroll kinematics
   const scrollProgressRef = useRef(0);
   const gateProgressRef = useRef(0);
+  const skipLinkRef = useRef<HTMLAnchorElement>(null);
+  const vignetteRef = useRef<HTMLDivElement>(null);
 
   // Dev test helper for deterministic Playwright captures (§8)
   useEffect(() => {
@@ -154,6 +156,21 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
           // Request level 2 on active scrolling (§4.3)
           governor.request("join-hero", inViewRef.current ? (Math.abs(self.getVelocity()) > 10 ? 2 : 1) : 0);
 
+          // Strict Hero HUD Exit Window (p = 0.70 -> 0.78):
+          if (skipLinkRef.current) {
+            const exit = Math.max(0, Math.min(1, (p - 0.70) / 0.08));
+            skipLinkRef.current.style.opacity = String(1 - exit);
+            skipLinkRef.current.style.transform = `translateY(${-20 * exit}px)`;
+            skipLinkRef.current.style.pointerEvents = exit >= 1 ? "none" : "auto";
+          }
+
+          // Dissolve dark radial vignette overlay during threshold pass (p = 0.65 -> 0.85)
+          // to eliminate any brown smudge under the navbar or over the incoming #FAF7F2 sheet
+          if (vignetteRef.current) {
+            const vigFade = Math.max(0, Math.min(1, (p - 0.65) / 0.20));
+            vignetteRef.current.style.opacity = String(1 - vigFade);
+          }
+
           // Gate swing kinematics:
           // Closed from p = 0 to 0.18
           // Smoothly swings open from p = 0.18 to 0.72
@@ -206,10 +223,11 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 pointer-events-auto">
           {/* Persistent Conversion "Join Now ↓" Skip Link (Warm Hearth Glass Pill) */}
           <a
+            ref={skipLinkRef}
             id="hero-skip-link"
             href="#membership-form"
             onClick={handleSkipToForm}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#161210]/85 text-[#FAF7F2] border border-[#D4AF37]/40 backdrop-blur-md rounded-full text-xs font-mono tracking-wider hover:border-[#C85A32] hover:bg-[#1E1815] transition-all cursor-pointer shrink-0 min-h-[44px] shadow-lg"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#161210]/85 text-[#FAF7F2] border border-[#D4AF37]/40 backdrop-blur-md rounded-full text-xs font-mono tracking-wider hover:border-[#C85A32] hover:bg-[#1E1815] transition-all will-change-[transform,opacity] cursor-pointer shrink-0 min-h-[44px] shadow-lg"
           >
             <span>{locale === "ta" ? "இப்போதே இணையுங்கள் ↓" : "Skip to Guestbook ↓"}</span>
             <span className="text-[10px] text-[#D4AF37] font-body hidden md:inline">
@@ -276,7 +294,10 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
         </View>
 
         {/* Optical Post-Processing: CSS Vignette Overlay (§1, Spike S3) */}
-        <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(20,10,5,0.45)_100%)]" />
+        <div
+          ref={vignetteRef}
+          className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(20,10,5,0.45)_100%)] transition-opacity will-change-[opacity]"
+        />
       </div>
     </div>
   );
