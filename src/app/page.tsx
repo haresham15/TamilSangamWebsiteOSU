@@ -346,80 +346,71 @@ export default function HomePage() {
               </div>
 
               {/* Top Anchor Header */}
-              <div className="relative z-10 space-y-4">
-                <div className="inline-flex items-center gap-2 border border-[#C85A32]/30 px-3 py-1 bg-[#C85A32]/10 font-space-mono text-[10px] tracking-widest text-[#C85A32] uppercase">
-                  <span className="w-1.5 h-1.5 bg-[#C85A32]" />
-                  <span>ACT III // THE ANCHOR</span>
-                </div>
-
+              <div className="relative z-10 space-y-3">
+                <span className="font-space-mono text-[10px] text-[#C85A32] tracking-widest uppercase block font-semibold">
+                  COLUMBUS CHAPTER
+                </span>
                 <p
                   ref={monolithTamilRef}
                   lang="ta"
                   style={{ letterSpacing: 0 }}
-                  className="font-noto-serif-tamil text-sm sm:text-base text-[#4A423D] leading-relaxed pt-2"
+                  className="font-noto-serif-tamil text-base sm:text-lg text-[#2A2825] leading-relaxed"
                 >
                   ஓஹியோ மாநிலத்தில் தமிழ் மரபையும் மாணவர் தோழமையையும் ஒன்றிணைக்கும் கலாச்சாரப் பீடம்.
                 </p>
               </div>
 
-              {/* Live Telemetry Lockup at Bottom (PRD §9.1) */}
-              <div className="relative z-10 pt-8 mt-auto border-t border-[#161210]/10 space-y-2.5 font-space-mono text-[11px] tracking-[0.18em] text-[#4A423D]">
-                <div className="flex items-center justify-between">
-                  <span className="text-[#161210]/60">COLUMBUS, OHIO</span>
-                  <span ref={liveTimeRef} className="text-[#161210] font-medium">--:--:-- EDT</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[#161210]/60">OLENTANGY RIVER</span>
-                  <span className="text-[#C85A32] font-medium">40.0067° N · 83.0305° W</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[#161210]/60">CHAPTER</span>
-                  <span className="text-[#161210] font-medium">EST. 2021 · 120+ MEMBERS</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[#161210]/60">COMMUNITY</span>
-                  <span className="text-[#161210] font-medium">ALL MAJORS WELCOME</span>
-                </div>
+              {/* Condensed Quiet Telemetry Lockup at Bottom */}
+              <div className="relative z-10 pt-4 mt-auto border-t border-[#161210]/10 flex flex-wrap items-center justify-between gap-2 font-space-mono text-[10px] tracking-wider text-[#4A423D]">
+                <span>COLUMBUS, OH · 40.0067° N, 83.0305° W</span>
+                <span ref={liveTimeRef} className="text-[#161210] font-medium">--:--:-- EDT</span>
               </div>
             </div>
 
             {/* Right Column (8 Cols - The Dossier) */}
             <div className="lg:col-span-8 flex flex-col justify-between">
-              {/* Editorial Hook */}
-              <div className="p-6 pt-20 sm:p-10 sm:pt-24 lg:p-12 lg:pt-24 xl:p-14 xl:pt-24 border-b border-[#161210]/10">
-                <span className="font-space-mono text-[10px] text-[#C85A32] tracking-widest uppercase block mb-3 font-semibold">
-                  EDITORIAL PROLOGUE
+              {/* Constitutional Introduction */}
+              <div className="p-6 pt-16 sm:p-8 sm:pt-20 lg:p-10 lg:pt-20 xl:p-12 xl:pt-20 border-b border-[#161210]/10">
+                <span className="font-space-mono text-[10px] text-[#C85A32] tracking-widest uppercase block mb-2 font-semibold">
+                  COMMUNITY CHARTER // OHIO STATE
                 </span>
-                <h3 className="text-[clamp(2rem,3.8vw,3.75rem)] font-display font-medium text-[#161210] leading-snug tracking-tight">
-                  &ldquo;A hearth on the banks of the Olentangy.&rdquo;
+                <h3 className="text-[clamp(1.75rem,3vw,2.75rem)] font-display font-medium text-[#161210] leading-tight tracking-tight">
+                  Tamil Sangam at Ohio State
                 </h3>
-                <p className="mt-2 text-xs sm:text-sm font-mono text-[#C85A32] tracking-wider uppercase font-semibold">
-                  A student-run cultural community at Ohio State for Tamil students and friends of every background · No Tamil required
+                <p className="mt-1.5 text-xs sm:text-sm font-mono text-[#C85A32] tracking-wider uppercase font-semibold">
+                  Inclusive Student Cultural Hub · Open Year-Round · No Language Requirement
                 </p>
-                <p ref={monolithPrologueRef} className="mt-4 text-sm sm:text-base text-[#4A423D] font-body leading-relaxed max-w-2xl">
-                  Born from the longing for home-cooked meals, late-night filter coffee, and the rhythm of Sangam verses beneath Midwest skies. We bridge ancient Tamil civilization with collegiate celebration, open dance floors, and lifelong kinship.
+                <p ref={monolithPrologueRef} className="mt-3.5 text-sm sm:text-[15px] text-[#4A423D] font-body leading-relaxed max-w-2xl">
+                  Established as an inclusive campus hub, Tamil Sangam at The Ohio State University unites Tamil Buckeyes and students of all cultural backgrounds. Guided by our constitution, we cultivate a welcoming home away from home through conversational language workshops, authentic South Indian cuisine, major campus festivals like Pongal and Diwali, and active peer mentorship.
                 </p>
-                <div className="mt-6 flex flex-wrap items-center gap-3">
+                <div className="mt-5 flex flex-wrap items-center gap-5">
                   <Link
                     href="/join"
                     onClick={playClick}
-                    className="px-4 py-2 bg-[#C85A32] text-[#FAF7F2] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#b04b25] transition-colors ticket-chamfer-tl-br shadow-sm"
+                    className="px-5 py-2.5 bg-[#C85A32] text-[#FAF7F2] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#b04b25] transition-colors ticket-chamfer-tl-br shadow-sm"
                   >
                     Join the Hearth →
                   </Link>
                   <Link
                     href="/events"
                     onClick={playClick}
-                    className="px-4 py-2 border border-[#161210]/25 text-[#161210] font-mono text-xs uppercase tracking-wider hover:border-[#C85A32] hover:text-[#C85A32] transition-colors"
+                    className="font-mono text-xs uppercase tracking-wider text-[#161210] hover:text-[#C85A32] border-b border-[#161210]/20 hover:border-[#C85A32] pb-0.5 transition-colors"
                   >
                     See What&apos;s Coming Up ↗
+                  </Link>
+                  <Link
+                    href="/about"
+                    onClick={playClick}
+                    className="font-mono text-xs uppercase tracking-wider text-[#4A423D] hover:text-[#C85A32] border-b border-transparent hover:border-[#C85A32] pb-0.5 transition-colors"
+                  >
+                    Read Constitution ↗
                   </Link>
                 </div>
               </div>
 
               {/* The Three Horizontal Ribbons with Hover Kinematics */}
               <div className="divide-y divide-[#161210]/10">
-                {/* Ribbon 1: CULTURAL MEMORY */}
+                {/* Ribbon 1: CULTURAL HERITAGE */}
                 <Link
                   href="/about"
                   onClick={playClick}
@@ -427,7 +418,7 @@ export default function HomePage() {
                     audioLayer.playTapeClack();
                   }}
                   data-cursor="bracket"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-7 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
+                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-6 lg:p-7 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
                     <span className="font-space-mono text-xs sm:text-sm text-[#C85A32] font-semibold transition-colors">
@@ -435,10 +426,10 @@ export default function HomePage() {
                     </span>
                     <div>
                       <h4 className="text-base sm:text-lg font-editorial font-bold text-[#161210] group-hover:text-[#C85A32] transition-colors">
-                        CULTURAL MEMORY
+                        CULTURAL HERITAGE & LANGUAGE
                       </h4>
                       <p className="text-xs sm:text-sm text-[#4A423D] mt-0.5 font-body">
-                        Classical Sangam heritage, Tamil literature & living Dravidian architectural traditions.
+                        Conversational Tamil workshops, Sangam literature explorations & Dravidian living arts.
                       </p>
                     </div>
                   </div>
@@ -450,7 +441,7 @@ export default function HomePage() {
                   </div>
                 </Link>
 
-                {/* Ribbon 2: THE BANQUET TABLE */}
+                {/* Ribbon 2: THE BANQUET TABLE & FESTIVALS */}
                 <Link
                   href="/events"
                   onClick={playClick}
@@ -458,7 +449,7 @@ export default function HomePage() {
                     audioLayer.playTapeClack();
                   }}
                   data-cursor="bracket"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-7 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
+                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-6 lg:p-7 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
                     <span className="font-space-mono text-xs sm:text-sm text-[#C85A32] font-semibold transition-colors">
@@ -466,10 +457,10 @@ export default function HomePage() {
                     </span>
                     <div>
                       <h4 className="text-base sm:text-lg font-editorial font-bold text-[#161210] group-hover:text-[#C85A32] transition-colors">
-                        THE BANQUET TABLE
+                        FESTIVALS & BANQUET TABLE
                       </h4>
                       <p className="text-xs sm:text-sm text-[#4A423D] mt-0.5 font-body">
-                        Streetside sapad, fresh dosas, frothy degree kaapi & annual Pongal celebrations.
+                        Authentic South Indian cuisine, streetside sapad & major campus festivals like Diwali and Pongal.
                       </p>
                     </div>
                   </div>
@@ -481,7 +472,7 @@ export default function HomePage() {
                   </div>
                 </Link>
 
-                {/* Ribbon 3: KINSHIP & DIASPORA */}
+                {/* Ribbon 3: PEER MENTORSHIP & KINSHIP */}
                 <Link
                   href="/join"
                   onClick={playClick}
@@ -492,7 +483,7 @@ export default function HomePage() {
                     audioLayer.playSubBassThud();
                   }}
                   data-cursor="bracket"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-7 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out border-b border-[#161210]/10 lg:border-b-0"
+                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-6 lg:p-7 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out border-b border-[#161210]/10 lg:border-b-0"
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
                     <span className="font-space-mono text-xs sm:text-sm text-[#C85A32] font-semibold transition-colors">
@@ -500,15 +491,15 @@ export default function HomePage() {
                     </span>
                     <div>
                       <h4 className="text-base sm:text-lg font-editorial font-bold text-[#161210] group-hover:text-[#C85A32] transition-colors">
-                        KINSHIP & DIASPORA
+                        PEER MENTORSHIP & KINSHIP
                       </h4>
                       <p className="text-xs sm:text-sm text-[#4A423D] mt-0.5 font-body">
-                        Student mentorship, Buckeye peer connections & collegiate South Asian solidarity.
+                        Freshman peer guidance, community volunteering & inclusive South Asian student solidarity.
                       </p>
                     </div>
                   </div>
                   <div className="mt-3 sm:mt-0 flex items-center gap-2 font-space-mono text-xs text-[#161210]/60 group-hover:text-[#C85A32] transition-colors shrink-0">
-                    <span className="hidden sm:inline">JOIN THE HEARTH</span>
+                    <span className="hidden sm:inline">JOIN THE COMMUNITY</span>
                     <span className="text-sm font-mono leading-none transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                       ↗
                     </span>

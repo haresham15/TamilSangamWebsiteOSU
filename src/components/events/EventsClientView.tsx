@@ -229,10 +229,9 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
           {/* Centered Airy Header */}
           <CourtyardHeader
             align="center"
-            eyebrow="Campus Gatherings & Almanac"
+            eyebrow="Campus Almanac"
             title={locale === "ta" ? "நிகழ்வுகள் & பண்பாட்டு சந்திப்புகள்" : "The Gatherings River"}
             tamilTitle={locale !== "ta" ? "பஞ்சாங்கம் · நற்கூடல்" : undefined}
-            description="Start the Aatam, Paatam, and Kondatam! From casual lawn picnics on the Oval and street food nights to spring cultural carnivals — our events are relaxed, social, and open to all students regardless of language or background."
           />
 
           {/* VIEW TOGGLE: Segmented Control (List | Calendar) */}

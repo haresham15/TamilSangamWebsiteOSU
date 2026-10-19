@@ -32,11 +32,47 @@ const QUICK_PROMPTS = [
   "Where are events held on campus?",
 ];
 
-export const SangamChatbot: React.FC = () => {
+export interface SangamChatbotProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  hideTrigger?: boolean;
+}
+
+export const SangamChatbot: React.FC<SangamChatbotProps> = ({
+  isOpen: externalIsOpen,
+  onClose: externalOnClose,
+  hideTrigger = false,
+}) => {
   const { locale } = useLocale();
   const { playClick, playWoodClick, playBell, playWhoosh, playSilkSwish } = useAudio();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isControlled = externalIsOpen !== undefined;
+  const isOpen = isControlled ? externalIsOpen : internalIsOpen;
+
+  const handleClose = () => {
+    if (externalOnClose) {
+      externalOnClose();
+    } else {
+      setInternalIsOpen(false);
+    }
+  };
+
+  const handleToggle = () => {
+    if (isControlled) {
+      if (isOpen && externalOnClose) {
+        externalOnClose();
+      }
+    } else {
+      if (!internalIsOpen) {
+        playWhoosh(0.45);
+      } else {
+        playSilkSwish(0.35);
+      }
+      setInternalIsOpen(!internalIsOpen);
+    }
+  };
+
   const [messages, setMessages] = useState<ChatMessageUI[]>([
     {
       id: "welcome-msg",
@@ -199,28 +235,23 @@ export const SangamChatbot: React.FC = () => {
 
   return (
     <>
-      {/* 1. Floating Chat Trigger Button - Warm Hearth Architectural Pill */}
-      <div id="global-sangam-chatbot" className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => {
-            if (!isOpen) {
-              playWhoosh(0.45);
-            } else {
-              playSilkSwish(0.35);
-            }
-            setIsOpen(!isOpen);
-          }}
-          aria-label="Ask Nanba - OSU Tamil Sangam AI Assistant"
-          className="relative group bg-[#161210]/92 text-[#FAF7F2] border border-[#D4AF37]/35 backdrop-blur-md rounded-full px-4 py-2.5 text-xs font-medium tracking-[0.16em] uppercase shadow-lg hover:border-[#C85A32] hover:bg-[#1E1815] flex items-center gap-2.5 transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
-        >
-          <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#FAF7F2]">
-            Ask Nanba
-          </span>
-        </motion.button>
-      </div>
+      {/* 1. Floating Chat Trigger Button - Warm Hearth Architectural Pill (Hidden when docked) */}
+      {!hideTrigger && (
+        <div id="global-sangam-chatbot" className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={handleToggle}
+            aria-label="Ask Nanba - OSU Tamil Sangam AI Assistant"
+            className="relative group bg-[#161210]/92 text-[#FAF7F2] border border-[#D4AF37]/35 backdrop-blur-md rounded-full px-4 py-2.5 text-xs font-medium tracking-[0.16em] uppercase shadow-lg hover:border-[#C85A32] hover:bg-[#1E1815] flex items-center gap-2.5 transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
+          >
+            <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#FAF7F2]">
+              Ask Nanba
+            </span>
+          </motion.button>
+        </div>
+      )}
 
       {/* 2. Chat Drawer Panel */}
       <AnimatePresence>
@@ -262,7 +293,7 @@ export const SangamChatbot: React.FC = () => {
                   <Database className="w-3.5 h-3.5" />
                 </button>
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={handleClose}
                   aria-label="Close Chat"
                   className="p-1.5 bg-[#2A2420] border border-[#D4AF37]/30 text-[#FAF7F2]/80 hover:text-white hover:border-[#C85A32] transition-colors"
                 >
@@ -287,7 +318,7 @@ export const SangamChatbot: React.FC = () => {
                     </span>
                     <Link
                       href="/guide"
-                      onClick={() => setIsOpen(false)}
+                      onClick={handleClose}
                       className="text-[10px] font-mono text-[#4c2472] font-bold hover:underline flex items-center gap-0.5"
                     >
                       Open Full Guide & Manager →
@@ -384,7 +415,7 @@ export const SangamChatbot: React.FC = () => {
                           <Link
                             key={idx}
                             href={cit.route}
-                            onClick={() => setIsOpen(false)}
+                            onClick={handleClose}
                             className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-purple-50 hover:bg-[#55CCA2]/20 border border-purple-300 text-[10px] font-mono font-bold text-[#4c2472] transition-colors"
                           >
                             <span>{cit.title}</span>

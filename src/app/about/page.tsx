@@ -123,10 +123,9 @@ export default function AboutPage() {
           {/* Centered Airy Section Header */}
           <CourtyardHeader
             align="center"
-            eyebrow="Heritage, Mission & Roots"
+            eyebrow="Heritage & Roots"
             title={locale === "ta" ? "எங்கள் வரலாறு & சங்கப் பார்வை" : "The Sangam Epic"}
             tamilTitle={locale !== "ta" ? "வரலாறு · தமிழ் மன்றம்" : undefined}
-            description="A sanctuary of warmth, classical verse, festive banquets, and collegiate belonging under Columbus skies. We bridge ancient Dravidian civilization with student kinship on the banks of the Olentangy."
           />
 
           {/* The Hero Quote: Naked Architectural Monument Against Global Background */}

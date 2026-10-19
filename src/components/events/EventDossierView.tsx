@@ -113,8 +113,12 @@ END:VCALENDAR`;
             <span className="text-hearth-terracotta font-semibold">{event.academicYear}</span>
             <span className="text-hearth-espresso/30">/</span>
             <span>{event.tamilDate}</span>
-            <span className="text-hearth-espresso/30">/</span>
-            <span>{event.status === "past" ? "ARCHIVED DOSSIER" : "ACTIVE GATHERING"}</span>
+            {event.status === "upcoming" && (
+              <>
+                <span className="text-hearth-espresso/30">/</span>
+                <span className="text-[#55CCA2] font-semibold">UPCOMING GATHERING</span>
+              </>
+            )}
           </div>
 
           {/* Primary Massive Event Title with ReactBits SplitText */}
@@ -176,8 +180,8 @@ END:VCALENDAR`;
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24 items-start">
           {/* Narrative Column */}
           <div className="lg:col-span-7 space-y-8">
-            <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-hearth-terracotta">
-              DISPATCH SUMMARY
+            <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-hearth-terracotta font-semibold">
+              OVERVIEW
             </h2>
             <p lang={locale === "ta" ? "ta" : "en"} className="text-xl sm:text-2xl font-serif text-hearth-espresso leading-relaxed">
               {displayDescription}
@@ -188,8 +192,8 @@ END:VCALENDAR`;
               <div className="flex items-start gap-3">
                 <Shirt className="w-4 h-4 text-hearth-terracotta shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-mono text-xs uppercase tracking-wider text-hearth-espresso block">
-                    ATTIRE DIRECTIVE
+                  <span className="font-mono text-xs uppercase tracking-wider text-hearth-espresso block font-medium">
+                    DRESS NOTE
                   </span>
                   <span>{locale === "ta" ? event.dressCodeTa : event.dressCodeEn}</span>
                 </div>
@@ -199,7 +203,7 @@ END:VCALENDAR`;
 
           {/* Schedule Column (Broadsheet Ledger Lines) */}
           <div className="lg:col-span-5 space-y-6">
-            <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-hearth-terracotta">
+            <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-hearth-terracotta font-semibold">
               TIMETABLE / நிரல்
             </h2>
             <div className="divide-y divide-hearth-espresso/10 border-t border-b border-hearth-espresso/10">
@@ -245,16 +249,16 @@ END:VCALENDAR`;
         <section aria-label="Curated Photographic Dossier" className="mt-20">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-hearth-espresso/15 pb-4 mb-16">
             <div>
-              <span className="text-xs font-mono uppercase tracking-[0.25em] text-hearth-terracotta block mb-1">
-                EVIDENCE & PLATES
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-serif text-hearth-espresso">
-                Randomized Dossier ({selectedPhotos.length} Selected Samples)
+              <h2 className="text-3xl sm:text-4xl font-serif text-hearth-espresso flex items-baseline gap-3">
+                <span>Selected Archive</span>
+                <span lang="ta" className="text-xl sm:text-2xl font-tamil text-hearth-espresso/50 font-normal">
+                  தொகுப்பு
+                </span>
+                <span className="text-xs font-mono text-hearth-terracotta font-semibold">
+                  ({selectedPhotos.length})
+                </span>
               </h2>
             </div>
-            <p className="text-xs font-mono text-hearth-espresso/75 mt-2 sm:mt-0 tracking-wider">
-              ROTATING LOCAL REEL // SUNLIT MAG-SPREAD
-            </p>
           </div>
 
           <button

@@ -479,40 +479,51 @@ export const FloatingNav: React.FC = () => {
                       innerRefs.current[route.href] = el;
                     }}
                     onClick={handleLinkClick}
-                    className="flex flex-col items-center justify-center text-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-xs"
+                    aria-current={isActive ? "page" : undefined}
+                    className="relative flex items-center justify-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-xs px-2.5 py-1"
                     style={{ willChange: "transform" }}
                   >
-                    {/* English: Soft modern Sans-Serif */}
-                    <span
-                      className={`font-sans text-[13px] xl:text-[14px] leading-tight tracking-tight transition-colors duration-200 ${
-                        isDarkHero
-                          ? isActive
-                            ? "font-semibold text-[#FAF9F6]"
-                            : "font-medium text-[#FAF9F6]/85 group-hover:text-[#FAF9F6]"
-                          : isActive
-                          ? "font-semibold text-[#2A2825]"
-                          : "font-medium text-[#2A2825]/85 group-hover:text-[#2A2825]"
-                      }`}
-                    >
-                      {locale === "ta" ? route.ta : route.en}
-                    </span>
+                    {/* Vertical Masked Bilingual Ticker */}
+                    <div className="relative h-5 overflow-hidden flex flex-col justify-center items-center">
+                      {/* English Primary Slot */}
+                      <span
+                        className={`font-sans text-[13px] xl:text-[14px] leading-tight tracking-tight transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                          isActive
+                            ? "-translate-y-full opacity-0 pointer-events-none"
+                            : "translate-y-0 group-hover:-translate-y-full group-hover:opacity-0 group-focus-visible:-translate-y-full"
+                        } ${
+                          isDarkHero
+                            ? "font-medium text-[#FAF9F6]/85 group-hover:text-[#FAF9F6]"
+                            : "font-medium text-[#2A2825]/85 group-hover:text-[#2A2825]"
+                        }`}
+                      >
+                        {locale === "ta" ? route.ta : route.en}
+                      </span>
 
-                    {/* Tamil: Elegant shadow below, opacity-50, smaller text */}
-                    <span
-                      lang="ta"
-                      style={{ letterSpacing: 0 }}
-                      className={`font-tamil text-[10px] xl:text-[11px] leading-none mt-1 transition-opacity duration-200 pointer-events-none ${
-                        isDarkHero
-                          ? isActive
-                            ? "text-[#E5A93C] opacity-95 font-medium"
-                            : "text-[#d1b8e6] opacity-60 group-hover:opacity-85"
-                          : isActive
-                          ? "text-[#B85C38] opacity-90 font-medium"
-                          : "text-[#57524C] opacity-50 group-hover:opacity-75"
-                      }`}
-                    >
-                      {locale === "ta" ? route.en : route.ta}
-                    </span>
+                      {/* Tamil Paired Slot (Swaps up on Hover/Focus/Active) */}
+                      <span
+                        lang="ta"
+                        style={{ letterSpacing: 0 }}
+                        className={`absolute inset-0 flex items-center justify-center gap-1.5 font-tamil text-[12px] xl:text-[13px] leading-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none ${
+                          isActive
+                            ? "translate-y-0 opacity-100"
+                            : "translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+                        } ${
+                          isDarkHero
+                            ? "text-[#E5A93C] font-semibold"
+                            : "text-[#B85C38] font-semibold"
+                        }`}
+                      >
+                        {isActive && (
+                          <span
+                            className={`w-1 h-1 rounded-full shrink-0 ${
+                              isDarkHero ? "bg-[#E5A93C]" : "bg-[#B85C38]"
+                            }`}
+                          />
+                        )}
+                        <span>{locale === "ta" ? route.en : route.ta}</span>
+                      </span>
+                    </div>
                   </Link>
                 </div>
               );

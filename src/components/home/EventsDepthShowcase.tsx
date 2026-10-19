@@ -101,7 +101,7 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
         {/* 1. LEFT COLUMN: SYNCHRONIZED EVENT DESCRIPTION CARD                       */}
         {/* ========================================================================= */}
         <div className="lg:col-span-5 flex flex-col justify-center">
-          <div className="relative p-6 sm:p-8 bg-[#FAF9F6] border border-[#2A2825]/10 rounded-2xl shadow-[0_12px_40px_rgba(42,40,37,0.06)] overflow-hidden">
+          <div className="group relative p-6 sm:p-8 bg-[#FAF9F6] border border-[#2A2825]/10 hover:border-[#B85C38]/40 rounded-2xl shadow-[0_12px_40px_rgba(42,40,37,0.06)] hover:shadow-[0_16px_48px_rgba(42,40,37,0.1)] transition-all cursor-pointer overflow-hidden">
             
             {/* Subtle Decorative Background Watermark */}
             <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-5 font-serif text-8xl font-bold text-[#2A2825]">
@@ -169,41 +169,27 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
                   {locale === "ta" ? activeEvent.descriptionTa : activeEvent.descriptionEn}
                 </p>
 
-                {/* Action Buttons Row */}
-                <div className="pt-2 flex flex-wrap items-center gap-3">
-                  <Link
-                    href={`/events/${activeEvent.slug}`}
-                    onClick={playClick}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#B85C38] hover:bg-[#A04A27] text-[#FAF9F6] font-sans font-semibold text-xs rounded-full shadow-sm hover:shadow-md transition-all cursor-pointer"
-                  >
-                    <span>{locale === "ta" ? "முழு விபரம்" : "View Event Page"}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
+                {/* Action Row */}
+                <div className="pt-3 border-t border-[#2A2825]/10 flex items-center justify-between">
+                  <span className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-wider text-[#B85C38] group-hover:text-[#2A2825] transition-colors">
+                    <span>{locale === "ta" ? "முழு விபரம் அறிவீர்" : "Explore Dossier"}</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
 
-                  <button
-                    onClick={() => {
-                      playBell(528);
-                      setIsModalOpen(true);
-                    }}
-                    className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white hover:bg-[#F4EFE6] border border-[#2A2825]/15 text-[#2A2825] font-sans font-medium text-xs rounded-full transition-colors cursor-pointer"
-                  >
-                    <Eye className="w-3.5 h-3.5 text-[#B85C38]" />
-                    <span>{locale === "ta" ? "விவரக் குறிப்பு" : "Open Modal"}</span>
-                  </button>
-
-                  {activeEvent.albumSlug && (
-                    <Link
-                      href={`/gallery/${activeEvent.albumSlug}`}
-                      onClick={playClick}
-                      className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white hover:bg-[#F4EFE6] border border-[#2A2825]/15 text-[#2A2825] font-sans font-medium text-xs rounded-full transition-colors cursor-pointer"
-                    >
-                      <span>{locale === "ta" ? "புகைப்படங்கள்" : "Gallery Photos"}</span>
-                      <ExternalLink className="w-3 h-3 text-[#57524C]" />
-                    </Link>
-                  )}
+                  <span className="text-[11px] font-mono text-[#57524C]/60 uppercase tracking-widest">
+                    ARCHIVE · 0{activeIndex + 1}
+                  </span>
                 </div>
               </motion.div>
             </AnimatePresence>
+
+            {/* Invisible Stretched Link over the entire card */}
+            <Link
+              href={`/events/${activeEvent.slug}`}
+              onClick={playClick}
+              className="absolute inset-0 z-10"
+              aria-label={locale === "ta" ? activeEvent.titleTa : activeEvent.titleEn}
+            />
           </div>
         </div>
 

@@ -1,0 +1,90 @@
+"use client";
+
+import React from "react";
+import { Volume2, VolumeX, Search } from "lucide-react";
+import { useAudio } from "@/context/AudioContext";
+import { useLocale } from "@/context/LocaleContext";
+
+interface UnifiedFloatingDockProps {
+  onOpenSearch: () => void;
+  onToggleChat: () => void;
+  isChatOpen: boolean;
+}
+
+export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
+  onOpenSearch,
+  onToggleChat,
+  isChatOpen,
+}) => {
+  const { isSoundEnabled, toggleSound, playClick } = useAudio();
+  const { locale } = useLocale();
+
+  return (
+    <aside
+      aria-label="Quick tools dock"
+      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none pointer-events-auto"
+    >
+      <div className="bg-[#161210]/92 text-[#FAF7F2] border border-[#FAF7F2]/15 backdrop-blur-md rounded-full h-10 px-3.5 sm:px-4 flex items-center gap-2.5 sm:gap-3 shadow-[0_8px_32px_rgba(0,0,0,0.35)] transition-all duration-200">
+        {/* 1. Ask Nanba Trigger */}
+        <button
+          type="button"
+          onClick={() => {
+            playClick();
+            onToggleChat();
+          }}
+          aria-label="Ask Nanba - OSU Tamil Sangam AI Assistant"
+          aria-expanded={isChatOpen}
+          className="flex items-center gap-2 text-xs font-mono font-medium tracking-wide text-[#FAF7F2] hover:text-[#E5A93C] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#E5A93C] rounded-full py-1 pr-1"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-[#E5A93C] animate-pulse shrink-0" />
+          <span className="text-[11px] sm:text-xs">
+            {locale === "ta" ? "நண்பா" : "Ask Nanba"}
+          </span>
+        </button>
+
+        {/* Vertical Divider */}
+        <span className="w-px h-3.5 bg-white/15 shrink-0" aria-hidden="true" />
+
+        {/* 2. Audio Wave / Hearth Synth Toggle */}
+        <button
+          type="button"
+          onClick={() => {
+            playClick();
+            toggleSound();
+          }}
+          aria-label={isSoundEnabled ? "Mute interactive audio" : "Enable interactive audio"}
+          title={isSoundEnabled ? "Mute sound" : "Unmute sound"}
+          className={`flex items-center justify-center w-7 h-7 rounded-full hover:bg-white/10 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#E5A93C] ${
+            isSoundEnabled ? "text-[#E5A93C]" : "text-[#FAF7F2]/50 hover:text-[#FAF7F2]"
+          }`}
+        >
+          {isSoundEnabled ? (
+            <Volume2 className="w-3.5 h-3.5" />
+          ) : (
+            <VolumeX className="w-3.5 h-3.5" />
+          )}
+        </button>
+
+        {/* Vertical Divider */}
+        <span className="w-px h-3.5 bg-white/15 shrink-0" aria-hidden="true" />
+
+        {/* 3. ⌘K Command Palette Search Badge */}
+        <button
+          type="button"
+          onClick={() => {
+            playClick();
+            onOpenSearch();
+          }}
+          aria-label="Open command search"
+          title="Search (⌘K)"
+          className="flex items-center gap-1.5 text-[11px] font-mono text-[#FAF7F2]/75 hover:text-white transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#E5A93C] rounded-full py-1 pl-1"
+        >
+          <Search className="w-3 h-3 text-[#FAF7F2]/60" />
+          <span className="hidden sm:inline-block px-1.5 py-0.5 rounded-sm bg-white/10 text-[10px] tracking-wide font-semibold text-[#FAF7F2]/90">
+            ⌘K
+          </span>
+        </button>
+      </div>
+    </aside>
+  );
+};

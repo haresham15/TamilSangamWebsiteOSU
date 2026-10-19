@@ -226,29 +226,28 @@ export default function SuggestionsPage() {
                 </p>
               </div>
 
-              {/* Proven Track Record: Borderless Architectural Typography between 1px Hairlines */}
-              <div className="relative z-10 py-6 border-t border-b border-[#E5DDD0] space-y-4">
-                <div className="flex items-center justify-between border-b border-[#E5DDD0] pb-3">
-                  <span className="text-xs font-mono font-semibold text-[#B85C38] tracking-widest uppercase">
-                    Proven Track Record
-                  </span>
-                  <span className="text-[11px] font-sans text-[#8C827A]">You Said · We Did</span>
-                </div>
-                <div className="space-y-4 text-sm font-sans text-[#57524C]">
-                  <div>
-                    <span className="text-xs font-semibold text-[#2A2825] block uppercase tracking-wider mb-1">
-                      Conversational Workshops:
-                    </span>
-                    <p className="leading-relaxed">
-                      Launched bi-weekly Katral sessions covering everyday Tamil vocabulary, script fundamentals, and history.
+              {/* Prior Community Initiatives: Compact Architectural Footnote Cards */}
+              <div className="relative z-10 pt-4 space-y-3">
+                <span className="text-[11px] font-mono tracking-widest uppercase text-[#8C827A] block">
+                  Past Proposals Realized
+                </span>
+                <div className="grid grid-cols-1 gap-2.5">
+                  <div className="p-3.5 rounded-xl bg-[#FAF9F6] border border-[#E5DDD0]/80">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[10px] font-mono font-semibold text-[#B85C38]">01</span>
+                      <span className="text-xs font-serif font-semibold text-[#2A2825]">Conversational Katral</span>
+                    </div>
+                    <p className="text-xs font-sans text-[#57524C] leading-relaxed">
+                      Bi-weekly sessions exploring everyday spoken Tamil and script fundamentals.
                     </p>
                   </div>
-                  <div>
-                    <span className="text-xs font-semibold text-[#2A2825] block uppercase tracking-wider mb-1">
-                      Joint Campus Festivals:
-                    </span>
-                    <p className="leading-relaxed">
-                      Co-produced Namma Jathara Spring Carnival with Telugu Tamasha, bringing together 200+ students.
+                  <div className="p-3.5 rounded-xl bg-[#FAF9F6] border border-[#E5DDD0]/80">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[10px] font-mono font-semibold text-[#B85C38]">02</span>
+                      <span className="text-xs font-serif font-semibold text-[#2A2825]">Spring Cultural Carnival</span>
+                    </div>
+                    <p className="text-xs font-sans text-[#57524C] leading-relaxed">
+                      Inter-collegiate festival co-hosted on the South Oval with partner cultural orgs.
                     </p>
                   </div>
                 </div>

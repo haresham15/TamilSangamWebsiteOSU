@@ -94,10 +94,9 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
           {/* Centered Airy Header */}
           <CourtyardHeader
             align="left"
-            eyebrow="The Open Book · Student Guide"
+            eyebrow="The Open Book"
             title={locale === "ta" ? "ஓலைச்சுவடி · திறந்த வழிகாட்டி" : "Frequently Asked Questions"}
-            tamilTitle={locale !== "ta" ? "வழிகாட்டி · கேள்வி & பதில்கள்" : undefined}
-            description="Everything you need to know about joining Tamil Sangam, attending our festivals, performing on campus, and democratic student membership. Completely open, honest, and free."
+            tamilTitle={locale !== "ta" ? "வழிகாட்டி · வினா-விடை" : undefined}
           />
 
           <div className={styles.layout}>

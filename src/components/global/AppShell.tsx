@@ -2,11 +2,11 @@
 
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { FloatingNav } from "./FloatingNav";
 import { CommandPalette } from "./CommandPalette";
 import { Footer } from "./Footer";
-import { CornerUtilityDrawer } from "./CornerUtilityDrawer";
+import { UnifiedFloatingDock } from "./UnifiedFloatingDock";
 import { SangamChatbot } from "@/components/chat/SangamChatbot";
 import { DirectorHUD } from "@/director/DirectorHUD";
 
@@ -17,7 +17,7 @@ interface AppShellProps {
 export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   // Global ⌘K / Ctrl+K Command Palette Keyboard Trigger
   React.useEffect(() => {
@@ -32,7 +32,6 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   }, []);
 
   const isLinksPage = pathname === "/links";
-  const isHomePage = pathname === "/";
 
   return (
     <div className="relative min-h-screen flex flex-col justify-between overflow-x-clip">
@@ -56,11 +55,23 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
         </motion.div>
       </main>
 
-      {/* 4. Bounded Free-Tier AI Chatbot (Skipped on /links and homepage) */}
-      {!isLinksPage && !isHomePage && <SangamChatbot />}
+      {/* 4. Bounded Free-Tier AI Chatbot (controlled by Unified Floating Dock) */}
+      {!isLinksPage && (
+        <SangamChatbot
+          isOpen={isChatOpen}
+          onClose={() => setIsChatOpen(false)}
+          hideTrigger={true}
+        />
+      )}
 
-      {/* 5. Minimalist Corner Utility Drawer (Relocated search, theme, language, audio) */}
-      {!isLinksPage && <CornerUtilityDrawer onOpenSearch={() => setIsSearchOpen(true)} />}
+      {/* 5. Unified Bottom-Right Floating Utility Dock (Ask Nanba, Audio, ⌘K) */}
+      {!isLinksPage && (
+        <UnifiedFloatingDock
+          onOpenSearch={() => setIsSearchOpen(true)}
+          onToggleChat={() => setIsChatOpen((prev) => !prev)}
+          isChatOpen={isChatOpen}
+        />
+      )}
 
       {/* 6. Footer (Skipped on /links) */}
       {!isLinksPage && <Footer onOpenSearch={() => setIsSearchOpen(true)} />}

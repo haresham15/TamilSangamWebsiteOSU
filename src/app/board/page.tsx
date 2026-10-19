@@ -71,7 +71,6 @@ export default function BoardPage() {
             eyebrow="Democratic Council · 2026–2027"
             title={locale === "ta" ? "நிர்வாகக் குழு & வழிகாட்டிகள்" : "The Executive Board"}
             tamilTitle={locale !== "ta" ? "ஆளுமை · மாணவர் தலைமை" : undefined}
-            description="Democratic student governance serving 120+ Buckeye members. Meet the officers leading community festivals, language workshops, and student advocacy across Columbus."
           />
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start mt-16 sm:mt-24">
             <aside className={styles.portrait + " lg:col-span-5 sticky top-28 self-start z-10"} aria-label="Selected officer" data-testid="officer-portrait">

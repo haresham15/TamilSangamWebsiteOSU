@@ -4,15 +4,15 @@ import React, { useRef, useState } from "react";
 import { LayoutGroup, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { GALLERY_ALBUMS, PhotoItem } from "@/data/gallery";
+import { GALLERY_ALBUMS } from "@/data/gallery";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { audioLayer } from "@/utils/audioLayer";
-import { X, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { GalleryHero } from "@/components/gallery-hero/GalleryHero";
-import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { useLiteMode } from "@/context/LiteModeContext";
+import { CinemaLightbox, type LightboxPhoto } from "@/components/ui/CinemaLightbox";
 
 export default function GalleryPage() {
   const { locale } = useLocale();
@@ -20,9 +20,7 @@ export default function GalleryPage() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTag, setActiveTag] = useState("all");
-  const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const openerRef = useRef<HTMLButtonElement | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const printsRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
   const { isLiteMode } = useLiteMode();
@@ -32,22 +30,6 @@ export default function GalleryPage() {
   const drift2 = useTransform(scrollYProgress, [0, 1], staticMotion ? [0, 0] : [35, -75]);
   const drift3 = useTransform(scrollYProgress, [0, 1], staticMotion ? [0, 0] : [15, -50]);
   const drifts = [drift1, drift2, drift3];
-
-  // Keyboard Escape listener & scroll-lock for lightbox modal
-  React.useEffect(() => {
-    if (!selectedPhoto) return;
-
-    const dialog = dialogRef.current;
-    dialog?.showModal();
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      dialog?.close();
-      document.body.style.overflow = originalOverflow;
-      openerRef.current?.focus({ preventScroll: true });
-    };
-  }, [selectedPhoto]);
 
   // Extract all photos across albums
   const allPhotos = GALLERY_ALBUMS.flatMap((a) => a.photos);
@@ -70,6 +52,20 @@ export default function GalleryPage() {
     );
   });
 
+  // Map filtered photos to CinemaLightbox format
+  const lightboxPhotos: LightboxPhoto[] = React.useMemo(() => {
+    return filteredPhotos.map((photo, idx) => ({
+      id: photo.id,
+      src: photo.imageUrl,
+      titleEn: photo.titleEn,
+      titleTa: photo.titleTa,
+      captionEn: photo.captionEn,
+      captionTa: photo.captionTa,
+      date: photo.eventDate,
+      plateNumber: String(idx + 1).padStart(2, "0"),
+    }));
+  }, [filteredPhotos]);
+
   return (
     <div className="w-full bg-transparent min-h-screen text-left">
       {/* =========================================================================
@@ -79,11 +75,9 @@ export default function GalleryPage() {
         <GalleryHero />
       </div>
 
-      {/* Hero to Content Gradient Transition */}
-
       {/* =========================================================================
           THE CANVAS: SUNLIT EXPANSIVE MASONRY ON WARM IVORY
-          Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
+          Transition smoothly from hero into horizontal Archive Control Bar
           ========================================================================= */}
       <EditorialSheetHandoff
         id="gallery-vault-content"
@@ -91,38 +85,24 @@ export default function GalleryPage() {
         sublabel="PHYSICAL ARCHIVES"
         className="text-hearth-espresso"
       >
-        {/* Refined Archival Ledger Header (Eliminating Duplicate H1 Collision) */}
-        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 pt-10 pb-6 border-b border-[#161210]/10 flex flex-col md:flex-row items-start md:items-end justify-between gap-4">
-          <div>
-            <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] font-bold block mb-1">
-              Physical Archives · 35mm Memories
-            </span>
-            <p className="font-serif text-2xl sm:text-3xl text-[#161210] font-normal">
-              {locale === "ta" ? "மாணவர் நினைவுகள் & புகைப்படப் பெட்டகம்" : "Student Fellowship & Living Archive"}
-            </p>
-          </div>
-          <p className="font-mono text-xs text-[#161210]/60 tracking-wider">
-            {filteredPhotos.length} {filteredPhotos.length === 1 ? "EXPOSURE" : "EXPOSURES"} CATALOGED
-          </p>
-        </div>
-
-        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 py-16 sm:py-24">
-
-          {/* Search Bar & Tag Links (Zero Pill Buttons) */}
-          <div className="max-w-2xl mx-auto space-y-8 mb-20 sm:mb-28">
-            <div className="relative border-b-2 border-hearth-espresso/15 focus-within:border-hearth-terracotta transition-colors pb-1">
-              <Search className="w-5 h-5 text-hearth-espresso/75 absolute left-0 top-3" />
+        {/* Sleek Horizontal Archive Control Bar (Search + Filter Pills + Count) */}
+        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 pt-8 pb-6 border-b border-[#161210]/10">
+          <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6">
+            {/* Search Input on Left */}
+            <div className="relative flex-1 max-w-md border-b border-hearth-espresso/20 focus-within:border-hearth-terracotta transition-colors pb-1">
+              <Search className="w-4 h-4 text-hearth-espresso/50 absolute left-0 top-2.5" />
               <input
                 aria-label="Search memories"
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search memories by event name, food, or tradition..."
-                className="w-full min-h-12 pl-8 pr-4 py-2.5 bg-transparent text-hearth-espresso placeholder:text-hearth-espresso/60 text-base sm:text-lg font-sans outline-none"
+                placeholder={locale === "ta" ? "நினைவுகளைத் தேடுக..." : "Search memories by event, food, or tradition..."}
+                className="w-full pl-7 pr-3 py-1.5 bg-transparent text-hearth-espresso placeholder:text-hearth-espresso/40 text-sm font-sans outline-none"
               />
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
+            {/* Category Filter Pills in Center/Right */}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
               {tags.map((tag) => {
                 const isSelected = activeTag === tag;
                 return (
@@ -135,10 +115,10 @@ export default function GalleryPage() {
                       playCardSlide();
                       setActiveTag(tag);
                     }}
-                    className={`min-h-12 min-w-12 font-sans text-xs tracking-widest uppercase font-semibold transition-colors duration-200 cursor-pointer pb-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-hearth-terracotta ${
+                    className={`px-3 py-1 text-xs font-mono tracking-wider uppercase rounded-full transition-all cursor-pointer ${
                       isSelected
-                        ? "text-hearth-terracotta border-b-2 border-hearth-terracotta"
-                        : "text-hearth-espresso/75 hover:text-hearth-espresso border-b-2 border-transparent"
+                        ? "bg-[#B85C38] text-white shadow-sm"
+                        : "bg-black/[0.04] hover:bg-black/[0.08] text-[#57524C]"
                     }`}
                   >
                     {tag}
@@ -146,7 +126,16 @@ export default function GalleryPage() {
                 );
               })}
             </div>
+
+            {/* Photo Count Badge on Right */}
+            <div className="hidden sm:flex items-center text-xs font-mono text-[#8C827A] tracking-wider shrink-0">
+              <span className="font-semibold text-[#B85C38] mr-1.5">{filteredPhotos.length}</span>
+              {filteredPhotos.length === 1 ? "EXPOSURE" : "EXPOSURES"}
+            </div>
           </div>
+        </div>
+
+        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 py-10 sm:py-16">
 
           {/* Analog Photo Table: Asymmetric Rotations, Physical Overlaps, Sharp Corners */}
           <p role="status" className="sr-only">{filteredPhotos.length} memories found</p>
@@ -171,10 +160,9 @@ export default function GalleryPage() {
                   data-gallery-print={photo.id}
                   data-cursor="view"
                   aria-label={`View ${photo.titleEn}`}
-                  onClick={(event) => {
-                    openerRef.current = event.currentTarget;
+                  onClick={() => {
                     audioLayer.playTapeClack();
-                    setSelectedPhoto(photo);
+                    setLightboxIndex(idx);
                   }}
                   animate={{ rotate: 0 }}
                   whileHover={staticMotion ? undefined : { scale: 1.01 }}
@@ -261,79 +249,14 @@ export default function GalleryPage() {
         </div>
       </EditorialSheetHandoff>
 
-      {/* Lightbox Projection Modal */}
-      {selectedPhoto && (
-        <dialog
-          ref={dialogRef}
-          aria-labelledby="gallery-photo-title"
-          aria-describedby="gallery-photo-caption"
-          onCancel={() => setSelectedPhoto(null)}
-          onKeyDown={(event) => {
-            if (event.key === "Tab") {
-              event.preventDefault();
-              dialogRef.current?.querySelector("button")?.focus();
-            }
-          }}
-          className="fixed inset-0 m-0 max-w-none max-h-none w-full h-dvh border-0 flex items-center justify-center p-4 sm:p-8 bg-transparent text-hearth-espresso backdrop:bg-hearth-espresso/85 backdrop:backdrop-blur-md"
-          onClick={(event) => { if (event.target === event.currentTarget) setSelectedPhoto(null); }}
-        >
-          <div
-            className="relative max-w-5xl w-full max-h-[90dvh] bg-paper border border-hearth-espresso/20 overflow-y-auto overscroll-contain shadow-2xl flex flex-col md:flex-row"
-            data-lenis-prevent
-          >
-            {/* Top Right Close Button */}
-            <button
-              type="button"
-              autoFocus
-              onClick={() => setSelectedPhoto(null)}
-              aria-label="Close"
-              className="absolute top-4 right-4 z-20 w-12 h-12 bg-paper/90 text-hearth-espresso hover:bg-hearth-terracotta hover:text-paper flex items-center justify-center border border-hearth-espresso/20 shadow-md transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hearth-terracotta"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {/* Photo View */}
-            <div className="relative md:w-2/3 h-64 shrink-0 md:h-[75dvh] bg-sunbaked-sand">
-              <Image
-                src={selectedPhoto.imageUrl}
-                alt={selectedPhoto.titleEn}
-                fill
-                className="object-contain"
-                sizes="(max-width: 1024px) 100vw, 800px"
-              />
-            </div>
-
-            {/* Info View */}
-            <div className="p-8 md:w-1/3 flex flex-col justify-between space-y-6 overflow-y-auto">
-              <div className="space-y-4">
-                <span className="text-xs font-sans font-semibold text-hearth-terracotta tracking-widest uppercase block">
-                  {selectedPhoto.eventDate}
-                </span>
-                <h3 id="gallery-photo-title" lang={locale === "ta" ? "ta" : "en"} className="text-2xl sm:text-3xl font-serif text-hearth-espresso leading-relaxed">
-                  {locale === "ta" ? selectedPhoto.titleTa : selectedPhoto.titleEn}
-                </h3>
-                <p id="gallery-photo-caption" lang={locale === "ta" ? "ta" : "en"} className="text-base font-sans text-hearth-espresso/75 leading-relaxed">
-                  {locale === "ta" ? selectedPhoto.captionTa : selectedPhoto.captionEn}
-                </p>
-                {selectedPhoto.crop && <p className="text-xs font-mono text-hearth-espresso/70">{selectedPhoto.crop.label}. Full source shown here.</p>}
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {selectedPhoto.tags.map((t) => (
-                    <span key={t} className="px-3 py-1 rounded-full bg-sunbaked-sand text-xs font-sans text-hearth-espresso">
-                      #{t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-hearth-espresso/10">
-                <p className="text-xs font-sans text-hearth-espresso/75">
-                  Columbus, Ohio · The Ohio State University
-                </p>
-              </div>
-            </div>
-          </div>
-        </dialog>
-      )}
+      {/* Cinema Lightbox Inspection */}
+      <CinemaLightbox
+        isOpen={lightboxIndex !== null}
+        photos={lightboxPhotos}
+        currentIndex={lightboxIndex ?? 0}
+        onClose={() => setLightboxIndex(null)}
+        onNavigate={(newIdx) => setLightboxIndex(newIdx)}
+      />
     </div>
   );
 }
