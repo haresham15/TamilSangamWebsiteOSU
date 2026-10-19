@@ -30,6 +30,39 @@ export interface SangamEvent {
 
 export const EVENTS: SangamEvent[] = [
   {
+    slug: "yaar-andha-killer",
+    titleEn: "Yaar Andha Killer?",
+    titleTa: "யார் அந்த கில்லர்? (ஹாலோவீன் மர்ம இரவு)",
+    taglineEn: "A Halloween murder mystery night with free food, suspense, and costume prizes.",
+    taglineTa: "திகில், புதிர்கள், சுவையான உணவு, மற்றும் பரிசுப் போட்டிகளுடன் கூடிய மர்ம இரவு.",
+    date: "October 23, 2026",
+    time: "5:30 PM - 8:30 PM ET",
+    tamilDate: "ஐப்பசி 6, விசுவாவசு ஆண்டு",
+    location: "Houston Grove Room, Ohio Union",
+    venueAddress: "1739 N High St, Columbus, OH 43210",
+    price: "Free Admission & Free Food (Open to all Buckeyes)",
+    statusBadgeEn: "Halloween Murder Mystery",
+    statusBadgeTa: "ஹாலோவீன் மர்ம இரவு",
+    status: "upcoming",
+    academicYear: "2026-2027",
+    descriptionEn:
+      "Tamil Sangam presents Yaar Andha Killer? Step into an evening of Halloween suspense, suspicion, and whodunnit clues at the Houston Grove Room in the Ohio Union! Free food will be provided for all attendees, and the best dressed costume wins a prize. Free and open to all students — no tickets or RSVP required.",
+    descriptionTa:
+      "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் வழங்கும் 'யார் அந்த கில்லர்?' ஹாலோவீன் மர்ம மற்றும் புதிர் இரவு. சுவையான இலவச உணவு மற்றும் சிறந்த ஆடை அணிந்தவர்களுக்கான சிறப்பு பரிசுகள் உண்டு! அனைத்து மாணவர்களுக்கும் அனுமதி முற்றிலும் இலவசம்.",
+    dressCodeEn: "Halloween Costumes / Mystery Attire (Best Dressed Wins a Prize!)",
+    dressCodeTa: "ஹாலோவீன் வினோத உடைகள் (சிறந்த ஆடைக்கு பரிசு!)",
+    schedule: [
+      { time: "5:15 PM", activityEn: "Doors Open & Welcome Gathering", activityTa: "அரங்கம் திறப்பு மற்றும் வரவேற்பு" },
+      { time: "5:30 PM", activityEn: "Free Food Dinner Served & Suspect Introductions", activityTa: "இலவச இரவு உணவு & கதாபாத்திரங்கள் அறிமுகம்" },
+      { time: "6:15 PM", activityEn: "The Murder Mystery Whodunnit Game Begins", activityTa: "மர்ம புதிர் விளையாட்டு தொடக்கம்" },
+      { time: "7:45 PM", activityEn: "Case Solved & Best Dressed Costume Prize Winner", activityTa: "வழக்கு தீர்ப்பு மற்றும் சிறந்த ஆடை பரிசு அறிவிப்பு" },
+      { time: "8:15 PM", activityEn: "Group Photos & Wrap-up Hangout", activityTa: "குழு புகைப்படங்கள் & அரட்டை" },
+    ],
+    posterImage: "/images/events/yaar-andha-killer.png",
+    hoverImage: "/images/events/yaar-andha-killer.png",
+    tags: ["halloween", "mystery", "free-food", "costume", "games", "social"],
+  },
+  {
     slug: "berry-cute-picnic",
     titleEn: "A Berry Cute Picnic",
     titleTa: "பெர்ரி க்யூட் பிக்னிக் (இலையுதிர் சங்கமம்)",

@@ -132,3 +132,27 @@ Sky, sun, sea, hills, and cloud bands are **fullscreen or large shader planes at
 | **3. Polaroids** | Pool, frames, photo pipeline, spawn logic, wind shader, hero cards, hover/click, lightbox | 4+ legible photos in frame at p=0.25; flutter looks like paper; emergence from haze is smooth |
 | **4. Choreography & finale** | Lenis + ScrollTrigger master timeline, camera moves, approach, blinding flash, mint anamorphic streak, wash, canvas teardown, seamless grid reveal, reverse scroll | Screenshots at p = 0, 0.2, 0.45, 0.7, 0.9, 1.0 all pass; no visible seam at hand-off |
 | **5. Polish, perf, a11y** | Adaptive tiers, fallbacks, reduced motion, skip link, mobile tuning, overlay copy, safe zones | Meets all metrics in Section 2; Lighthouse a11y ≥ 95 on the page |
+
+---
+
+## 9. Cinematic Intent, Movie Connections & Easter Eggs
+
+### 9.1 The *Vaaranam Aayiram* (2008) Homage
+The `/gallery` hero is a deeply personal love letter to Gautham Vasudev Menon’s coming-of-age classic *Vaaranam Aayiram*, starring Suriya, with music by Harris Jayaraj:
+- **The 24-Fret 12-TET Acoustic Highway:** Modeled after Suriya’s acoustic guitar from "Mundhinam Paarthéney" and "Nenjukkul Peidhidum". The fretboard is not merely a metaphor—it is a physical 3D highway representing the musical journey of college life, from open mic jams on the South Oval to late-night dorm room acoustic sessions.
+- **The Single Red Rose Contact Brake ($p = 0.52$):** At 52% scroll progress, a single red rose lands softly on the vibrating guitar strings—referencing the iconic train journey and Berkeley street romance where Suriya pursues Meghna with a single red rose. The impact dampens the high-frequency vibration and triggers a golden dust explosion.
+- **The Military Dog Tags ($p = 0.755$):** At 75.5% scroll progress, silver military dog tags drop onto the frets with a metallic clink, symbolizing the loss, resilience, maturity, and brotherhood that college students experience as they grow into adults.
+- **Sunset Flare Dissolve:** The blinding golden-hour sunset flare washes the entire screen, mirroring the cinematography of R. Rathnavelu, before dissolving seamlessly into the 35mm archival memories of the student gallery.
+
+### 9.2 Tying Together the Content: From Fretboard to Physical Memories
+The transition from the 3D acoustic fretboard highway into the **Canvas (35mm Archival Masonry)** below is intentional and narrative-driven:
+1. **Musical Vibrations Spawn Memories:** In the 3D scene, plucking strings ejects floating Polaroid film frames into the coastal air.
+2. **The Archival Masonry Below:** When the camera reaches the end of the fretboard, the floating memories settle onto an expansive Warm Ivory (`#FAF9F6`) field—an interlocking masonry grid with wide gaps, tag filtering, and authentic student consent controls.
+
+### 9.3 Hero Media Artifacts
+- **Video Capture:** [`docs/heroes/media/gallery_hero_animation.webm`](./media/gallery_hero_animation.webm)
+- **Animated GIF:** [`docs/heroes/media/gallery_hero_animation.gif`](./media/gallery_hero_animation.gif)
+- **Rest Frame (p=0):** [`docs/heroes/media/gallery_hero_rest.png`](./media/gallery_hero_rest.png)
+- **Mid-Scroll (Strings Vibrating & Rose Landing):** [`docs/heroes/media/gallery_hero_mid.png`](./media/gallery_hero_mid.png)
+- **Sunset Handoff Reveal:** [`docs/heroes/media/gallery_hero_reveal.png`](./media/gallery_hero_reveal.png)
+

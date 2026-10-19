@@ -481,13 +481,30 @@ commit; report what looks wrong before asking to proceed.
 
 FIRST REPLY: acknowledge constraints, list unanswered items from PRD §14, then deliver MATH FIRST only.
 ```
-<ADDITIONAL_METADATA>
-The current local time is: 2026-10-10T15:26:16-04:00.
 
-The user's current state is as follows:
-Active Document: c:\Users\hares\OneDrive\Desktop\CS_Projects\TamilSangamWebsiteOSU\src\director\wireframe.ts (LANGUAGE_TYPESCRIPT)
-Cursor is on line: 27
-Other open documents:
-- c:\Users\hares\OneDrive\Desktop\CS_Projects\TamilSangamWebsiteOSU\src\director\wireframe.ts (LANGUAGE_TYPESCRIPT)
-No browser pages are currently open.
-</ADDITIONAL_METADATA>
+---
+
+## 15. Philosophical Intent, Literary Genesis & Media Artifacts
+
+### 15.1 The Threshold Art & Thirukkural Genesis
+The home page hero (`/`) embodies the foundational cultural ritual of the Tamil household:
+- **Arisi Maavu (அரிசி மாவு — Ground Rice Flour) Kolam:** In Tamil tradition, every morning begins before sunrise with women drawing symmetrical geometric patterns (*pulli kolam*) with ground rice flour at the threshold of the home. This ritual serves dual purposes: welcoming guests and the divine (*Lakshmi Kataksham*), while providing sustenance to birds and ants, embodying nonviolent co-existence with nature (*Ahimsa*).
+- **The Sacred Dot Lattice & Lissajous Weave:** 3D curves parameterized by harmonic frequencies weave around the static pulli dot matrix without touching them—reflecting the mathematical discipline of *Sikku Kolam*.
+- **The Thirukkural Genesis:** Suspended in the central void is the primordial first letter of the Tamil alphabet: **"அ"** (Akara). As the user scrolls, the kolam strands unpeel and form a protective circular wreath around the first couplet of the *Thirukkural* by Thiruvalluvar:
+  $$\text{"அகர முதல எழுத்தெல்லாம் ஆதி பகவன் முதற்றே உலகு"}$$
+  *(“As the letter 'A' is the first of all letters, so is the eternal Lord the beginning of the universe.”)*
+  This establishes the digital presence of Ohio State Tamil Sangam as grounded in universal ethics, wisdom, and literature.
+
+### 15.2 Content Integration: The Courtyard Unmasking
+As the kolam threads peel upward through the parabolic vertex shader (`peelConveyorShader.ts`), the 3D scene effortlessly yields to the **Muttram Courtyard Broadsheet**:
+1. **Next Flagship Gathering:** Prominent live calendar announcement with dual Gregorian and Tamil calendar lockup.
+2. **The Five Pillars:** Dance (ஆட்டம்), Music (பாட்டம்), Celebration (கொண்டாட்டம்), Service (தொண்டு), and Literature (தமிழ்).
+3. **Moments on the Olentangy:** Natural, non-boxed photo collage of campus life.
+4. **Cultural Glossary:** Interactive explanations of foundational Tamil concepts for visitors and students.
+
+### 15.3 Hero Media Artifacts
+- **Video Capture:** [`docs/heroes/media/home_hero_animation.webm`](./media/home_hero_animation.webm)
+- **Animated GIF:** [`docs/heroes/media/home_hero_animation.gif`](./media/home_hero_animation.gif)
+- **Rest Frame (p=0 Kolam):** [`docs/heroes/media/home_hero_rest.png`](./media/home_hero_rest.png)
+- **Mid-Scroll Peel:** [`docs/heroes/media/home_hero_mid.png`](./media/home_hero_mid.png)
+- **Thirukkural Wreath Reveal:** [`docs/heroes/media/home_hero_reveal.png`](./media/home_hero_reveal.png)

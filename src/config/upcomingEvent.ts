@@ -34,27 +34,27 @@ export interface FlagshipEventConfig {
 }
 
 export const activeUpcomingEvent: FlagshipEventConfig = {
-  id: "kollywood-kollai-2026",
+  id: "yaar-andha-killer-2026",
   seasonKey: "halloween",
-  title: "Kollywood Kollai",
-  tamilTitle: "கோலிவுட் கொள்ளை",
+  title: "Yaar Andha Killer?",
+  tamilTitle: "யார் அந்த கில்லர்?",
   teaserQuote:
-    "Shadows lengthen across the Oval. The score shifts. Step into a night of cinematic suspense, folk rhythms, and collegiate revelry.",
+    "Footprints in the hallway. A room full of suspects. Free food, high stakes, and a killer on the loose. Can you crack the case?",
   description:
-    "An immersive autumn convergence weaving Tamil cinema folklore, costumed revelry, street-style night-market sapad, and live acoustic cyphers under midnight Ohio skies.",
+    "Tamil Sangam presents Yaar Andha Killer? Step into an evening of Halloween suspense, suspicion, and whodunnit clues at the Houston Grove Room in the Ohio Union! Free food will be provided for all attendees, and the best dressed costume wins a prize.",
   telemetry: {
-    date: "OCTOBER 31, 2026",
-    time: "8:00 PM – 11:30 PM EST",
-    location: "OHIO UNION // PERFORMANCE HALL",
-    doorsOpen: "7:30 PM",
-    admission: "FREE FOR ALL BUCKEYES // ZERO DUES",
+    date: "OCTOBER 23, 2026",
+    time: "5:30 PM – 8:30 PM ET",
+    location: "OHIO UNION // HOUSTON GROVE ROOM",
+    doorsOpen: "5:15 PM",
+    admission: "FREE FOOD // BEST DRESSED WINS A PRIZE",
   },
   visual: {
-    silhouetteSrc: "/images/themes/jack-o-lantern.png",
-    altText: "Carved Jack-o'-lantern thematic silhouette",
+    silhouetteSrc: "/images/events/yaar-andha-killer.png",
+    altText: "Yaar Andha Killer? Halloween Murder Mystery Night",
     aspectRatio: "portrait",
     dither: {
-      veilColor: "#B85C38", // Terracotta Autumn
+      veilColor: "#7B3F9E", // Halloween Mystery Purple from poster
       shadowColor: "#1A1715", // Deep Espresso
       matrixSize: 8,
       grainScale: 2.5,
@@ -63,9 +63,9 @@ export const activeUpcomingEvent: FlagshipEventConfig = {
     },
   },
   action: {
-    label: "Step Into the Hearth",
-    tamilLabel: "பதிவு செய்க",
-    href: "/join",
+    label: "Explore The Gathering",
+    tamilLabel: "ஆவணம் பார்க்க",
+    href: "/events/yaar-andha-killer",
     external: false,
   },
 };

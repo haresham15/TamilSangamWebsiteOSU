@@ -14,19 +14,19 @@ export const SEARCH_SYNONYMS: SynonymMapping[] = [
   // Food, Dining & Kaapi
   {
     synonyms: ["sapad", "saapadu", "sappadu", "dosa", "thosai", "chai", "tea", "coffee", "kaapi", "degrekaapi", "biryani", "food", "dinner", "picnic", "snacks", "samosa"],
-    targetIds: ["evt-streetside-sapad-night", "evt-berry-cute-picnic", "gal-streetside-sapad-night", "p-events"],
+    targetIds: ["evt-streetside-sapad", "evt-berry-cute-picnic", "gal-streetside-sapad", "gal-berry-cute-picnic", "p-events"],
     keywords: ["Streetside Sapad Night", "Filter Coffee & Chai", "Banana Leaf Feast", "Dosa Cooking", "Picnic Berries"],
   },
   // Dance, Music & Kuthu
   {
-    synonyms: ["kuthu", "gaana", "gana", "dance", "aatam", "attam", "music", "paatam", "paatu", "song", "folk", "karagattam", "beats", "rhythm"],
-    targetIds: ["evt-namma-jathara-carnival", "p-events", "p-join"],
+    synonyms: ["kuthu", "gaana", "gana", "dance", "aatam", "attam", "music", "paatam", "paatu", "song", "folk", "karagattam", "beats", "rhythm", "jam"],
+    targetIds: ["evt-namma-jathara", "p-events", "p-join"],
     keywords: ["01 Aatam", "02 Paatam", "Dance & Music Track", "Kuthu Open Floor", "Live Jams"],
   },
   // Leadership & Governance
   {
     synonyms: ["eboard", "board", "president", "officers", "exec", "executive", "lead", "leadership", "meenakshi", "council"],
-    targetIds: ["p-board", "brd-meenakshi-v", "brd-shrinidhi-n", "brd-sadhana-s", "brd-srinivas-s"],
+    targetIds: ["p-board", "brd-president", "brd-vice-president", "brd-treasurer", "brd-secretary"],
     keywords: ["Executive Board Roster", "President Meenakshi Varadarajan", "Student Officers", "Committee Chairs"],
   },
   // Membership, Dues & Constitution

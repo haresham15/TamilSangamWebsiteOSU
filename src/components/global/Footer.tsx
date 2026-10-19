@@ -44,9 +44,48 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
   const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
   const [isDismissed, setIsDismissed] = useState(false);
   const [directorEnabled, setDirectorEnabled] = useState(false);
+  const [liveCalendarEvent, setLiveCalendarEvent] = useState<{
+    id: string;
+    slug: string | null;
+    titleEn: string;
+    titleTa: string | null;
+    dateShort: string;
+  } | null>(null);
 
   React.useEffect(() => {
     setDirectorEnabled(isDirectorEnabled());
+
+    let active = true;
+    fetch("/api/events")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!active || !data || !Array.isArray(data.events)) return;
+        const now = Date.now();
+        const upcoming = data.events.find((e: any) => {
+          const t = new Date(e.start).getTime();
+          return !isNaN(t) && t >= now - 4 * 3600000;
+        });
+        if (upcoming) {
+          const dt = new Date(upcoming.start);
+          const dateShort = new Intl.DateTimeFormat("en-US", {
+            timeZone: "America/New_York",
+            month: "short",
+            day: "numeric",
+          }).format(dt);
+          setLiveCalendarEvent({
+            id: upcoming.id,
+            slug: upcoming.slug,
+            titleEn: upcoming.titleEn,
+            titleTa: upcoming.titleTa,
+            dateShort,
+          });
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   const isSubscribed = status === "success" || (status === "idle" && Boolean(savedEmail) && !isDismissed);
@@ -177,6 +216,33 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
             </div>
 
             {(() => {
+              if (liveCalendarEvent) {
+                const title =
+                  locale === "ta" && liveCalendarEvent.titleTa
+                    ? liveCalendarEvent.titleTa
+                    : liveCalendarEvent.titleEn;
+                const linkHref = `/events?view=calendar&event=${encodeURIComponent(
+                  liveCalendarEvent.slug || liveCalendarEvent.id
+                )}`;
+                return (
+                  <div className="flex flex-wrap items-center gap-4 text-xs font-sans">
+                    <Link
+                      href={linkHref}
+                      onClick={playClick}
+                      className="inline-flex items-center gap-2 pb-1 border-b border-[#E5A93C] text-xs font-sans text-white hover:text-[#E5A93C] transition-colors group"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#E5A93C] animate-pulse" />
+                      <span className="text-[#E5A93C] font-semibold uppercase tracking-wider font-mono">
+                        {locale === "ta" ? "அடுத்த நிகழ்வு:" : "Next Event:"}
+                      </span>
+                      <span className="text-white/90 group-hover:text-white transition-colors">
+                        {title} · {liveCalendarEvent.dateShort}
+                      </span>
+                      <span className="text-[#E5A93C] transition-transform group-hover:translate-x-1">→</span>
+                    </Link>
+                  </div>
+                );
+              }
               const nextFlagship = getNextFlagshipEvent();
               if (nextFlagship) {
                 return (

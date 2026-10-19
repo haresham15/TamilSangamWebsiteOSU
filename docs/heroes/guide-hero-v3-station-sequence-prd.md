@@ -822,3 +822,26 @@ Before calling v3 complete:
 11. Record any human waivers in the final checkpoint.
 12. Commit only the approved phase scope with its evidence artifacts.
 
+---
+
+## 24. Cinematic Intent, Movie Connections & Media Artifacts
+
+### 24.1 The *Alaipayuthey* (2000) Homage
+The `/guide` hero sequence is an explicit cinematic homage to Mani Ratnam’s landmark suburban romance *Alaipayuthey*, starring Madhavan (Karthik) and Shalini (Shakthi), with music by A.R. Rahman:
+- **The Blue Hour Railway Platform:** Captured at dusk/blue hour on a rain-slicked platform, echoing the daily suburban train commutes between Tambaram and Chennai Central where Karthik and Shakthi's romance unfolds.
+- **The Compartment Window Silhouettes:** Backlit by warm compartment light, a woman sits inside in silhouette looking out through barred glass, while on the platform a man stands looking in. This represents the emotional threshold of every new student: arriving in an unfamiliar city, peering in, wondering what lies ahead.
+- **The Railway Crane Shot:** As the user scrolls, the camera pulls back and cranes up into the vast rafters of the station hall—mirroring P.C. Sreeram’s sweeping crane camera choreography—revealing the towering mechanical Solari departure board.
+
+### 24.2 Mechanical Flap Acoustics & Content Bridging
+- **Solari Split-Flap State Machine (`FlapGrid.tsx`):** A $24 \times 6$ grid of mechanical flap units that clatters out incoming student questions in alternating English and Tamil.
+- **Coalesced 8ms Audio Bus (`impactBus.ts`):** Mechanical clicking sounds synthesize the authentic acoustic clatter of 1970s Solari departure boards without browser audio clipping.
+- **Handoff to Student Knowledge Base:** The split-flap board answers the most-asked campus question before smoothly handing off to the **Open Book Knowledge Base** below: curated guides to Columbus Indian groceries, campus bus lines, local vegetarian dining, and academic mentorship.
+
+### 24.3 Hero Media Artifacts
+- **Video Capture:** [`docs/heroes/media/guide_hero_animation.webm`](./media/guide_hero_animation.webm)
+- **Animated GIF:** [`docs/heroes/media/guide_hero_animation.gif`](./media/guide_hero_animation.gif)
+- **Rest Frame (p=0 Window):** [`docs/heroes/media/guide_hero_rest.png`](./media/guide_hero_rest.png)
+- **Mid-Scroll (Station Hall Crane):** [`docs/heroes/media/guide_hero_mid.png`](./media/guide_hero_mid.png)
+- **Departure Board Reveal:** [`docs/heroes/media/guide_hero_reveal.png`](./media/guide_hero_reveal.png)
+
+
