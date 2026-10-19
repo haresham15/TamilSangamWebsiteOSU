@@ -5,6 +5,8 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useBoardHeroStore } from "@/store/boardHeroStore";
 
+import { createHeroKineticsTracker } from "@/lib/heroKinetics";
+
 interface CraneCameraRigProps {
   scrollProgress: RefObject<number>;
 }
@@ -14,31 +16,36 @@ function easeInOutCubic(x: number): number {
 }
 
 /**
- * §6: Crane Camera Rig with Spring Inertia
- * - Instead of locked 1:1 dolly, actual camera position spring-lerps toward
- *   target with frame-rate independent damping to simulate physical crane arm weight.
+ * §6: Crane Camera Rig with Spring Inertia & Processional Look-At Weave
+ * - Processional camera look-at weave acknowledges alternating left/right officer banners.
  * - Dynamic FOV expansion (32° -> 44°).
  * - Synchronizes FogExp2 density per the PRD depth-cueing schedule.
  */
 export function CraneCameraRig({ scrollProgress }: CraneCameraRigProps) {
   const targetPos = useMemo(() => new THREE.Vector3(), []);
   const fpsRef = useRef({ frames: 0, lastTime: 0 });
+  const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
     const { camera, scene } = state;
-    const p = Math.min(1.0, Math.max(0.0, scrollProgress.current));
+    const rawP = Math.min(1.0, Math.max(0.0, scrollProgress.current));
+    const kinetics = kineticsRef.current.update(rawP, state.pointer, dt);
+    const p = kinetics.smoothProgress;
     const easedP = easeInOutCubic(p);
+
+    // Keep store synchronized for banner cloth velocity tracking
+    useBoardHeroStore.getState().setScrollProgress(p);
 
     // 1. Compute physical crane target position framing the Chola centerpiece and lamps
     const targetZ = THREE.MathUtils.lerp(30, 5.2, easedP);
-    const swayX = Math.sin(p * 6.0) * 0.12;
+    const swayX = Math.sin(p * 6.0) * 0.12 + kinetics.smoothPointerX * 0.35;
 
     // Camera cranes from an elevated 2.22m vantage point to glide above the Chola crown
     // before settling to 1.62m eye-level colonnade cruise once through the entrance
     const craneDescend = p < 0.28 ? Math.pow(p / 0.28, 1.5) : 1.0;
     const baseY = THREE.MathUtils.lerp(2.22, 1.62, craneDescend);
-    const swayY = baseY + Math.sin(p * 4.0) * 0.025;
+    const swayY = baseY + Math.sin(p * 4.0) * 0.025 - kinetics.smoothPointerY * 0.18;
     targetPos.set(swayX, swayY, targetZ);
 
     // 2. Spring-follow crane inertia (frame-rate independent damping, clamped alpha in [0, 1])
@@ -53,9 +60,12 @@ export function CraneCameraRig({ scrollProgress }: CraneCameraRigProps) {
       persCamera.updateProjectionMatrix();
     }
 
-    // 4. Look ahead along the center aisle, gazing slightly downward over the crown at entrance
+    // 4. Dignified Processional Camera Look-At Weave
+    // Smoothly sweeps across left and right banners as camera dollies down the corridor
+    const lookWeaveX = Math.sin(p * Math.PI * 3.0) * 0.35 + kinetics.smoothPointerX * 0.2;
     const lookY = p < 0.28 ? THREE.MathUtils.lerp(1.38, 1.65, p / 0.28) : 1.65;
-    camera.lookAt(0, lookY, targetPos.z - 8.0);
+    camera.lookAt(lookWeaveX, lookY, targetPos.z - 8.0);
+    camera.rotation.z = kinetics.velocityBank * 0.4;
 
     // 5. Scroll-driven FogExp2 density schedule (§5 Table)
     let targetFog = 0.045;

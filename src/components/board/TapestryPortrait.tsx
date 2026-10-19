@@ -213,9 +213,13 @@ function createTapestryTexture(member: BoardMember): THREE.CanvasTexture {
   return texture;
 }
 
+import { createHeroKineticsTracker } from "@/lib/heroKinetics";
+import { useBoardHeroStore } from "@/store/boardHeroStore";
+
 /**
  * §4: Physical Cloth Wind Shader Plane per Board Member
- * Features layered sine ripple vertex displacement modulated by an organic gust envelope.
+ * Features layered sine ripple vertex displacement modulated by an organic gust envelope
+ * and scroll-velocity blowback as the camera dollies down the colonnade.
  */
 export function TapestryPortrait({
   member,
@@ -224,12 +228,17 @@ export function TapestryPortrait({
   isLeftAisle = false,
 }: TapestryPortraitProps) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
   const uniformsRef = useRef<{
     uTime: { value: number };
     uGustIntensity: { value: number };
+    uScrollVelocity: { value: number };
+    uBannerPhase: { value: number };
   }>({
     uTime: { value: 0 },
     uGustIntensity: { value: 0.3 },
+    uScrollVelocity: { value: 0 },
+    uBannerPhase: { value: (isLeftAisle ? 1.4 : 5.8) + position[2] * 0.2 },
   });
 
   const texture = useMemo(() => createTapestryTexture(member), [member]);
@@ -241,34 +250,39 @@ export function TapestryPortrait({
       metalness: 0.2,
       side: THREE.DoubleSide,
     });
+    mat.defines = { USE_UV: "" };
 
     mat.onBeforeCompile = (shader) => {
       shader.uniforms.uTime = uniformsRef.current.uTime;
       shader.uniforms.uGustIntensity = uniformsRef.current.uGustIntensity;
+      shader.uniforms.uScrollVelocity = uniformsRef.current.uScrollVelocity;
+      shader.uniforms.uBannerPhase = uniformsRef.current.uBannerPhase;
 
       // Inject uniforms
       shader.vertexShader =
         `
         uniform float uTime;
         uniform float uGustIntensity;
+        uniform float uScrollVelocity;
+        uniform float uBannerPhase;
         ` + shader.vertexShader;
 
-      // Inject exact §4 GLSL cloth wind equation
+      // Inject exact silk cloth wind equation with scroll velocity
       shader.vertexShader = shader.vertexShader.replace(
         "#include <begin_vertex>",
         `
         #include <begin_vertex>
 
-        // Ripples travel down the fabric from top rod
-        float heightPhase = position.y * 0.8;
-        float wave1 = sin(uTime * 1.1 + heightPhase) * 0.035;
-        float wave2 = sin(uTime * 2.3 + heightPhase * 1.7 + 1.5) * 0.018;
-        float sway = (wave1 + wave2) * uGustIntensity;
+        // Pin factor: 0 at top rod (uv.y == 1.0), 1 at bottom fringe (uv.y == 0.0)
+        float pinWeight = pow(1.0 - uv.y, 1.35);
 
-        // Pinned at rod (top y = +1.0), free sway at bottom (y = -1.0)
-        float pinFactor = smoothstep(1.0, 0.0, (position.y + 1.0) / 2.0);
-        transformed.x += sway * pinFactor;
-        transformed.z += sway * 0.4 * pinFactor;
+        // Silk tapestry breeze + scroll-velocity blowback as camera dollies past
+        float breeze = sin(uv.y * 4.5 - uTime * 2.1 + uBannerPhase) * 0.045
+                     + cos(uv.x * 3.0 + uTime * 1.4) * 0.015
+                     + uScrollVelocity * 0.06;
+
+        transformed.z += breeze * pinWeight * uGustIntensity;
+        transformed.x += sin(uTime * 1.2 + uBannerPhase) * 0.02 * pinWeight;
         `
       );
     };
@@ -280,7 +294,11 @@ export function TapestryPortrait({
     const dt = Math.min(delta, 0.05);
     if (dt <= 0) return;
     const time = clock.getElapsedTime();
+    const rawP = useBoardHeroStore.getState().scrollProgress;
+    const kinetics = kineticsRef.current.update(rawP, undefined, dt);
+
     uniformsRef.current.uTime.value = time;
+    uniformsRef.current.uScrollVelocity.value = kinetics.smoothVelocity;
 
     // Modulate gust intensity via slow Perlin/simplex noise drift (§4: uTime * 0.15)
     const gustEnvelope = 0.32 + 0.25 * noise1D(time * 0.15 + (isLeftAisle ? 1.4 : 5.8));

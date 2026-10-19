@@ -233,15 +233,17 @@ export function createPeelConveyorMaterial(
     // 2. Fragment Shader Injection: Travelling light pulses along woven threads
     shader.fragmentShader = `
       uniform float uTime;
+      uniform float uP;
       varying float vDistHead;
       ${shader.fragmentShader}
     `.replace(
       `#include <emissivemap_fragment>`,
       `
       #include <emissivemap_fragment>
-      float pulse = sin(vUv.x * 24.0 - uTime * 2.0);
-      float glow = smoothstep(0.65, 1.0, pulse) * 0.35;
-      totalEmissiveRadiance += vec3(1.0, 0.72, 0.25) * glow;
+      // Traveling golden energy pulse along curve parameter
+      float pulse = pow(0.5 + 0.5 * sin(vUv.x * 18.0 - uTime * 3.2 - uP * 12.0), 6.0);
+      vec3 pulseCol = mix(vec3(1.0, 0.72, 0.25), vec3(1.0, 0.94, 0.78), pulse * 0.65);
+      totalEmissiveRadiance += pulseCol * (pulse * 0.65);
 
       // PRD §7.6: Tapered tip highlight / terminal glow at strand heads
       float tipHighlight = (1.0 - smoothstep(0.0, 0.40, vDistHead)) * 0.45;

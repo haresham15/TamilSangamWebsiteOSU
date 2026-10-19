@@ -14,6 +14,8 @@ const ARCHIVE_PHOTOS = [
   "/events/berry-cute-picnic/picnic-06.jpg",
 ];
 
+import { createHeroKineticsTracker } from "@/lib/heroKinetics";
+
 export function ArchivalPlanes() {
   const textures = useTexture(ARCHIVE_PHOTOS, (loaded) => {
     const list = Array.isArray(loaded) ? loaded : [loaded];
@@ -23,6 +25,7 @@ export function ArchivalPlanes() {
   });
 
   const groupRef = useRef<THREE.Group>(null);
+  const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
 
   const planes = useMemo(() => {
     return [
@@ -35,10 +38,12 @@ export function ArchivalPlanes() {
     ];
   }, []);
 
-  useFrame(({ clock }, delta) => {
+  useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
     if (!groupRef.current) return;
-    const t = clock.getElapsedTime();
+    const kinetics = kineticsRef.current.update(0, state.pointer, dt);
+    const t = state.clock.getElapsedTime();
+
     // Gentle cinematic drift
     groupRef.current.position.y = THREE.MathUtils.damp(
       groupRef.current.position.y,
@@ -52,6 +57,20 @@ export function ArchivalPlanes() {
       3,
       dt
     );
+
+    // 35mm slide 3D pointer parallax tilt
+    groupRef.current.rotation.x = THREE.MathUtils.damp(
+      groupRef.current.rotation.x,
+      -kinetics.smoothPointerY * 0.12,
+      5.0,
+      dt
+    );
+    groupRef.current.rotation.y = THREE.MathUtils.damp(
+      groupRef.current.rotation.y,
+      kinetics.smoothPointerX * 0.15,
+      5.0,
+      dt
+    );
   });
 
   return (
@@ -59,20 +78,33 @@ export function ArchivalPlanes() {
       {planes.map((p, idx) => {
         const tex = Array.isArray(textures) ? textures[idx % textures.length] : textures;
         return (
-          <mesh
+          <group
             key={idx}
             position={p.pos as [number, number, number]}
             rotation={p.rot as [number, number, number]}
             scale={p.scale as [number, number, number]}
           >
-            <planeGeometry args={[1, 1]} />
-            <meshBasicMaterial
-              map={tex}
-              transparent={true}
-              opacity={0.42}
-              depthWrite={false}
-            />
-          </mesh>
+            {/* Delicate warm gold 35mm slide border with subtle golden-hour halation */}
+            <mesh position={[0, 0, -0.005]}>
+              <planeGeometry args={[1.04, 1.04]} />
+              <meshBasicMaterial
+                color="#D4AF37"
+                transparent={true}
+                opacity={0.35}
+                depthWrite={false}
+              />
+            </mesh>
+            {/* Archival memory photo plane */}
+            <mesh>
+              <planeGeometry args={[1, 1]} />
+              <meshBasicMaterial
+                map={tex}
+                transparent={true}
+                opacity={0.52}
+                depthWrite={false}
+              />
+            </mesh>
+          </group>
         );
       })}
     </group>

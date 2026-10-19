@@ -403,6 +403,26 @@ function HallRafters() {
           <meshBasicMaterial color="#FFB84D" transparent opacity={0.18} />
         </mesh>
       </group>
+
+      {/* Staggered volumetric diagonal roof light shafts passing through frame during crane rise (p = 0.45 -> 0.80) */}
+      {[-6.5, 0.0, 6.5].map((x, i) => (
+        <mesh
+          key={i}
+          position={[x, 11.5 + i * 2.2, -4.5 + i * 1.2]}
+          rotation={[0.42, 0, -0.32]}
+          renderOrder={4}
+        >
+          <planeGeometry args={[5.0, 15]} />
+          <meshBasicMaterial
+            color="#FFB84D"
+            transparent
+            opacity={0.026}
+            blending={THREE.AdditiveBlending}
+            side={THREE.DoubleSide}
+            depthWrite={false}
+          />
+        </mesh>
+      ))}
     </group>
   );
 }

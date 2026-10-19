@@ -75,27 +75,50 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
     return new THREE.CatmullRomCurve3(points);
   }, []);
 
+  const sunRimRef = useRef<THREE.PointLight>(null);
+
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.05);
     const p = gateProgressRef.current ?? 0;
     const maxAngle = Math.PI * 0.44; // ~79 degrees open
-    const targetAngle = p * maxAngle;
+
+    // Asymmetric mechanical gate hinge timing: right door leads by 4%
+    // Right leaf: p = 0.22 -> 0.82
+    const pRight = Math.max(0, Math.min(1, (p - 0.22) / 0.60));
+    // Left leaf: p = 0.26 -> 0.85
+    const pLeft = Math.max(0, Math.min(1, (p - 0.26) / 0.59));
+
+    // Heavy wrought-iron ease with 1.5° (0.026 rad) mechanical settle
+    const easeDoor = (t: number) => {
+      const s = t * t * (3 - 2 * t);
+      const bounce = t > 0.85 ? Math.sin(((t - 0.85) / 0.15) * Math.PI) * 0.026 : 0;
+      return s + bounce;
+    };
+
+    const targetAngleRight = easeDoor(pRight) * maxAngle;
+    const targetAngleLeft = easeDoor(pLeft) * maxAngle;
 
     if (leftHingeRef.current) {
       leftHingeRef.current.rotation.y = THREE.MathUtils.damp(
         leftHingeRef.current.rotation.y,
-        -targetAngle,
-        10.0,
+        -targetAngleLeft,
+        8.0,
         dt
       );
     }
     if (rightHingeRef.current) {
       rightHingeRef.current.rotation.y = THREE.MathUtils.damp(
         rightHingeRef.current.rotation.y,
-        targetAngle,
-        10.0,
+        targetAngleRight,
+        8.0,
         dt
       );
+    }
+
+    // Dynamic warm sun-rim reflection sweeping across iron scrollwork
+    if (sunRimRef.current) {
+      sunRimRef.current.position.x = (pRight - pLeft) * 1.8;
+      sunRimRef.current.intensity = 3.0 + (pRight + pLeft) * 3.5;
     }
   });
 
@@ -335,6 +358,16 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
           </mesh>
         ))}
       </group>
+
+      {/* Dynamic warm sun-rim reflection sweeping across iron scrollwork bevels */}
+      <pointLight
+        ref={sunRimRef}
+        position={[0, 3.2, 0.4]}
+        color="#FFF5DE"
+        intensity={4.5}
+        distance={14}
+        decay={2}
+      />
     </group>
   );
 }

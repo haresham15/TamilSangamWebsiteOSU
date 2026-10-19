@@ -24,6 +24,7 @@ import {
 import { createPeelConveyorMaterial } from "./peelConveyorShader";
 import { playCinematicWhoosh } from "@/audio/sounds";
 import { useReducedMotion } from "framer-motion";
+import { createHeroKineticsTracker } from "@/lib/heroKinetics";
 import muktaFont from "../../../public/fonts/mukta-malar-tamil.json";
 
 const STUDIO_LIGHT = { ivory: "#FAF7F2", terracotta: "#C85A32", gold: "#D4AF37" };
@@ -31,15 +32,20 @@ const STUDIO_LIGHT = { ivory: "#FAF7F2", terracotta: "#C85A32", gold: "#D4AF37" 
 /**
  * Camera Vertical Truck Glide (§PRD 5.2)
  * Glides downward from y = 0 to y = -1.2 * Hv, with camZ 12 -> 11.2 and pitch -4 deg -> 0 deg.
+ * Elevated with scroll-velocity inertia, pointer parallax, and portal push-through (Act II -> Act III).
  */
 function HeroTruckCamera() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const currentPos = useRef(new THREE.Vector3(0, 0, 12));
+  const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
 
   useSafeFrame((state, safeDelta) => {
-    const p = heroDirectorState.scrubActive
+    const rawP = heroDirectorState.scrubActive
       ? heroDirectorState.scrubProgress
       : heroScrollProgress.current;
+
+    const kinetics = kineticsRef.current.update(rawP, state.pointer, safeDelta);
+    const p = kinetics.smoothProgress;
 
     const { camY, camZ, pitchDeg } = evalCamera(p);
 
@@ -48,8 +54,21 @@ function HeroTruckCamera() {
     currentPos.current.y += (camY - currentPos.current.y) * damp;
     currentPos.current.z += (camZ - currentPos.current.z) * damp;
 
-    state.camera.position.set(0, currentPos.current.y, currentPos.current.z);
-    state.camera.rotation.set(pitchDeg * (Math.PI / 180), 0, 0);
+    // Camera Portal Push-Through (Act II -> Act III: p = 0.62 -> 0.78)
+    const pushT = Math.max(0, Math.min(1, (p - 0.62) / 0.16));
+    const easePush = pushT * pushT * (3 - 2 * pushT);
+    const portalZOffset = easePush * 6.5;
+
+    // Pointer Parallax + Velocity Pitch/Bank Rig
+    const px = kinetics.smoothPointerX * 0.35;
+    const py = -kinetics.smoothPointerY * 0.25;
+
+    state.camera.position.set(px, currentPos.current.y + py, currentPos.current.z - portalZOffset);
+    state.camera.rotation.set(
+      (pitchDeg * (Math.PI / 180)) - kinetics.smoothPointerY * 0.035 + kinetics.velocityPitch,
+      kinetics.smoothPointerX * 0.045,
+      kinetics.velocityBank * 0.6
+    );
   });
 
   return <PerspectiveCamera ref={cameraRef} makeDefault position={[0, 0, 12]} fov={35} />;
@@ -300,6 +319,8 @@ function PeelAndFlowKolamMesh({ isMobile, tier }: { isMobile: boolean; tier: str
     return { lattice, rightGeometry, rightConveyor, leftConveyor };
   }, [isMobile, tier]);
 
+  const containerRef = useRef<THREE.Group>(null);
+
   // Hot loop execution (clamped delta)
   useSafeFrame((state) => {
     const time = state.clock.elapsedTime;
@@ -313,6 +334,13 @@ function PeelAndFlowKolamMesh({ isMobile, tier }: { isMobile: boolean; tier: str
 
     leftConveyor.uniforms.uTime.value = time * speedMult;
     leftConveyor.uniforms.uP.value = p;
+
+    // Camera Portal Push-Through: Kolam wreath scales radially outward past frustum
+    if (containerRef.current) {
+      const pushT = Math.max(0, Math.min(1, (p - 0.62) / 0.16));
+      const radialScale = 1.0 + pushT * pushT * 2.8;
+      containerRef.current.scale.set(radialScale, radialScale, 1.0);
+    }
   });
 
   return (
@@ -321,7 +349,7 @@ function PeelAndFlowKolamMesh({ isMobile, tier }: { isMobile: boolean; tier: str
       <GroundedPulliPoints lattice={lattice} />
 
       {/* Symmetric Dot-Woven Kolam Halves Driven by GPU Conveyor */}
-      <group name="PeelAndFlowKolamContainer" position={[0, 0, 0]}>
+      <group ref={containerRef} name="PeelAndFlowKolamContainer" position={[0, 0, 0]}>
         <mesh
           name="RightHalf"
           geometry={rightGeometry}
@@ -505,6 +533,8 @@ function ScrollExpandIntroOverlay() {
 function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const materialRef = useRef<THREE.MeshPhysicalMaterial>(null);
+  const specularLightRef = useRef<THREE.PointLight>(null);
+  const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
   const elapsed = useRef(0);
 
   const emblemWireMat = useMemo(
@@ -519,19 +549,31 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
 
   useEffect(() => () => emblemWireMat.dispose(), [emblemWireMat]);
 
-  useSafeFrame((_, dt) => {
-    const time = elapsed.current += dt;
+  useSafeFrame((state, dt) => {
+    const time = (elapsed.current += dt);
+    const rawP = heroDirectorState.scrubActive
+      ? heroDirectorState.scrubProgress
+      : heroScrollProgress.current;
+    const kinetics = kineticsRef.current.update(rawP, state.pointer, dt);
 
     if (groupRef.current) {
-      // Gentle micro-motion
-      const floatY = Math.sin(time * 1.05) * 0.025;
-      const wobbleY = Math.sin(time * 0.75) * 0.015;
-      const tiltX = Math.sin(time * 0.50) * 0.01;
+      // Magnetic 3D "அ" figure-8 levitation & velocity tilt
+      const floatY = Math.sin(time * 1.2) * 0.06;
+      const rotY = Math.sin(time * 0.8) * 0.08 + kinetics.smoothPointerX * 0.18;
+      const rotX = -kinetics.smoothPointerY * 0.14 + kinetics.velocityPitch * 1.8;
 
-      // Positioned at z = 0.05 inside the central void
-      groupRef.current.position.set(0, floatY, 0.05);
-      groupRef.current.rotation.set(tiltX, wobbleY, 0);
+      groupRef.current.position.set(kinetics.smoothPointerX * 0.12, floatY, 0.05);
+      groupRef.current.rotation.set(rotX, rotY, kinetics.velocityBank * 0.7);
       groupRef.current.scale.setScalar(1.0);
+
+      // Dynamic specular light tracking pointer across stem and curved loop
+      if (specularLightRef.current) {
+        specularLightRef.current.position.set(
+          kinetics.smoothPointerX * 2.2 + 0.6,
+          -kinetics.smoothPointerY * 1.6 + 0.3,
+          1.4
+        );
+      }
 
       if (materialRef.current) {
         materialRef.current.opacity = 1.0;
@@ -544,6 +586,8 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
 
   return (
     <group ref={groupRef} position={[0, 0, 0.05]}>
+      {/* Living gold specular light sweeping across stem & loop bevels */}
+      <pointLight ref={specularLightRef} color="#FFD074" intensity={4.2} distance={6} />
       <Center>
         <Text3D
           font={muktaFont as unknown as Parameters<typeof Text3D>[0]["font"]}

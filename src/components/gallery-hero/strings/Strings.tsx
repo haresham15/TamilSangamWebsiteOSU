@@ -19,6 +19,7 @@ if (typeof window !== "undefined") {
 
 export function Strings() {
   const meshRef = useRef<THREE.InstancedMesh>(null);
+  const prevPointerX = useRef<number | null>(null);
 
   // 1. Material and Uniforms
   const { material, uniforms } = useMemo(() => createStringMaterial(), []);
@@ -125,6 +126,24 @@ export function Strings() {
         heroState.rawVelocity = 0.0;
       }
     }
+
+    // Interactive pointer string strumming (cursor pluck detection)
+    const ptrX = state.pointer.x;
+    if (prevPointerX.current !== null) {
+      const pDelta = ptrX - prevPointerX.current;
+      if (Math.abs(pDelta) > 0.0015) {
+        const minX = Math.min(prevPointerX.current, ptrX);
+        const maxX = Math.max(prevPointerX.current, ptrX);
+        for (let i = 0; i < 6; i++) {
+          const stringScreenX = (i - 2.5) * 0.11;
+          if (stringScreenX >= minX && stringScreenX <= maxX) {
+            const amp = Math.min(1.0, Math.max(0.35, Math.abs(pDelta) * 12.0));
+            globalStringEnergy.triggerPluck(i, amp);
+          }
+        }
+      }
+    }
+    prevPointerX.current = ptrX;
 
     // Advance energy model using ScrollTrigger raw velocity
     globalStringEnergy.update(dt, heroState.rawVelocity, heroState.stringsDamperK);

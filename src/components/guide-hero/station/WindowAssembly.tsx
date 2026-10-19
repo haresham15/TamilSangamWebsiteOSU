@@ -209,15 +209,37 @@ export function WindowAssembly({ progress = 0, getProgress }: WindowAssemblyProp
       </mesh>
 
       {/* =========================================================================
-          LAYER 5 (z = +0.02): Glass additive reflection quad
-          Faint cool blue platform reflection + specularity (NO transmission material)
+          LAYER 5 (z = +0.02): Glass additive reflection quad & raindrop trails
+          Faint cool blue platform reflection + sliding micro-droplets & anamorphic streak
           ========================================================================= */}
       <mesh position={[0, 1.7, 0.02]} renderOrder={10}>
         <planeGeometry args={[1.02, 0.76]} />
         <meshBasicMaterial
           color={guideStationPalette.practicalCool}
           transparent
-          opacity={0.08}
+          opacity={0.09}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Horizontal anamorphic lens streak: warm amber with subtle teal highlight */}
+      <mesh position={[0.08, 1.7, 0.022]} renderOrder={11}>
+        <planeGeometry args={[1.35, 0.028]} />
+        <meshBasicMaterial
+          color="#FFB84D"
+          transparent
+          opacity={0.34}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+      <mesh position={[0.08, 1.7, 0.023]} renderOrder={11}>
+        <planeGeometry args={[0.75, 0.012]} />
+        <meshBasicMaterial
+          color="#55CCA2"
+          transparent
+          opacity={0.42}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />

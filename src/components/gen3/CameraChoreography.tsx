@@ -35,11 +35,15 @@ function easeInOutCubic(x: number): number {
   return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 }
 
+import { createHeroKineticsTracker } from "@/lib/heroKinetics";
+
 export function CameraChoreography() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const currentProgress = useRef(0);
   const targetPos = useRef(new THREE.Vector3().copy(CAM_POINTS[0]));
   const targetLook = useRef(new THREE.Vector3().copy(LOOK_POINTS[0]));
+  const tangentVec = useRef(new THREE.Vector3());
+  const kineticsRef = useRef(createHeroKineticsTracker(8.0, 5.0, 4.0));
   const { size } = useThree();
 
   // Pre-construct Catmull-Rom splines for zero-garbage evaluation per frame
@@ -52,18 +56,19 @@ export function CameraChoreography() {
     []
   );
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
     if (!cameraRef.current) return;
 
-    // 1. Fetch raw progress from GSAP ScrollTrigger
+    // 1. Fetch raw progress from GSAP ScrollTrigger & update kinetics
     const rawProgress = getScrollProgress();
     const clampedProgress = Math.min(1.0, Math.max(0.0, rawProgress));
+    const kinetics = kineticsRef.current.update(clampedProgress, state.pointer, dt);
 
     // 2. Exponential damp progress to absorb any micro frame timing variations
     currentProgress.current = THREE.MathUtils.damp(
       currentProgress.current,
-      clampedProgress,
+      kinetics.smoothProgress,
       12.0,
       dt
     );
@@ -73,6 +78,7 @@ export function CameraChoreography() {
 
     // 4. Sample continuous 3D Catmull-Rom trajectory (C^1 continuous velocity)
     posCurve.getPoint(smoothP, targetPos.current);
+    posCurve.getTangent(smoothP, tangentVec.current);
     lookCurve.getPoint(smoothP, targetLook.current);
     const targetFov = THREE.MathUtils.lerp(START_FOV, END_FOV, smoothP);
 
@@ -83,11 +89,26 @@ export function CameraChoreography() {
       targetPos.current.z = targetPos.current.z * 1.36; // Step back for phone aspect ratio
       targetPos.current.y = Math.min(12.5, targetPos.current.y * 0.94);
       targetLook.current.y = 3.3;
+    } else {
+      // Desktop pointer parallax
+      targetPos.current.x += kinetics.smoothPointerX * 0.45;
+      targetPos.current.y += -kinetics.smoothPointerY * 0.25;
     }
 
-    // 6. Direct application: smooth trajectory already completely eliminates jitter
+    // 6. Technocrane Dutch-Roll Banking along the spiral trajectory
+    // Tangent lateral curvature + velocity bank, damped smoothly within [-0.045, +0.045] rad
+    const tangentBank = -tangentVec.current.x * 0.055;
+    const scrollVelBank = kinetics.velocityBank * 0.75;
+    const targetBank = THREE.MathUtils.clamp(tangentBank + scrollVelBank, -0.045, 0.045);
+
     cameraRef.current.position.copy(targetPos.current);
     cameraRef.current.lookAt(targetLook.current);
+    cameraRef.current.rotation.z = THREE.MathUtils.damp(
+      cameraRef.current.rotation.z,
+      targetBank,
+      7.0,
+      dt
+    );
 
     // 7. Update projection matrix only when FOV actually changes
     const finalFov = targetFov * (isPortrait ? 1.15 : 1.0);

@@ -280,14 +280,14 @@ export function CorridorTreadmill() {
       },
       materials: {
         floor: new THREE.MeshStandardMaterial({
-          color: "#38251a",
-          roughness: 0.9,
-          metalness: 0.15,
+          color: "#120E0C",
+          roughness: 0.18,
+          metalness: 0.45,
         }),
         inlay: new THREE.MeshStandardMaterial({
-          color: "#422c1e",
-          roughness: 0.82,
-          metalness: 0.2,
+          color: "#1A1412",
+          roughness: 0.15,
+          metalness: 0.5,
         }),
         darkGroove: new THREE.MeshBasicMaterial({ color: "#1a110a" }),
         plinth: new THREE.MeshStandardMaterial({

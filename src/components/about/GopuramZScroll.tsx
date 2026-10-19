@@ -132,6 +132,8 @@ const sharedTorusGeo = new THREE.TorusGeometry(4.0, 0.12, 32, 200);
 const sharedInnerRingGeo = new THREE.TorusGeometry(1.85, 0.04, 24, 120);
 const sharedCenterDotGeo = new THREE.SphereGeometry(0.28, 32, 24);
 
+import { createHeroKineticsTracker } from "@/lib/heroKinetics";
+
 const sharedRingMat = new THREE.MeshPhysicalMaterial({
   color: "#D4AF37",
   metalness: 0.92,
@@ -141,6 +143,39 @@ const sharedRingMat = new THREE.MeshPhysicalMaterial({
   emissive: new THREE.Color("#2A1808"),
   emissiveIntensity: 0.15,
 });
+
+sharedRingMat.onBeforeCompile = (shader) => {
+  shader.vertexShader = `
+    varying vec3 vWorldPosition;
+    ${shader.vertexShader}
+  `.replace(
+    `#include <begin_vertex>`,
+    `#include <begin_vertex>
+     vWorldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
+    `
+  );
+
+  shader.fragmentShader = `
+    varying vec3 vWorldPosition;
+    ${shader.fragmentShader}
+  `.replace(
+    `#include <roughnessmap_fragment>`,
+    `#include <roughnessmap_fragment>
+     // Procedural astrolabe degree ticks on astronomical brass
+     float angle = atan(vWorldPosition.y, vWorldPosition.x);
+     float tick = step(0.92, sin(angle * 90.0));
+     roughnessFactor = mix(roughnessFactor, 0.48, tick * 0.65);
+    `
+  ).replace(
+    `#include <emissivemap_fragment>`,
+    `#include <emissivemap_fragment>
+     // Warm Fresnel edge sheen on outer ring bevels
+     vec3 viewDir = normalize(vViewPosition);
+     float fresnel = pow(1.0 - max(0.0, dot(normalize(vNormal), viewDir)), 3.0);
+     totalEmissiveRadiance += vec3(0.98, 0.72, 0.28) * (fresnel * 0.35);
+    `
+  );
+};
 
 const sharedKolamMat = new THREE.MeshPhysicalMaterial({
   color: "#CD7F32",
@@ -180,14 +215,28 @@ function BronzeRing({
   scrollProgressRef: React.RefObject<number>;
 }) {
   const meshRef = useRef<THREE.Group>(null);
+  const coreLightRef = useRef<THREE.PointLight>(null);
 
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.05);
     if (meshRef.current) {
-      const alignment = 1 - THREE.MathUtils.smoothstep(scrollProgressRef.current, 0.76, 0.96);
+      const p = scrollProgressRef.current;
+      // 4-stage gyroscopic detent curve: accelerates between chapters and settles into alignment
+      const chapterPhase = p * 4.0;
+      const detentOffset = (Math.sin(chapterPhase * Math.PI * 2.0) / (Math.PI * 8.0)) * 0.55;
+      const detentP = p - detentOffset;
+
+      // Mandala coplanar concentric alignment as p -> 1.0
+      const alignment = 1 - THREE.MathUtils.smoothstep(detentP, 0.78, 0.98);
       meshRef.current.rotation.x = THREE.MathUtils.damp(meshRef.current.rotation.x, rotation[0] * alignment, 8, dt);
       meshRef.current.rotation.y = THREE.MathUtils.damp(meshRef.current.rotation.y, rotation[1] * alignment, 8, dt);
       meshRef.current.rotation.z = THREE.MathUtils.damp(meshRef.current.rotation.z, rotation[2] * alignment, 8, dt);
+
+      // Specular pulse from core at chapter detent points
+      if (coreLightRef.current) {
+        const resonance = Math.pow(Math.cos(chapterPhase * Math.PI), 8.0);
+        coreLightRef.current.intensity = 6 + resonance * 8;
+      }
     }
   });
 
@@ -211,7 +260,7 @@ function BronzeRing({
         material={sharedCoreMat}
         scale={[scale, scale, scale]}
       />
-      <pointLight color="#FFB366" intensity={6} distance={4} decay={2} />
+      <pointLight ref={coreLightRef} color="#FFB366" intensity={6} distance={4} decay={2} />
       {/* Flowing 8-Petal Sikku Kolam 3D Knot with silky-smooth bends */}
       <mesh
         geometry={sharedKolamGeo}
@@ -304,7 +353,7 @@ function TierText({
   );
 }
 
-// Cinematic Camera Controller with smooth damping
+// Cinematic Camera Controller with gyroscopic chapter detents and mandala portal push
 function AscendingGopuramCamera({
   scrollProgressRef,
   isMobile,
@@ -312,27 +361,47 @@ function AscendingGopuramCamera({
   scrollProgressRef: React.RefObject<number>;
   isMobile: boolean;
 }) {
+  const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
+
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
     const camera = state.camera;
+    const rawP = scrollProgressRef.current;
+    const kinetics = kineticsRef.current.update(rawP, state.pointer, dt);
+    const p = kinetics.smoothProgress;
+
+    // Gyroscopic Chapter Detents: locks into alignment at chapter holds
+    const chapterPhase = p * 4.0;
+    const detentOffset = (Math.sin(chapterPhase * Math.PI * 2.0) / (Math.PI * 8.0)) * 0.55;
+    const detentP = p - detentOffset;
+
     // 5 rings spaced 20 units apart. Z goes from 12 to -52.
     const startZ = 12;
     const endZ = -52;
-    const targetZ = THREE.MathUtils.lerp(startZ, endZ, scrollProgressRef.current);
+    const targetZ = THREE.MathUtils.lerp(startZ, endZ, detentP);
 
-    const targetX = isMobile ? 0 : -2;
-    const targetY = 0;
+    // Mandala Alignment & Camera Push Exit (p = 0.82 -> 1.00)
+    const exitT = Math.max(0, Math.min(1, (p - 0.82) / 0.18));
+    const exitPush = exitT * exitT * 8.0;
+
+    // Pointer parallax
+    const px = isMobile ? 0 : kinetics.smoothPointerX * 0.45;
+    const py = -kinetics.smoothPointerY * 0.28;
+
+    const targetX = (isMobile ? 0 : -2) * (1 - exitT) + px;
+    const targetY = py;
 
     camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 16.0, dt);
     camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 16.0, dt);
-    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 16.0, dt);
+    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ - exitPush, 16.0, dt);
 
-    // Natural subtle breeze sway
+    // Natural subtle breeze sway + velocity banking
     const swayTime = camera.position.z * 0.08;
     camera.position.x += Math.sin(swayTime) * 0.03 * dt;
     camera.position.y += Math.cos(swayTime * 1.4) * 0.03 * dt;
+    camera.rotation.z = THREE.MathUtils.damp(camera.rotation.z, kinetics.velocityBank * 0.5, 8.0, dt);
 
-    camera.lookAt(targetX, targetY, targetZ - 10);
+    camera.lookAt(targetX * 0.5, targetY * 0.5, targetZ - exitPush - 10);
   });
 
   return null;

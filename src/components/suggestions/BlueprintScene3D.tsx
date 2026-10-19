@@ -127,6 +127,9 @@ function createBlueprintGroundTexture(): THREE.CanvasTexture | null {
 }
 
 // Kaththi-style holographic line construction shader
+import { createHeroKineticsTracker } from "@/lib/heroKinetics";
+
+// Kaththi-style holographic world-space laser scan-plane construction shader
 const StadiumLineShader = {
   vertexShader: `
     attribute float aOrigY;
@@ -135,27 +138,25 @@ const StadiumLineShader = {
     uniform float uMaxHeight;
     uniform float uTime;
     varying float vOrigY;
-    varying float vCurY;
     varying float vTag;
     varying float vScanIntensity;
+    varying float vIsGhost;
 
     void main() {
       vOrigY = aOrigY;
       vTag = aTag;
       
-      // Calculate current construction height threshold
-      float h = uProgress * (uMaxHeight + 0.2);
+      // World-space vertical laser scan plane
+      float scanH = uProgress * (uMaxHeight + 0.1);
       
-      // Real-time vertical line construction: vertices rise from ground (y=0.02) to full height
-      float curY = clamp(aOrigY, 0.02, max(0.02, h));
-      vCurY = curY;
+      // Vertices above scan height render as ghost wireframe
+      vIsGhost = (aOrigY > scanH) ? 1.0 : 0.0;
 
-      // Glow intensity for vertices currently being constructed at the rising horizon
-      float distToHorizon = abs(aOrigY - h);
-      float isNearHorizon = (distToHorizon < 0.45 && h > 0.08 && h < uMaxHeight + 0.1) ? 1.0 : 0.0;
-      vScanIntensity = isNearHorizon * max(0.0, 1.0 - (distToHorizon / 0.45));
+      // Hot laser construction edge: vertices within ±0.45m of scan horizon
+      float distToHorizon = abs(aOrigY - scanH);
+      vScanIntensity = smoothstep(0.45, 0.0, distToHorizon);
 
-      vec3 transformed = vec3(position.x, curY, position.z);
+      vec3 transformed = position;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
     }
   `,
@@ -166,36 +167,39 @@ const StadiumLineShader = {
     uniform vec3 uColorRotunda;
     uniform float uTime;
     varying float vOrigY;
-    varying float vCurY;
     varying float vTag;
     varying float vScanIntensity;
+    varying float vIsGhost;
 
     void main() {
-      // Base blueprint line color: blazing cinematic amber/gold (#FFB84D)
-      vec3 color = uColorBase;
+      // Crisp architectural gold base (#D4AF37)
+      vec3 color = vec3(0.83, 0.69, 0.22);
 
       // Element-specific architectural coloration
       if (vTag < 0.5) {
-        // Football Field: warm amber/copper turf lines
         color = uColorField;
       } else if (vTag > 3.5 && vTag < 4.5) {
-        // North Rotunda: sacred radiant gold
         color = uColorRotunda;
       } else if (vTag > 4.5) {
-        // Press Box & Scoreboard: warm burnished bronze/gold
         color = vec3(1.0, 0.72, 0.30);
       } else if (vTag > 1.5 && vTag < 2.5) {
-        // Cantilever Steel Trusses: warm bronze/gold
-        color = mix(uColorBase, vec3(1.0, 0.82, 0.4), 0.45);
+        color = mix(color, vec3(1.0, 0.82, 0.4), 0.45);
       }
 
-      // Kaththi Hologram Glow Effect: blazing neon amber/gold along the active construction wave
-      if (vScanIntensity > 0.01) {
-        vec3 activeGlow = mix(vec3(1.0, 0.65, 0.22), vec3(1.0, 0.90, 0.45), 0.5 + 0.5 * sin(uTime * 8.0));
-        color = mix(color, activeGlow, vScanIntensity);
+      float alpha = 0.94;
+
+      if (vIsGhost > 0.5) {
+        // Faint 6% opacity ghost wireframe being printed upward
+        alpha = 0.06;
+        color = vec3(0.65, 0.55, 0.40);
+      } else if (vScanIntensity > 0.01) {
+        // Hot, bright ivory-cyan Laser Construction Edge at ±0.45m
+        vec3 hotEdge = mix(vec3(1.0, 0.98, 0.92), vec3(0.35, 0.95, 0.85), 0.5 + 0.5 * sin(uTime * 6.0));
+        color = mix(color, hotEdge, min(1.0, vScanIntensity * 2.5));
+        alpha = 1.0;
       }
 
-      gl_FragColor = vec4(color, 0.94);
+      gl_FragColor = vec4(color, alpha);
     }
   `,
 };
@@ -253,7 +257,6 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: React.Mu
     if (!mat?.uniforms) return;
 
     mat.uniforms.uTime.value += dt;
-    const time = mat.uniforms.uTime.value;
     
     // Progress smoothly interpolates from 0 to 1 as user scrolls
     const p = Math.min(1, Math.max(0, scrollProgress.current));
@@ -289,32 +292,31 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: React.Mu
   );
 }
 
-// Steady Axonometric / Isometric Architectural Camera Controller
+// Steady Axonometric / Isometric Architectural Camera Controller with Interactive CAD Turntable Orbit
 function SteadyIsometricCamera() {
   const { camera } = useThree();
-
-  // Fixed, steady cinematic isometric architectural perspective (South-East 3/4 axonometric view):
-  // Positioned elevated and further out (X: 16.0, Y: 13.5, Z: 18.5) looking at stadium center (0.0, 1.4, -1.2).
-  // Delivers the classic 30° axonometric blueprint projection with monumental scale and spatial depth,
-  // revealing the entire horseshoe, outer Roman arches, tiered bowl, and North Rotunda in one steady frame.
+  const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
   const basePos = useMemo(() => new THREE.Vector3(16.0, 13.5, 18.5), []);
   const lookTarget = useMemo(() => new THREE.Vector3(0.0, 1.4, -1.2), []);
   const targetPos = useRef(new THREE.Vector3(16.0, 13.5, 18.5));
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
-    // Subtle, organic breathing parallax to keep the scene alive
-    const mouseX = state.mouse.x * 0.35;
-    const mouseY = state.mouse.y * 0.20;
+    const kinetics = kineticsRef.current.update(0, state.pointer, dt);
+
+    // Interactive CAD turntable orbit: ±8° azimuth, ±4° elevation
+    const azimuthOffset = kinetics.smoothPointerX * 2.2;
+    const elevationOffset = kinetics.smoothPointerY * 1.2;
 
     targetPos.current.set(
-      basePos.x + mouseX,
-      basePos.y + mouseY,
-      basePos.z
+      basePos.x + azimuthOffset,
+      basePos.y + elevationOffset,
+      basePos.z - kinetics.smoothPointerX * 0.8
     );
 
-    camera.position.lerp(targetPos.current, 1 - Math.exp(-3 * dt));
+    camera.position.lerp(targetPos.current, 1 - Math.exp(-4 * dt));
     camera.lookAt(lookTarget);
+    camera.rotation.z = kinetics.velocityBank * 0.35;
   });
 
   return null;

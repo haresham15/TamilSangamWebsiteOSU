@@ -34,8 +34,9 @@ export function VolumetricCones() {
     const dt = Math.min(delta, 0.05);
     elapsed.current += dt;
     group.current?.children.forEach((cone, index) => {
-      cone.rotation.x = Math.sin(elapsed.current * 0.28 + index * Math.PI) * 0.06;
-      cone.rotation.z = Math.sin(elapsed.current * 0.35 + index * Math.PI) * 0.1;
+      // Counter-rotating volumetric spotlight gimbals sweeping amber rays across the arena
+      cone.rotation.x = Math.cos(elapsed.current * 0.52 + index * 0.9) * 0.12;
+      cone.rotation.z = Math.sin(elapsed.current * 0.7 + index * 1.3) * 0.18;
     });
   });
   return (

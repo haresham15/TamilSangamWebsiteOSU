@@ -64,6 +64,8 @@ export function createStringMaterial(): {
 
       varying vec2 vStringUV;
       varying float vWound;
+      varying float vEnergy;
+      varying float vPluck;
     ` + shader.vertexShader;
 
     // Inject displacement logic right after <begin_vertex>
@@ -74,6 +76,8 @@ export function createStringMaterial(): {
 
       vStringUV = uv;
       vWound = aWound;
+      vEnergy = aEnergy;
+      vPluck = (aPluckT >= 0.0) ? (aPluckAmp * exp(-aPluckT * 1.8)) : 0.0;
 
       vec3 pos = position;
       // Scale tube cross-section to string gauge radius
@@ -127,6 +131,8 @@ export function createStringMaterial(): {
     shader.fragmentShader = `
       varying vec2 vStringUV;
       varying float vWound;
+      varying float vEnergy;
+      varying float vPluck;
     ` + shader.fragmentShader;
 
     // Inject helical normal ridges for wound strings and distinct bronze vs plain steel colors
@@ -143,7 +149,7 @@ export function createStringMaterial(): {
       `
     );
 
-    // Modulate base color: Phosphor Bronze for wound strings
+    // Modulate base color and inject warm pluck emissive glow
     shader.fragmentShader = shader.fragmentShader.replace(
       "#include <color_fragment>",
       `
@@ -153,6 +159,14 @@ export function createStringMaterial(): {
       vec3 bronzeCol = vec3(0.80, 0.50, 0.20);
       vec3 steelCol  = vec3(0.88, 0.88, 0.88);
       diffuseColor.rgb = mix(steelCol, bronzeCol, vWound);
+      `
+    ).replace(
+      "#include <emissivemap_fragment>",
+      `
+      #include <emissivemap_fragment>
+      // Warm golden emissive glow on plucked strings decaying to ambient
+      float activePluckGlow = vPluck * 0.55 + vEnergy * 0.20;
+      totalEmissiveRadiance += vec3(1.0, 0.74, 0.28) * activePluckGlow;
       `
     );
   };
