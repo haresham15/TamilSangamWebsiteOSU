@@ -1,12 +1,14 @@
 "use client";
 
-import { createContext, useContext, useEffect, useId, useRef, useState, type MutableRefObject, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useId, useRef, useState, useSyncExternalStore, type MutableRefObject, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { governor } from "@/engine/governor";
 
 const VisibilityContext = createContext(false);
 export const useHeroStageVisibility = () => useContext(VisibilityContext);
+
+const emptySubscribe = () => () => {};
 
 export function HeroScrollStage({ children, className = "", id, runway = 280, progressRef, tone = "indigo", static: isStatic = false }: {
   children: ReactNode;
@@ -19,15 +21,10 @@ export function HeroScrollStage({ children, className = "", id, runway = 280, pr
 }) {
   const section = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
-  const melt = useRef<HTMLDivElement>(null);
   const key = useId();
   const governorKey = id || key;
   const [visible, setVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   const effectiveStatic = mounted && isStatic;
 
@@ -43,36 +40,38 @@ export function HeroScrollStage({ children, className = "", id, runway = 280, pr
   }, [governorKey, effectiveStatic]);
 
   useEffect(() => {
-    if (effectiveStatic || !section.current) return;
+    const sectionEl = section.current;
+    const stageEl = stage.current;
+    if (effectiveStatic || !sectionEl) return;
     gsap.registerPlugin(ScrollTrigger);
     const trigger = ScrollTrigger.create({
-      trigger: section.current,
+      trigger: sectionEl,
       start: "top top",
       end: "bottom bottom",
       invalidateOnRefresh: true,
       onUpdate: ({ progress }) => {
         if (progressRef) progressRef.current = progress;
-        if (stage.current) {
+        if (stageEl) {
           // AWWWARDS Recessive Camera & Stage Push (p = 0.84 -> 1.00)
           if (progress >= 0.84) {
             const t = (progress - 0.84) / 0.16;
             const scale = 1.0 - 0.05 * t;
             const yOffset = -6 * t;
             const opacity = 1.0 - 0.75 * t;
-            stage.current.style.transform = `scale(${scale.toFixed(3)}) translateY(${yOffset.toFixed(2)}vh)`;
-            stage.current.style.opacity = opacity.toFixed(3);
+            stageEl.style.transform = `scale(${scale.toFixed(3)}) translateY(${yOffset.toFixed(2)}vh)`;
+            stageEl.style.opacity = opacity.toFixed(3);
           } else {
-            stage.current.style.transform = "";
-            stage.current.style.opacity = "";
+            stageEl.style.transform = "";
+            stageEl.style.opacity = "";
           }
         }
       },
     });
     return () => {
       trigger.kill();
-      if (stage.current) {
-        stage.current.style.transform = "";
-        stage.current.style.opacity = "";
+      if (stageEl) {
+        stageEl.style.transform = "";
+        stageEl.style.opacity = "";
       }
     };
   }, [effectiveStatic, progressRef]);

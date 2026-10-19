@@ -40,8 +40,6 @@ export function GlobalCanvas() {
   const [source, setSource] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    const el = document.getElementById("app-root");
-    if (el) setSource(el);
     const frameId = requestAnimationFrame(() => {
       setSource(document.getElementById("app-root"));
     });
