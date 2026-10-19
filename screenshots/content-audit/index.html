@@ -3,38 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Muttram Courtyard Content Audit · Layout Board · OSU Tamil Sangam</title>
+  <title>Hero Animations & Content Audit Board · OSU Tamil Sangam</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anek+Tamil:wght@400;600;700;800&family=Halant:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Mukta+Malar:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #14100E;
-      --card-bg: #1C1714;
-      --border: rgba(229, 169, 60, 0.18);
+      --bg: #120e0d;
+      --card-bg: #1a1513;
+      --border: rgba(229, 169, 60, 0.22);
+      --border-subtle: rgba(255, 255, 255, 0.08);
       --accent: #E5A93C;
       --terracotta: #B85C38;
       --sand: #F4EFE6;
-      --accent-subtle: rgba(229, 169, 60, 0.12);
       --text-primary: #FAF9F6;
       --text-secondary: #C2B6A6;
+      --tag-bg: rgba(229, 169, 60, 0.10);
+      --cinema-tag: #ff8c42;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background-color: var(--bg);
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(184, 92, 56, 0.14) 0%, transparent 60%),
-        radial-gradient(rgba(229, 169, 60, 0.06) 1px, transparent 1px);
+        radial-gradient(circle at 50% 0%, rgba(184, 92, 56, 0.16) 0%, transparent 60%),
+        radial-gradient(rgba(229, 169, 60, 0.05) 1px, transparent 1px);
       background-size: 100% 100%, 32px 32px;
       color: var(--text-primary);
       font-family: 'Mukta Malar', sans-serif;
       min-height: 100vh;
       padding: 40px 32px 100px;
-      overflow-x: auto;
     }
     header {
-      max-width: 1600px;
-      margin: 0 auto 48px;
+      max-width: 1720px;
+      margin: 0 auto 36px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -57,10 +58,11 @@
     .brand-eyebrow::before {
       content: '';
       display: inline-block;
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       background: var(--accent);
       border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent);
     }
     h1 {
       font-family: 'Halant', 'Anek Tamil', serif;
@@ -69,14 +71,22 @@
       letter-spacing: -0.01em;
       color: #FAF9F6;
     }
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      max-width: 800px;
+      line-height: 1.5;
+    }
     .meta-pills {
       display: flex;
+      flex-wrap: wrap;
       gap: 12px;
       font-family: 'JetBrains Mono', monospace;
       font-size: 12px;
     }
     .pill {
-      background: rgba(229, 169, 60, 0.05);
+      background: var(--tag-bg);
       border: 1px solid var(--border);
       padding: 6px 14px;
       border-radius: 20px;
@@ -87,38 +97,43 @@
     /* Framer Canvas Artboard Strip */
     .framer-canvas {
       display: flex;
-      gap: 40px;
+      gap: 36px;
       overflow-x: auto;
       padding: 20px 8px 60px;
       scroll-snap-type: x mandatory;
     }
     .artboard-card {
-      flex: 0 0 460px;
+      flex: 0 0 520px;
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
       transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
       scroll-snap-align: start;
     }
     .artboard-card:hover {
-      border-color: rgba(229, 169, 60, 0.5);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(229, 169, 60, 0.12);
+      border-color: rgba(229, 169, 60, 0.6);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(229, 169, 60, 0.15);
       transform: translateY(-4px);
     }
     .artboard-header {
       padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--border-subtle);
       background: rgba(255, 255, 255, 0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .artboard-top-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     .artboard-title {
-      font-size: 17px;
+      font-size: 18px;
       font-family: 'Halant', serif;
       font-weight: 600;
       color: #FAF9F6;
@@ -136,43 +151,135 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       background: rgba(229, 169, 60, 0.08);
-      border: 1px solid rgba(229, 169, 60, 0.15);
+      border: 1px solid rgba(229, 169, 60, 0.25);
       padding: 3px 8px;
       border-radius: 6px;
       color: var(--accent);
     }
+    .cinema-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      background: rgba(184, 92, 56, 0.18);
+      border: 1px solid rgba(184, 92, 56, 0.4);
+      color: #ffaa75;
+      padding: 3px 10px;
+      border-radius: 12px;
+      align-self: flex-start;
+    }
+    .tab-bar {
+      display: flex;
+      background: rgba(0, 0, 0, 0.35);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 4px 10px;
+      gap: 6px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .tab-btn.active {
+      color: #14100E;
+      background: var(--accent);
+      font-weight: 600;
+    }
     .artboard-preview {
       width: 100%;
-      height: 720px;
+      height: 480px;
       overflow-y: auto;
       overflow-x: hidden;
-      background: #FAF9F6;
+      background: #0f0b0a;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .artboard-preview::-webkit-scrollbar {
       width: 6px;
     }
     .artboard-preview::-webkit-scrollbar-thumb {
-      background: rgba(184, 92, 56, 0.3);
+      background: rgba(184, 92, 56, 0.4);
       border-radius: 3px;
     }
-    .artboard-preview img {
+    .view-content {
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+    .view-content.active {
+      display: block;
+    }
+    .view-content img {
       width: 100%;
       height: auto;
       display: block;
     }
+    .view-content video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .stills-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 12px;
+      background: #14100E;
+    }
+    .still-item {
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .still-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      padding: 4px 8px;
+      background: rgba(0, 0, 0, 0.5);
+    }
     .artboard-footer {
-      padding: 14px 20px;
-      border-top: 1px solid var(--border);
+      padding: 16px 20px;
+      border-top: 1px solid var(--border-subtle);
       background: rgba(255, 255, 255, 0.02);
       font-size: 13px;
       color: var(--text-secondary);
       line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .hero-meta-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+    }
+    .easter-egg-text {
+      font-size: 12px;
+      color: #dfd7cc;
+      line-height: 1.45;
     }
     .artboard-actions {
-      margin-top: 10px;
       display: flex;
-      gap: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
     }
     .btn-link {
       font-family: 'JetBrains Mono', monospace;
@@ -180,14 +287,26 @@
       text-decoration: none;
       color: var(--accent);
       border: 1px solid var(--border);
-      background: rgba(229, 169, 60, 0.06);
+      background: rgba(229, 169, 60, 0.08);
       padding: 5px 12px;
       border-radius: 6px;
       transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }
     .btn-link:hover {
       background: var(--accent);
       color: #14100E;
+    }
+    .btn-prd {
+      color: #FAF9F6;
+      border-color: rgba(184, 92, 56, 0.4);
+      background: rgba(184, 92, 56, 0.15);
+    }
+    .btn-prd:hover {
+      background: var(--terracotta);
+      color: #FAF9F6;
     }
   </style>
 </head>
@@ -195,197 +314,406 @@
   <header>
     <div>
       <div class="brand-eyebrow">OSU Tamil Sangam · முற்றம் (Muttram) Architecture</div>
-      <h1>Navbar Content Audit Board</h1>
+      <h1>Hero Animations & Content Audit Master Board</h1>
+      <p class="subtitle">Interactive side-by-side inspection of all 9 routes: live hero animation GIFs, 60fps WebM video captures, kinematic scroll stills, and full-page editorial content with cinematic Easter egg specifications.</p>
     </div>
     <div class="meta-pills">
-      <div class="pill">Scope: <strong>8 Core Navbar Pages</strong></div>
-      <div class="pill">Aesthetic: <strong>Muttram Courtyard (#FAF9F6)</strong></div>
-      <div class="pill">Viewport: <strong>1440px Desktop Retina</strong></div>
+      <div class="pill">Pages Audited: <strong>9/9 Active</strong></div>
+      <div class="pill">Format: <strong>GIF + WebM + 1440p Stills</strong></div>
+      <div class="pill">PRD Status: <strong>v3.0 Production Ready</strong></div>
     </div>
   </header>
 
   <div class="framer-canvas">
-    
-      <div class="artboard-card" id="card-01-home">
-        <div class="artboard-header">
-          <div class="artboard-title">
-            <span>Home</span>
-            <span class="artboard-ta">முகப்பு</span>
-          </div>
+
+    <!-- 01-home -->
+    <div class="artboard-card" id="card-01-home">
+      <div class="artboard-header">
+        <div class="artboard-top-row">
+          <div class="artboard-title">01 · Home <span class="artboard-ta">முகப்பு</span></div>
           <span class="artboard-route">/</span>
         </div>
-        <div class="artboard-preview">
-          <img src="./01-home.png" alt="Home Content Screenshot" loading="lazy">
+        <div class="cinema-badge">📜 Thirukkural Genesis · Arisi Maavu Threshold</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('01-home', 'gif')">Hero GIF</button>
+        <button class="tab-btn" onclick="switchTab('01-home', 'video')">WebM Video</button>
+        <button class="tab-btn" onclick="switchTab('01-home', 'full')">Full Page</button>
+        <button class="tab-btn" onclick="switchTab('01-home', 'stills')">Kinematic Stills</button>
+      </div>
+      <div class="artboard-preview">
+        <div class="view-content active" id="view-01-home-gif">
+          <img src="./heroes/home_hero_animation.gif" alt="Home Hero Animation GIF" loading="lazy">
         </div>
-        <div class="artboard-footer">
-          <p>Sunlit courtyard: Next flagship gathering, Five Pillars in airy vertical sections, Moments on the Olentangy organic collage, and cultural glossary</p>
-          <div class="artboard-actions">
-            <a href="./01-home.png" target="_blank" class="btn-link">View Full Image ↗</a>
-            <a href="http://localhost:3000/" target="_blank" class="btn-link">Open Live Route ↗</a>
-          </div>
+        <div class="view-content" id="view-01-home-video">
+          <video src="./heroes/home_hero_animation.webm" autoplay loop muted playsinline></video>
+        </div>
+        <div class="view-content" id="view-01-home-full">
+          <img src="./01-home.png" alt="Home Full Page Screenshot" loading="lazy">
+        </div>
+        <div class="view-content stills-grid" id="view-01-home-stills">
+          <div class="still-item"><div class="still-label">P0: Rest / Central "அ"</div><img src="./heroes/home_hero_rest.png"></div>
+          <div class="still-item"><div class="still-label">P2: Conveyor Peel</div><img src="./heroes/home_hero_mid.png"></div>
+          <div class="still-item"><div class="still-label">P4: Thirukkural Wreath</div><img src="./heroes/home_hero_reveal.png"></div>
         </div>
       </div>
-    
-      <div class="artboard-card" id="card-02-events">
-        <div class="artboard-header">
-          <div class="artboard-title">
-            <span>Events</span>
-            <span class="artboard-ta">நிகழ்வுகள்</span>
-          </div>
+      <div class="artboard-footer">
+        <div class="hero-meta-title">Hero: Digital Kolam Woven Conveyor</div>
+        <div class="easter-egg-text">Lissajous curves weave around a static pulli dot matrix. The primordial Tamil "அ" unpeels downward into a protective wreath framing Thirukkural Kural 1, unmasking the sunlit courtyard broadsheet.</div>
+        <div class="artboard-actions">
+          <a href="../../docs/heroes/home-hero-peel-and-flow-prd.md" class="btn-link btn-prd" target="_blank">📄 Read Home PRD ↗</a>
+          <a href="http://localhost:3100/" class="btn-link" target="_blank">🌐 Live Route ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02-events -->
+    <div class="artboard-card" id="card-02-events">
+      <div class="artboard-header">
+        <div class="artboard-top-row">
+          <div class="artboard-title">02 · Events <span class="artboard-ta">நிகழ்வுகள்</span></div>
           <span class="artboard-route">/events</span>
         </div>
-        <div class="artboard-preview">
-          <img src="./02-events.png" alt="Events Content Screenshot" loading="lazy">
+        <div class="cinema-badge">🎬 LEO (2023) · Naa Ready Concert Arena</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('02-events', 'gif')">Hero GIF</button>
+        <button class="tab-btn" onclick="switchTab('02-events', 'video')">WebM Video</button>
+        <button class="tab-btn" onclick="switchTab('02-events', 'full')">Full Page</button>
+        <button class="tab-btn" onclick="switchTab('02-events', 'stills')">Kinematic Stills</button>
+      </div>
+      <div class="artboard-preview">
+        <div class="view-content active" id="view-02-events-gif">
+          <img src="./heroes/events_hero_animation.gif" alt="Events Hero Animation GIF" loading="lazy">
         </div>
-        <div class="artboard-footer">
-          <p>The Gatherings River: Open list of gatherings, centered massive serif titles, soft sans dates, campus traditions, and memory archives</p>
-          <div class="artboard-actions">
-            <a href="./02-events.png" target="_blank" class="btn-link">View Full Image ↗</a>
-            <a href="http://localhost:3000/events" target="_blank" class="btn-link">Open Live Route ↗</a>
-          </div>
+        <div class="view-content" id="view-02-events-video">
+          <video src="./heroes/events_hero_animation.webm" autoplay loop muted playsinline></video>
+        </div>
+        <div class="view-content" id="view-02-events-full">
+          <img src="./02-events.png" alt="Events Full Page Screenshot" loading="lazy">
+        </div>
+        <div class="view-content stills-grid" id="view-02-events-stills">
+          <div class="still-item"><div class="still-label">P0: Altitude Crane</div><img src="./heroes/events_hero_rest.png"></div>
+          <div class="still-item"><div class="still-label">P2: 128 BPM Crowd Plunge</div><img src="./heroes/events_hero_mid.png"></div>
+          <div class="still-item"><div class="still-label">P4: God Light Blowout</div><img src="./heroes/events_hero_reveal.png"></div>
         </div>
       </div>
-    
-      <div class="artboard-card" id="card-03-about">
-        <div class="artboard-header">
-          <div class="artboard-title">
-            <span>About</span>
-            <span class="artboard-ta">அறிமுகம்</span>
-          </div>
+      <div class="artboard-footer">
+        <div class="hero-meta-title">Hero: Leo Concert Arena Gen 3</div>
+        <div class="easter-egg-text">12,000-intensity sodium-vapor "God Light", 8,000 instanced dancing silhouettes bouncing at 128 BPM, thousands of swaying phone torches, and the bronze emblem floating above the cauldron stage.</div>
+        <div class="artboard-actions">
+          <a href="../../docs/heroes/events-hero-leo-concert-arena-prd.md" class="btn-link btn-prd" target="_blank">📄 Read Events PRD ↗</a>
+          <a href="http://localhost:3100/events" class="btn-link" target="_blank">🌐 Live Route ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03-about -->
+    <div class="artboard-card" id="card-03-about">
+      <div class="artboard-header">
+        <div class="artboard-top-row">
+          <div class="artboard-title">03 · About <span class="artboard-ta">அறிமுகம்</span></div>
           <span class="artboard-route">/about</span>
         </div>
-        <div class="artboard-preview">
-          <img src="./03-about.png" alt="About Content Screenshot" loading="lazy">
+        <div class="cinema-badge">🏛️ Aayirathil Oruvan · Puranaanooru 192</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('03-about', 'gif')">Hero GIF</button>
+        <button class="tab-btn" onclick="switchTab('03-about', 'video')">WebM Video</button>
+        <button class="tab-btn" onclick="switchTab('03-about', 'full')">Full Page</button>
+        <button class="tab-btn" onclick="switchTab('03-about', 'stills')">Kinematic Stills</button>
+      </div>
+      <div class="artboard-preview">
+        <div class="view-content active" id="view-03-about-gif">
+          <img src="./heroes/about_hero_animation.gif" alt="About Hero Animation GIF" loading="lazy">
         </div>
-        <div class="artboard-footer">
-          <p>The Organic Journey: Center-snaking SVG river timeline (2021-2026), 4 pillars of Sangam, campus alliances, and democratic constitution</p>
-          <div class="artboard-actions">
-            <a href="./03-about.png" target="_blank" class="btn-link">View Full Image ↗</a>
-            <a href="http://localhost:3000/about" target="_blank" class="btn-link">Open Live Route ↗</a>
-          </div>
+        <div class="view-content" id="view-03-about-video">
+          <video src="./heroes/about_hero_animation.webm" autoplay loop muted playsinline></video>
+        </div>
+        <div class="view-content" id="view-03-about-full">
+          <img src="./03-about.png" alt="About Full Page Screenshot" loading="lazy">
+        </div>
+        <div class="view-content stills-grid" id="view-03-about-stills">
+          <div class="still-item"><div class="still-label">Tala 0: Yaathum Oore</div><img src="./heroes/about_hero_rest.png"></div>
+          <div class="still-item"><div class="still-label">Tala 2: Aatam Paatam</div><img src="./heroes/about_hero_mid.png"></div>
+          <div class="still-item"><div class="still-label">Tala 4: Living Heritage</div><img src="./heroes/about_hero_reveal.png"></div>
         </div>
       </div>
-    
-      <div class="artboard-card" id="card-04-board">
-        <div class="artboard-header">
-          <div class="artboard-title">
-            <span>Board</span>
-            <span class="artboard-ta">அவை</span>
-          </div>
+      <div class="artboard-footer">
+        <div class="hero-meta-title">Hero: 5-Tala Dravidian Gopuram Z-Scroll</div>
+        <div class="easter-egg-text">Camera glides through 5 sacred architectural tiers of a Dravidian temple gopuram, framed by parametric bronze Brahma Mudi Sikku Kolam rings, unlocking Kaniyan Poongundranar's ancient universalist verse.</div>
+        <div class="artboard-actions">
+          <a href="../../docs/heroes/about-hero-gopuram-z-scroll-prd.md" class="btn-link btn-prd" target="_blank">📄 Read About PRD ↗</a>
+          <a href="http://localhost:3100/about" class="btn-link" target="_blank">🌐 Live Route ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04-board -->
+    <div class="artboard-card" id="card-04-board">
+      <div class="artboard-header">
+        <div class="artboard-top-row">
+          <div class="artboard-title">04 · Board <span class="artboard-ta">அவை</span></div>
           <span class="artboard-route">/board</span>
         </div>
-        <div class="artboard-preview">
-          <img src="./04-board.png" alt="Board Content Screenshot" loading="lazy">
+        <div class="cinema-badge">👑 Ponniyin Selvan · Chola Darbar Throne</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('04-board', 'gif')">Hero GIF</button>
+        <button class="tab-btn" onclick="switchTab('04-board', 'video')">WebM Video</button>
+        <button class="tab-btn" onclick="switchTab('04-board', 'full')">Full Page</button>
+        <button class="tab-btn" onclick="switchTab('04-board', 'stills')">Kinematic Stills</button>
+      </div>
+      <div class="artboard-preview">
+        <div class="view-content active" id="view-04-board-gif">
+          <img src="./heroes/board_hero_animation.gif" alt="Board Hero Animation GIF" loading="lazy">
         </div>
-        <div class="artboard-footer">
-          <p>The Warm Portraits: Executive board roster with airy vertical gaps in serif typography, color portrait reveals, and constitutional governance</p>
-          <div class="artboard-actions">
-            <a href="./04-board.png" target="_blank" class="btn-link">View Full Image ↗</a>
-            <a href="http://localhost:3000/board" target="_blank" class="btn-link">Open Live Route ↗</a>
-          </div>
+        <div class="view-content" id="view-04-board-video">
+          <video src="./heroes/board_hero_animation.webm" autoplay loop muted playsinline></video>
+        </div>
+        <div class="view-content" id="view-04-board-full">
+          <img src="./04-board.png" alt="Board Full Page Screenshot" loading="lazy">
+        </div>
+        <div class="view-content stills-grid" id="view-04-board-stills">
+          <div class="still-item"><div class="still-label">P0: Stone Portal Entry</div><img src="./heroes/board_hero_rest.png"></div>
+          <div class="still-item"><div class="still-label">P2: Silk Banners & Agal Vilakku</div><img src="./heroes/board_hero_mid.png"></div>
+          <div class="still-item"><div class="still-label">P4: Chola Crown Reveal</div><img src="./heroes/board_hero_reveal.png"></div>
         </div>
       </div>
-    
-      <div class="artboard-card" id="card-05-gallery">
-        <div class="artboard-header">
-          <div class="artboard-title">
-            <span>Gallery</span>
-            <span class="artboard-ta">நினைவுகள்</span>
-          </div>
+      <div class="artboard-footer">
+        <div class="hero-meta-title">Hero: Chola Darbar Corridor Treadmill</div>
+        <div class="easter-egg-text">Monolithic granite pillars, floating brass agal vilakku oil lamps, cloth-simulated silk tapestries depicting student ministers, and the 3D Karanda Makuta (Imperial Chola Crown) with rotating Sirascakra lotus halo.</div>
+        <div class="artboard-actions">
+          <a href="../../docs/heroes/board-hero-chola-darbar-prd.md" class="btn-link btn-prd" target="_blank">📄 Read Board PRD ↗</a>
+          <a href="http://localhost:3100/board" class="btn-link" target="_blank">🌐 Live Route ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05-gallery -->
+    <div class="artboard-card" id="card-05-gallery">
+      <div class="artboard-header">
+        <div class="artboard-top-row">
+          <div class="artboard-title">05 · Gallery <span class="artboard-ta">நினைவுகள்</span></div>
           <span class="artboard-route">/gallery</span>
         </div>
-        <div class="artboard-preview">
-          <img src="./05-gallery.png" alt="Gallery Content Screenshot" loading="lazy">
+        <div class="cinema-badge">🎸 Vaaranam Aayiram · 24-Fret Highway</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('05-gallery', 'gif')">Hero GIF</button>
+        <button class="tab-btn" onclick="switchTab('05-gallery', 'video')">WebM Video</button>
+        <button class="tab-btn" onclick="switchTab('05-gallery', 'full')">Full Page</button>
+        <button class="tab-btn" onclick="switchTab('05-gallery', 'stills')">Kinematic Stills</button>
+      </div>
+      <div class="artboard-preview">
+        <div class="view-content active" id="view-05-gallery-gif">
+          <img src="./heroes/gallery_hero_animation.gif" alt="Gallery Hero Animation GIF" loading="lazy">
         </div>
-        <div class="artboard-footer">
-          <p>The Canvas: Expansive interlocking masonry with wide ivory gaps, 35mm physical film memories, tag filters, and student consent policy</p>
-          <div class="artboard-actions">
-            <a href="./05-gallery.png" target="_blank" class="btn-link">View Full Image ↗</a>
-            <a href="http://localhost:3000/gallery" target="_blank" class="btn-link">Open Live Route ↗</a>
-          </div>
+        <div class="view-content" id="view-05-gallery-video">
+          <video src="./heroes/gallery_hero_animation.webm" autoplay loop muted playsinline></video>
+        </div>
+        <div class="view-content" id="view-05-gallery-full">
+          <img src="./05-gallery.png" alt="Gallery Full Page Screenshot" loading="lazy">
+        </div>
+        <div class="view-content stills-grid" id="view-05-gallery-stills">
+          <div class="still-item"><div class="still-label">P0: Coastal Fretboard</div><img src="./heroes/gallery_hero_rest.png"></div>
+          <div class="still-item"><div class="still-label">P2: Vibrating Strings & Rose</div><img src="./heroes/gallery_hero_mid.png"></div>
+          <div class="still-item"><div class="still-label">P4: Sunset Film Flash</div><img src="./heroes/gallery_hero_reveal.png"></div>
         </div>
       </div>
-    
-      <div class="artboard-card" id="card-06-guide">
-        <div class="artboard-header">
-          <div class="artboard-title">
-            <span>Guide</span>
-            <span class="artboard-ta">வழிகாட்டி</span>
-          </div>
+      <div class="artboard-footer">
+        <div class="hero-meta-title">Hero: 24-Fret Acoustic Guitar Highway</div>
+        <div class="easter-egg-text">24-fret true 12-TET acoustic neck along a coastal sunset road. Plucking strings ejects floating Polaroids; Suriya's red rose lands at p=0.52 and military dog tags drop at p=0.755 before the sunset flash.</div>
+        <div class="artboard-actions">
+          <a href="../../docs/heroes/gallery-hero-prd.md" class="btn-link btn-prd" target="_blank">📄 Read Gallery PRD ↗</a>
+          <a href="http://localhost:3100/gallery" class="btn-link" target="_blank">🌐 Live Route ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06-guide -->
+    <div class="artboard-card" id="card-06-guide">
+      <div class="artboard-header">
+        <div class="artboard-top-row">
+          <div class="artboard-title">06 · Guide <span class="artboard-ta">வழிகாட்டி</span></div>
           <span class="artboard-route">/guide</span>
         </div>
-        <div class="artboard-preview">
-          <img src="./06-guide.png" alt="Guide Content Screenshot" loading="lazy">
+        <div class="cinema-badge">🚆 Alaipayuthey · Blue Hour Railway Station</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('06-guide', 'gif')">Hero GIF</button>
+        <button class="tab-btn" onclick="switchTab('06-guide', 'video')">WebM Video</button>
+        <button class="tab-btn" onclick="switchTab('06-guide', 'full')">Full Page</button>
+        <button class="tab-btn" onclick="switchTab('06-guide', 'stills')">Kinematic Stills</button>
+      </div>
+      <div class="artboard-preview">
+        <div class="view-content active" id="view-06-guide-gif">
+          <img src="./heroes/guide_hero_animation.gif" alt="Guide Hero Animation GIF" loading="lazy">
         </div>
-        <div class="artboard-footer">
-          <p>The Open Book: Generous padding between Q&A pairs, conversational questions in soft Terracotta, and searchable student knowledge base</p>
-          <div class="artboard-actions">
-            <a href="./06-guide.png" target="_blank" class="btn-link">View Full Image ↗</a>
-            <a href="http://localhost:3000/guide" target="_blank" class="btn-link">Open Live Route ↗</a>
-          </div>
+        <div class="view-content" id="view-06-guide-video">
+          <video src="./heroes/guide_hero_animation.webm" autoplay loop muted playsinline></video>
+        </div>
+        <div class="view-content" id="view-06-guide-full">
+          <img src="./06-guide.png" alt="Guide Full Page Screenshot" loading="lazy">
+        </div>
+        <div class="view-content stills-grid" id="view-06-guide-stills">
+          <div class="still-item"><div class="still-label">P0: Compartment Window</div><img src="./heroes/guide_hero_rest.png"></div>
+          <div class="still-item"><div class="still-label">P2: Hall Crane Pullback</div><img src="./heroes/guide_hero_mid.png"></div>
+          <div class="still-item"><div class="still-label">P4: Split-Flap Board Reveal</div><img src="./heroes/guide_hero_reveal.png"></div>
         </div>
       </div>
-    
-      <div class="artboard-card" id="card-07-suggestions">
-        <div class="artboard-header">
-          <div class="artboard-title">
-            <span>Ideas</span>
-            <span class="artboard-ta">கருத்து</span>
-          </div>
+      <div class="artboard-footer">
+        <div class="hero-meta-title">Hero: Solari Split-Flap Departure Board</div>
+        <div class="easter-egg-text">Rain-damp platform at blue hour. Backlit window silhouettes homage Karthik and Shakthi's train glances. The camera cranes into the station hall where a mechanical flap board cycles student FAQ departures.</div>
+        <div class="artboard-actions">
+          <a href="../../docs/heroes/guide-hero-v3-station-sequence-prd.md" class="btn-link btn-prd" target="_blank">📄 Read Guide PRD ↗</a>
+          <a href="http://localhost:3100/guide" class="btn-link" target="_blank">🌐 Live Route ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07-suggestions -->
+    <div class="artboard-card" id="card-07-suggestions">
+      <div class="artboard-header">
+        <div class="artboard-top-row">
+          <div class="artboard-title">07 · Ideas <span class="artboard-ta">கருத்து</span></div>
           <span class="artboard-route">/suggestions</span>
         </div>
-        <div class="artboard-preview">
-          <img src="./07-suggestions.png" alt="Ideas Content Screenshot" loading="lazy">
+        <div class="cinema-badge">📐 Kaththi (2014) · War Room & Coin Drop</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('07-suggestions', 'gif')">Hero GIF</button>
+        <button class="tab-btn" onclick="switchTab('07-suggestions', 'video')">WebM Video</button>
+        <button class="tab-btn" onclick="switchTab('07-suggestions', 'full')">Full Page</button>
+        <button class="tab-btn" onclick="switchTab('07-suggestions', 'stills')">Kinematic Stills</button>
+      </div>
+      <div class="artboard-preview">
+        <div class="view-content active" id="view-07-suggestions-gif">
+          <img src="./heroes/suggestions_hero_animation.gif" alt="Suggestions Hero Animation GIF" loading="lazy">
         </div>
-        <div class="artboard-footer">
-          <p>The Ideas Hearth: Conversational campus proposal form, category selectors, proven track record ledger, and leadership routing</p>
-          <div class="artboard-actions">
-            <a href="./07-suggestions.png" target="_blank" class="btn-link">View Full Image ↗</a>
-            <a href="http://localhost:3000/suggestions" target="_blank" class="btn-link">Open Live Route ↗</a>
-          </div>
+        <div class="view-content" id="view-07-suggestions-video">
+          <video src="./heroes/suggestions_hero_animation.webm" autoplay loop muted playsinline></video>
+        </div>
+        <div class="view-content" id="view-07-suggestions-full">
+          <img src="./07-suggestions.png" alt="Suggestions Full Page Screenshot" loading="lazy">
+        </div>
+        <div class="view-content stills-grid" id="view-07-suggestions-stills">
+          <div class="still-item"><div class="still-label">P0: Axonometric Horseshoe</div><img src="./heroes/suggestions_hero_rest.png"></div>
+          <div class="still-item"><div class="still-label">P2: Laser Scan & Compass</div><img src="./heroes/suggestions_hero_mid.png"></div>
+          <div class="still-item"><div class="still-label">P4: Coin Drop Intersection</div><img src="./heroes/suggestions_hero_reveal.png"></div>
         </div>
       </div>
-    
-      <div class="artboard-card" id="card-08-join">
-        <div class="artboard-header">
-          <div class="artboard-title">
-            <span>Join</span>
-            <span class="artboard-ta">இணையுங்கள்</span>
-          </div>
+      <div class="artboard-footer">
+        <div class="hero-meta-title">Hero: Kaththi War Room & Ohio Stadium 3D</div>
+        <div class="easter-egg-text">Bruised plum void, 3D wireframe mesh of Ohio Stadium, brass architect's compass, rolled master scrolls, and Kathiresan's coin drop marking the critical pipeline intersection for student campus proposals.</div>
+        <div class="artboard-actions">
+          <a href="../../docs/heroes/suggestions-hero-kaththi-war-room-prd.md" class="btn-link btn-prd" target="_blank">📄 Read Ideas PRD ↗</a>
+          <a href="http://localhost:3100/suggestions" class="btn-link" target="_blank">🌐 Live Route ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08-join -->
+    <div class="artboard-card" id="card-08-join">
+      <div class="artboard-header">
+        <div class="artboard-top-row">
+          <div class="artboard-title">08 · Join <span class="artboard-ta">இணையுங்கள்</span></div>
           <span class="artboard-route">/join</span>
         </div>
-        <div class="artboard-preview">
-          <img src="./08-join.png" alt="Join Content Screenshot" loading="lazy">
+        <div class="cinema-badge">🍁 Autograph / Minnale · Buckeye & Jasmine Drift</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('08-join', 'gif')">Hero GIF</button>
+        <button class="tab-btn" onclick="switchTab('08-join', 'video')">WebM Video</button>
+        <button class="tab-btn" onclick="switchTab('08-join', 'full')">Full Page</button>
+        <button class="tab-btn" onclick="switchTab('08-join', 'stills')">Kinematic Stills</button>
+      </div>
+      <div class="artboard-preview">
+        <div class="view-content active" id="view-08-join-gif">
+          <img src="./heroes/join_hero_animation.gif" alt="Join Hero Animation GIF" loading="lazy">
         </div>
-        <div class="artboard-footer">
-          <p>The Welcoming Hearth: Guestbook-style membership form with conversational prompts, simple elegant underlines, and community links</p>
-          <div class="artboard-actions">
-            <a href="./08-join.png" target="_blank" class="btn-link">View Full Image ↗</a>
-            <a href="http://localhost:3000/join" target="_blank" class="btn-link">Open Live Route ↗</a>
-          </div>
+        <div class="view-content" id="view-08-join-video">
+          <video src="./heroes/join_hero_animation.webm" autoplay loop muted playsinline></video>
+        </div>
+        <div class="view-content" id="view-08-join-full">
+          <img src="./08-join.png" alt="Join Full Page Screenshot" loading="lazy">
+        </div>
+        <div class="view-content stills-grid" id="view-08-join-stills">
+          <div class="still-item"><div class="still-label">P0: Closed Iron Gates</div><img src="./heroes/join_hero_rest.png"></div>
+          <div class="still-item"><div class="still-label">P2: Gates Parting in Sunlight</div><img src="./heroes/join_hero_mid.png"></div>
+          <div class="still-item"><div class="still-label">P4: Courtyard Welcome</div><img src="./heroes/join_hero_reveal.png"></div>
         </div>
       </div>
-    
-      <div class="artboard-card" id="card-09-event-dossier">
-        <div class="artboard-header">
-          <div class="artboard-title">
-            <span>Event Dossier</span>
-            <span class="artboard-ta">நிகழ்ச்சி ஆவணம்</span>
-          </div>
-          <span class="artboard-route">/events/berry-cute-picnic</span>
-        </div>
-        <div class="artboard-preview">
-          <img src="./09-event-dossier.png" alt="Event Dossier Content Screenshot" loading="lazy">
-        </div>
-        <div class="artboard-footer">
-          <p>The Sunlit Dossier: ReactBits SplitText header, randomized 5-8 photo scatter on light table with 0px radius, and magnetic Google Photos Vault gateway</p>
-          <div class="artboard-actions">
-            <a href="./09-event-dossier.png" target="_blank" class="btn-link">View Full Image ↗</a>
-            <a href="http://localhost:3000/events/berry-cute-picnic" target="_blank" class="btn-link">Open Live Route ↗</a>
-          </div>
+      <div class="artboard-footer">
+        <div class="hero-meta-title">Hero: Morning Campus Courtyard Gates</div>
+        <div class="easter-egg-text">Wrought-iron campus gates physically swing open on procedural hinges. GPU particle simulation blends 90% Ohio Buckeye leaves with 10% white Madurai Jasmine petals (malli poo) in morning god-rays.</div>
+        <div class="artboard-actions">
+          <a href="../../docs/heroes/join-hero-collegiate-gates-prd.md" class="btn-link btn-prd" target="_blank">📄 Read Join PRD ↗</a>
+          <a href="http://localhost:3100/join" class="btn-link" target="_blank">🌐 Live Route ↗</a>
         </div>
       </div>
-    
+    </div>
+
+    <!-- 09-event-dossier -->
+    <div class="artboard-card" id="card-09-event-dossier">
+      <div class="artboard-header">
+        <div class="artboard-top-row">
+          <div class="artboard-title">09 · Dossier <span class="artboard-ta">நிகழ்ச்சி ஆவணம்</span></div>
+          <span class="artboard-route">/events/[slug]</span>
+        </div>
+        <div class="cinema-badge">📰 High-Fashion Broadsheet · Vault Gateway</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('09-event-dossier', 'gif')">Hero GIF</button>
+        <button class="tab-btn" onclick="switchTab('09-event-dossier', 'video')">WebM Video</button>
+        <button class="tab-btn" onclick="switchTab('09-event-dossier', 'full')">Full Page</button>
+        <button class="tab-btn" onclick="switchTab('09-event-dossier', 'stills')">Kinematic Stills</button>
+      </div>
+      <div class="artboard-preview">
+        <div class="view-content active" id="view-09-event-dossier-gif">
+          <img src="./heroes/event-dossier_hero_animation.gif" alt="Event Dossier Hero Animation GIF" loading="lazy">
+        </div>
+        <div class="view-content" id="view-09-event-dossier-video">
+          <video src="./heroes/event-dossier_hero_animation.webm" autoplay loop muted playsinline></video>
+        </div>
+        <div class="view-content" id="view-09-event-dossier-full">
+          <img src="./09-event-dossier.png" alt="Event Dossier Full Page Screenshot" loading="lazy">
+        </div>
+        <div class="view-content stills-grid" id="view-09-event-dossier-stills">
+          <div class="still-item"><div class="still-label">P0: SplitText Cascade</div><img src="./heroes/event-dossier_hero_rest.png"></div>
+          <div class="still-item"><div class="still-label">P2: Parallax Scatter Table</div><img src="./heroes/event-dossier_hero_mid.png"></div>
+          <div class="still-item"><div class="still-label">P4: Magnetic Vault Gateway</div><img src="./heroes/event-dossier_hero_reveal.png"></div>
+        </div>
+      </div>
+      <div class="artboard-footer">
+        <div class="hero-meta-title">Feature: Sunlit Randomized Magazine</div>
+        <div class="easter-egg-text">Server-side Fisher-Yates shuffle produces a fresh 5-8 photo slice on each visit with zero layout shift. SplitText letterpress cascade and proximity magnetic door leading to the Google Photos Vault.</div>
+        <div class="artboard-actions">
+          <a href="../../docs/heroes/event-dossier-prd.md" class="btn-link btn-prd" target="_blank">📄 Read Dossier PRD ↗</a>
+          <a href="http://localhost:3100/events/berry-cute-picnic" class="btn-link" target="_blank">🌐 Live Route ↗</a>
+        </div>
+      </div>
+    </div>
+
   </div>
+
+  <script>
+    function switchTab(cardId, tabName) {
+      const card = document.getElementById('card-' + cardId);
+      if (!card) return;
+
+      // Update tab buttons
+      const buttons = card.querySelectorAll('.tab-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      const activeBtn = Array.from(buttons).find(btn => btn.textContent.toLowerCase().includes(tabName));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      // Update views
+      const views = card.querySelectorAll('.view-content');
+      views.forEach(v => v.classList.remove('active'));
+      const targetView = document.getElementById('view-' + cardId + '-' + tabName);
+      if (targetView) targetView.classList.add('active');
+    }
+  </script>
 </body>
 </html>

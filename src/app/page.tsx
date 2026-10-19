@@ -334,22 +334,22 @@ export default function HomePage() {
             style={staticHero ? { display: "none" } : undefined}
             id="monolith"
             ref={monolithRef}
-            className="absolute inset-0 z-20 w-full h-[100dvh] overflow-y-auto lg:overflow-hidden grid grid-cols-1 lg:grid-cols-12 bg-[#050201] border-t border-white/10 text-white"
+            className="absolute inset-0 z-20 w-full h-[100dvh] overflow-y-auto lg:overflow-hidden grid grid-cols-1 lg:grid-cols-12 bg-[#FAF7F2] border-t border-[#161210]/10 text-[#161210]"
           >
             {/* Left Column (4 Cols - The Anchor, §PRD 9.1) */}
-            <div className="lg:col-span-4 relative p-6 pt-20 sm:p-10 sm:pt-24 lg:p-12 lg:pt-24 xl:p-14 xl:pt-24 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-white/10 overflow-hidden">
+            <div className="lg:col-span-4 relative p-6 pt-20 sm:p-10 sm:pt-24 lg:p-12 lg:pt-24 xl:p-14 xl:pt-24 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#161210]/10 overflow-hidden">
               {/* Absolute Massive Tamil Numeral Watermark: 3% opacity positioned bottom-left clipped */}
               <div
                 aria-hidden="true"
-                className="absolute -bottom-10 -left-6 text-[clamp(14rem,32vw,36rem)] font-noto-serif-tamil font-bold text-white opacity-[0.03] select-none pointer-events-none leading-none"
+                className="absolute -bottom-10 -left-6 text-[clamp(14rem,32vw,36rem)] font-noto-serif-tamil font-bold text-[#161210] opacity-[0.04] select-none pointer-events-none leading-none"
               >
                 ௦௧
               </div>
 
               {/* Top Anchor Header */}
               <div className="relative z-10 space-y-4">
-                <div className="inline-flex items-center gap-2 border border-white/10 px-3 py-1 bg-white/[0.02] font-space-mono text-[10px] tracking-widest text-[#FFB84D] uppercase">
-                  <span className="w-1.5 h-1.5 bg-[#FFB84D]" />
+                <div className="inline-flex items-center gap-2 border border-[#C85A32]/30 px-3 py-1 bg-[#C85A32]/10 font-space-mono text-[10px] tracking-widest text-[#C85A32] uppercase">
+                  <span className="w-1.5 h-1.5 bg-[#C85A32]" />
                   <span>ACT III // THE ANCHOR</span>
                 </div>
 
@@ -357,29 +357,29 @@ export default function HomePage() {
                   ref={monolithTamilRef}
                   lang="ta"
                   style={{ letterSpacing: 0 }}
-                  className="font-noto-serif-tamil text-sm sm:text-base text-neutral-400 leading-relaxed pt-2"
+                  className="font-noto-serif-tamil text-sm sm:text-base text-[#4A423D] leading-relaxed pt-2"
                 >
                   ஓஹியோ மாநிலத்தில் தமிழ் மரபையும் மாணவர் தோழமையையும் ஒன்றிணைக்கும் கலாச்சாரப் பீடம்.
                 </p>
               </div>
 
               {/* Live Telemetry Lockup at Bottom (PRD §9.1) */}
-              <div className="relative z-10 pt-8 mt-auto border-t border-white/10 space-y-2.5 font-space-mono text-[11px] tracking-[0.18em] text-neutral-400">
+              <div className="relative z-10 pt-8 mt-auto border-t border-[#161210]/10 space-y-2.5 font-space-mono text-[11px] tracking-[0.18em] text-[#4A423D]">
                 <div className="flex items-center justify-between">
-                  <span className="text-white/40">COLUMBUS, OHIO</span>
-                  <span ref={liveTimeRef} className="text-white font-medium">--:--:-- EDT</span>
+                  <span className="text-[#161210]/60">COLUMBUS, OHIO</span>
+                  <span ref={liveTimeRef} className="text-[#161210] font-medium">--:--:-- EDT</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-white/40">OLENTANGY RIVER</span>
-                  <span className="text-[#55CCA2] font-medium">40.0067° N · 83.0305° W</span>
+                  <span className="text-[#161210]/60">OLENTANGY RIVER</span>
+                  <span className="text-[#C85A32] font-medium">40.0067° N · 83.0305° W</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-white/40">CHAPTER</span>
-                  <span className="text-white font-medium">EST. 2021 · 120+ MEMBERS</span>
+                  <span className="text-[#161210]/60">CHAPTER</span>
+                  <span className="text-[#161210] font-medium">EST. 2021 · 120+ MEMBERS</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-white/40">COMMUNITY</span>
-                  <span className="text-white font-medium">ALL MAJORS WELCOME</span>
+                  <span className="text-[#161210]/60">COMMUNITY</span>
+                  <span className="text-[#161210] font-medium">ALL MAJORS WELCOME</span>
                 </div>
               </div>
             </div>
@@ -387,31 +387,31 @@ export default function HomePage() {
             {/* Right Column (8 Cols - The Dossier) */}
             <div className="lg:col-span-8 flex flex-col justify-between">
               {/* Editorial Hook */}
-              <div className="p-6 pt-20 sm:p-10 sm:pt-24 lg:p-12 lg:pt-24 xl:p-14 xl:pt-24 border-b border-white/10">
-                <span className="font-space-mono text-[10px] text-white/40 tracking-widest uppercase block mb-3">
+              <div className="p-6 pt-20 sm:p-10 sm:pt-24 lg:p-12 lg:pt-24 xl:p-14 xl:pt-24 border-b border-[#161210]/10">
+                <span className="font-space-mono text-[10px] text-[#C85A32] tracking-widest uppercase block mb-3 font-semibold">
                   EDITORIAL PROLOGUE
                 </span>
-                <h3 className="text-[clamp(2rem,3.8vw,3.75rem)] font-display font-medium text-white leading-snug tracking-tight">
+                <h3 className="text-[clamp(2rem,3.8vw,3.75rem)] font-display font-medium text-[#161210] leading-snug tracking-tight">
                   &ldquo;A hearth on the banks of the Olentangy.&rdquo;
                 </h3>
-                <p className="mt-2 text-xs sm:text-sm font-mono text-[#55CCA2] tracking-wider uppercase font-semibold">
+                <p className="mt-2 text-xs sm:text-sm font-mono text-[#C85A32] tracking-wider uppercase font-semibold">
                   A student-run cultural community at Ohio State for Tamil students and friends of every background · No Tamil required
                 </p>
-                <p ref={monolithPrologueRef} className="mt-4 text-sm sm:text-base text-neutral-300 font-body leading-relaxed max-w-2xl">
+                <p ref={monolithPrologueRef} className="mt-4 text-sm sm:text-base text-[#4A423D] font-body leading-relaxed max-w-2xl">
                   Born from the longing for home-cooked meals, late-night filter coffee, and the rhythm of Sangam verses beneath Midwest skies. We bridge ancient Tamil civilization with collegiate celebration, open dance floors, and lifelong kinship.
                 </p>
                 <div className="mt-6 flex flex-wrap items-center gap-3">
                   <Link
                     href="/join"
                     onClick={playClick}
-                    className="px-4 py-2 bg-[#FFB84D] text-[#1a0a00] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#ffc56e] transition-colors ticket-chamfer-tl-br"
+                    className="px-4 py-2 bg-[#C85A32] text-[#FAF7F2] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#b04b25] transition-colors ticket-chamfer-tl-br shadow-sm"
                   >
                     Join the Hearth →
                   </Link>
                   <Link
                     href="/events"
                     onClick={playClick}
-                    className="px-4 py-2 border border-white/20 text-white font-mono text-xs uppercase tracking-wider hover:border-[#55CCA2] hover:text-[#55CCA2] transition-colors"
+                    className="px-4 py-2 border border-[#161210]/25 text-[#161210] font-mono text-xs uppercase tracking-wider hover:border-[#C85A32] hover:text-[#C85A32] transition-colors"
                   >
                     See What&apos;s Coming Up ↗
                   </Link>
@@ -419,7 +419,7 @@ export default function HomePage() {
               </div>
 
               {/* The Three Horizontal Ribbons with Hover Kinematics */}
-              <div className="divide-y divide-white/10">
+              <div className="divide-y divide-[#161210]/10">
                 {/* Ribbon 1: CULTURAL MEMORY */}
                 <Link
                   href="/about"
@@ -428,22 +428,22 @@ export default function HomePage() {
                     audioLayer.playTapeClack();
                   }}
                   data-cursor="bracket"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-7 hover:bg-white/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
+                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-7 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
-                    <span className="font-space-mono text-xs sm:text-sm text-white/40 group-hover:text-[#FFB84D] transition-colors">
+                    <span className="font-space-mono text-xs sm:text-sm text-[#C85A32] font-semibold transition-colors">
                       01 //
                     </span>
                     <div>
-                      <h4 className="text-base sm:text-lg font-editorial font-bold text-white group-hover:text-[#FFB84D] transition-colors">
+                      <h4 className="text-base sm:text-lg font-editorial font-bold text-[#161210] group-hover:text-[#C85A32] transition-colors">
                         CULTURAL MEMORY
                       </h4>
-                      <p className="text-xs sm:text-sm text-neutral-400 mt-0.5 font-body">
+                      <p className="text-xs sm:text-sm text-[#4A423D] mt-0.5 font-body">
                         Classical Sangam heritage, Tamil literature & living Dravidian architectural traditions.
                       </p>
                     </div>
                   </div>
-                  <div className="mt-3 sm:mt-0 flex items-center gap-2 font-space-mono text-xs text-white/40 group-hover:text-[#FFB84D] transition-colors shrink-0">
+                  <div className="mt-3 sm:mt-0 flex items-center gap-2 font-space-mono text-xs text-[#161210]/60 group-hover:text-[#C85A32] transition-colors shrink-0">
                     <span className="hidden sm:inline">EXPLORE ARCHIVE</span>
                     <span className="text-sm font-mono leading-none transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                       ↗
@@ -459,22 +459,22 @@ export default function HomePage() {
                     audioLayer.playTapeClack();
                   }}
                   data-cursor="bracket"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-7 hover:bg-white/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
+                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-7 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
-                    <span className="font-space-mono text-xs sm:text-sm text-white/40 group-hover:text-[#FFB84D] transition-colors">
+                    <span className="font-space-mono text-xs sm:text-sm text-[#C85A32] font-semibold transition-colors">
                       02 //
                     </span>
                     <div>
-                      <h4 className="text-base sm:text-lg font-editorial font-bold text-white group-hover:text-[#FFB84D] transition-colors">
+                      <h4 className="text-base sm:text-lg font-editorial font-bold text-[#161210] group-hover:text-[#C85A32] transition-colors">
                         THE BANQUET TABLE
                       </h4>
-                      <p className="text-xs sm:text-sm text-neutral-400 mt-0.5 font-body">
+                      <p className="text-xs sm:text-sm text-[#4A423D] mt-0.5 font-body">
                         Streetside sapad, fresh dosas, frothy degree kaapi & annual Pongal celebrations.
                       </p>
                     </div>
                   </div>
-                  <div className="mt-3 sm:mt-0 flex items-center gap-2 font-space-mono text-xs text-white/40 group-hover:text-[#FFB84D] transition-colors shrink-0">
+                  <div className="mt-3 sm:mt-0 flex items-center gap-2 font-space-mono text-xs text-[#161210]/60 group-hover:text-[#C85A32] transition-colors shrink-0">
                     <span className="hidden sm:inline">VIEW GATHERINGS</span>
                     <span className="text-sm font-mono leading-none transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                       ↗
@@ -493,22 +493,22 @@ export default function HomePage() {
                     audioLayer.playSubBassThud();
                   }}
                   data-cursor="bracket"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-7 hover:bg-white/[0.03] transition-[transform,color,background-color] duration-300 ease-out border-b border-white/10 lg:border-b-0"
+                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-7 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out border-b border-[#161210]/10 lg:border-b-0"
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
-                    <span className="font-space-mono text-xs sm:text-sm text-white/40 group-hover:text-[#FFB84D] transition-colors">
+                    <span className="font-space-mono text-xs sm:text-sm text-[#C85A32] font-semibold transition-colors">
                       03 //
                     </span>
                     <div>
-                      <h4 className="text-base sm:text-lg font-editorial font-bold text-white group-hover:text-[#FFB84D] transition-colors">
+                      <h4 className="text-base sm:text-lg font-editorial font-bold text-[#161210] group-hover:text-[#C85A32] transition-colors">
                         KINSHIP & DIASPORA
                       </h4>
-                      <p className="text-xs sm:text-sm text-neutral-400 mt-0.5 font-body">
+                      <p className="text-xs sm:text-sm text-[#4A423D] mt-0.5 font-body">
                         Student mentorship, Buckeye peer connections & collegiate South Asian solidarity.
                       </p>
                     </div>
                   </div>
-                  <div className="mt-3 sm:mt-0 flex items-center gap-2 font-space-mono text-xs text-white/40 group-hover:text-[#FFB84D] transition-colors shrink-0">
+                  <div className="mt-3 sm:mt-0 flex items-center gap-2 font-space-mono text-xs text-[#161210]/60 group-hover:text-[#C85A32] transition-colors shrink-0">
                     <span className="hidden sm:inline">JOIN THE HEARTH</span>
                     <span className="text-sm font-mono leading-none transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                       ↗

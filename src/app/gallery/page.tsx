@@ -142,10 +142,9 @@ export default function GalleryPage() {
           <LayoutGroup id="gallery-prints">
           <div ref={printsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-14 items-start">
             {filteredPhotos.map((photo, idx) => {
-              // Asymmetric aspect ratio patterns for dynamic physical photos
+              // Architectural aspect ratio patterns for dynamic physical photos
               const aspect = idx % 5 === 0 ? "aspect-[4/5]" : idx % 3 === 0 ? "aspect-[16/10]" : "aspect-[4/3]";
-              const rotations = [-2, 2, 0, -1, 1, -1];
-              const overlap = idx % 3 === 1 ? "md:-mt-6" : idx % 3 === 2 ? "md:mt-4" : "";
+              const overlap = idx % 3 === 1 ? "md:-mt-4" : idx % 3 === 2 ? "md:mt-3" : "";
 
               return (
                 <motion.div
@@ -166,20 +165,23 @@ export default function GalleryPage() {
                     audioLayer.playTapeClack();
                     setSelectedPhoto(photo);
                   }}
-                  animate={{ rotate: staticMotion ? 0 : rotations[idx % rotations.length] }}
-                  whileHover={staticMotion ? undefined : { rotate: 0, scale: 1.02 }}
-                  whileFocus={staticMotion ? undefined : { rotate: 0, scale: 1.02 }}
+                  animate={{ rotate: 0 }}
+                  whileHover={staticMotion ? undefined : { scale: 1.01 }}
+                  whileFocus={staticMotion ? undefined : { scale: 1.01 }}
                   transition={staticMotion ? { duration: 0 } : { type: "spring", stiffness: 260, damping: 24 }}
                   className="group relative block w-full text-left cursor-pointer select-none hover:z-30 focus-visible:z-30 focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-hearth-terracotta"
                 >
-                  {/* Sharp Physical Photo Print (No rounded corners, no white card wrapper) */}
-                  <span className={`block relative w-full ${aspect} overflow-hidden bg-sunbaked-sand border border-hearth-espresso/15 shadow-xl shadow-hearth-espresso/10`}>
+                  {/* Sharp Architectural Contact Sheet Print with Plate Badge */}
+                  <span className={`block relative w-full ${aspect} overflow-hidden bg-sunbaked-sand border border-hearth-espresso/20 shadow-md`}>
+                    <span className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 bg-[#161210]/85 text-[#FAF7F2] font-mono text-[10px] tracking-widest uppercase border border-[#D4AF37]/30 backdrop-blur-sm">
+                      PLATE {String(idx + 1).padStart(2, "0")}
+                    </span>
                     <Image
                       src={photo.imageUrl}
                       alt={photo.titleEn}
                       fill
-                      className="object-cover"
-                      style={{ objectPosition: photo.crop?.position, transform: photo.crop ? `scale(${photo.crop.scale})` : undefined }}
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                      style={{ objectPosition: photo.crop?.position }}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </span>

@@ -44,7 +44,22 @@ export async function getRandomizedEventPhotos(
         .map((entry) => entry.name);
 
       if (validFiles.length > 0) {
-        imageFiles = validFiles;
+        // Deduplicate: public/events has picnic-01..picnic-08 as authentic unique photos
+        // and picnic-09..picnic-18 as exact duplicates of 01..08.
+        const uniqueSet = new Set<string>();
+        const dedupedFiles: string[] = [];
+        for (const file of validFiles) {
+          const match = file.match(/(\w+)-(\d+)\./);
+          if (match) {
+            const num = parseInt(match[2], 10);
+            if (num > 8) continue; // Skip redundant clones
+          }
+          if (!uniqueSet.has(file)) {
+            uniqueSet.add(file);
+            dedupedFiles.push(file);
+          }
+        }
+        imageFiles = dedupedFiles.length >= minCount ? dedupedFiles : validFiles;
         resolvedRelativeDir = path.relative(path.join(process.cwd(), "public"), dir).replace(/\\/g, "/");
         break;
       }

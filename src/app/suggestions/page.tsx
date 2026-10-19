@@ -34,13 +34,10 @@ const BlueprintScene3D = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-full bg-[#0F050A] flex flex-col items-center justify-center text-[#FFB84D] font-mono text-xs gap-3">
-        <div className="flex items-center gap-2">
-          <Compass className="w-4 h-4 animate-spin text-[#55CCA2]" />
-          <span className="tracking-widest uppercase">
-            CALIBRATING 3D AXONOMETRIC BLUEPRINT MATRIX...
-          </span>
-        </div>
+      <div className="w-full h-full bg-[#120D0B] flex flex-col items-center justify-center text-[#FAF7F2] p-8 text-center">
+        <span className="font-mono text-xs text-[#D4AF37] uppercase tracking-[0.24em] mb-2">CAMPUS VOICES • STUDENT INITIATIVES</span>
+        <h1 className="font-serif text-3xl sm:text-5xl text-[#FAF7F2] font-normal mb-2">The Blueprint Hearth</h1>
+        <p lang="ta" className="font-tamil text-base text-[#D4AF37]/80">கருத்துக்களம் · திட்டங்கள்</p>
       </div>
     ),
   }
@@ -145,14 +142,30 @@ export default function SuggestionsPage() {
           />
         </div>
 
-        {/* Scroll Indicator */}
+        {/* Hero Editorial Header Overlay */}
+        <div className="absolute top-28 sm:top-32 left-6 sm:left-12 lg:left-16 z-20 pointer-events-none max-w-xl">
+          <span className="font-mono text-xs text-[#D4AF37] uppercase tracking-[0.24em] block mb-2 font-semibold">
+            CAMPUS VOICES • STUDENT INITIATIVES
+          </span>
+          <h1 className="font-serif text-4xl sm:text-6xl text-[#FAF7F2] font-normal tracking-tight leading-none mb-2">
+            The Blueprint Hearth
+          </h1>
+          <p lang="ta" className="font-tamil text-lg sm:text-xl text-[#D4AF37]/85 leading-relaxed font-medium">
+            கருத்துக்களம் · திட்டங்கள்
+          </p>
+          <p className="font-body text-xs sm:text-sm text-[#FAF7F2]/70 mt-2 max-w-md leading-relaxed hidden sm:block">
+            Propose student festivals, language workshops, food nights, and campus collaborations directly to the council.
+          </p>
+        </div>
+
+        {/* Clean Architectural Bottom Bezel Dispatch Button */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-auto">
           <button
             onClick={scrollToForm}
-            className="flex items-center gap-2 px-4 py-2 bg-black/60 border border-white/20 text-white font-mono text-xs uppercase tracking-widest hover:border-[#FFB84D] hover:text-[#FFB84D] transition-all backdrop-blur-sm"
+            className="flex items-center gap-2.5 px-5 py-2.5 bg-[#161210]/90 border border-[#D4AF37]/40 text-[#FAF7F2] font-mono text-xs uppercase tracking-widest hover:border-[#C85A32] hover:bg-[#1E1815] transition-all rounded-full shadow-lg backdrop-blur-md cursor-pointer"
           >
             <span>DISPATCH SUGGESTION</span>
-            <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
+            <ArrowDown className="w-3.5 h-3.5 text-[#D4AF37] animate-bounce" />
           </button>
         </div>
       </HeroScrollStage>

@@ -53,14 +53,14 @@ export default function BoardPage() {
         <BoardHeroCanvas bezel={
           <dl className={styles.bezel} aria-label="Tamil Sangam at a glance">
             <div><dt>Buckeye Members</dt><dd>{reduceMotion ? 120 : <CountUp to={120} duration={2} />}+</dd></div>
-            <div><dt>Executive Officers</dt><dd>{reduceMotion ? 8 : <CountUp to={8} duration={1.5} />}</dd></div>
+            <div><dt>Executive Officers</dt><dd>{reduceMotion ? 9 : <CountUp to={9} duration={1.5} />}</dd></div>
             <div><dt>Campus Galas & Events</dt><dd>{reduceMotion ? 14 : <CountUp to={14} duration={1.8} />}</dd></div>
-            <div><dt>Est. at Ohio State</dt><dd>{reduceMotion ? 2018 : <CountUp to={2018} from={2000} duration={2.2} separator="" />}</dd></div>
+            <div><dt>Est. at Ohio State</dt><dd>{reduceMotion ? 2021 : <CountUp to={2021} from={2000} duration={2.2} separator="" />}</dd></div>
           </dl>
         } />
       </div>
       <div className={styles.content}>
-        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 pt-36 sm:pt-44 pb-24 sm:pb-32 scroll-mt-32">
           <CourtyardHeader
             align="left"
             eyebrow="Democratic Council · 2026–2027"
@@ -69,7 +69,7 @@ export default function BoardPage() {
             description="Democratic student governance serving 120+ Buckeye members. Meet the officers leading community festivals, language workshops, and student advocacy across Columbus."
           />
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start mt-16 sm:mt-24">
-            <aside className={styles.portrait + " lg:col-span-5"} aria-label="Selected officer" data-testid="officer-portrait">
+            <aside className={styles.portrait + " lg:col-span-5 sticky top-28 self-start z-10"} aria-label="Selected officer" data-testid="officer-portrait">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div key={hoveredMember.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : .2 }}>
                   <div className={styles.portraitPrint}>

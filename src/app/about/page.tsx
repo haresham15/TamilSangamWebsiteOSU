@@ -23,7 +23,7 @@ export default function AboutPage() {
     const ctx = gsap.context(() => {
       gsap.fromTo(split.words, { opacity: 0.18, filter: "blur(4px)" }, {
         opacity: 1, filter: "blur(0px)", stagger: 0.08,
-        scrollTrigger: { trigger: quoteRef.current, start: "top 85%", end: "bottom 45%", scrub: true, invalidateOnRefresh: true },
+        scrollTrigger: { trigger: quoteRef.current, start: "top 85%", end: "center center", scrub: true, invalidateOnRefresh: true },
       });
       gsap.fromTo(watermarkRef.current, { xPercent: -8 }, { xPercent: 8,
         scrollTrigger: { trigger: quoteRef.current, start: "top bottom", end: "bottom top", scrub: true, invalidateOnRefresh: true },
@@ -128,7 +128,7 @@ export default function AboutPage() {
             <span className="font-sans text-xs uppercase tracking-widest text-[#B85C38] font-semibold block">
               Core Motto // புறநானூறு 192
             </span>
-            <span ref={watermarkRef} aria-hidden="true" lang="ta" className="pointer-events-none absolute inset-x-0 top-1/3 font-tamil text-8xl text-hearth-terracotta/5 whitespace-nowrap tracking-normal">யாதும் ஊரே யாவரும் கேளிர்</span>
+            <span ref={watermarkRef} aria-hidden="true" lang="ta" className="pointer-events-none absolute inset-x-0 top-1/3 font-tamil text-8xl text-[#B85C38]/[0.035] whitespace-nowrap tracking-normal">யாதும் ஊரே யாவரும் கேளிர்</span>
             <blockquote ref={quoteRef} className="text-3xl sm:text-5xl lg:text-6xl font-serif font-light text-[#2A2825] leading-snug tracking-tight">
               &ldquo;<strong className="font-medium text-[#B85C38]">To Us All Towns Are Home, Everyone Our Kin.</strong> Born from the deep longing for home-cooked meals, steaming cups of filter coffee, and the resonant cadence of <strong className="font-medium text-[#E5A93C]">Sangam verses</strong> beneath Midwest skies.&rdquo;
             </blockquote>

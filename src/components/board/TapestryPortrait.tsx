@@ -135,9 +135,14 @@ function createTapestryTexture(member: BoardMember): THREE.CanvasTexture {
   // 5. Bilingual Typography Roster Lockup
   ctx.textAlign = "center";
 
-  // English Name (Bold Display Serif)
+  // English Name (Bold Display Serif, dynamically sized to prevent clipping)
   ctx.fillStyle = "#FFF6E5";
-  ctx.font = "bold 32px 'Anek Tamil', 'Halant', serif";
+  let nameFontSize = 30;
+  ctx.font = `bold ${nameFontSize}px 'Anek Tamil', 'Halant', serif`;
+  while (ctx.measureText(member.nameEn).width > width - 72 && nameFontSize > 18) {
+    nameFontSize -= 2;
+    ctx.font = `bold ${nameFontSize}px 'Anek Tamil', 'Halant', serif`;
+  }
   ctx.fillText(member.nameEn, width / 2, 530);
 
   // Tamil Name

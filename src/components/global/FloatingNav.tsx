@@ -40,7 +40,7 @@ export const FloatingNav: React.FC = () => {
   const [isScrolledDown, setIsScrolledDown] = useState(false);
 
   // Dark 3D Hero sections at the top of specific pages
-  const darkHeroRoutes = ["/", "/events", "/about", "/board"];
+  const darkHeroRoutes = ["/", "/events", "/about", "/board", "/gallery", "/guide", "/suggestions", "/join"];
   const isDarkHero = darkHeroRoutes.includes(pathname) && !isPastHero;
 
   // References for Gooey Active Indicator & Magnetic Mechanics
@@ -75,8 +75,12 @@ export const FloatingNav: React.FC = () => {
       if (typeof window === "undefined") return 0;
       if (pathname === "/") return 850;
       if (pathname === "/about") return 2200;
-      if (pathname === "/events") return 450;
-      if (pathname === "/board") return 500;
+      if (pathname === "/events") return 1400;
+      if (pathname === "/board") return 800;
+      if (pathname === "/gallery") return 800;
+      if (pathname === "/guide") return 700;
+      if (pathname === "/suggestions") return 800;
+      if (pathname === "/join") return 800;
       return 0;
     };
 
@@ -379,7 +383,7 @@ export const FloatingNav: React.FC = () => {
         ref={headerRef}
         className={`fixed top-0 left-0 right-0 z-50 w-full transition-[padding,background-color,backdrop-filter,border-color,box-shadow,color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-0 opacity-100 pointer-events-auto ${
           isDarkHero
-            ? "pt-3.5 pb-3.5 px-6 sm:px-10 lg:px-16 bg-[#0c0814]/85 backdrop-blur-md border-b border-amber-500/20 text-[#FAF9F6] shadow-lg"
+            ? "pt-3.5 pb-3.5 px-6 sm:px-10 lg:px-16 bg-[#161210]/92 backdrop-blur-md border-b border-[#D4AF37]/25 text-[#FAF7F2] shadow-lg"
             : isScrolledDown
             ? "pt-3.5 pb-3.5 px-6 sm:px-10 lg:px-16 bg-[#FAF9F6]/92 backdrop-blur-md border-b border-[#2A2825]/8 text-[#2A2825] shadow-[0_4px_24px_rgba(42,40,37,0.06)]"
             : "pt-5 sm:pt-6 pb-3.5 px-6 sm:px-10 lg:px-16 bg-[#FAF9F6]/85 backdrop-blur-xs border-b border-[#2A2825]/5 text-[#2A2825]"
