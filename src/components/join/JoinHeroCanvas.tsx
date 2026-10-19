@@ -204,41 +204,18 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
       {/* ================================================================= */}
       <div className="absolute top-20 sm:top-24 left-0 right-0 z-30 px-3 sm:px-8 pointer-events-none">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 pointer-events-auto">
-          {/* Persistent Conversion "Join Now ↓" Skip Link (High WCAG contrast against cream morning sky) */}
+          {/* Persistent Conversion "Join Now ↓" Skip Link (Warm Hearth Glass Pill) */}
           <a
             id="hero-skip-link"
             href="#membership-form"
             onClick={handleSkipToForm}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#55CCA2] text-[#050201] text-xs font-mono font-bold uppercase tracking-wider rounded-none border-2 border-[#141414] shadow-[3px_3px_0px_#141414] hover:bg-[#6ee7b7] hover:shadow-[4px_4px_0px_#141414] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#141414] focus:outline-none focus:ring-2 focus:ring-[#141414] transition-[background-color,box-shadow,transform] duration-150 cursor-pointer shrink-0 min-h-[44px]"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#161210]/85 text-[#FAF7F2] border border-[#D4AF37]/40 backdrop-blur-md rounded-full text-xs font-mono tracking-wider hover:border-[#C85A32] hover:bg-[#1E1815] transition-all cursor-pointer shrink-0 min-h-[44px] shadow-lg"
           >
-            <span>{locale === "ta" ? "இப்போதே இணையுங்கள் ↓" : "Join Now ↓"}</span>
-            <span className="text-[10px] opacity-75 font-body hidden md:inline">
-              {locale === "ta" ? "(படிவம்)" : "(Skip intro)"}
+            <span>{locale === "ta" ? "இப்போதே இணையுங்கள் ↓" : "Skip to Guestbook ↓"}</span>
+            <span className="text-[10px] text-[#D4AF37] font-body hidden md:inline">
+              {locale === "ta" ? "(படிவம்)" : "(Form)"}
             </span>
           </a>
-
-          {/* Iron PBR Variant Switcher (Phase 3: §4 & §8) */}
-          <div className="flex items-center gap-1.5 bg-[#141414]/90 backdrop-blur-md px-2.5 py-1 border border-[#C49A45]/50 text-xs font-mono text-[#F4EEDD] shadow-sm">
-            <span className="text-white/60 text-[10px] uppercase tracking-wider hidden sm:inline">Iron PBR:</span>
-            <button
-              type="button"
-              onClick={() => setIronVariant("a")}
-              className={`px-2 py-0.5 transition-colors cursor-pointer text-[11px] ${
-                ironVariant === "a" ? "bg-[#C49A45] text-black font-bold" : "text-white/70 hover:text-white"
-              }`}
-            >
-              Var A (Specular)
-            </button>
-            <button
-              type="button"
-              onClick={() => setIronVariant("b")}
-              className={`px-2 py-0.5 transition-colors cursor-pointer text-[11px] ${
-                ironVariant === "b" ? "bg-[#C49A45] text-black font-bold" : "text-white/70 hover:text-white"
-              }`}
-            >
-              Var B (Matte)
-            </button>
-          </div>
         </div>
       </div>
 
@@ -294,7 +271,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
             <LeafDrift tier={tier} reducedMotion={reducedMotion} />
 
             {/* Finale Sunrise Bloom */}
-            <WhiteoutFinale scrollProgressRef={scrollProgressRef} />
+            <WhiteoutFinale scrollProgressRef={scrollProgressRef} gateProgressRef={gateProgressRef} />
           </Suspense>
         </View>
 

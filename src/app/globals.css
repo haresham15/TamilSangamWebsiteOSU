@@ -1110,12 +1110,12 @@ input, textarea {
 /* Shared cinematic runway; DOM overlays sit above the persistent canvas. */
 .hero-scroll-stage { position: relative; background: var(--color-hero-indigo); }
 .hero-scroll-stage[data-tone=espresso] { background: var(--color-hero-espresso); }
-.hero-stage-melt { position: absolute; inset: 0; z-index: 15; pointer-events: none; opacity: 0; background: linear-gradient(to bottom, transparent 0%, var(--color-paper) 100%); }
+.hero-stage-melt { position: absolute; inset: 0; z-index: 15; pointer-events: none; opacity: 0; background: linear-gradient(to bottom, transparent 65%, var(--color-paper) 100%); }
 @theme {
   --color-paper: #FAF7F2;
-  --color-hero-indigo: #0E0B1A;
+  --color-hero-indigo: #14110F;
   --color-hero-espresso: #120D0B;
-  --color-hearth-espresso: #1A1614;
+  --color-hearth-espresso: #161210;
   --color-hearth-terracotta: #C85A32;
   --color-antique-gold: #D4AF37;
   --color-warm-amber: #FFB366;

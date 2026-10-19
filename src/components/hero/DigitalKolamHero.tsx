@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useMemo, useSyncExternalStore } from "react";
+import React, { useRef, useEffect, useMemo, useSyncExternalStore, Suspense } from "react";
 import * as THREE from "three";
 import { useFrame, type RootState } from "@react-three/fiber";
 import { PerspectiveCamera, Text3D, Center, Environment, Lightformer } from "@react-three/drei";
@@ -22,9 +22,9 @@ import {
   PulliDotLattice,
 } from "./pathBuilder";
 import { createPeelConveyorMaterial } from "./peelConveyorShader";
-import { SideKolamsGroup } from "@/components/home-hero/side-kolams/SideKolam";
 import { playCinematicWhoosh } from "@/audio/sounds";
 import { useReducedMotion } from "framer-motion";
+import muktaFont from "../../../public/fonts/mukta-malar-tamil.json";
 
 const STUDIO_LIGHT = { ivory: "#FAF7F2", terracotta: "#C85A32", gold: "#D4AF37" };
 
@@ -407,8 +407,8 @@ function ScrollExpandIntroOverlay() {
           frameRef.current.style.borderRadius = `${r}px`;
           frameRef.current.style.borderWidth = `${borderW}px`;
           frameRef.current.style.borderColor = "#050201";
-          frameRef.current.style.outline = `${2 * borderOpacity}px solid rgba(255, 184, 77, ${0.85 * borderOpacity})`;
-          frameRef.current.style.boxShadow = `0 0 0 9999px #050201, inset 0 0 0 ${2 * borderOpacity}px rgba(255, 184, 77, ${0.7 * borderOpacity}), 0 0 ${35 * (1 - easeE)}px rgba(255, 184, 77, ${0.25 * borderOpacity})`;
+          frameRef.current.style.outline = "none";
+          frameRef.current.style.boxShadow = "0 0 0 9999px #050201";
           frameRef.current.style.opacity = `${borderOpacity}`;
         }
       }
@@ -461,8 +461,8 @@ function ScrollExpandIntroOverlay() {
           height: "38vh",
           borderRadius: "22px",
           border: "10px solid #050201",
-          outline: "2px solid rgba(255, 184, 77, 0.85)",
-          boxShadow: "0 0 0 9999px #050201, inset 0 0 0 2px rgba(255, 184, 77, 0.7), 0 0 35px rgba(255, 184, 77, 0.25)",
+          outline: "none",
+          boxShadow: "0 0 0 9999px #050201",
           willChange: "width, height, border-radius, opacity",
         }}
       />
@@ -546,7 +546,7 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
     <group ref={groupRef} position={[0, 0, 0.05]}>
       <Center>
         <Text3D
-          font="/fonts/mukta-malar-tamil.json"
+          font={muktaFont as unknown as Parameters<typeof Text3D>[0]["font"]}
           size={letterSize}
           height={0.32}
           curveSegments={64}
@@ -562,13 +562,12 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
           அ
           <meshPhysicalMaterial
             ref={materialRef}
-            color={STUDIO_LIGHT.ivory}
-            metalness={1}
-            roughness={0.16}
+            color="#F4EFE6"
+            metalness={0.96}
+            roughness={0.12}
             clearcoat={1.0}
             clearcoatRoughness={0.08}
-            reflectivity={0.95}
-            envMapIntensity={2.0}
+            envMapIntensity={2.4}
           />
         </Text3D>
       </Center>
@@ -680,30 +679,43 @@ export function DigitalKolamHero() {
           <fogExp2 attach="fog" args={["#050201", 0.03]} />
           <HeroTruckCamera />
 
-          {/* Local Lightformer Environment rendered once (frames={1}, zero CDN dependency) */}
+          {/* Sangam Studio Environment: High-Craft Lighting Rig */}
           <Environment frames={1} resolution={256} background={false}>
-            {/* Three local studio strips captured once into the reflection map. */}
+            {/* Warm Ivory Key Strip (-X) */}
             <Lightformer
               form="rect"
-              intensity={4.0}
-              color={STUDIO_LIGHT.ivory}
-              position={[-6, 6, 4]}
-              scale={[2, 10, 1]}
+              intensity={3.5}
+              color="#FFF8EB"
+              position={[-5, 3, 5]}
+              scale={[8, 5, 1]}
+              target={[0, 0, 0]}
             />
+            {/* High-Contrast Terracotta/Gold Rim Strip (+X, Crucial for right-edge definition on 'அ') */}
             <Lightformer
               form="rect"
-              intensity={1.5}
-              color={STUDIO_LIGHT.terracotta}
-              position={[6, 2, 3]}
-              scale={[2, 12, 1]}
+              intensity={4.8}
+              color="#C85A32"
+              position={[6, 2, -2]}
+              scale={[6, 8, 1]}
+              target={[0, 0, 0]}
             />
-            {/* Low warm kicker flare */}
+            {/* Antique Brass Overhead Fill (+Y) */}
+            <Lightformer
+              form="ring"
+              intensity={2.4}
+              color="#D4AF37"
+              scale={10}
+              position={[0, 8, 0]}
+              target={[0, 0, 0]}
+            />
+            {/* Warm Espresso Floor Bounce (-Y) */}
             <Lightformer
               form="rect"
-              intensity={2.2}
-              color={STUDIO_LIGHT.gold}
-              position={[0, -5, 3]}
-              scale={[12, 3, 1]}
+              intensity={1.4}
+              color="#3A2618"
+              scale={[12, 4, 1]}
+              position={[0, -6, 2]}
+              target={[0, 0, 0]}
             />
           </Environment>
 
@@ -720,11 +732,10 @@ export function DigitalKolamHero() {
           {/* Peel & Flow Kolam Halves (§PRD Home Hero) */}
           <PeelAndFlowKolamMesh isMobile={isMobile} tier={tier} />
 
-          {/* Authentic Stationary Side Kolams (Option A: Kolam L #46815 & Kolam R #46895) */}
-          <SideKolamsGroup isMobile={isMobile} />
-
           {/* Golden "அ" Emblem in Protected Central Void */}
-          <GoldenTamilEmblem isMobile={isMobile} />
+          <Suspense fallback={null}>
+            <GoldenTamilEmblem isMobile={isMobile} />
+          </Suspense>
         </View>
       )}
 

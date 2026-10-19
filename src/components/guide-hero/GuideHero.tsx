@@ -4,8 +4,6 @@ import React, { useEffect, useRef, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
-import { getActiveLenis } from "@/components/providers/MotionProvider";
-import { AtlasDebugOverlay } from "./board/AtlasDebugOverlay";
 import { useGuideStore } from "./store/guideStore";
 import { GuideHeroPoster } from "./GuideHeroPoster";
 import type { RankedFaq } from "@/lib/faq-engagement/contracts";
@@ -40,7 +38,6 @@ export function GuideHero({
     }
     return false;
   });
-  const [showSkip, setShowSkip] = React.useState(false);
   const activeItem = useGuideStore((state) => state.activeItem);
   const source = useGuideStore((state) => state.source);
   const liveTitle = activeItem?.text || activeTitle;
@@ -70,11 +67,7 @@ export function GuideHero({
     return () => media.removeEventListener("change", update);
   }, []);
 
-  useEffect(() => {
-    if (isFallback) return;
-    const timeout = window.setTimeout(() => setShowSkip(true), 2_000);
-    return () => window.clearTimeout(timeout);
-  }, [isFallback]);
+
 
   useEffect(() => {
     const element = sectionRef.current;
@@ -110,21 +103,8 @@ export function GuideHero({
     return { boardWidth: 30 * 0.7, boardHeight: 5 * 1.04, cols: 30, rows: 5 };
   }, [breakpoint]);
 
-  const skipStationSequence = () => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const pinnedDistance = Math.max(0, section.offsetHeight - window.innerHeight);
-    const target = section.getBoundingClientRect().top + window.scrollY + pinnedDistance * 0.92;
-    const lenis = getActiveLenis();
-    if (lenis) {
-      lenis.scrollTo(target, { immediate: reduceMotion, duration: reduceMotion ? undefined : 0.65 });
-    } else {
-      window.scrollTo({ top: target, behavior: reduceMotion ? "auto" : "smooth" });
-    }
-  };
-
   return (
-    <section ref={sectionRef} id={id} aria-label="FAQ Departure Board" className={`relative w-full select-none bg-transparent ${isFallback ? "min-h-[100dvh]" : "min-h-[380dvh] md:min-h-[440dvh]"}`} suppressHydrationWarning>
+    <section ref={sectionRef} id={id} aria-label="FAQ Departure Board" className="relative w-full select-none bg-[#14110F] min-h-[120dvh]" suppressHydrationWarning>
       <div className="sticky top-0 h-[100dvh] min-h-[480px] overflow-hidden">
         <p aria-live="polite" className="sr-only">
           {source === "station" ? `Most asked: ${liveTitle}` : `Showing: ${liveTitle}`}
@@ -134,12 +114,6 @@ export function GuideHero({
           {!isFallback && <BoardView sequenceElement={sectionRef} {...board} />}
         </div>
         <div className="guide-station-handoff pointer-events-none absolute inset-0 z-10 h-full w-full" />
-        {!isFallback && <AtlasDebugOverlay />}
-        {!isFallback && (
-          <button type="button" onClick={skipStationSequence} className={`guide-station-skip absolute left-5 top-24 z-20 min-h-12 px-4 font-mono text-xs tracking-[0.14em] focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary ${showSkip ? "guide-station-skip--visible" : ""}`}>
-            Skip station sequence
-          </button>
-        )}
       </div>
     </section>
   );

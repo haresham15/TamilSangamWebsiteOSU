@@ -483,40 +483,6 @@ export function CampusProps() {
           <cylinderGeometry args={[0.008, 0.008, 0.30, 8]} />
         </mesh>
       </group>
-
-      {/* =================================================================== */}
-      {/* 4. Distant Campus Rooftop Water Tank & Birds (§5 Item 3)            */}
-      {/* Location: x = -16, y = 8.5, z = -35 (far in morning fog haze)        */}
-      {/* =================================================================== */}
-      <group position={[-16, 8.5, -35]}>
-        {/* Trestle Steel Frame Legs */}
-        {[-1.2, 1.2].map((tx, txi) =>
-          [-1.2, 1.2].map((tz, tzi) => (
-            <mesh key={`${txi}-${tzi}`} position={[tx, -1.8, tz]} material={silhouetteMaterial}>
-              <cylinderGeometry args={[0.08, 0.08, 3.6, 8]} />
-            </mesh>
-          ))
-        )}
-        {/* Water Tank Cylinder */}
-        <mesh position={[0, 1.2, 0]} material={silhouetteMaterial}>
-          <cylinderGeometry args={[1.8, 1.8, 2.6, 24]} />
-        </mesh>
-        {/* Conical Roof */}
-        <mesh position={[0, 2.9, 0]} material={silhouetteMaterial}>
-          <coneGeometry args={[2.0, 0.9, 24]} />
-        </mesh>
-        {/* 2 Distant Morning Birds perched on railing */}
-        <group position={[-1.2, 2.7, 1.2]} rotation={[0, 0.6, 0]}>
-          <mesh material={silhouetteMaterial}>
-            <sphereGeometry args={[0.10, 8, 8]} />
-          </mesh>
-        </group>
-        <group position={[1.4, 2.7, 0.8]} rotation={[0, -0.8, 0]}>
-          <mesh material={silhouetteMaterial}>
-            <sphereGeometry args={[0.09, 8, 8]} />
-          </mesh>
-        </group>
-      </group>
     </group>
   );
 }

@@ -11,8 +11,9 @@ import { useFrame } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
 import { SceneView as View } from "@/components/canvas/SceneView";
 import { registerSystem } from "@/engine/masterTick";
-import { useWarmup } from "@/components/gl/useWarmup";
 import { SceneRegistrar } from "@/director/wireframe";
+import { SangamStudioEnvironment } from "@/components/canvas/SangamStudioEnvironment";
+import { useWarmup } from "@/components/gl/useWarmup";
 
 interface TierItem {
   id: string;
@@ -129,12 +130,42 @@ const sharedKolamCurve = new KolamKnotCurve(3.0, 0.25, 3, 8, 0.45);
 const sharedKolamGeo = new THREE.TubeGeometry(sharedKolamCurve, 720, 0.07, 32, true);
 const sharedTorusGeo = new THREE.TorusGeometry(4.0, 0.12, 32, 200);
 const sharedInnerRingGeo = new THREE.TorusGeometry(1.85, 0.04, 24, 120);
-const sharedCenterDotGeo = new THREE.SphereGeometry(0.22, 32, 24);
+const sharedCenterDotGeo = new THREE.SphereGeometry(0.28, 32, 24);
 
-const sharedRingMat = new THREE.MeshStandardMaterial({ color: "#b87333", metalness: 0.9, roughness: 0.18 });
-const sharedKolamMat = new THREE.MeshStandardMaterial({ color: "#c68642", metalness: 0.9, roughness: 0.18 });
-const sharedGoldMat = new THREE.MeshStandardMaterial({ color: "#e6a147", metalness: 0.9, roughness: 0.18 });
+const sharedRingMat = new THREE.MeshPhysicalMaterial({
+  color: "#D4AF37",
+  metalness: 0.92,
+  roughness: 0.22,
+  clearcoat: 0.6,
+  clearcoatRoughness: 0.2,
+  emissive: new THREE.Color("#2A1808"),
+  emissiveIntensity: 0.15,
+});
+
+const sharedKolamMat = new THREE.MeshPhysicalMaterial({
+  color: "#CD7F32",
+  metalness: 0.88,
+  roughness: 0.24,
+  clearcoat: 0.85,
+});
+
+const sharedCoreMat = new THREE.MeshPhysicalMaterial({
+  color: "#F2BE54",
+  metalness: 0.94,
+  roughness: 0.15,
+  clearcoat: 1.0,
+  emissive: new THREE.Color("#D4AF37"),
+  emissiveIntensity: 0.45,
+});
+
 const CURSOR_LIGHT_COLOR = "#FFB366";
+
+const STAGE_RANGES = [
+  { start: 0.00, end: 0.22 },
+  { start: 0.26, end: 0.48 },
+  { start: 0.52, end: 0.74 },
+  { start: 0.78, end: 0.95 },
+];
 
 // Optimized abstract cinematic Bronze Rings with lightweight shared geometry
 function BronzeRing({
@@ -174,12 +205,13 @@ function BronzeRing({
         material={sharedRingMat}
         scale={[scale, scale, scale]}
       />
-      {/* Central Sacred Pulli Dot (Bindu) */}
+      {/* Central Sacred Pulli Dot (Radiant Core) */}
       <mesh
         geometry={sharedCenterDotGeo}
-        material={sharedGoldMat}
+        material={sharedCoreMat}
         scale={[scale, scale, scale]}
       />
+      <pointLight color="#FFB366" intensity={6} distance={4} decay={2} />
       {/* Flowing 8-Petal Sikku Kolam 3D Knot with silky-smooth bends */}
       <mesh
         geometry={sharedKolamGeo}
@@ -208,10 +240,35 @@ function TierText({
     step: () => {
       const element = textRef.current;
       if (!element) return;
-      const distance = scrollProgressRef.current * TIERS.length - index;
-      const opacity = Math.max(0, Math.min(1, (distance + 0.2) / 0.2, (1 - distance) / 0.2));
+      const range = STAGE_RANGES[index];
+      if (!range) {
+        element.style.opacity = "0";
+        element.style.visibility = "hidden";
+        return;
+      }
+      const p = scrollProgressRef.current;
+      if (p < range.start || p > range.end) {
+        element.style.opacity = "0";
+        element.style.visibility = "hidden";
+        element.style.transform = p < range.start ? "translateY(24px)" : "translateY(-24px)";
+        return;
+      }
+      const enterDur = 0.04;
+      const exitDur = 0.04;
+      let opacity = 1;
+      let yOffset = 0;
+      if (p < range.start + enterDur) {
+        const norm = (p - range.start) / enterDur;
+        opacity = norm;
+        yOffset = 24 * (1 - norm);
+      } else if (p > range.end - exitDur) {
+        const norm = (range.end - p) / exitDur;
+        opacity = norm;
+        yOffset = -24 * (1 - norm);
+      }
       element.style.opacity = String(opacity);
       element.style.visibility = opacity > 0 ? "visible" : "hidden";
+      element.style.transform = `translateY(${yOffset.toFixed(1)}px)`;
     },
   }), [index, scrollProgressRef]);
   const Heading = index === 0 ? "h1" : "h2";
@@ -219,7 +276,7 @@ function TierText({
   return (
       <div
         ref={textRef}
-        className="absolute inset-y-0 left-0 z-10 flex w-full flex-col justify-center px-6 py-24 pointer-events-none sm:px-12 lg:w-7/12 lg:pl-[7vw] lg:pr-12 bg-[radial-gradient(ellipse_at_35%_50%,var(--color-hero-indigo)_0%,transparent_74%)]"
+        className="absolute inset-y-0 left-0 z-10 flex w-full flex-col justify-center px-6 py-24 pointer-events-none sm:px-12 lg:w-7/12 lg:pl-[7vw] lg:pr-12 bg-[radial-gradient(ellipse_at_35%_50%,var(--color-hero-indigo)_0%,transparent_74%)] transition-transform duration-75"
         style={{ opacity: index === 0 ? 1 : 0, visibility: index === 0 ? "visible" : "hidden" }}
       >
           <Heading lang={locale === "ta" ? "ta" : "en"} className={`text-3xl sm:text-5xl xl:text-6xl text-paper mb-5 ${locale === "ta" ? "font-tamil leading-relaxed tracking-normal" : "font-display leading-[1.12] tracking-tight"}`}>
@@ -365,22 +422,23 @@ function GopuramScene({ scrollProgressRef, isMobile, locale }: {
           <View className="absolute inset-0 w-full h-full pointer-events-none" index={2} visible={visible}>
             <SceneRegistrar />
             <GopuramWarmup />
-            <color attach="background" args={["#120a1f"]} />
+            <color attach="background" args={["#14110F"]} />
             <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={50} near={0.05} far={150} />
-            <fog attach="fog" args={["#120a1f", 10, 45]} />
+            <fog attach="fog" args={["#14110F", 10, 48]} />
 
-            <directionalLight position={[10, 20, 10]} intensity={2.5} color="#ffe5b4" />
-            <ambientLight intensity={1.5} color="#dcbef8" />
-            <directionalLight position={[-10, 5, -10]} intensity={1.0} color="#ba93e3" />
+            <SangamStudioEnvironment />
+            <directionalLight position={[10, 20, 10]} intensity={2.2} color="#FFF8EB" />
+            <ambientLight intensity={1.2} color="#3A2618" />
+            <directionalLight position={[-10, 5, -10]} intensity={0.8} color="#D4AF37" />
             <CursorLight />
 
-            {/* Z-Axis Rings mapping */}
+            {/* Z-Axis Rings mapping: Aligned along flythrough path to eliminate offset ghost rings */}
             {TIERS.map((tier, idx) => (
                 <BronzeRing
                   key={tier.id}
-                  position={[isMobile ? 1.2 : 3.2, 0, -idx * 15]}
-                  scale={1 + idx * 0.1}
-                  rotation={[0.25, -0.35, (idx * Math.PI) / 4]}
+                  position={[isMobile ? 0 : 2.4, 0, -idx * 20]}
+                  scale={1 + idx * 0.08}
+                  rotation={[0.2, -0.25, (idx * Math.PI) / 4]}
                   scrollProgressRef={scrollProgressRef}
                 />
             ))}

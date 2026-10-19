@@ -4,7 +4,6 @@ import React, { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { guideStationPalette } from "./palette";
-import { SdfSilhouette } from "./SdfSilhouette";
 
 function createCompartmentGradient() {
   const width = 128;
@@ -32,36 +31,6 @@ function createCompartmentGradient() {
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.needsUpdate = true;
   return texture;
-}
-
-function Curtain() {
-  const meshRef = React.useRef<THREE.Mesh>(null);
-  const shape = useMemo(() => {
-    const curtain = new THREE.Shape();
-    curtain.moveTo(-1.86, 1.03);
-    curtain.lineTo(-0.9, 1.03);
-    curtain.bezierCurveTo(-1.1, 0.45, -0.7, 0.08, -1.0, -0.38);
-    curtain.bezierCurveTo(-1.3, -0.78, -0.84, -1.05, -1.18, -1.05);
-    curtain.lineTo(-1.86, -1.05);
-    curtain.closePath();
-    return curtain;
-  }, []);
-
-  useFrame(({ clock }, delta) => {
-    const dt = Math.min(delta, 0.05);
-    if (dt <= 0) return;
-    if (!meshRef.current) return;
-    const t = clock.getElapsedTime();
-    meshRef.current.rotation.y = Math.sin(t * 3.2) * 0.035 + Math.sin(t * 7.1) * 0.012;
-    meshRef.current.position.x = Math.sin(t * 2.8) * 0.01;
-  });
-
-  return (
-    <mesh ref={meshRef} position={[0, 0, 0.06]} renderOrder={22}>
-      <shapeGeometry args={[shape]} />
-      <meshBasicMaterial color={guideStationPalette.coachBand} transparent opacity={0.68} depthWrite={false} side={THREE.DoubleSide} />
-    </mesh>
-  );
 }
 
 interface WindowAssemblyProps {
@@ -93,35 +62,25 @@ export function WindowAssembly({ progress, getProgress }: WindowAssemblyProps) {
         <planeGeometry args={[4.15, 2.35]} />
         <meshBasicMaterial map={gradient} toneMapped={false} />
       </mesh>
-      <mesh position={[-0.88, -0.56, 0.018]} renderOrder={12}>
-        <boxGeometry args={[1.05, 0.48, 0.08]} />
-        <meshStandardMaterial color={guideStationPalette.boardInk} metalness={0.22} roughness={0.78} />
-      </mesh>
-      <mesh position={[1.15, -0.55, 0.018]} renderOrder={12}>
-        <boxGeometry args={[0.92, 0.5, 0.08]} />
-        <meshStandardMaterial color={guideStationPalette.boardInk} metalness={0.22} roughness={0.78} />
-      </mesh>
-      <group position={[0.85, 0.46, 0.025]} rotation={[0, 0, 0.16]} renderOrder={13}>
-        {[0, (Math.PI * 2) / 3, (Math.PI * 4) / 3].map((rotation) => (
-          <mesh key={rotation} rotation={[0, 0, rotation]} position={[0.2, 0, 0]}>
-            <boxGeometry args={[0.5, 0.035, 0.025]} />
-            <meshBasicMaterial color={guideStationPalette.boardInk} transparent opacity={0.62} />
-          </mesh>
-        ))}
-      </group>
-      <SdfSilhouette kind="woman" position={[-0.72, -0.08, 0.05]} scale={0.9} />
-      <Curtain />
+      {/* Refractive Monsoon Glass Window Pane */}
       <mesh position={[0, 0, 0.08]} renderOrder={23}>
         <planeGeometry args={[4.03, 2.23]} />
-        <meshBasicMaterial color={guideStationPalette.practicalCool} transparent opacity={0.08} depthWrite={false} />
+        <meshPhysicalMaterial
+          color="#1A1614"
+          ior={1.45}
+          roughness={0.18}
+          transmission={0.92}
+          thickness={0.6}
+          transparent={true}
+        />
       </mesh>
-      {[-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75].map((y) => (
+      {/* Sleek architectural window bars */}
+      {[-0.75, -0.25, 0.25, 0.75].map((y) => (
         <mesh key={y} position={[0, y, 0.1]} rotation={[0, 0, Math.PI / 2]} renderOrder={24}>
           <cylinderGeometry args={[0.012, 0.012, 4.05, 10]} />
           <meshStandardMaterial color={guideStationPalette.boardInk} metalness={0.78} roughness={0.22} />
         </mesh>
       ))}
-      <SdfSilhouette kind="man" position={[0.86, -0.06, 0.125]} scale={0.94} />
       {[
         { position: [0, 1.15, 0.14] as THREE.Vector3Tuple, size: [4.35, 0.12, 0.1] as [number, number, number] },
         { position: [0, -1.15, 0.14] as THREE.Vector3Tuple, size: [4.35, 0.12, 0.1] as [number, number, number] },

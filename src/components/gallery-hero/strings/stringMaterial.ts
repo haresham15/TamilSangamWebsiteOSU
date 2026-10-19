@@ -135,23 +135,23 @@ export function createStringMaterial(): {
       `
       #include <normal_fragment_begin>
 
+      // Subtle fine micro-groove texture without aliased sawtooth artifacts
       if (vWound > 0.5) {
-        // Helical winding texture on bronze strings (0, 1, 2)
-        float bump = sin(vStringUV.y * 3600.0) * 0.28;
+        float bump = sin(vStringUV.y * 180.0) * 0.06;
         normal = normalize(normal + vec3(0.0, bump, 0.0));
       }
       `
     );
 
-    // Modulate base color: Bronze for wound, lustrous steel for plain
+    // Modulate base color: Phosphor Bronze for wound strings
     shader.fragmentShader = shader.fragmentShader.replace(
       "#include <color_fragment>",
       `
       #include <color_fragment>
 
-      // Bronze: #C57D3A (wound) vs Polished Steel: #D6D6D6 (plain)
-      vec3 bronzeCol = vec3(0.77, 0.49, 0.23);
-      vec3 steelCol  = vec3(0.84, 0.84, 0.84);
+      // Phosphor Bronze #CD7F32 vs Polished Plain Steel
+      vec3 bronzeCol = vec3(0.80, 0.50, 0.20);
+      vec3 steelCol  = vec3(0.88, 0.88, 0.88);
       diffuseColor.rgb = mix(steelCol, bronzeCol, vWound);
       `
     );

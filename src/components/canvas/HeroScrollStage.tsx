@@ -52,7 +52,7 @@ export function HeroScrollStage({ children, className = "", id, runway = 280, pr
       invalidateOnRefresh: true,
       onUpdate: ({ progress }) => {
         if (progressRef) progressRef.current = progress;
-        if (melt.current) melt.current.style.opacity = String(Math.max(0, (progress - 0.85) / 0.15));
+        if (melt.current) melt.current.style.opacity = String(Math.min(1, Math.max(0, (progress - 0.88) / 0.12)));
       },
     });
     return () => trigger.kill();

@@ -24,27 +24,43 @@ export function ShadowLatticeDecal() {
     return tex;
   }, []);
 
-  const walkwayMaterial = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#D1CCC0",
-        map: cobblestoneDiffuse,
-        roughnessMap: cobblestoneRoughness,
-        roughness: 1.0,
-        metalness: 0.04,
-      }),
-    [cobblestoneDiffuse, cobblestoneRoughness]
-  );
+  const walkwayMaterial = useMemo(() => {
+    const mat = new THREE.MeshStandardMaterial({
+      color: "#D1CCC0",
+      map: cobblestoneDiffuse,
+      roughnessMap: cobblestoneRoughness,
+      roughness: 1.0,
+      metalness: 0.04,
+      transparent: true,
+    });
+    mat.onBeforeCompile = (shader) => {
+      shader.vertexShader = shader.vertexShader
+        .replace("#include <common>", "#include <common>\nvarying vec3 vWorldPos;")
+        .replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;");
+      shader.fragmentShader = shader.fragmentShader
+        .replace("#include <common>", "#include <common>\nvarying vec3 vWorldPos;")
+        .replace("#include <dithering_fragment>", "#include <dithering_fragment>\nfloat depthFade = smoothstep(-6.0, -1.0, vWorldPos.z);\ngl_FragColor.a *= depthFade;");
+    };
+    return mat;
+  }, [cobblestoneDiffuse, cobblestoneRoughness]);
 
-  const curbMaterial = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#E8E4D9",
-        roughness: 0.9,
-        metalness: 0.02,
-      }),
-    []
-  );
+  const curbMaterial = useMemo(() => {
+    const mat = new THREE.MeshStandardMaterial({
+      color: "#E8E4D9",
+      roughness: 0.9,
+      metalness: 0.02,
+      transparent: true,
+    });
+    mat.onBeforeCompile = (shader) => {
+      shader.vertexShader = shader.vertexShader
+        .replace("#include <common>", "#include <common>\nvarying vec3 vWorldPos;")
+        .replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;");
+      shader.fragmentShader = shader.fragmentShader
+        .replace("#include <common>", "#include <common>\nvarying vec3 vWorldPos;")
+        .replace("#include <dithering_fragment>", "#include <dithering_fragment>\nfloat depthFade = smoothstep(-6.0, -1.0, vWorldPos.z);\ngl_FragColor.a *= depthFade;");
+    };
+    return mat;
+  }, []);
 
   React.useEffect(() => {
     return () => {

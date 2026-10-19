@@ -89,23 +89,30 @@ export function CholaCrown3D({
     // -------------------------------------------------------------
     // 7. Karnapatra / Makara Side Crests
     // -------------------------------------------------------------
-    const karnaLeafGeo = new THREE.TorusGeometry(0.32, 0.026, 16, 32, Math.PI * 0.8);
+    const karnaLeafGeo = new THREE.TorusGeometry(0.18, 0.02, 16, 32, Math.PI * 0.6);
     const karnaDropGeo = new THREE.ConeGeometry(0.04, 0.12, 12);
 
     // -------------------------------------------------------------
     // Materials: Authentic 22k Temple Gold, Panchaloha Bronze, Rubies, Emeralds
     // -------------------------------------------------------------
-    const cholaGoldMat = new THREE.MeshStandardMaterial({
+    const cholaGoldMat = new THREE.MeshPhysicalMaterial({
       color: "#d4af37",
       metalness: 0.92,
-      roughness: 0.18,
+      roughness: 0.22,
+      clearcoat: 0.6,
+      clearcoatRoughness: 0.2,
+      emissive: new THREE.Color("#2A1808"),
+      emissiveIntensity: 0.15,
       side: THREE.DoubleSide,
     });
 
-    const polishedGoldMat = new THREE.MeshStandardMaterial({
+    const polishedGoldMat = new THREE.MeshPhysicalMaterial({
       color: "#f6c744",
       metalness: 0.96,
       roughness: 0.11,
+      clearcoat: 0.9,
+      emissive: new THREE.Color("#D4AF37"),
+      emissiveIntensity: 0.2,
       side: THREE.DoubleSide,
     });
 
@@ -463,20 +470,20 @@ export function CholaCrown3D({
         {[-1, 1].map((dir, idx) => (
           <group
             key={`karna-${idx}`}
-            position={[dir * 0.48, 0.12, 0]}
+            position={[dir * 0.54, 0.16, 0]}
             rotation={[0, dir > 0 ? 0 : Math.PI, 0]}
           >
-            {/* Arched Makara Leaf */}
+            {/* Arched Makara Leaf flaring outward without clipping cone body */}
             <mesh
               geometry={geometries.karnaLeafGeo}
               material={materials.polishedGoldMat}
-              rotation={[0, 0, dir * 0.32]}
+              rotation={[0, 0, dir * -0.25]}
             />
             {/* Hanging Pearl/Jewel Droplet */}
             <mesh
               geometry={geometries.karnaDropGeo}
               material={materials.southSeaPearlMat}
-              position={[dir * 0.18, -0.14, 0]}
+              position={[dir * 0.12, -0.12, 0]}
               rotation={[Math.PI, 0, 0]}
             />
           </group>

@@ -5,7 +5,7 @@ import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { SceneLighting } from "./SceneLighting";
 import { MinimalPlatform } from "./MinimalPlatform";
-import { SangamLogo3D } from "./SangamLogo3D";
+import { Performer } from "./Performer";
 import { VolumetricCones } from "./VolumetricCones";
 import { LeoCameraRig } from "./LeoCameraRig";
 import { LeoScrollController } from "./LeoScrollController";
@@ -109,7 +109,15 @@ function EventsConcertScene({ bespokeEnv, progressRef }: { bespokeEnv: THREE.Tex
           <DustCloud />
           <SceneLighting />
           <MinimalPlatform />
-          <SangamLogo3D />
+          <Performer />
+          {/* Amber rim spotlight for concert performer drama */}
+          <spotLight
+            position={[0, 4.5, -2.5]}
+            color="#FFB366"
+            intensity={35}
+            angle={0.45}
+            penumbra={0.6}
+          />
           <JumpingCrowdSilhouettes />
         </React.Suspense>
       </DepthTextureProvider>

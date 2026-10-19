@@ -68,7 +68,7 @@ export function GateLettering() {
           anchorX="center"
           anchorY="middle"
         >
-          ஓஹியோ தமிழ் சங்கம் · EST. 2024
+          ஓஹியோ தமிழ் சங்கம் · EST. 2021
         </Text>
       </group>
     </group>

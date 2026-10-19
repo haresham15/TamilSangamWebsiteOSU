@@ -6,14 +6,12 @@ import * as THREE from "three";
 import { SceneView as View } from "@/components/canvas/SceneView";
 import { CameraRig } from "./CameraRig";
 import { LightingRig } from "./fx/LightingRig";
-import { Fretboard } from "./neck/Fretboard";
 import { Frets } from "./neck/Frets";
-import { Inlays } from "./neck/Inlays";
 import { Strings } from "./strings/Strings";
-import { LandmarkGizmos, StringGizmo } from "./debug/Gizmos";
-import { PropPlaceholders } from "./props/Placeholders";
 import { Pick } from "./props/Pick";
 import { GoldDustBurst } from "./fx/GoldDustBurst";
+import { ArchivalPlanes } from "./ArchivalPlanes";
+import { SangamStudioEnvironment } from "@/components/canvas/SangamStudioEnvironment";
 import { useWarmup } from "@/components/gl/useWarmup";
 import { useThree, useFrame } from "@react-three/fiber";
 import { registerScene } from "@/director/wireframe";
@@ -28,17 +26,6 @@ function ScrollProgressSync({ progressRef }: { progressRef?: React.MutableRefObj
   return null;
 }
 
-/**
- * Scene (§1, §3)
- *
- * Canvas-agnostic Scene rendered inside Drei <View> (Global Architecture PRD v2):
- * - Exactly ONE WebGL Canvas across the application lifetime
- * - 24 true 12-TET frets with procedural rosewood neck
- * - Follow-camera rig with subtle breath sway
- * - Dynamic lighting rig with 3-era palette transition
- * - 6-string physics-driven InstancedMesh with scroll vibration & pluck
- * - PropRig container anchored 14 su ahead
- */
 function SceneWarmup() {
   useWarmup("gallery-fretboard");
   return null;
@@ -63,38 +50,31 @@ export default function Scene({ progressRef }: { progressRef?: React.MutableRefO
         <SceneWarmup />
         <SceneRegistrar />
         <ScrollProgressSync progressRef={progressRef} />
-        {/* Dynamic Scene Background & Exponential Squared Fog */}
-        <color attach="background" args={["#F0C98A"]} />
-        <fogExp2 attach="fog" args={["#F0C98A", 0.004]} />
+        {/* Warm Obsidian Scene Background & Atmospheric Fog */}
+        <color attach="background" args={["#14110F"]} />
+        <fogExp2 attach="fog" args={["#14110F", 0.015]} />
 
-        {/* Dynamic 3-Era Lighting System */}
+        {/* Studio Lighting & Zero-Cost Procedural Reflections */}
+        <SangamStudioEnvironment />
         <LightingRig />
+
+        {/* Drifting Archival Photos in Z-Space */}
+        <ArchivalPlanes />
 
         {/* Camera Kinematics Rig */}
         <CameraRig propRigRef={propRigRef} />
 
-        {/* Macro Guitar Neck & Strings Assembly (§3.1, §3.3) */}
+        {/* Sleek Phosphor-Bronze Acoustic Strings & Delicate Frets */}
         <group position={[0, 0, 0]}>
-          <Fretboard />
           <Frets />
-          <Inlays />
           <Strings />
         </group>
 
-        {/* Visual Landmark Debug Lines & CPU String Gizmo */}
-        <LandmarkGizmos />
-        <StringGizmo />
-
-        {/* Guitar Pick Strum Assembly (§5.3) */}
+        {/* Guitar Pick Strum Assembly */}
         <Pick />
 
-        {/* Gold Dust Burst Particle Simulation (§5.4, Phase 6) */}
+        {/* Gold Dust Burst Particle Simulation */}
         <GoldDustBurst />
-
-        {/* PropRig: Group following 14 su ahead of camera */}
-        <group ref={propRigRef} name="prop-rig">
-          <PropPlaceholders />
-        </group>
       </View>
     </div>
   );

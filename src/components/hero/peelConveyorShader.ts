@@ -139,18 +139,11 @@ export function createPeelConveyorMaterial(
 
       varying float vDistHead;
 
-      // PRD §6.3: Tube tapering at both head and tail
+      // PRD §6.3: Calligraphic needle tapering at head and tail (Recipe A)
       float evalTaper(float a, float L) {
-        float taperDist = 0.15 * L;
-        float dHead = a;
-        float dTail = max(0.0, L - a);
-        float factor = 1.0;
-        if (dHead < taperDist) {
-          factor = 0.35 + 0.65 * (dHead / taperDist);
-        } else if (dTail < taperDist) {
-          factor = 0.35 + 0.65 * (dTail / taperDist);
-        }
-        return factor;
+        float headTaper = smoothstep(0.0, 0.14 * L, a);
+        float tailTaper = smoothstep(0.0, 0.14 * L, max(0.0, L - a));
+        return headTaper * tailTaper;
       }
 
       // PRD §7.4: Peel-lift of the tail out of plane

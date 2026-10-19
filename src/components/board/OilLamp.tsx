@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useMemo } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { noise1D } from "./noise";
@@ -17,6 +17,30 @@ interface OilLampProps {
  * - Noise-driven organic flicker with per-instance phase offset (never synchronized).
  * - Real PointLight is only active when `isRealLight` is true (capped at 2-3 scene-wide).
  */
+const flameVertexShader = `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const flameFragmentShader = `
+  varying vec2 vUv;
+  uniform float uTime;
+  uniform float uPhase;
+  uniform float uIntensity;
+
+  void main() {
+    vec2 centeredUv = vUv - vec2(0.5, 0.28);
+    float radial = smoothstep(0.48, 0.0, length(centeredUv * vec2(1.5, 0.88)));
+    float verticalFade = pow(1.0 - clamp(vUv.y, 0.0, 1.0), 1.6);
+    float flicker = 0.92 + 0.08 * sin(uTime * 13.0 + uPhase) * cos(uTime * 7.3);
+    vec3 flameCol = mix(vec3(0.78, 0.35, 0.19), vec3(1.0, 0.88, 0.55), radial);
+    gl_FragColor = vec4(flameCol * flicker, radial * verticalFade * uIntensity);
+  }
+`;
+
 export function OilLamp({
   position,
   phaseOffset = 0,
@@ -24,43 +48,31 @@ export function OilLamp({
 }: OilLampProps) {
   const flameMeshRef = useRef<THREE.Mesh>(null);
   const pointLightRef = useRef<THREE.PointLight>(null);
-  const lightTargetRef = useRef<{ baseIntensity: number }>({ baseIntensity: 2.4 });
-
-  useEffect(() => {
-    if (flameMeshRef.current) {
-      // Confine bloom to flame mesh only (§5, §8)
-      flameMeshRef.current.layers.enable(1);
-    }
-  }, []);
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uPhase: { value: phaseOffset },
+      uIntensity: { value: 1.0 },
+    }),
+    [phaseOffset]
+  );
 
   useFrame(({ clock }, delta) => {
     const dt = Math.min(delta, 0.05);
     if (dt <= 0) return;
     const time = clock.getElapsedTime();
-    // Smooth noise-driven flicker with per-lamp phase offset
+    uniforms.uTime.value = time;
     const n = noise1D(time * 4.2 + phaseOffset * 17.3);
-    const flicker = 0.85 + 0.35 * n; // [0.5, 1.2]
+    const flicker = 0.85 + 0.35 * n;
+    uniforms.uIntensity.value = flicker * 1.5;
 
-    // 1. Update flame billboard emissive intensity
-    if (flameMeshRef.current && flameMeshRef.current.material) {
-      const mat = flameMeshRef.current.material as THREE.MeshStandardMaterial;
-      mat.emissiveIntensity = flicker * 2.8;
-      // Subtle organic micro-scale wobble
-      const wobble = 1.0 + 0.08 * noise1D(time * 6.0 + phaseOffset);
-      flameMeshRef.current.scale.set(wobble, wobble * 1.15, wobble);
-    }
-
-    // 2. Update real PointLight intensity if active
     if (isRealLight && pointLightRef.current) {
-      pointLightRef.current.intensity = flicker * lightTargetRef.current.baseIntensity;
+      pointLightRef.current.intensity = flicker * 2.8;
     }
   });
 
   return (
     <group position={position}>
-      {/* ========================================================================= */}
-      {/* 1. CARVED WALL BRACKET & BRASS OIL DISH (Dravidian Kuthuvilakku Sconce)   */}
-      {/* ========================================================================= */}
       {/* Wall Mounting Plate */}
       <mesh position={[0, 0, -0.22]}>
         <boxGeometry args={[0.24, 0.45, 0.08]} />
@@ -95,36 +107,44 @@ export function OilLamp({
         <meshStandardMaterial color="#1a1208" roughness={0.9} />
       </mesh>
 
-      {/* ========================================================================= */}
-      {/* 2. TEARDROP FLAME MESH (Selective Bloom Layer Source)                      */}
-      {/* ========================================================================= */}
-      <mesh ref={flameMeshRef} position={[0, 0.18, 0.04]}>
-        <coneGeometry args={[0.07, 0.24, 16]} />
-        <meshStandardMaterial
-          color="#FFD37A"
-          emissive="#FF9A3C"
-          emissiveIntensity={2.5}
-          roughness={0.1}
-          toneMapped={false}
-        />
-      </mesh>
+      {/* Volumetric Vilakku Flame Crossed Billboards */}
+      <group position={[0, 0.24, 0.04]}>
+        <mesh ref={flameMeshRef}>
+          <planeGeometry args={[0.22, 0.36]} />
+          <shaderMaterial
+            vertexShader={flameVertexShader}
+            fragmentShader={flameFragmentShader}
+            uniforms={uniforms}
+            transparent={true}
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+        <mesh rotation={[0, Math.PI / 2, 0]}>
+          <planeGeometry args={[0.22, 0.36]} />
+          <shaderMaterial
+            vertexShader={flameVertexShader}
+            fragmentShader={flameFragmentShader}
+            uniforms={uniforms}
+            transparent={true}
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+        {/* Soft Point Glow Core */}
+        <pointLight color="#FF9A3C" intensity={1.8} distance={3.5} decay={2} />
+      </group>
 
-      {/* Subtle Inner Glow Core */}
-      <mesh position={[0, 0.14, 0.04]}>
-        <sphereGeometry args={[0.04, 12, 12]} />
-        <meshBasicMaterial color="#FFF5DB" toneMapped={false} />
-      </mesh>
-
-      {/* ========================================================================= */}
-      {/* 3. CONDITIONAL REAL POINTLIGHT (Max 2-3 Active Scene-Wide per §5)          */}
-      {/* ========================================================================= */}
+      {/* Conditional Real PointLight */}
       {isRealLight && (
         <pointLight
           ref={pointLightRef}
           position={[0, 0.25, 0.15]}
-          color="#FF9A3C"
-          intensity={2.4}
-          distance={9.0}
+          color="#FF9E44"
+          intensity={2.8}
+          distance={8.0}
           decay={2.0}
         />
       )}

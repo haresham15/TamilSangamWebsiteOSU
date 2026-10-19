@@ -48,21 +48,21 @@ export function EmblemFinale({ scrollProgress, onFinaleTriggered }: EmblemFinale
         const ringMat = ringMeshRef.current.material as THREE.MeshStandardMaterial;
         const light = backLightRef.current;
 
-        // 1. Hard golden bloom flash: emissive ramps from 1.0 -> 3.5 over 0.3s
+        // Refined warm golden bloom: emissive gently elevates from 0.4 -> 0.95
         gsap.to(mat, {
-          emissiveIntensity: 3.8,
-          duration: 0.3,
-          ease: "power2.in",
+          emissiveIntensity: 0.95,
+          duration: 0.35,
+          ease: "power2.out",
         });
         gsap.to(ringMat, {
-          emissiveIntensity: 3.8,
-          duration: 0.3,
-          ease: "power2.in",
+          emissiveIntensity: 0.95,
+          duration: 0.35,
+          ease: "power2.out",
         });
         gsap.to(light, {
-          intensity: 18.0,
-          duration: 0.3,
-          ease: "power2.in",
+          intensity: 6.5,
+          duration: 0.35,
+          ease: "power2.out",
           onComplete: () => {
             if (onFinaleTriggered) {
               onFinaleTriggered();
@@ -81,8 +81,8 @@ export function EmblemFinale({ scrollProgress, onFinaleTriggered }: EmblemFinale
         const mat = emblemMeshRef.current.material as THREE.MeshStandardMaterial;
         const ringMat = ringMeshRef.current.material as THREE.MeshStandardMaterial;
         gsap.killTweensOf([mat, ringMat, backLightRef.current]);
-        mat.emissiveIntensity = 0.85;
-        ringMat.emissiveIntensity = 1.0;
+        mat.emissiveIntensity = 0.25;
+        ringMat.emissiveIntensity = 0.35;
         backLightRef.current.intensity = 3.5;
       }
     }
@@ -109,12 +109,12 @@ export function EmblemFinale({ scrollProgress, onFinaleTriggered }: EmblemFinale
         <meshStandardMaterial color="#4a3324" roughness={0.8} metalness={0.3} />
       </mesh>
 
-      {/* Flanking Sanctum Brass Lamps (Always Real Lights for Final Approach) */}
+      {/* Flanking Sanctum Brass Lamps */}
       <OilLamp position={[-1.6, -0.8, 0.5]} isRealLight={true} phaseOffset={0.7} />
       <OilLamp position={[1.6, -0.8, 0.5]} isRealLight={true} phaseOffset={2.4} />
 
       {/* ========================================================================= */}
-      {/* 2. CHOLA TIGER EMBLEM MEDALLION (Designated Bloom Source)                 */}
+      {/* 2. CHOLA TIGER EMBLEM MEDALLION & ARCHITECTURAL TORANA                   */}
       {/* ========================================================================= */}
       {/* Heavy Embossed Bronze Disc */}
       <mesh position={[0, 0.3, -0.1]}>
@@ -122,16 +122,15 @@ export function EmblemFinale({ scrollProgress, onFinaleTriggered }: EmblemFinale
         <meshStandardMaterial color="#2d1d11" roughness={0.7} metalness={0.8} />
       </mesh>
 
-      {/* Glowing 24K Gold Aureole Ring (Bloom Layer) */}
+      {/* Brushed 24K Gold Aureole Ring */}
       <mesh ref={ringMeshRef} position={[0, 0.3, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.3, 0.08, 16, 48]} />
         <meshStandardMaterial
           color="#D4AF37"
-          emissive="#D4AF37"
-          emissiveIntensity={1.0}
-          roughness={0.25}
-          metalness={0.9}
-          toneMapped={false}
+          emissive="#523B0F"
+          emissiveIntensity={0.35}
+          roughness={0.22}
+          metalness={0.92}
         />
       </mesh>
 
@@ -140,15 +139,26 @@ export function EmblemFinale({ scrollProgress, onFinaleTriggered }: EmblemFinale
         <cylinderGeometry args={[1.22, 1.22, 0.04, 32]} />
         <meshStandardMaterial
           color="#D4AF37"
-          emissive="#D4AF37"
-          emissiveIntensity={0.85}
-          roughness={0.3}
-          metalness={0.95}
-          toneMapped={false}
+          emissive="#523B0F"
+          emissiveIntensity={0.25}
+          roughness={0.26}
+          metalness={0.94}
         />
       </mesh>
 
-      {/* Piercing Gold Backlight for Finale Flash */}
+      {/* Backlit Golden Morning Bloom Plane for Smooth Page Melt */}
+      <mesh position={[0, 0.3, -0.2]}>
+        <planeGeometry args={[4.2, 4.2]} />
+        <meshBasicMaterial
+          color="#FFF8EB"
+          transparent={true}
+          opacity={0.35}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Warm Golden Key Light */}
       <pointLight
         ref={backLightRef}
         position={[0, 0.4, 0.4]}

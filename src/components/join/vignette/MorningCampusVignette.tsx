@@ -2,9 +2,6 @@
 
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { ChaiBench } from "./ChaiBench";
-import { BlackboardEasel } from "./BlackboardEasel";
-import { TinTrunk } from "./TinTrunk";
 import { CampusProps } from "./CampusProps";
 
 interface MorningCampusVignetteProps {
@@ -65,16 +62,7 @@ export function MorningCampusVignette({ tier = "A" }: MorningCampusVignetteProps
 
   return (
     <group ref={rootRef}>
-      {/* 1. Teak Bench with 4 Chai Tumblers & "வாங்க நண்பா" Tag */}
-      <ChaiBench />
-
-      {/* 2. Lecture Easel with Chalk Blackboard & Meeting Notice */}
-      <BlackboardEasel />
-
-      {/* 3. Vintage Painted Tin Trunk with Bedding Roll & Tiffin Carrier */}
-      <TinTrunk />
-
-      {/* 4. Mortarboard on Finial, Bunting Catenary, Leaning Bike, Distant Rooftop Tank */}
+      {/* Collegiate Architectural & Historical Props */}
       <CampusProps />
     </group>
   );

@@ -182,7 +182,7 @@ function createArenaBackWallTexture(): THREE.CanvasTexture | null {
 
   ctx.font = "bold 23px 'Courier New', monospace";
   ctx.fillStyle = "rgba(220, 190, 130, 0.8)";
-  ctx.fillText("COLLEGIATE CULTURAL PRODUCTION  ·  ESTABLISHED 1972 · BUCKEYE SANGAM", cx, cy + 320);
+  ctx.fillText("COLLEGIATE CULTURAL PRODUCTION  ·  EST. 2021 · BUCKEYE SANGAM", cx, cy + 320);
 
   // =========================================================================
   // 3. MIDDLE REGISTER DIRECTLY BEHIND & FLANKING THE COIN (cy ≈ 1520 - 1650)
@@ -232,13 +232,13 @@ function createArenaBackWallTexture(): THREE.CanvasTexture | null {
   // Circular Stencil Legend
   ctx.font = "bold 20px 'Courier New', monospace";
   ctx.fillStyle = "rgba(245, 158, 11, 0.65)";
-  ctx.fillText("★ TAMIL SANGAM ORDNANCE • 2026 EDITION • TURNTABLE CALIBRATION RETICLE ★", cx, reticleY - 290);
+  ctx.fillText("★ TAMIL SANGAM AT OHIO STATE • FESTIVAL ARENA STAGE ★", cx, reticleY - 290);
   ctx.font = "bold 20px 'Mukta Malar', 'Noto Sans Tamil', sans-serif";
   ctx.fillStyle = "rgba(255, 235, 175, 0.65)";
   ctx.fillText("சுழற்சி மையப்புள்ளி · தூய தமிழ் மரபு · ஓஹையோ தமிழ்ச் சங்கம்", cx, reticleY + 290);
   ctx.restore();
 
-  // 3B. Left Middle Register: Machine Specification & Safety Mandates (Behind Left Crowd)
+  // 3B. Left Middle Register: Cultural Stage (Behind Left Crowd)
   const lmx = 850;
   ctx.strokeStyle = "rgba(200, 130, 10, 0.45)";
   ctx.lineWidth = 3.5;
@@ -249,21 +249,21 @@ function createArenaBackWallTexture(): THREE.CanvasTexture | null {
   ctx.textAlign = "left";
   ctx.font = "900 40px 'Impact', sans-serif";
   ctx.fillStyle = "rgba(255, 215, 80, 0.92)";
-  ctx.fillText("HYDRAULIC FORGE LINE 04", lmx - 420, 1390);
+  ctx.fillText("FESTIVAL CONCERT WING", lmx - 420, 1390);
 
   ctx.font = "bold 28px 'Mukta Malar', 'Noto Sans Tamil', sans-serif";
   ctx.fillStyle = "rgba(255, 240, 190, 0.88)";
-  ctx.fillText("ஹைட்ராலிக் பிரஸ் லைன் 04 · விசை அழுத்தம்: 12,000 PSI", lmx - 420, 1435);
+  ctx.fillText("ஓஹியோ தமிழ் கலை அரங்கம் · விழா மேடை", lmx - 420, 1435);
 
   ctx.font = "bold 23px 'Courier New', monospace";
   ctx.fillStyle = "rgba(200, 195, 185, 0.85)";
   const leftMidSpecs = [
-    "OPERATING TONNAGE: 500 TONS CONTINUOUS",
-    "FLUID SPECIFICATION: HYD-OIL ISO VG 68",
-    "⚠ CAUTION: EYE & EAR PROTECTION MANDATORY",
-    "⚠ ஆபத்து: சுழலும் பாகங்கள் · ஒதுங்கி நிற்கவும்",
-    "LAST CALIBRATION: SEP 2026 · INSPECTION PASSED",
-    "SERIAL: TS-OSU-FORGE-2026-B4",
+    "STAGE PRODUCTION: SANGAM LIVE AUDITORIUM",
+    "COLLEGIATE CELEBRATION · OPEN TO ALL BUCKEYES",
+    "மரபு · பண்பாடு · தோழமை (HERITAGE · KINSHIP)",
+    "NO DUES · 100% FREE MEMBERSHIP · ALL MAJORS",
+    "FOUNDED: 2021 · THE OHIO STATE UNIVERSITY",
+    "SERIAL: TS-OSU-2021-SANGAM",
   ];
   leftMidSpecs.forEach((txt, idx) => {
     ctx.fillText(txt, lmx - 420, 1485 + idx * 36);
@@ -345,11 +345,11 @@ function createArenaBackWallTexture(): THREE.CanvasTexture | null {
 
   ctx.textAlign = "center";
   ctx.font = "900 42px 'Arial Black', sans-serif";
-  ctx.fillStyle = "rgba(255, 80, 80, 0.95)";
-  ctx.fillText("⚡ DANGER : HIGH VOLTAGE 33,000V ⚡", lx, 960);
+  ctx.fillStyle = "rgba(255, 215, 80, 0.95)";
+  ctx.fillText("★ LIVE SOUND & STAGE RIG ★", lx, 960);
   ctx.font = "bold 30px 'Mukta Malar', 'Noto Sans Tamil', sans-serif";
-  ctx.fillStyle = "rgba(255, 180, 180, 0.9)";
-  ctx.fillText("எச்சரிக்கை : அதீத மின்னழுத்தம் · விபத்து அபாயம்", lx, 1005);
+  ctx.fillStyle = "rgba(255, 235, 175, 0.9)";
+  ctx.fillText("நேரடி இசை & மேடை அரங்கம்", lx, 1005);
 
   // Large Vertical Architectural Stencil: S E C T O R - 0 1
   ctx.font = "900 64px 'Impact', sans-serif";
@@ -419,29 +419,29 @@ function createArenaBackWallTexture(): THREE.CanvasTexture | null {
   ctx.textAlign = "center";
   ctx.font = "900 38px 'Arial Black', sans-serif";
   ctx.fillStyle = "rgba(255, 215, 80, 0.95)";
-  ctx.fillText("EMERGENCY STEAM SHUTOFF STATION 02", rx, 960);
+  ctx.fillText("COLLEGIATE FESTIVAL RIG 02", rx, 960);
   ctx.font = "bold 30px 'Mukta Malar', 'Noto Sans Tamil', sans-serif";
   ctx.fillStyle = "rgba(255, 240, 190, 0.9)";
-  ctx.fillText("அவசர கால நீராவி நிறுத்தம் · வால்வு 02", rx, 1005);
+  ctx.fillText("மாணவர் கலை விழா அரங்கம் · பிரிவு 02", rx, 1005);
 
-  // Bold Tamil Cultural Slogan: "தடையை உடை · வென்று காட்டு!"
-  ctx.strokeStyle = "rgba(220, 38, 38, 0.7)";
+  // Bold Tamil Cultural Slogan: "ஆட்டம் · பாட்டம் · கொண்டாட்டம்"
+  ctx.strokeStyle = "rgba(212, 175, 55, 0.6)";
   ctx.lineWidth = 3;
   ctx.strokeRect(rx - 440, 1080, 880, 230);
-  ctx.fillStyle = "rgba(220, 38, 38, 0.08)";
+  ctx.fillStyle = "rgba(212, 175, 55, 0.06)";
   ctx.fillRect(rx - 440, 1080, 880, 230);
 
   ctx.font = "900 58px 'Mukta Malar', 'Noto Sans Tamil', sans-serif";
-  ctx.fillStyle = "rgba(255, 80, 80, 0.95)";
-  ctx.fillText("தடையை உடை  ·  வென்று காட்டு!", rx, 1150);
+  ctx.fillStyle = "rgba(255, 215, 80, 0.95)";
+  ctx.fillText("ஆட்டம்  ·  பாட்டம்  ·  கொண்டாட்டம்", rx, 1150);
 
   ctx.font = "900 42px 'Arial Black', sans-serif";
-  ctx.fillStyle = "rgba(255, 215, 90, 0.9)";
-  ctx.fillText("BREAK THE CAGE  ·  RISE VICTORIOUS", rx, 1215);
+  ctx.fillStyle = "rgba(255, 235, 175, 0.9)";
+  ctx.fillText("COMMUNITY  ·  CULTURE  ·  CELEBRATION", rx, 1215);
 
   ctx.font = "bold 22px 'Courier New', monospace";
   ctx.fillStyle = "rgba(220, 190, 130, 0.75)";
-  ctx.fillText("TAMIL SANGAM 2026  ·  OHIO STATE PRIDE", rx, 1265);
+  ctx.fillText("TAMIL SANGAM AT OHIO STATE  ·  BUCKEYE PRIDE", rx, 1265);
 
   // Large Vertical Architectural Stencil: S E C T O R - 0 2
   ctx.font = "900 64px 'Impact', sans-serif";
@@ -456,7 +456,7 @@ function createArenaBackWallTexture(): THREE.CanvasTexture | null {
   // =========================================================================
   ctx.font = "900 36px 'Courier New', monospace";
   ctx.fillStyle = "rgba(245, 158, 11, 0.55)";
-  ctx.fillText("TAMIL SANGAM HEAVY INDUSTRIAL WORKS · COLUMBUS, OH · 2026 EDITION · ALL PROTOCOLS ACTIVE", cx, 160);
+  ctx.fillText("TAMIL SANGAM CULTURAL ARENA · THE OHIO STATE UNIVERSITY · EST. 2021", cx, 160);
 
   const topHazardY = 220;
   const stripeW = 50;
@@ -496,10 +496,10 @@ function createArenaBackWallTexture(): THREE.CanvasTexture | null {
     ctx.fill();
   }
 
-  // Bottom Stenciled Floor Warning
+  // Bottom Stenciled Stage Header
   ctx.font = "900 34px 'Courier New', monospace";
   ctx.fillStyle = "rgba(255, 215, 80, 0.85)";
-  ctx.fillText("⚠ KEEP CLEAR OF TURNTABLE PLATFORM · எப்போதும் ஒதுங்கி நிற்கவும் · TAMIL SANGAM 2026 ⚠", cx, 1835);
+  ctx.fillText("★ ஆட்டம் பாட்டம் கொண்டாட்டம் • COMMUNITY • CULTURE • CELEBRATION ★", cx, 1835);
 
   // 8. Soft edge vignette falloff to dissolve corner signage and outer edges into darkness
   const leftEdgeGrad = ctx.createLinearGradient(0, 0, 950, 0);
@@ -1586,43 +1586,7 @@ export function LeoFactoryEnvironment() {
       <HangingChain position={[4.2, 12, -4.5]} length={7.2} />
       <HangingChain position={[5.0, 12, 2.5]} length={5.8} />
 
-      {/* 9. Weapons & Props Flanking the Medallion */}
-      {/* Sledgehammer #1: Leaning against barrel cluster on left */}
-      <Sledgehammer position={[-3.2, 0, 1.4]} rotation={[0.2, 0.4, 0.22]} />
-
-      {/* Sledgehammer #2: Resting on right crate */}
-      <Sledgehammer position={[3.6, 0.65, -0.6]} rotation={[Math.PI / 2, 0, -0.4]} />
-
-      {/* Machete #1: Stuck upright into heavy timber chopping block */}
-      <group position={[-2.8, 0, -1.8]}>
-        {/* Timber block */}
-        <mesh position={[0, 0.35, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.35, 0.4, 0.7, 16]} />
-          <meshStandardMaterial color="#301f14" roughness={0.85} />
-        </mesh>
-        {/* Machete embedded in block */}
-        <Machete position={[0, 0.3, 0]} rotation={[0.08, 0.2, 0.05]} />
-      </group>
-
-      {/* Machete #2: Wall mounted on weapon rack at left wall */}
-      <Machete position={[-15.6, 3.5, -1.5]} rotation={[0, Math.PI / 2, Math.PI / 3]} />
-      <Machete position={[-15.6, 3.5, 0.5]} rotation={[0, Math.PI / 2, -Math.PI / 3]} />
-
-      {/* Oil Barrels Cluster (Left) */}
-      <OilBarrel position={[-4.2, 0, -1.2]} color="#1b3a4b" />
-      <OilBarrel position={[-3.7, 0, -2.5]} color="#5a2214" />
-      <OilBarrel position={[-4.8, 0, 0.8]} color="#2d3338" />
-
-      {/* Oil Barrels (Right) */}
-      <OilBarrel position={[4.5, 0, -1.5]} color="#5a2214" />
-      <OilBarrel position={[4.1, 0, -2.8]} color="#1b3a4b" />
-
-      {/* Wooden Ordnance Crates */}
-      <WoodCrate position={[3.6, 0.55, -0.8]} texture={crateTexture} />
-      <WoodCrate position={[4.8, 0.55, 0.6]} texture={crateTexture} />
-      <WoodCrate position={[-4.6, 0.55, 2.2]} rotation={[0, 0.35, 0]} texture={crateTexture} />
-
-      {/* 10. Upward Drifting Festival Forge Sparks & Embers */}
+      {/* 9. Upward Drifting Festival Embers */}
       <FactorySparks count={140} />
     </group>
   );
