@@ -11,6 +11,7 @@ import type { RankedFaq } from "@/lib/faq-engagement/contracts";
 import { audioLayer } from "@/utils/audioLayer";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
+import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { Plus, Search } from "lucide-react";
 import styles from "./guide.module.css";
 
@@ -115,7 +116,7 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
                 </button>
               ))}
             </nav>
-            <div className="min-w-0">
+            <div className="min-w-0 bg-[#FAF8F5] border border-[#161210]/10 shadow-[0_12px_40px_rgba(22,18,16,0.04)] rounded-sm p-6 sm:p-10">
               <div className="relative mb-8">
                 <label htmlFor="guide-search" className="sr-only">Search questions</label>
                 <Search aria-hidden="true" className="size-5 absolute left-0 top-4 text-hearth-terracotta" />
@@ -163,8 +164,12 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
             </div>
           </div>
 
+          <div className="mt-20 sm:mt-28">
+            <KolamSectionRule tone="sandstone" />
+          </div>
+
           {/* Borderless Organic Transportation to Suggestions */}
-          <div className="mt-24 sm:mt-32">
+          <div className="mt-16 sm:mt-24">
             <OrganicRouteGateway
               primaryHref="/suggestions"
               primaryLabel="Step into Suggestions"

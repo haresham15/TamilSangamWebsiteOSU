@@ -12,6 +12,7 @@ export interface CourtyardHeaderProps {
   align?: "left" | "center";
   className?: string;
   action?: React.ReactNode;
+  dark?: boolean;
 }
 
 export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
@@ -22,6 +23,7 @@ export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
   align = "left",
   className = "",
   action,
+  dark = false,
 }) => {
   const isCenter = align === "center";
   // Enforce strict 2-Element Header Rule: suppress eyebrow if Tamil subtitle exists
@@ -42,20 +44,20 @@ export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
       >
         <div className="space-y-3">
           {showEyebrow && (
-            <span className="font-sans text-xs tracking-widest uppercase font-semibold text-[#B85C38] block">
+            <span className={`font-sans text-xs tracking-widest uppercase font-semibold block ${dark ? "text-[#D4AF37]" : "text-[#B85C38]"}`}>
               {eyebrow}
             </span>
           )}
 
           <div className="space-y-1">
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-[#2A2825] tracking-tight leading-[1.12]">
+            <h2 className={`text-3xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight leading-[1.12] ${dark ? "text-[#FAF6F0]" : "text-[#2A2825]"}`}>
               <SplitText text={title} splitType="words" effect="rise" mask />
             </h2>
 
             {tamilTitle && (
               <p
                 lang="ta"
-                className="font-tamil text-lg sm:text-2xl text-[#2A2825]/60 font-light"
+                className={`font-tamil text-lg sm:text-2xl font-light ${dark ? "text-[#FAF6F0]/60" : "text-[#2A2825]/60"}`}
               >
                 <BlurText text={tamilTitle} animateBy="words" />
               </p>
@@ -64,7 +66,7 @@ export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
 
           {description && (
             <p
-              className={`font-sans text-base sm:text-lg text-[#57524C] leading-relaxed max-w-2xl pt-2 ${
+              className={`font-sans text-base sm:text-lg leading-relaxed max-w-2xl pt-2 ${dark ? "text-[#E8DEC8]/80" : "text-[#57524C]"} ${
                 isCenter ? "mx-auto" : ""
               }`}
             >

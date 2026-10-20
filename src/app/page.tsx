@@ -23,6 +23,7 @@ import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { EventsDepthShowcase } from "@/components/home/EventsDepthShowcase";
 import { NextFlagshipGathering } from "@/components/home/NextFlagshipGathering";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
+import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 
 export default function HomePage() {
   const { playClick } = useAudio();
@@ -517,18 +518,26 @@ export default function HomePage() {
           </div>
         </div>
 
+        <KolamSectionRule tone="sandstone" />
+
         {/* =========================================================================
             WHAT'S NEXT: DYNAMIC FLAGSHIP EVENT ENGINE & DITHER-VEIL ART INSTALLATION
             ========================================================================= */}
         <NextFlagshipGathering />
 
+        <KolamSectionRule tone="light" />
+
         {/* The Pillars: Airy Vertical Sections (Zero Rigid Borders) */}
         <SilkHoverPillars />
+
+        <KolamSectionRule tone="espresso" />
 
         {/* =========================================================================
             MOMENTS ON THE OLENTANGY: REACT BITS DEPTH CAROUSEL & EVENT CHRONICLE
             ========================================================================= */}
         <EventsDepthShowcase />
+
+        <KolamSectionRule tone="light" />
 
         {/* =========================================================================
             COMMUNITY KINSHIP PROOF STRIP (Zero Bounding Boxes, 1px Grounding Line)
@@ -561,6 +570,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        <KolamSectionRule tone="sandstone" />
 
         {/* =========================================================================
             INVITING GATEWAY: STEP INTO THE GATHERINGS (Organic Screen-Spanning Route)

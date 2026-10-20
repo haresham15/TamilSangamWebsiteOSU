@@ -18,6 +18,7 @@ import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import dynamic from "next/dynamic";
 import { HeroScrollStage } from "@/components/canvas/HeroScrollStage";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
+import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { registerSystem } from "@/engine/masterTick";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
@@ -379,8 +380,10 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
             </div>
           )}
 
-          {/* Annual Recurring Traditions (Staggered Typographic List, Zero Beige Boxes) */}
-          <div className="mt-28 sm:mt-40 space-y-12">
+          <KolamSectionRule tone="sandstone" />
+
+          {/* Annual Recurring Traditions (Warm Chola Sandstone Band with Recessed Specimen Cards) */}
+          <div className="mt-20 sm:mt-32 -mx-6 sm:-mx-12 px-6 sm:px-12 py-20 bg-[#F2EAE0] border-y border-[#161210]/10 space-y-12 shadow-[inset_0_2px_12px_rgba(22,18,16,0.03)]">
             <div className="text-center space-y-2">
               <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
                 Recurring Cycles · ஆண்டு சுழற்சி
@@ -393,64 +396,50 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
               </p>
             </div>
 
-            <div className="border-t border-[#E5DDD0] divide-y divide-[#E5DDD0] text-left">
-              <div className="py-10 sm:py-14 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline">
-                <div className="md:col-span-4 space-y-1">
-                  <span className="font-sans text-xs text-[#B85C38] uppercase tracking-widest font-semibold block">
-                    Early Autumn · South Oval
-                  </span>
-                  <h4 className="text-2xl sm:text-3xl font-serif text-[#2A2825]">Welcome Chai & Lawn Social</h4>
-                </div>
-                <div className="md:col-span-8">
-                  <p className="text-base font-sans text-[#57524C] leading-relaxed">
-                    Casual welcome mixer on the grass with filter coffee, samosas, icebreakers, and connecting freshmen with upperclassmen mentors.
-                  </p>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-5xl mx-auto">
+              <div className="p-8 bg-[#FAF6F0] rounded-sm border border-[#161210]/10 shadow-[0_4px_20px_rgba(22,18,16,0.04)] space-y-3">
+                <span className="font-sans text-xs text-[#B85C38] uppercase tracking-widest font-semibold block">
+                  Early Autumn · South Oval
+                </span>
+                <h4 className="text-2xl font-serif text-[#2A2825]">Welcome Chai & Lawn Social</h4>
+                <p className="text-sm font-sans text-[#57524C] leading-relaxed">
+                  Casual welcome mixer on the grass with filter coffee, samosas, icebreakers, and connecting freshmen with upperclassmen mentors.
+                </p>
               </div>
 
-              <div className="py-10 sm:py-14 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline md:pl-8">
-                <div className="md:col-span-4 space-y-1">
-                  <span className="font-sans text-xs text-[#E5A93C] uppercase tracking-widest font-semibold block">
-                    Late Autumn · Ohio Union
-                  </span>
-                  <h4 className="text-2xl sm:text-3xl font-serif text-[#2A2825]">Diwali Sparkler Night & Festive Feast</h4>
-                </div>
-                <div className="md:col-span-8">
-                  <p className="text-base font-sans text-[#57524C] leading-relaxed">
-                    Our signature autumn festival featuring authentic catered South Indian dinner, live student acoustic film jams, and sparklers on the plaza.
-                  </p>
-                </div>
+              <div className="p-8 bg-[#FAF6F0] rounded-sm border border-[#161210]/10 shadow-[0_4px_20px_rgba(22,18,16,0.04)] space-y-3">
+                <span className="font-sans text-xs text-[#E5A93C] uppercase tracking-widest font-semibold block">
+                  Late Autumn · Ohio Union
+                </span>
+                <h4 className="text-2xl font-serif text-[#2A2825]">Diwali Sparkler Night & Festive Feast</h4>
+                <p className="text-sm font-sans text-[#57524C] leading-relaxed">
+                  Our signature autumn festival featuring authentic catered South Indian dinner, live student acoustic film jams, and sparklers on the plaza.
+                </p>
               </div>
 
-              <div className="py-10 sm:py-14 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline">
-                <div className="md:col-span-4 space-y-1">
-                  <span className="font-sans text-xs text-[#B85C38] uppercase tracking-widest font-semibold block">
-                    Mid Winter · Campus Plaza
-                  </span>
-                  <h4 className="text-2xl sm:text-3xl font-serif text-[#2A2825]">Pongal Harvest Gathering (தைப்பொங்கல்)</h4>
-                </div>
-                <div className="md:col-span-8">
-                  <p className="text-base font-sans text-[#57524C] leading-relaxed">
-                    Traditional sweet pongal pot cooking, festive kolam sidewalk chalk competitions, and celebration of the Tamil harvest season.
-                  </p>
-                </div>
+              <div className="p-8 bg-[#FAF6F0] rounded-sm border border-[#161210]/10 shadow-[0_4px_20px_rgba(22,18,16,0.04)] space-y-3">
+                <span className="font-sans text-xs text-[#B85C38] uppercase tracking-widest font-semibold block">
+                  Mid Winter · Campus Plaza
+                </span>
+                <h4 className="text-2xl font-serif text-[#2A2825]">Pongal Harvest Gathering (தைப்பொங்கல்)</h4>
+                <p className="text-sm font-sans text-[#57524C] leading-relaxed">
+                  Traditional sweet pongal pot cooking, festive kolam sidewalk chalk competitions, and celebration of the Tamil harvest season.
+                </p>
               </div>
 
-              <div className="py-10 sm:py-14 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline md:pl-8">
-                <div className="md:col-span-4 space-y-1">
-                  <span className="font-sans text-xs text-[#E5A93C] uppercase tracking-widest font-semibold block">
-                    Mid Spring · Recreation Grounds
-                  </span>
-                  <h4 className="text-2xl sm:text-3xl font-serif text-[#2A2825]">Namma Jathara Spring Carnival</h4>
-                </div>
-                <div className="md:col-span-8">
-                  <p className="text-base font-sans text-[#57524C] leading-relaxed">
-                    Joint collegiate carnival co-hosted with Telugu Tamasha, uniting 200+ students for Indian street food stalls, outdoor games, and dance.
-                  </p>
-                </div>
+              <div className="p-8 bg-[#FAF6F0] rounded-sm border border-[#161210]/10 shadow-[0_4px_20px_rgba(22,18,16,0.04)] space-y-3">
+                <span className="font-sans text-xs text-[#E5A93C] uppercase tracking-widest font-semibold block">
+                  Mid Spring · Recreation Grounds
+                </span>
+                <h4 className="text-2xl font-serif text-[#2A2825]">Namma Jathara Spring Carnival</h4>
+                <p className="text-sm font-sans text-[#57524C] leading-relaxed">
+                  Joint collegiate carnival co-hosted with Telugu Tamasha, uniting 200+ students for Indian street food stalls, outdoor games, and dance.
+                </p>
               </div>
             </div>
           </div>
+
+          <KolamSectionRule tone="sandstone" />
 
           {/* Gateway Section to The Canvas Gallery */}
           <OrganicRouteGateway

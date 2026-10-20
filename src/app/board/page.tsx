@@ -21,6 +21,7 @@ import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import CountUp from "@/components/CountUp";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
+import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { SpotlightCard } from "@/components/ui/react-bits";
 import styles from "./board.module.css";
 
@@ -260,7 +261,7 @@ export default function BoardPage() {
               aria-label="Selected officer dossier"
               data-testid="officer-portrait"
             >
-              <div className={styles.dossierCard}>
+              <div className={`${styles.dossierCard} !bg-[#EFE6DA] !border-[#D4AF37]/30 !shadow-[inset_0_2px_10px_rgba(22,18,16,0.05),0_12px_36px_rgba(22,18,16,0.06)]`}>
                 {/* Dossier Header Bar with Quick Nav */}
                 <div className="flex items-center justify-between border-b border-hearth-espresso/15 pb-3 mb-4 select-none">
                   <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest text-hearth-terracotta uppercase">
@@ -588,70 +589,76 @@ export default function BoardPage() {
             </div>
           </div>
 
-          {/* Working Subcommittee Councils: Borderless Typographic Grid */}
-          <div className="mt-28 sm:mt-40 pt-16 border-t border-hearth-espresso/20 space-y-16">
-            <div className="text-center space-y-3">
+          <KolamSectionRule tone="sandstone" />
+
+          {/* Working Subcommittee Councils & Constitution (Warm Chola Sandstone Band) */}
+          <div className="mt-20 sm:mt-32 -mx-6 sm:-mx-10 lg:-mx-16 px-6 sm:px-10 lg:px-16 py-20 bg-[#F2EAE0] border-y border-[#161210]/10 shadow-[inset_0_2px_12px_rgba(22,18,16,0.03)] space-y-20">
+            <div className="space-y-16">
+              <div className="text-center space-y-3">
+                <span className="font-sans text-xs font-semibold text-hearth-terracotta tracking-widest uppercase block">
+                  Working Groups · துணைக் குழுக்கள்
+                </span>
+                <h3 className="text-3xl sm:text-5xl font-serif font-normal text-hearth-espresso">
+                  Subcommittee Coordinators
+                </h3>
+                <p className="text-base text-hearth-espresso/80 font-sans max-w-xl mx-auto leading-relaxed">
+                  Dedicated student organizers leading choreography, social media trailers, campus catering, and community service.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 text-left max-w-5xl mx-auto">
+                {SUBCOMMITTEE_MEMBERS.map((sub, i) => (
+                  <div
+                    key={sub.id || i}
+                    className={styles.coordinator + " space-y-2 p-6 bg-[#FAF6F0] rounded-sm border border-[#161210]/10 shadow-[0_2px_8px_rgba(22,18,16,0.03)]"}
+                    onPointerMove={(event) => {
+                      if (
+                        !window.matchMedia(
+                          "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)"
+                        ).matches
+                      )
+                        return;
+                      const rect = event.currentTarget.getBoundingClientRect();
+                      event.currentTarget.style.setProperty("--pointer-x", event.clientX - rect.left + "px");
+                      event.currentTarget.style.setProperty("--pointer-y", event.clientY - rect.top + "px");
+                    }}
+                    onPointerLeave={(event) => {
+                      event.currentTarget.style.removeProperty("--pointer-x");
+                      event.currentTarget.style.removeProperty("--pointer-y");
+                    }}
+                  >
+                    <span className="font-mono text-xs text-hearth-terracotta uppercase tracking-widest font-semibold block">
+                      {sub.areaEn}
+                    </span>
+                    <h4 className="text-2xl sm:text-3xl font-serif text-hearth-espresso">{sub.nameEn}</h4>
+                    <p className="text-sm font-sans text-hearth-espresso/80" lang="ta">
+                      {sub.nameTa} · {sub.areaTa}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Plain-Language Democratic Governance */}
+            <div className="pt-16 border-t border-hearth-espresso/15 space-y-6 max-w-3xl mx-auto text-center sm:text-left">
               <span className="font-sans text-xs font-semibold text-hearth-terracotta tracking-widest uppercase block">
-                Working Groups · துணைக் குழுக்கள்
+                Democratic Governance · ஜனநாயக விதிகள்
               </span>
-              <h3 className="text-3xl sm:text-5xl font-serif font-normal text-hearth-espresso">
-                Subcommittee Coordinators
-              </h3>
-              <p className="text-base text-hearth-espresso/80 font-sans max-w-xl mx-auto leading-relaxed">
-                Dedicated student organizers leading choreography, social media trailers, campus catering, and community service.
+              <h4 className="text-3xl sm:text-4xl font-serif text-hearth-espresso">
+                Constitution of Tamil Sangam at Ohio State
+              </h4>
+              <p className="text-base sm:text-lg font-sans text-hearth-espresso/80 leading-relaxed">
+                Our organization is fully student-run and democratically governed under Ohio State University Student Activities guidelines. Executive officers are elected annually by general body vote, and all constitutional amendments are publicly accessible.
               </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 text-left">
-              {SUBCOMMITTEE_MEMBERS.map((sub, i) => (
-                <div
-                  key={sub.id || i}
-                  className={styles.coordinator + " space-y-2"}
-                  onPointerMove={(event) => {
-                    if (
-                      !window.matchMedia(
-                        "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)"
-                      ).matches
-                    )
-                      return;
-                    const rect = event.currentTarget.getBoundingClientRect();
-                    event.currentTarget.style.setProperty("--pointer-x", event.clientX - rect.left + "px");
-                    event.currentTarget.style.setProperty("--pointer-y", event.clientY - rect.top + "px");
-                  }}
-                  onPointerLeave={(event) => {
-                    event.currentTarget.style.removeProperty("--pointer-x");
-                    event.currentTarget.style.removeProperty("--pointer-y");
-                  }}
-                >
-                  <span className="font-mono text-xs text-hearth-terracotta uppercase tracking-widest font-semibold block">
-                    {sub.areaEn}
-                  </span>
-                  <h4 className="text-2xl sm:text-3xl font-serif text-hearth-espresso">{sub.nameEn}</h4>
-                  <p className="text-sm font-sans text-hearth-espresso/80" lang="ta">
-                    {sub.nameTa} · {sub.areaTa}
-                  </p>
-                </div>
-              ))}
+              <div className="pt-2">
+                <MuttramButton href="/guide" variant="secondary" size="md" onClick={playClick}>
+                  Read Organization FAQ & Guidelines →
+                </MuttramButton>
+              </div>
             </div>
           </div>
 
-          {/* Plain-Language Democratic Governance */}
-          <div className="mt-28 pt-16 border-t border-hearth-espresso/20 space-y-6 max-w-3xl">
-            <span className="font-sans text-xs font-semibold text-hearth-terracotta tracking-widest uppercase block">
-              Democratic Governance · ஜனநாயக விதிகள்
-            </span>
-            <h4 className="text-3xl sm:text-4xl font-serif text-hearth-espresso">
-              Constitution of Tamil Sangam at Ohio State
-            </h4>
-            <p className="text-base sm:text-lg font-sans text-hearth-espresso/80 leading-relaxed">
-              Our organization is fully student-run and democratically governed under Ohio State University Student Activities guidelines. Executive officers are elected annually by general body vote, and all constitutional amendments are publicly accessible.
-            </p>
-            <div className="pt-2">
-              <MuttramButton href="/guide" variant="secondary" size="md" onClick={playClick}>
-                Read Organization FAQ & Guidelines →
-              </MuttramButton>
-            </div>
-          </div>
+          <KolamSectionRule tone="sandstone" />
 
           {/* Borderless Organic Transportation to Join */}
           <div className="mt-28 sm:mt-36">

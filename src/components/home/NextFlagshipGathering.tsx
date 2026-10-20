@@ -97,8 +97,8 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
         description="Our calendar brings together authentic food, live performance, and fellowship beneath Columbus skies. Open to every Buckeye regardless of language or background."
       />
 
-      {/* 12-Column Asymmetric Grid: Dithered Installation (5 cols) + Editorial Dossier (7 cols) */}
-      <div className="relative w-full grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-x-16 items-stretch border-b border-[#E5DDD0] pb-24 sm:pb-32">
+      {/* 12-Column Asymmetric Grid: Dithered Installation (5 cols) + Editorial Dossier (7 cols) inside Recessed Archival Well */}
+      <div className="relative w-full rounded-sm bg-[#F2EAE0]/60 p-6 sm:p-10 lg:p-12 border border-[#161210]/10 shadow-[inset_0_2px_12px_rgba(22,18,16,0.03)] grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-x-16 items-stretch">
         {/* COLS 1–5: THE DITHERED INSTALLATION */}
         <div className="lg:col-span-5 relative w-full flex flex-col justify-center">
           <SpotlightCard className="w-full bg-transparent border-0 p-0">

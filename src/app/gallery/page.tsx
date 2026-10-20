@@ -11,6 +11,7 @@ import { audioLayer } from "@/utils/audioLayer";
 import { Search } from "lucide-react";
 import { GalleryHero } from "@/components/gallery-hero/GalleryHero";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
+import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { CinemaLightbox, type LightboxPhoto } from "@/components/ui/CinemaLightbox";
 
@@ -133,12 +134,13 @@ export default function GalleryPage() {
           </div>
         </div>
 
-        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 py-10 sm:py-16">
-
-          {/* Analog Photo Table: Asymmetric Rotations, Physical Overlaps, Sharp Corners */}
-          <p role="status" className="sr-only">{filteredPhotos.length} memories found</p>
-          <LayoutGroup id="gallery-prints">
-          <div ref={printsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-14 items-start">
+        {/* Recessed Archival Mat-Board Well for Exhibition Masonry */}
+        <div className="w-full bg-[#F2EAE0]/75 border-y border-[#161210]/10 shadow-[inset_0_2px_12px_rgba(22,18,16,0.04)] py-12 sm:py-20 my-8">
+          <div className="max-w-[1600px] mx-auto px-6 sm:px-12">
+            {/* Analog Photo Table: Asymmetric Rotations, Physical Overlaps, Sharp Corners */}
+            <p role="status" className="sr-only">{filteredPhotos.length} memories found</p>
+            <LayoutGroup id="gallery-prints">
+            <div ref={printsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-14 items-start">
             {filteredPhotos.map((photo, idx) => {
               // Architectural aspect ratio patterns for dynamic physical photos
               const aspect = idx % 5 === 0 ? "aspect-[4/5]" : idx % 3 === 0 ? "aspect-[16/10]" : "aspect-[4/3]";
@@ -227,8 +229,14 @@ export default function GalleryPage() {
             </div>
           )}
 
+          </div>
+        </div>
+
+        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 py-10 sm:py-16">
+          <KolamSectionRule tone="sandstone" />
+
           {/* Student Photo Consent & Removal Notice (Unboxed, 1px Grounding Line) */}
-          <div className="mt-28 sm:mt-40 border-t border-antique-gold/30 pt-16 text-center max-w-2xl mx-auto space-y-3 select-none">
+          <div className="mt-20 sm:mt-28 border-t border-antique-gold/30 pt-16 text-center max-w-2xl mx-auto space-y-3 select-none">
             <span className="font-sans text-xs font-semibold text-hearth-terracotta tracking-widest uppercase block">
               Student Privacy & Consent
             </span>
@@ -243,7 +251,6 @@ export default function GalleryPage() {
               and we will take it down immediately with zero questions asked.
             </p>
           </div>
-
         </div>
       </EditorialSheetHandoff>
 

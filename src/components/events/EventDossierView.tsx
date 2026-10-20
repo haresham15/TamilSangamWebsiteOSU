@@ -12,6 +12,8 @@ import { SplitText } from "./SplitText";
 import { ParallaxScatter } from "./ParallaxScatter";
 import { VaultGateway } from "./VaultGateway";
 import { Magnet } from "@/components/ui/react-bits";
+import { EditorialBackgroundCanvas } from "@/components/ui/EditorialBackgroundCanvas";
+import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 
 interface EventDossierViewProps {
   event: SangamEvent;
@@ -91,8 +93,9 @@ END:VCALENDAR`;
   };
 
   return (
-    <article className="w-full min-h-screen bg-paper text-hearth-espresso font-sans selection:bg-hearth-terracotta/20">
-      <main className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-32 pb-16">
+    <article className="relative w-full min-h-screen bg-paper text-hearth-espresso font-sans selection:bg-hearth-terracotta/20 overflow-hidden">
+      <EditorialBackgroundCanvas />
+      <main className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-32 pb-16">
         {/* Navigation Breadcrumb (Minimal Typographic Link, No Pills) */}
         <nav aria-label="Breadcrumb" className="mb-14">
           <Link
@@ -245,9 +248,9 @@ END:VCALENDAR`;
         </section>
 
         {/* ============================================================ */}
-        {/* EDITORIAL PHOTO SPREAD (ReactBits Parallax Scatter)          */}
+        {/* EDITORIAL PHOTO SPREAD (Recessed Archival Mat-Board Well)   */}
         {/* ============================================================ */}
-        <section aria-label="Curated Photographic Dossier" className="mt-20">
+        <section aria-label="Curated Photographic Dossier" className="mt-20 -mx-6 sm:-mx-10 lg:-mx-16 px-6 sm:px-10 lg:px-16 py-16 bg-[#F2EAE0]/75 border-y border-[#161210]/10 shadow-[inset_0_2px_12px_rgba(22,18,16,0.04)]">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-hearth-espresso/15 pb-4 mb-16">
             <div>
               <h2 className="text-3xl sm:text-4xl font-serif text-hearth-espresso flex items-baseline gap-3">
@@ -286,6 +289,8 @@ END:VCALENDAR`;
             </div>
           )}
         </section>
+
+        <KolamSectionRule tone="sandstone" />
 
         {/* ============================================================ */}
         {/* PHASE 3: THE VAULT DOOR (ReactBits Magnetic Proximity)       */}

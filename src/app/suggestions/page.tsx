@@ -25,6 +25,7 @@ import { audioLayer } from "@/utils/audioLayer";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
+import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { registerSystem } from "@/engine/masterTick";
 import { Magnet } from "@/components/ui/react-bits";
 
@@ -252,9 +253,9 @@ export default function SuggestionsPage() {
 
             {/* ===================================================================
                 THE FLOW (RIGHT 8 COLUMNS): CONVERSATIONAL PROPOSAL FORM
-                Warm, open, conversational inputs without dark command-line syntax
+                Warm, open, conversational inputs inside Warm Parchment Ledger Sheet
                 =================================================================== */}
-            <main className="lg:col-span-8">
+            <main className="lg:col-span-8 bg-[#FAF8F5] border border-[#161210]/10 shadow-[0_12px_40px_rgba(22,18,16,0.04)] rounded-sm p-6 sm:p-10">
               {!state.success ? (
                 <form action={formAction} className="space-y-12 py-2">
                   {/* Honeypot & Timestamp Hidden Inputs */}
@@ -411,6 +412,10 @@ export default function SuggestionsPage() {
             </main>
 
           </div>
+        </div>
+
+        <div className="mt-20 sm:mt-28">
+          <KolamSectionRule tone="sandstone" />
         </div>
 
         {/* =========================================================================

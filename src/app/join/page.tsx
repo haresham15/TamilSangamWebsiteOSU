@@ -8,6 +8,7 @@ import { useAudio } from "@/context/AudioContext";
 import { audioLayer } from "@/utils/audioLayer";
 import { Loader2 } from "lucide-react";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
+import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { GuestbookField } from "@/components/muttram/GuestbookField";
 import { SITE_CONFIG } from "@/data/siteConfig";
@@ -153,7 +154,7 @@ export default function JoinPage() {
 
           <div className={styles.layout}>
           {!submitted ? (
-            <form onSubmit={handleSubmit} className={styles.form + " space-y-16"}>
+            <form onSubmit={handleSubmit} className={`${styles.form} space-y-16 bg-[#FAF8F5] border border-[#161210]/10 shadow-[0_12px_40px_rgba(22,18,16,0.04)] rounded-sm p-6 sm:p-10`}>
               
               {/* Prompt 01: Name */}
               <GuestbookField
@@ -340,8 +341,12 @@ export default function JoinPage() {
           </StarBorder>
           </div>
 
+          <div className="mt-20 sm:mt-28">
+            <KolamSectionRule tone="sandstone" />
+          </div>
+
           {/* Open Hearth Guarantee Notice (Unboxed, 1px Grounding Line) */}
-          <div className="mt-28 border-t border-hearth-espresso/20 pt-12 text-center space-y-2 max-w-lg mx-auto">
+          <div className="mt-16 border-t border-hearth-espresso/20 pt-12 text-center space-y-2 max-w-lg mx-auto">
             <p className="text-sm font-sans text-hearth-espresso/80 leading-relaxed">
               Membership in Tamil Sangam is completely open and free to all Buckeyes, undergraduate or graduate, of any major, language, or heritage.
             </p>

@@ -11,6 +11,7 @@ import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { FlowingRiverTimeline } from "@/components/muttram/FlowingRiverTimeline";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
+import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 
 export default function AboutPage() {
   const { locale } = useLocale();
@@ -128,8 +129,8 @@ export default function AboutPage() {
             tamilTitle={locale !== "ta" ? "வரலாறு · தமிழ் மன்றம்" : undefined}
           />
 
-          {/* The Hero Quote: Naked Architectural Monument Against Global Background */}
-          <div className="relative my-24 sm:my-36 text-center space-y-8 max-w-4xl mx-auto">
+          {/* The Hero Quote: Naked Architectural Monument with Warm Amber Halo */}
+          <div className="relative my-24 sm:my-36 text-center space-y-8 max-w-4xl mx-auto py-12 px-6 rounded-2xl bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08),rgba(200,90,50,0.03)_50%,transparent_75%)]">
             <span className="font-sans text-xs uppercase tracking-widest text-[#B85C38] font-semibold block">
               புறநானூறு 192 · கணியன் பூங்குன்றனார்
             </span>
@@ -142,8 +143,10 @@ export default function AboutPage() {
             </p>
           </div>
 
-          {/* Centered Snaking Timeline: The Flowing River */}
-          <div className="my-24 sm:my-36 space-y-8">
+          <KolamSectionRule tone="sandstone" />
+
+          {/* Centered Snaking Timeline: The Flowing River (Stepped Warm Sandstone Chapter) */}
+          <div className="my-24 sm:my-36 -mx-6 sm:-mx-10 px-6 sm:px-10 py-24 bg-[#F2EAE0] border-y border-[#161210]/10 shadow-[inset_0_2px_12px_rgba(22,18,16,0.03)] space-y-8">
             <div className="text-center space-y-2">
               <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
                 வரலாற்றுப் பாதை · Historical Path
@@ -158,6 +161,8 @@ export default function AboutPage() {
 
             <FlowingRiverTimeline milestones={timelineMilestones} locale={locale} />
           </div>
+
+          <KolamSectionRule tone="sandstone" />
 
           {/* Campus & Regional Alliances: Staggered Text-Only Typographic List (No Beige Cards) */}
           <div className="mt-28 sm:mt-40 space-y-12">
@@ -199,6 +204,8 @@ export default function AboutPage() {
               ))}
             </div>
           </div>
+
+          <KolamSectionRule tone="light" />
 
           {/* Gateway Section to The Board (Organic Route Gateway) */}
           <OrganicRouteGateway

@@ -103,6 +103,22 @@ html.sangam-fallback #guide-station-hero section { min-height: 100dvh !important
   --color-hearth-terracotta: #C85A32;
   --color-antique-gold: #D4AF37;
   --color-warm-amber: #FFB366;
+
+  /* Living Chola Monograph 5-Tier OKLCH Archival Surface Palette */
+  --color-khadi-ivory: oklch(0.975 0.012 85);       /* #FAF6F0 - Primary sunlit cotton-rag paper */
+  --color-chola-sandstone: oklch(0.935 0.018 75);   /* #F2EAE0 - Secondary warm stepped limestone surface */
+  --color-palm-parchment: oklch(0.895 0.028 80);    /* #E8DEC8 - Recessed archival mat-board / specimen well */
+  --color-espresso-interlude: oklch(0.18 0.015 50); /* #161210 - Deep warm obsidian/espresso contrast */
+  --color-sandstone-pedestal: oklch(0.92 0.02 75);  /* #EFE6DA - Tactile recessed pedestal well */
+}
+
+:root {
+  --bg-khadi-ivory: #FAF6F0;
+  --bg-chola-sandstone: #F2EAE0;
+  --bg-palm-parchment: #E8DEC8;
+  --bg-terracotta-tint: radial-gradient(120% 100% at 50% 0%, #F7EDE2 0%, #EFE4D6 100%);
+  --bg-espresso-interlude: #161210;
+  --bg-sandstone-pedestal: #EFE6DA;
 }
 
 /* Explicit Typography Utilities for Tailwind v4 */

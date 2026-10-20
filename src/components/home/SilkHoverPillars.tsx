@@ -102,10 +102,15 @@ export function SilkHoverPillars() {
   const y = useSpring(pointerY, { stiffness: 160, damping: 22 });
   const active = PILLAR_ROWS.find((row) => row.id === activeRow);
   return (
-    <section className="relative w-full bg-paper text-hearth-espresso py-24 sm:py-32 overflow-hidden select-none">
-      <div className="max-w-[1600px] mx-auto px-6 sm:px-12">
-        {/* Airy Courtyard Section Header */}
+    <section className="relative w-full bg-[#161210] text-[#FAF6F0] py-24 sm:py-32 overflow-hidden select-none border-y border-[#D4AF37]/20 shadow-[inset_0_20px_50px_rgba(0,0,0,0.5)]">
+      {/* Ambient brass corner accents */}
+      <div className="absolute top-0 left-0 w-32 h-32 bg-[radial-gradient(circle_at_top_left,rgba(212,175,55,0.08),transparent_70%)] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-32 h-32 bg-[radial-gradient(circle_at_bottom_right,rgba(200,90,50,0.08),transparent_70%)] pointer-events-none" />
+
+      <div className="max-w-[1600px] mx-auto px-6 sm:px-12 relative z-10">
+        {/* Airy Courtyard Section Header in Espresso Tone */}
         <CourtyardHeader
+          dark
           eyebrow="Foundational Commitments"
           title={locale === "ta" ? "ஐந்து தூண்கள்" : "The Five Pillars"}
           tamilTitle={locale !== "ta" ? "ஐந்து தூண்கள் · திண்ணை மரபு" : undefined}
@@ -113,8 +118,8 @@ export function SilkHoverPillars() {
         />
 
         {/* Massive Airy Vertical Sections (No rigid grid borders) */}
-        {/* Strict CSS Grid Hanging Indent (Zero Boxes, 1px Grounding Line) */}
-        <div className="w-full border-t border-[#E5DDD0]">
+        {/* Strict CSS Grid Hanging Indent with Warm Brass Grounding Lines */}
+        <div className="w-full border-t border-[#D4AF37]/25">
           {PILLAR_ROWS.map((pillar, idx) => {
             return (
               <Link
@@ -130,13 +135,13 @@ export function SilkHoverPillars() {
                 onFocus={() => setActiveRow(pillar.id)}
                 onBlur={() => setActiveRow(null)}
                 onPointerMove={(event) => { pointerX.set(event.clientX + 28); pointerY.set(event.clientY - 80); }}
-                className="pillar-curtain group relative block w-full py-12 sm:py-16 border-b border-hearth-espresso/20 transition-[padding,background-color,color] duration-300 hover:py-20 focus-visible:py-20 hover:bg-hearth-espresso focus-visible:bg-hearth-espresso focus-visible:outline-2 focus-visible:outline-hearth-terracotta motion-reduce:transition-none"
+                className="pillar-curtain group relative block w-full py-12 sm:py-16 border-b border-[#D4AF37]/20 transition-[padding,background-color,color] duration-300 hover:py-20 focus-visible:py-20 hover:bg-[#1E1916] focus-visible:bg-[#1E1916] focus-visible:outline-2 focus-visible:outline-[#D4AF37] motion-reduce:transition-none"
               >
                 {/* Content Layout: Strict CSS Grid Hanging Indent */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-baseline">
                   {/* Hanging Numeral (col 1-2) */}
                   <div className="lg:col-span-2">
-                    <span className="font-serif text-3xl sm:text-5xl text-[#B85C38] font-light block">
+                    <span className="font-serif text-3xl sm:text-5xl text-[#D4AF37] font-light block transition-colors group-hover:text-[#F39C12]">
                       {locale === "ta" ? pillar.numTa : pillar.num}
                     </span>
                   </div>
@@ -144,29 +149,29 @@ export function SilkHoverPillars() {
                   {/* Massive Bilingual Pillar Title (col 3-7) */}
                   <div className="lg:col-span-5 space-y-1">
                     <div className="flex items-baseline gap-4 sm:gap-6 flex-wrap">
-                      <h3 className="text-4xl sm:text-6xl md:text-7xl font-serif font-normal tracking-tight text-[#2A2825] group-hover:text-[#B85C38] transition-colors duration-300">
+                      <h3 className="text-4xl sm:text-6xl md:text-7xl font-serif font-normal tracking-tight text-[#FAF6F0] group-hover:text-[#F39C12] transition-colors duration-300">
                         {pillar.nameEn}
                       </h3>
                       <span
                         lang="ta"
                         style={{ letterSpacing: 0 }}
-                        className="text-2xl sm:text-4xl font-serif font-light text-[#2A2825]/40 group-hover:text-[#B85C38]/60 transition-colors duration-300"
+                        className="text-2xl sm:text-4xl font-serif font-light text-[#FAF6F0]/40 group-hover:text-[#F39C12]/70 transition-colors duration-300"
                       >
                         {pillar.nameTa}
                       </span>
                     </div>
-                    <span className="font-sans text-xs tracking-widest uppercase font-semibold text-[#B85C38] block pt-1">
+                    <span className="font-sans text-xs tracking-widest uppercase font-semibold text-[#D4AF37] block pt-1">
                       {locale === "ta" ? pillar.subtitleTa : pillar.subtitleEn}
                     </span>
                   </div>
 
                   {/* Subtitle & Narrative Description (col 8-12) */}
                   <div className="lg:col-span-5 flex items-start justify-between gap-6 pt-2 lg:pt-0">
-                    <p className="text-sm sm:text-base font-sans text-[#57524C] leading-relaxed group-hover:text-[#2A2825] transition-colors duration-300">
+                    <p className="text-sm sm:text-base font-sans text-[#E8DEC8]/80 leading-relaxed group-hover:text-[#FAF6F0] transition-colors duration-300">
                       {locale === "ta" ? pillar.descTa : pillar.descEn}
                     </p>
 
-                    <div className="shrink-0 text-[#2A2825] group-hover:text-[#B85C38] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300">
+                    <div className="shrink-0 text-[#D4AF37]/70 group-hover:text-[#FAF6F0] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300">
                       <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                   </div>
