@@ -105,6 +105,7 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
         end: "+=1600",
         pin: true,
         scrub: true,
+        invalidateOnRefresh: true,
         anticipatePin: 1,
         onUpdate: (self) => {
           const p = self.progress;

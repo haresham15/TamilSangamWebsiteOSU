@@ -1,6 +1,6 @@
 // src/director/wireframe.ts
 import * as THREE from "three";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 
 /**

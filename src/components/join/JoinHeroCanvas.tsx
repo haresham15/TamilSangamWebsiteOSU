@@ -151,6 +151,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
         pin: true,
         pinSpacing: true,
         scrub: true, // Direct 1:1 read of Lenis
+        invalidateOnRefresh: true,
         anticipatePin: 0, // 0 eliminates initial pin twitch
         onUpdate: (self) => {
           const p = self.progress;

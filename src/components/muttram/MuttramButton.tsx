@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { motion, HTMLMotionProps } from "framer-motion";
+import { motion } from "framer-motion";
 
 export type MuttramButtonVariant = "primary" | "secondary" | "outline" | "ghost";
 export type MuttramButtonSize = "sm" | "md" | "lg";

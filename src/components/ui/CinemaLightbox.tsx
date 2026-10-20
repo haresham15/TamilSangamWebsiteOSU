@@ -93,7 +93,7 @@ export function CinemaLightbox({
           <header className="w-full flex items-center justify-between z-20 shrink-0">
             <div className="flex items-center gap-3">
               <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] font-bold">
-                PLATE {plateLabel}
+                Plate {plateLabel}
               </span>
               <span className="text-white/20">/</span>
               <span className="font-mono text-xs text-white/50 tracking-wider">

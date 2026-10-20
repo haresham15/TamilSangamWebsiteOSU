@@ -57,8 +57,7 @@ export const FloatingNav: React.FC = () => {
   const navContainerRef = useRef<HTMLElement>(null);
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const innerRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
-  const quickToXRefs = useRef<Record<string, (val: number) => void>>({});
-  const quickToYRefs = useRef<Record<string, (val: number) => void>>({});
+  const isShiftedRefs = useRef<Record<string, boolean>>({});
 
   const mainDotRef = useRef<HTMLSpanElement>(null);
   const trailDotRef = useRef<HTMLSpanElement>(null);
@@ -274,21 +273,6 @@ export const FloatingNav: React.FC = () => {
     const navContainer = navContainerRef.current;
     if (!navContainer) return;
 
-    // Initialize GSAP quickTo setters for 120fps frictionless tracking
-    NAV_ROUTES.forEach((route) => {
-      const inner = innerRefs.current[route.href];
-      if (inner) {
-        quickToXRefs.current[route.href] = gsap.quickTo(inner, "x", {
-          duration: 0.35,
-          ease: "power2.out",
-        });
-        quickToYRefs.current[route.href] = gsap.quickTo(inner, "y", {
-          duration: 0.35,
-          ease: "power2.out",
-        });
-      }
-    });
-
     const PROXIMITY_THRESHOLD = 50; // 50px proximity radius per Master Directive
     const MAX_PULL_OFFSET = 7; // Max subtle tactile shift (in px)
 
@@ -301,10 +285,7 @@ export const FloatingNav: React.FC = () => {
       NAV_ROUTES.forEach((route) => {
         const item = itemRefs.current[route.href];
         const inner = innerRefs.current[route.href];
-        const quickX = quickToXRefs.current[route.href];
-        const quickY = quickToYRefs.current[route.href];
-
-        if (!item || !inner || !quickX || !quickY) return;
+        if (!item || !inner) return;
 
         const rect = item.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
@@ -317,17 +298,27 @@ export const FloatingNav: React.FC = () => {
         const activationRadius = PROXIMITY_THRESHOLD + rect.width / 2;
 
         if (dist <= activationRadius) {
-          // As cursor approaches within 50px, pull text smoothly toward cursor
+          isShiftedRefs.current[route.href] = true;
           const pullRatio = 1 - dist / activationRadius;
           const shiftX = (diffX / dist) * pullRatio * MAX_PULL_OFFSET;
           const shiftY = (diffY / dist) * pullRatio * (MAX_PULL_OFFSET * 0.75);
 
-          quickX(shiftX);
-          quickY(shiftY);
-        } else {
-          // Outside proximity: spring back to zero
-          quickX(0);
-          quickY(0);
+          gsap.to(inner, {
+            x: shiftX,
+            y: shiftY,
+            duration: 0.25,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
+        } else if (isShiftedRefs.current[route.href]) {
+          isShiftedRefs.current[route.href] = false;
+          gsap.to(inner, {
+            x: 0,
+            y: 0,
+            duration: 0.35,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
         }
       });
     };
@@ -335,7 +326,8 @@ export const FloatingNav: React.FC = () => {
     const handlePointerLeave = () => {
       NAV_ROUTES.forEach((route) => {
         const inner = innerRefs.current[route.href];
-        if (inner) {
+        if (inner && isShiftedRefs.current[route.href]) {
+          isShiftedRefs.current[route.href] = false;
           gsap.to(inner, {
             x: 0,
             y: 0,

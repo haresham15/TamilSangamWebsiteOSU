@@ -71,7 +71,7 @@ export function initTerminalBootScramble(
         revealDelay,
       },
       scrollTrigger: {
-        trigger: (options?.trigger as any) || htmlEl,
+        trigger: options?.trigger || htmlEl,
         start,
         once: true,
       },

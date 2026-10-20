@@ -1,5 +1,4 @@
 import { getLedgerStore } from "./ledgerStore";
-import { escapeHtml } from "./html";
 
 export interface SubscriberRecord {
   id: string;

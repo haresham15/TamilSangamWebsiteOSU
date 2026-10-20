@@ -173,7 +173,7 @@ export default function GalleryPage() {
                   {/* Sharp Architectural Contact Sheet Print with Plate Badge */}
                   <span className={`block relative w-full ${aspect} overflow-hidden bg-sunbaked-sand border border-hearth-espresso/20 shadow-md`}>
                     <span className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 bg-[#161210]/85 text-[#FAF7F2] font-mono text-[10px] tracking-widest uppercase border border-[#D4AF37]/30 backdrop-blur-sm">
-                      PLATE {String(idx + 1).padStart(2, "0")}
+                      Plate {String(idx + 1).padStart(2, "0")}
                     </span>
                     <Image
                       src={photo.imageUrl}

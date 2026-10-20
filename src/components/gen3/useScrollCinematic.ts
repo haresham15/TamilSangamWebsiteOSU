@@ -38,6 +38,7 @@ export function useScrollCinematic(triggerId: string = "events-hero-trigger") {
         pin: true,
         pinSpacing: true, // Smooth organic transition to catalogue below
         scrub: true,
+        invalidateOnRefresh: true,
         anticipatePin: 1,
         onUpdate: (self) => {
           scrollProgress = self.progress;

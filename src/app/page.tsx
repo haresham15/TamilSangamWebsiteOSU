@@ -405,7 +405,7 @@ export default function HomePage() {
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
                     <span className="font-space-mono text-xs sm:text-sm text-[#C85A32] font-semibold transition-colors">
-                      01 //
+                      01 ·
                     </span>
                     <div>
                       <h4 className="text-base sm:text-lg font-editorial font-bold text-[#161210] group-hover:text-[#C85A32] transition-colors">
@@ -436,7 +436,7 @@ export default function HomePage() {
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
                     <span className="font-space-mono text-xs sm:text-sm text-[#C85A32] font-semibold transition-colors">
-                      02 //
+                      02 ·
                     </span>
                     <div>
                       <h4 className="text-base sm:text-lg font-editorial font-bold text-[#161210] group-hover:text-[#C85A32] transition-colors">
@@ -470,7 +470,7 @@ export default function HomePage() {
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
                     <span className="font-space-mono text-xs sm:text-sm text-[#C85A32] font-semibold transition-colors">
-                      03 //
+                      03 ·
                     </span>
                     <div>
                       <h4 className="text-base sm:text-lg font-editorial font-bold text-[#161210] group-hover:text-[#C85A32] transition-colors">
