@@ -94,6 +94,14 @@ export const FloatingNav: React.FC = () => {
 
     const evaluateScroll = () => {
       const scrollY = window.scrollY;
+      if (scrollY <= 32) {
+        setIsPastHero(false);
+        setIsInHeroZone(false);
+        setIsAtTop(true);
+        setIsScrolledDown(false);
+        return;
+      }
+
       const sheet = document.querySelector<HTMLElement>("[data-editorial-sheet], #monolith");
       let pastHero = false;
       if (sheet) {
@@ -109,7 +117,7 @@ export const FloatingNav: React.FC = () => {
       // Auto-retract navbar during active 3D scroll immersion zone
       const inHero = isHeroRoute && scrollY > 32 && !pastHero;
       setIsInHeroZone(inHero);
-      setIsAtTop(scrollY <= 32);
+      setIsAtTop(false);
       setIsScrolledDown(scrollY > 20);
     };
 

@@ -140,13 +140,13 @@ export function GuideHero({
       ref={runwayRef}
       id={id}
       aria-label="Sangam Junction Departure Board Introduction"
-      className="relative w-full h-[340vh] max-md:h-[280vh] bg-transparent select-none"
+      className="relative w-full h-[360vh] max-md:h-[280vh] bg-[#0A0F14] select-none"
       suppressHydrationWarning
     >
-      {/* Sticky 100dvh viewport that stays locked for the entire 340vh runway */}
+      {/* Sticky 100dvh viewport that stays locked for the entire 360vh runway */}
       <div
         ref={stickyViewportRef}
-        className="sticky top-0 left-1/2 -translate-x-1/2 h-dvh w-screen overflow-hidden bg-transparent m-0 p-0"
+        className="sticky top-0 left-0 h-dvh w-full overflow-hidden bg-[#0A0F14] m-0 p-0"
       >
         <p aria-live="polite" className="sr-only">
           {source === "station" ? `Most asked: ${liveTitle}` : `Showing: ${liveTitle}`}
@@ -162,8 +162,8 @@ export function GuideHero({
         {/* Tracked 3D View scene */}
         {!isFallback && <BoardView sequenceElement={runwayRef} {...board} />}
 
-        {/* Accessible Skip Intro Control (48x48px min target, visible on focus & dwell) */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-8 z-20 flex justify-between items-end px-8">
+        {/* Accessible Skip Intro Control (48x48px min target, visible on focus & dwell, clears mobile dock) */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-20 sm:bottom-8 z-20 flex justify-between items-end px-6 sm:px-8">
           <button
             ref={ctaRef}
             type="button"

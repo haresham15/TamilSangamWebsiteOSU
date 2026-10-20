@@ -74,7 +74,7 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
           ========================================================================= */}
       <div
         data-hero-container="true"
-        className="relative z-10 w-full bg-transparent overflow-x-clip"
+        className="relative z-10 w-full bg-[#0A0F14] overflow-x-clip"
       >
         <GuideHero initialPopularRanking={initialPopularRanking} />
       </div>

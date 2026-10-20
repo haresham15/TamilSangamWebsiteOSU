@@ -424,22 +424,21 @@ function ScrollExpandIntroOverlay() {
         } else {
           frameRef.current.style.visibility = "visible";
           const isMobile = window.innerWidth < 768;
-          const startW = isMobile ? 56 : 28;
-          const startH = isMobile ? 38 : 38;
+          const startW = isMobile ? 66 : 34;
+          const startH = isMobile ? 42 : 42;
           const w = startW + (100 - startW) * easeE;
           const h = startH + (100 - startH) * easeE;
-          const r = (isMobile ? 18 : 22) * (1 - easeE);
-          const borderW = 10 * (1 - easeE);
+          const r = (isMobile ? 20 : 24) * (1 - easeE);
+          const borderW = Math.max(0, 2 * (1 - easeE));
 
-          // Softened cinematic boundary without obscuring black matte
+          // Expanding Visible Black Frame with thick solid black bezel matte & glowing gold rim
           frameRef.current.style.width = `${w}vw`;
           frameRef.current.style.height = `${h}vh`;
           frameRef.current.style.borderRadius = `${r}px`;
-          frameRef.current.style.borderWidth = `${borderW > 0 ? "1px" : "0px"}`;
-          frameRef.current.style.borderColor = "rgba(212, 175, 55, 0.25)";
+          frameRef.current.style.border = `${borderW > 0 ? `${borderW}px solid rgba(255, 184, 77, ${0.85 * borderOpacity})` : "none"}`;
           frameRef.current.style.outline = "none";
-          frameRef.current.style.boxShadow = "none";
-          frameRef.current.style.opacity = `${borderOpacity * 0.7}`;
+          frameRef.current.style.boxShadow = `0 0 0 9999px #050201, 0 0 ${35 * (1 - easeE)}px rgba(255, 184, 77, ${0.35 * borderOpacity})`;
+          frameRef.current.style.opacity = `${borderOpacity}`;
         }
       }
 
@@ -482,39 +481,39 @@ function ScrollExpandIntroOverlay() {
 
   return (
     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden select-none">
-      {/* Softened Ambient Boundary - Full Bleed Immersion */}
+      {/* Expanding Visible Black Frame with Thick Black Bezel Matte & Gold Glow */}
       <div
         ref={frameRef}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
         style={{
-          width: "28vw",
-          height: "38vh",
-          borderRadius: "22px",
-          border: "1px solid rgba(212, 175, 55, 0.25)",
+          width: "34vw",
+          height: "42vh",
+          borderRadius: "24px",
+          border: "2px solid rgba(255, 184, 77, 0.85)",
           outline: "none",
-          boxShadow: "none",
+          boxShadow: "0 0 0 9999px #050201, 0 0 35px rgba(255, 184, 77, 0.35)",
           willChange: "width, height, border-radius, opacity",
         }}
       />
 
-      {/* Title held at upper portion above the frame */}
+      {/* Title held at upper portion above the frame, positioned cleanly below navbar */}
       <div
         ref={titleRef}
-        className="absolute top-0 left-0 right-0 pt-7 sm:pt-9 text-center transition-opacity"
+        className="absolute top-0 left-0 right-0 pt-20 sm:pt-24 text-center transition-opacity"
         style={{ willChange: "opacity, transform" }}
       >
-        <span className="block font-space-mono text-[10px] sm:text-xs tracking-[0.28em] text-[#FFB84D]/90 uppercase mb-1 sm:mb-2">
+        <span className="block font-space-mono text-[9px] sm:text-xs tracking-[0.26em] text-[#FFB84D]/90 uppercase">
           THE OHIO STATE UNIVERSITY
         </span>
-        <h1 className="font-anek-tamil text-[clamp(2.2rem,5.5vw,4.5rem)] font-bold text-white tracking-tight leading-none drop-shadow-[0_4px_32px_rgba(0,0,0,0.85)]">
+        <h1 className="font-anek-tamil text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] mt-1 sm:mt-1.5">
           TAMIL SANGAM
         </h1>
       </div>
 
-      {/* Scroll Hint held at bottom */}
+      {/* Scroll Hint held at bottom (bottom-16 on mobile to clear floating utility dock) */}
       <div
         ref={hintRef}
-        className="absolute bottom-6 sm:bottom-8 left-0 right-0 text-center transition-opacity"
+        className="absolute bottom-16 sm:bottom-8 left-0 right-0 text-center px-4 transition-opacity"
         style={{ willChange: "opacity, transform" }}
       >
         <p className="font-space-mono text-[11px] sm:text-xs tracking-[0.22em] text-[#FFB84D]/85 uppercase">
