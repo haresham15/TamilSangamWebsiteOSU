@@ -26,6 +26,7 @@ import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { registerSystem } from "@/engine/masterTick";
+import { Magnet } from "@/components/ui/react-bits";
 
 // =========================================================================
 // CRITICAL & IMMUTABLE: 3D Blueprint Scene Hero
@@ -37,7 +38,6 @@ const BlueprintScene3D = dynamic(
     ssr: false,
     loading: () => (
       <div className="w-full h-full bg-[#120D0B] flex flex-col items-center justify-center text-[#FAF7F2] p-8 text-center">
-        <span className="font-mono text-xs text-[#D4AF37] uppercase tracking-[0.24em] mb-2">CAMPUS VOICES • STUDENT INITIATIVES</span>
         <h1 className="font-serif text-3xl sm:text-5xl text-[#FAF7F2] font-normal mb-2">The Blueprint Hearth</h1>
         <p lang="ta" className="font-tamil text-base text-[#D4AF37]/80">கருத்துக்களம் · திட்டங்கள்</p>
       </div>
@@ -53,23 +53,25 @@ function SubmitSuggestionButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="px-8 py-3.5 bg-[#E5A93C] text-[#1E1B18] font-sans text-sm font-semibold rounded-full hover:bg-[#B85C38] hover:text-[#FAF9F6] transition-all duration-300 flex items-center gap-2.5 shadow-md shadow-stone-900/5 cursor-pointer disabled:opacity-50"
-    >
-      {pending ? (
-        <>
-          <Loader2 className="w-4 h-4 animate-spin" />
-          <span>Sharing your idea...</span>
-        </>
-      ) : (
-        <>
-          <span>Submit Proposal</span>
-          <ArrowRight className="w-4 h-4" />
-        </>
-      )}
-    </button>
+    <Magnet magnetStrength={2} maxOffset={8}>
+      <button
+        type="submit"
+        disabled={pending}
+        className="px-8 py-3.5 bg-[#E5A93C] text-[#1E1B18] font-sans text-sm font-semibold rounded-full hover:bg-[#B85C38] hover:text-[#FAF9F6] transition-all duration-300 flex items-center gap-2.5 shadow-md shadow-stone-900/5 cursor-pointer disabled:opacity-50"
+      >
+        {pending ? (
+          <>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span>Sharing your idea...</span>
+          </>
+        ) : (
+          <>
+            <span>Submit Proposal</span>
+            <ArrowRight className="w-4 h-4" />
+          </>
+        )}
+      </button>
+    </Magnet>
   );
 }
 
@@ -162,9 +164,6 @@ export default function SuggestionsPage() {
 
         {/* Hero Editorial Header Overlay */}
         <div className="absolute top-28 sm:top-32 left-6 sm:left-12 lg:left-16 z-20 pointer-events-none max-w-xl">
-          <span className="font-mono text-xs text-[#D4AF37] uppercase tracking-[0.24em] block mb-2 font-semibold">
-            CAMPUS VOICES • STUDENT INITIATIVES
-          </span>
           <h1 className="font-serif text-4xl sm:text-6xl text-[#FAF7F2] font-normal tracking-tight leading-none mb-2">
             The Blueprint Hearth
           </h1>
@@ -212,14 +211,11 @@ export default function SuggestionsPage() {
                 =================================================================== */}
             <aside className="lg:col-span-4 lg:sticky lg:top-24 space-y-8 select-none">
               <div className="relative z-10 space-y-4">
-                <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
-                  Campus Voices · Student Initiatives
-                </span>
                 <h1 className="text-4xl sm:text-5xl font-serif font-normal text-[#2A2825] leading-tight">
                   The Ideas Hearth
                 </h1>
-                <p className="text-xs font-sans text-[#57524C] tracking-wider uppercase font-semibold" lang="ta">
-                  {locale === "ta" ? "விருப்பங்கள் & வரைபடம்" : "Student Proposal Portal"}
+                <p className="text-sm font-tamil text-[#B85C38] tracking-normal font-medium" lang="ta">
+                  {locale === "ta" ? "விருப்பங்கள் & வரைபடம்" : "கருத்துக்களம் · திட்டங்கள்"}
                 </p>
                 <p className="text-base font-sans text-[#57524C] leading-relaxed">
                   Every festival, language circle, dinner gathering, and dance item began as an idea proposed by a student. Share yours directly with the executive board.

@@ -108,7 +108,6 @@ export function GalleryHero() {
 
         <div className="pointer-events-none absolute inset-0 z-10 flex min-h-dvh flex-col items-center justify-center px-6 text-center text-sangam-cream">
           <div key={String(isStatic)} ref={title} className="w-full max-w-3xl py-12">
-          <p className="mb-7 font-mono text-[10px] uppercase tracking-[0.25em] text-sangam-gold sm:text-xs">Vaaranam Aayiram · Memory Archive</p>
           <h1 className="font-display text-[clamp(3.75rem,11vw,10rem)] leading-[1.05] tracking-tight">
             {locale === "ta" ? <span lang="ta" className="font-tamil leading-relaxed tracking-normal">நினைவுகள்</span> : "The Canvas"}
           </h1>

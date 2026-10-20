@@ -21,6 +21,7 @@ import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import CountUp from "@/components/CountUp";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
+import { SpotlightCard } from "@/components/ui/react-bits";
 import styles from "./board.module.css";
 
 const BoardHeroCanvas = dynamic(
@@ -248,7 +249,6 @@ export default function BoardPage() {
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 pt-28 sm:pt-36 pb-24 sm:pb-32 scroll-mt-32">
           <CourtyardHeader
             align="left"
-            eyebrow="Democratic Council · 2026–2027"
             title={locale === "ta" ? "நிர்வாகக் குழு & வழிகாட்டிகள்" : "The Executive Board"}
             tamilTitle={locale !== "ta" ? "ஆளுமை · மாணவர் தலைமை" : undefined}
           />
@@ -404,7 +404,7 @@ export default function BoardPage() {
                 const hasPhoto = member.photoUrl && member.photoUrl !== "/emblem.svg";
 
                 return (
-                  <div
+                  <SpotlightCard
                     key={member.id}
                     className={`rounded-xl transition-all duration-200 border ${
                       isSelected
@@ -457,9 +457,8 @@ export default function BoardPage() {
                       {/* Header and Identity */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2 flex-wrap">
-                          <span className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-hearth-terracotta">
-                            <span className="font-bold">#{String(index + 1).padStart(2, "0")}</span>
-                            <span>{member.roleEn}</span>
+                          <span className="text-xs font-mono uppercase tracking-widest text-hearth-terracotta font-semibold">
+                            {member.roleEn}
                           </span>
 
                           {/* Indicator Badge */}
@@ -583,7 +582,7 @@ export default function BoardPage() {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </div>
+                  </SpotlightCard>
                 );
               })}
             </div>

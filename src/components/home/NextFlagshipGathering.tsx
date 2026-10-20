@@ -11,6 +11,7 @@ import { activeUpcomingEvent, type FlagshipEventConfig } from "@/config/upcoming
 import { CalendarEvent } from "@/lib/calendar/types";
 import { formatEventDateDisplay, formatEventTimeET } from "@/lib/calendar/parse";
 import { Calendar } from "lucide-react";
+import { Magnet, SpotlightCard } from "@/components/ui/react-bits";
 
 export interface NextFlagshipGatheringProps {
   config?: FlagshipEventConfig;
@@ -100,39 +101,40 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
       <div className="relative w-full grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-x-16 items-stretch border-b border-[#E5DDD0] pb-24 sm:pb-32">
         {/* COLS 1–5: THE DITHERED INSTALLATION */}
         <div className="lg:col-span-5 relative w-full flex flex-col justify-center">
-          <motion.div
-            onPointerMove={(event) => {
-              if (reduced || event.pointerType !== "mouse") return;
-              const box = event.currentTarget.getBoundingClientRect();
-              tiltX.set((0.5 - (event.clientY - box.top) / box.height) * 6);
-              tiltY.set(((event.clientX - box.left) / box.width - 0.5) * 6);
-            }}
-            onPointerLeave={() => { tiltX.set(0); tiltY.set(0); }}
-            className={`relative w-full ${aspectClass} border border-hearth-espresso/20 p-5 select-none`}
-            style={{ rotateX, rotateY, transformPerspective: 900 }}
-          >
-            {["top-0 left-0", "top-0 right-0", "bottom-0 left-0", "bottom-0 right-0"].map((position) => <span key={position} aria-hidden="true" className={`absolute ${position} font-mono text-hearth-terracotta`}>+</span>)}
-            <DitherVeil
-              imageSrc={config.visual.silhouetteSrc}
-              veilColor={config.visual.dither.veilColor}
-              shadowColor={config.visual.dither.shadowColor}
-              matrixSize={config.visual.dither.matrixSize}
-              grainScale={config.visual.dither.grainScale}
-              noiseIntensity={config.visual.dither.noiseIntensity}
-              interactive={config.visual.dither.interactive}
-              className="w-full h-full"
-            />
-          </motion.div>
-          <p className="mt-4 font-mono text-[10px] tracking-wider text-hearth-espresso/60">COLUMBUS · 40.0067 N, 83.0305 W</p>
+          <SpotlightCard className="w-full bg-transparent border-0 p-0">
+            <motion.div
+              onPointerMove={(event) => {
+                if (reduced || event.pointerType !== "mouse") return;
+                const box = event.currentTarget.getBoundingClientRect();
+                tiltX.set((0.5 - (event.clientY - box.top) / box.height) * 6);
+                tiltY.set(((event.clientX - box.left) / box.width - 0.5) * 6);
+              }}
+              onPointerLeave={() => { tiltX.set(0); tiltY.set(0); }}
+              className={`relative w-full ${aspectClass} border border-hearth-espresso/20 p-5 select-none`}
+              style={{ rotateX, rotateY, transformPerspective: 900 }}
+            >
+              {["top-0 left-0", "top-0 right-0", "bottom-0 left-0", "bottom-0 right-0"].map((position) => <span key={position} aria-hidden="true" className={`absolute ${position} font-mono text-hearth-terracotta`}>+</span>)}
+              <DitherVeil
+                imageSrc={config.visual.silhouetteSrc}
+                veilColor={config.visual.dither.veilColor}
+                shadowColor={config.visual.dither.shadowColor}
+                matrixSize={config.visual.dither.matrixSize}
+                grainScale={config.visual.dither.grainScale}
+                noiseIntensity={config.visual.dither.noiseIntensity}
+                interactive={config.visual.dither.interactive}
+                className="w-full h-full"
+              />
+            </motion.div>
+          </SpotlightCard>
         </div>
 
         {/* COLS 6–12: THE EDITORIAL DOSSIER */}
         <div className="lg:col-span-7 flex flex-col justify-between space-y-8">
           <div className="space-y-6">
-            {/* 01 // Seasonal Teaser */}
+            {/* Seasonal Preview */}
             <div className="space-y-2">
               <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] block font-semibold">
-                01 // SEASONAL TEASER
+                Seasonal Preview
               </span>
               <p className="font-serif italic text-lg sm:text-2xl text-[#2A2825] leading-relaxed">
                 &ldquo;{config.teaserQuote}&rdquo;
@@ -204,19 +206,21 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
           {/* Magnetic Call to Action: Link Aligned to Canvas Bottom */}
           <div className="pt-4 border-t border-stone-300/40 sm:border-t-0 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <Link
-                className="group inline-flex items-center gap-3 text-xl sm:text-2xl font-serif text-[#2A2825] hover:text-[#B85C38] transition-colors cursor-pointer"
-                href={actionHref}
-                onClick={() => playClick?.()}
-              >
-                <span>{config.action.label}</span>
-                <span className="text-sm font-sans opacity-50">
-                  ({config.action.tamilLabel})
-                </span>
-                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                  ↗
-                </span>
-              </Link>
+              <Magnet padding={40} magnetStrength={2.0} maxOffset={10}>
+                <Link
+                  className="group inline-flex items-center gap-3 text-xl sm:text-2xl font-serif text-[#2A2825] hover:text-[#B85C38] transition-colors cursor-pointer"
+                  href={actionHref}
+                  onClick={() => playClick?.()}
+                >
+                  <span>{config.action.label}</span>
+                  <span className="text-sm font-sans opacity-50">
+                    ({config.action.tamilLabel})
+                  </span>
+                  <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                    ↗
+                  </span>
+                </Link>
+              </Magnet>
               <a
                 href={icsDownloadHref}
                 download

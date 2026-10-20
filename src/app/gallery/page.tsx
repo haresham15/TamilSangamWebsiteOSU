@@ -81,8 +81,6 @@ export default function GalleryPage() {
           ========================================================================= */}
       <EditorialSheetHandoff
         id="gallery-vault-content"
-        badge="35MM MEMORIES"
-        sublabel="PHYSICAL ARCHIVES"
         className="text-hearth-espresso"
       >
         {/* Sleek Horizontal Archive Control Bar (Search + Filter Pills + Count) */}

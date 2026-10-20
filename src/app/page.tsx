@@ -308,7 +308,7 @@ export default function HomePage() {
                 ref={kuralMetaRef}
                 className="mt-5 sm:mt-6 font-space-mono text-[10px] sm:text-[11px] text-[#FFB84D]/85 tracking-[0.22em] uppercase"
               >
-                THIRUKKURAL 81 // ADHIGAARAM 9
+                THIRUKKURAL 81 · விருந்தோம்பல்
               </div>
             </div>
           </div>
@@ -347,12 +347,6 @@ export default function HomePage() {
                   ஓஹியோ மாநிலத்தில் தமிழ் மரபையும் மாணவர் தோழமையையும் ஒன்றிணைக்கும் கலாச்சாரப் பீடம்.
                 </p>
               </div>
-
-              {/* Condensed Quiet Telemetry Lockup at Bottom */}
-              <div className="relative z-10 pt-4 mt-auto border-t border-[#161210]/10 flex flex-wrap items-center justify-between gap-2 font-space-mono text-[10px] tracking-wider text-[#4A423D]">
-                <span>COLUMBUS, OH · 40.0067° N, 83.0305° W</span>
-                <span ref={liveTimeRef} className="text-[#161210] font-medium">--:--:-- EDT</span>
-              </div>
             </div>
 
             {/* Right Column (8 Cols - The Dossier) */}
@@ -360,7 +354,7 @@ export default function HomePage() {
               {/* Constitutional Introduction */}
               <div className="p-5 pt-14 sm:p-7 sm:pt-16 lg:p-7 lg:pt-16 xl:p-10 xl:pt-20 border-b border-[#161210]/10">
                 <span className="font-space-mono text-[10px] text-[#C85A32] tracking-widest uppercase block mb-1.5 font-semibold">
-                  COMMUNITY CHARTER // OHIO STATE
+                  COMMUNITY CHARTER · OHIO STATE
                 </span>
                 <h3 className="text-[clamp(1.5rem,2.5vw,2.5rem)] font-display font-medium text-[#161210] leading-tight tracking-tight">
                   Tamil Sangam at Ohio State

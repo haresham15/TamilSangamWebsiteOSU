@@ -77,8 +77,8 @@ export function HeroScrollStage({ children, className = "", id, runway = 280, pr
   }, [effectiveStatic, progressRef]);
 
   return (
-    <section ref={section} id={id} data-hero-stage data-tone={tone} className={`hero-scroll-stage ${className}`} style={{ minHeight: effectiveStatic ? "100dvh" : `${runway}dvh` }} suppressHydrationWarning>
-      <div ref={stage} data-hero-viewport className={effectiveStatic ? "relative z-10 min-h-dvh w-full overflow-hidden" : "sticky top-0 z-10 h-dvh w-full overflow-hidden"} suppressHydrationWarning>
+    <section ref={section} id={id} data-hero-stage data-tone={tone} className={`hero-scroll-stage relative w-full overflow-visible ${className}`} style={{ minHeight: effectiveStatic ? "100dvh" : `${runway}dvh` }} suppressHydrationWarning>
+      <div ref={stage} data-hero-viewport className={effectiveStatic ? "relative z-10 min-h-dvh w-screen left-1/2 -translate-x-1/2 overflow-hidden m-0 p-0" : "sticky top-0 left-1/2 -translate-x-1/2 z-10 h-dvh w-screen overflow-hidden m-0 p-0"} suppressHydrationWarning>
         <VisibilityContext.Provider value={!effectiveStatic && visible}>{children}</VisibilityContext.Provider>
       </div>
     </section>

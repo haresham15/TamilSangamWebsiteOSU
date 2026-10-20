@@ -131,7 +131,7 @@ export default function AboutPage() {
           {/* The Hero Quote: Naked Architectural Monument Against Global Background */}
           <div className="relative my-24 sm:my-36 text-center space-y-8 max-w-4xl mx-auto">
             <span className="font-sans text-xs uppercase tracking-widest text-[#B85C38] font-semibold block">
-              Core Motto // புறநானூறு 192
+              புறநானூறு 192 · கணியன் பூங்குன்றனார்
             </span>
             <span ref={watermarkRef} aria-hidden="true" lang="ta" className="pointer-events-none absolute inset-x-0 top-1/3 font-tamil text-8xl text-[#B85C38]/[0.035] whitespace-nowrap tracking-normal">யாதும் ஊரே யாவரும் கேளிர்</span>
             <blockquote ref={quoteRef} className="text-3xl sm:text-5xl lg:text-6xl font-serif font-light text-[#2A2825] leading-snug tracking-tight">
@@ -146,7 +146,7 @@ export default function AboutPage() {
           <div className="my-24 sm:my-36 space-y-8">
             <div className="text-center space-y-2">
               <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
-                The Historical Path // வரலாற்றுப் பாதை
+                வரலாற்றுப் பாதை · Historical Path
               </span>
               <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#2A2825]">
                 Our Journey on the Olentangy
@@ -163,7 +163,7 @@ export default function AboutPage() {
           <div className="mt-28 sm:mt-40 space-y-12">
             <div className="text-center space-y-2">
               <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
-                Campus & Community Alliances // கூட்டணிகள்
+                Campus & Community Alliances · கூட்டணிகள்
               </span>
               <h3 className="text-3xl sm:text-4xl font-serif font-normal text-[#2A2825]">
                 Rooted in Columbus & Buckeye Life

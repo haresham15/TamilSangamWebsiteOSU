@@ -9,6 +9,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import { Menu, X } from "lucide-react";
+import { Magnet } from "@/components/ui/react-bits";
 
 // ============================================================================
 // 1. NAVIGATION ROUTE CONFIGURATION
@@ -42,7 +43,9 @@ export const FloatingNav: React.FC = () => {
 
   // Visibility & Contextual Backdrop State
   const [isPastHero, setIsPastHero] = useState(false);
+  const [isInHeroZone, setIsInHeroZone] = useState(false);
   const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
 
   // Dark 3D Hero sections at the top of specific pages
   const normalizedPath = pathname.replace(/\/+$/, "") || "/";
@@ -92,14 +95,22 @@ export const FloatingNav: React.FC = () => {
 
     const evaluateScroll = () => {
       const scrollY = window.scrollY;
-      const sheet = document.querySelector<HTMLElement>("[data-editorial-sheet]");
+      const sheet = document.querySelector<HTMLElement>("[data-editorial-sheet], #monolith");
+      let pastHero = false;
       if (sheet) {
         const top = sheet.getBoundingClientRect().top;
-        setIsPastHero(top <= 72);
+        pastHero = top <= 72;
       } else {
         const threshold = getHeroThreshold();
-        setIsPastHero(threshold === 0 || scrollY >= threshold);
+        pastHero = threshold === 0 || scrollY >= threshold;
       }
+      setIsPastHero(pastHero);
+
+      const isHeroRoute = darkHeroRoutes.includes(normalizedPath);
+      // Auto-retract navbar during active 3D scroll immersion zone
+      const inHero = isHeroRoute && scrollY > 32 && !pastHero;
+      setIsInHeroZone(inHero);
+      setIsAtTop(scrollY <= 32);
       setIsScrolledDown(scrollY > 20);
     };
 
@@ -393,9 +404,15 @@ export const FloatingNav: React.FC = () => {
       <header
         id="global-floating-nav"
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-50 w-full transition-[padding,background-color,backdrop-filter,border-color,box-shadow,color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-0 opacity-100 pointer-events-auto ${
+        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          isInHeroZone
+            ? "-translate-y-full opacity-0 pointer-events-none"
+            : "translate-y-0 opacity-100 pointer-events-auto"
+        } ${
           isDarkHero
-            ? "pt-3.5 pb-3.5 px-6 sm:px-10 lg:px-16 bg-[#161210]/92 backdrop-blur-md border-b border-[#D4AF37]/25 text-[#FAF7F2] shadow-lg"
+            ? isAtTop
+              ? "pt-5 sm:pt-6 pb-3.5 px-6 sm:px-10 lg:px-16 bg-transparent border-b border-transparent text-[#FAF7F2] shadow-none"
+              : "pt-3.5 pb-3.5 px-6 sm:px-10 lg:px-16 bg-[#161210]/92 backdrop-blur-md border-b border-[#D4AF37]/25 text-[#FAF7F2] shadow-lg"
             : isScrolledDown
             ? "pt-3.5 pb-3.5 px-6 sm:px-10 lg:px-16 bg-[#FAF9F6]/92 backdrop-blur-md border-b border-[#2A2825]/8 text-[#2A2825] shadow-[0_4px_24px_rgba(42,40,37,0.06)]"
             : "pt-5 sm:pt-6 pb-3.5 px-6 sm:px-10 lg:px-16 bg-[#FAF9F6]/85 backdrop-blur-xs border-b border-[#2A2825]/5 text-[#2A2825]"
@@ -530,22 +547,24 @@ export const FloatingNav: React.FC = () => {
           {/* 3. THE CALL TO ACTION (RIGHT): Stark text link "Join the Hearth ↗"     */}
           {/* ----------------------------------------------------------------------- */}
           <div className="flex items-center gap-4 shrink-0">
-            <Link
-              href="/join"
-              onClick={handleLinkClick}
-              className={`group hidden sm:inline-flex items-center gap-1.5 font-sans text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-xs py-1 px-1.5 ${
-                isDarkHero
-                  ? "text-[#FAF9F6] hover:text-[#E5A93C]"
-                  : "text-[#2A2825] hover:text-[#B85C38]"
-              }`}
-            >
-              <span>{locale === "ta" ? "இணைந்திருங்கள்" : "Join the Hearth"}</span>
-              <span className={`text-sm transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${
-                isDarkHero ? "text-[#E5A93C]" : "text-[#B85C38]"
-              }`}>
-                ↗
-              </span>
-            </Link>
+            <Magnet padding={35} magnetStrength={2.2} maxOffset={8}>
+              <Link
+                href="/join"
+                onClick={handleLinkClick}
+                className={`group hidden sm:inline-flex items-center gap-1.5 font-sans text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-xs py-1 px-1.5 ${
+                  isDarkHero
+                    ? "text-[#FAF9F6] hover:text-[#E5A93C]"
+                    : "text-[#2A2825] hover:text-[#B85C38]"
+                }`}
+              >
+                <span>{locale === "ta" ? "இணைந்திருங்கள்" : "Join the Hearth"}</span>
+                <span className={`text-sm transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${
+                  isDarkHero ? "text-[#E5A93C]" : "text-[#B85C38]"
+                }`}>
+                  ↗
+                </span>
+              </Link>
+            </Magnet>
 
             {/* Mobile Menu Hamburger Trigger */}
             <button

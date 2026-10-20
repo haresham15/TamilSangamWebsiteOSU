@@ -383,7 +383,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
           <div className="mt-28 sm:mt-40 space-y-12">
             <div className="text-center space-y-2">
               <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
-                Recurring Cycles // ஆண்டு சுழற்சி
+                Recurring Cycles · ஆண்டு சுழற்சி
               </span>
               <h3 className="text-3xl sm:text-4xl font-serif font-normal text-[#2A2825]">
                 Annual Campus Traditions

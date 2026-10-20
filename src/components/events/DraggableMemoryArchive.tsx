@@ -202,7 +202,7 @@ export function DraggableMemoryArchive() {
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#87500e]">
             <span className="w-2 h-2 bg-[#55CCA2] inline-block animate-pulse" />
-            <span>CAMPUS MEMORY DESK // புகைப்பட நினைவுகள்</span>
+            <span>CAMPUS MEMORY DESK · புகைப்பட நினைவுகள்</span>
           </div>
           <p className="text-[11px] text-[#250d38]/70 font-sans">
             Rifle through, move, and explore polaroids from our outdoor lawn picnics and cultural celebrations.

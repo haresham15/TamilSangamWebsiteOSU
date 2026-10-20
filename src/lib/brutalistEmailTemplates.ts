@@ -105,7 +105,7 @@ export function generateGuestbookConfirmationHtml(params: {
 
         <!-- Student Dossier Card -->
         <div class="dossier-card">
-          <div class="dossier-header">OFFICIAL DOSSIER RECORD // OSU-TS-${year}</div>
+          <div class="dossier-header">OFFICIAL DOSSIER RECORD · OSU-TS-${year}</div>
 
           <div class="dossier-row">
             <span class="dossier-label">[STUDENT_NAME]</span>
@@ -264,7 +264,7 @@ export function generateIdeasHearthConfirmationHtml(params: {
         </p>
 
         <div class="receipt-box">
-          <div class="receipt-id">BLUEPRINT DISPATCH // ${escapeHtml(recordId)}</div>
+          <div class="receipt-id">BLUEPRINT DISPATCH · ${escapeHtml(recordId)}</div>
           <div class="receipt-category">${escapeHtml(category)}</div>
           <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #57524C; margin-bottom: 10px;">
             PINNED BY: ${escapeHtml(author)} ${email ? `&lt;${escapeHtml(email)}&gt;` : ""}

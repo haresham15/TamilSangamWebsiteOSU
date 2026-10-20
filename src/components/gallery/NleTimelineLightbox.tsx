@@ -208,7 +208,7 @@ export function NleTimelineLightbox({
             aria-label="Close NLE Lightbox"
           >
             <X className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">ESC // CLOSE</span>
+            <span className="hidden sm:inline">ESC · CLOSE</span>
           </button>
         </div>
       </div>

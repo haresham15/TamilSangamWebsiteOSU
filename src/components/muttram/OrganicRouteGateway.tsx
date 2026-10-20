@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useAudio } from "@/context/AudioContext";
 import { useLocale } from "@/context/LocaleContext";
+import { Magnet } from "@/components/ui/react-bits";
 
 export interface OrganicRouteGatewayProps {
   eyebrow?: string;
@@ -72,7 +73,7 @@ export const OrganicRouteGateway: React.FC<OrganicRouteGatewayProps> = ({
           <div className="flex items-center gap-3 shrink-0">
             <span className="w-2 h-2 rounded-full bg-[#B85C38] group-hover:bg-[#E5A93C] transition-colors duration-300" />
             <span className="font-mono text-xs uppercase tracking-widest text-[#57524C] group-hover:text-[#FAF7F2]/80 transition-colors duration-300">
-              NEXT CHAPTER // {routeMeta.chapter}
+              NEXT CHAPTER · {routeMeta.chapter}
             </span>
           </div>
 
@@ -97,9 +98,11 @@ export const OrganicRouteGateway: React.FC<OrganicRouteGatewayProps> = ({
             <span className="hidden sm:inline-block font-mono text-xs uppercase tracking-wider text-[#57524C] group-hover:text-[#FAF7F2]/80 transition-colors duration-300">
               {primaryLabel}
             </span>
-            <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border border-[#161210]/15 group-hover:border-white/40 flex items-center justify-center bg-white/70 group-hover:bg-white text-[#161210] group-hover:text-[#C85A32] shadow-sm group-hover:shadow-lg group-hover:scale-105 transition-all duration-300">
-              <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </div>
+            <Magnet magnetStrength={2.5} maxOffset={10}>
+              <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border border-[#161210]/15 group-hover:border-white/40 flex items-center justify-center bg-white/70 group-hover:bg-white text-[#161210] group-hover:text-[#C85A32] shadow-sm group-hover:shadow-lg group-hover:scale-105 transition-all duration-300">
+                <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </div>
+            </Magnet>
           </div>
 
         </div>

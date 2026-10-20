@@ -114,7 +114,7 @@ export function VaultGateway({
 
         {/* Colophon Footnote */}
         <p className="mt-8 text-xs font-mono text-[#57524C]/60 tracking-wider">
-          CURATED MUTTRAM ARCHIVE // COLUMBUS, OH
+          CURATED MUTTRAM ARCHIVE · COLUMBUS, OH
         </p>
       </div>
     </footer>

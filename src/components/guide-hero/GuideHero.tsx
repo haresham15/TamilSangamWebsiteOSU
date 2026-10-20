@@ -146,7 +146,7 @@ export function GuideHero({
       {/* Sticky 100dvh viewport that stays locked for the entire 340vh runway */}
       <div
         ref={stickyViewportRef}
-        className="sticky top-0 left-0 h-dvh w-full overflow-hidden bg-transparent"
+        className="sticky top-0 left-1/2 -translate-x-1/2 h-dvh w-screen overflow-hidden bg-transparent m-0 p-0"
       >
         <p aria-live="polite" className="sr-only">
           {source === "station" ? `Most asked: ${liveTitle}` : `Showing: ${liveTitle}`}

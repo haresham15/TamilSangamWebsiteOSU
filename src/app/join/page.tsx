@@ -11,6 +11,7 @@ import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { GuestbookField } from "@/components/muttram/GuestbookField";
 import { SITE_CONFIG } from "@/data/siteConfig";
+import { Magnet, StarBorder, SpotlightCard } from "@/components/ui/react-bits";
 import styles from "./join.module.css";
 
 // =========================================================================
@@ -145,7 +146,6 @@ export default function JoinPage() {
           {/* Centered Airy Header */}
           <CourtyardHeader
             align="left"
-            eyebrow="The Welcoming Hearth · Membership"
             title={locale === "ta" ? "எங்களுடன் இணையுங்கள்" : "Sign Our Guestbook"}
             tamilTitle={locale !== "ta" ? "இணைவு · நல்வரவு" : undefined}
             description="100% Free · Zero Dues · Open to every Ohio State student and friend regardless of language. Pull up a chair and become part of our campus community."
@@ -199,7 +199,7 @@ export default function JoinPage() {
                   </span>
                 </div>
 
-                <div className="space-y-6 pt-2">
+                <div className="space-y-4 pt-2">
                   {[
                     { id: "general", label: "General Member", desc: "Attend feasts, lawn picnics, and campus socials" },
                     { id: "performer", label: "Dance & Music", desc: "Kuthu & Gaana dance circles, acoustic music jams" },
@@ -207,28 +207,32 @@ export default function JoinPage() {
                   ].map((type) => {
                     const isSelected = membershipType === type.id;
                     return (
-                      <button
+                      <SpotlightCard
                         key={type.id}
-                        type="button"
-                        data-membership-type={type.id}
-                        aria-pressed={isSelected}
-                        onClick={() => {
-                          audioLayer.playTapeClack();
-                          setMembershipType(type.id as typeof membershipType);
-                        }}
-                        className={`w-full text-left py-4 pl-6 transition-all duration-300 cursor-pointer border-l-2 ${
+                        className={`transition-all duration-300 rounded-sm border-l-4 ${
                           isSelected
-                            ? "border-hearth-terracotta"
-                            : "border-hearth-espresso/20 hover:border-hearth-espresso/40"
+                            ? "border-hearth-terracotta bg-hearth-sand/40"
+                            : "border-hearth-espresso/20 hover:border-hearth-espresso/40 bg-transparent"
                         }`}
                       >
-                        <span className={`text-xl sm:text-2xl font-serif font-normal block mb-1 ${isSelected ? "text-hearth-terracotta" : "text-hearth-espresso"}`}>
-                          {type.label}
-                        </span>
-                        <p className="text-sm font-sans text-hearth-espresso/80 leading-relaxed">
-                          {type.desc}
-                        </p>
-                      </button>
+                        <button
+                          type="button"
+                          data-membership-type={type.id}
+                          aria-pressed={isSelected}
+                          onClick={() => {
+                            audioLayer.playTapeClack();
+                            setMembershipType(type.id as typeof membershipType);
+                          }}
+                          className="w-full text-left py-4 px-6 cursor-pointer"
+                        >
+                          <span className={`text-xl sm:text-2xl font-serif font-normal block mb-1 ${isSelected ? "text-hearth-terracotta" : "text-hearth-espresso"}`}>
+                            {type.label}
+                          </span>
+                          <p className="text-sm font-sans text-hearth-espresso/80 leading-relaxed">
+                            {type.desc}
+                          </p>
+                        </button>
+                      </SpotlightCard>
                     );
                   })}
                 </div>
@@ -255,20 +259,22 @@ export default function JoinPage() {
 
               {/* Submit Action */}
               <div className="pt-8 border-t border-hearth-espresso/20 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="font-serif text-2xl sm:text-3xl font-normal text-hearth-terracotta hover:text-antique-gold border-b-2 border-hearth-terracotta hover:border-antique-gold pb-1 transition-colors self-start cursor-pointer disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center gap-2 text-lg">
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Signing the guestbook...</span>
-                    </span>
-                  ) : (
-                    <span>Sign the Guestbook ✦</span>
-                  )}
-                </button>
+                <Magnet magnetStrength={2} maxOffset={8}>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="font-serif text-2xl sm:text-3xl font-normal text-hearth-terracotta hover:text-antique-gold border-b-2 border-hearth-terracotta hover:border-antique-gold pb-1 transition-colors self-start cursor-pointer disabled:opacity-50"
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center gap-2 text-lg">
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Signing the guestbook...</span>
+                      </span>
+                    ) : (
+                      <span>Sign the Guestbook ✦</span>
+                    )}
+                  </button>
+                </Magnet>
 
                 <p className="text-xs font-sans text-hearth-espresso/80">
                   The Ohio State University · Recognized Student Organization · 100% Free
@@ -316,27 +322,26 @@ export default function JoinPage() {
             </div>
           )}
 
-          <aside className={styles.pass} aria-label="Live membership pass" data-testid="membership-pass">
-            <div className={styles.passHeader}>
-              <p className="font-mono text-xs tracking-widest uppercase text-antique-gold">Tamil Sangam / Ohio State</p>
-              <h2 className="font-serif text-2xl mt-4">Your membership pass</h2>
-              <p className="text-xs mt-2" role="status">{submitted ? "Guestbook signed" : "Draft preview"}</p>
-            </div>
-            <dl aria-live="polite" aria-atomic="false">
-              <dt>Name</dt><dd className={styles.passName}>{name.trim() || "Your name"}</dd>
-              <dt>Email</dt><dd>{email.trim() || "Not entered"}</dd>
-              <dt>Major / Program</dt><dd>{major.trim() || "Not entered (optional)"}</dd>
-              <dt>Participation</dt><dd>{membershipType === "general" ? "General Member" : membershipType === "performer" ? "Dance & Music" : "Working Council"}</dd>
-            </dl>
-            <p className={styles.passFoot}>{submitted ? "Your membership request has been saved." : "Preview only. Sign the guestbook to submit your membership request."}</p>
-          </aside>
+          <StarBorder className="w-full" color="#D4AF37" trailColor="#C85A32">
+            <aside className={styles.pass} aria-label="Live membership pass" data-testid="membership-pass">
+              <div className={styles.passHeader}>
+                <p className="font-mono text-xs tracking-widest uppercase text-antique-gold">Tamil Sangam · Ohio State</p>
+                <h2 className="font-serif text-2xl mt-4">Your membership pass</h2>
+                {submitted && <p className="text-xs mt-2 text-emerald-400" role="status">Guestbook signed</p>}
+              </div>
+              <dl aria-live="polite" aria-atomic="false">
+                <dt>Name</dt><dd className={styles.passName}>{name.trim() || "Your name"}</dd>
+                <dt>Email</dt><dd>{email.trim() || "Not entered"}</dd>
+                <dt>Major / Program</dt><dd>{major.trim() || "Not entered (optional)"}</dd>
+                <dt>Participation</dt><dd>{membershipType === "general" ? "General Member" : membershipType === "performer" ? "Dance & Music" : "Working Council"}</dd>
+              </dl>
+              <p className={styles.passFoot}>{submitted ? "Your membership request has been saved." : "Preview only. Sign the guestbook to submit your membership request."}</p>
+            </aside>
+          </StarBorder>
           </div>
 
           {/* Open Hearth Guarantee Notice (Unboxed, 1px Grounding Line) */}
           <div className="mt-28 border-t border-hearth-espresso/20 pt-12 text-center space-y-2 max-w-lg mx-auto">
-            <span className="font-sans text-xs uppercase tracking-widest text-hearth-terracotta font-semibold block">
-              Open Hearth Commitment
-            </span>
             <p className="text-sm font-sans text-hearth-espresso/80 leading-relaxed">
               Membership in Tamil Sangam is completely open and free to all Buckeyes, undergraduate or graduate, of any major, language, or heritage.
             </p>

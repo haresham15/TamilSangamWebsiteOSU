@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Volume2, VolumeX, Search } from "lucide-react";
 import { useAudio } from "@/context/AudioContext";
 import { useLocale } from "@/context/LocaleContext";
+import { StarBorder } from "@/components/ui/react-bits";
 
 interface UnifiedFloatingDockProps {
   onOpenSearch: () => void;
@@ -16,15 +18,54 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
   onToggleChat,
   isChatOpen,
 }) => {
+  const pathname = usePathname();
   const { isSoundEnabled, toggleSound, playClick } = useAudio();
   const { locale } = useLocale();
+  const [isInHeroZone, setIsInHeroZone] = useState(false);
+
+  useEffect(() => {
+    const normalizedPath = pathname.replace(/\/+$/, "") || "/";
+    const darkHeroRoutes = ["/", "/events", "/about", "/board", "/gallery", "/guide", "/suggestions", "/join"];
+    const isHeroRoute = darkHeroRoutes.includes(normalizedPath);
+
+    const evaluateScroll = () => {
+      if (!isHeroRoute) {
+        setIsInHeroZone(false);
+        return;
+      }
+      const scrollY = window.scrollY;
+      const sheet = document.querySelector<HTMLElement>("[data-editorial-sheet], #monolith");
+      let pastHero = false;
+      if (sheet) {
+        const top = sheet.getBoundingClientRect().top;
+        pastHero = top <= 72;
+      } else {
+        pastHero = scrollY >= 800;
+      }
+      // Retract/fade out dock during active 3D scroll immersion zone
+      setIsInHeroZone(scrollY > 32 && !pastHero);
+    };
+
+    evaluateScroll();
+    window.addEventListener("scroll", evaluateScroll, { passive: true });
+    window.addEventListener("resize", evaluateScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", evaluateScroll);
+      window.removeEventListener("resize", evaluateScroll);
+    };
+  }, [pathname]);
 
   return (
     <aside
       aria-label="Quick tools dock"
-      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none pointer-events-auto"
+      className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        isInHeroZone
+          ? "opacity-0 pointer-events-none translate-y-4"
+          : "opacity-100 pointer-events-auto translate-y-0"
+      }`}
     >
-      <div className="bg-[#161210]/92 text-[#FAF7F2] border border-[#FAF7F2]/15 backdrop-blur-md rounded-full h-10 px-3.5 sm:px-4 flex items-center gap-2.5 sm:gap-3 shadow-[0_8px_32px_rgba(0,0,0,0.35)] transition-all duration-200">
+      <StarBorder color="#D4AF37" trailColor="#C85A32" thickness={1} hover="lap">
+        <div className="bg-[#161210]/92 text-[#FAF7F2] border border-[#FAF7F2]/15 backdrop-blur-md rounded-full h-10 px-3.5 sm:px-4 flex items-center gap-2.5 sm:gap-3 shadow-[0_8px_32px_rgba(0,0,0,0.35)] transition-all duration-200">
         {/* 1. Ask Nanba Trigger */}
         <button
           type="button"
@@ -85,6 +126,7 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
           </span>
         </button>
       </div>
+      </StarBorder>
     </aside>
   );
 };

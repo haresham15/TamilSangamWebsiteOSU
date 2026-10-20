@@ -9,6 +9,7 @@ import { Footer } from "./Footer";
 import { UnifiedFloatingDock } from "./UnifiedFloatingDock";
 import { SangamChatbot } from "@/components/chat/SangamChatbot";
 import { DirectorHUD } from "@/director/DirectorHUD";
+import { ClickSpark } from "@/components/ui/react-bits";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -34,8 +35,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const isLinksPage = pathname === "/links";
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-between overflow-x-clip">
-      {/* 1. Global Floating Nav (Skipped on /links to preserve Linktree simplicity) */}
+    <ClickSpark sparkColor="#D4AF37" sparkCount={8} sparkRadius={18} duration={420} className="relative min-h-screen flex flex-col justify-between overflow-x-clip">
       {/* 1. Global Floating Nav: Pure routing only */}
       {!isLinksPage && <FloatingNav />}
 
@@ -78,7 +78,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
 
       {/* 7. Director's Viewport Diagnostics HUD (§6) */}
       <DirectorHUD />
-    </div>
+    </ClickSpark>
   );
 };
 

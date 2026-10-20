@@ -2,6 +2,8 @@
 
 import React from "react";
 
+import { SplitText, BlurText } from "@/components/ui/react-bits";
+
 export interface CourtyardHeaderProps {
   eyebrow?: string;
   title: string;
@@ -22,6 +24,8 @@ export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
   action,
 }) => {
   const isCenter = align === "center";
+  // Enforce strict 2-Element Header Rule: suppress eyebrow if Tamil subtitle exists
+  const showEyebrow = Boolean(eyebrow && !tamilTitle);
 
   return (
     <div
@@ -37,7 +41,7 @@ export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
         }`}
       >
         <div className="space-y-3">
-          {eyebrow && (
+          {showEyebrow && (
             <span className="font-sans text-xs tracking-widest uppercase font-semibold text-[#B85C38] block">
               {eyebrow}
             </span>
@@ -45,7 +49,7 @@ export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
 
           <div className="space-y-1">
             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-[#2A2825] tracking-tight leading-[1.12]">
-              {title}
+              <SplitText text={title} splitType="words" effect="rise" mask />
             </h2>
 
             {tamilTitle && (
@@ -53,7 +57,7 @@ export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
                 lang="ta"
                 className="font-tamil text-lg sm:text-2xl text-[#2A2825]/60 font-light"
               >
-                {tamilTitle}
+                <BlurText text={tamilTitle} animateBy="words" />
               </p>
             )}
           </div>

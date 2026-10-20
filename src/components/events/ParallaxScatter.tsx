@@ -84,9 +84,8 @@ export function ParallaxScatter({ photos, eventTitle }: ParallaxScatterProps) {
           />
         </div>
 
-        {/* Minimal Colophon Caption (Distilled: No repeated red italic labels) */}
-        <figcaption className="mt-3 flex items-baseline justify-between text-[11px] font-mono tracking-widest text-hearth-espresso/75 uppercase">
-          <span>PLATE {String(globalIndex + 1).padStart(2, "0")}</span>
+        {/* Minimal Colophon Caption */}
+        <figcaption className="mt-2 flex items-baseline justify-end text-[11px] font-mono tracking-widest text-hearth-espresso/75 uppercase">
           <span className="text-[10px] text-hearth-terracotta opacity-0 group-hover:opacity-100 transition-opacity">
             INSPECT ↗
           </span>

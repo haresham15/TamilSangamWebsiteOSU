@@ -431,14 +431,15 @@ function ScrollExpandIntroOverlay() {
           const r = (isMobile ? 18 : 22) * (1 - easeE);
           const borderW = 10 * (1 - easeE);
 
+          // Softened cinematic boundary without obscuring black matte
           frameRef.current.style.width = `${w}vw`;
           frameRef.current.style.height = `${h}vh`;
           frameRef.current.style.borderRadius = `${r}px`;
-          frameRef.current.style.borderWidth = `${borderW}px`;
-          frameRef.current.style.borderColor = "#050201";
+          frameRef.current.style.borderWidth = `${borderW > 0 ? "1px" : "0px"}`;
+          frameRef.current.style.borderColor = "rgba(212, 175, 55, 0.25)";
           frameRef.current.style.outline = "none";
-          frameRef.current.style.boxShadow = "0 0 0 9999px #050201";
-          frameRef.current.style.opacity = `${borderOpacity}`;
+          frameRef.current.style.boxShadow = "none";
+          frameRef.current.style.opacity = `${borderOpacity * 0.7}`;
         }
       }
 
@@ -481,7 +482,7 @@ function ScrollExpandIntroOverlay() {
 
   return (
     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden select-none">
-      {/* Expanding Visible Black Frame with Thick Black Bezel Matte */}
+      {/* Softened Ambient Boundary - Full Bleed Immersion */}
       <div
         ref={frameRef}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
@@ -489,9 +490,9 @@ function ScrollExpandIntroOverlay() {
           width: "28vw",
           height: "38vh",
           borderRadius: "22px",
-          border: "10px solid #050201",
+          border: "1px solid rgba(212, 175, 55, 0.25)",
           outline: "none",
-          boxShadow: "0 0 0 9999px #050201",
+          boxShadow: "none",
           willChange: "width, height, border-radius, opacity",
         }}
       />
@@ -503,7 +504,7 @@ function ScrollExpandIntroOverlay() {
         style={{ willChange: "opacity, transform" }}
       >
         <span className="block font-space-mono text-[10px] sm:text-xs tracking-[0.28em] text-[#FFB84D]/90 uppercase mb-1 sm:mb-2">
-          THE OHIO STATE UNIVERSITY // EST. 2021
+          THE OHIO STATE UNIVERSITY
         </span>
         <h1 className="font-anek-tamil text-[clamp(2.2rem,5.5vw,4.5rem)] font-bold text-white tracking-tight leading-none drop-shadow-[0_4px_32px_rgba(0,0,0,0.85)]">
           TAMIL SANGAM
@@ -528,7 +529,7 @@ function ScrollExpandIntroOverlay() {
  * 3D Golden "அ" Emblem Component (§MASTER DIRECTIVE & ScrollExpand)
  * High-fidelity single-glyph Tamil letter "அ" from Mukta Malar font,
  * suspended stationary in the central void at [0, 0, 0.05].
- * - Standard normal scale 1.0x (per user request).
+ * - Monumental scale 1.35x per user request for full-screen edge-to-edge immersion.
  * - Gentle micro-motion, leaving the frame purely as the camera descends.
  */
 function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
@@ -565,7 +566,7 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
 
       groupRef.current.position.set(kinetics.smoothPointerX * 0.12, floatY, 0.05);
       groupRef.current.rotation.set(rotX, rotY, kinetics.velocityBank * 0.7);
-      groupRef.current.scale.setScalar(1.0);
+      groupRef.current.scale.setScalar(1.35);
 
       // Dynamic specular light tracking pointer across stem and curved loop
       if (specularLightRef.current) {

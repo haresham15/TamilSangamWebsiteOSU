@@ -11,6 +11,7 @@ import { useLiteMode } from "@/context/LiteModeContext";
 import { SplitText } from "./SplitText";
 import { ParallaxScatter } from "./ParallaxScatter";
 import { VaultGateway } from "./VaultGateway";
+import { Magnet } from "@/components/ui/react-bits";
 
 interface EventDossierViewProps {
   event: SangamEvent;
@@ -204,7 +205,7 @@ END:VCALENDAR`;
           {/* Schedule Column (Broadsheet Ledger Lines) */}
           <div className="lg:col-span-5 space-y-6">
             <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-hearth-terracotta font-semibold">
-              TIMETABLE / நிரல்
+              TIMETABLE · நிரல்
             </h2>
             <div className="divide-y divide-hearth-espresso/10 border-t border-b border-hearth-espresso/10">
               {event.schedule.map((slot, idx) => (
@@ -261,15 +262,19 @@ END:VCALENDAR`;
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={shuffleArchive}
-            disabled={selectedPhotos.length < 2}
-            className="mb-12 inline-flex min-h-12 items-center gap-3 border-b border-hearth-terracotta text-hearth-terracotta font-mono text-xs tracking-widest hover:text-hearth-espresso focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-hearth-terracotta disabled:opacity-50"
-          >
-            <Shuffle aria-hidden="true" className="h-4 w-4" />
-            SHUFFLE ARCHIVE
-          </button>
+          <div className="mb-12 inline-block">
+            <Magnet magnetStrength={2} maxOffset={8}>
+              <button
+                type="button"
+                onClick={shuffleArchive}
+                disabled={selectedPhotos.length < 2}
+                className="inline-flex min-h-12 items-center gap-3 border-b border-hearth-terracotta text-hearth-terracotta font-mono text-xs tracking-widest hover:text-hearth-espresso focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-hearth-terracotta disabled:opacity-50 cursor-pointer"
+              >
+                <Shuffle aria-hidden="true" className="h-4 w-4" />
+                SHUFFLE ARCHIVE
+              </button>
+            </Magnet>
+          </div>
           <p role="status" className="sr-only">{shuffleCount > 0 ? `Archive reshuffled. ${selectedPhotos.length} selected samples.` : ""}</p>
 
           {/* The Asymmetrical Parallax Scatter */}

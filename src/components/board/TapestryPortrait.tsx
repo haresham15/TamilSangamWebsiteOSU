@@ -79,15 +79,15 @@ function createTapestryTexture(member: BoardMember): THREE.CanvasTexture {
   drawCornerKalasam(borderWidth + 4, height - borderWidth - 4);
   drawCornerKalasam(width - borderWidth - 4, height - borderWidth - 4);
 
-  // 3. Top Header: Chola Dynasty Sun Crest & Tiger Glyph
+  // 3. Top Header: Chola Dynasty Crest
   ctx.textAlign = "center";
   ctx.fillStyle = "#D4AF37";
   ctx.font = "bold 20px 'Courier New', monospace";
-  ctx.fillText("✦ CHOLA DARBAR · சோழர் அவை ✦", width / 2, 75);
+  ctx.fillText("சோழர் அவை · Executive Committee", width / 2, 75);
 
   ctx.fillStyle = "rgba(201, 162, 39, 0.75)";
   ctx.font = "12px monospace";
-  ctx.fillText(`EXECUTIVE COMMITTEE · ${member.term}`, width / 2, 100);
+  ctx.fillText(`OHIO STATE · ${member.term}`, width / 2, 100);
 
   // 4. Portrait Framing Medallion (Center)
   const photoCenterX = width / 2;

@@ -152,7 +152,7 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
       ref={sectionRef}
       className={`relative w-full ${
         reducedMotion ? "h-[85dvh]" : "h-[100dvh]"
-      } overflow-hidden bg-transparent border-b border-[#3d2714] flex flex-col justify-between`}
+      } overflow-hidden bg-transparent flex flex-col justify-between`}
       style={{ minHeight: "100dvh" }}
     >
       <div
