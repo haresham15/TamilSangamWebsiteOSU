@@ -20,6 +20,8 @@ export interface HeroState {
   stringEnergies: number[];
   stringsDamperK: number;
   lastScrollTime: number;
+  easterEggActive: boolean;
+  easterEggUnlockedAt: number;
 }
 
 export const heroState: HeroState = {
@@ -38,7 +40,52 @@ export const heroState: HeroState = {
   stringEnergies: [0, 0, 0, 0, 0, 0],
   stringsDamperK: 0.0,
   lastScrollTime: 0,
+  easterEggActive: false,
+  easterEggUnlockedAt: 0,
 };
+
+export const pluckedStringsSet = new Set<number>();
+const easterEggListeners = new Set<(active: boolean) => void>();
+
+export function subscribeEasterEgg(cb: (active: boolean) => void) {
+  easterEggListeners.add(cb);
+  return () => {
+    easterEggListeners.delete(cb);
+  };
+}
+
+import { soundEngine } from "@/lib/soundEngine";
+
+export function triggerEasterEgg() {
+  if (heroState.easterEggActive) return;
+  heroState.easterEggActive = true;
+  heroState.easterEggUnlockedAt = Date.now();
+  easterEggListeners.forEach((fn) => fn(true));
+
+  // Trigger 6-string golden arpeggio cascade
+  for (let i = 0; i < 6; i++) {
+    setTimeout(() => {
+      pluckHandler?.(i, 0.9 - i * 0.05);
+    }, i * 65);
+  }
+
+  // Play warm acoustic Major 7th / Add9 guitar chord swell
+  soundEngine.playAcousticMajor7ChordSwell();
+
+  // Auto-reset after 6 seconds so user can experience it again
+  setTimeout(() => {
+    heroState.easterEggActive = false;
+    pluckedStringsSet.clear();
+    easterEggListeners.forEach((fn) => fn(false));
+  }, 6000);
+}
+
+export function recordStringPluck(stringIndex: number) {
+  pluckedStringsSet.add(stringIndex);
+  if (pluckedStringsSet.size >= 6) {
+    triggerEasterEgg();
+  }
+}
 
 let timelineSetter: ((p: number) => void) | null = null;
 let cameraSnapHandler: ((p: number) => void) | null = null;

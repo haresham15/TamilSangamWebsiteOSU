@@ -185,8 +185,8 @@ export function WindowAssembly({ progress = 0, getProgress }: WindowAssemblyProp
           ========================================================================= */}
       <SdfSilhouette
         kind="woman"
-        position={[0.15, 1.58, -0.7]}
-        scale={1.05}
+        position={[0.15, 1.68, -0.7]}
+        scale={0.92}
         fog={false}
       />
 
@@ -301,8 +301,8 @@ export function WindowAssembly({ progress = 0, getProgress }: WindowAssemblyProp
           ========================================================================= */}
       <SdfSilhouette
         kind="man"
-        position={[-0.95, 0.88, 0.8]}
-        scale={1.0}
+        position={[-0.85, 1.25, 0.8]}
+        scale={0.95}
         fog={true}
       />
 

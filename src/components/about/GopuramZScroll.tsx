@@ -272,7 +272,7 @@ function BronzeRing({
   );
 }
 
-// Floating Glassmorphic Text Modals for Each Passing Bronze Ring
+// Seamless Floating Titles for Each Passing Bronze Kolam Ring
 function RingModalCard({
   tier,
   index,
@@ -303,7 +303,7 @@ function RingModalCard({
       if (p < range.start || p > range.end) {
         element.style.opacity = "0";
         element.style.visibility = "hidden";
-        element.style.transform = p < range.start ? "translateY(28px) scale(0.96)" : "translateY(-28px) scale(0.96)";
+        element.style.transform = p < range.start ? "translateY(20px)" : "translateY(-20px)";
         return;
       }
 
@@ -313,23 +313,20 @@ function RingModalCard({
       const exitDur = 0.025;
       let opacity = 1;
       let yOffset = 0;
-      let scale = 1.0;
 
       if (!isFirst && p < range.start + enterDur) {
         const norm = (p - range.start) / enterDur;
         opacity = Math.max(0, Math.min(1, norm));
-        yOffset = 24 * (1 - norm);
-        scale = 0.96 + 0.04 * norm;
+        yOffset = 18 * (1 - norm);
       } else if (p > range.end - exitDur) {
         const norm = (range.end - p) / exitDur;
         opacity = Math.max(0, Math.min(1, norm));
-        yOffset = -24 * (1 - norm);
-        scale = 0.96 + 0.04 * norm;
+        yOffset = -18 * (1 - norm);
       }
 
       element.style.opacity = opacity.toFixed(3);
       element.style.visibility = opacity > 0 ? "visible" : "hidden";
-      element.style.transform = `translateY(${yOffset.toFixed(1)}px) scale(${scale.toFixed(3)})`;
+      element.style.transform = `translateY(${yOffset.toFixed(1)}px)`;
     },
   }), [index, scrollProgressRef]);
 
@@ -338,42 +335,24 @@ function RingModalCard({
   return (
     <div
       ref={cardRef}
-      className="absolute inset-y-0 left-0 z-20 flex w-full flex-col justify-center px-4 sm:px-8 lg:px-14 lg:w-6/12 xl:w-5/12 pointer-events-none transition-transform duration-75"
+      className="absolute inset-y-0 left-0 z-20 flex w-full flex-col justify-center px-6 sm:px-12 lg:px-20 lg:w-7/12 xl:w-6/12 pointer-events-none transition-transform duration-75"
       style={{
         opacity: index === 0 ? 1 : 0,
         visibility: index === 0 ? "visible" : "hidden",
-        transform: "translateY(0px) scale(1)",
+        transform: "translateY(0px)",
       }}
     >
-      {/* Floating Glassmorphic Editorial Modal Card Box */}
-      <div className="relative p-6 sm:p-8 bg-[#14100E]/90 backdrop-blur-xl border border-[#D4AF37]/35 rounded-2xl shadow-[0_24px_64px_rgba(0,0,0,0.85)] overflow-hidden pointer-events-auto">
-        {/* Top ambient gold accent glow */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37]/80 to-transparent" />
+      {/* Floating Organic Titles: Seamlessly Integrated into the 3D Scene */}
+      <div className="max-w-xl text-left select-none space-y-3 pointer-events-auto">
+        {/* Understated Category Subtitle */}
+        <span className="font-mono text-xs uppercase tracking-widest text-[#D4AF37]/75 block drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+          {locale === "ta" ? tier.subtitleTa : tier.subtitleEn}
+        </span>
 
-        {/* Top Badges: Chapter Indicator + Ring Progress Meter */}
-        <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#D4AF37]/15 border border-[#D4AF37]/35 text-[#E5A93C] text-[11px] font-mono font-bold uppercase tracking-widest rounded-full">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#E5A93C] animate-pulse" />
-            <span>{`// CHAPTER 0${index + 1}`}</span>
-            <span aria-hidden="true" className="opacity-50">·</span>
-            <span>{locale === "ta" ? tier.subtitleTa : tier.subtitleEn}</span>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs font-mono text-[#D4AF37]/90 font-medium">
-            <span>Ring {index + 1} of {totalTiers}</span>
-            <div className="w-16 h-1.5 bg-white/10 rounded-full overflow-hidden border border-[#D4AF37]/20">
-              <div
-                className="h-full bg-gradient-to-r from-[#D4AF37] to-[#F59E0B] rounded-full transition-all duration-300"
-                style={{ width: `${((index + 1) / totalTiers) * 100}%` }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Primary Chapter Title */}
+        {/* Primary Title */}
         <Heading
           lang={locale === "ta" ? "ta" : "en"}
-          className={`text-2xl sm:text-3xl lg:text-4xl text-[#FAF9F6] font-extrabold mb-2 leading-[1.15] tracking-tight ${
+          className={`text-3xl sm:text-4xl lg:text-5xl text-[#FAF7F2] font-normal leading-[1.12] tracking-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.95)] ${
             locale === "ta" ? "font-tamil leading-relaxed" : "font-serif"
           }`}
         >
@@ -381,27 +360,21 @@ function RingModalCard({
         </Heading>
 
         {/* Tamil Calligraphic Inscription */}
-        <p
-          lang="ta"
-          style={{ letterSpacing: 0 }}
-          className="text-base sm:text-xl font-bold text-[#E5A93C] font-tamil mb-3 leading-relaxed"
-        >
-          {tier.titleTa}
-        </p>
-
-        {/* Classical Verse Citation (Purananuru / Thirukkural) */}
-        {tier.kuralQuote && (
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#2A1808]/90 border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-mono font-semibold tracking-wider rounded-md mb-4">
-            <span className="opacity-75">📜</span>
-            <span>{tier.kuralQuote}</span>
-          </div>
+        {locale !== "ta" && (
+          <p
+            lang="ta"
+            style={{ letterSpacing: 0 }}
+            className="text-lg sm:text-2xl font-medium text-[#E5A93C] font-tamil leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]"
+          >
+            {tier.titleTa}
+          </p>
         )}
 
-        {/* Narrative Description For Each Ring */}
+        {/* Narrative Description */}
         <p
           lang={locale === "ta" ? "ta" : "en"}
-          className={`text-sm sm:text-base text-[#FAF9F6]/90 leading-relaxed font-normal ${
-            locale === "ta" ? "font-tamil tracking-normal" : "font-body"
+          className={`text-sm sm:text-base text-[#FAF7F2]/80 leading-relaxed font-sans max-w-lg pt-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] ${
+            locale === "ta" ? "font-tamil" : ""
           }`}
         >
           {locale === "ta" ? tier.descTa : tier.descEn}
@@ -581,13 +554,7 @@ function GopuramScene({ scrollProgressRef, isMobile, locale }: {
         <AscendingGopuramCamera scrollProgressRef={scrollProgressRef} isMobile={isMobile} />
       </View>
 
-      {/* Top Heritage Badge */}
-      <div className="absolute top-24 left-4 sm:left-8 lg:left-14 z-20 pointer-events-none hidden sm:flex items-center gap-2 px-3.5 py-1.5 bg-[#14100E]/85 backdrop-blur-md border border-[#D4AF37]/30 text-[#E5A93C] text-[10px] font-mono uppercase tracking-widest rounded-full shadow-lg">
-        <span className="w-1.5 h-1.5 rounded-full bg-[#E5A93C] animate-pulse" />
-        <span>Our Ethos & Heritage · பண்பாட்டு நோக்கு</span>
-      </div>
-
-      {/* 5 Sacred Ring Floating Text Modals */}
+      {/* 5 Sacred Ring Floating Titles */}
       {TIERS.map((tier, index) => (
         <RingModalCard
           key={tier.id}
@@ -598,15 +565,6 @@ function GopuramScene({ scrollProgressRef, isMobile, locale }: {
           locale={locale}
         />
       ))}
-
-      {/* Bottom Flythrough Guidance Indicator */}
-      <div className="absolute bottom-6 left-4 sm:left-8 lg:left-14 right-4 sm:right-8 lg:right-14 z-20 pointer-events-none flex items-center justify-between text-[11px] font-mono text-[#D4AF37]/80 uppercase tracking-widest border-t border-[#D4AF37]/20 pt-3">
-        <span className="hidden sm:inline">The Ohio State University Tamil Sangam</span>
-        <div className="flex items-center gap-2">
-          <span>Scroll to Fly Through Sacred Rings</span>
-          <span className="w-1.5 h-1.5 bg-[#E5A93C] rounded-full animate-bounce" />
-        </div>
-      </div>
     </>
   );
 }

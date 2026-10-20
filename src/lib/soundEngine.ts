@@ -545,6 +545,54 @@ class SoundEngine {
     filter.connect(masterGain);
     masterGain.connect(ctx.destination);
   }
+
+
+
+  // 8. Vaaranam Aayiram Harmonic Major 7th / Add9 Guitar Chord Swell
+  public playAcousticMajor7ChordSwell() {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    // Eadd9 / Emaj7 voicings (E2, B2, E3, G#3, B3, F#4) - iconic nostalgic Tamil cinema acoustic arpeggio
+    const chordFreqs = [82.41, 123.47, 164.81, 207.65, 246.94, 369.99];
+    chordFreqs.forEach((freq, idx) => {
+      setTimeout(() => {
+        if (!ctx || ctx.state === "suspended") return;
+        const now = ctx.currentTime;
+        const decay = 3.6 - idx * 0.25;
+
+        const osc = ctx.createOscillator();
+        const oscHarmonic = ctx.createOscillator();
+        const g = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(freq, now);
+
+        oscHarmonic.type = "sine";
+        oscHarmonic.frequency.setValueAtTime(freq * 2.0, now);
+
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(freq * 4.5, now);
+        filter.frequency.exponentialRampToValueAtTime(freq * 1.8, now + decay * 0.6);
+
+        g.gain.setValueAtTime(0.0001, now);
+        g.gain.linearRampToValueAtTime(0.18, now + 0.008);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+
+        osc.connect(filter);
+        oscHarmonic.connect(filter);
+        filter.connect(g);
+        g.connect(ctx.destination);
+
+        osc.start(now);
+        oscHarmonic.start(now);
+        osc.stop(now + decay + 0.05);
+        oscHarmonic.stop(now + decay + 0.05);
+      }, idx * 60);
+    });
+  }
 }
 
 export const soundEngine = new SoundEngine();

@@ -15,6 +15,7 @@ const ARCHIVE_PHOTOS = [
 ];
 
 import { createHeroKineticsTracker } from "@/lib/heroKinetics";
+import { heroState } from "./state";
 
 export function ArchivalPlanes() {
   const textures = useTexture(ARCHIVE_PHOTOS, (loaded) => {
@@ -26,6 +27,8 @@ export function ArchivalPlanes() {
 
   const groupRef = useRef<THREE.Group>(null);
   const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
+  const borderMatsRef = useRef<THREE.MeshBasicMaterial[]>([]);
+  const planeGroupsRef = useRef<(THREE.Group | null)[]>([]);
 
   const planes = useMemo(() => {
     return [
@@ -71,6 +74,26 @@ export function ArchivalPlanes() {
       5.0,
       dt
     );
+
+    // Sympathetic ripple and golden-hour bloom across memory cards
+    const easterEggBoost = heroState.easterEggActive ? 1.0 : 0.0;
+    planes.forEach((p, idx) => {
+      const g = planeGroupsRef.current[idx];
+      const mat = borderMatsRef.current[idx];
+      const stringEnergy = heroState.stringEnergies[idx % 6] || 0.0;
+
+      if (g) {
+        const baseScale = p.scale as [number, number, number];
+        const targetScaleMultiplier = 1.0 + stringEnergy * 0.05 + easterEggBoost * 0.08;
+        g.scale.x = THREE.MathUtils.damp(g.scale.x, baseScale[0] * targetScaleMultiplier, 6.0, dt);
+        g.scale.y = THREE.MathUtils.damp(g.scale.y, baseScale[1] * targetScaleMultiplier, 6.0, dt);
+      }
+
+      if (mat) {
+        const targetOpacity = 0.35 + stringEnergy * 0.45 + easterEggBoost * 0.55;
+        mat.opacity = THREE.MathUtils.damp(mat.opacity, Math.min(0.95, targetOpacity), 6.0, dt);
+      }
+    });
   });
 
   return (
@@ -80,15 +103,21 @@ export function ArchivalPlanes() {
         return (
           <group
             key={idx}
+            ref={(el) => {
+              planeGroupsRef.current[idx] = el;
+            }}
             position={p.pos as [number, number, number]}
             rotation={p.rot as [number, number, number]}
             scale={p.scale as [number, number, number]}
           >
-            {/* Delicate warm gold 35mm slide border with subtle golden-hour halation */}
+            {/* Delicate warm gold 35mm slide border with sympathetic halation */}
             <mesh position={[0, 0, -0.005]}>
               <planeGeometry args={[1.04, 1.04]} />
               <meshBasicMaterial
-                color="#D4AF37"
+                ref={(mat) => {
+                  if (mat) borderMatsRef.current[idx] = mat;
+                }}
+                color="#E8984A"
                 transparent={true}
                 opacity={0.35}
                 depthWrite={false}
@@ -100,7 +129,7 @@ export function ArchivalPlanes() {
               <meshBasicMaterial
                 map={tex}
                 transparent={true}
-                opacity={0.52}
+                opacity={0.65}
                 depthWrite={false}
               />
             </mesh>

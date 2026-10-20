@@ -29,7 +29,7 @@ export function ShadowLatticeDecal() {
       color: "#D1CCC0",
       map: cobblestoneDiffuse,
       roughnessMap: cobblestoneRoughness,
-      roughness: 1.0,
+      roughness: 0.95,
       metalness: 0.04,
       transparent: true,
     });
@@ -39,7 +39,7 @@ export function ShadowLatticeDecal() {
         .replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;");
       shader.fragmentShader = shader.fragmentShader
         .replace("#include <common>", "#include <common>\nvarying vec3 vWorldPos;")
-        .replace("#include <dithering_fragment>", "#include <dithering_fragment>\nfloat depthFade = smoothstep(-6.0, -1.0, vWorldPos.z);\ngl_FragColor.a *= depthFade;");
+        .replace("#include <dithering_fragment>", "#include <dithering_fragment>\nfloat depthFade = smoothstep(-48.0, -42.0, vWorldPos.z);\ngl_FragColor.a *= depthFade;");
     };
     return mat;
   }, [cobblestoneDiffuse, cobblestoneRoughness]);
@@ -47,7 +47,7 @@ export function ShadowLatticeDecal() {
   const curbMaterial = useMemo(() => {
     const mat = new THREE.MeshStandardMaterial({
       color: "#E8E4D9",
-      roughness: 0.9,
+      roughness: 0.85,
       metalness: 0.02,
       transparent: true,
     });
@@ -57,7 +57,7 @@ export function ShadowLatticeDecal() {
         .replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;");
       shader.fragmentShader = shader.fragmentShader
         .replace("#include <common>", "#include <common>\nvarying vec3 vWorldPos;")
-        .replace("#include <dithering_fragment>", "#include <dithering_fragment>\nfloat depthFade = smoothstep(-6.0, -1.0, vWorldPos.z);\ngl_FragColor.a *= depthFade;");
+        .replace("#include <dithering_fragment>", "#include <dithering_fragment>\nfloat depthFade = smoothstep(-48.0, -42.0, vWorldPos.z);\ngl_FragColor.a *= depthFade;");
     };
     return mat;
   }, []);
@@ -71,22 +71,22 @@ export function ShadowLatticeDecal() {
 
   return (
     <group position={[0, 0, 0]}>
-      {/* 1. Campus Cobblestone Walkway Slab with Morning Dew Glints */}
+      {/* 1. Extended Campus Cobblestone Promenade stretching through the Quad (z = +14m to -46m) */}
       <mesh
-        position={[0, -0.05, 0]}
+        position={[0, -0.05, -16]}
         rotation={[-Math.PI / 2, 0, 0]}
         material={walkwayMaterial}
         receiveShadow
       >
-        <planeGeometry args={[14, 28]} />
+        <planeGeometry args={[7.2, 60]} />
       </mesh>
 
-      {/* Stone curb borders flanking the path */}
-      <mesh position={[-5.2, 0.08, 0]} material={curbMaterial} receiveShadow>
-        <boxGeometry args={[0.4, 0.22, 28]} />
+      {/* Raised limestone curb borders flanking the promenade */}
+      <mesh position={[-3.6, 0.08, -16]} material={curbMaterial} receiveShadow>
+        <boxGeometry args={[0.35, 0.22, 60]} />
       </mesh>
-      <mesh position={[5.2, 0.08, 0]} material={curbMaterial} receiveShadow>
-        <boxGeometry args={[0.4, 0.22, 28]} />
+      <mesh position={[3.6, 0.08, -16]} material={curbMaterial} receiveShadow>
+        <boxGeometry args={[0.35, 0.22, 60]} />
       </mesh>
     </group>
   );

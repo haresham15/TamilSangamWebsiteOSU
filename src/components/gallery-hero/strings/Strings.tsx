@@ -7,8 +7,9 @@ import { GUITAR_STRINGS } from "./stringMath";
 import { StringEnergyModel } from "./energy";
 import { createStringMaterial } from "./stringMaterial";
 import { getStringSpacing, getStringHeight } from "../neck/fretMath";
-import { heroState, registerPluckHandlers } from "../state";
+import { heroState, registerPluckHandlers, recordStringPluck } from "../state";
 import { triggerStrumSequence } from "../props/strumStateMachine";
+import { soundEngine } from "@/lib/soundEngine";
 
 // Global energy model instance accessible across components and debug HUD
 export const globalStringEnergy = new StringEnergyModel();
@@ -139,6 +140,8 @@ export function Strings() {
           if (stringScreenX >= minX && stringScreenX <= maxX) {
             const amp = Math.min(1.0, Math.max(0.35, Math.abs(pDelta) * 12.0));
             globalStringEnergy.triggerPluck(i, amp);
+            recordStringPluck(i);
+            soundEngine.playAcousticString(i, amp);
           }
         }
       }

@@ -23,6 +23,7 @@ import { FOG_COLOR, FOG_DENSITY, SUN_POS } from "./env/sun";
 
 import { JoinMaterialsManager, type IronVariant } from "./JoinMaterialsManager";
 import { MorningCampusVignette } from "./vignette/MorningCampusVignette";
+import { NanbanQuadEnvironment } from "./NanbanQuadEnvironment";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -275,6 +276,9 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
 
             {/* Collegiate Brick Pillars & Swinging Lattice Leaves (PBR Materials & Bump Maps) */}
             <CampusGate gateProgressRef={gateProgressRef} />
+
+            {/* Nanban Collegiate Perimeter Walls, Tree Colonnade & Distant Heritage Hall */}
+            <NanbanQuadEnvironment />
 
             {/* Parametric "TAMIL SANGAM" Bronze Arch Lettering */}
             <GateLettering />

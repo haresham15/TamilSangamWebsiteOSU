@@ -11,6 +11,8 @@ import { Strings } from "./strings/Strings";
 import { Pick } from "./props/Pick";
 import { GoldDustBurst } from "./fx/GoldDustBurst";
 import { ArchivalPlanes } from "./ArchivalPlanes";
+import { SunsetSkyDome } from "./SunsetSkyDome";
+import { AcousticSoundboard } from "./AcousticSoundboard";
 import { SangamStudioEnvironment } from "@/components/canvas/SangamStudioEnvironment";
 import { useWarmup } from "@/components/gl/useWarmup";
 import { useThree, useFrame } from "@react-three/fiber";
@@ -50,13 +52,17 @@ export default function Scene({ progressRef }: { progressRef?: React.MutableRefO
         <SceneWarmup />
         <SceneRegistrar />
         <ScrollProgressSync progressRef={progressRef} />
-        {/* Warm Obsidian Scene Background & Atmospheric Fog */}
-        <color attach="background" args={["#14110F"]} />
-        <fogExp2 attach="fog" args={["#14110F", 0.015]} />
+        {/* Vaaranam Aayiram Golden-Hour Coastal Twilight Sky Dome & Shimmering Horizon Bokeh */}
+        <color attach="background" args={["#120D18"]} />
+        <fogExp2 attach="fog" args={["#180F16", 0.007]} />
+        <SunsetSkyDome />
 
         {/* Studio Lighting & Zero-Cost Procedural Reflections */}
         <SangamStudioEnvironment />
         <LightingRig />
+
+        {/* Warm Cedar & Rosewood Acoustic Soundboard, Kolam Rosette & Neck */}
+        <AcousticSoundboard />
 
         {/* Drifting Archival Photos in Z-Space */}
         <ArchivalPlanes />

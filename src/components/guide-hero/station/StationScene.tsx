@@ -156,10 +156,10 @@ function StationBoard({
 
   return (
     <group ref={revealRef} name="StationBoardReveal">
-      {/* 4 steel suspension rods connecting board housing at y = 14m to rafters at y = 21m */}
-      {[-6.0, -2.0, 2.0, 6.0].map((x) => (
-        <mesh key={x} position={[x, 17.5, GUIDE_BOARD_WORLD_POSITION[2]]}>
-          <cylinderGeometry args={[0.045, 0.045, 7.0, 12]} />
+      {/* 4 clean vertical suspension rods connecting board top edge (y = 17.5m) to rafters (y = 21.8m) */}
+      {[-5.5, -2.0, 2.0, 5.5].map((x) => (
+        <mesh key={x} position={[x, 19.65, GUIDE_BOARD_WORLD_POSITION[2]]}>
+          <cylinderGeometry args={[0.04, 0.04, 4.3, 12]} />
           <meshBasicMaterial color="#1A1C20" fog={false} />
         </mesh>
       ))}
@@ -312,8 +312,8 @@ function WetPlatform() {
         <planeGeometry args={[75, 30]} />
         <meshStandardMaterial
           color={guideStationPalette.platform}
-          metalness={0.25}
-          roughness={0.3}
+          metalness={0.3}
+          roughness={0.22}
         />
       </mesh>
 
@@ -348,36 +348,36 @@ function WetPlatform() {
  * Grand iron station rafters & roof trusses spanning y = 16m to 22m (PRD §5.5).
  */
 function HallRafters() {
-  // Trusses frame the central 14m bay (board spans x = -7 to +7)
-  const trussX = [-18, -12, -8.2, 8.2, 12, 18];
+  // Trusses frame the outer bays (x = -18, -12, 12, 18), leaving central corridor (x = -12 to +12) completely open
+  const trussX = [-18, -12, 12, 18];
 
   return (
     <group name="StationHallRafters">
       {trussX.map((x) => (
         <group key={x} position={[x, 0, -5.8]}>
-          {/* Angled steel truss chords */}
-          <mesh position={[0, 18.5, 0]} rotation={[0, 0, -0.55]}>
-            <boxGeometry args={[0.16, 12, 0.22]} />
+          {/* Angled steel truss chords elevated high to y = 24.5m */}
+          <mesh position={[0, 24.5, 0]} rotation={[0, 0, -0.55]}>
+            <boxGeometry args={[0.2, 10, 0.25]} />
             <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.8} roughness={0.3} />
           </mesh>
-          <mesh position={[0, 18.5, 0]} rotation={[0, 0, 0.55]}>
-            <boxGeometry args={[0.16, 12, 0.22]} />
+          <mesh position={[0, 24.5, 0]} rotation={[0, 0, 0.55]}>
+            <boxGeometry args={[0.2, 10, 0.25]} />
             <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.8} roughness={0.3} />
           </mesh>
-          {/* Horizontal cross-tie beam */}
-          <mesh position={[0, 15.5, 0]}>
-            <boxGeometry args={[11, 0.22, 0.24]} />
+          {/* High horizontal cross-tie beam at y = 21.8m (4.3m above top of board at y = 17.5m) */}
+          <mesh position={[0, 21.8, 0]}>
+            <boxGeometry args={[11, 0.24, 0.26]} />
             <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.8} roughness={0.3} />
           </mesh>
-          {/* Hanging sodium practical lamp */}
-          <mesh position={[0, 14.8, 0]}>
-            <sphereGeometry args={[0.12, 12, 12]} />
+          {/* High hanging sodium practical lamp at y = 21.2m */}
+          <mesh position={[0, 21.2, 0]}>
+            <sphereGeometry args={[0.14, 12, 12]} />
             <meshBasicMaterial color={guideStationPalette.practicalWarm} toneMapped={false} />
           </mesh>
           <pointLight
-            position={[0, 14.5, 0]}
-            intensity={45}
-            distance={18}
+            position={[0, 21.0, 0]}
+            intensity={55}
+            distance={24}
             color={guideStationPalette.practicalWarm}
             decay={2}
           />
@@ -386,14 +386,14 @@ function HallRafters() {
 
       {/* Cast-iron supporting columns at station sides */}
       {[-18, 18].map((x) => (
-        <mesh key={x} position={[x, 7.5, -5.8]}>
-          <cylinderGeometry args={[0.25, 0.35, 15, 16]} />
+        <mesh key={x} position={[x, 10.75, -5.8]}>
+          <cylinderGeometry args={[0.28, 0.38, 21.5, 16]} />
           <meshStandardMaterial color="#101720" metalness={0.75} roughness={0.35} />
         </mesh>
       ))}
 
-      {/* Bilingual Station Nameboard: SANGAM JUNCTION / சங்கம் சந்திப்பு high on the rafters */}
-      <group position={[0, 20.8, -5.8]} name="StationNameboard">
+      {/* Bilingual Station Nameboard high on the rafters at y = 25.2m */}
+      <group position={[0, 25.2, -5.8]} name="StationNameboard">
         <mesh>
           <boxGeometry args={[8.5, 1.4, 0.12]} />
           <meshStandardMaterial color="#0A1017" metalness={0.65} roughness={0.35} />
@@ -404,19 +404,19 @@ function HallRafters() {
         </mesh>
       </group>
 
-      {/* Staggered volumetric diagonal roof light shafts passing through frame during crane rise (p = 0.45 -> 0.80) */}
+      {/* Staggered volumetric diagonal roof light shafts positioned safely behind/above board */}
       {[-6.5, 0.0, 6.5].map((x, i) => (
         <mesh
           key={i}
-          position={[x, 11.5 + i * 2.2, -4.5 + i * 1.2]}
+          position={[x, 19.5 + i * 1.5, -9.5 + i * 1.0]}
           rotation={[0.42, 0, -0.32]}
           renderOrder={4}
         >
-          <planeGeometry args={[5.0, 15]} />
+          <planeGeometry args={[5.0, 16]} />
           <meshBasicMaterial
             color="#FFB84D"
             transparent
-            opacity={0.026}
+            opacity={0.022}
             blending={THREE.AdditiveBlending}
             side={THREE.DoubleSide}
             depthWrite={false}

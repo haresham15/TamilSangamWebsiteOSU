@@ -21,8 +21,8 @@ export function createSilhouetteMaterial({ sdfA, sdfB, fog = false }: Silhouette
         uSdfB: { value: sdfB },
         uPose: { value: 0.0 },
         uTime: { value: 0.0 },
-        uHaloWidth: { value: 0.065 },
-        uRimStrength: { value: 0.55 },
+        uHaloWidth: { value: 0.04 },
+        uRimStrength: { value: 0.45 },
         uInk: { value: new THREE.Color(0.012, 0.012, 0.014) }, // Near-black ink (#030303)
         uRim: { value: new THREE.Color(1.0, 0.72, 0.44) }, // Warm halation (#ffb870)
       },
