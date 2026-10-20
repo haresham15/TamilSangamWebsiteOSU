@@ -90,8 +90,6 @@ export default function HomePage() {
       split = new SplitText(english, { type: "words" });
     }
 
-    const nav = document.getElementById("global-floating-nav");
-    const chatbot = document.getElementById("global-sangam-chatbot");
 
     const ctx = gsap.context(() => {
       // 1. Master Pinned Timeline: Pins the 100dvh viewport container while scrubbing 300vh (§MASTER DIRECTIVE)
@@ -156,27 +154,6 @@ export default function HomePage() {
         }
       });
 
-      // =========================================================================
-      // CLUTTER ASSASSINATION & PERSISTENT NAV EMERGENCE (§PRD 9 & 10)
-      // Hide Navbar and Chatbot throughout Acts I & II (0.00 -> 0.70).
-      // Once scrolled past the hero wreath (0.70+), navbar becomes FULLY VISIBLE!
-      // =========================================================================
-      if (nav) {
-        tl.fromTo(
-          nav,
-          { opacity: 0, pointerEvents: "none" },
-          { opacity: 1, pointerEvents: "auto", duration: 0.04, ease: "power2.out" },
-          0.70
-        );
-      }
-      if (chatbot) {
-        tl.fromTo(
-          chatbot,
-          { opacity: 0, pointerEvents: "none" },
-          { opacity: 1, pointerEvents: "auto", duration: 0.04, ease: "power2.out" },
-          0.70
-        );
-      }
 
       // =========================================================================
       // ACT II: 0.52 -> 0.70 Scroll (§PRD 9: KURAL TIERS INSIDE WREATH)

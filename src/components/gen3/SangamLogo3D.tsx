@@ -4,6 +4,10 @@ import React, { useRef, useMemo, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useTexture } from "@react-three/drei";
+import { createHeroKineticsTracker } from "@/lib/heroKinetics";
+import { getScrollProgress } from "./useScrollCinematic";
+
+useTexture.preload("/coin-face.svg");
 
 function createBrushedCoinTexture(): THREE.CanvasTexture {
   const size = 512;
@@ -49,12 +53,17 @@ function createBrushedCoinTexture(): THREE.CanvasTexture {
   return texture;
 }
 
-export function SangamLogo3D() {
+interface SangamLogo3DProps {
+  progressRef?: React.RefObject<number>;
+}
+
+export function SangamLogo3D({ progressRef }: SangamLogo3DProps = {}) {
   const groupRef = useRef<THREE.Group>(null);
   const ring1Ref = useRef<THREE.Group>(null);
   const ring2Ref = useRef<THREE.Group>(null);
   const spotlightRef = useRef<THREE.SpotLight>(null);
   const targetRef = useRef<THREE.Object3D>(null);
+  const kineticsRef = useRef(createHeroKineticsTracker(6.0, 4.2, 3.5));
 
   // Load the minted gold & bronze medallion texture
   const logoTexture = useTexture("/coin-face.svg", (texture) => {
@@ -165,28 +174,32 @@ export function SangamLogo3D() {
     const dt = Math.min(delta, 0.05);
     const time = elapsed.current += dt;
 
+    // Track smooth scroll kinetics
+    const rawProgress = progressRef?.current ?? getScrollProgress();
+    const kinetics = kineticsRef.current.update(rawProgress, undefined, dt);
+
     if (groupRef.current) {
       // Gentle floating levitation centered at Y = 3.65m (bottom of coin at 1.15m, hovering well clear of the platform)
       groupRef.current.position.y = 3.65 + Math.sin(time * 1.5) * 0.12;
       
-      // Majestic horizontal coin spin around vertical Y-axis (stays upright)
-      groupRef.current.rotation.y += dt * 0.45;
+      // Majestic horizontal coin spin around vertical Y-axis (stays upright + smooth kinetic scroll boost)
+      groupRef.current.rotation.y += dt * 0.45 + kinetics.smoothVelocity * 0.08;
       
-      // Subtle natural wobble on X
-      groupRef.current.rotation.x = Math.sin(time * 0.8) * 0.05;
+      // Subtle natural wobble on X + responsive pitch
+      groupRef.current.rotation.x = Math.sin(time * 0.8) * 0.04 + kinetics.velocityPitch * 0.3;
     }
 
     // Independent smooth celestial orbit for the outer rings (encircling the coin equatorially high above the ground)
     if (ring1Ref.current) {
       ring1Ref.current.position.y = 3.65 + Math.sin(time * 1.5) * 0.12;
-      ring1Ref.current.rotation.y += dt * 0.25;
+      ring1Ref.current.rotation.y += dt * 0.25 + kinetics.smoothVelocity * 0.04;
       ring1Ref.current.rotation.x = Math.sin(time * 0.5) * 0.16 + 0.28;
       ring1Ref.current.rotation.z = Math.cos(time * 0.4) * 0.12;
     }
 
     if (ring2Ref.current) {
       ring2Ref.current.position.y = 3.65 + Math.sin(time * 1.5) * 0.12;
-      ring2Ref.current.rotation.y -= dt * 0.2;
+      ring2Ref.current.rotation.y -= dt * 0.2 - kinetics.smoothVelocity * 0.03;
       ring2Ref.current.rotation.x = Math.cos(time * 0.45) * 0.18 - 0.26;
       ring2Ref.current.rotation.z = Math.sin(time * 0.38) * 0.15 + 0.12;
     }

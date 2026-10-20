@@ -1151,15 +1151,13 @@ body {
    Visually purged while p < 0.62, but fully reachable via keyboard Tab focus,
    top-edge hover (top 72px), scroll-up intent, or skip link.
    ========================================================================= */
-[data-hero-purge="true"] :is(.site-nav, .ask-nanba, #global-floating-nav, #global-sangam-chatbot) {
+[data-hero-purge="true"] :is(.ask-nanba, #global-sangam-chatbot) {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-[data-hero-purge="true"] :is(.site-nav, #global-floating-nav):focus-within,
-[data-hero-purge="true"] :is(.site-nav, #global-floating-nav):hover,
-[data-hero-purge="true"].hero-nav-revealed :is(.site-nav, .ask-nanba, #global-floating-nav, #global-sangam-chatbot) {
+[data-hero-purge="true"].hero-nav-revealed :is(.ask-nanba, #global-sangam-chatbot) {
   opacity: 1;
   pointer-events: auto;
 }

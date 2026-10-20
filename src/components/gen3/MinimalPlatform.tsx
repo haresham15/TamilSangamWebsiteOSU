@@ -100,7 +100,9 @@ export function MinimalPlatform() {
       {/* 3. Rotating Turntable Stage Deck with Inlaid Glowing Kolam Rings */}
       <group ref={turntableRef} position={[0, 0.17, 0]}>
         {/* Main Stage Turntable Deck (Brushed Obsidian & Brass) with Acoustic Bass-Ripples */}
-        <mesh receiveShadow geometry={new THREE.CylinderGeometry(3.45, 3.45, 0.02, 64)} material={deckMaterial} />
+        <mesh receiveShadow material={deckMaterial}>
+          <cylinderGeometry args={[3.45, 3.45, 0.02, 64]} />
+        </mesh>
 
         {/* Outer Inlaid Brass Ring */}
         <mesh position={[0, 0.012, 0]} rotation={[-Math.PI / 2, 0, 0]}>

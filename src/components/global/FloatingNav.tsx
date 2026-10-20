@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import { Menu, X } from "lucide-react";
 
 // ============================================================================
@@ -34,6 +35,10 @@ export const FloatingNav: React.FC = () => {
   const { playClick, playSilkSwish } = useAudio();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const handleCloseMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
+  }, []);
+  useModalScrollLock(isMobileMenuOpen, handleCloseMobileMenu);
 
   // Visibility & Contextual Backdrop State
   const [isPastHero, setIsPastHero] = useState(false);
@@ -579,7 +584,8 @@ export const FloatingNav: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-40 bg-[#FAF9F6]/98 backdrop-blur-xl lg:hidden flex flex-col pt-28 px-6 pb-12 justify-between overflow-y-auto pointer-events-auto"
+            data-lenis-prevent="true"
+            className="fixed inset-0 z-50 bg-[#FAF9F6]/98 backdrop-blur-xl lg:hidden flex flex-col pt-24 px-6 pb-12 justify-between overflow-y-auto overscroll-contain pointer-events-auto"
           >
             <div className="space-y-6">
               <div className="pb-4 border-b border-[#2A2825]/10 flex items-center justify-between">
@@ -598,7 +604,7 @@ export const FloatingNav: React.FC = () => {
                 <button
                   onClick={handleToggleMobileMenu}
                   aria-label="Close menu"
-                  className="w-8 h-8 flex items-center justify-center text-[#2A2825] hover:text-[#B85C38]"
+                  className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-[#2A2825] hover:text-[#B85C38] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-full"
                 >
                   <X className="w-5 h-5" />
                 </button>
