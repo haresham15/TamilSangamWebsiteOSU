@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { X, Calendar, Clock, MapPin, Download, ExternalLink, ArrowRight } from "lucide-react";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import { CalendarEvent } from "@/lib/calendar/types";
 import { formatEventDateDisplay, formatEventTimeET } from "@/lib/calendar/parse";
 import { buildGoogleCalendarUrl } from "@/lib/calendar/ics";
@@ -22,6 +23,8 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
   const reducedMotion = useReducedMotion();
   const modalRef = useRef<HTMLDivElement>(null);
   const previouslyFocusedElement = useRef<HTMLElement | null>(null);
+
+  useModalScrollLock(Boolean(event), onClose);
 
   // Store trigger element on open and restore on close
   useEffect(() => {
@@ -138,12 +141,12 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
                   onClose();
                 }}
                 aria-label={locale === "ta" ? "மூடு" : "Close event details"}
-                className="absolute top-5 right-5 w-10 h-10 rounded-full bg-[#1E1B18]/5 hover:bg-[#B85C38] hover:text-white text-[#2A2825] flex items-center justify-center transition-colors cursor-pointer"
+                className="absolute top-4 right-4 w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-[#1E1B18]/5 hover:bg-[#B85C38] hover:text-white text-[#2A2825] flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="pr-12">
+              <div className="pr-14">
                 <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#B85C38] block mb-1">
                   OSU TAMIL SANGAM · GATHERING
                 </span>
@@ -166,7 +169,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
             </div>
 
             {/* Modal Scrollable Body */}
-            <div className="p-6 sm:p-8 space-y-6 overflow-y-auto flex-1">
+            <div data-lenis-prevent className="p-6 sm:p-8 space-y-6 overflow-y-auto overscroll-contain flex-1">
               {/* Telemetry Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 p-4 bg-[#F4EFE6] rounded-2xl border border-[#2A2825]/10 text-xs font-sans text-[#57524C]">
                 <div className="flex items-start gap-2.5">

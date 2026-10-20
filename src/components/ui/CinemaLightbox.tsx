@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 
 export interface LightboxPhoto {
   id?: string;
@@ -31,7 +33,14 @@ export function CinemaLightbox({
   onClose,
   onNavigate,
 }: CinemaLightboxProps) {
+  const [mounted, setMounted] = useState(false);
   const currentPhoto = photos[currentIndex];
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useModalScrollLock(isOpen, onClose);
 
   const handlePrev = useCallback(() => {
     if (photos.length <= 1) return;
@@ -43,15 +52,12 @@ export function CinemaLightbox({
     onNavigate((currentIndex + 1) % photos.length);
   }, [currentIndex, photos.length, onNavigate]);
 
-  // Keyboard navigation & body scroll-lock
+  // Keyboard arrow navigation
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-      } else if (e.key === "ArrowLeft") {
+      if (e.key === "ArrowLeft") {
         e.preventDefault();
         handlePrev();
       } else if (e.key === "ArrowRight") {
@@ -60,23 +66,17 @@ export function CinemaLightbox({
       }
     };
 
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, handlePrev, handleNext]);
 
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen, onClose, handlePrev, handleNext]);
-
-  if (!isOpen || !currentPhoto) return null;
+  if (!isOpen || !currentPhoto || !mounted) return null;
 
   const plateLabel = currentPhoto.plateNumber
     ? String(currentPhoto.plateNumber).padStart(2, "0")
     : String(currentIndex + 1).padStart(2, "0");
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -105,7 +105,7 @@ export function CinemaLightbox({
               type="button"
               onClick={onClose}
               aria-label="Close lightbox (ESC)"
-              className="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 hover:border-[#B85C38] text-white/80 hover:text-white transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38]"
+              className="group flex items-center gap-2 px-3.5 py-2 min-w-[48px] min-h-[48px] rounded-full border border-white/15 bg-white/5 hover:bg-white/10 hover:border-[#B85C38] text-white/80 hover:text-white transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38]"
             >
               <span className="text-[10px] font-mono uppercase tracking-widest text-white/50 group-hover:text-white/90">
                 ESC
@@ -216,7 +216,8 @@ export function CinemaLightbox({
           </footer>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
 

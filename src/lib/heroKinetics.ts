@@ -29,10 +29,11 @@ export interface HeroKineticsTracker {
  * @param pointerLambda Smoothing lambda for cursor parallax (default 4.0)
  */
 export function createHeroKineticsTracker(
-  progressLambda = 7.5,
-  velocityLambda = 5.0,
+  progressLambda = 4.2,
+  velocityLambda = 6.0,
   pointerLambda = 4.0
 ): HeroKineticsTracker {
+  let isInitialized = false;
   let rawP = 0;
   let smoothP = 0;
   let smoothVel = 0;
@@ -54,23 +55,35 @@ export function createHeroKineticsTracker(
   return {
     update(rawProgress: number, pointer?: { x: number; y: number }, delta = 0.016) {
       const dt = Math.min(delta, 0.05);
-      rawP = rawProgress;
+      const rawPClamped = THREE.MathUtils.clamp(rawProgress, 0, 1);
 
-      const prevSmooth = smoothP;
+      if (!isInitialized) {
+        rawP = rawPClamped;
+        smoothP = rawPClamped;
+        if (pointer) {
+          smoothPtrX = pointer.x;
+          smoothPtrY = pointer.y;
+        }
+        isInitialized = true;
+      }
+      rawP = rawPClamped;
+
+      // 1. Single silky damper (lambda = 4.2 for weighty cinematic inertia)
       smoothP = THREE.MathUtils.damp(smoothP, rawP, progressLambda, dt);
 
-      // Instantaneous normalized scroll velocity (-1.5 to +1.5)
-      const instVel = THREE.MathUtils.clamp((smoothP - prevSmooth) / Math.max(dt, 0.001), -1.5, 1.5);
-      smoothVel = THREE.MathUtils.damp(smoothVel, instVel, velocityLambda, dt);
+      // 2. Jitter-free analytical velocity: proportional to (target - current), clamped gently
+      const targetVel = THREE.MathUtils.clamp((rawP - smoothP) * 3.5, -0.6, 0.6);
+      smoothVel = THREE.MathUtils.damp(smoothVel, targetVel, velocityLambda, dt);
 
-      // Pointer parallax damping
+      // 3. Pointer parallax damping
       if (pointer) {
         smoothPtrX = THREE.MathUtils.damp(smoothPtrX, pointer.x, pointerLambda, dt);
         smoothPtrY = THREE.MathUtils.damp(smoothPtrY, pointer.y, pointerLambda, dt);
       }
 
-      vPitch = smoothVel * 0.04;
-      vBank = smoothVel * 0.045;
+      // 4. Subtle, lush velocity bank and pitch (clamped to max ±0.015 / ±0.018 rad)
+      vPitch = THREE.MathUtils.clamp(smoothVel * 0.025, -0.015, 0.015);
+      vBank = THREE.MathUtils.clamp(smoothVel * 0.030, -0.018, 0.018);
 
       state.rawProgress = rawP;
       state.smoothProgress = smoothP;
@@ -86,6 +99,7 @@ export function createHeroKineticsTracker(
       return state;
     },
     reset(initialProgress = 0) {
+      isInitialized = true;
       rawP = initialProgress;
       smoothP = initialProgress;
       smoothVel = 0;

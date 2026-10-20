@@ -147,7 +147,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
         end: "+=130%",
         pin: true,
         pinSpacing: true,
-        scrub: 0.8, // Smooth GSAP scrub
+        scrub: true, // Direct 1:1 read of Lenis
         anticipatePin: 0, // 0 eliminates initial pin twitch
         onUpdate: (self) => {
           const p = self.progress;

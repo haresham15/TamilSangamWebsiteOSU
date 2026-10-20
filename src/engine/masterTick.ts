@@ -1,5 +1,6 @@
 // src/engine/masterTick.ts
 import type Lenis from "lenis";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { governor } from "./governor";
 import { rendererAdvance, getRendererClock } from "./renderer";
 import { heroScrollProgress } from "./heroScrollStore";
@@ -7,11 +8,12 @@ import { heroScrollProgress } from "./heroScrollStore";
 /**
  * Master Clock & Ticker (§4.1)
  * One callback, explicit execution order:
- * 1) Lenis scroll update (triggers ScrollTrigger.update)
- * 2) Scroll state publication
- * 2.5) Critical exponential damping of hero scroll progress
- * 3) Subsystem updates (ordered by System.order: springs, parallax, image planes, camera rigs)
- * 4) Governor evaluation and R3F advance()
+ * 1) Lenis scroll update
+ * 2) ScrollTrigger explicit synchronization
+ * 3) Scroll state publication
+ * 3.5) Critical exponential damping of hero scroll progress
+ * 4) Subsystem updates (ordered by System.order: springs, parallax, image planes, camera rigs)
+ * 5) Governor evaluation and R3F advance()
  */
 
 export interface ScrollState {
@@ -65,9 +67,13 @@ export function masterTick(timeSec: number, lenis: Lenis | null) {
   const dt = last === 0 ? 1 / 60 : Math.min(timeSec - last, 1 / 20);
   last = timeSec;
 
-  // 1) Smooth scroll step (emits 'scroll' -> ScrollTrigger.update)
+  // 1) Smooth scroll step
   if (lenis) {
     lenis.raf(timeSec * 1000);
+  }
+  // 2) Synchronize ScrollTrigger with Lenis scroll position
+  if (typeof window !== "undefined") {
+    ScrollTrigger.update();
   }
 
   // 2) Publish scroll state

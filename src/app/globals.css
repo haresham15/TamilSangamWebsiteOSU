@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scroll-padding-top: 6rem;
+}
+
 .pillar-curtain:is(:hover, :focus-visible) :is(h3, p, span, svg) { color: var(--color-paper); }
 .parchment-grain { position: fixed; z-index: 40; }
 @media (hover: none), (pointer: coarse) { .pillar-preview { display: none; } }

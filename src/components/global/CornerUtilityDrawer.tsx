@@ -66,7 +66,8 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.95 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-3 w-72 bg-[#FAF9F6]/95 backdrop-blur-md border border-[#2A2825]/15 shadow-[0_12px_36px_rgba(42,40,37,0.12)] p-3 text-[#2A2825] font-sans"
+            data-lenis-prevent
+            className="mb-3 w-72 max-h-[min(80dvh,500px)] overflow-y-auto overscroll-contain bg-[#FAF9F6]/95 backdrop-blur-md border border-[#2A2825]/15 shadow-[0_12px_36px_rgba(42,40,37,0.12)] p-3 text-[#2A2825] font-sans"
           >
             {/* Header */}
             <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#2A2825]/10">
@@ -235,7 +236,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
         }}
         aria-label="Toggle Sangam Utilities Drawer"
         aria-expanded={isOpen}
-        className="group relative flex items-center justify-center w-10 h-10 rounded-full bg-[#FAF9F6] border border-[#2A2825]/20 shadow-[0_4px_16px_rgba(42,40,37,0.12)] text-[#2A2825] hover:text-[#B85C38] hover:border-[#B85C38]/40 hover:scale-105 active:scale-95 transition-all duration-200"
+        className="group relative flex items-center justify-center w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-[#FAF9F6] border border-[#2A2825]/20 shadow-[0_4px_16px_rgba(42,40,37,0.12)] text-[#2A2825] hover:text-[#B85C38] hover:border-[#B85C38]/40 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
       >
         <SlidersHorizontal className="w-4 h-4 transition-transform group-hover:rotate-45" />
         {/* Active tint dot */}

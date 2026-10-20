@@ -6,7 +6,9 @@ const nextConfig: NextConfig = {
     optimizePackageImports: [
       "lucide-react",
       "three",
+      "@react-three/fiber",
       "@react-three/drei",
+      "@react-three/postprocessing",
       "gsap",
       "framer-motion",
     ],

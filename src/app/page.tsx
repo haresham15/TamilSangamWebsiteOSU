@@ -103,7 +103,7 @@ export default function HomePage() {
           pin: viewport,
           invalidateOnRefresh: true,
           anticipatePin: 0, // 0 eliminates 1px twitch at start of scroll
-          scrub: 0.8, // Smooth GSAP scrub
+          scrub: true, // Direct 1:1 synchronization with Lenis
         },
       });
 
@@ -158,15 +158,15 @@ export default function HomePage() {
 
       // =========================================================================
       // CLUTTER ASSASSINATION & PERSISTENT NAV EMERGENCE (§PRD 9 & 10)
-      // Hide Navbar and Chatbot throughout Acts I & II (0.00 -> 0.60).
-      // Once scrolled past the hero wreath (0.60+), navbar becomes FULLY VISIBLE!
+      // Hide Navbar and Chatbot throughout Acts I & II (0.00 -> 0.70).
+      // Once scrolled past the hero wreath (0.70+), navbar becomes FULLY VISIBLE!
       // =========================================================================
       if (nav) {
         tl.fromTo(
           nav,
           { opacity: 0, pointerEvents: "none" },
           { opacity: 1, pointerEvents: "auto", duration: 0.04, ease: "power2.out" },
-          0.60
+          0.70
         );
       }
       if (chatbot) {
@@ -174,74 +174,75 @@ export default function HomePage() {
           chatbot,
           { opacity: 0, pointerEvents: "none" },
           { opacity: 1, pointerEvents: "auto", duration: 0.04, ease: "power2.out" },
-          0.60
+          0.70
         );
       }
 
       // =========================================================================
-      // ACT II: 0.54 -> 0.66 Scroll (§PRD 9: KURAL TIERS INSIDE WREATH)
+      // ACT II: 0.52 -> 0.70 Scroll (§PRD 9: KURAL TIERS INSIDE WREATH)
       // 3-Tier Staggered Reveal for Kural 81 centered inside wreath cradle
+      // Reading Plateau Hold from 0.64 -> 0.70 before curtain rise
       // =========================================================================
       if (kural) {
         tl.fromTo(
           kural,
           { opacity: 0 },
           { opacity: 1, duration: 0.02, ease: "none" },
-          0.53
+          0.52
         );
       }
 
-      // Tier 1: Tamil Script (0.54 -> 0.58, slide up + blur 10px -> 0px)
+      // Tier 1: Tamil Script (0.53 -> 0.57, slide up + blur 10px -> 0px)
       if (tamil) {
         tl.fromTo(
           tamil,
           { opacity: 0, y: 35, filter: "blur(10px)" },
           { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.04, ease: "power2.out" },
-          0.54
+          0.53
         );
       }
 
-      // Tier 2: English Translation (0.58 -> 0.62, word-by-word cascade)
+      // Tier 2: English Translation (0.57 -> 0.61, word-by-word cascade)
       if (split && split.words && split.words.length > 0) {
         tl.fromTo(
           split.words,
           { opacity: 0, y: 12 },
           { opacity: 1, y: 0, stagger: 0.002, duration: 0.04, ease: "power2.out" },
-          0.58
+          0.57
         );
       }
 
-      // Tier 3: Metadata / Caption (0.62 -> 0.66)
+      // Tier 3: Metadata / Caption (0.61 -> 0.64)
       if (meta) {
         tl.fromTo(
           meta,
           { opacity: 0, y: 14 },
-          { opacity: 1, y: 0, duration: 0.04, ease: "power2.out" },
-          0.62
+          { opacity: 1, y: 0, duration: 0.03, ease: "power2.out" },
+          0.61
         );
       }
 
-      // Dwell period (0.62 -> 0.64): Reading pause with wreath formed.
-      // Exit of Kural at start of curtain rise (0.64 -> 0.67)
+      // Reading Hold Plateau (0.64 -> 0.70): Generous reading dwell with wreath formed.
+      // Exit of Kural at start of curtain rise (0.70 -> 0.73)
       if (kural) {
         tl.to(
           kural,
           { opacity: 0, y: -20, filter: "blur(6px)", duration: 0.03, ease: "power1.in" },
-          0.64
+          0.70
         );
       }
 
       // =========================================================================
-      // ACT III: 0.67 -> 0.77 Scroll ("Curtain Rise", slides up and settles)
+      // ACT III: 0.72 -> 0.80 Scroll ("Curtain Rise", slides up and settles)
       // Monolith slides UP (yPercent: 100 -> 0) naturally covering the WebGL scene
-      // and stays resting and visible through 0.77 -> 1.00
+      // and stays resting and visible through 0.80 -> 1.00
       // =========================================================================
       if (monolith) {
         tl.fromTo(
           monolith,
           { yPercent: 100 },
-          { yPercent: 0, duration: 0.10, ease: "power2.out" },
-          0.67
+          { yPercent: 0, duration: 0.08, ease: "power2.out" },
+          0.72
         );
       }
     }, wrapper);
@@ -269,13 +270,13 @@ export default function HomePage() {
       <HeritageTextureOverlay variant="sandstone" opacity={0.02} />
 
       {/* =========================================================================
-          ACTS I, II & III: 300vh PINNED DOM WRAPPER & GSAP TIMELINE (CINEMATIC)
+          ACTS I, II & III: 420vh PINNED DOM WRAPPER & GSAP TIMELINE (CINEMATIC)
           ========================================================================= */}
       <div
         ref={pinnedWrapperRef}
         data-hero-pinned="home"
         id="act-i-viewport-wrapper"
-        className={`relative w-full bg-hero-espresso ${staticHero ? "h-dvh" : "h-[300dvh]"}`}
+        className={`relative w-full bg-hero-espresso ${staticHero ? "h-dvh" : "h-[420dvh]"}`}
       >
         {/* Pinned 100dvh Viewport Container */}
         <div
@@ -326,17 +327,17 @@ export default function HomePage() {
           </div>
 
           {/* =========================================================================
-              ACT III: THE MONOLITH SPLIT ("CURTAIN RISE" SLIDE-UP AT SCROLL 0.66)
+              ACT III: THE MONOLITH SPLIT ("CURTAIN RISE" SLIDE-UP AT SCROLL 0.72)
               ========================================================================= */}
           <section
             hidden={staticHero}
             style={staticHero ? { display: "none" } : undefined}
             id="monolith"
             ref={monolithRef}
-            className="absolute inset-0 z-20 w-full h-[100dvh] overflow-y-auto lg:overflow-hidden grid grid-cols-1 lg:grid-cols-12 bg-[#FAF7F2] border-t border-[#161210]/10 text-[#161210]"
+            className="absolute inset-0 z-20 w-full h-[100dvh] overflow-y-auto lg:overflow-y-auto xl:overflow-hidden grid grid-cols-1 lg:grid-cols-12 bg-[#FAF7F2] border-t border-[#161210]/10 text-[#161210]"
           >
             {/* Left Column (4 Cols - The Anchor, §PRD 9.1) */}
-            <div className="lg:col-span-4 relative p-6 pt-20 sm:p-10 sm:pt-24 lg:p-12 lg:pt-24 xl:p-14 xl:pt-24 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#161210]/10 overflow-hidden">
+            <div className="lg:col-span-4 relative p-6 pt-16 sm:p-8 sm:pt-20 lg:p-8 lg:pt-20 xl:p-12 xl:pt-24 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#161210]/10 overflow-hidden">
               {/* Absolute Massive Tamil Numeral Watermark: 3% opacity positioned bottom-left clipped */}
               <div
                 aria-hidden="true"
@@ -370,24 +371,24 @@ export default function HomePage() {
             {/* Right Column (8 Cols - The Dossier) */}
             <div className="lg:col-span-8 flex flex-col justify-between">
               {/* Constitutional Introduction */}
-              <div className="p-6 pt-16 sm:p-8 sm:pt-20 lg:p-10 lg:pt-20 xl:p-12 xl:pt-20 border-b border-[#161210]/10">
-                <span className="font-space-mono text-[10px] text-[#C85A32] tracking-widest uppercase block mb-2 font-semibold">
+              <div className="p-5 pt-14 sm:p-7 sm:pt-16 lg:p-7 lg:pt-16 xl:p-10 xl:pt-20 border-b border-[#161210]/10">
+                <span className="font-space-mono text-[10px] text-[#C85A32] tracking-widest uppercase block mb-1.5 font-semibold">
                   COMMUNITY CHARTER // OHIO STATE
                 </span>
-                <h3 className="text-[clamp(1.75rem,3vw,2.75rem)] font-display font-medium text-[#161210] leading-tight tracking-tight">
+                <h3 className="text-[clamp(1.5rem,2.5vw,2.5rem)] font-display font-medium text-[#161210] leading-tight tracking-tight">
                   Tamil Sangam at Ohio State
                 </h3>
-                <p className="mt-1.5 text-xs sm:text-sm font-mono text-[#C85A32] tracking-wider uppercase font-semibold">
+                <p className="mt-1 text-xs sm:text-sm font-mono text-[#C85A32] tracking-wider uppercase font-semibold">
                   Inclusive Student Cultural Hub · Open Year-Round · No Language Requirement
                 </p>
-                <p ref={monolithPrologueRef} className="mt-3.5 text-sm sm:text-[15px] text-[#4A423D] font-body leading-relaxed max-w-2xl">
+                <p ref={monolithPrologueRef} className="mt-2.5 text-xs sm:text-[14px] text-[#4A423D] font-body leading-relaxed max-w-2xl">
                   Established as an inclusive campus hub, Tamil Sangam at The Ohio State University unites Tamil Buckeyes and students of all cultural backgrounds. Guided by our constitution, we cultivate a welcoming home away from home through conversational language workshops, authentic South Indian cuisine, major campus festivals like Pongal and Diwali, and active peer mentorship.
                 </p>
-                <div className="mt-5 flex flex-wrap items-center gap-5">
+                <div className="mt-4 flex flex-wrap items-center gap-4 sm:gap-5">
                   <Link
                     href="/join"
                     onClick={playClick}
-                    className="px-5 py-2.5 bg-[#C85A32] text-[#FAF7F2] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#b04b25] transition-colors ticket-chamfer-tl-br shadow-sm"
+                    className="px-4 py-2 sm:px-5 sm:py-2.5 bg-[#C85A32] text-[#FAF7F2] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#b04b25] transition-colors ticket-chamfer-tl-br shadow-sm"
                   >
                     Join the Hearth →
                   </Link>
@@ -418,7 +419,7 @@ export default function HomePage() {
                     audioLayer.playTapeClack();
                   }}
                   data-cursor="bracket"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-6 lg:p-7 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
+                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 sm:p-4 lg:p-4 xl:p-5 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
                     <span className="font-space-mono text-xs sm:text-sm text-[#C85A32] font-semibold transition-colors">
@@ -449,7 +450,7 @@ export default function HomePage() {
                     audioLayer.playTapeClack();
                   }}
                   data-cursor="bracket"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-6 lg:p-7 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
+                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 sm:p-4 lg:p-4 xl:p-5 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out"
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
                     <span className="font-space-mono text-xs sm:text-sm text-[#C85A32] font-semibold transition-colors">
@@ -483,7 +484,7 @@ export default function HomePage() {
                     audioLayer.playSubBassThud();
                   }}
                   data-cursor="bracket"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-6 lg:p-7 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out border-b border-[#161210]/10 lg:border-b-0"
+                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 sm:p-4 lg:p-4 xl:p-5 hover:bg-[#161210]/[0.03] transition-[transform,color,background-color] duration-300 ease-out border-b border-[#161210]/10 lg:border-b-0"
                 >
                   <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
                     <span className="font-space-mono text-xs sm:text-sm text-[#C85A32] font-semibold transition-colors">

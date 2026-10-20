@@ -10,6 +10,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { DepthCarousel, DepthCarouselItem } from "@/components/ui/DepthCarousel";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 
 interface EventsDepthShowcaseProps {
   className?: string;
@@ -28,6 +29,8 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useModalScrollLock(isModalOpen, () => setIsModalOpen(false));
   const [mounted, setMounted] = useState(false);
 
   React.useEffect(() => {
@@ -246,7 +249,8 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.94, y: 16 }}
                   transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative w-full max-w-2xl bg-[#FAF9F6] border border-[#2A2825]/15 rounded-3xl shadow-2xl overflow-hidden z-10 text-left max-h-[90vh] overflow-y-auto"
+                  data-lenis-prevent
+                  className="relative w-full max-w-2xl bg-[#FAF9F6] border border-[#2A2825]/15 rounded-3xl shadow-2xl overflow-hidden z-10 text-left max-h-[85vh] overflow-y-auto overscroll-contain"
                 >
                   {/* Modal Header Banner Image */}
                   <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-[#1E1B18]">
@@ -261,7 +265,7 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
                     <button
                       onClick={() => setIsModalOpen(false)}
                       aria-label="Close modal"
-                      className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 hover:bg-[#B85C38] text-white flex items-center justify-center backdrop-blur-sm transition-colors cursor-pointer"
+                      className="absolute top-4 right-4 w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-black/60 hover:bg-[#B85C38] text-white flex items-center justify-center backdrop-blur-sm transition-colors cursor-pointer"
                     >
                       <X className="w-5 h-5" />
                     </button>

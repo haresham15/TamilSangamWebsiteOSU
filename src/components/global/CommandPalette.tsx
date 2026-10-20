@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import { EVENTS } from "@/data/events";
 import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS } from "@/data/board";
 import { GALLERY_ALBUMS } from "@/data/gallery";
@@ -31,7 +33,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
   const { playClick } = useAudio();
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useModalScrollLock(isOpen, onClose);
 
   // Build searchable index
   const items: SearchItem[] = [
@@ -163,25 +172,25 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, filteredItems, selectedIndex, handleSelect, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
       aria-label="Search site command palette"
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+      className="fixed inset-0 z-[100] flex items-start justify-center pt-16 sm:pt-20 p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
     >
       <div 
         role="dialog"
         aria-modal="true"
         aria-label="Search and command palette"
-        className="box-ticket w-full max-w-2xl bg-[#160d26] border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] overflow-hidden text-left"
+        className="box-ticket w-full max-w-[min(92vw,680px)] max-h-[min(85dvh,720px)] flex flex-col bg-[#160d26] border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] overflow-hidden text-left"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input Bar */}
-        <div className="flex items-center px-6 py-4 border-b-2 border-white/10 gap-3">
+        <div className="flex items-center px-6 py-4 border-b-2 border-white/10 gap-3 shrink-0">
           <Search className="w-5 h-5 text-[#55CCA2]" />
           <input
             ref={inputRef}
@@ -231,7 +240,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         </div>
 
         {/* Results List */}
-        <div id="command-palette-results" role="listbox" aria-label="Search suggestions" className="max-h-[60vh] overflow-y-auto p-2 space-y-1">
+        <div
+          id="command-palette-results"
+          role="listbox"
+          aria-label="Search suggestions"
+          data-lenis-prevent
+          className="flex-1 max-h-[60vh] overflow-y-auto overscroll-contain p-2 space-y-1"
+        >
           {filteredItems.length === 0 ? (
             <div className="py-12 text-center text-slate-400">
               <p className="text-sm">{locale === "ta" ? "எந்த முடிவுகளும் கிடைக்கவில்லை" : "No matching results found."}</p>
@@ -273,7 +288,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         </div>
 
         {/* Footer shortcuts */}
-        <div className="px-6 py-3 border-t border-white/10 bg-black/60 flex items-center justify-between text-[11px] text-slate-200 font-mono">
+        <div className="px-6 py-3 border-t border-white/10 bg-black/60 flex items-center justify-between text-[11px] text-slate-200 font-mono shrink-0">
           <div className="flex items-center gap-3">
             <span>↑↓ Navigate</span>
             <span>↵ Select</span>
@@ -282,6 +297,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
           <span className="text-[#55CCA2] font-bold">OSU Tamil Sangam</span>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

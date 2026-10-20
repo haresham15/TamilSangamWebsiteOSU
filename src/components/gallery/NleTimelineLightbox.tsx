@@ -2,9 +2,11 @@
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { PhotoItem } from "@/data/gallery";
 import { audioLayer } from "@/utils/audioLayer";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import {
   X,
   Maximize2,
@@ -35,6 +37,13 @@ export function NleTimelineLightbox({
   const playheadRef = useRef<HTMLDivElement>(null);
   const [isScrubbing, setIsScrubbing] = useState(false);
   const [timecodeStr, setTimecodeStr] = useState("01:04:22:18");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useModalScrollLock(true, onClose);
 
   // 24FPS Timecode simulation
   useEffect(() => {
@@ -146,7 +155,9 @@ export function NleTimelineLightbox({
     }
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div
       role="dialog"
       aria-label="DaVinci Resolve NLE Timeline Lightbox"
@@ -193,7 +204,7 @@ export function NleTimelineLightbox({
               onClose();
             }}
             data-cursor="bracket"
-            className="flex items-center gap-1.5 px-3 py-1 bg-[#1c120c] hover:bg-[#E11D48] text-white border border-white/20 hover:border-[#E11D48] text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 min-w-[48px] min-h-[48px] justify-center bg-[#1c120c] hover:bg-[#E11D48] text-white border border-white/20 hover:border-[#E11D48] text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer"
             aria-label="Close NLE Lightbox"
           >
             <X className="w-3.5 h-3.5" />
@@ -329,6 +340,7 @@ export function NleTimelineLightbox({
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
+          data-lenis-prevent
           className="relative w-full h-16 sm:h-20 bg-black border border-white/15 overflow-hidden cursor-ew-resize touch-none select-none"
         >
           {/* Vertical Red Playhead Line with Inverted Needle Badge */}
@@ -367,6 +379,7 @@ export function NleTimelineLightbox({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

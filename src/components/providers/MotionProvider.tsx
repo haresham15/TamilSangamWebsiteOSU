@@ -46,7 +46,8 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
     // Initialize Lenis strictly without autoRaf (§4.1)
     const lenis = new Lenis({
       autoRaf: false,
-      lerp: 0.1,
+      lerp: 0.08,
+      smoothWheel: true,
       syncTouch: false, // Keep native touch momentum scrolling on iOS and mobile
       anchors: true,
       allowNestedScroll: true,

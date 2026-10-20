@@ -37,7 +37,7 @@ const STUDIO_LIGHT = { ivory: "#FAF7F2", terracotta: "#C85A32", gold: "#D4AF37" 
 function HeroTruckCamera() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const currentPos = useRef(new THREE.Vector3(0, 0, 12));
-  const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
+  const kineticsRef = useRef(createHeroKineticsTracker(4.2, 5.0, 4.0));
 
   useSafeFrame((state, safeDelta) => {
     const rawP = heroDirectorState.scrubActive
@@ -63,7 +63,8 @@ function HeroTruckCamera() {
     const px = kinetics.smoothPointerX * 0.35;
     const py = -kinetics.smoothPointerY * 0.25;
 
-    state.camera.position.set(px, currentPos.current.y + py, currentPos.current.z - portalZOffset);
+    const aspectScale = state.viewport.aspect < 1.2 ? 1.2 / Math.max(state.viewport.aspect, 0.5) : 1.0;
+    state.camera.position.set(px, currentPos.current.y + py, (currentPos.current.z - portalZOffset) * aspectScale);
     state.camera.rotation.set(
       (pitchDeg * (Math.PI / 180)) - kinetics.smoothPointerY * 0.035 + kinetics.velocityPitch,
       kinetics.smoothPointerX * 0.045,

@@ -64,7 +64,7 @@ export function useGuideStationTimeline(sequenceElement: RefObject<HTMLElement |
         trigger: element,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.8,
+        scrub: true,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           progressState.target = self.progress;

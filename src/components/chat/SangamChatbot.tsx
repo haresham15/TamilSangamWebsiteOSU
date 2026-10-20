@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import {
   X,
   Send,
@@ -47,8 +49,13 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
   const { playClick, playWoodClick, playBell, playWhoosh, playSilkSwish } = useAudio();
 
   const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const isControlled = externalIsOpen !== undefined;
   const isOpen = isControlled ? externalIsOpen : internalIsOpen;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleClose = () => {
     if (externalOnClose) {
@@ -57,6 +64,8 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
       setInternalIsOpen(false);
     }
   };
+
+  useModalScrollLock(isOpen, handleClose);
 
   const handleToggle = () => {
     if (isControlled) {
@@ -253,54 +262,55 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
         </div>
       )}
 
-      {/* 2. Chat Drawer Panel */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 30, scale: 0.96 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] as const }}
-            className="fixed bottom-16 sm:bottom-20 right-3 sm:right-6 z-50 w-[calc(100vw-24px)] sm:w-[420px] max-h-[calc(100dvh-80px)] sm:max-h-[620px] h-[75dvh] sm:h-[80vh] flex flex-col bg-[#FAF7F2] border border-[#161210]/20 shadow-[0_16px_40px_rgba(22,18,16,0.22)] overflow-hidden text-left"
-          >
-            {/* Header */}
-            <div className="p-3.5 bg-[#161210] border-b border-[#D4AF37]/30 flex items-center justify-between text-[#FAF7F2] shrink-0">
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 bg-[#2A2420] border border-[#D4AF37]/40 flex items-center justify-center shrink-0">
-                  <Bot className="w-4 h-4 text-[#D4AF37]" />
+      {/* 2. Chat Drawer Panel (Mounted in Portal to eliminate overflow-hidden clipping) */}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 30, scale: 0.96 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] as const }}
+              className="fixed bottom-16 sm:bottom-20 right-3 sm:right-6 z-[100] w-[calc(100vw-24px)] sm:w-[420px] max-h-[min(85dvh,640px)] h-[min(75dvh,600px)] flex flex-col bg-[#FAF7F2] border border-[#161210]/20 shadow-[0_16px_40px_rgba(22,18,16,0.22)] overflow-hidden text-left"
+            >
+              {/* Header */}
+              <div className="p-3.5 bg-[#161210] border-b border-[#D4AF37]/30 flex items-center justify-between text-[#FAF7F2] shrink-0">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 bg-[#2A2420] border border-[#D4AF37]/40 flex items-center justify-center shrink-0">
+                    <Bot className="w-4 h-4 text-[#D4AF37]" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold font-display text-white tracking-tight">
+                      Nanba (நண்பா)
+                    </h3>
+                    <p className="text-[10px] font-mono text-[#D4AF37]/80">
+                      Sangam Student Assistant
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-sm font-bold font-display text-white tracking-tight">
-                    Nanba (நண்பா)
-                  </h3>
-                  <p className="text-[10px] font-mono text-[#D4AF37]/80">
-                    Sangam Student Assistant
-                  </p>
-                </div>
-              </div>
 
-              <div className="flex items-center gap-1.5">
-                <button
-                  onClick={() => setIsEditorOpen(!isEditorOpen)}
-                  title="Edit Knowledge Base"
-                  aria-label="Toggle Knowledge Base Editor"
-                  className={`p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center border text-xs font-mono font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] transition-[background-color,border-color,color] duration-150 cursor-pointer ${
-                    isEditorOpen
-                      ? "bg-[#D4AF37] text-[#161210] border-[#D4AF37]"
-                      : "bg-[#2A2420] text-[#FAF7F2] border-[#D4AF37]/30 hover:text-white hover:border-[#D4AF37]"
-                  }`}
-                >
-                  <Database className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  onClick={handleClose}
-                  aria-label="Close Chat"
-                  className="p-1.5 bg-[#2A2420] border border-[#D4AF37]/30 text-[#FAF7F2]/80 hover:text-white hover:border-[#C85A32] transition-colors"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setIsEditorOpen(!isEditorOpen)}
+                    title="Edit Knowledge Base"
+                    aria-label="Toggle Knowledge Base Editor"
+                    className={`p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center border text-xs font-mono font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] transition-[background-color,border-color,color] duration-150 cursor-pointer ${
+                      isEditorOpen
+                        ? "bg-[#D4AF37] text-[#161210] border-[#D4AF37]"
+                        : "bg-[#2A2420] text-[#FAF7F2] border-[#D4AF37]/30 hover:text-white hover:border-[#D4AF37]"
+                    }`}
+                  >
+                    <Database className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={handleClose}
+                    aria-label="Close Chat"
+                    className="p-2 min-w-[48px] min-h-[48px] flex items-center justify-center bg-[#2A2420] border border-[#D4AF37]/30 text-[#FAF7F2]/80 hover:text-white hover:border-[#C85A32] transition-colors cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-            </div>
 
             {/* Quick Knowledge Base Editor Modal / Drawer Slide-in */}
             <AnimatePresence>
@@ -386,7 +396,7 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
             </AnimatePresence>
 
             {/* Messages Scroll Area */}
-            <div className="flex-1 p-3.5 space-y-3.5 overflow-y-auto bg-[#faf8f5]">
+            <div data-lenis-prevent className="flex-1 p-3.5 space-y-3.5 overflow-y-auto overscroll-contain bg-[#faf8f5]">
               {messages.map((m) => (
                 <div
                   key={m.id}
@@ -493,7 +503,9 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
-    </>
-  );
+      </AnimatePresence>,
+      document.body
+    )}
+  </>
+);
 };

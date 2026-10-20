@@ -5,7 +5,7 @@ import { Environment, Lightformer } from "@react-three/drei";
 
 export function SangamStudioEnvironment() {
   return (
-    <Environment frames={1} resolution={256}>
+    <Environment frames={1} resolution={128}>
       {/* Warm Ivory Key Strip (-X) */}
       <Lightformer
         form="rect"

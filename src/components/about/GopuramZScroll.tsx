@@ -196,10 +196,11 @@ const sharedCoreMat = new THREE.MeshPhysicalMaterial({
 const CURSOR_LIGHT_COLOR = "#FFB366";
 
 const STAGE_RANGES = [
-  { start: 0.00, end: 0.20 },
-  { start: 0.24, end: 0.44 },
-  { start: 0.48, end: 0.68 },
-  { start: 0.72, end: 0.86 },
+  { start: 0.00, end: 0.16 },
+  { start: 0.16, end: 0.32 },
+  { start: 0.32, end: 0.48 },
+  { start: 0.48, end: 0.64 },
+  { start: 0.64, end: 0.80 },
 ];
 
 // Optimized abstract cinematic Bronze Rings with lightweight shared geometry
@@ -221,9 +222,9 @@ function BronzeRing({
     const dt = Math.min(delta, 0.05);
     if (meshRef.current) {
       const p = scrollProgressRef.current;
-      // 4-stage gyroscopic detent curve: accelerates between chapters and settles into alignment
-      const chapterPhase = p * 4.0;
-      const detentOffset = (Math.sin(chapterPhase * Math.PI * 2.0) / (Math.PI * 8.0)) * 0.55;
+      // 5-stage gyroscopic detent curve: accelerates between chapters and settles into alignment
+      const chapterPhase = p * 5.0;
+      const detentOffset = (Math.sin(chapterPhase * Math.PI * 2.0) / (Math.PI * 10.0)) * 0.55;
       const detentP = p - detentOffset;
 
       // Mandala coplanar concentric alignment as p -> 1.0
@@ -302,17 +303,18 @@ function TierText({
         element.style.transform = p < range.start ? "translateY(24px)" : "translateY(-24px)";
         return;
       }
-      const enterDur = 0.04;
-      const exitDur = 0.04;
+      const isFirst = index === 0;
+      const enterDur = isFirst ? 0 : 0.035;
+      const exitDur = 0.035;
       let opacity = 1;
       let yOffset = 0;
-      if (p < range.start + enterDur) {
+      if (!isFirst && p < range.start + enterDur) {
         const norm = (p - range.start) / enterDur;
-        opacity = norm;
+        opacity = Math.max(0, Math.min(1, norm));
         yOffset = 24 * (1 - norm);
       } else if (p > range.end - exitDur) {
         const norm = (range.end - p) / exitDur;
-        opacity = norm;
+        opacity = Math.max(0, Math.min(1, norm));
         yOffset = -24 * (1 - norm);
       }
       element.style.opacity = String(opacity);
@@ -326,8 +328,14 @@ function TierText({
       <div
         ref={textRef}
         className="absolute inset-y-0 left-0 z-10 flex w-full flex-col justify-center px-6 py-24 pointer-events-none sm:px-12 lg:w-7/12 lg:pl-[7vw] lg:pr-12 bg-[radial-gradient(ellipse_at_35%_50%,var(--color-hero-indigo)_0%,transparent_74%)] transition-transform duration-75"
-        style={{ opacity: index === 0 ? 1 : 0, visibility: index === 0 ? "visible" : "hidden" }}
+        style={{ opacity: index === 0 ? 1 : 0, visibility: index === 0 ? "visible" : "hidden", transform: "translateY(0px)" }}
       >
+          <div className="font-mono text-xs uppercase tracking-widest text-antique-gold/90 mb-3 flex items-center gap-2">
+            <span>{`// CHAPTER 0${index + 1}`}</span>
+            <span aria-hidden="true">·</span>
+            <span>{locale === "ta" ? tier.subtitleTa : tier.subtitleEn}</span>
+          </div>
+
           <Heading lang={locale === "ta" ? "ta" : "en"} className={`text-3xl sm:text-5xl xl:text-6xl text-paper mb-5 ${locale === "ta" ? "font-tamil leading-relaxed tracking-normal" : "font-display leading-[1.12] tracking-tight"}`}>
             {locale === "ta" ? tier.titleTa : tier.titleEn}
           </Heading>
@@ -335,7 +343,7 @@ function TierText({
           <p
             lang="ta"
             style={{ letterSpacing: 0 }}
-            className="text-lg sm:text-2xl text-warm-amber font-tamil leading-relaxed mb-5"
+            className="text-lg sm:text-2xl text-turmeric-gold font-tamil leading-relaxed mb-5"
           >
             {tier.titleTa}
           </p>
@@ -370,18 +378,18 @@ function AscendingGopuramCamera({
     const kinetics = kineticsRef.current.update(rawP, state.pointer, dt);
     const p = kinetics.smoothProgress;
 
-    // Gyroscopic Chapter Detents: locks into alignment at chapter holds
-    const chapterPhase = p * 4.0;
-    const detentOffset = (Math.sin(chapterPhase * Math.PI * 2.0) / (Math.PI * 8.0)) * 0.55;
+    // Gyroscopic Chapter Detents: locks into alignment at chapter holds across all 5 tiers
+    const chapterPhase = p * 5.0;
+    const detentOffset = (Math.sin(chapterPhase * Math.PI * 2.0) / (Math.PI * 10.0)) * 0.55;
     const detentP = p - detentOffset;
 
-    // 5 rings spaced 20 units apart. Z goes from 12 to -52.
+    // 5 rings spaced 20 units apart (0, -20, -40, -60, -80). Z travels from 12 to -88.
     const startZ = 12;
-    const endZ = -52;
+    const endZ = -88;
     const targetZ = THREE.MathUtils.lerp(startZ, endZ, detentP);
 
-    // Mandala Alignment & Camera Push Exit (p = 0.82 -> 1.00)
-    const exitT = Math.max(0, Math.min(1, (p - 0.82) / 0.18));
+    // Mandala Alignment & Camera Push Exit (p = 0.80 -> 1.00)
+    const exitT = Math.max(0, Math.min(1, (p - 0.80) / 0.20));
     const exitPush = exitT * exitT * 8.0;
 
     // Pointer parallax
@@ -468,12 +476,19 @@ export function GopuramZScroll() {
       {mounted && !isStatic ? (
         <GopuramScene scrollProgressRef={scrollProgressRef} isMobile={isMobile} locale={locale} />
       ) : (
-        <div className="relative z-10 flex min-h-dvh flex-col justify-center gap-6 px-6 py-32 sm:px-16 max-w-4xl">
-          <h1 lang={locale === "ta" ? "ta" : "en"} className={`text-4xl sm:text-6xl ${locale === "ta" ? "font-tamil leading-relaxed" : "font-display"}`}>
-            {locale === "ta" ? TIERS[0].titleTa : TIERS[0].titleEn}
-          </h1>
-          <p lang="ta" className="font-tamil text-xl leading-relaxed text-sangam-mint">{TIERS[0].titleTa}</p>
-          <p lang={locale === "ta" ? "ta" : "en"} className="text-lg leading-relaxed">{locale === "ta" ? TIERS[0].descTa : TIERS[0].descEn}</p>
+        <div className="relative z-10 flex min-h-dvh flex-col justify-center gap-8 px-6 py-32 sm:px-16 max-w-4xl">
+          {TIERS.map((tierItem, idx) => (
+            <div key={tierItem.id} className="space-y-2 border-b border-paper/10 pb-6 last:border-b-0">
+              <span className="font-mono text-xs uppercase tracking-widest text-antique-gold block">
+                {`// CHAPTER 0${idx + 1} · ${locale === "ta" ? tierItem.subtitleTa : tierItem.subtitleEn}`}
+              </span>
+              <h2 lang={locale === "ta" ? "ta" : "en"} className={`text-2xl sm:text-4xl text-paper ${locale === "ta" ? "font-tamil leading-relaxed" : "font-display"}`}>
+                {locale === "ta" ? tierItem.titleTa : tierItem.titleEn}
+              </h2>
+              <p lang="ta" className="font-tamil text-lg leading-relaxed text-turmeric-gold">{tierItem.titleTa}</p>
+              <p lang={locale === "ta" ? "ta" : "en"} className="text-base text-paper/80 leading-relaxed">{locale === "ta" ? tierItem.descTa : tierItem.descEn}</p>
+            </div>
+          ))}
         </div>
       )}
     </HeroScrollStage>

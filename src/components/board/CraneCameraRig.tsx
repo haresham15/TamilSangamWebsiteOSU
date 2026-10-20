@@ -24,7 +24,7 @@ function easeInOutCubic(x: number): number {
 export function CraneCameraRig({ scrollProgress }: CraneCameraRigProps) {
   const targetPos = useMemo(() => new THREE.Vector3(), []);
   const fpsRef = useRef({ frames: 0, lastTime: 0 });
-  const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
+  const kineticsRef = useRef(createHeroKineticsTracker(4.2, 5.0, 4.0));
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
@@ -38,7 +38,8 @@ export function CraneCameraRig({ scrollProgress }: CraneCameraRigProps) {
     useBoardHeroStore.getState().setScrollProgress(p);
 
     // 1. Compute physical crane target position framing the Chola centerpiece and lamps
-    const targetZ = THREE.MathUtils.lerp(30, 5.2, easedP);
+    const aspectScale = state.viewport.aspect < 1.2 ? 1.2 / Math.max(state.viewport.aspect, 0.5) : 1.0;
+    const targetZ = THREE.MathUtils.lerp(30 * aspectScale, 5.2 * aspectScale, easedP);
     const swayX = Math.sin(p * 6.0) * 0.12 + kinetics.smoothPointerX * 0.35;
 
     // Camera cranes from an elevated 2.22m vantage point to glide above the Chola crown
