@@ -222,7 +222,7 @@ export default function BoardPage() {
       </div>
 
       <EditorialSheetHandoff
-        badge="DEMOCRATIC COUNCIL"
+        badge="EXECUTIVE LEADERSHIP"
         sublabel="OFFICERS 2026–2027"
         className="text-hearth-espresso"
         overflowClass="overflow-x-clip"

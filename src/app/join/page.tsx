@@ -24,14 +24,7 @@ const JoinHeroCanvas = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[70dvh] flex flex-col items-center justify-center bg-hero-espresso text-antique-gold font-sans text-sm gap-3">
-        <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-antique-gold animate-pulse" />
-          <span className="tracking-widest">
-            Entering the morning campus...
-          </span>
-        </div>
-      </div>
+      <div className="w-full h-[70dvh] bg-hero-espresso" aria-hidden="true" />
     ),
   }
 );
