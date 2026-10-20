@@ -38,6 +38,7 @@ export const FloatingNav: React.FC = () => {
   // Visibility & Contextual Backdrop State
   const [isPastHero, setIsPastHero] = useState(false);
   const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const scrollStateRef = useRef({ isPastHero: false, isScrolledDown: false });
 
   // Dark 3D Hero sections at the top of specific pages
   const darkHeroRoutes = ["/", "/events", "/about", "/board"];
@@ -83,8 +84,18 @@ export const FloatingNav: React.FC = () => {
     const evaluateScroll = () => {
       const scrollY = window.scrollY;
       const threshold = getHeroThreshold();
-      setIsPastHero(threshold === 0 || scrollY >= threshold);
-      setIsScrolledDown(scrollY > 20);
+
+      const newIsPastHero = threshold === 0 || scrollY >= threshold;
+      const newIsScrolledDown = scrollY > 20;
+
+      if (
+        scrollStateRef.current.isPastHero !== newIsPastHero ||
+        scrollStateRef.current.isScrolledDown !== newIsScrolledDown
+      ) {
+        scrollStateRef.current = { isPastHero: newIsPastHero, isScrolledDown: newIsScrolledDown };
+        setIsPastHero(newIsPastHero);
+        setIsScrolledDown(newIsScrolledDown);
+      }
     };
 
     evaluateScroll();
