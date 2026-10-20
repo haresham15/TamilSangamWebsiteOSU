@@ -5,6 +5,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { PerspectiveCamera } from "@react-three/drei";
 import { leoKinematics } from "@/store/leoHeroStore";
+import { getScrollProgress } from "./useScrollCinematic";
 
 /**
  * LeoCameraRig (§Phase 1 Directive)
@@ -39,6 +40,10 @@ export function LeoCameraRig() {
     // 3. Smoothly interpolate lookAt vector for buttery smooth panning
     currentLookAt.current.lerp(leoKinematics.targetLookAt, dampFactor);
     cam.lookAt(currentLookAt.current);
+
+    // 4. Smooth Technocrane Dutch-roll banking along the spiral descent (±0.018 rad)
+    const roll = Math.sin(getScrollProgress() * Math.PI * 2) * 0.018;
+    cam.rotation.z += roll;
   });
 
   return (
