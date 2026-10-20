@@ -25,7 +25,7 @@ const NAV_ROUTES: NavRoute[] = [
   { href: "/about", en: "About", ta: "அறிமுகம்" },
   { href: "/board", en: "Board", ta: "அவை" },
   { href: "/gallery", en: "Gallery", ta: "நினைவுகள்" },
-  { href: "/guide", en: "Guide & FAQ", ta: "வழிகாட்டி & கேள்வி-பதில்" },
+  { href: "/guide", en: "Guide & FAQ", ta: "வழிகாட்டி" },
   { href: "/suggestions", en: "Ideas", ta: "கருத்து" },
 ];
 
@@ -45,8 +45,9 @@ export const FloatingNav: React.FC = () => {
   const [isScrolledDown, setIsScrolledDown] = useState(false);
 
   // Dark 3D Hero sections at the top of specific pages
+  const normalizedPath = pathname.replace(/\/+$/, "") || "/";
   const darkHeroRoutes = ["/", "/events", "/about", "/board", "/gallery", "/guide", "/suggestions", "/join"];
-  const isDarkHero = darkHeroRoutes.includes(pathname) && !isPastHero;
+  const isDarkHero = darkHeroRoutes.includes(normalizedPath) && !isPastHero;
 
   // References for Gooey Active Indicator & Magnetic Mechanics
   const headerRef = useRef<HTMLElement>(null);
@@ -439,11 +440,11 @@ export const FloatingNav: React.FC = () => {
           <nav
             ref={navContainerRef}
             aria-label="Primary Navigation"
-            className="hidden lg:flex items-center gap-x-10 xl:gap-x-12 relative py-2"
+            className="hidden lg:flex items-center gap-x-3.5 lg:gap-x-5 xl:gap-x-8 2xl:gap-x-10 relative py-2"
           >
             {/* Gooey Active Indicator Track (rests above active link) */}
             <div
-              className="absolute -top-2 left-0 w-full h-3 pointer-events-none overflow-visible"
+              className="absolute -top-1.5 left-0 w-full h-3 pointer-events-none overflow-visible"
               style={{ filter: "url(#muttram-gooey-nav)" }}
               aria-hidden="true"
             >
@@ -485,50 +486,40 @@ export const FloatingNav: React.FC = () => {
                     }}
                     onClick={handleLinkClick}
                     aria-current={isActive ? "page" : undefined}
-                    className="relative flex items-center justify-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-xs px-2.5 py-1"
+                    className="relative flex flex-col items-center justify-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-xs px-2 sm:px-2.5 py-1"
                     style={{ willChange: "transform" }}
                   >
-                    {/* Vertical Masked Bilingual Ticker */}
-                    <div className="relative h-5 overflow-hidden flex flex-col justify-center items-center">
-                      {/* English Primary Slot */}
-                      <span
-                        className={`font-sans text-[13px] xl:text-[14px] leading-tight tracking-tight transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                          isActive
-                            ? "-translate-y-full opacity-0 pointer-events-none"
-                            : "translate-y-0 group-hover:-translate-y-full group-hover:opacity-0 group-focus-visible:-translate-y-full"
-                        } ${
-                          isDarkHero
-                            ? "font-medium text-[#FAF9F6]/85 group-hover:text-[#FAF9F6]"
-                            : "font-medium text-[#2A2825]/85 group-hover:text-[#2A2825]"
-                        }`}
-                      >
-                        {locale === "ta" ? route.ta : route.en}
-                      </span>
+                    {/* Primary Navigation Text */}
+                    <span
+                      className={`font-sans text-[13px] xl:text-[14px] leading-tight tracking-tight whitespace-nowrap transition-colors duration-200 ${
+                        isDarkHero
+                          ? isActive
+                            ? "font-semibold text-[#FAF9F6]"
+                            : "font-medium text-[#FAF9F6]/85 group-hover:text-white"
+                          : isActive
+                          ? "font-semibold text-[#2A2825]"
+                          : "font-medium text-[#2A2825]/85 group-hover:text-[#161210]"
+                      }`}
+                    >
+                      {locale === "ta" ? route.ta : route.en}
+                    </span>
 
-                      {/* Tamil Paired Slot (Swaps up on Hover/Focus/Active) */}
-                      <span
-                        lang="ta"
-                        style={{ letterSpacing: 0 }}
-                        className={`absolute inset-0 flex items-center justify-center gap-1.5 font-tamil text-[12px] xl:text-[13px] leading-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none ${
-                          isActive
-                            ? "translate-y-0 opacity-100"
-                            : "translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
-                        } ${
-                          isDarkHero
-                            ? "text-[#E5A93C] font-semibold"
-                            : "text-[#B85C38] font-semibold"
-                        }`}
-                      >
-                        {isActive && (
-                          <span
-                            className={`w-1 h-1 rounded-full shrink-0 ${
-                              isDarkHero ? "bg-[#E5A93C]" : "bg-[#B85C38]"
-                            }`}
-                          />
-                        )}
-                        <span>{locale === "ta" ? route.en : route.ta}</span>
-                      </span>
-                    </div>
+                    {/* Secondary Color Text (Tamil Subtitle - Illuminated & Always Visible, Never Cut Off) */}
+                    <span
+                      lang="ta"
+                      style={{ letterSpacing: 0 }}
+                      className={`font-tamil text-[10px] xl:text-[11px] leading-none mt-1 whitespace-nowrap transition-all duration-200 pointer-events-none ${
+                        isDarkHero
+                          ? isActive
+                            ? "text-[#E5A93C] font-semibold opacity-100"
+                            : "text-[#E5A93C]/75 font-medium opacity-65 group-hover:opacity-100 group-hover:text-[#E5A93C]"
+                          : isActive
+                          ? "text-[#B85C38] font-semibold opacity-100"
+                          : "text-[#B85C38]/75 font-medium opacity-65 group-hover:opacity-100 group-hover:text-[#B85C38]"
+                      }`}
+                    >
+                      {locale === "ta" ? route.en : route.ta}
+                    </span>
                   </Link>
                 </div>
               );
