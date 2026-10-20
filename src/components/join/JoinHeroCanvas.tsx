@@ -24,6 +24,7 @@ import { FOG_COLOR, FOG_DENSITY, SUN_POS } from "./env/sun";
 import { JoinMaterialsManager, type IronVariant } from "./JoinMaterialsManager";
 import { MorningCampusVignette } from "./vignette/MorningCampusVignette";
 import { NanbanQuadEnvironment } from "./NanbanQuadEnvironment";
+import { soundEngine } from "@/lib/soundEngine";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -66,6 +67,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
   const gateProgressRef = useRef(0);
   const skipLinkRef = useRef<HTMLAnchorElement>(null);
   const vignetteRef = useRef<HTMLDivElement>(null);
+  const hasChimedGatesRef = useRef(false);
 
   // Dev test helper for deterministic Playwright captures (§8)
   useEffect(() => {
@@ -178,9 +180,16 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
           // Fully open (1.0) by p = 0.75, giving clearance margin before threshold pass
           if (p < 0.18) {
             gateProgressRef.current = 0;
+            if (p < 0.12) {
+              hasChimedGatesRef.current = false;
+            }
           } else if (p >= 0.72) {
             gateProgressRef.current = 1.0;
           } else {
+            if (!hasChimedGatesRef.current) {
+              hasChimedGatesRef.current = true;
+              soundEngine.playTempleChime();
+            }
             // Cubic smooth easing for natural iron inertia
             const rawT = (p - 0.18) / 0.54;
             gateProgressRef.current = rawT * rawT * (3 - 2 * rawT);

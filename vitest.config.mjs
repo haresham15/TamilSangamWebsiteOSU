@@ -3,7 +3,10 @@ import path from "node:path";
 
 export default defineConfig({
   test: {
-    include: ["src/lib/calendar/**/*.test.ts"],
+    include: [
+      "src/lib/calendar/**/*.test.ts",
+      "src/lib/soundEngine.test.ts",
+    ],
     environment: "node",
   },
   resolve: {

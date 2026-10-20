@@ -16,6 +16,7 @@ import CountUp from "@/components/CountUp";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
 import { audioLayer } from "@/utils/audioLayer";
+import { soundEngine } from "@/lib/soundEngine";
 import { SANGAM_CIPHER_CHARS } from "@/utils/scrambleTerminal";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
@@ -174,7 +175,16 @@ export default function HomePage() {
         tl.fromTo(
           tamil,
           { opacity: 0, y: 35, filter: "blur(10px)" },
-          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.04, ease: "power2.out" },
+          {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 0.04,
+            ease: "power2.out",
+            onStart: () => {
+              soundEngine.playTempleChime();
+            },
+          },
           0.53
         );
       }

@@ -115,7 +115,7 @@ export function SilkHoverPillars() {
         {/* Massive Airy Vertical Sections (No rigid grid borders) */}
         {/* Strict CSS Grid Hanging Indent (Zero Boxes, 1px Grounding Line) */}
         <div className="w-full border-t border-[#E5DDD0]">
-          {PILLAR_ROWS.map((pillar) => {
+          {PILLAR_ROWS.map((pillar, idx) => {
             return (
               <Link
                 key={pillar.id}
@@ -124,7 +124,7 @@ export function SilkHoverPillars() {
                 onMouseEnter={() => {
                   setActiveRow(pillar.id);
                   playSilkSwish(0.35);
-                  playMarimba();
+                  playMarimba(idx);
                 }}
                 onMouseLeave={() => setActiveRow(null)}
                 onFocus={() => setActiveRow(pillar.id)}

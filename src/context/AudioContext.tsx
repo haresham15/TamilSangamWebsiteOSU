@@ -1,3 +1,4 @@
+// src/context/AudioContext.tsx
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
@@ -5,7 +6,6 @@ import { soundEngine } from "@/lib/soundEngine";
 import { audio } from "@/audio/AudioController";
 import { audioLayer } from "@/utils/audioLayer";
 import { armAudioUnlock } from "@/audio/armUnlock";
-import { playHearthAmbience, stopHearthAmbience, playKuralChime } from "@/audio/sounds";
 
 interface AudioContextType {
   isSoundEnabled: boolean;
@@ -19,8 +19,12 @@ interface AudioContextType {
   playSilkSwish: (gain?: number) => void;
   playSyllable: (syllable: string) => void;
   playAcousticString: (stringIndex: number, strength?: number) => void;
-  playMarimba: (freq?: number) => void;
+  playMarimba: (freqOrIndex?: number) => void;
   playCardSlide: (volume?: number) => void;
+  playPillarHover: (indexOrKey?: number | string) => void;
+  playArchiveBrush: () => void;
+  playTempleChime: () => void;
+  playMicroTap: () => void;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -59,11 +63,8 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     }
 
     if (nextState) {
-      // Kural chime confirms audio-on; hearth ambience begins fading in
-      playKuralChime();
-      playHearthAmbience();
-    } else {
-      stopHearthAmbience();
+      // Temple bell harmonic shimmer confirms unmuted state; Tambura drone begins breathing in
+      soundEngine.playTempleChime();
     }
   };
 
@@ -72,29 +73,21 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       value={{
         isSoundEnabled,
         toggleSound,
-        playBell: (freq) => soundEngine.playTempleBell(freq),
+        playBell: () => soundEngine.playTempleChime(),
         playThump: (pitch) => soundEngine.playParaiThump(pitch),
-        playClick: () => {
-          soundEngine.playWoodClick();
-          audioLayer.playWarmWoodClick();
-        },
-        playWoodClick: () => {
-          soundEngine.playWoodClick();
-          audioLayer.playWarmWoodClick();
-        },
+        playClick: () => soundEngine.playMicroTap(),
+        playWoodClick: () => soundEngine.playMicroTap(),
         playFlour: () => soundEngine.playFlourChime(),
-        playWhoosh: (gain) => {
-          soundEngine.playWhoosh(gain);
-          audioLayer.playCinematicWhoosh(gain);
-        },
-        playSilkSwish: (gain) => {
-          soundEngine.playSilkSwish(gain);
-          audioLayer.playSilkSwish(gain);
-        },
+        playWhoosh: (gain) => soundEngine.playWhoosh(gain),
+        playSilkSwish: (gain) => soundEngine.playSilkSwish(gain),
         playSyllable: (s) => soundEngine.playSolkattuSyllable(s),
         playAcousticString: (idx, strength) => soundEngine.playAcousticString(idx, strength),
-        playMarimba: (freq) => soundEngine.playMarimbaTransient(freq),
-        playCardSlide: (vol) => soundEngine.playCardSlideSwoosh(vol),
+        playMarimba: (val) => soundEngine.playPillarHover(val ?? 0),
+        playCardSlide: () => soundEngine.playArchiveBrush(),
+        playPillarHover: (val) => soundEngine.playPillarHover(val ?? 0),
+        playArchiveBrush: () => soundEngine.playArchiveBrush(),
+        playTempleChime: () => soundEngine.playTempleChime(),
+        playMicroTap: () => soundEngine.playMicroTap(),
       }}
     >
       {children}

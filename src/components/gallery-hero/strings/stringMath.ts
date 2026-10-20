@@ -17,12 +17,12 @@ export interface GuitarStringSpec {
 }
 
 export const GUITAR_STRINGS: GuitarStringSpec[] = [
-  { index: 0, note: "E2", name: "Low E", radius: 0.090, isWound: true, fundamentalHz: 2.00, gain: 1.0, phase: 0.0 },
-  { index: 1, note: "A2", name: "A", radius: 0.075, isWound: true, fundamentalHz: 2.67, gain: 0.95, phase: 1.12 },
-  { index: 2, note: "D3", name: "D", radius: 0.060, isWound: true, fundamentalHz: 3.56, gain: 0.90, phase: 2.34 },
-  { index: 3, note: "G3", name: "G", radius: 0.045, isWound: false, fundamentalHz: 4.76, gain: 0.80, phase: 3.45 },
-  { index: 4, note: "B3", name: "B", radius: 0.035, isWound: false, fundamentalHz: 5.99, gain: 0.70, phase: 4.56 },
-  { index: 5, note: "E4", name: "High e", radius: 0.028, isWound: false, fundamentalHz: 8.00, gain: 0.60, phase: 5.67 },
+  { index: 0, note: "D3", name: "Sa (Low)", radius: 0.090, isWound: true, fundamentalHz: 2.00, gain: 1.0, phase: 0.0 },
+  { index: 1, note: "A3", name: "Pa (Low)", radius: 0.075, isWound: true, fundamentalHz: 2.67, gain: 0.95, phase: 1.12 },
+  { index: 2, note: "D4", name: "Sa", radius: 0.060, isWound: true, fundamentalHz: 3.56, gain: 0.90, phase: 2.34 },
+  { index: 3, note: "F#4", name: "Ga3", radius: 0.045, isWound: false, fundamentalHz: 4.76, gain: 0.80, phase: 3.45 },
+  { index: 4, note: "A4", name: "Pa", radius: 0.035, isWound: false, fundamentalHz: 5.99, gain: 0.70, phase: 4.56 },
+  { index: 5, note: "D5", name: "Sa (Hi)", radius: 0.028, isWound: false, fundamentalHz: 8.00, gain: 0.60, phase: 5.67 },
 ];
 
 export interface StringPhysicsState {
