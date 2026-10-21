@@ -61,7 +61,9 @@ export const GuestbookField = forwardRef<HTMLInputElement & HTMLTextAreaElement,
               onChange={onChange}
               onKeyDown={onKeyDown}
               placeholder={placeholder}
-              className="w-full bg-transparent border-b-2 border-[#2A2825]/15 focus:border-[#B85C38] py-3 text-lg sm:text-xl font-sans text-[#2A2825] placeholder:text-[#2A2825]/30 focus:outline-none transition-colors duration-200 resize-none leading-relaxed"
+              aria-invalid={!!error}
+              aria-describedby={error ? `${id}-error` : undefined}
+              className="w-full bg-transparent border-b-2 border-[#2A2825]/15 focus:border-[#B85C38] focus:bg-[#2A2825]/[0.02] py-3 px-2 -ml-2 text-lg sm:text-xl font-sans text-[#2A2825] placeholder:text-[#2A2825]/30 focus:outline-none transition-colors duration-200 resize-none leading-relaxed"
             />
           ) : (
             <input
@@ -72,12 +74,14 @@ export const GuestbookField = forwardRef<HTMLInputElement & HTMLTextAreaElement,
               onChange={onChange}
               onKeyDown={onKeyDown}
               placeholder={placeholder}
-              className="w-full bg-transparent border-b-2 border-[#2A2825]/15 focus:border-[#B85C38] py-3 text-xl sm:text-2xl font-sans text-[#2A2825] placeholder:text-[#2A2825]/30 focus:outline-none transition-colors duration-200"
+              aria-invalid={!!error}
+              aria-describedby={error ? `${id}-error` : undefined}
+              className="w-full bg-transparent border-b-2 border-[#2A2825]/15 focus:border-[#B85C38] focus:bg-[#2A2825]/[0.02] py-3 px-2 -ml-2 text-xl sm:text-2xl font-sans text-[#2A2825] placeholder:text-[#2A2825]/30 focus:outline-none transition-colors duration-200"
             />
           )}
 
           {error && (
-            <p className="mt-2 text-sm font-sans text-[#B85C38] font-medium animate-fadeIn">
+            <p id={`${id}-error`} className="mt-2 text-sm font-sans text-[#B85C38] font-medium animate-fadeIn">
               {error}
             </p>
           )}
