@@ -114,24 +114,18 @@
 
 .depth-carousel__dots {
   position: absolute;
-  bottom: 16px;
+  bottom: 14px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 3000;
   display: flex;
   gap: 8px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(250, 249, 246, 0.88);
-  border: 1px solid rgba(42, 40, 37, 0.12);
-  box-shadow: 0 4px 16px rgba(42, 40, 37, 0.08);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  padding: 4px 8px;
 }
 
 .depth-carousel__dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   padding: 0;
   border: none;
   border-radius: 999px;
@@ -143,7 +137,7 @@
 }
 
 .depth-carousel__dot.is-active {
-  width: 24px;
+  width: 20px;
   background: #B85C38;
 }
 

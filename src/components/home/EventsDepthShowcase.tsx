@@ -104,12 +104,7 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
         {/* 1. LEFT COLUMN: SYNCHRONIZED EVENT DESCRIPTION CARD                       */}
         {/* ========================================================================= */}
         <div className="lg:col-span-5 flex flex-col justify-center">
-          <div className="group relative p-6 sm:p-8 bg-[#FAF9F6] border border-[#2A2825]/10 hover:border-[#B85C38]/40 rounded-2xl shadow-[0_12px_40px_rgba(42,40,37,0.06)] hover:shadow-[0_16px_48px_rgba(42,40,37,0.1)] transition-all cursor-pointer overflow-hidden">
-            
-            {/* Subtle Decorative Background Watermark */}
-            <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-5 font-serif text-8xl font-bold text-[#2A2825]">
-              {activeIndex + 1}
-            </div>
+          <div className="relative text-left pr-0 lg:pr-4">
 
             <AnimatePresence mode="wait">
               <motion.div
@@ -120,92 +115,77 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
                 transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
                 className="space-y-5 text-left"
               >
-                {/* Badge & Counter Row */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-[#E5A93C]/20 border border-[#E5A93C]/40 text-[#2A2825]">
-                      <Sparkles className="w-3 h-3 text-[#B85C38]" />
-                      <span>{locale === "ta" ? activeEvent.statusBadgeTa : activeEvent.statusBadgeEn}</span>
-                    </span>
-                    <span className="text-xs font-mono text-[#57524C] font-medium">
-                      {activeEvent.academicYear}
-                    </span>
-                  </div>
-
-                  <span className="text-xs font-mono font-semibold text-[#B85C38]">
+                {/* Clean Editorial Eyebrow */}
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <span className="uppercase tracking-widest text-[#B85C38] font-semibold">
+                    {locale === "ta" ? activeEvent.statusBadgeTa : activeEvent.statusBadgeEn} · {activeEvent.academicYear}
+                  </span>
+                  <span className="font-semibold text-[#57524C]/60 tracking-wider">
                     0{activeIndex + 1} / 0{recentEvents.length}
                   </span>
                 </div>
 
                 {/* Event Titles */}
-                <div>
-                  <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#2A2825] leading-tight">
+                <div className="space-y-1.5">
+                  <h3 className="font-serif text-3xl sm:text-4xl text-[#2A2825] font-normal leading-tight tracking-tight">
                     {locale === "ta" ? activeEvent.titleTa : activeEvent.titleEn}
                   </h3>
                   <p
                     lang="ta"
                     style={{ letterSpacing: 0 }}
-                    className="font-tamil text-sm text-[#B85C38] font-medium mt-1"
+                    className="font-serif text-base sm:text-lg text-[#B85C38] font-normal"
                   >
                     {locale === "ta" ? activeEvent.titleEn : activeEvent.titleTa}
                   </p>
                 </div>
 
-                {/* Logistics Bar (Date & Location) */}
-                <div className="pt-2 pb-1 border-t border-b border-[#2A2825]/10 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans text-[#57524C]">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 text-[#B85C38] shrink-0" />
-                    <span className="font-medium text-[#2A2825]">{activeEvent.date}</span>
+                {/* Logistics Bar (Clean Bordered Hairlines) */}
+                <div className="py-3.5 border-t border-b border-[#2A2825]/10 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono text-[#57524C]">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-[#B85C38]" />
+                    <span className="font-semibold text-[#2A2825]">{activeEvent.date}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-3.5 h-3.5 text-[#B85C38] shrink-0" />
+                  <div className="flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-[#B85C38]" />
                     <span>{activeEvent.time}</span>
                   </div>
-                  <div className="sm:col-span-2 flex items-center gap-2">
-                    <MapPin className="w-3.5 h-3.5 text-[#B85C38] shrink-0" />
+                  <div className="flex items-center gap-1.5 w-full sm:w-auto">
+                    <MapPin className="w-3.5 h-3.5 text-[#B85C38]" />
                     <span className="line-clamp-1">{activeEvent.location}</span>
                   </div>
                 </div>
 
                 {/* Event Description */}
-                <p className="font-sans text-sm text-[#57524C] leading-relaxed">
+                <p className="font-sans text-base text-[#57524C] leading-relaxed">
                   {locale === "ta" ? activeEvent.descriptionTa : activeEvent.descriptionEn}
                 </p>
 
-                {/* Action Row */}
-                <div className="pt-3 border-t border-[#2A2825]/10 flex items-center justify-between">
-                  <span className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-wider text-[#B85C38] group-hover:text-[#2A2825] transition-colors">
-                    <span>{locale === "ta" ? "முழு விபரம் அறிவீர்" : "Explore Dossier"}</span>
+                {/* Action Link */}
+                <div className="pt-2">
+                  <Link
+                    href={`/events/${activeEvent.slug}`}
+                    onClick={playClick}
+                    className="group inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-wider text-[#B85C38] hover:text-[#2A2825] transition-colors border-b border-[#B85C38]/40 pb-0.5"
+                  >
+                    <span>{locale === "ta" ? "முழு விபரம் அறிவீர்" : "Explore Gathering"}</span>
                     <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-                  </span>
-
-                  <span className="text-[11px] font-mono text-[#57524C]/60 uppercase tracking-widest">
-                    ARCHIVE · 0{activeIndex + 1}
-                  </span>
+                  </Link>
                 </div>
               </motion.div>
             </AnimatePresence>
-
-            {/* Invisible Stretched Link over the entire card */}
-            <Link
-              href={`/events/${activeEvent.slug}`}
-              onClick={playClick}
-              className="absolute inset-0 z-10"
-              aria-label={locale === "ta" ? activeEvent.titleTa : activeEvent.titleEn}
-            />
           </div>
         </div>
 
         {/* ========================================================================= */}
         {/* 2. RIGHT COLUMN: REACT BITS DEPTH CAROUSEL                                */}
         {/* ========================================================================= */}
-        <div className="lg:col-span-7 flex items-center justify-center relative min-h-[460px] sm:min-h-[500px]">
-          <div className="w-full h-[460px] sm:h-[500px] relative">
+        <div className="lg:col-span-7 flex items-center justify-center relative min-h-[520px] sm:min-h-[580px]">
+          <div className="w-full h-[520px] sm:h-[580px] relative">
             <DepthCarousel
               items={carouselItems}
-              cardWidth={310}
-              cardHeight={410}
-              radius={20}
+              cardWidth={380}
+              cardHeight={490}
+              radius={14}
               depth={210}
               spread={85}
               tilt={20}

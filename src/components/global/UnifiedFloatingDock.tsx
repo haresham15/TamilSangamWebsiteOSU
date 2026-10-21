@@ -6,6 +6,7 @@ import { Volume2, VolumeX, Search } from "lucide-react";
 import { useAudio } from "@/context/AudioContext";
 import { useLocale } from "@/context/LocaleContext";
 import { StarBorder } from "@/components/ui/react-bits";
+import { NanbaAvatar } from "@/components/chat/NanbaAvatar";
 
 interface UnifiedFloatingDockProps {
   onOpenSearch: () => void;
@@ -21,29 +22,28 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
   const pathname = usePathname();
   const { isSoundEnabled, toggleSound, playClick } = useAudio();
   const { locale } = useLocale();
-  const [isInHeroZone, setIsInHeroZone] = useState(false);
+  const normalizedPath = pathname.replace(/\/+$/, "") || "/";
+  const darkHeroRoutes = ["/", "/events", "/about", "/board", "/gallery", "/guide", "/suggestions", "/join"];
+  const isHeroRoute = darkHeroRoutes.includes(normalizedPath);
+  const [isInHeroZone, setIsInHeroZone] = useState(() => isHeroRoute);
 
   useEffect(() => {
-    const normalizedPath = pathname.replace(/\/+$/, "") || "/";
-    const darkHeroRoutes = ["/", "/events", "/about", "/board", "/gallery", "/guide", "/suggestions", "/join"];
-    const isHeroRoute = darkHeroRoutes.includes(normalizedPath);
-
     const evaluateScroll = () => {
       if (!isHeroRoute) {
         setIsInHeroZone(false);
         return;
       }
       const scrollY = window.scrollY;
-      const sheet = document.querySelector<HTMLElement>("[data-editorial-sheet], #monolith");
+      const sheet = document.querySelector<HTMLElement>("[data-editorial-sheet]");
       let pastHero = false;
       if (sheet) {
         const top = sheet.getBoundingClientRect().top;
-        pastHero = top <= 72;
+        pastHero = top <= 80;
       } else {
         pastHero = scrollY >= 800;
       }
-      // Retract/fade out dock during active 3D scroll immersion zone
-      setIsInHeroZone(scrollY > 32 && !pastHero);
+      // Retract/fade out dock during hero animation until user makes it through the animation
+      setIsInHeroZone(!pastHero);
     };
 
     evaluateScroll();
@@ -64,8 +64,8 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
           : "opacity-100 pointer-events-auto translate-y-0"
       }`}
     >
-      <StarBorder color="#D4AF37" trailColor="#C85A32" thickness={1} hover="lap">
-        <div className="bg-[#161210]/92 text-[#FAF7F2] border border-[#FAF7F2]/15 backdrop-blur-md rounded-full h-10 px-3.5 sm:px-4 flex items-center gap-2.5 sm:gap-3 shadow-[0_8px_32px_rgba(0,0,0,0.35)] transition-all duration-200">
+      <StarBorder className="rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.35)]" color="#D4AF37" trailColor="#C85A32" thickness={1}>
+        <div className="bg-[#161210] text-[#FAF7F2] border border-[#FAF7F2]/15 backdrop-blur-md rounded-full h-10 px-3.5 sm:px-4 flex items-center gap-2.5 sm:gap-3 transition-all duration-200">
         {/* 1. Ask Nanba Trigger */}
         <button
           type="button"
@@ -75,9 +75,9 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
           }}
           aria-label="Ask Nanba - OSU Tamil Sangam AI Assistant"
           aria-expanded={isChatOpen}
-          className="flex items-center gap-2 text-xs font-mono font-medium tracking-wide text-[#FAF7F2] hover:text-[#E5A93C] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#E5A93C] rounded-full py-1 pr-1"
+          className="group flex items-center gap-2 text-xs font-mono font-medium tracking-wide text-[#FAF7F2] hover:text-[#E5A93C] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#E5A93C] rounded-full py-1 pr-1"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#E5A93C] animate-pulse shrink-0" />
+          <NanbaAvatar size={18} className="w-[18px] h-[18px] shrink-0 transition-transform duration-200 group-hover:scale-115" />
           <span className="text-[11px] sm:text-xs">
             {locale === "ta" ? "நண்பா" : "Ask Nanba"}
           </span>

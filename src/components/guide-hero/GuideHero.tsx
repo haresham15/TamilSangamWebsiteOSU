@@ -11,7 +11,7 @@ import { getGuideStationProgress } from "./station/useGuideStationTimeline";
 
 const BoardView = dynamic(() => import("./BoardView"), {
   ssr: false,
-  loading: () => <div className="h-full w-full bg-[#0A0F14]" aria-hidden="true" />,
+  loading: () => <div className="h-full w-full bg-transparent" aria-hidden="true" />,
 });
 
 interface GuideHeroProps {
@@ -140,13 +140,13 @@ export function GuideHero({
       ref={runwayRef}
       id={id}
       aria-label="Sangam Junction Departure Board Introduction"
-      className="relative w-full h-[360vh] max-md:h-[280vh] bg-[#0A0F14] select-none"
+      className="relative w-full h-[360vh] max-md:h-[280vh] bg-transparent select-none"
       suppressHydrationWarning
     >
       {/* Sticky 100dvh viewport that stays locked for the entire 360vh runway */}
       <div
         ref={stickyViewportRef}
-        className="sticky top-0 left-0 h-dvh w-full overflow-hidden bg-[#0A0F14] m-0 p-0"
+        className="sticky top-0 left-0 h-dvh w-full overflow-hidden bg-transparent m-0 p-0"
       >
         <p aria-live="polite" className="sr-only">
           {source === "station" ? `Most asked: ${liveTitle}` : `Showing: ${liveTitle}`}

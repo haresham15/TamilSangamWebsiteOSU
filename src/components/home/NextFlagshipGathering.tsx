@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useLocale } from "@/context/LocaleContext";
@@ -69,6 +69,24 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
   const displayDate = liveEvent ? formatEventDateDisplay(liveEvent.start).toUpperCase() : config.telemetry.date;
   const displayTime = liveEvent ? formatEventTimeET(liveEvent.start, liveEvent.end, liveEvent.allDay) : config.telemetry.time;
   const displayLocation = liveEvent ? liveEvent.location.toUpperCase() : config.telemetry.location;
+
+  // Split location into primary venue name and optional street address / city if detailed
+  const { venueName, venueAddress } = useMemo(() => {
+    const raw = displayLocation.trim();
+    const parts = raw.split(",").map((p) => p.trim());
+    if (parts.length > 2) {
+      const addressIdx = parts.findIndex(
+        (p) => /^\d+\s+[A-Z]/i.test(p) || /^(COLUMBUS|OH|OHIO)\b/i.test(p)
+      );
+      if (addressIdx > 0) {
+        return {
+          venueName: parts.slice(0, addressIdx).join(", "),
+          venueAddress: parts.slice(addressIdx).join(", "),
+        };
+      }
+    }
+    return { venueName: raw, venueAddress: "" };
+  }, [displayLocation]);
 
   const actionHref = liveEvent
     ? (liveEvent.slug ? `/events/${liveEvent.slug}` : `/events?view=calendar&event=${encodeURIComponent(liveEvent.id)}`)
@@ -162,20 +180,20 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
 
             {/* Telemetry Ledger */}
             <div className="pt-2 border-t border-stone-300/40 divide-y divide-stone-300/40">
-              <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] font-medium">
+              <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 sm:gap-6">
+                <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] font-medium shrink-0">
                   DATE
                 </span>
-                <span className="font-serif text-base sm:text-lg text-[#2A2825] tracking-wide">
+                <span className="font-serif text-base sm:text-lg text-[#2A2825] tracking-wide sm:text-right">
                   {displayDate}
                 </span>
               </div>
 
-              <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] font-medium">
+              <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 sm:gap-6">
+                <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] font-medium shrink-0">
                   TIME
                 </span>
-                <span className="font-serif text-base sm:text-lg text-[#2A2825] tracking-wide">
+                <span className="font-serif text-base sm:text-lg text-[#2A2825] tracking-wide sm:text-right">
                   {displayTime}{" "}
                   <span className="text-xs font-sans text-[#57524C]">
                     (DOORS: {config.telemetry.doorsOpen})
@@ -183,20 +201,25 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
                 </span>
               </div>
 
-              <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] font-medium">
+              <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 sm:gap-6">
+                <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] font-medium shrink-0">
                   VENUE
                 </span>
-                <span className="font-serif text-base sm:text-lg text-[#2A2825] tracking-wide">
-                  {displayLocation}
+                <span className="font-serif text-base sm:text-lg text-[#2A2825] tracking-wide sm:text-right">
+                  {venueName}
+                  {venueAddress && (
+                    <span className="block text-xs font-sans text-[#57524C] tracking-normal mt-0.5">
+                      {venueAddress}
+                    </span>
+                  )}
                 </span>
               </div>
 
-              <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] font-medium">
+              <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 sm:gap-6">
+                <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] font-medium shrink-0">
                   ADMISSION
                 </span>
-                <span className="font-serif text-base sm:text-lg text-[#2A2825] tracking-wide">
+                <span className="font-serif text-base sm:text-lg text-[#2A2825] tracking-wide sm:text-right">
                   {config.telemetry.admission}
                 </span>
               </div>

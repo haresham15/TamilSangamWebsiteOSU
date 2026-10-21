@@ -12,6 +12,7 @@ export interface EditorialSheetHandoffProps {
   overflowClass?: string;
   showBackgroundCanvas?: boolean;
   backgroundCanvasVariant?: "light" | "espresso";
+  overlapHero?: boolean;
 }
 
 /**
@@ -30,12 +31,17 @@ export function EditorialSheetHandoff({
   overflowClass = "overflow-x-clip",
   showBackgroundCanvas = true,
   backgroundCanvasVariant = "light",
+  overlapHero = true,
 }: EditorialSheetHandoffProps) {
+  const overlapStyles = overlapHero
+    ? "-mt-[10vh] md:-mt-[12vh] rounded-t-[28px] shadow-[0_-24px_60px_rgba(18,13,11,0.45)] border-t border-[#D4AF37]/35"
+    : "mt-0 border-t border-[#161210]/10";
+
   return (
     <section
       id={id}
       data-editorial-sheet="true"
-      className={`relative z-20 w-full bg-[#FAF6F0] text-[#161210] -mt-[10vh] md:-mt-[12vh] rounded-t-[28px] shadow-[0_-24px_60px_rgba(18,13,11,0.45)] border-t border-[#D4AF37]/35 ${overflowClass} ${className}`.trim()}
+      className={`relative z-20 w-full bg-[#FAF6F0] text-[#161210] ${overlapStyles} ${overflowClass} ${className}`.trim()}
     >
       {/* Living Chola Monograph & Pulli Background Layer */}
       {showBackgroundCanvas && (

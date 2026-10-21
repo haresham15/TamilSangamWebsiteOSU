@@ -322,7 +322,7 @@ export default function HomePage() {
             style={staticHero ? { display: "none" } : undefined}
             id="monolith"
             ref={monolithRef}
-            className="absolute inset-0 z-20 w-full h-[100dvh] overflow-y-auto lg:overflow-y-auto xl:overflow-hidden grid grid-cols-1 lg:grid-cols-12 bg-[#FAF7F2] border-t border-[#161210]/10 text-[#161210]"
+            className="absolute inset-0 z-20 w-full h-[100dvh] overflow-y-auto grid grid-cols-1 lg:grid-cols-12 bg-[#FAF7F2] border-t border-[#161210]/10 text-[#161210]"
           >
             {/* Left Column (4 Cols - The Anchor, §PRD 9.1) */}
             <div className="lg:col-span-4 relative p-6 pt-16 sm:p-8 sm:pt-20 lg:p-8 lg:pt-20 xl:p-12 xl:pt-24 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#161210]/10 overflow-hidden">
@@ -499,7 +499,7 @@ export default function HomePage() {
           Warm Ivory (#FAF7F2), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
           Glides up over the pinned stage (p = 0.88 -> 1.00)
           ========================================================================= */}
-      <EditorialSheetHandoff id="flagship-gathering" badge="CAMPUS HEARTH" sublabel="COLUMBUS, OH">
+      <EditorialSheetHandoff id="flagship-gathering" badge="CAMPUS HEARTH" sublabel="COLUMBUS, OH" overlapHero={false}>
 
         {/* Puranaanuru 192 Sunlit Wisdom Banner */}
         <div className="bg-[#F4EFE6] py-6 px-6 text-center select-none">

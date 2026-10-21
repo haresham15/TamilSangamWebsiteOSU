@@ -431,13 +431,13 @@ function ScrollExpandIntroOverlay() {
           const r = (isMobile ? 20 : 24) * (1 - easeE);
           const borderW = Math.max(0, 2 * (1 - easeE));
 
-          // Expanding Visible Black Frame with thick solid black bezel matte & glowing gold rim
+          // Expanding Visible Black Frame with thick solid black bezel matte
           frameRef.current.style.width = `${w}vw`;
           frameRef.current.style.height = `${h}vh`;
           frameRef.current.style.borderRadius = `${r}px`;
-          frameRef.current.style.border = `${borderW > 0 ? `${borderW}px solid rgba(255, 184, 77, ${0.85 * borderOpacity})` : "none"}`;
+          frameRef.current.style.border = "none";
           frameRef.current.style.outline = "none";
-          frameRef.current.style.boxShadow = `0 0 0 9999px #050201, 0 0 ${35 * (1 - easeE)}px rgba(255, 184, 77, ${0.35 * borderOpacity})`;
+          frameRef.current.style.boxShadow = "0 0 0 9999px #050201";
           frameRef.current.style.opacity = `${borderOpacity}`;
         }
       }
@@ -481,7 +481,7 @@ function ScrollExpandIntroOverlay() {
 
   return (
     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden select-none">
-      {/* Expanding Visible Black Frame with Thick Black Bezel Matte & Gold Glow */}
+      {/* Expanding Visible Black Frame with Thick Black Bezel Matte */}
       <div
         ref={frameRef}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
@@ -489,9 +489,9 @@ function ScrollExpandIntroOverlay() {
           width: "34vw",
           height: "42vh",
           borderRadius: "24px",
-          border: "2px solid rgba(255, 184, 77, 0.85)",
+          border: "none",
           outline: "none",
-          boxShadow: "0 0 0 9999px #050201, 0 0 35px rgba(255, 184, 77, 0.35)",
+          boxShadow: "0 0 0 9999px #050201",
           willChange: "width, height, border-radius, opacity",
         }}
       />

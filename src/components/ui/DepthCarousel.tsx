@@ -420,6 +420,25 @@ export const DepthCarousel: React.FC<DepthCarouselProps> = ({
     }
   }, [data]);
 
+  // Responsive scale constraint for mobile viewports
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const updateScale = () => {
+      const w = el.clientWidth;
+      if (w > 0 && w < cardWidth + 40) {
+        scaleRef.current = Math.max(0.65, (w - 24) / cardWidth);
+      } else {
+        scaleRef.current = 1;
+      }
+      layout(posRef.current);
+    };
+    updateScale();
+    const ro = new ResizeObserver(updateScale);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [cardWidth, layout]);
+
   return (
     <div
       ref={rootRef}
@@ -465,7 +484,7 @@ export const DepthCarousel: React.FC<DepthCarouselProps> = ({
             {/* In-Card Title Teaser */}
             <div className="absolute bottom-4 left-4 right-4 z-10 text-left pointer-events-none">
               {item.badge && (
-                <span className="inline-block text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#E5A93C] text-[#1E1B18] mb-1.5 shadow-sm">
+                <span className="block text-[10px] font-mono font-semibold uppercase tracking-widest text-[#E5A93C] mb-1">
                   {item.badge}
                 </span>
               )}

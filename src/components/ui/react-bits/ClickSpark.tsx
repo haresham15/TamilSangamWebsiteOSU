@@ -112,12 +112,12 @@ export function ClickSpark({
 
   return (
     <>
-      {children}
+      {children ? <div className={className}>{children}</div> : null}
       {!shouldReduceMotion && (
         <canvas
           ref={canvasRef}
           aria-hidden="true"
-          className={`pointer-events-none fixed inset-0 z-[100] w-full h-full select-none ${className}`.trim()}
+          className="pointer-events-none fixed inset-0 z-[100] w-full h-full select-none"
         />
       )}
     </>

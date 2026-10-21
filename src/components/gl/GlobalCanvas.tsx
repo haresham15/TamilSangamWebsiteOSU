@@ -54,7 +54,7 @@ export function GlobalCanvas() {
   }
 
   return (
-    <div id="gl-root" aria-hidden="true">
+    <div id="gl-root" aria-hidden="true" className="fixed inset-0 w-full h-[100dvh] pointer-events-none z-[1] bg-transparent">
       <Canvas
         eventSource={source}
         eventPrefix="client"

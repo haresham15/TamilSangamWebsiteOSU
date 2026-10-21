@@ -35,7 +35,10 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const isLinksPage = pathname === "/links";
 
   return (
-    <ClickSpark sparkColor="#D4AF37" sparkCount={8} sparkRadius={18} duration={420} className="relative min-h-screen flex flex-col justify-between overflow-x-clip">
+    <div className="relative min-h-screen flex flex-col justify-between overflow-x-clip">
+      {/* Kolam Gold Click Spark Particles Overlay */}
+      <ClickSpark sparkColor="#D4AF37" sparkCount={8} sparkRadius={18} duration={420} />
+
       {/* 1. Global Floating Nav: Pure routing only */}
       {!isLinksPage && <FloatingNav />}
 
@@ -78,7 +81,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
 
       {/* 7. Director's Viewport Diagnostics HUD (§6) */}
       <DirectorHUD />
-    </ClickSpark>
+    </div>
   );
 };
 

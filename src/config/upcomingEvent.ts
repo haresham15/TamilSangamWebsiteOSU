@@ -50,11 +50,11 @@ export const activeUpcomingEvent: FlagshipEventConfig = {
     admission: "FREE FOOD // BEST DRESSED WINS A PRIZE",
   },
   visual: {
-    silhouetteSrc: "/images/events/yaar-andha-killer.png",
-    altText: "Yaar Andha Killer? Halloween Murder Mystery Night",
+    silhouetteSrc: "/images/themes/jack-o-lantern.png",
+    altText: "Carved Jack-o'-lantern thematic silhouette",
     aspectRatio: "portrait",
     dither: {
-      veilColor: "#7B3F9E", // Halloween Mystery Purple from poster
+      veilColor: "#B85C38", // Terracotta Autumn
       shadowColor: "#1A1715", // Deep Espresso
       matrixSize: 8,
       grainScale: 2.5,

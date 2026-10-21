@@ -48,7 +48,7 @@ export default function BoardView({ sequenceElement, ...boardProps }: BoardViewP
   }, []);
 
   return (
-    <div ref={containerRef} className="h-full w-full">
+    <div ref={containerRef} className="absolute inset-0 h-full w-full pointer-events-none">
       {/* Index 2 deliberately renders after the global grade stack; see Phase 0B checkpoint. */}
       <View className="h-full w-full pointer-events-auto" index={2}>
         <StationViewScene {...boardProps} />

@@ -292,7 +292,7 @@ export default function RootLayout({
         <EventJsonLd />
 
         <Providers>
-          <div id="app-root">
+          <div id="app-root" className="min-h-full flex flex-col flex-1">
             <AppShell>{children}</AppShell>
           </div>
           <GlobalCanvas />

@@ -13,7 +13,7 @@ export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
     titleTa: "யார் அந்த கில்லர்?",
     description:
       "Tamil Sangam presents Yaar Andha Killer? Step into an evening of Halloween suspense, suspicion, and whodunnit clues at the Houston Grove Room in the Ohio Union! Free food will be provided for all attendees, and the best dressed costume wins a prize.\n\nFree admission & free food for all Buckeyes. Zero dues.\nslug: yaar-andha-killer",
-    location: "Houston Grove Room, Ohio Union, 1739 N High St, Columbus, OH",
+    location: "Houston Grove Room, Ohio Union",
     allDay: false,
     start: "2026-10-23T17:30:00-04:00",
     end: "2026-10-23T20:30:00-04:00",
@@ -27,7 +27,7 @@ export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
     titleTa: "கோலிவுட் கொள்ளை",
     description:
       "An immersive autumn convergence weaving Tamil cinema folklore, costumed revelry, street-style night-market sapad, and live acoustic cyphers under midnight Ohio skies.\n\nFree admission for all Buckeyes. Zero dues.",
-    location: "Ohio Union — Performance Hall, 1739 N High St, Columbus, OH",
+    location: "Ohio Union — Performance Hall",
     allDay: false,
     start: "2026-10-31T20:00:00-04:00",
     end: "2026-10-31T23:30:00-04:00",
@@ -41,7 +41,7 @@ export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
     titleTa: "தெருவோரச் சாப்பாடு திருவிழா",
     description:
       "Hot kothu parotta, crispy dosas, filter coffee, and casual dinner with friends on campus. Meet new Buckeyes and enjoy authentic South Indian food.",
-    location: "Campus Kitchen / Ohio Union, 1739 N High St, Columbus, OH",
+    location: "Campus Kitchen / Ohio Union",
     allDay: false,
     start: "2026-11-14T18:30:00-05:00",
     end: "2026-11-14T21:00:00-05:00",
@@ -55,7 +55,7 @@ export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
     titleTa: "தீபாவளி கொண்டாட்டம்",
     description:
       "Our signature autumn festival featuring authentic catered South Indian dinner, live student acoustic film jams, and sparklers on the plaza.",
-    location: "South Oval & Ohio Union Plaza, Columbus, OH",
+    location: "South Oval & Ohio Union Plaza",
     allDay: false,
     start: "2026-11-20T18:00:00-05:00",
     end: "2026-11-20T22:00:00-05:00",
@@ -69,7 +69,7 @@ export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
     titleTa: "தைப்பொங்கல் திருவிழா",
     description:
       "Traditional sweet pongal pot cooking, festive kolam sidewalk chalk competitions, and celebration of the Tamil harvest season on the Oval lawn.",
-    location: "South Oval Lawn, The Ohio State University, Columbus, OH",
+    location: "South Oval Lawn",
     allDay: false,
     start: "2027-01-17T11:00:00-05:00",
     end: "2027-01-17T15:00:00-05:00",
@@ -83,7 +83,7 @@ export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
     titleTa: "நம்ம ஜாதரா வசந்த திருவிழா",
     description:
       "Joint collegiate spring carnival co-hosted with Telugu Tamasha, uniting 200+ students for Indian street food stalls, outdoor games, and dance.",
-    location: "RPAC Plaza / South Grounds, Columbus, OH",
+    location: "RPAC Plaza / South Grounds",
     allDay: false,
     start: "2027-03-27T13:00:00-04:00",
     end: "2027-03-27T18:00:00-04:00",
@@ -97,7 +97,7 @@ export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
     titleTa: "சித்திரைத் திருநாள் கொண்டாட்டம்",
     description:
       "Celebrating Chithirai Puthandu with traditional feast dishes, live student acoustic music, and student fellowship.",
-    location: "Ohio Union — Great Hall, 1739 N High St, Columbus, OH",
+    location: "Ohio Union — Great Hall",
     allDay: false,
     start: "2027-04-14T17:30:00-04:00",
     end: "2027-04-14T21:00:00-04:00",
