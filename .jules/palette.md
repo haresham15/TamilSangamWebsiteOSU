@@ -1,3 +1,3 @@
-## 2023-10-11 - [ARIA Labels on Icon-Only Buttons]
-**Learning:** Found an icon-only button used to flip the `HolographicCard` 3D component on the board page which lacked an `aria-label`. It's crucial for screen reader users that any interactive elements without text have a descriptive `aria-label` so their purpose is clear.
-**Action:** Applied `aria-label="Flip Card"` to the `<button>` to ensure screen readers correctly interpret its function. In the future, always inspect buttons containing only icons (e.g. `<RotateCw />`) for missing accessibility labels.
+## 2024-05-24 - Accessibility labels overriding localized texts
+**Learning:** Adding `aria-label` attributes to interactive elements overrides their visible text content for screen readers. In bilingual or localized interfaces, hardcoding an `aria-label` in a single language breaks the localization experience.
+**Action:** When adding `aria-label`s, ensure they are also localized using the current language state, or avoid adding them to elements that already have sufficient, descriptive visible text.
