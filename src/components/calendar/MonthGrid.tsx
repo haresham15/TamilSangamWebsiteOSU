@@ -263,6 +263,7 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
                       playClick();
                       setDayPopover({ dayKey, events: dayEvents });
                     }}
+                    aria-label={`View ${dayEvents.length - 2} more events for ${format(day, "MMMM do")}`}
                     className="text-[10px] font-mono text-[#B85C38] hover:text-[#2A2825] font-semibold text-left pl-1 cursor-pointer transition-colors"
                   >
                     +{dayEvents.length - 2} more
@@ -285,6 +286,7 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
               <button
                 type="button"
                 onClick={() => setDayPopover(null)}
+                aria-label="Close day events popover"
                 className="text-xs font-mono text-[#57524C] hover:text-[#2A2825]"
               >
                 Close ✕
