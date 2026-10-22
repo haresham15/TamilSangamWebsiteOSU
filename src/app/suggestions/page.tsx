@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useRef, useState, useEffect, useActionState } from "react";
+import React, { useRef, useState, useEffect, useActionState, Suspense } from "react";
 import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
 import { useReducedMotion } from "framer-motion";
 import { useFormStatus } from "react-dom";
+import Link from "next/link";
 import {
   ArrowDown,
   Check,
   Loader2,
-  ArrowRight
+  ArrowRight,
+  Sparkles
 } from "lucide-react";
 import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
@@ -22,6 +25,48 @@ import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { registerSystem } from "@/engine/masterTick";
 import { Magnet } from "@/components/ui/react-bits";
+import { PILLARS_DATA, PillarSlug } from "@/data/pillars";
+
+function SuggestionsSearchParamsSync({
+  onCategory,
+  onPrompt,
+  onPillar,
+}: {
+  onCategory: (cat: string) => void;
+  onPrompt: (prompt: string) => void;
+  onPillar: (pillar: string) => void;
+}) {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const rawCat = searchParams.get("category");
+    const pillar = searchParams.get("pillar");
+    const prompt = searchParams.get("prompt");
+
+    if (rawCat) {
+      const normalized = rawCat.toLowerCase().replace(/\+/g, " ");
+      if (normalized.includes("event")) {
+        onCategory("Event idea");
+      } else if (normalized.includes("initiative")) {
+        onCategory("New initiative");
+      } else if (normalized.includes("feedback")) {
+        onCategory("Website feedback");
+      } else if (normalized.includes("partner")) {
+        onCategory("Partnership");
+      }
+    }
+
+    if (pillar) {
+      onPillar(pillar.toLowerCase());
+    }
+
+    if (prompt) {
+      onPrompt(prompt);
+    }
+  }, [searchParams, onCategory, onPrompt, onPillar]);
+
+  return null;
+}
 
 // =========================================================================
 // CRITICAL & IMMUTABLE: 3D Blueprint Scene Hero
@@ -97,6 +142,8 @@ export default function SuggestionsPage() {
     });
   }, []);
   const [selectedCategory, setSelectedCategory] = useState("Event idea");
+  const [incomingPillar, setIncomingPillar] = useState<string | null>(null);
+  const [pillarPrompt, setPillarPrompt] = useState<string | null>(null);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -245,6 +292,22 @@ export default function SuggestionsPage() {
                 Warm, open, conversational inputs inside Warm Parchment Ledger Sheet
                 =================================================================== */}
             <main className="lg:col-span-8 bg-[#FAF8F5] border border-[#161210]/10 shadow-[0_12px_40px_rgba(22,18,16,0.04)] rounded-sm p-6 sm:p-10">
+              <Suspense fallback={null}>
+                <SuggestionsSearchParamsSync
+                  onCategory={setSelectedCategory}
+                  onPillar={(p) => {
+                    setIncomingPillar(p);
+                    if (formSectionRef.current) {
+                      formSectionRef.current.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  onPrompt={(promptText) => {
+                    setPillarPrompt(promptText);
+                    setMessage((prev) => prev || promptText);
+                  }}
+                />
+              </Suspense>
+
               {!state.success ? (
                 <form action={formAction} className="space-y-12 py-2">
                   {/* Honeypot & Timestamp Hidden Inputs */}
@@ -253,6 +316,42 @@ export default function SuggestionsPage() {
                     <input type="text" name="website" tabIndex={-1} autoComplete="off" />
                   </div>
                   <input type="hidden" name="category" value={selectedCategory} />
+
+                  {/* Incoming Pillar Context Banner */}
+                  {incomingPillar && PILLARS_DATA[incomingPillar as PillarSlug] && (
+                    <div className="p-4 rounded-xl bg-[#FAF9F6] border border-[#B85C38]/30 space-y-2.5">
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-[#B85C38] animate-pulse" />
+                          <span className="font-semibold text-[#2A2825]">
+                            Continuing from Pillar {PILLARS_DATA[incomingPillar as PillarSlug].number}: {PILLARS_DATA[incomingPillar as PillarSlug].titleEn} ({PILLARS_DATA[incomingPillar as PillarSlug].titleTa})
+                          </span>
+                        </div>
+                        <Link
+                          href={`/pillars/${incomingPillar}`}
+                          className="text-[#B85C38] hover:underline"
+                        >
+                          View Pillar Blueprint ↗
+                        </Link>
+                      </div>
+
+                      {pillarPrompt && message !== pillarPrompt && (
+                        <div className="pt-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              audioLayer.playTapeClack();
+                              setMessage(pillarPrompt);
+                            }}
+                            className="inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-[#B85C38]/10 hover:bg-[#B85C38]/20 text-[#B85C38] border border-[#B85C38]/30 transition-colors"
+                          >
+                            <Sparkles className="w-3.5 h-3.5" />
+                            <span>Insert Pillar Starter Template</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* Question 01: Proposal Message */}
                   <div className="space-y-3">

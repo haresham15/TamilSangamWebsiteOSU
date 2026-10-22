@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { EVENTS } from "@/data/events";
 import { GALLERY_ALBUMS } from "@/data/gallery";
+import { ALL_PILLARS } from "@/data/pillars";
 import { SITE_URL } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -64,6 +65,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
+  // Dynamic Pillar Pages (The Five Pillars)
+  const pillarPages: MetadataRoute.Sitemap = ALL_PILLARS.map((pillar) => ({
+    url: `${SITE_URL}/pillars/${pillar.slug}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.85,
+  }));
+
   // Dynamic Event Dossier pages with image attachments for Google Image Search
   const eventPages: MetadataRoute.Sitemap = EVENTS.map((event) => ({
     url: `${SITE_URL}/events/${event.slug}`,
@@ -93,5 +102,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ].filter(Boolean),
   }));
 
-  return [...staticPages, ...eventPages, ...galleryPages];
+  return [...staticPages, ...pillarPages, ...eventPages, ...galleryPages];
 }

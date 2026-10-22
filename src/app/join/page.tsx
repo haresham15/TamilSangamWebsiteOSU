@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { audioLayer } from "@/utils/audioLayer";
@@ -29,6 +30,41 @@ const JoinHeroCanvas = dynamic(
   }
 );
 
+function JoinSearchParamsSync({
+  onSelectTrack,
+  onPillar,
+}: {
+  onSelectTrack: (track: "general" | "performer" | "committee") => void;
+  onPillar: (pillar: string) => void;
+}) {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const track = searchParams.get("track");
+    const pillar = searchParams.get("pillar");
+
+    if (track) {
+      if (track === "dance-music" || track === "performer") {
+        onSelectTrack("performer");
+      } else if (track === "council" || track === "committee") {
+        onSelectTrack("committee");
+      } else if (track === "general") {
+        onSelectTrack("general");
+      }
+    }
+
+    if (pillar) {
+      onPillar(pillar);
+      const formEl = document.getElementById("membership-form");
+      if (formEl) {
+        formEl.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [searchParams, onSelectTrack, onPillar]);
+
+  return null;
+}
+
 export default function JoinPage() {
   const { locale } = useLocale();
   const { playClick, playBell } = useAudio();
@@ -38,6 +74,7 @@ export default function JoinPage() {
   const [major, setMajor] = useState("");
   const [membershipType, setMembershipType] = useState<"general" | "performer" | "committee">("general");
   const [notes, setNotes] = useState("");
+  const [incomingPillar, setIncomingPillar] = useState<string | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -151,9 +188,30 @@ export default function JoinPage() {
           />
 
           <div className={styles.layout}>
+            <Suspense fallback={null}>
+              <JoinSearchParamsSync
+                onSelectTrack={setMembershipType}
+                onPillar={setIncomingPillar}
+              />
+            </Suspense>
+
           {!submitted ? (
             <form onSubmit={handleSubmit} className={`${styles.form} space-y-16 bg-[#FAF8F5] border border-[#161210]/10 shadow-[0_12px_40px_rgba(22,18,16,0.04)] rounded-sm p-6 sm:p-10`}>
               
+              {incomingPillar && (
+                <div className="p-4 rounded-xl bg-hearth-sand/60 border border-hearth-terracotta/30 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-hearth-terracotta animate-pulse" />
+                    <span className="text-hearth-espresso font-medium">
+                      Continuing from Pillar: Pre-selected {membershipType === "performer" ? "Dance & Music" : membershipType === "committee" ? "Working Council" : "General Member"} Track
+                    </span>
+                  </div>
+                  <Link href={`/pillars/${incomingPillar}`} className="text-hearth-terracotta hover:underline">
+                    View {incomingPillar.toUpperCase()} Pillar ↗
+                  </Link>
+                </div>
+              )}
+
               {/* Prompt 01: Name */}
               <GuestbookField
                 id="guestbook-name"

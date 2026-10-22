@@ -1,3 +1,4 @@
+// src/components/home/SilkHoverPillars.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -5,8 +6,11 @@ import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-moti
 import Link from "next/link";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
+import { soundEngine } from "@/lib/soundEngine";
+import { audioLayer } from "@/utils/audioLayer";
 import { ArrowUpRight } from "lucide-react";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
+import { SpotlightCard } from "@/components/ui/react-bits";
 
 interface PillarRow {
   id: string;
@@ -33,7 +37,7 @@ const PILLAR_ROWS: PillarRow[] = [
     subtitleTa: "நடனம்",
     descEn: "High-energy cinematic Kuthu, folk Karagattam, and collaborative open dance circles. Open to every skill level.",
     descTa: "குத்து, நாட்டுப்புறக் கலைகள், மற்றும் கல்லூரி கொண்டாட்ட நடனங்கள்.",
-    href: "/events",
+    href: "/pillars/aatam",
     posterSrc: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1400&q=80",
   },
   {
@@ -46,7 +50,7 @@ const PILLAR_ROWS: PillarRow[] = [
     subtitleTa: "இசை",
     descEn: "Acoustic student jam circles, beloved Ilaiyaraaja & Rahman anthems, indie chords, and live student sets.",
     descTa: "அக்யூஸ்டிக் கல்லூரிப் பாடல்கள், திரைப்பட இசை, மற்றும் நட்பு நிறைந்த மாலைகள்.",
-    href: "/events",
+    href: "/pillars/paatam",
     posterSrc: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1400&q=80",
   },
   {
@@ -59,7 +63,7 @@ const PILLAR_ROWS: PillarRow[] = [
     subtitleTa: "திருவிழா",
     descEn: "Seasonal feasts, South Oval lawn picnics, Diwali sparkler nights, and Pongal pots simmering on Columbus turf.",
     descTa: "ஓவல் புல்வெளி பிக்னிக், தெருவோரச் சாப்பாடு, தீபாவளி மத்தாப்பு கொண்டாட்டங்கள்.",
-    href: "/events",
+    href: "/pillars/kondatam",
     posterSrc: "/events/berry-cute-picnic/picnic-01.jpg",
   },
   {
@@ -72,7 +76,7 @@ const PILLAR_ROWS: PillarRow[] = [
     subtitleTa: "சமூகம்",
     descEn: "A welcoming porch on campus. Peer mentorship, freshman welcome, and fellowship uniting all Buckeyes.",
     descTa: "ஓஹியோ பல்கலைக்கழகத்தில் அனைத்து மாணவர்களையும் அன்போடு ஒன்றிணைக்கும் குடும்பம்.",
-    href: "/join",
+    href: "/pillars/santhippum",
     posterSrc: "/events/namma-jathara/picnic-01.jpg",
   },
   {
@@ -85,14 +89,14 @@ const PILLAR_ROWS: PillarRow[] = [
     subtitleTa: "மொழி & அறிவு",
     descEn: "Conversational Tamil workshops, Sangam literary discussions, diaspora seminars, and peer language exchange.",
     descTa: "உரையாடல் தமிழ் பயிற்சி, சங்க இலக்கிய அறிமுகம், வரலாற்று உரைகள்.",
-    href: "/about",
+    href: "/pillars/katral",
     posterSrc: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=1400&q=80",
   },
 ];
 
 export function SilkHoverPillars() {
   const { locale } = useLocale();
-  const { playClick, playSilkSwish, playMarimba } = useAudio();
+  const { playClick } = useAudio();
   const [activeRow, setActiveRow] = useState<string | null>(null);
 
   const reduced = useReducedMotion();
@@ -101,8 +105,12 @@ export function SilkHoverPillars() {
   const x = useSpring(pointerX, { stiffness: 160, damping: 22 });
   const y = useSpring(pointerY, { stiffness: 160, damping: 22 });
   const active = PILLAR_ROWS.find((row) => row.id === activeRow);
+
   return (
-    <section className="relative w-full bg-[#161210] text-[#FAF6F0] py-24 sm:py-32 overflow-hidden select-none border-y border-[#D4AF37]/20 shadow-[inset_0_20px_50px_rgba(0,0,0,0.5)]">
+    <section
+      id="five-pillars"
+      className="scroll-mt-24 relative w-full bg-[#161210] text-[#FAF6F0] py-24 sm:py-32 overflow-hidden select-none border-y border-[#D4AF37]/20 shadow-[inset_0_20px_50px_rgba(0,0,0,0.5)]"
+    >
       {/* Ambient brass corner accents */}
       <div className="absolute top-0 left-0 w-32 h-32 bg-[radial-gradient(circle_at_top_left,rgba(212,175,55,0.08),transparent_70%)] pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-32 h-32 bg-[radial-gradient(circle_at_bottom_right,rgba(200,90,50,0.08),transparent_70%)] pointer-events-none" />
@@ -117,74 +125,97 @@ export function SilkHoverPillars() {
           description="Solid stone foundations of our campus community. Each pillar gives every student an open, welcoming home to dance, create, and belong."
         />
 
-        {/* Massive Airy Vertical Sections (No rigid grid borders) */}
-        {/* Strict CSS Grid Hanging Indent with Warm Brass Grounding Lines */}
+        {/* Massive Airy Vertical Sections */}
         <div className="w-full border-t border-[#D4AF37]/25">
           {PILLAR_ROWS.map((pillar, idx) => {
             return (
-              <Link
+              <SpotlightCard
                 key={pillar.id}
-                href={pillar.href}
-                onClick={playClick}
-                onMouseEnter={() => {
-                  setActiveRow(pillar.id);
-                  playSilkSwish(0.35);
-                  playMarimba(idx);
-                }}
-                onMouseLeave={() => setActiveRow(null)}
-                onFocus={() => setActiveRow(pillar.id)}
-                onBlur={() => setActiveRow(null)}
-                onPointerMove={(event) => { pointerX.set(event.clientX + 28); pointerY.set(event.clientY - 80); }}
-                className="pillar-curtain group relative block w-full py-12 sm:py-16 border-b border-[#D4AF37]/20 transition-[padding,background-color,color] duration-300 hover:py-20 focus-visible:py-20 hover:bg-[#1E1916] focus-visible:bg-[#1E1916] focus-visible:outline-2 focus-visible:outline-[#D4AF37] motion-reduce:transition-none"
+                spotlightColor="rgba(200, 90, 50, 0.12)"
+                goldColor="rgba(212, 175, 55, 0.08)"
+                radius={460}
+                className="w-full bg-transparent border-none rounded-none p-0 overflow-visible"
               >
-                {/* Content Layout: Strict CSS Grid Hanging Indent */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-baseline">
-                  {/* Hanging Numeral (col 1-2) */}
-                  <div className="lg:col-span-2">
-                    <span className="font-serif text-3xl sm:text-5xl text-[#D4AF37] font-light block transition-colors group-hover:text-[#F39C12]">
-                      {locale === "ta" ? pillar.numTa : pillar.num}
-                    </span>
-                  </div>
-
-                  {/* Massive Bilingual Pillar Title (col 3-7) */}
-                  <div className="lg:col-span-5 space-y-1">
-                    <div className="flex items-baseline gap-4 sm:gap-6 flex-wrap">
-                      <h3 className="text-4xl sm:text-6xl md:text-7xl font-serif font-normal tracking-tight text-[#FAF6F0] group-hover:text-[#F39C12] transition-colors duration-300">
-                        {pillar.nameEn}
-                      </h3>
-                      <span
-                        lang="ta"
-                        style={{ letterSpacing: 0 }}
-                        className="text-2xl sm:text-4xl font-serif font-light text-[#FAF6F0]/40 group-hover:text-[#F39C12]/70 transition-colors duration-300"
-                      >
-                        {pillar.nameTa}
+                <Link
+                  href={pillar.href}
+                  onClick={playClick}
+                  onMouseEnter={() => {
+                    setActiveRow(pillar.id);
+                    audioLayer.playSilkSwish(0.35);
+                    soundEngine.playPillarHover(idx);
+                  }}
+                  onMouseLeave={() => setActiveRow(null)}
+                  onFocus={() => {
+                    setActiveRow(pillar.id);
+                    soundEngine.playPillarHover(idx);
+                  }}
+                  onBlur={() => setActiveRow(null)}
+                  onPointerMove={(event) => {
+                    pointerX.set(event.clientX + 28);
+                    pointerY.set(event.clientY - 80);
+                  }}
+                  className="pillar-curtain group relative block w-full py-12 sm:py-16 border-b border-[#D4AF37]/20 transition-[padding,background-color,color] duration-300 hover:py-20 focus-visible:py-20 hover:bg-[#1E1916] focus-visible:bg-[#1E1916] focus-visible:outline-2 focus-visible:outline-[#D4AF37] motion-reduce:transition-none"
+                >
+                  {/* Content Layout: Strict CSS Grid Hanging Indent */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-baseline">
+                    {/* Hanging Numeral (col 1-2) */}
+                    <div className="lg:col-span-2">
+                      <span className="font-serif text-3xl sm:text-5xl text-[#D4AF37] font-light block transition-colors group-hover:text-[#F39C12]">
+                        {locale === "ta" ? pillar.numTa : pillar.num}
                       </span>
                     </div>
-                    <span className="font-sans text-xs tracking-widest uppercase font-semibold text-[#D4AF37] block pt-1">
-                      {locale === "ta" ? pillar.subtitleTa : pillar.subtitleEn}
-                    </span>
-                  </div>
 
-                  {/* Subtitle & Narrative Description (col 8-12) */}
-                  <div className="lg:col-span-5 flex items-start justify-between gap-6 pt-2 lg:pt-0">
-                    <p className="text-sm sm:text-base font-sans text-[#E8DEC8]/80 leading-relaxed group-hover:text-[#FAF6F0] transition-colors duration-300">
-                      {locale === "ta" ? pillar.descTa : pillar.descEn}
-                    </p>
+                    {/* Massive Bilingual Pillar Title (col 3-7) */}
+                    <div className="lg:col-span-5 space-y-1">
+                      <div className="flex items-baseline gap-4 sm:gap-6 flex-wrap">
+                        <h3 className="text-4xl sm:text-6xl md:text-7xl font-serif font-normal tracking-tight text-[#FAF6F0] group-hover:text-[#F39C12] transition-colors duration-300">
+                          {pillar.nameEn}
+                        </h3>
+                        <span
+                          lang="ta"
+                          style={{ letterSpacing: 0 }}
+                          className="text-2xl sm:text-4xl font-serif font-light text-[#FAF6F0]/40 group-hover:text-[#F39C12]/70 transition-colors duration-300"
+                        >
+                          {pillar.nameTa}
+                        </span>
+                      </div>
+                      <span className="font-sans text-xs tracking-widest uppercase font-semibold text-[#D4AF37] block pt-1">
+                        {locale === "ta" ? pillar.subtitleTa : pillar.subtitleEn}
+                      </span>
+                    </div>
 
-                    <div className="shrink-0 text-[#D4AF37]/70 group-hover:text-[#FAF6F0] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300">
-                      <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                    {/* Subtitle & Narrative Description (col 8-12) */}
+                    <div className="lg:col-span-5 flex items-start justify-between gap-6 pt-2 lg:pt-0">
+                      <p className="text-sm sm:text-base font-sans text-[#E8DEC8]/80 leading-relaxed group-hover:text-[#FAF6F0] transition-colors duration-300">
+                        {locale === "ta" ? pillar.descTa : pillar.descEn}
+                      </p>
+
+                      <div className="shrink-0 flex items-center gap-2 text-[#D4AF37]/70 group-hover:text-[#FAF6F0] transition-all duration-300">
+                        <span className="hidden sm:inline-block font-mono text-[11px] uppercase tracking-wider opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-[#D4AF37]">
+                          Explore Pillar
+                        </span>
+                        <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </SpotlightCard>
             );
           })}
         </div>
       </div>
-      {!reduced && active && <motion.div aria-hidden="true" style={{ x, y }} className="pillar-preview pointer-events-none fixed left-0 top-0 z-50 h-32 w-32 rounded-full border border-antique-gold bg-hearth-terracotta text-paper flex flex-col items-center justify-center">
-        <span className="font-mono text-xs">{active.num}</span>
-        <span lang="ta" className="font-tamil text-xl leading-relaxed tracking-normal">{active.nameTa}</span>
-      </motion.div>}
+      {!reduced && active && (
+        <motion.div
+          aria-hidden="true"
+          style={{ x, y }}
+          className="pillar-preview pointer-events-none fixed left-0 top-0 z-50 h-32 w-32 rounded-full border border-antique-gold bg-hearth-terracotta text-paper flex flex-col items-center justify-center shadow-xl backdrop-blur-sm"
+        >
+          <span className="font-mono text-xs">{active.num}</span>
+          <span lang="ta" className="font-tamil text-xl leading-relaxed tracking-normal">
+            {active.nameTa}
+          </span>
+        </motion.div>
+      )}
     </section>
   );
 }

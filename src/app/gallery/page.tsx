@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, Suspense } from "react";
 import { LayoutGroup, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { GALLERY_ALBUMS } from "@/data/gallery";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
@@ -14,6 +15,28 @@ import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { CinemaLightbox, type LightboxPhoto } from "@/components/ui/CinemaLightbox";
+
+function GallerySearchParamsSync({
+  onSelectTag,
+}: {
+  onSelectTag: (tag: string) => void;
+}) {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const category = searchParams.get("category");
+    if (category) {
+      const lower = category.toLowerCase();
+      onSelectTag(lower);
+      const target = document.getElementById("gallery-vault-content");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [searchParams, onSelectTag]);
+
+  return null;
+}
 
 export default function GalleryPage() {
   const { locale } = useLocale();
@@ -84,6 +107,10 @@ export default function GalleryPage() {
         id="gallery-vault-content"
         className="text-hearth-espresso"
       >
+        <Suspense fallback={null}>
+          <GallerySearchParamsSync onSelectTag={setActiveTag} />
+        </Suspense>
+
         {/* Sleek Horizontal Archive Control Bar (Search + Filter Pills + Count) */}
         <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 pt-8 pb-6 border-b border-[#161210]/10">
           <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6">
