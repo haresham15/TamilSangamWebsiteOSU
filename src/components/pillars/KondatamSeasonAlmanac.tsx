@@ -50,7 +50,7 @@ const SEASONS: SeasonGathering[] = [
     icon: Flame,
     tone: "Warm Gold & Candlelight Amber",
     accentHex: "#D4AF37",
-    culinaryTraditions: ["Warm Gulab Jamun", "Mysore Pak & Murukku", "Simmering Madras Filter Coffee"],
+    culinaryTraditions: ["Warm Gulab Jamun", "Mysore Pak & Murukku", "Indian Chai & Spiced Refreshments"],
     activities: ["Outdoor Cold-Night Sparkler Circles", "Traditional Silk Attire Showcase", "Semester Finals Relief Hangouts"],
     blueprintVision:
       "Creating a radiant, warm sanctuary in the freezing Columbus winter where students gather in festive veshtis and sarees for home-cooked food.",
@@ -62,14 +62,14 @@ const SEASONS: SeasonGathering[] = [
     seasonTa: "தைப் பொங்கல் அறுவடை",
     monthRange: "JANUARY – FEBRUARY",
     tamilMonth: "தை மாதம்",
-    flagshipEvent: "Streetside Sapad & Clay-Pot Pongal Night",
+    flagshipEvent: "Streetside Sapad & Pongal Gathering",
     icon: Utensils,
     tone: "Turmeric Gold & Clay Terracotta",
     accentHex: "#E5A93C",
-    culinaryTraditions: ["Sweet Sakkarai Pongal with Cashews", "Crispy Medu Vadai", "Steaming Sambar Rice on Banana Leaves"],
+    culinaryTraditions: ["Sweet Sakkarai Pongal with Cashews", "Crispy Medu Vadai", "Hot South Indian Festive Meals"],
     activities: ["Live Kolam Floor Art Competitions", "Traditional Sugarcane Cracking", "Folk Parai Drumming & Village Roots"],
     blueprintVision:
-      "Bringing authentic Tamil agricultural harvest gratitude to the Midwest, complete with clay pot boiling traditions and banana leaf feasting.",
+      "Bringing authentic Tamil agricultural harvest gratitude to the Midwest, complete with festive traditions, cultural games, and shared meals.",
     prompt: "I want to propose food items or traditional cultural activities for our Thai Pongal harvest celebration...",
   },
   {
@@ -82,7 +82,7 @@ const SEASONS: SeasonGathering[] = [
     icon: CloudSun,
     tone: "Verdant Mint & Blossom Coral",
     accentHex: "#55CCA2",
-    culinaryTraditions: ["Fresh Mango Kulfi & Jigarthanda", "Street Tawa Kothu Roti", "Spicy Masala Dosa Stalls"],
+    culinaryTraditions: ["Fresh Mango Kulfi & Cold Drinks", "Hot Biryani & Samosas", "Indian Street Snacks"],
     activities: ["Inter-Collegiate Tug-of-War (கயிறு இழுத்தல்)", "Open-Air Cultural Stage Performances", "Spring Senior Farewell Walk"],
     blueprintVision:
       "Our largest co-hosted outdoor cultural carnival uniting South Asian organizations on the RPAC Plaza under the warm April sun.",

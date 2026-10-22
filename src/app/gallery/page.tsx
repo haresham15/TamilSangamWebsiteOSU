@@ -15,6 +15,8 @@ import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { CinemaLightbox, type LightboxPhoto } from "@/components/ui/CinemaLightbox";
+import { GooglePhotosVaultsStrip } from "@/components/gateways/GooglePhotosVaultsStrip";
+import { OsuTamilPlaylistGateway } from "@/components/gateways/OsuTamilPlaylistGateway";
 
 function GallerySearchParamsSync({
   onSelectTag,
@@ -259,8 +261,14 @@ export default function GalleryPage() {
           </div>
         </div>
 
-        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 py-10 sm:py-16">
+        <div className="w-full max-w-[1600px] mx-auto px-6 sm:px-12 py-10 sm:py-16 space-y-16">
           <KolamSectionRule tone="sandstone" />
+
+          {/* Quick-Access Strip to all 4 official Google Photos albums */}
+          <GooglePhotosVaultsStrip variant="light" />
+
+          {/* Open Community Gateway: The All-OSU Tamil Collective Playlist */}
+          <OsuTamilPlaylistGateway variant="light" />
 
           {/* Student Photo Consent & Removal Notice (Unboxed, 1px Grounding Line) */}
           <div className="mt-20 sm:mt-28 border-t border-antique-gold/30 pt-16 text-center max-w-2xl mx-auto space-y-3 select-none">

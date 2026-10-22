@@ -12,6 +12,8 @@ import { FlowingRiverTimeline } from "@/components/muttram/FlowingRiverTimeline"
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
+import { ThirukkuralExplorer } from "@/components/gateways/ThirukkuralExplorer";
+import { AramPhilanthropyGateway } from "@/components/gateways/AramPhilanthropyGateway";
 
 export default function AboutPage() {
   const { locale } = useLocale();
@@ -92,7 +94,7 @@ export default function AboutPage() {
     {
       name: "Columbus Local Kitchens",
       type: "Authentic Catering",
-      collaboration: "Partnering with trusted South Indian kitchens to bring piping-hot dosas, filter coffee, and festive feasts to campus events.",
+      collaboration: "Partnering with trusted South Indian kitchens to bring hot biryani, samosas, traditional snacks, and festive feasts to campus events.",
     },
   ];
 
@@ -141,7 +143,7 @@ export default function AboutPage() {
             </span>
             <span ref={watermarkRef} aria-hidden="true" lang="ta" className="pointer-events-none absolute inset-x-0 top-1/3 font-tamil text-8xl text-[#B85C38]/[0.035] whitespace-nowrap tracking-normal">யாதும் ஊரே யாவரும் கேளிர்</span>
             <blockquote ref={quoteRef} className="text-3xl sm:text-5xl lg:text-6xl font-serif font-light text-[#2A2825] leading-snug tracking-tight">
-              &ldquo;<strong className="font-medium text-[#B85C38]">To Us All Towns Are Home, Everyone Our Kin.</strong> Born from the deep longing for home-cooked meals, steaming cups of filter coffee, and the resonant cadence of <strong className="font-medium text-[#E5A93C]">Sangam verses</strong> beneath Midwest skies.&rdquo;
+              &ldquo;<strong className="font-medium text-[#B85C38]">To Us All Towns Are Home, Everyone Our Kin.</strong> Born from the deep longing for home-cooked flavors, authentic kinship, and the resonant cadence of <strong className="font-medium text-[#E5A93C]">Sangam verses</strong> beneath Midwest skies.&rdquo;
             </blockquote>
             <p className="font-tamil text-xl sm:text-2xl text-[#B85C38]" lang="ta">
               யாதும் ஊரே யாவரும் கேளிர் — கணியன் பூங்குன்றனார்
@@ -165,6 +167,18 @@ export default function AboutPage() {
             </div>
 
             <FlowingRiverTimeline milestones={timelineMilestones} locale={locale} />
+          </div>
+
+          {/* Open Community Gateway: Living Thirukkural Card */}
+          <div className="my-16 sm:my-24">
+            <ThirukkuralExplorer variant="light" />
+          </div>
+
+          <KolamSectionRule tone="sandstone" />
+
+          {/* Open Community Gateway: Aram Philanthropy & Cross-Cultural Service */}
+          <div className="my-16 sm:my-24">
+            <AramPhilanthropyGateway variant="light" />
           </div>
 
           <KolamSectionRule tone="sandstone" />

@@ -50,7 +50,7 @@ export const CURRENT_BOARD: BoardMember[] = [
     ],
     quote: "யாதும் ஊரே யாவரும் கேளீர் (To us all towns are home, everyone our kin).",
     email: "osutamilsangam@gmail.com",
-    instagram: "@osutamilsangam",
+    instagram: "@tamilsangam.osu",
   },
   {
     id: "vice-president",
@@ -76,7 +76,7 @@ export const CURRENT_BOARD: BoardMember[] = [
     ],
     quote: "ஒற்றுமையே வலிமை (In unity lies our strength).",
     email: "osutamilsangam@gmail.com",
-    instagram: "@osutamilsangam",
+    instagram: "@tamilsangam.osu",
   },
   {
     id: "design-lead",
@@ -102,7 +102,7 @@ export const CURRENT_BOARD: BoardMember[] = [
     ],
     quote: "கண்ணால் காண்பதும் கவிதையாகும் (Art is poetry made visible).",
     email: "osutamilsangam@gmail.com",
-    instagram: "@osutamilsangam",
+    instagram: "@tamilsangam.osu",
   },
   {
     id: "creative-director",
@@ -128,7 +128,7 @@ export const CURRENT_BOARD: BoardMember[] = [
     ],
     quote: "ஆட்டம் பாட்டம் கொண்டாட்டம் (Dance, song, and joyous celebration).",
     email: "osutamilsangam@gmail.com",
-    instagram: "@osutamilsangam",
+    instagram: "@tamilsangam.osu",
   },
   {
     id: "treasurer",
@@ -154,7 +154,7 @@ export const CURRENT_BOARD: BoardMember[] = [
     ],
     quote: "முயற்சி திருவினையாக்கும் (Dedicated effort yields abundance).",
     email: "osutamilsangam@gmail.com",
-    instagram: "@osutamilsangam",
+    instagram: "@tamilsangam.osu",
   },
   {
     id: "social-media-manager",
@@ -180,7 +180,7 @@ export const CURRENT_BOARD: BoardMember[] = [
     ],
     quote: "தொடர்பில் மலரும் நட்பு (Connection fosters community).",
     email: "osutamilsangam@gmail.com",
-    instagram: "@osutamilsangam",
+    instagram: "@tamilsangam.osu",
   },
   {
     id: "marketing-program-manager",
@@ -206,7 +206,7 @@ export const CURRENT_BOARD: BoardMember[] = [
     ],
     quote: "திட்டமிடுதலே வெற்றியின் முதல் படி (Structured planning is the foundation of triumph).",
     email: "osutamilsangam@gmail.com",
-    instagram: "@osutamilsangam",
+    instagram: "@tamilsangam.osu",
   },
   {
     id: "event-coordinator",
@@ -218,21 +218,21 @@ export const CURRENT_BOARD: BoardMember[] = [
     committeeTa: "அரங்க மேலாண்மை, விருந்தோம்பல் & உணவு ஏற்பாடுகள்",
     term: "2026-2027",
     bioEn: "Leads physical venue logistics, university room reservations, authentic South Indian catering contracts, and day-of-event stage choreography.",
-    bioTa: "ஓஹியோ யூனியன் அரங்க முன்பதிவுகள், தலைவாழை இலை பாரம்பரிய உணவு ஏற்பாடுகள், மற்றும் விழா நாள் களப் பணிகளை முன்னெடுப்பவர்.",
+    bioTa: "ஓஹியோ யூனியன் அரங்க முன்பதிவுகள், சுவையான உணவு ஏற்பாடுகள், மற்றும் விழா நாள் களப் பணிகளை முன்னெடுப்பவர்.",
     photoUrl: "/emblem.svg",
     responsibilitiesEn: [
       "Secures Ohio Union, Hagerty Hall, and RPAC venue reservations and permits",
-      "Manages catering contracts for traditional banana-leaf meals and refreshments",
+      "Manages catering contracts for hot biryani, samosas, refreshments, and festive meals",
       "Orchestrates check-in desks, crowd navigation, and safety protocol enforcement",
     ],
     responsibilitiesTa: [
       "பல்கலைக்கழக அரங்க முன்பதிவுகள் மற்றும் அனுமதிப் படிவங்களை நிர்வகித்தல்",
-      "பாரம்பரிய உணவு நிறுவனங்களுடன் ஒப்பந்தம் செய்து சுவையான விருந்து ஏற்பாடு செய்தல்",
+      "உள்ளூர் உணவகங்களுடன் பேசி சுவையான பிரியாணி மற்றும் சிற்றுண்டிகள் ஏற்பாடு செய்தல்",
       "விழா நாளில் நுழைவு வாயில் வரவேற்பு மற்றும் பார்வையாளர் வசதிகளை நெறிப்படுத்துதல்",
     ],
     quote: "விருந்தோம்பல் தமிழரின் பண்பு (Hospitality is the soul of Tamil culture).",
     email: "osutamilsangam@gmail.com",
-    instagram: "@osutamilsangam",
+    instagram: "@tamilsangam.osu",
   },
   {
     id: "outreach-coordinator",
@@ -258,7 +258,7 @@ export const CURRENT_BOARD: BoardMember[] = [
     ],
     quote: "அன்பே சிவம் (Love is the highest divinity).",
     email: "osutamilsangam@gmail.com",
-    instagram: "@osutamilsangam",
+    instagram: "@tamilsangam.osu",
   },
 ];
 

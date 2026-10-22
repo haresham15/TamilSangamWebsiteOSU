@@ -12,6 +12,7 @@ import { KondatamSeasonAlmanac } from "@/components/pillars/KondatamSeasonAlmana
 import { SanthippumThinnaiNetwork } from "@/components/pillars/SanthippumThinnaiNetwork";
 import { KatralLivingAtelier } from "@/components/pillars/KatralLivingAtelier";
 import { PillarSiblingSwitcher } from "@/components/pillars/PillarSiblingSwitcher";
+import { OsuTamilPlaylistGateway } from "@/components/gateways/OsuTamilPlaylistGateway";
 import {
   ArrowLeft,
   ChevronLeft,
@@ -209,6 +210,11 @@ export function PillarDetailView({ pillar }: PillarDetailViewProps) {
           {pillar.slug === "kondatam" && <KondatamSeasonAlmanac />}
           {pillar.slug === "santhippum" && <SanthippumThinnaiNetwork />}
           {pillar.slug === "katral" && <KatralLivingAtelier />}
+          {pillar.slug === "paatam" && (
+            <div className="mt-14 sm:mt-20">
+              <OsuTamilPlaylistGateway variant="light" />
+            </div>
+          )}
         </div>
       </main>
 

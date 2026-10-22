@@ -14,6 +14,7 @@ import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { GuestbookField } from "@/components/muttram/GuestbookField";
 import { SITE_CONFIG } from "@/data/siteConfig";
 import { Magnet, StarBorder, SpotlightCard } from "@/components/ui/react-bits";
+import { GroupMePulseGateways } from "@/components/gateways/GroupMePulseGateways";
 import styles from "./join.module.css";
 
 // =========================================================================
@@ -73,6 +74,8 @@ export default function JoinPage() {
   const [email, setEmail] = useState("");
   const [major, setMajor] = useState("");
   const [membershipType, setMembershipType] = useState<"general" | "performer" | "committee">("general");
+  const [buckeyeRole, setBuckeyeRole] = useState("Undergraduate");
+  const [monthlyDispatchOptIn, setMonthlyDispatchOptIn] = useState(true);
   const [notes, setNotes] = useState("");
   const [incomingPillar, setIncomingPillar] = useState<string | null>(null);
 
@@ -132,6 +135,8 @@ export default function JoinPage() {
           email: email.trim(),
           major: major.trim(),
           membershipType,
+          buckeyeRole,
+          monthlyDispatchOptIn,
           notes: notes.trim(),
         }),
       });
@@ -245,6 +250,52 @@ export default function JoinPage() {
                 placeholder="e.g. Computer Science, Public Health, Fisher College..."
               />
 
+              {/* Prompt: Buckeye Role Selector (OSU-Wide Community) */}
+              <div className="space-y-4">
+                <div>
+                  <span className="text-xl sm:text-2xl font-serif font-normal text-hearth-espresso block">
+                    What is your role at Ohio State?
+                  </span>
+                  <span className="text-sm font-sans text-hearth-espresso/80 block mt-1">
+                    Tamil Sangam is an OSU-wide community uniting undergraduates, graduate researchers, faculty, and alumni.
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  {[
+                    { id: "Undergraduate", label: "Undergraduate Student", desc: "First-year, transfer, or upperclassman" },
+                    { id: "Master's / PhD Graduate Student", label: "Master's / PhD Student", desc: "Graduate studies, researchers, & TAs" },
+                    { id: "OSU Faculty / Researcher / Staff", label: "Faculty / Staff / Postdoc", desc: "Professors, clinicians, & university staff" },
+                    { id: "Alumni & Community", label: "Alumni & Community", desc: "Columbus residents & Buckeye alumni" },
+                  ].map((role) => {
+                    const isSelected = buckeyeRole === role.id;
+                    return (
+                      <button
+                        key={role.id}
+                        type="button"
+                        aria-pressed={isSelected}
+                        onClick={() => {
+                          audioLayer.playTapeClack();
+                          setBuckeyeRole(role.id);
+                        }}
+                        className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-hearth-terracotta bg-hearth-sand/50 shadow-sm"
+                            : "border-hearth-espresso/20 hover:border-hearth-espresso/40 bg-transparent"
+                        }`}
+                      >
+                        <span className={`text-base font-serif font-medium block ${isSelected ? "text-hearth-terracotta font-semibold" : "text-hearth-espresso"}`}>
+                          {role.label}
+                        </span>
+                        <p className="text-xs font-sans text-hearth-espresso/70 mt-0.5">
+                          {role.desc}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Prompt 04: Pathway / Involvement */}
               <div className="space-y-6">
                 <div>
@@ -304,8 +355,28 @@ export default function JoinPage() {
                 sublabel="Food preferences, dance background, or any questions for the officers (optional)."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="e.g. Vegetarian / Love filter coffee / Looking for dance rehearsal friends!"
+                placeholder="e.g. Vegetarian / Love Tamil cinema trivia / Looking for dance rehearsal friends!"
               />
+
+              {/* Monthly Sangam Dispatch Opt-In Checkbox */}
+              <div className="p-4 rounded-xl border border-hearth-espresso/20 bg-hearth-sand/20 space-y-2">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={monthlyDispatchOptIn}
+                    onChange={(e) => setMonthlyDispatchOptIn(e.target.checked)}
+                    className="mt-1 w-4 h-4 rounded border-hearth-espresso/30 text-hearth-terracotta focus:ring-hearth-terracotta"
+                  />
+                  <div className="text-xs font-sans text-hearth-espresso/90">
+                    <span className="font-semibold block text-sm text-hearth-espresso">
+                      Send me the Monthly Sangam Dispatch
+                    </span>
+                    <span className="leading-relaxed block mt-0.5">
+                      A concise monthly roundup of Tamil community news, Columbus movie releases, playlist drops, and campus events. Zero spam, unsubscribe anytime.
+                    </span>
+                  </div>
+                </label>
+              </div>
 
               {/* Error Message */}
               {errorMessage && (
@@ -399,6 +470,11 @@ export default function JoinPage() {
 
           <div className="mt-20 sm:mt-28">
             <KolamSectionRule tone="sandstone" />
+          </div>
+
+          {/* Open Community Gateway: Live GroupMe Pulse & Hangouts */}
+          <div className="mt-12 sm:mt-16">
+            <GroupMePulseGateways variant="light" />
           </div>
 
           {/* Open Hearth Guarantee Notice (Unboxed, 1px Grounding Line) */}

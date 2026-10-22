@@ -13,6 +13,8 @@ interface MembershipRequest {
   email: string;
   major: string;
   membershipType: "general" | "performer" | "committee";
+  buckeyeRole?: string;
+  monthlyDispatchOptIn?: boolean;
   notes: string;
   submittedAt: string;
 }
@@ -26,7 +28,15 @@ export async function POST(request: NextRequest) {
   if (!body || typeof body !== "object") {
     return NextResponse.json({ success: false, error: "Invalid membership request." }, { status: 400 });
   }
-  const { name, email, major = "", membershipType, notes = "" } = body as Record<string, unknown>;
+  const {
+    name,
+    email,
+    major = "",
+    membershipType,
+    buckeyeRole = "Undergraduate",
+    monthlyDispatchOptIn = false,
+    notes = "",
+  } = body as Record<string, unknown>;
   if (typeof name !== "string" || !name.trim() || name.length > 120 ||
       typeof email !== "string" || typeof major !== "string" || major.length > 160 ||
       typeof notes !== "string" || notes.length > 2500 ||
@@ -39,8 +49,15 @@ export async function POST(request: NextRequest) {
   }
   try {
     const record: MembershipRequest = {
-      id: randomUUID(), name: name.trim(), email: validation.normalizedEmail,
-      major: major.trim(), membershipType, notes: notes.trim(), submittedAt: new Date().toISOString(),
+      id: randomUUID(),
+      name: name.trim(),
+      email: validation.normalizedEmail,
+      major: major.trim(),
+      membershipType,
+      buckeyeRole: typeof buckeyeRole === "string" ? buckeyeRole : "Undergraduate",
+      monthlyDispatchOptIn: Boolean(monthlyDispatchOptIn),
+      notes: notes.trim(),
+      submittedAt: new Date().toISOString(),
     };
 
     // 1. Persist to ledger

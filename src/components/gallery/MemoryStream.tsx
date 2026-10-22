@@ -36,7 +36,7 @@ const MEMORY_CAPTIONS = [
   { titleEn: "Berry Cute Picnic", titleTa: "பெர்ரி க்யூட் பிக்னிக்", date: "Sep 18" },
   { titleEn: "South Oval Sunset", titleTa: "தெற்கு ஓவல் அந்திவேளை", date: "Autumn" },
   { titleEn: "Acoustic Sangam", titleTa: "இசைச் சங்கமம்", date: "Live" },
-  { titleEn: "Dosa & Chai Evening", titleTa: "தோசை & தேநீர் மாலை", date: "Union" },
+  { titleEn: "Biryani & Game Night", titleTa: "பிரியாணி & விளையாட்டு இரவு", date: "Union" },
   { titleEn: "Pongal Thiruvizha", titleTa: "பொங்கல் திருவிழா", date: "Jan 25" },
   { titleEn: "Collegiate Bonds", titleTa: "நட்பின் சங்கமம்", date: "2025" },
   { titleEn: "Lawn Card Games", titleTa: "புல்வெளி விளையாட்டுகள்", date: "Campus" },

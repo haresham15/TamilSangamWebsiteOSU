@@ -12,7 +12,7 @@ export const metadata: Metadata = buildRouteMetadata({
     "Ohio State Tamil photo archive",
     "35mm campus photography OSU",
     "cultural dance performances Ohio State",
-    "banana-leaf feasts Columbus",
+    "biryani feasts Columbus",
     "South Oval memories",
   ],
 });

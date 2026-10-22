@@ -24,6 +24,8 @@ import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
 import { useReducedMotion } from "framer-motion";
 import { Calendar as CalendarIcon, List as ListIcon, Download } from "lucide-react";
+import { GooglePhotosVaultsStrip } from "@/components/gateways/GooglePhotosVaultsStrip";
+import { GroupMePulseGateways } from "@/components/gateways/GroupMePulseGateways";
 
 // =========================================================================
 // CRITICAL & IMMUTABLE: 3D Sodium-Vapor Amber Events Hero Scene
@@ -387,7 +389,19 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
             </div>
           )}
 
-          <KolamSectionRule tone="sandstone" />
+          {/* Quick-Access Strip to all 4 official Google Photos albums */}
+          <div className="mt-16 sm:mt-24">
+            <GooglePhotosVaultsStrip variant="light" />
+          </div>
+
+          {/* Open Community Gateway: Live GroupMe Pulse & Hangouts */}
+          <div className="mt-12 sm:mt-16">
+            <GroupMePulseGateways variant="light" />
+          </div>
+
+          <div className="mt-20">
+            <KolamSectionRule tone="sandstone" />
+          </div>
 
           {/* Annual Recurring Traditions (Warm Chola Sandstone Band with Recessed Specimen Cards) */}
           <div className="mt-20 sm:mt-32 -mx-6 sm:-mx-12 px-6 sm:px-12 py-20 bg-[#F2EAE0] border-y border-[#161210]/10 space-y-12 shadow-[inset_0_2px_12px_rgba(22,18,16,0.03)]">
@@ -408,9 +422,9 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
                 <span className="font-sans text-xs text-[#B85C38] uppercase tracking-widest font-semibold block">
                   Early Autumn · South Oval
                 </span>
-                <h4 className="text-2xl font-serif text-[#2A2825]">Welcome Chai & Lawn Social</h4>
+                <h4 className="text-2xl font-serif text-[#2A2825]">Welcome Lawn Picnic & Social</h4>
                 <p className="text-sm font-sans text-[#57524C] leading-relaxed">
-                  Casual welcome mixer on the grass with filter coffee, samosas, icebreakers, and connecting freshmen with upperclassmen mentors.
+                  Casual welcome mixer out on the South Oval grass with samosas, Indian snacks, cold drinks, Kahoot trivia, and connecting freshmen with mentors.
                 </p>
               </div>
 
@@ -430,7 +444,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
                 </span>
                 <h4 className="text-2xl font-serif text-[#2A2825]">Pongal Harvest Gathering (தைப்பொங்கல்)</h4>
                 <p className="text-sm font-sans text-[#57524C] leading-relaxed">
-                  Traditional sweet pongal pot cooking, festive kolam sidewalk chalk competitions, and celebration of the Tamil harvest season.
+                  Traditional sweet pongal celebration, festive kolam sidewalk chalk competitions, and cultural games honoring the harvest season.
                 </p>
               </div>
 
@@ -440,7 +454,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
                 </span>
                 <h4 className="text-2xl font-serif text-[#2A2825]">Namma Jathara Spring Carnival</h4>
                 <p className="text-sm font-sans text-[#57524C] leading-relaxed">
-                  Joint collegiate carnival co-hosted with Telugu Tamasha, uniting 200+ students for Indian street food stalls, outdoor games, and dance.
+                  Joint collegiate carnival co-hosted with Telugu Tamasha, uniting 200+ students for Indian snacks, hot biryani, outdoor carnival games, and open dance circle.
                 </p>
               </div>
             </div>

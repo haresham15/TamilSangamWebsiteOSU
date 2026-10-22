@@ -25,13 +25,13 @@ test("gallery filters combine search and category; keyboard lightbox restores fo
   const vault = page.locator("#gallery-vault-content");
   await vault.scrollIntoViewIfNeeded();
   await vault.getByRole("button", { name: "food", exact: true }).click();
-  await vault.getByRole("textbox", { name: "Search memories" }).fill("banana");
-  const print = vault.getByRole("button", { name: "View Banana Leaf Dinner" });
+  await vault.getByRole("textbox", { name: "Search memories" }).fill("biryani");
+  const print = vault.getByRole("button", { name: "View Vanakkam at the Biryani Table" });
   await expect(print).toHaveCount(1);
   await expect(vault.locator("[data-gallery-print]")).toHaveCount(1);
   await print.focus();
   await page.keyboard.press("Enter");
-  const dialog = page.getByRole("dialog", { name: "Banana Leaf Dinner" });
+  const dialog = page.getByRole("dialog", { name: "Vanakkam at the Biryani Table" });
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole("button", { name: "Close" })).toBeFocused();
   await page.keyboard.press("Tab");

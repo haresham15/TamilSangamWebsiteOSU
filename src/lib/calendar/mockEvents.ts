@@ -40,7 +40,7 @@ export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
     titleEn: "Streetside Sapad Night",
     titleTa: "தெருவோரச் சாப்பாடு திருவிழா",
     description:
-      "Hot kothu parotta, crispy dosas, filter coffee, and casual dinner with friends on campus. Meet new Buckeyes and enjoy authentic South Indian food.",
+      "Hot biryani, samosas, Indian snacks, cold drinks, Kahoot trivia, and casual dinner with friends on campus. Meet new Buckeyes and enjoy authentic food.",
     location: "Campus Kitchen / Ohio Union",
     allDay: false,
     start: "2026-11-14T18:30:00-05:00",

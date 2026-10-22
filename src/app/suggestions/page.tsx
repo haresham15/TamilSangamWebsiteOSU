@@ -26,6 +26,8 @@ import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { registerSystem } from "@/engine/masterTick";
 import { Magnet } from "@/components/ui/react-bits";
 import { PILLARS_DATA, PillarSlug } from "@/data/pillars";
+import { OsuTamilPlaylistGateway } from "@/components/gateways/OsuTamilPlaylistGateway";
+import { AramPhilanthropyGateway } from "@/components/gateways/AramPhilanthropyGateway";
 
 function SuggestionsSearchParamsSync({
   onCategory,
@@ -502,8 +504,14 @@ export default function SuggestionsPage() {
           </div>
         </div>
 
-        <div className="mt-20 sm:mt-28">
+        <div className="mt-20 sm:mt-28 space-y-16">
           <KolamSectionRule tone="sandstone" />
+
+          {/* Open Community Gateway: The All-OSU Tamil Collective Playlist */}
+          <OsuTamilPlaylistGateway variant="light" />
+
+          {/* Open Community Gateway: Aram Philanthropy & Cross-Cultural Service */}
+          <AramPhilanthropyGateway variant="light" />
         </div>
 
         {/* =========================================================================

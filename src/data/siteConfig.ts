@@ -31,9 +31,17 @@ export const SITE_CONFIG = {
   // External Portals & Communications
   contactEmail: "osutamilsangam@gmail.com",
   privacyEmail: "osutamilsangam+privacy@gmail.com",
-  groupMeUrl: "https://groupme.com/join_group/osutamilsangam",
-  instagramUrl: "https://instagram.com/osutamilsangam",
+  groupMeUrl: "https://web.groupme.com/join_group/83424812/BeBIRg7f",
+  instagramUrl: "https://www.instagram.com/tamilsangam.osu/",
   constitutionPdfPath: "/docs/constitution-2026-2027.pdf",
+
+  // Official Google Photos Event Vaults (All 4 Albums)
+  googlePhotosAlbums: {
+    album1: "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7", // Berry Cute Picnic
+    album2: "https://photos.app.goo.gl/PnkceBh19PqytYQ89", // Streetside Sapad
+    album3: "https://photos.app.goo.gl/NBTxg98ppmd9uhWX9", // Namma Jathara Carnival
+    album4: "https://photos.app.goo.gl/QrUrPkvPQqQvz7H29", // TS X TT Event
+  },
 
   // Canonical Navigation Structure
   navLinks: [

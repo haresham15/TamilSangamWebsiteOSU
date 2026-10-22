@@ -14,9 +14,8 @@
 
 - **Campus Address**: Ohio Union, 1739 N High St, Columbus, OH 43210
 - **Geographic Coordinates**: 40.0067° N, 83.0305° W
-- **Contact Email**: osutamilsangam@gmail.com
-- **Instagram**: https://www.instagram.com/osutamilsangam
-- **Student GroupMe**: https://groupme.com/join_group/osutamilsangam
+- **Instagram**: https://www.instagram.com/tamilsangam.osu/
+- **Student GroupMe**: https://web.groupme.com/join_group/83424812/BeBIRg7f
 
 ---
 
@@ -66,8 +65,8 @@ Our campus initiatives are organized across Five Pillars:
    - *Dossier Link*: https://tamil-sangam-website-osu.vercel.app/events/berry-cute-picnic
 
 3. **Streetside Sapad Night (தெருவோரச் சாப்பாடு)**
-   - *Location*: Campus Kitchen / Ohio Union, Columbus, OH
-   - *Details*: South Indian street food dinner serving piping-hot kothu parotta, crispy masala dosas, and filter coffee.
+   - *Location*: Campus Hall / Ohio Union, Columbus, OH
+   - *Details*: General Body Meeting featuring competitive Kahoot trivia, musical chairs, small-group team games, and hot biryani with Indian snacks and cold drinks.
    - *Dossier Link*: https://tamil-sangam-website-osu.vercel.app/events/streetside-sapad
 
 4. **Namma Jathara Carnival (நம்ம ஜாதரா)**

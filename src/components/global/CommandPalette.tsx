@@ -54,8 +54,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       { id: "p-gallery", category: "Page", title: "Gallery / நினைவுகள்", subtitle: "Festival memories & photo albums", href: "/gallery", icon: <ImageIcon className="w-4 h-4 text-[#06b6d4]" /> },
       { id: "p-guide", category: "Page", title: "User Guide & FAQ / வழிகாட்டி", subtitle: "Handbook, Searchable FAQ & AI Knowledge Manager", href: "/guide", icon: <BookOpen className="w-4 h-4 text-[#55CCA2]" /> },
       { id: "p-nanba", category: "Page", title: "Ask Nanba / நண்பா (AI Guide)", subtitle: "Chat with Nanba or search verified club knowledge", href: "/guide", icon: <NanbaAvatar size={16} className="w-4 h-4 shrink-0" /> },
-      { id: "p-join", category: "Page", title: "Join / இணைந்திடுங்கள்", subtitle: "GroupMe gateway & audition signups", href: "/join", icon: <Users className="w-4 h-4 text-[#10b981]" /> },
-      { id: "p-suggestions", category: "Page", title: "Suggestions / பரிந்துரைகள்", subtitle: "Blueprint reveal & community suggestion box", href: "/suggestions", icon: <Sparkles className="w-4 h-4 text-[#FFC526]" /> },
+      { id: "p-join", category: "Page", title: "Join / இணைந்திடுங்கள்", subtitle: "Guestbook & free student membership", href: "/join", icon: <Users className="w-4 h-4 text-[#10b981]" /> },
+      { id: "p-groupme", category: "Page", title: "GroupMe Campus Chat / பிரதான அரட்டை", subtitle: "Join our active student campus chat", href: "https://web.groupme.com/join_group/83424812/BeBIRg7f", icon: <Users className="w-4 h-4 text-[#10b981]" /> },
+      { id: "p-instagram", category: "Page", title: "Instagram (@tamilsangam.osu)", subtitle: "Official announcements, photo drops & reels", href: "https://www.instagram.com/tamilsangam.osu/", icon: <Sparkles className="w-4 h-4 text-[#e1306c]" /> },
+      { id: "p-suggestions", category: "Page", title: "Suggestions & Ideas / கருத்துக்களம்", subtitle: "Campus ideas, playlists & initiatives", href: "/ideas", icon: <Sparkles className="w-4 h-4 text-[#FFC526]" /> },
       { id: "p-links", category: "Page", title: "Quick Links (Bio Hub)", subtitle: "Mobile link-in-bio & social links", href: "/links", icon: <ArrowRight className="w-4 h-4 text-[#55CCA2]" /> },
 
       // Events

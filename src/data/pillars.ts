@@ -221,16 +221,16 @@ export const PILLARS_DATA: Record<PillarSlug, PillarData> = {
     heroTagline: "The Buckeye Almanac: Four Seasons of Feasting, Lawn Picnics & Harvest Rites",
     heroTaglineTa: "பருவகால விழாக்கள்: தெருவோரச் சாப்பாடு, புல்வெளி விருந்துகள் மற்றும் அறுவடைத் திருநாள்",
     manifestoLead:
-      "Kondatam turns cold Columbus turf into a vibrant festival ground. It is the communal fragrance of simmering cardamom and jaggery during Thai Pongal, the riotous colors and tug-of-war on the spring grass, and banana-leaf feasts that bring home to the Midwest.",
+      "Kondatam turns Columbus campus into a vibrant festival ground. It is the communal cheer of high-energy Kahoot and team games, festive gatherings on South Oval, and hot biryani dinners that bring home to Ohio State.",
     manifestoLeadTa:
-      "கொண்டாட்டம் என்பது கொலம்பஸ் நகரில் நமது பாரம்பரிய விழாக் கொண்டாட்டங்களின் உயிரோட்டம். தைப் பொங்கலின் வெல்ல மணம், சித்திரைத் திருவிழாவின் விளையாட்டுப் போட்டிகள், மற்றும் வாழையிலை விருந்துகளின் வாசம் மூலம் நம் கலாச்சாரத்தை இங்கு மலரச் செய்கிறோம்.",
+      "கொண்டாட்டம் என்பது கொலம்பஸ் வளாகத்தில் நமது கூட்டு மகிழ்ச்சியின் வெளிப்பாடு. கஹூட் மற்றும் குழு விளையாட்டுகள், ஓவல் புல்வெளி சந்திப்புகள், மற்றும் சூடான பிரியாணி விருந்து மூலம் நம் தோழமையை இங்கு மலரச் செய்கிறோம்.",
     futureEventVision:
       "Our 2026–2027 calendar builds four landmark seasonal gatherings: the Autumn Welcome Picnic on South Oval, Diwali Lights Social, Streetside Sapad Night, and the flagship Namma Jathara Spring Carnival. We invite student organizers, culinary enthusiasts, and decorators to co-design these festivals from the ground up.",
     futureEventVisionTa:
       "2026–2027 ஆண்டிற்கான நமது நாட்காட்டி நான்கு முக்கியப் பருவ விழாக்களைக் கட்டமைக்கிறது: இலையுதிர் புல்வெளி பிக்னிக், தீபாவளி சந்திப்பு, தெருவோரச் சாப்பாடு, மற்றும் நம்ம ஜாத்ரா வசந்த விழா. இந்த விழாக்களை வடிவமைக்க மாணவர்களை அழைக்கிறோம்.",
     openCallTitle: "Open Call: Festival Co-Designers & Organizers",
     openCallDesc:
-      "Want to coordinate banana-leaf dining, design traditional Kolam decor, lead lawn games, or help manage logistics? Step into our festival committee.",
+      "Want to coordinate food catering, design traditional Kolam decor, lead team games, or help manage logistics? Step into our festival committee.",
     accentColor: "#E5A93C", // Turmeric Gold
     ragaNote: "Ga3 (F#4)",
     ragaHz: 367.08,

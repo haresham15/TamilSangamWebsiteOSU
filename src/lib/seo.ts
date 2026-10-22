@@ -47,8 +47,8 @@ export const SEO_ENTITY = {
   memberOf: "Ohio State Student Activities",
   contactEmail: "osutamilsangam@gmail.com",
   socials: [
-    "https://www.instagram.com/osutamilsangam",
-    "https://groupme.com/join_group/osutamilsangam",
+    "https://www.instagram.com/tamilsangam.osu/",
+    "https://web.groupme.com/join_group/83424812/BeBIRg7f",
     "https://activities.osu.edu/involvement/student_organizations/find_a_student_org/?i=Tamil+Sangam",
     "https://github.com/haresham15/TamilSangamWebsiteOSU",
   ],
@@ -112,7 +112,7 @@ export const ROUTE_METADATA = {
   gallery: {
     title: "Photo Gallery & 35mm Campus Archive | OSU Tamil Sangam",
     description:
-      "Browse candid photographs, cultural dance performances, banana-leaf feasts, and South Oval memories from Tamil Sangam at OSU.",
+      "Browse candid photographs, competitive Kahoot trivia, hot biryani tables, and South Oval memories from Tamil Sangam at OSU.",
     path: "/gallery",
   },
   guide: {

@@ -19,7 +19,7 @@ export const BASELINE_KNOWLEDGE: KnowledgeItem[] = [
     titleEn: "What is OSU Tamil Sangam?",
     titleTa: "ஓஹியோ தமிழ் சங்கம் என்றால் என்ன?",
     contentEn:
-      "OSU Tamil Sangam is an official student-run organization at The Ohio State University in Columbus, OH. We are an open, casual cultural and social hub for Tamil students and friends of all backgrounds. We host campus lawn picnics, South Indian street food nights (kothu parotta, dosas, filter coffee), music jams, games, and our annual autumn Diwali celebration. Membership is 100% free and open to everyone regardless of major, culture, or language spoken.",
+      "OSU Tamil Sangam is an official student-run organization at The Ohio State University in Columbus, OH. We are an open, casual cultural and social hub for Tamil students and friends of all backgrounds. We host campus lawn picnics, game nights (Kahoot trivia, musical chairs, small-group team games), hot biryani dinners, and collaborative student hangouts. Membership is 100% free and open to everyone regardless of major, culture, or language spoken.",
     contentTa:
       "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் என்பது கொலம்பஸில் உள்ள ஓஹியோ பல்கலைக்கழகத்தில் செயல்படும் மாணவர் அமைப்பாகும். நல்ல உணவு, இசை, விளையாட்டு மற்றும் தோழமையின் வழியே அனைவரையும் ஒன்றிணைக்கும் திறந்த பண்பாட்டு மையம்.",
     keywords: [
@@ -189,19 +189,20 @@ export const BASELINE_KNOWLEDGE: KnowledgeItem[] = [
   {
     id: "kb-event-streetside-sapad",
     category: "Events",
-    titleEn: "TS Streetside Sapad Night (Food Night)",
-    titleTa: "தெருவோரச் சாப்பாடு திருவிழா",
+    titleEn: "TS Streetside Sapad & Game Night",
+    titleTa: "தெருவோரச் சாப்பாடு & விளையாட்டு இரவு",
     contentEn:
-      "An authentic South Indian street food dinner night held in February at campus dining kitchens or student spaces. Features fresh hot kothu parotta chopped live on the tawa, crispy dosas, chutneys, and authentic Madras meter filter coffee.",
+      "A flagship General Body Meeting held in campus halls featuring high-energy Kahoot trivia showdowns, musical chairs, and interactive challenges, followed by hot biryani, samosas, and cold canned drinks served at marigold-draped tables.",
     contentTa:
-      "கொத்து பரோட்டா, மொறுமொறு தோசை மற்றும் பில்டர் காபியுடன் கூடிய தெருவோரச் சாப்பாடு மாலை.",
+      "கஹூட் வினாடி-வினா, குழு விளையாட்டுகள் மற்றும் சூடான பிரியாணி, சமோசா, குளிர்பானங்களுடன் கூடிய பொதுக்குழு சந்திப்பு.",
     keywords: [
       "streetside sapad",
       "food",
-      "kothu parotta",
-      "dosa",
-      "filter coffee",
-      "kaapi",
+      "biryani",
+      "samosa",
+      "kahoot",
+      "trivia",
+      "games",
       "dinner",
     ],
     route: "/events/streetside-sapad",

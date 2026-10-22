@@ -492,6 +492,14 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
               Instagram
             </a>
             <a 
+              href={SITE_CONFIG.groupMeUrl}
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-white/80 hover:text-[#E5A93C] transition-colors"
+            >
+              GroupMe
+            </a>
+            <a 
               href={SITE_CONFIG.constitutionPdfPath} 
               target="_blank" 
               rel="noopener noreferrer" 

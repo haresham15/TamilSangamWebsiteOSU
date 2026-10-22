@@ -23,6 +23,7 @@ import CountUp from "@/components/CountUp";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { SpotlightCard } from "@/components/ui/react-bits";
+import { TechFiresideGateway } from "@/components/gateways/TechFiresideGateway";
 import styles from "./board.module.css";
 
 const BoardHeroCanvas = dynamic(
@@ -664,6 +665,11 @@ export default function BoardPage() {
           </div>
 
           <KolamSectionRule tone="sandstone" />
+
+          {/* Open Community Gateway: Tamil Nadu x Ohio State Tech & Career Firesides */}
+          <div className="mt-20 sm:mt-28">
+            <TechFiresideGateway variant="light" />
+          </div>
 
           {/* Borderless Organic Transportation to Join */}
           <div className="mt-28 sm:mt-36">

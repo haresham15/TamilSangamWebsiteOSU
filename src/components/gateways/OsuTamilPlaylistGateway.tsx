@@ -1,0 +1,138 @@
+import React from "react";
+import Link from "next/link";
+import { Music, Radio, Disc3, MessageSquarePlus, Send, Sparkles } from "lucide-react";
+
+interface OsuTamilPlaylistGatewayProps {
+  className?: string;
+  variant?: "dark" | "light";
+}
+
+export function OsuTamilPlaylistGateway({
+  className = "",
+  variant = "light",
+}: OsuTamilPlaylistGatewayProps) {
+  const isDark = variant === "dark";
+
+  const ERA_PILLS = [
+    { label: "80s & 90s Ilaiyaraaja Classics", ta: "இளையராஜா சகாப்தம்" },
+    { label: "A.R. Rahman Soundscape", ta: "ஏ.ஆர். ரஹ்மான் இசைப்புயல்" },
+    { label: "2000s Harris & Yuvan Nostalgia", ta: "ஹாரிஸ் & யுவன் நினைவுகள்" },
+    { label: "Anirudh Hype & Modern Kuthu", ta: "அனிருத் & குத்து பாடல்கள்" },
+    { label: "Chennai Indie & Diaspora Hip-Hop", ta: "சுயாதீனத் தமிழ் இசை" },
+  ];
+
+  return (
+    <section
+      aria-labelledby="playlist-gateway-heading"
+      className={`relative w-full overflow-hidden rounded-2xl p-6 sm:p-8 md:p-10 border transition-all ${
+        isDark
+          ? "bg-[#161413] border-white/10 text-white"
+          : "bg-[#FAF7F2] border-[#E5DDD0] text-[#2A2825]"
+      } ${className}`}
+    >
+      {/* Background Decorative Vinyl Glow */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-20 -bottom-20 w-80 h-80 rounded-full opacity-10 bg-gradient-to-br from-[#E5A93C] via-[#B85C38] to-[#9B7BB8] blur-3xl"
+      />
+
+      <div className="relative max-w-4xl mx-auto space-y-8">
+        {/* Top Badges Strip */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-5 border-current/10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium tracking-wide uppercase bg-[#E5A93C]/15 text-[#B85C38] dark:bg-[#E5A93C]/20 dark:text-[#E5A93C]">
+            <Radio className="w-3.5 h-3.5 animate-pulse" aria-hidden="true" />
+            <span>OPEN GATEWAY · COMMUNITY CURATED</span>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-stone-500 uppercase">
+            <Disc3 className="w-4 h-4 text-[#B85C38]" aria-hidden="true" />
+            <span>Olentangy FM · Only Tamil Tracks</span>
+          </div>
+        </div>
+
+        {/* Content Body */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="lg:col-span-8 space-y-4">
+            <h2
+              id="playlist-gateway-heading"
+              className="text-2xl sm:text-3xl lg:text-4xl font-serif font-normal tracking-tight leading-tight"
+            >
+              The All-OSU Collaborative Tamil Playlist
+            </h2>
+
+            <p lang="ta" className="text-base sm:text-lg font-tamil text-[#B85C38] tracking-normal">
+              ஓஹியோ ஸ்டேட் தமிழ் மாணவர்களின் கூட்டுப் பாடல்தொகுப்பு
+            </p>
+
+            <p className={`text-sm sm:text-base leading-relaxed font-sans ${isDark ? "text-stone-300" : "text-[#57524C]"}`}>
+              We&apos;re building a massive, multi-year OSU collaborative playlist—strictly Tamil tracks added by Buckeyes across every cohort, from 80s Ilaiyaraaja &amp; A.R. Rahman to Anirudh and underground Chennai indie.
+            </p>
+
+            {/* Era Tags */}
+            <div className="pt-2">
+              <span className="block text-xs font-mono font-semibold uppercase tracking-wider text-stone-500 mb-2">
+                Included Soundscapes &amp; Cohort Eras:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {ERA_PILLS.map((pill) => (
+                  <span
+                    key={pill.label}
+                    className={`text-xs px-2.5 py-1 rounded-md border font-sans ${
+                      isDark
+                        ? "bg-[#211E1C] border-white/10 text-stone-300"
+                        : "bg-white border-[#E6DDCE] text-[#57524C]"
+                    }`}
+                  >
+                    {pill.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Action Ledger Box */}
+          <div className="lg:col-span-4 flex flex-col gap-3">
+            <div
+              className={`p-5 rounded-xl border space-y-4 ${
+                isDark ? "bg-[#1E1B19] border-white/10" : "bg-white border-[#E6DDCE] shadow-sm"
+              }`}
+            >
+              <div className="space-y-1">
+                <span className="text-xs font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
+                  Join the Sound Ledger
+                </span>
+                <p className="text-xs text-stone-500">
+                  Spotify &amp; Apple Music collaborative link incubating for 2026–2027. Drop your favorite tracks right now!
+                </p>
+              </div>
+
+              {/* Action 1: GroupMe */}
+              <a
+                href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-xs font-mono font-semibold uppercase tracking-wider transition-all bg-[#B85C38] text-white hover:bg-[#A04E2F] focus:outline-none focus:ring-2 focus:ring-[#B85C38]"
+              >
+                <span>Drop a Song in GroupMe</span>
+                <Send className="w-3.5 h-3.5 ml-2" aria-hidden="true" />
+              </a>
+
+              {/* Action 2: Ideas Terminal Route */}
+              <Link
+                href="/ideas?category=NEW+INITIATIVE&prompt=Playlist+Track+Submission"
+                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-xs font-mono font-semibold uppercase tracking-wider border transition-all ${
+                  isDark
+                    ? "border-white/15 text-stone-200 hover:bg-white/5"
+                    : "border-[#E6DDCE] text-[#2A2825] hover:bg-[#F4EFE6]"
+                } focus:outline-none focus:ring-2 focus:ring-[#B85C38]`}
+              >
+                <span>Submit a Track Title</span>
+                <MessageSquarePlus className="w-3.5 h-3.5 ml-2" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

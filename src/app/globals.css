@@ -6,6 +6,26 @@ main {
   overflow-x: clip;
 }
 
+/* Hide native cursor on fine-pointer devices; ViewfinderCursor takes over */
+@media (pointer: fine) {
+  html, body, * {
+    cursor: none !important;
+  }
+  /* Restore functional cursors for accessibility — these remain 'none' visually
+     because our custom overlay already handles hover state changes,
+     but we must not break OS-level cursor semantics for AT tools. */
+  a, button, [role="button"], [tabindex]:not([tabindex="-1"]),
+  input[type="submit"], input[type="button"], input[type="reset"],
+  label[for], select {
+    cursor: none !important;
+  }
+  input[type="text"], input[type="email"], input[type="password"],
+  input[type="search"], input[type="number"], input[type="tel"],
+  input[type="url"], textarea, [contenteditable] {
+    cursor: none !important;
+  }
+}
+
 html {
   scroll-padding-top: 6rem;
 }

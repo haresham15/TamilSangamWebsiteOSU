@@ -106,7 +106,7 @@ export default function BioHubPage() {
           OSU Tamil Sangam
         </h1>
         <p className="text-xs text-[#B85C38] font-mono uppercase tracking-widest mb-2 font-semibold">
-          @osutamilsangam · The Ohio State University
+          @tamilsangam.osu · The Ohio State University
         </p>
         <p className="text-xs text-[#57524C] mb-6 max-w-xs mx-auto leading-relaxed font-sans">
           Start the Aatam, Paatam, and Kondatam! · ஆட்டம் · பாட்டம் · கொண்டாட்டம்
@@ -115,7 +115,7 @@ export default function BioHubPage() {
         {/* Quick Social Links: Borderless Minimal Text/Icon Actions */}
         <div className="flex items-center justify-center gap-6 mb-10 pb-6 border-b border-[#E5DDD0]">
           <a
-            href="https://instagram.com/osutamilsangam"
+            href="https://www.instagram.com/tamilsangam.osu/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-xs font-sans font-medium text-[#57524C] hover:text-[#B85C38] transition-colors"
@@ -125,7 +125,7 @@ export default function BioHubPage() {
             <span>Instagram</span>
           </a>
           <a
-            href="https://groupme.com"
+            href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-xs font-sans font-medium text-[#57524C] hover:text-[#B85C38] transition-colors"

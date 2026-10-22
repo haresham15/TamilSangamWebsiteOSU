@@ -15,7 +15,7 @@ export const SEARCH_SYNONYMS: SynonymMapping[] = [
   {
     synonyms: ["sapad", "saapadu", "sappadu", "dosa", "thosai", "chai", "tea", "coffee", "kaapi", "degrekaapi", "biryani", "food", "dinner", "picnic", "snacks", "samosa"],
     targetIds: ["evt-streetside-sapad", "evt-berry-cute-picnic", "gal-streetside-sapad", "gal-berry-cute-picnic", "p-events"],
-    keywords: ["Streetside Sapad Night", "Filter Coffee & Chai", "Banana Leaf Feast", "Dosa Cooking", "Picnic Berries"],
+    keywords: ["Streetside Sapad Night", "Hot Biryani & Samosas", "Indian Snacks & Refreshments", "Kahoot & Team Games", "Picnic Lawn Gathering"],
   },
   // Dance, Music & Kuthu
   {

@@ -58,12 +58,12 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/groupme",
-        destination: "https://groupme.com/join_group/osutamilsangam",
+        destination: "https://web.groupme.com/join_group/83424812/BeBIRg7f",
         permanent: false,
       },
       {
         source: "/instagram",
-        destination: "https://www.instagram.com/osutamilsangam/",
+        destination: "https://www.instagram.com/tamilsangam.osu/",
         permanent: false,
       },
       {
