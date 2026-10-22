@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, MapPin, Clock, ArrowRight, ExternalLink, Sparkles, X, Eye } from "lucide-react";
+import { Calendar, MapPin, Clock, ArrowRight, X } from "lucide-react";
 import { EVENTS, SangamEvent } from "@/data/events";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
@@ -18,7 +19,7 @@ interface EventsDepthShowcaseProps {
 
 export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ className = "" }) => {
   const { locale } = useLocale();
-  const { playClick, playBell } = useAudio();
+  const { playClick } = useAudio();
 
   // Get the 3 existing events
   const recentEvents = useMemo(() => {
@@ -31,11 +32,11 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useModalScrollLock(isModalOpen, () => setIsModalOpen(false));
-  const [mounted, setMounted] = useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   // Keyboard Escape listener & body scroll lock for modal
   React.useEffect(() => {
@@ -234,10 +235,13 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
                 >
                   {/* Modal Header Banner Image */}
                   <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-[#1E1B18]">
-                    <img
+                    <Image
                       src={activeEvent.posterImage || activeEvent.hoverImage}
                       alt={`${activeEvent.titleEn} — OSU Tamil Sangam campus event at The Ohio State University`}
-                      className="w-full h-full object-cover brightness-90"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 672px"
+                      className="object-cover brightness-90"
+                      priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#FAF9F6] via-transparent to-black/40" />
 

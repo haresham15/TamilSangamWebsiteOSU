@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -48,17 +48,18 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
   const { isLiteMode } = useLiteMode();
   const tier = useTier();
   const reducedMotion = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
   const heroOverlayRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  const staticHero = mounted ? (isLiteMode || tier === "C" || !!reducedMotion) : false;
+  const isClient = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+  const staticHero = isClient ? (isLiteMode || tier === "C" || !!reducedMotion) : false;
 
   useEffect(() => {
     return registerSystem({
@@ -100,8 +101,11 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
     };
     const globalWin = typeof window !== "undefined" ? (window as unknown as { __pendingEventYear?: string }) : undefined;
     if (globalWin?.__pendingEventYear) {
-      setFilterYear(globalWin.__pendingEventYear);
+      const pendingYear = globalWin.__pendingEventYear;
       delete globalWin.__pendingEventYear;
+      queueMicrotask(() => {
+        setFilterYear(pendingYear);
+      });
     }
     window.addEventListener("event-year-select", onYearEvent);
     return () => window.removeEventListener("event-year-select", onYearEvent);

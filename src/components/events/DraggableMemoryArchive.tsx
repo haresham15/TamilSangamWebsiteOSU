@@ -1,13 +1,13 @@
 // src/components/events/DraggableMemoryArchive.tsx
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Draggable } from "gsap/Draggable";
 import { audioLayer } from "@/utils/audioLayer";
-import { RotateCcw, Move, Sparkles } from "lucide-react";
+import { RotateCcw, Move } from "lucide-react";
 
 interface PolaroidArtifact {
   id: string;
@@ -95,7 +95,6 @@ export function DraggableMemoryArchive() {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const maxZIndexRef = useRef(10);
   const draggablesRef = useRef<Draggable[]>([]);
-  const [hasDealt, setHasDealt] = useState(false);
 
   const dealCards = () => {
     if (!containerRef.current) return;
@@ -132,8 +131,6 @@ export function DraggableMemoryArchive() {
         }
       );
     });
-
-    setHasDealt(true);
   };
 
   useEffect(() => {

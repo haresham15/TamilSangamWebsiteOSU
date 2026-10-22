@@ -2,14 +2,10 @@
 
 import React, { useRef, useState, useEffect, useActionState } from "react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useReducedMotion } from "framer-motion";
 import { useFormStatus } from "react-dom";
 import {
-  Compass,
   ArrowDown,
-  Mail,
-  Lightbulb,
   Check,
   Loader2,
   ArrowRight
@@ -18,8 +14,6 @@ import { useLocale } from "@/context/LocaleContext";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
 import { HeroScrollStage } from "@/components/canvas/HeroScrollStage";
-import type { BlueprintPin } from "@/components/suggestions/BlueprintSVG";
-import { OFFICIAL_DISCLAIMER, CONTACT_EMAIL } from "@/lib/constants";
 import { submitSuggestion, SuggestionActionState } from "@/app/actions/suggestion";
 import { audioLayer } from "@/utils/audioLayer";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
@@ -103,23 +97,19 @@ export default function SuggestionsPage() {
     });
   }, []);
   const [selectedCategory, setSelectedCategory] = useState("Event idea");
-  const [activePin, setActivePin] = useState<BlueprintPin | null>(null);
-  const [newlyDroppedPin, setNewlyDroppedPin] = useState<{
-    id: string;
-    x: number;
-    y: number;
-  } | null>(null);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [timestamp, setTimestamp] = useState<number>(() => (typeof window !== "undefined" ? Date.now() : 0));
+  const [timestamp] = useState<number>(() => (typeof window !== "undefined" ? Date.now() : 0));
 
   const [state, formAction] = useActionState(submitSuggestion, initialState);
+  const newlyDroppedPin = state.success && state.pin ? state.pin : null;
 
+  const playedSoundRef = useRef(false);
   useEffect(() => {
-    if (state.success && state.pin) {
-      setNewlyDroppedPin(state.pin);
+    if (state.success && state.pin && !playedSoundRef.current) {
+      playedSoundRef.current = true;
       audioLayer.playTapeClack();
     }
   }, [state.success, state.pin]);
@@ -156,7 +146,6 @@ export default function SuggestionsPage() {
             scrollProgress={scrollProgress}
             isLiteMode={staticHero}
             onSelectPin={(pin) => {
-              setActivePin(pin);
               setSelectedCategory(pin.category);
             }}
             newPin={newlyDroppedPin}
