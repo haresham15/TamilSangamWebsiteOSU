@@ -121,7 +121,7 @@ export function createHeroKineticsTracker(
 /**
  * React hook wrapper providing a persistent zero-allocation kinetics tracker.
  */
-export function useHeroKinetics(initialProgress = 0, progressLambda = 7.5, velocityLambda = 5.0) {
+export function useHeroKinetics(initialProgress = 0, progressLambda = 4.2, velocityLambda = 5.0) {
   const [tracker] = useState(() => {
     const instance = createHeroKineticsTracker(progressLambda, velocityLambda);
     instance.reset(initialProgress);

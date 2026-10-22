@@ -43,10 +43,12 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
       return () => cancelAnimationFrame(frameId);
     }
 
-    // Initialize Lenis strictly without autoRaf (§4.1)
+    // Initialize Lenis with cinematic pacing & heavyweight inertial damping
     const lenis = new Lenis({
       autoRaf: false,
-      lerp: 0.08,
+      lerp: 0.052,
+      wheelMultiplier: 0.70,
+      touchMultiplier: 0.85,
       smoothWheel: true,
       syncTouch: false, // Keep native touch momentum scrolling on iOS and mobile
       anchors: true,

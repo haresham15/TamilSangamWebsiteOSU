@@ -52,15 +52,15 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Initialize Lenis with ultra-responsive silky linear interpolation
+    // Initialize Lenis with cinematic pacing & heavyweight inertial damping
     const lenis = new Lenis({
-      lerp: 0.095, // Pure exponential interpolation: instantaneous response, buttery smooth deceleration
+      lerp: 0.052,
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      syncTouch: false, // Don't fight native touch momentum scrolling (Phase 6 mandate)
-      touchMultiplier: 1.0,
-      wheelMultiplier: 1.0,
+      syncTouch: false,
+      touchMultiplier: 0.85,
+      wheelMultiplier: 0.70,
       autoRaf: false,
     });
 
