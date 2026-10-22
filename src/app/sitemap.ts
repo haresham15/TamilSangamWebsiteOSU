@@ -1,93 +1,95 @@
 import { MetadataRoute } from "next";
 import { EVENTS } from "@/data/events";
 import { GALLERY_ALBUMS } from "@/data/gallery";
+import { SITE_URL } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://osutamilsangam.org";
   const now = new Date();
 
-  // Core static pages
-  const staticPages = [
+  // Core static pages with exact priority weights
+  const staticPages: MetadataRoute.Sitemap = [
     {
-      url: baseUrl,
+      url: SITE_URL,
       lastModified: now,
-      changeFrequency: "daily" as const,
+      changeFrequency: "weekly",
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/events`,
+      url: `${SITE_URL}/join`,
       lastModified: now,
-      changeFrequency: "weekly" as const,
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/about`,
+      url: `${SITE_URL}/events`,
       lastModified: now,
-      changeFrequency: "monthly" as const,
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/board`,
-      lastModified: now,
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/gallery`,
-      lastModified: now,
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/initiatives`,
-      lastModified: now,
-      changeFrequency: "monthly" as const,
-      priority: 0.75,
-    },
-    {
-      url: `${baseUrl}/join`,
-      lastModified: now,
-      changeFrequency: "weekly" as const,
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/guide`,
+      url: `${SITE_URL}/about`,
       lastModified: now,
-      changeFrequency: "weekly" as const,
-      priority: 0.85,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
     {
-      url: `${baseUrl}/links`,
+      url: `${SITE_URL}/guide`,
       lastModified: now,
-      changeFrequency: "weekly" as const,
-      priority: 0.85,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
     {
-      url: `${baseUrl}/suggestions`,
+      url: `${SITE_URL}/board`,
       lastModified: now,
-      changeFrequency: "weekly" as const,
-      priority: 0.85,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/gallery`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/ideas`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/suggestions`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
     },
   ];
 
-  // Dynamic event pages with images for Google Image Search
-  const eventPages = EVENTS.map((event) => ({
-    url: `${baseUrl}/events/${event.slug}`,
+  // Dynamic Event Dossier pages with image attachments for Google Image Search
+  const eventPages: MetadataRoute.Sitemap = EVENTS.map((event) => ({
+    url: `${SITE_URL}/events/${event.slug}`,
     lastModified: now,
-    changeFrequency: "weekly" as const,
-    priority: event.status === "upcoming" ? 0.95 : 0.75,
-    images: event.posterImage ? [event.posterImage] : [`${baseUrl}/emblem.svg`],
+    changeFrequency: "weekly",
+    priority: event.status === "upcoming" ? 0.95 : 0.8,
+    images: [
+      event.posterImage?.startsWith("http")
+        ? event.posterImage
+        : `${SITE_URL}${event.posterImage || "/emblem.svg"}`,
+    ],
   }));
 
-  // Dynamic gallery album pages with photo URLs for Google Images
-  const galleryPages = GALLERY_ALBUMS.map((album) => ({
-    url: `${baseUrl}/gallery/${album.slug}`,
+  // Dynamic Gallery Album pages with photo previews
+  const galleryPages: MetadataRoute.Sitemap = GALLERY_ALBUMS.map((album) => ({
+    url: `${SITE_URL}/gallery/${album.slug}`,
     lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
+    changeFrequency: "monthly",
+    priority: 0.75,
     images: [
-      album.coverImage,
-      ...album.photos.slice(0, 4).map((p) => p.imageUrl),
+      album.coverImage?.startsWith("http")
+        ? album.coverImage
+        : `${SITE_URL}${album.coverImage || "/emblem.svg"}`,
+      ...album.photos.slice(0, 4).map((p) =>
+        p.imageUrl?.startsWith("http") ? p.imageUrl : `${SITE_URL}${p.imageUrl}`
+      ),
     ].filter(Boolean),
   }));
 

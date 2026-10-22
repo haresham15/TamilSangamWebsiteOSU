@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
 import { GALLERY_ALBUMS } from "@/data/gallery";
-import { PhotoAlbumJsonLd, BreadcrumbJsonLd } from "@/components/global/JsonLd";
+import { PhotoAlbumJsonLd } from "@/components/global/JsonLd";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { constructAlternates, constructCanonical, DEFAULT_ROBOTS, SITE_URL } from "@/lib/seo";
 
 interface AlbumLayoutProps {
   children: React.ReactNode;
   params: Promise<{ album: string }>;
+}
+
+export async function generateStaticParams() {
+  return GALLERY_ALBUMS.map((album) => ({
+    album: album.slug,
+  }));
 }
 
 export async function generateMetadata({
@@ -22,12 +30,17 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${album.titleEn} (${album.titleTa}) · Photo Album`;
+  const title = `${album.titleEn} (${album.titleTa}) | OSU Tamil Sangam Photos`;
   const description = `${album.descriptionEn} High-resolution photography archive from ${album.eventDate} at ${album.location}. Contains ${album.photoCount} event photos.`;
-  const cover = album.coverImage || "/emblem.svg";
+  const canonical = constructCanonical(`/gallery/${album.slug}`);
+  const cover = album.coverImage?.startsWith("http")
+    ? album.coverImage
+    : `${SITE_URL}${album.coverImage || "/opengraph-image"}`;
 
   return {
-    title,
+    title: {
+      absolute: title,
+    },
     description,
     keywords: [
       album.titleEn,
@@ -37,26 +50,25 @@ export async function generateMetadata({
       album.location,
       "Tamil festival gallery Columbus",
     ],
-    alternates: {
-      canonical: `https://osutamilsangam.org/gallery/${album.slug}`,
-    },
+    alternates: constructAlternates(`/gallery/${album.slug}`),
+    robots: DEFAULT_ROBOTS,
     openGraph: {
-      title: `${album.titleEn} · Photo Archive`,
+      title,
       description,
-      url: `https://osutamilsangam.org/gallery/${album.slug}`,
+      url: canonical,
       siteName: "OSU Tamil Sangam",
       images: [
         {
           url: cover,
           width: 1200,
           height: 800,
-          alt: `${album.titleEn} Cover Photo`,
+          alt: `${album.titleEn} — OSU Tamil Sangam`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${album.titleEn} · Photo Archive`,
+      title,
       description,
       images: [cover],
     },

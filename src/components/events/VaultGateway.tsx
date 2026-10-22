@@ -34,11 +34,20 @@ export function VaultGateway({
     const container = containerRef.current;
     if (!container) return;
 
+    let rect = container.getBoundingClientRect();
+    let isRectDirty = false;
+    const markRectDirty = () => {
+      isRectDirty = true;
+    };
+
     const handlePointerMove = (e: PointerEvent) => {
       // Disable on touch devices
       if (e.pointerType === "touch") return;
 
-      const rect = container.getBoundingClientRect();
+      if (isRectDirty) {
+        rect = container.getBoundingClientRect();
+        isRectDirty = false;
+      }
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
@@ -71,10 +80,14 @@ export function VaultGateway({
     };
 
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("scroll", markRectDirty, { passive: true });
+    window.addEventListener("resize", markRectDirty, { passive: true });
     container.addEventListener("pointerleave", handlePointerLeave);
 
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("scroll", markRectDirty);
+      window.removeEventListener("resize", markRectDirty);
       container.removeEventListener("pointerleave", handlePointerLeave);
     };
   }, [mouseX, mouseY]);

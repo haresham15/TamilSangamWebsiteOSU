@@ -177,7 +177,7 @@ export default function GalleryPage() {
                     </span>
                     <Image
                       src={photo.imageUrl}
-                      alt={photo.titleEn}
+                      alt={`${photo.titleEn} — OSU Tamil Sangam campus photo at The Ohio State University`}
                       fill
                       className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                       style={{ objectPosition: photo.crop?.position }}

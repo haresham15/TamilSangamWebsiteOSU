@@ -40,16 +40,32 @@ export function EditorialBackgroundCanvas({
     let targetY = 30;
     let currentX = 50;
     let currentY = 30;
+    let isLoopRunning = false;
+
+    let rect = container.getBoundingClientRect();
+    let isRectDirty = false;
+    const markRectDirty = () => {
+      isRectDirty = true;
+    };
 
     const onPointerMove = (e: PointerEvent) => {
       if (e.pointerType === "touch") return;
-      const rect = container.getBoundingClientRect();
+      if (isRectDirty) {
+        rect = container.getBoundingClientRect();
+        isRectDirty = false;
+      }
       if (rect.height <= 0 || rect.width <= 0) return;
       targetX = ((e.clientX - rect.left) / rect.width) * 100;
       targetY = ((e.clientY - rect.top) / rect.height) * 100;
+
+      if (!isLoopRunning) {
+        isLoopRunning = true;
+        rafId = requestAnimationFrame(updateLoop);
+      }
     };
 
     const onScroll = () => {
+      markRectDirty();
       if (reducedMotion || isLiteMode) return;
       const y = window.scrollY;
       const deg = (y * 0.025) % 360;
@@ -66,16 +82,21 @@ export function EditorialBackgroundCanvas({
       container.style.setProperty("--mouse-x", `${currentX.toFixed(2)}%`);
       container.style.setProperty("--mouse-y", `${currentY.toFixed(2)}%`);
 
-      rafId = requestAnimationFrame(updateLoop);
+      if (Math.abs(targetX - currentX) > 0.05 || Math.abs(targetY - currentY) > 0.05) {
+        rafId = requestAnimationFrame(updateLoop);
+      } else {
+        isLoopRunning = false;
+      }
     };
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
-    rafId = requestAnimationFrame(updateLoop);
+    window.addEventListener("resize", markRectDirty, { passive: true });
 
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", markRectDirty);
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, [reducedMotion, isLiteMode]);

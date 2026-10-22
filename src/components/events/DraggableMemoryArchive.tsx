@@ -28,8 +28,7 @@ const ARCHIVE_ITEMS: PolaroidArtifact[] = [
     titleEn: "South Oval Berry Picnic",
     date: "SEP 18, 2025",
     location: "SOUTH OVAL",
-    imageUrl:
-      "https://lh3.googleusercontent.com/pw/AP1GczOdehFuJLAxjkdIUuNU81_YAEVLVi6aCMMvZ_N__khC5gsOnJ4QG9IeoQ2y6T3r4VwEMSX4xHuoLD1nnOXfE-0JAL7sLvBUuQbucC4wHfd6byWzLyWF=w1200-h800-no",
+    imageUrl: "/events/berry-cute-picnic/picnic-01.jpg",
     initialX: 8,
     initialY: 10,
     initialRot: -8,
@@ -40,8 +39,7 @@ const ARCHIVE_ITEMS: PolaroidArtifact[] = [
     titleEn: "Streetside Sapad Tawa",
     date: "FEB 24, 2026",
     location: "CAMPUS KITCHEN",
-    imageUrl:
-      "https://lh3.googleusercontent.com/pw/AP1GczNF_2udq2E6IEtC1s-XVUq1UlKrrxNA-C9qkOWeup2hGMg4_Ko3Q9ht3_c1lkPum7Lgba0THDhb1XA0xYowvs8HWdckVTnrjuYhVIir9-CRqrRwocXs=w1200-h800-no",
+    imageUrl: "/events/streetside-sapad/picnic-02.jpg",
     initialX: 38,
     initialY: 6,
     initialRot: 7,
@@ -52,8 +50,7 @@ const ARCHIVE_ITEMS: PolaroidArtifact[] = [
     titleEn: "Namma Jathara Plaza Dance",
     date: "MAR 26, 2026",
     location: "RPAC PLAZA",
-    imageUrl:
-      "https://lh3.googleusercontent.com/pw/AP1GczNuEGeshSWnp89wHaHufx1Bd8MRDPNdjflHj-6aJQfCxsJ5Hoi8E1RE19B2swHesxufteDymvuxItgG44_D9JVLj-sgjpJoTdLgrtXWIXRxe7GFKrKo=w1200-h800-no",
+    imageUrl: "/events/namma-jathara/picnic-01.jpg",
     initialX: 68,
     initialY: 14,
     initialRot: -12,
@@ -64,8 +61,7 @@ const ARCHIVE_ITEMS: PolaroidArtifact[] = [
     titleEn: "Degree Filter Kaapi Savor",
     date: "AUTUMN 2025",
     location: "UNION HEARTH",
-    imageUrl:
-      "https://lh3.googleusercontent.com/pw/AP1GczPlVkHkFW39BMqHGdeuYa0EwT1OOXOGWweSVgrPMbn24CSvrUlwF8CS_x787kPudpRyXEgtSMteYmBp6Zbad4uzMgeqB6LfISOvbS0AO1-qHsPKtEoC=w1200-h800-no",
+    imageUrl: "/events/streetside-sapad/picnic-04.jpg",
     initialX: 18,
     initialY: 48,
     initialRot: 11,
@@ -76,8 +72,7 @@ const ARCHIVE_ITEMS: PolaroidArtifact[] = [
     titleEn: "Spring Family Kickback",
     date: "APR 2026",
     location: "OHIO STADIUM",
-    imageUrl:
-      "https://lh3.googleusercontent.com/pw/AP1GczPoDEE5ppMuBlStSn71wmY-vnb9sbDehdzKVvxu_QvEJZfJ8hGCig4Bkxoe8Rx8-xpnXzZA02iZ2EZid-qciQ4V85WQKl44j_Ed6YLD25GTunQbulMG=w1200-h800-no",
+    imageUrl: "/events/berry-cute-picnic/picnic-05.jpg",
     initialX: 48,
     initialY: 44,
     initialRot: -5,
@@ -88,8 +83,7 @@ const ARCHIVE_ITEMS: PolaroidArtifact[] = [
     titleEn: "Carnival Rehearsal Moments",
     date: "MAR 2026",
     location: "DRAKE CENTER",
-    imageUrl:
-      "https://lh3.googleusercontent.com/pw/AP1GczMckOLKN2caITiN5K1TOGffHjjgJrfgVuOLzMp4vuZ6J7kgf1CQB-PChurpUnPfiexScEG44wZkP-PWanuwwdRE3STuUUNN6LLQoe-ioZJ3MeSMpkCC=w1200-h800-no",
+    imageUrl: "/events/namma-jathara/picnic-02.jpg",
     initialX: 74,
     initialY: 46,
     initialRot: 9,
@@ -269,7 +263,7 @@ export function DraggableMemoryArchive() {
             <div className="relative w-full h-44 sm:h-52 bg-black/80 border border-black/10 overflow-hidden mb-3">
               <Image
                 src={item.imageUrl}
-                alt={item.titleEn}
+                alt={`${item.titleEn} — OSU Tamil Sangam campus memories at The Ohio State University`}
                 fill
                 sizes="(max-width: 768px) 250px, 300px"
                 className="object-cover pointer-events-none select-none"

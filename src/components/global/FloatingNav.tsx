@@ -51,6 +51,12 @@ export const FloatingNav: React.FC = () => {
   const [isInHeroZone, setIsInHeroZone] = useState(() => isHeroRoute);
   const [isScrolledDown, setIsScrolledDown] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
+  const scrollStateRef = useRef({
+    isPastHero: false,
+    isInHeroZone: isHeroRoute,
+    isScrolledDown: false,
+    isAtTop: true,
+  });
 
   const isDarkHero = isHeroRoute && !isPastHero;
 
@@ -94,24 +100,53 @@ export const FloatingNav: React.FC = () => {
       return 0;
     };
 
-    const evaluateScroll = () => {
-      const scrollY = window.scrollY;
-      const sheet = document.querySelector<HTMLElement>("[data-editorial-sheet]");
-      let pastHero = false;
-      if (sheet) {
-        const top = sheet.getBoundingClientRect().top;
-        pastHero = top <= 80;
-      } else {
-        const threshold = getHeroThreshold();
-        pastHero = threshold === 0 || scrollY >= threshold;
-      }
-      setIsPastHero(pastHero);
+    let ticking = false;
+    let cachedSheet: HTMLElement | null = null;
+    let sheetCheckTime = 0;
 
-      // Auto-retract navbar during hero immersion until user makes it through the whole animation
-      const inHero = isHeroRoute && !pastHero;
-      setIsInHeroZone(inHero);
-      setIsAtTop(scrollY <= 32);
-      setIsScrolledDown(scrollY > 20);
+    const evaluateScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const scrollY = window.scrollY;
+        const now = performance.now();
+        if (!cachedSheet || now - sheetCheckTime > 2000) {
+          cachedSheet = document.querySelector<HTMLElement>("[data-editorial-sheet]");
+          sheetCheckTime = now;
+        }
+
+        let pastHero = false;
+        if (cachedSheet) {
+          pastHero = cachedSheet.getBoundingClientRect().top <= 80;
+        } else {
+          const threshold = getHeroThreshold();
+          pastHero = threshold === 0 || scrollY >= threshold;
+        }
+
+        const inHero = isHeroRoute && !pastHero;
+        const atTop = scrollY <= 32;
+        const scrolledDown = scrollY > 20;
+
+        const prev = scrollStateRef.current;
+        if (
+          prev.isPastHero !== pastHero ||
+          prev.isInHeroZone !== inHero ||
+          prev.isAtTop !== atTop ||
+          prev.isScrolledDown !== scrolledDown
+        ) {
+          scrollStateRef.current = {
+            isPastHero: pastHero,
+            isInHeroZone: inHero,
+            isAtTop: atTop,
+            isScrolledDown: scrolledDown,
+          };
+          setIsPastHero(pastHero);
+          setIsInHeroZone(inHero);
+          setIsAtTop(atTop);
+          setIsScrolledDown(scrolledDown);
+        }
+      });
     };
 
     evaluateScroll();
@@ -122,7 +157,7 @@ export const FloatingNav: React.FC = () => {
       window.removeEventListener("scroll", evaluateScroll);
       window.removeEventListener("resize", evaluateScroll);
     };
-  }, [pathname]);
+  }, [pathname, isHeroRoute]);
 
   // ============================================================================
   // 3. REACTBITS KINEMATICS: GOOEY ACTIVE INDICATOR

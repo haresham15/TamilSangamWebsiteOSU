@@ -24,7 +24,8 @@ import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
 import { Providers } from "@/components/providers/Providers";
 import { GlobalCanvas } from "@/components/gl/GlobalCanvas";
 import { AppShell } from "@/components/global/AppShell";
-import { OrganizationJsonLd, EventJsonLd, WebSiteJsonLd } from "@/components/global/JsonLd";
+import { RootGraphJsonLd, EventJsonLd } from "@/components/seo/JsonLd";
+import { SITE_URL, ROUTE_METADATA, DEFAULT_ROBOTS, constructAlternates } from "@/lib/seo";
 import { ViewfinderCursor } from "@/components/ui/ViewfinderCursor";
 
 const muktaMalar = Mukta_Malar({
@@ -147,24 +148,29 @@ const spaceMono = Space_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#462270",
+  themeColor: "#161210",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://osutamilsangam.org"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "OSU Tamil Sangam · The Ohio State University",
+    default: ROUTE_METADATA.home.title,
     template: "%s | OSU Tamil Sangam",
   },
-  description:
-    "Official student organization at The Ohio State University. A welcoming campus hub for Tamil culture, good food, casual hangouts, collegiate dance, and fellowship in Columbus — open to all students and languages.",
+  description: ROUTE_METADATA.home.description,
   applicationName: "OSU Tamil Sangam",
   keywords: [
     "OSU Tamil Sangam",
-    "The Ohio State University Tamil Sangam",
+    "Tamil Sangam at OSU",
+    "Ohio State Tamil Sangam",
+    "Tamil Sangam Ohio State University",
+    "Tamil student organization OSU",
+    "Indian South Asian student organizations at Ohio State",
+    "Columbus Tamil student community",
+    "The Ohio State University",
     "Ohio State University",
     "Tamil Sangam OSU",
     "Tamil student organization Ohio State",
@@ -185,61 +191,47 @@ export const metadata: Metadata = {
     "Tamil diaspora Midwest",
     "Midwest collegiate Tamil Sangam",
     "Thirukkural study Ohio State",
-    "Kanchipuram silk exhibition",
-    "Tamil movies Ohio State",
-    "OSU Indian student freshman guide",
-    "Columbus Indian grocery guide",
     "தமிழ் சங்கம்",
-    "ஓஹியோ தமிழ் சங்கம்",
-    "ஓஹியோ ஸ்டேட் பல்கலைக்கழகம்",
+    "ஒஹையோ மாநிலப் பல்கலைக்கழகத் தமிழ்ச் சங்கம்",
+    "ஓஹையோ தமிழ் சங்கம்",
+    "ஓஹையோ ஸ்டேட் பல்கலைக்கழகம்",
     "கொலம்பஸ் தமிழ்",
   ],
-  category: "culture",
+  category: "Student Organization",
   classification: "Collegiate Cultural Student Organization",
   referrer: "origin-when-cross-origin",
-  authors: [{ name: "OSU Tamil Sangam Executive Board", url: "https://osutamilsangam.org/board" }],
-  creator: "The Ohio State University Tamil Sangam",
-  publisher: "OSU Tamil Sangam",
+  authors: [{ name: "OSU Tamil Sangam Executive Board", url: `${SITE_URL}/board` }],
+  creator: "OSU Tamil Sangam Executive Board",
+  publisher: "The Ohio State University Tamil Sangam",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  alternates: {
-    canonical: "https://osutamilsangam.org",
-    types: {
-      "application/rss+xml": "https://osutamilsangam.org/feed.xml",
-    },
-    languages: {
-      "en-US": "https://osutamilsangam.org",
-      "ta-IN": "https://osutamilsangam.org",
-    },
-  },
+  alternates: constructAlternates("/"),
   openGraph: {
-    title: "OSU Tamil Sangam · The Ohio State University",
-    description:
-      "Start the Aatam, Paatam, and Kondatam! Bridging classical Tamil heritage with student dance, feasts, live concerts, and campus community in Columbus.",
-    url: "https://osutamilsangam.org",
+    title: ROUTE_METADATA.home.title,
+    description: ROUTE_METADATA.home.description,
+    url: SITE_URL,
     siteName: "OSU Tamil Sangam",
     locale: "en_US",
     alternateLocale: "ta_IN",
     type: "website",
     images: [
       {
-        url: "/emblem.svg",
-        width: 500,
-        height: 500,
-        type: "image/svg+xml",
-        alt: "Ohio State University Tamil Sangam Official Circular Emblem",
+        url: `${SITE_URL}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        type: "image/png",
+        alt: "OSU Tamil Sangam · The Ohio State University",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "OSU Tamil Sangam · The Ohio State University",
-    description:
-      "Start the Aatam, Paatam, and Kondatam! Celebrating Tamil performing arts and student community at Ohio State.",
-    images: ["/emblem.svg"],
+    title: ROUTE_METADATA.home.title,
+    description: ROUTE_METADATA.home.description,
+    images: [`${SITE_URL}/opengraph-image`],
   },
   icons: {
     icon: [
@@ -250,17 +242,7 @@ export const metadata: Metadata = {
       { url: "/apple-icon.svg", type: "image/svg+xml" },
     ],
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
+  robots: DEFAULT_ROBOTS,
 };
 
 export default function RootLayout({
@@ -286,9 +268,8 @@ export default function RootLayout({
         <ViewfinderCursor />
         <HeritageTextureOverlay variant="sandstone" opacity={0.03} blendMode="multiply" className="parchment-grain" />
 
-        {/* Structured Data for Search Engine Crawlers */}
-        <WebSiteJsonLd />
-        <OrganizationJsonLd />
+        {/* Linked Schema.org Knowledge Graph (@graph) for Search Engines */}
+        <RootGraphJsonLd />
         <EventJsonLd />
 
         <Providers>

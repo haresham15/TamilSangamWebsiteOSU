@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { motion, useSpring, useMotionValue, useReducedMotion } from "framer-motion";
 
 export interface MagnetProps {
@@ -40,7 +40,7 @@ export function Magnet({
   const smoothRotateX = useSpring(rotateX, springConfig);
   const smoothRotateY = useSpring(rotateY, springConfig);
 
-  const [isHovered, setIsHovered] = useState(false);
+  const isHoveredRef = useRef(false);
 
   useEffect(() => {
     if (disabled || shouldReduceMotion) return;
@@ -48,8 +48,20 @@ export function Magnet({
     const el = ref.current;
     if (!el) return;
 
+    let rect = el.getBoundingClientRect();
+    let isRectDirty = false;
+    const markRectDirty = () => {
+      isRectDirty = true;
+    };
+
+    window.addEventListener("scroll", markRectDirty, { passive: true });
+    window.addEventListener("resize", markRectDirty, { passive: true });
+
     const handlePointerMove = (e: PointerEvent) => {
-      const rect = el.getBoundingClientRect();
+      if (isRectDirty) {
+        rect = el.getBoundingClientRect();
+        isRectDirty = false;
+      }
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
@@ -57,7 +69,7 @@ export function Magnet({
       const activeRadius = Math.max(rect.width, rect.height) / 2 + padding;
 
       if (dist < activeRadius) {
-        setIsHovered(true);
+        isHoveredRef.current = true;
         const offsetX = (e.clientX - centerX) / activeRadius;
         const offsetY = (e.clientY - centerY) / activeRadius;
 
@@ -68,8 +80,8 @@ export function Magnet({
         y.set(targetY);
         rotateX.set(-offsetY * tilt);
         rotateY.set(offsetX * tilt);
-      } else if (isHovered) {
-        setIsHovered(false);
+      } else if (isHoveredRef.current) {
+        isHoveredRef.current = false;
         x.set(0);
         y.set(0);
         rotateX.set(0);
@@ -78,7 +90,7 @@ export function Magnet({
     };
 
     const handlePointerLeave = () => {
-      setIsHovered(false);
+      isHoveredRef.current = false;
       x.set(0);
       y.set(0);
       rotateX.set(0);
@@ -89,10 +101,12 @@ export function Magnet({
     el.addEventListener("pointerleave", handlePointerLeave);
 
     return () => {
+      window.removeEventListener("scroll", markRectDirty);
+      window.removeEventListener("resize", markRectDirty);
       window.removeEventListener("pointermove", handlePointerMove);
       el.removeEventListener("pointerleave", handlePointerLeave);
     };
-  }, [disabled, shouldReduceMotion, padding, magnetStrength, maxOffset, tilt, isHovered, x, y, rotateX, rotateY]);
+  }, [disabled, shouldReduceMotion, padding, magnetStrength, maxOffset, tilt, x, y, rotateX, rotateY]);
 
   if (shouldReduceMotion || disabled) {
     return <div className={`inline-block ${className}`}>{children}</div>;

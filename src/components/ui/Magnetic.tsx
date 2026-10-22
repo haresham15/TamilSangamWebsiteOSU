@@ -64,18 +64,20 @@ export function Magnetic({
     instanceRef.current = instance;
 
     let rect = outer.getBoundingClientRect();
-    const updateRect = () => {
-      if (outer) rect = outer.getBoundingClientRect();
+    let isRectDirty = false;
+    const markRectDirty = () => {
+      isRectDirty = true;
     };
 
-    window.addEventListener("scroll", updateRect, { passive: true });
-    window.addEventListener("resize", updateRect, { passive: true });
+    window.addEventListener("scroll", markRectDirty, { passive: true });
+    window.addEventListener("resize", markRectDirty, { passive: true });
 
     const handlePointerMove = (e: PointerEvent) => {
       if (e.pointerType === "touch") return;
 
-      if (!instance.active) {
+      if (isRectDirty) {
         rect = outer.getBoundingClientRect();
+        isRectDirty = false;
       }
 
       const cx = rect.left + rect.width / 2;
@@ -143,8 +145,8 @@ export function Magnetic({
     outer.addEventListener("focusin", handleFocusIn);
 
     return () => {
-      window.removeEventListener("scroll", updateRect);
-      window.removeEventListener("resize", updateRect);
+      window.removeEventListener("scroll", markRectDirty);
+      window.removeEventListener("resize", markRectDirty);
       window.removeEventListener("pointermove", handlePointerMove);
       outer.removeEventListener("pointerleave", handlePointerLeave);
       outer.removeEventListener("focusin", handleFocusIn);

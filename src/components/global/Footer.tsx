@@ -475,7 +475,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
             <Link href="/board" className="hover:text-[#E5A93C] font-semibold transition-colors">{t("nav.board")}</Link>
             <Link href="/gallery" className="hover:text-[#E5A93C] transition-colors">{t("nav.gallery")}</Link>
             <Link href="/guide" className="hover:text-[#E5A93C] transition-colors">{locale === "ta" ? "வழிகாட்டி & கேள்வி-பதில்" : "Guide & FAQ"}</Link>
-            <Link href="/suggestions" className="hover:text-[#E5A93C] transition-colors">{locale === "ta" ? "கருத்துகள்" : "Ideas"}</Link>
+            <Link href="/ideas" className="hover:text-[#E5A93C] transition-colors">{locale === "ta" ? "கருத்துகள்" : "Ideas"}</Link>
             <Link href="/join" className="hover:text-[#E5A93C] font-semibold text-[#E5A93C] transition-colors">{t("nav.join")}</Link>
             <a 
               href={`mailto:${SITE_CONFIG.contactEmail}`}
@@ -501,6 +501,15 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
               <ExternalLink className="w-3 h-3" />
             </a>
           </nav>
+
+          {/* 1-Hop Crawler Links for Event Dossiers */}
+          <div className="w-full pt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[11px] font-mono text-white/50 border-t border-white/5">
+            <span className="text-[#E5A93C]/80 uppercase tracking-wider text-[10px]">Campus Dossiers:</span>
+            <Link href="/events/yaar-andha-killer" className="hover:text-[#E5A93C] transition-colors">Yaar Andha Killer?</Link>
+            <Link href="/events/berry-cute-picnic" className="hover:text-[#E5A93C] transition-colors">Berry Cute Picnic</Link>
+            <Link href="/events/streetside-sapad" className="hover:text-[#E5A93C] transition-colors">Streetside Sapad</Link>
+            <Link href="/events/namma-jathara" className="hover:text-[#E5A93C] transition-colors">Namma Jathara Carnival</Link>
+          </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
             {directorEnabled && (

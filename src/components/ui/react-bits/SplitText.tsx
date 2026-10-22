@@ -60,8 +60,10 @@ export function SplitText({
   };
 
   return (
-    <Tag className={className}>
+    <Tag className={className} aria-label={text}>
+      <span className="sr-only">{text}</span>
       <motion.span
+        aria-hidden="true"
         className="inline-block"
         variants={containerVariants}
         initial="hidden"

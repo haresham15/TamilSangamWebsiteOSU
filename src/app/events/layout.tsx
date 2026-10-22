@@ -1,58 +1,34 @@
 import type { Metadata } from "next";
-import { BreadcrumbJsonLd } from "@/components/global/JsonLd";
+import { BreadcrumbJsonLd, EventsCollectionJsonLd } from "@/components/seo/JsonLd";
+import { buildRouteMetadata, ROUTE_METADATA } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Events, Festivals & Ticket Drops",
-  description:
-    "Explore upcoming festivals, ticket reservations, and campus gatherings hosted by OSU Tamil Sangam. Join us for Aatam Paatam Kondatam, Diwali Night, lawn picnics, and street food kickbacks in Columbus.",
+export const metadata: Metadata = buildRouteMetadata({
+  title: ROUTE_METADATA.events.title,
+  description: ROUTE_METADATA.events.description,
+  path: ROUTE_METADATA.events.path,
   keywords: [
-    "OSU Tamil Sangam Events",
-    "Aatam Paatam Kondatam 2026",
-    "OSU Diwali Night",
-    "Pongal Ohio State",
-    "Ohio Union cultural celebrations",
-    "South Asian festivals Ohio State",
-    "Columbus Tamil events",
-    "Tamil festival tickets OSU",
-    "Student culture night Columbus",
+    "Campus Events & Festivals OSU Tamil Sangam",
+    "Tamil Sangam at OSU events",
+    "Ohio State Tamil events",
+    "Kollywood Kollai OSU",
+    "OSU Diwali",
+    "Pongal banquets Ohio State",
+    "Namma Jathara Carnival",
+    "South Oval picnics Columbus OH",
+    "Tamil student organization OSU",
   ],
-  alternates: {
-    canonical: "https://osutamilsangam.org/events",
-  },
-  openGraph: {
-    title: "Events & Festivals | OSU Tamil Sangam",
-    description:
-      "Explore upcoming cultural festivals, ticket drops, and campus gatherings hosted by OSU Tamil Sangam at The Ohio State University.",
-    url: "https://osutamilsangam.org/events",
-    siteName: "OSU Tamil Sangam",
-    type: "website",
-    images: [
-      {
-        url: "/posters/diwali-2025.webp",
-        width: 1200,
-        height: 630,
-        alt: "OSU Tamil Sangam Cultural Festival Showcase",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Events & Festivals | OSU Tamil Sangam",
-    description:
-      "Explore upcoming cultural festivals, ticket drops, and campus gatherings at Ohio State.",
-    images: ["/posters/diwali-2025.webp"],
-  },
-};
+});
 
 export default function EventsLayout({ children }: { children: React.ReactNode }) {
   const breadcrumbItems = [
-    { name: "Home", url: "https://osutamilsangam.org" },
-    { name: "Events & Festivals", url: "https://osutamilsangam.org/events" },
+    { name: "Home", url: "/" },
+    { name: "Events & Festivals", url: "/events" },
   ];
 
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbItems} />
+      <EventsCollectionJsonLd />
       {children}
     </>
   );

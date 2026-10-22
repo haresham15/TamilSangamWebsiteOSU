@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { Volume2, VolumeX, Search } from "lucide-react";
 import { useAudio } from "@/context/AudioContext";
@@ -26,24 +26,46 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
   const darkHeroRoutes = ["/", "/events", "/about", "/board", "/gallery", "/guide", "/suggestions", "/join"];
   const isHeroRoute = darkHeroRoutes.includes(normalizedPath);
   const [isInHeroZone, setIsInHeroZone] = useState(() => isHeroRoute);
+  const inHeroZoneRef = useRef(isHeroRoute);
 
   useEffect(() => {
+    let ticking = false;
+    let cachedSheet: HTMLElement | null = null;
+    let sheetCheckTime = 0;
+
     const evaluateScroll = () => {
       if (!isHeroRoute) {
-        setIsInHeroZone(false);
+        if (inHeroZoneRef.current) {
+          inHeroZoneRef.current = false;
+          setIsInHeroZone(false);
+        }
         return;
       }
-      const scrollY = window.scrollY;
-      const sheet = document.querySelector<HTMLElement>("[data-editorial-sheet]");
-      let pastHero = false;
-      if (sheet) {
-        const top = sheet.getBoundingClientRect().top;
-        pastHero = top <= 80;
-      } else {
-        pastHero = scrollY >= 800;
-      }
-      // Retract/fade out dock during hero animation until user makes it through the animation
-      setIsInHeroZone(!pastHero);
+
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const scrollY = window.scrollY;
+        const now = performance.now();
+        if (!cachedSheet || now - sheetCheckTime > 2000) {
+          cachedSheet = document.querySelector<HTMLElement>("[data-editorial-sheet]");
+          sheetCheckTime = now;
+        }
+
+        let pastHero = false;
+        if (cachedSheet) {
+          pastHero = cachedSheet.getBoundingClientRect().top <= 80;
+        } else {
+          pastHero = scrollY >= 800;
+        }
+
+        const nextInHero = !pastHero;
+        if (inHeroZoneRef.current !== nextInHero) {
+          inHeroZoneRef.current = nextInHero;
+          setIsInHeroZone(nextInHero);
+        }
+      });
     };
 
     evaluateScroll();
@@ -53,7 +75,7 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
       window.removeEventListener("scroll", evaluateScroll);
       window.removeEventListener("resize", evaluateScroll);
     };
-  }, [pathname]);
+  }, [pathname, isHeroRoute]);
 
   return (
     <aside
@@ -89,10 +111,7 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
         {/* 2. Audio Wave / Hearth Synth Toggle */}
         <button
           type="button"
-          onClick={() => {
-            playClick();
-            toggleSound();
-          }}
+          onClick={toggleSound}
           aria-label={isSoundEnabled ? "Mute interactive audio" : "Enable interactive audio"}
           title={isSoundEnabled ? "Mute sound" : "Unmute sound"}
           className={`flex items-center justify-center w-7 h-7 rounded-full hover:bg-white/10 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#E5A93C] ${

@@ -14,7 +14,7 @@ import { audio } from "./AudioController";
 export function armAudioUnlock() {
   if (typeof window === "undefined") return;
 
-  const events = ["pointerdown", "keydown", "touchend"] as const;
+  const events = ["pointerdown", "keydown", "touchend", "click"] as const;
   const ac = new AbortController();
 
   const handler = () => {

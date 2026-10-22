@@ -1,59 +1,35 @@
 import type { Metadata } from "next";
-import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/global/JsonLd";
+import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/seo/JsonLd";
+import { buildRouteMetadata, ROUTE_METADATA } from "@/lib/seo";
 import { FAQS } from "@/data/faq";
 
-export const metadata: Metadata = {
-  title: "About Us, Heritage & Constitution",
-  description:
-    "Learn about the mission, 2000-year classical Tamil heritage, history at Ohio State, student constitution, campus partners, and governance of OSU Tamil Sangam.",
+export const metadata: Metadata = buildRouteMetadata({
+  title: ROUTE_METADATA.about.title,
+  description: ROUTE_METADATA.about.description,
+  path: ROUTE_METADATA.about.path,
   keywords: [
     "About OSU Tamil Sangam",
-    "Tamil Sangam history Ohio State",
-    "Tamil heritage Columbus Ohio",
-    "Sangam literature university",
-    "OSU Tamil Sangam constitution",
+    "Tamil Sangam at OSU heritage",
+    "Ohio State Tamil Sangam history",
+    "Five Pillars Aatam Paatam Kondatam Santhippum Katral",
+    "யாதும் ஊரே யாவரும் கேளிர்",
     "Ohio State student organization governance",
-    "Telugu Tamasha at OSU collaboration",
-    "South Asian student orgs Ohio State",
     "Tamil culture Columbus",
+    "South Asian student orgs Ohio State",
   ],
-  alternates: {
-    canonical: "https://osutamilsangam.org/about",
-  },
-  openGraph: {
-    title: "About Us & Classical Heritage | OSU Tamil Sangam",
-    description:
-      "Explore the mission, classical heritage, student constitution, campus partners, and leadership history of OSU Tamil Sangam at The Ohio State University.",
-    url: "https://osutamilsangam.org/about",
-    siteName: "OSU Tamil Sangam",
-    type: "article",
-    images: [
-      {
-        url: "/emblem.svg",
-        width: 500,
-        height: 500,
-        alt: "OSU Tamil Sangam Official Emblem",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "About Us & Classical Heritage | OSU Tamil Sangam",
-    description:
-      "Learn about the mission, classical heritage, student constitution, and campus partners of OSU Tamil Sangam.",
-    images: ["/emblem.svg"],
-  },
-};
+  type: "article",
+});
 
 export default function AboutLayout({ children }: { children: React.ReactNode }) {
   const breadcrumbItems = [
-    { name: "Home", url: "https://osutamilsangam.org" },
-    { name: "About Us", url: "https://osutamilsangam.org/about" },
+    { name: "Home", url: "/" },
+    { name: "About Us & Heritage", url: "/about" },
   ];
 
   const faqItems = FAQS.map((faq) => ({
     question: faq.questionEn,
     answer: faq.answerEn,
+    questionTa: faq.questionTa,
   }));
 
   return (

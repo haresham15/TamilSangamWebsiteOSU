@@ -40,8 +40,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
     eventDate: "September 18, 2025",
     location: "South Oval, The Ohio State University",
     attendance: "Outdoor Welcome Social",
-    coverImage:
-      "https://lh3.googleusercontent.com/pw/AP1GczPlVkHkFW39BMqHGdeuYa0EwT1OOXOGWweSVgrPMbn24CSvrUlwF8CS_x787kPudpRyXEgtSMteYmBp6Zbad4uzMgeqB6LfISOvbS0AO1-qHsPKtEoC=w1200-h800-no",
+    coverImage: "/events/berry-cute-picnic/picnic-01.jpg",
     photoCount: 5,
     googlePhotosUrl: "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7",
     descriptionEn:
@@ -62,8 +61,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "புல்வெளி சந்திப்பு",
         captionEn: "Students meeting up on the South Oval for the fall welcome picnic.",
         captionTa: "இலையுதிர்கால பிக்னிக்கிற்காக ஓவல் புல்வெளியில் திரண்ட மாணவர்கள்.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczPlVkHkFW39BMqHGdeuYa0EwT1OOXOGWweSVgrPMbn24CSvrUlwF8CS_x787kPudpRyXEgtSMteYmBp6Zbad4uzMgeqB6LfISOvbS0AO1-qHsPKtEoC=w1200-h800-no",
+        imageUrl: "/events/berry-cute-picnic/picnic-01.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Sep 18, 2025",
         tags: ["picnic", "oval", "community", "welcome"],
@@ -75,8 +73,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "பழங்கள் மற்றும் சிற்றுண்டி",
         captionEn: "Strawberries, blueberries, and snacks set out on the lawn table.",
         captionTa: "ஸ்ட்ராபெர்ரி, ப்ளூபெர்ரி மற்றும் சுவையான சிற்றுண்டிகள்.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczPYC0WAe9V07JbvAfxV4lcTbzIKpJN3gO5Y4Rg7i8khdxDyW34OgZrQFWQFoOxQib3ypvzE2x1lNQV2Spp_UUH2co3DjcSFGuQ7NO15cRPZeL4dG7Pz=w1200-h800-no",
+        imageUrl: "/events/berry-cute-picnic/picnic-02.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Sep 18, 2025",
         tags: ["food", "picnic", "fruit", "snacks"],
@@ -88,8 +85,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "புல்வெளி விளையாட்டுகள்",
         captionEn: "Frisbee and yard games out on the grass.",
         captionTa: "புல்வெளியில் நடைபெற்ற எளிய விளையாட்டுகள்.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczOy4Y-Gl5o10D5AST9dGunYua9Hqde-tLbTTPwd3s3jFl5FnsWeecYBYDI14b2PR97Jeel_HzylFFl2c-SFIKpTx2nbSo__Gko9eWdQBrf7hXw4Wr5m=w1200-h800-no",
+        imageUrl: "/events/berry-cute-picnic/picnic-03.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Sep 18, 2025",
         tags: ["games", "picnic", "lawn", "fun"],
@@ -101,8 +97,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "தோழமை சந்திப்பு",
         captionEn: "Students hanging out and chatting on the picnic blankets.",
         captionTa: "மாணவர்கள் ஒன்றாக அமர்ந்து பேசி மகிழ்ந்த தருணம்.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczM27IFXsu1l2lOJmCu9nD_SAYPYy5VWB6CKeOunJwmnh4PbsVHULRU8HUoF3RkGrNd85QC9Y5nZ_RUGATeCFv1xAOIE3-SRA9P3-etrO_KgIhbBXUoO=w1200-h800-no",
+        imageUrl: "/events/berry-cute-picnic/picnic-04.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Sep 18, 2025",
         tags: ["community", "bonding", "friends"],
@@ -114,8 +109,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "பலகை விளையாட்டு & கார்டுகள்",
         captionEn: "Rounds of Uno and card games under the trees.",
         captionTa: "மரங்களின் நிழலில் விளையாடப்பட்ட கார்டு விளையாட்டுகள்.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczN8j2wwhk6wlIqhV0Yo9_E3LphYyrZOgijqQoLJTqRNW41uaj14TQQhzLLkRHc3uoRtuzdP5OfzoMcZko5aoEVxSoGTjvwpWUKBBr29kFva-YXM53nO=w1200-h800-no",
+        imageUrl: "/events/berry-cute-picnic/picnic-05.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Sep 18, 2025",
         tags: ["games", "uno", "picnic"],
@@ -131,8 +125,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
     eventDate: "February 24, 2026",
     location: "Campus Kitchen / Ohio Union",
     attendance: "Street Food Dinner",
-    coverImage:
-      "https://lh3.googleusercontent.com/pw/AP1GczPoDEE5ppMuBlStSn71wmY-vnb9sbDehdzKVvxu_QvEJZfJ8hGCig4Bkxoe8Rx8-xpnXzZA02iZ2EZid-qciQ4V85WQKl44j_Ed6YLD25GTunQbulMG=w1200-h800-no",
+    coverImage: "/events/streetside-sapad/picnic-01.jpg",
     photoCount: 5,
     googlePhotosUrl: "https://photos.app.goo.gl/PnkceBh19PqytYQ89",
     descriptionEn:
@@ -154,8 +147,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "விருந்து வரவேற்பு",
         captionEn: "Students arriving for an evening of South Indian street food.",
         captionTa: "தெருவோர உணவு விருந்திற்கு வருகை தந்த மாணவர்கள்.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczPoDEE5ppMuBlStSn71wmY-vnb9sbDehdzKVvxu_QvEJZfJ8hGCig4Bkxoe8Rx8-xpnXzZA02iZ2EZid-qciQ4V85WQKl44j_Ed6YLD25GTunQbulMG=w1200-h800-no",
+        imageUrl: "/events/streetside-sapad/picnic-01.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Feb 24, 2026",
         tags: ["food", "sapad", "welcome"],
@@ -168,8 +160,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "தவா சமையல்",
         captionEn: "Preparing kothu parotta and dosas on the tawa.",
         captionTa: "தவாவில் தயாரான கொத்து பரோட்டா மற்றும் தோசை.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczNF_2udq2E6IEtC1s-XVUq1UlKrrxNA-C9qkOWeup2hGMg4_Ko3Q9ht3_c1lkPum7Lgba0THDhb1XA0xYowvs8HWdckVTnrjuYhVIir9-CRqrRwocXs=w1200-h800-no",
+        imageUrl: "/events/streetside-sapad/picnic-02.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Feb 24, 2026",
         tags: ["food", "cooking", "tawa", "kothu"],
@@ -182,8 +173,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "வாழை இலை உணவு",
         captionEn: "Dosas and chutneys served on banana leaves.",
         captionTa: "வாழை இலையில் பரிமாறப்பட்ட சுவையான உணவு.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczMd_Ca-bIl-USqHn_B4pu__WA4nAeb9pWcK56veZ3ojvKcEapqq5RkUOoqgjJAh7DCDzeGIDIh2zDdOlvSEuhj528GD2hsZKIzuAwP4gO91U7LUuKb3=w1200-h800-no",
+        imageUrl: "/events/streetside-sapad/picnic-03.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Feb 24, 2026",
         tags: ["food", "banana-leaf", "dinner"],
@@ -196,8 +186,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "பில்டர் காபி & டீ",
         captionEn: "Freshly brewed filter coffee and spiced chai.",
         captionTa: "சுடச்சுட பில்டர் காபி மற்றும் தேநீர்.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczOS1DyWkRKsH9a9VJBcm4AIlFlq0apv3fMKV5j5a7W-hOgu8XUFxrNt6v-SWQJBLnYSGIUex1N0c5fi3PmgamHi1X0HPTJGAacm5QpYaW74Xf1VD6K9=w1200-h800-no",
+        imageUrl: "/events/streetside-sapad/picnic-04.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Feb 24, 2026",
         tags: ["food", "kaapi", "chai"],
@@ -210,8 +199,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "தோழர்களுடன் உணவு",
         captionEn: "Students sitting down together to enjoy the meal.",
         captionTa: "மாணவர்கள் ஒன்றாக அமர்ந்து உணவை சுவைத்த தருணம்.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczOmKTptM7M4u3fUgpGVtR2LyalrDDG1BmMjiFpjeJ0EQrtFNibrVCa9usBlRzgJ9OUxm1QtDxkkHPewneqYNfoUq2YU-5OiMnFLEFjpqliQdT-L1dBJ=w1200-h800-no",
+        imageUrl: "/events/streetside-sapad/picnic-05.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Feb 24, 2026",
         tags: ["community", "dinner", "friends"],
@@ -227,8 +215,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
     eventDate: "March 26, 2026",
     location: "RPAC Plaza / South Oval, OSU Campus",
     attendance: "Joint Spring Carnival",
-    coverImage:
-      "https://lh3.googleusercontent.com/pw/AP1GczMckOLKN2caITiN5K1TOGffHjjgJrfgVuOLzMp4vuZ6J7kgf1CQB-PChurpUnPfiexScEG44wZkP-PWanuwwdRE3STuUUNN6LLQoe-ioZJ3MeSMpkCC=w1200-h800-no",
+    coverImage: "/events/namma-jathara/picnic-01.jpg",
     photoCount: 5,
     googlePhotosUrl: "https://photos.app.goo.gl/NBTxg98ppmd9uhWX9",
     descriptionEn:
@@ -249,8 +236,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "திருவிழா நுழைவு",
         captionEn: "Welcome banners and entrance setup for the carnival.",
         captionTa: "வண்ண அலங்காரங்களுடன் அமைக்கப்பட்ட நுழைவாயில்.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczMckOLKN2caITiN5K1TOGffHjjgJrfgVuOLzMp4vuZ6J7kgf1CQB-PChurpUnPfiexScEG44wZkP-PWanuwwdRE3STuUUNN6LLQoe-ioZJ3MeSMpkCC=w1200-h800-no",
+        imageUrl: "/events/namma-jathara/picnic-01.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Mar 26, 2026",
         tags: ["jathara", "carnival", "entry"],
@@ -262,8 +248,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "இணைந்த கூட்டணி",
         captionEn: "Tamil Sangam and Telugu Tamasha at OSU partnering for a campus festival.",
         captionTa: "தமிழ் சங்கமும் தெலுங்கு அமைப்பும் இணைந்து நடத்திய நிகழ்வு.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczNuEGeshSWnp89wHaHufx1Bd8MRDPNdjflHj-6aJQfCxsJ5Hoi8E1RE19B2swHesxufteDymvuxItgG44_D9JVLj-sgjpJoTdLgrtXWIXRxe7GFKrKo=w1200-h800-no",
+        imageUrl: "/events/namma-jathara/picnic-02.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Mar 26, 2026",
         tags: ["collaboration", "community"],
@@ -276,8 +261,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "திருவிழா விளையாட்டுகள்",
         captionEn: "Ring toss and lawn game stations for attendees.",
         captionTa: "வளையம் எறிதல் மற்றும் திருவிழா விளையாட்டு அரங்குகள்.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczNNKBxLuk6dKuVOB6Y3FJpMNzre-USTScoCoeK0Sc8C7ZUzrW7zWGaBTuxfNVfVIFvHkzqovHdJuhiJYSG-vheEmyJTlNLj8R_2H26_gJWog_za-V2p=w1200-h800-no",
+        imageUrl: "/events/namma-jathara/picnic-03.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Mar 26, 2026",
         tags: ["games", "carnival"],
@@ -290,8 +274,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "நடன வட்டம்",
         captionEn: "Students dancing together to popular Tamil and Telugu songs.",
         captionTa: "மாணவர்கள் இணைந்து ஆடிய நடனம்.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczPGCQshZV66CzrNL00kIbFhMoTNiDAXLKmvQlgnuxAzCXmdAW2A0Jq99RjQmqbh-6mOrDZ4cnwzhO_eMDcxxjImhw_KwqjF201SOKVLVymU7auvZMHY=w1200-h800-no",
+        imageUrl: "/events/namma-jathara/picnic-04.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Mar 26, 2026",
         tags: ["dance", "carnival"],
@@ -303,8 +286,7 @@ export const GALLERY_ALBUMS: GalleryAlbum[] = [
         titleTa: "நிறைவு குழுப் புகைப்படம்",
         captionEn: "Organizers and students gathered together at the end of the event.",
         captionTa: "ஒருங்கிணைப்பாளர்களும் மாணவர்களும் ஒன்றிணைந்த நிறைவு புகைப்படம்.",
-        imageUrl:
-          "https://lh3.googleusercontent.com/pw/AP1GczOdehFuJLAxjkdIUuNU81_YAEVLVi6aCMMvZ_N__khC5gsOnJ4QG9IeoQ2y6T3r4VwEMSX4xHuoLD1nnOXfE-0JAL7sLvBUuQbucC4wHfd6byWzLyWF=w1200-h800-no",
+        imageUrl: "/events/namma-jathara/picnic-05.jpg",
         photographer: "OSU Tamil Sangam Archives",
         eventDate: "Mar 26, 2026",
         tags: ["group", "celebration"],

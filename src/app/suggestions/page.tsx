@@ -39,7 +39,7 @@ const BlueprintScene3D = dynamic(
     ssr: false,
     loading: () => (
       <div className="w-full h-full bg-[#120D0B] flex flex-col items-center justify-center text-[#FAF7F2] p-8 text-center">
-        <h1 className="font-serif text-3xl sm:text-5xl text-[#FAF7F2] font-normal mb-2">The Blueprint Hearth</h1>
+        <div className="font-serif text-3xl sm:text-5xl text-[#FAF7F2] font-normal mb-2">The Blueprint Hearth</div>
         <p lang="ta" className="font-tamil text-base text-[#D4AF37]/80">கருத்துக்களம் · திட்டங்கள்</p>
       </div>
     ),
@@ -166,7 +166,7 @@ export default function SuggestionsPage() {
         {/* Hero Editorial Header Overlay */}
         <div className="absolute top-28 sm:top-32 left-6 sm:left-12 lg:left-16 z-20 pointer-events-none max-w-xl">
           <h1 className="font-serif text-4xl sm:text-6xl text-[#FAF7F2] font-normal tracking-tight leading-none mb-2">
-            The Blueprint Hearth
+            The Blueprint Hearth <span className="sr-only">— Propose a Campus Event | OSU Tamil Sangam at The Ohio State University</span>
           </h1>
           <p lang="ta" className="font-tamil text-lg sm:text-xl text-[#D4AF37]/85 leading-relaxed font-medium">
             கருத்துக்களம் · திட்டங்கள்
@@ -212,9 +212,9 @@ export default function SuggestionsPage() {
                 =================================================================== */}
             <aside className="lg:col-span-4 lg:sticky lg:top-24 space-y-8 select-none">
               <div className="relative z-10 space-y-4">
-                <h1 className="text-4xl sm:text-5xl font-serif font-normal text-[#2A2825] leading-tight">
+                <h2 className="text-4xl sm:text-5xl font-serif font-normal text-[#2A2825] leading-tight">
                   The Ideas Hearth
-                </h1>
+                </h2>
                 <p className="text-sm font-tamil text-[#B85C38] tracking-normal font-medium" lang="ta">
                   {locale === "ta" ? "விருப்பங்கள் & வரைபடம்" : "கருத்துக்களம் · திட்டங்கள்"}
                 </p>

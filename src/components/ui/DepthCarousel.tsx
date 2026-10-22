@@ -250,9 +250,15 @@ export const DepthCarousel: React.FC<DepthCarouselProps> = ({
     const onWheel = (e: WheelEvent) => {
       const cfg = cfgRef.current;
       if (cfg.count < 2) return;
+
+      // Only intercept horizontal swipe/wheel gestures; let vertical page scroll pass through cleanly
+      if (Math.abs(e.deltaY) >= Math.abs(e.deltaX) && Math.abs(e.deltaX) < 10) {
+        return;
+      }
+
       e.preventDefault();
       tweenRef.current?.kill();
-      const raw = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      const raw = e.deltaX !== 0 ? e.deltaX : e.deltaY;
       const delta = e.deltaMode === 1 ? raw * 24 : raw;
       const step = clamp(delta / (cfg.cardWidth * 0.9), -0.6, 0.6);
       posRef.current += step;

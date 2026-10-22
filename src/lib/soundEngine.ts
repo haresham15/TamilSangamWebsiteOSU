@@ -212,9 +212,9 @@ class SoundEngine {
     this.compressor.attack.setValueAtTime(0.008, ctx.currentTime);
     this.compressor.release.setValueAtTime(0.12, ctx.currentTime);
 
-    // 6. MasterGain (0.18 max ceiling when unmuted, 0.0001 when muted)
+    // 6. MasterGain (0.75 ceiling when unmuted, 0.0001 when muted)
     this.masterGain = ctx.createGain();
-    this.masterGain.gain.setValueAtTime(this.isMuted ? 0.0001 : 0.18, ctx.currentTime);
+    this.masterGain.gain.setValueAtTime(this.isMuted ? 0.0001 : 0.75, ctx.currentTime);
 
     // Wire Chain:
     this.masterInput.connect(this.highpassFilter);
@@ -260,9 +260,17 @@ class SoundEngine {
   public setMuted(muted: boolean) {
     this.isMuted = muted;
     const ctx = this.getContext();
-    if (this.masterGain && ctx) {
-      const now = ctx.currentTime;
-      this.masterGain.gain.linearRampToValueAtTime(muted ? 0.0001 : 0.18, now + 0.05);
+    if (ctx) {
+      if (ctx.state === "suspended" && !muted) {
+        ctx.resume().catch(() => {});
+      }
+      if (this.masterGain) {
+        const now = ctx.currentTime;
+        const target = muted ? 0.0001 : 0.75;
+        this.masterGain.gain.cancelScheduledValues(now);
+        this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
+        this.masterGain.gain.linearRampToValueAtTime(target, now + 0.04);
+      }
     }
     if (muted) {
       this.stopAmbientDrone();
@@ -302,7 +310,7 @@ class SoundEngine {
 
     const droneGain = ctx.createGain();
     droneGain.gain.setValueAtTime(0.0001, now);
-    droneGain.gain.linearRampToValueAtTime(0.025, now + 2.2);
+    droneGain.gain.linearRampToValueAtTime(0.065, now + 1.8);
 
     const lpf = ctx.createBiquadFilter();
     lpf.type = "lowpass";
@@ -423,14 +431,14 @@ class SoundEngine {
     oscA.frequency.exponentialRampToValueAtTime(78, now + 0.045);
 
     gainA.gain.setValueAtTime(0.0001, now);
-    gainA.gain.linearRampToValueAtTime(0.04, now + 0.014);
+    gainA.gain.linearRampToValueAtTime(0.18, now + 0.014);
     gainA.gain.exponentialRampToValueAtTime(0.0001, now + 0.099);
 
     oscA.connect(gainA);
     gainA.connect(lpfA);
     lpfA.connect(this.masterInput);
 
-    // Layer B (Raga Mohanam Melodic Whisper: gain 0.018, 25ms attack, 320ms decay)
+    // Layer B (Raga Mohanam Melodic Whisper: gain 0.14, 25ms attack, 320ms decay)
     const oscB = ctx.createOscillator();
     const gainB = ctx.createGain();
 
@@ -438,7 +446,7 @@ class SoundEngine {
     oscB.frequency.setValueAtTime(overtoneFreq, now);
 
     gainB.gain.setValueAtTime(0.0001, now);
-    gainB.gain.linearRampToValueAtTime(0.018, now + 0.025);
+    gainB.gain.linearRampToValueAtTime(0.14, now + 0.025);
     gainB.gain.exponentialRampToValueAtTime(0.0001, now + 0.345);
 
     oscB.connect(gainB);
@@ -464,20 +472,20 @@ class SoundEngine {
     const s = Math.min(1.0, Math.max(0.15, strength));
     const now = ctx.currentTime;
 
-    // 1. Fundamental (1f, sine, gain: 0.045 * s, attack 15ms, decay 1.1s)
+    // 1. Fundamental (1f, sine, gain: 0.22 * s, attack 15ms, decay 1.1s)
     const osc1 = ctx.createOscillator();
     const g1 = ctx.createGain();
     osc1.type = "sine";
     osc1.frequency.setValueAtTime(baseFreq, now);
 
     g1.gain.setValueAtTime(0.0001, now);
-    g1.gain.linearRampToValueAtTime(0.045 * s, now + 0.015);
+    g1.gain.linearRampToValueAtTime(0.22 * s, now + 0.015);
     g1.gain.exponentialRampToValueAtTime(0.0001, now + 1.1);
 
     osc1.connect(g1);
     g1.connect(this.masterInput);
 
-    // 2. Octave (2f, triangle low-passed at 1100Hz, gain: 0.018 * s, attack 12ms, decay 0.45s)
+    // 2. Octave (2f, triangle low-passed at 1100Hz, gain: 0.10 * s, attack 12ms, decay 0.45s)
     const osc2 = ctx.createOscillator();
     const g2 = ctx.createGain();
     const lpf2 = ctx.createBiquadFilter();
@@ -488,34 +496,34 @@ class SoundEngine {
     osc2.frequency.setValueAtTime(baseFreq * 2.0, now);
 
     g2.gain.setValueAtTime(0.0001, now);
-    g2.gain.linearRampToValueAtTime(0.018 * s, now + 0.012);
+    g2.gain.linearRampToValueAtTime(0.10 * s, now + 0.012);
     g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
 
     osc2.connect(g2);
     g2.connect(lpf2);
     lpf2.connect(this.masterInput);
 
-    // 3. Fifth/Body (3f, sine, gain: 0.006 * s, attack 10ms, decay 0.20s)
+    // 3. Fifth/Body (3f, sine, gain: 0.04 * s, attack 10ms, decay 0.20s)
     const osc3 = ctx.createOscillator();
     const g3 = ctx.createGain();
     osc3.type = "sine";
     osc3.frequency.setValueAtTime(baseFreq * 3.0, now);
 
     g3.gain.setValueAtTime(0.0001, now);
-    g3.gain.linearRampToValueAtTime(0.006 * s, now + 0.010);
+    g3.gain.linearRampToValueAtTime(0.04 * s, now + 0.010);
     g3.gain.exponentialRampToValueAtTime(0.0001, now + 0.20);
 
     osc3.connect(g3);
     g3.connect(this.masterInput);
 
-    // 4. Soundboard Resonance Thump (110Hz, gain: 0.015 * s, 18ms)
+    // 4. Soundboard Resonance Thump (110Hz, gain: 0.08 * s, 18ms)
     const oscThump = ctx.createOscillator();
     const gThump = ctx.createGain();
     oscThump.type = "sine";
     oscThump.frequency.setValueAtTime(110, now);
 
     gThump.gain.setValueAtTime(0.0001, now);
-    gThump.gain.linearRampToValueAtTime(0.015 * s, now + 0.005);
+    gThump.gain.linearRampToValueAtTime(0.08 * s, now + 0.005);
     gThump.gain.exponentialRampToValueAtTime(0.0001, now + 0.018);
 
     oscThump.connect(gThump);
@@ -567,7 +575,7 @@ class SoundEngine {
         lpf.frequency.setValueAtTime(1200, now);
 
         g.gain.setValueAtTime(0.0001, now);
-        g.gain.linearRampToValueAtTime(0.038, now + 0.020);
+        g.gain.linearRampToValueAtTime(0.16, now + 0.020);
         g.gain.exponentialRampToValueAtTime(0.0001, now + decay);
 
         osc.connect(lpf);
@@ -623,7 +631,7 @@ class SoundEngine {
 
     const noiseGain = ctx.createGain();
     noiseGain.gain.setValueAtTime(0.0001, now);
-    noiseGain.gain.linearRampToValueAtTime(0.022, now + 0.004);
+    noiseGain.gain.linearRampToValueAtTime(0.085, now + 0.004);
     noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.016);
 
     // 3. 95 Hz muted felt-stop thump
@@ -634,7 +642,7 @@ class SoundEngine {
     feltOsc.frequency.exponentialRampToValueAtTime(45, now + 0.020);
 
     feltGain.gain.setValueAtTime(0.0001, now);
-    feltGain.gain.linearRampToValueAtTime(0.018, now + 0.004);
+    feltGain.gain.linearRampToValueAtTime(0.070, now + 0.004);
     feltGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.020);
 
     // Stereo Panning
@@ -663,7 +671,7 @@ class SoundEngine {
   // SPEC 3 VOICE 5: ARCHIVE SHUFFLE ("SHUFFLE ARCHIVE" & GALLERY FILTERS)
   // Warm Cotton-Rag Cardstock Brush:
   // 130ms pink-noise buffer filtered through smooth bandpass sweeping 280 -> 520 -> 310 Hz
-  // with soft bell-curve envelope (35ms attack, 95ms release, gain 0.025).
+  // with soft bell-curve envelope (35ms attack, 95ms release, gain 0.12).
   // ============================================================================
   public playArchiveBrush() {
     if (this.isMuted) return;
@@ -696,7 +704,7 @@ class SoundEngine {
 
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.025, now + 0.035);
+    gain.gain.linearRampToValueAtTime(0.12, now + 0.035);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.13);
 
     src.connect(bpf);
@@ -710,9 +718,9 @@ class SoundEngine {
   // ============================================================================
   // SPEC 3 VOICE 6: HOME THIRUKKURAL 81 & JOIN CAMPUS GATES
   // Soft Bronze Kovil Mani (Temple Bell) Harmonic Shimmer:
-  // Sa_hi (587.33 Hz, gain 0.022, 40ms attack, 2.2s decay)
-  // + Pa (440.49 Hz, gain 0.014, 1.8s decay)
-  // + Upper shimmer partial (1174.66 Hz, LPF 1350 Hz, gain 0.005, 0.9s decay).
+  // Sa_hi (587.33 Hz, gain 0.18, 40ms attack, 2.2s decay)
+  // + Pa (440.49 Hz, gain 0.12, 1.8s decay)
+  // + Upper shimmer partial (1174.66 Hz, LPF 1350 Hz, gain 0.05, 0.9s decay).
   // ============================================================================
   public playTempleChime() {
     if (this.isMuted) return;
@@ -728,7 +736,7 @@ class SoundEngine {
     osc1.frequency.setValueAtTime(RAGA_MOHANAM_HZ.Sa_hi, now);
 
     g1.gain.setValueAtTime(0.0001, now);
-    g1.gain.linearRampToValueAtTime(0.022, now + 0.040);
+    g1.gain.linearRampToValueAtTime(0.18, now + 0.040);
     g1.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
 
     osc1.connect(g1);
@@ -741,7 +749,7 @@ class SoundEngine {
     osc2.frequency.setValueAtTime(RAGA_MOHANAM_HZ.Pa, now);
 
     g2.gain.setValueAtTime(0.0001, now);
-    g2.gain.linearRampToValueAtTime(0.014, now + 0.035);
+    g2.gain.linearRampToValueAtTime(0.12, now + 0.035);
     g2.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
 
     osc2.connect(g2);
@@ -758,7 +766,7 @@ class SoundEngine {
     osc3.frequency.setValueAtTime(1174.66, now);
 
     g3.gain.setValueAtTime(0.0001, now);
-    g3.gain.linearRampToValueAtTime(0.005, now + 0.025);
+    g3.gain.linearRampToValueAtTime(0.05, now + 0.025);
     g3.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
 
     osc3.connect(lpf3);
@@ -776,7 +784,7 @@ class SoundEngine {
 
   // ============================================================================
   // SPEC 3 VOICE 7: NAVBAR, COMMAND PALETTE (⌘K) & BUTTON MICRO-TAPS
-  // Whisper-Soft Bamboo/Wood Micro-Tap: 28ms sine drop (240 -> 130 Hz, 10ms soft attack, gain 0.015)
+  // Whisper-Soft Bamboo/Wood Micro-Tap: 28ms sine drop (240 -> 130 Hz, 10ms soft attack, gain 0.14)
   // ============================================================================
   public playMicroTap() {
     if (this.isMuted) return;
@@ -795,7 +803,7 @@ class SoundEngine {
     osc.frequency.exponentialRampToValueAtTime(130, now + 0.028);
 
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.015, now + 0.010);
+    gain.gain.linearRampToValueAtTime(0.14, now + 0.010);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.028);
 
     osc.connect(gain);
@@ -844,7 +852,7 @@ class SoundEngine {
     osc.frequency.exponentialRampToValueAtTime(Math.max(45, pitch * 0.7), now + 0.08);
 
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.045, now + 0.014);
+    gain.gain.linearRampToValueAtTime(0.24, now + 0.014);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
 
     osc.connect(gain);
@@ -869,7 +877,7 @@ class SoundEngine {
     osc.frequency.setValueAtTime(RAGA_MOHANAM_HZ.Sa_hi, now);
 
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.012, now + 0.015);
+    gain.gain.linearRampToValueAtTime(0.10, now + 0.015);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
 
     osc.connect(gain);
@@ -909,7 +917,7 @@ class SoundEngine {
 
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(volume * 0.035, now + 0.15);
+    gain.gain.linearRampToValueAtTime(volume * 0.18, now + 0.15);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
 
     src.connect(bpf);
@@ -950,7 +958,7 @@ class SoundEngine {
 
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(volume * 0.028, now + 0.035);
+    gain.gain.linearRampToValueAtTime(volume * 0.14, now + 0.035);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
 
     src.connect(bpf);
@@ -1002,3 +1010,7 @@ class SoundEngine {
 }
 
 export const soundEngine = new SoundEngine();
+
+if (typeof window !== "undefined") {
+  (window as unknown as { __soundEngine?: SoundEngine }).__soundEngine = soundEngine;
+}

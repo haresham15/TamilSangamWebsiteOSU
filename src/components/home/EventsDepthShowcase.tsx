@@ -236,7 +236,7 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
                   <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-[#1E1B18]">
                     <img
                       src={activeEvent.posterImage || activeEvent.hoverImage}
-                      alt={activeEvent.titleEn}
+                      alt={`${activeEvent.titleEn} — OSU Tamil Sangam campus event at The Ohio State University`}
                       className="w-full h-full object-cover brightness-90"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#FAF9F6] via-transparent to-black/40" />

@@ -60,7 +60,7 @@ const PILLAR_ROWS: PillarRow[] = [
     descEn: "Seasonal feasts, South Oval lawn picnics, Diwali sparkler nights, and Pongal pots simmering on Columbus turf.",
     descTa: "ஓவல் புல்வெளி பிக்னிக், தெருவோரச் சாப்பாடு, தீபாவளி மத்தாப்பு கொண்டாட்டங்கள்.",
     href: "/events",
-    posterSrc: "https://lh3.googleusercontent.com/pw/AP1GczPlVkHkFW39BMqHGdeuYa0EwT1OOXOGWweSVgrPMbn24CSvrUlwF8CS_x787kPudpRyXEgtSMteYmBp6Zbad4uzMgeqB6LfISOvbS0AO1-qHsPKtEoC=w1200-h800-no",
+    posterSrc: "/events/berry-cute-picnic/picnic-01.jpg",
   },
   {
     id: "santhippum",
@@ -73,7 +73,7 @@ const PILLAR_ROWS: PillarRow[] = [
     descEn: "A welcoming porch on campus. Peer mentorship, freshman welcome, and fellowship uniting all Buckeyes.",
     descTa: "ஓஹியோ பல்கலைக்கழகத்தில் அனைத்து மாணவர்களையும் அன்போடு ஒன்றிணைக்கும் குடும்பம்.",
     href: "/join",
-    posterSrc: "https://lh3.googleusercontent.com/pw/AP1GczPoDEE5ppMuBlStSn71wmY-vnb9sbDehdzKVvxu_QvEJZfJ8hGCig4Bkxoe8Rx8-xpnXzZA02iZ2EZid-qciQ4V85WQKl44j_Ed6YLD25GTunQbulMG=w1200-h800-no",
+    posterSrc: "/events/namma-jathara/picnic-01.jpg",
   },
   {
     id: "katral",

@@ -217,6 +217,11 @@ export default function BoardPage() {
 
   return (
     <div className="w-full text-left bg-transparent">
+      {/* Semantic SSR H1 for Search Engine Crawlers & Screen Readers */}
+      <h1 className="sr-only">
+        Executive Board &amp; Student Leadership — OSU Tamil Sangam at The Ohio State University
+      </h1>
+
       <div id="board-hero-trigger" data-hero-container="true" className="relative z-10 w-full">
         <BoardHeroCanvas bezel={null} />
       </div>

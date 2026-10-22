@@ -44,6 +44,7 @@ export function ClickSpark({
     if (!ctx) return;
 
     let animId = 0;
+    let isRunning = false;
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -52,23 +53,8 @@ export function ClickSpark({
     resize();
     window.addEventListener("resize", resize);
 
-    const handleClick = (e: MouseEvent) => {
-      // Trigger spark on clicks
-      const now = performance.now();
-      for (let i = 0; i < sparkCount; i++) {
-        const angle = (i * 2 * Math.PI) / sparkCount;
-        sparksRef.current.push({
-          x: e.clientX,
-          y: e.clientY,
-          angle,
-          startTime: now,
-        });
-      }
-    };
-
-    window.addEventListener("click", handleClick, { passive: true });
-
     const render = (time: number) => {
+      if (!ctx || !canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const remaining: Spark[] = [];
@@ -98,13 +84,35 @@ export function ClickSpark({
       }
 
       sparksRef.current = remaining;
-      animId = requestAnimationFrame(render);
+      if (remaining.length > 0) {
+        animId = requestAnimationFrame(render);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        isRunning = false;
+      }
     };
 
-    animId = requestAnimationFrame(render);
+    const handleClick = (e: MouseEvent) => {
+      const now = performance.now();
+      for (let i = 0; i < sparkCount; i++) {
+        const angle = (i * 2 * Math.PI) / sparkCount;
+        sparksRef.current.push({
+          x: e.clientX,
+          y: e.clientY,
+          angle,
+          startTime: now,
+        });
+      }
+      if (!isRunning) {
+        isRunning = true;
+        animId = requestAnimationFrame(render);
+      }
+    };
+
+    window.addEventListener("click", handleClick, { passive: true });
 
     return () => {
-      cancelAnimationFrame(animId);
+      if (animId) cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
       window.removeEventListener("click", handleClick);
     };

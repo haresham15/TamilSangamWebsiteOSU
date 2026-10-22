@@ -98,6 +98,11 @@ export default function AboutPage() {
 
   return (
     <div className="w-full text-left bg-transparent">
+      {/* Semantic SSR H1 for Search Engine Crawlers & Screen Readers */}
+      <h1 className="sr-only">
+        About Us &amp; Heritage (யாதும் ஊரே யாவரும் கேளிர்) — OSU Tamil Sangam at The Ohio State University
+      </h1>
+
       {/* =========================================================================
           CRITICAL / IMMUTABLE: Cinematic 3D Gopuram Z-Axis Mission Fly-Through Hero
           HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES.

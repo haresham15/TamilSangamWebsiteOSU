@@ -115,6 +115,11 @@ export default function JoinPage() {
 
   return (
     <div className="w-full text-left bg-transparent">
+      {/* Semantic SSR H1 for Search Engine Crawlers & Screen Readers */}
+      <h1 className="sr-only">
+        Join OSU Tamil Sangam | Free Membership Guestbook at The Ohio State University
+      </h1>
+
       {/* 1. Cinematic Morning Gates Hero Scene - IMMUTABLE */}
       <div
         id="nanban-gates-hero"

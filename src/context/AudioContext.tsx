@@ -50,6 +50,11 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
   const toggleSound = () => {
     const nextState = !isSoundEnabled;
+    if (nextState) {
+      soundEngine.unlock();
+    } else {
+      soundEngine.playMicroTap();
+    }
     setIsSoundEnabled(nextState);
     audio.setEnabled(nextState);
     soundEngine.setMuted(!nextState);

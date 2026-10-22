@@ -110,6 +110,7 @@ export function GalleryHero() {
           <div key={String(isStatic)} ref={title} className="w-full max-w-3xl py-12">
           <h1 className="font-display text-[clamp(3.75rem,11vw,10rem)] leading-[1.05] tracking-tight">
             {locale === "ta" ? <span lang="ta" className="font-tamil leading-relaxed tracking-normal">நினைவுகள்</span> : "The Canvas"}
+            <span className="sr-only"> — Photo Gallery &amp; 35mm Campus Archive | OSU Tamil Sangam at The Ohio State University</span>
           </h1>
           {locale !== "ta" && <p lang="ta" className="mt-4 font-tamil text-2xl leading-relaxed tracking-normal text-[#D4AF37] sm:text-4xl">நினைவுகள்</p>}
           <p className="mx-auto mt-6 max-w-sm font-body text-sm leading-relaxed text-sangam-cream/85 sm:text-base">Campus afternoons. Shared tables. Stories we keep.</p>

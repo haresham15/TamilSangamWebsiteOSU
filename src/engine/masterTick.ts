@@ -70,9 +70,8 @@ export function masterTick(timeSec: number, lenis: Lenis | null) {
   // 1) Smooth scroll step
   if (lenis) {
     lenis.raf(timeSec * 1000);
-  }
-  // 2) Synchronize ScrollTrigger with Lenis scroll position
-  if (typeof window !== "undefined") {
+  } else if (typeof window !== "undefined") {
+    // Synchronize ScrollTrigger with window scroll when Lenis is not active
     ScrollTrigger.update();
   }
 

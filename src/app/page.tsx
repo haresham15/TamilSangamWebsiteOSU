@@ -50,6 +50,7 @@ export default function HomePage() {
   const monolithPrologueRef = useRef<HTMLParagraphElement>(null);
   const monolithTamilRef = useRef<HTMLParagraphElement>(null);
   const decodedMonolithRef = useRef(false);
+  const heroPurgeActiveRef = useRef<boolean | null>(null);
 
   // Live Columbus EDT clock island (PRD §9.1)
   useEffect(() => {
@@ -113,12 +114,18 @@ export default function HomePage() {
         setHeroScrollProgress(scrubbedP);
 
         // Toggle hero purge dataset attribute (active during Acts I & II up to 0.60)
-        if (scrubbedP < 0.60) {
-          document.body.dataset.heroPurge = "true";
-          delete document.body.dataset.heroPassed;
-        } else {
-          delete document.body.dataset.heroPurge;
-          document.body.dataset.heroPassed = "true";
+        const isPurge = scrubbedP < 0.60;
+        if (heroPurgeActiveRef.current !== isPurge) {
+          heroPurgeActiveRef.current = isPurge;
+          if (isPurge) {
+            document.body.dataset.heroPurge = "true";
+            delete document.body.dataset.heroPassed;
+          } else {
+            delete document.body.dataset.heroPurge;
+            document.body.dataset.heroPassed = "true";
+          }
+        }
+        if (!isPurge) {
 
           // Terminal Boot Sequence (GSAP ScrambleText) on Act III Monolith
           if (!decodedMonolithRef.current) {
@@ -253,6 +260,11 @@ export default function HomePage() {
       >
         SKIP TO CONTENT &rarr;
       </a>
+
+      {/* Semantic SSR H1 for Search Engine Crawlers and Screen Readers */}
+      <h1 className="sr-only">
+        OSU Tamil Sangam (ஒஹையோ மாநிலப் பல்கலைக்கழகத் தமிழ்ச் சங்கம்) — Official Tamil Student Organization at The Ohio State University in Columbus, Ohio
+      </h1>
 
       {/* 0. Tactile Heritage Sandstone Texture Overlay */}
       <HeritageTextureOverlay variant="sandstone" opacity={0.02} />
