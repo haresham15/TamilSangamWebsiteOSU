@@ -6,18 +6,20 @@ export const guideStationPalette = {
   fog: "#0A0F14",
   haze: "#14283A",
   hazeBright: "#2A4A63",
-  coach: "#1A242F",
-  coachEdge: "#4D6B85",
-  coachBand: "#D9CFB4",
-  platform: "#1B2229",
-  platformEdge: "#B99845",
+  coach: "#1B334B", // Rich Prussian Blue-Teal (never pitch-black!)
+  coachDark: "#101D2A",
+  coachEdge: "#4A5D6E", // Brushed Anodized Aluminum & Weathered Steel
+  coachBand: "#C8B898", // Faded cream-ochre livery pinstripe
+  platform: "#0E1620", // Wet dark asphalt/concrete
+  platformEdge: "#D4AF37", // Yellow tactile platform safety line
   practicalWarm: "#FFD9A0",
-  practicalCool: "#9FD6FF",
+  practicalCool: "#5B9BD5", // Platform mercury-vapor blue
   boardInk: "#0C0C0E",
   boardGlyph: "#F1E9D2",
   windowGlow: "#FFB84D",
   windowFalloff: "#FF8A2A",
-  rim: "#7AA7D6",
+  rim: "#68A8E8", // Cool blue-hour moonlight rim
 } as const;
 
 export const GUIDE_STATION_FOG_DENSITY = 0.018;
+

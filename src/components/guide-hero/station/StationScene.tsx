@@ -32,6 +32,7 @@ interface StationSceneProps {
 /**
  * Cinematic camera rig: samples guideRail.ts with critical damping (λ = 6)
  * and decaying handheld drift (PRD §6.1).
+ * Initialized at calibrated F1 coordinates: (0.25, 1.48, 3.55) -> lookAt (-0.15, 1.52, 0.0).
  */
 function StationCamera({
   getProgress,
@@ -41,8 +42,8 @@ function StationCamera({
   getTargetProgress: () => number;
 }) {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
-  const currentPos = useRef(new THREE.Vector3(0.2, 1.55, 5.6));
-  const currentLookAt = useRef(new THREE.Vector3(-0.25, 1.7, 0));
+  const currentPos = useRef(new THREE.Vector3(0.25, 1.48, 3.55));
+  const currentLookAt = useRef(new THREE.Vector3(-0.15, 1.52, 0.0));
   const targetLookAt = useMemo(() => new THREE.Vector3(), []);
   const [reduceMotion, setReduceMotion] = useState(false);
   const { size } = useThree();
@@ -144,8 +145,8 @@ function StationBoard({
     if (!group) return;
 
     const p = getProgress();
-    // Board enters frame at p >= 0.55
-    group.visible = p >= 0.5;
+    // Board enters frame at p >= 0.50
+    group.visible = p >= 0.48;
 
     // Board cascade triggers once at p >= 0.82 (idempotent, PRD §7.6)
     if (p >= 0.82 && !mostAskedRevealed.current) {
@@ -196,8 +197,13 @@ function StationBoard({
 }
 
 /**
- * Weathered blue Indian Railways-style passenger coach (#1A242F).
- * Built with an exact window cutout for the (0, 1.7, 0) opening.
+ * Authentic Indian Railways ICF Blue Passenger Coach (#1B334B Prussian Blue-Teal).
+ * Features:
+ * - Skirt at y = 0.35m
+ * - Corrugated waist ribs below window (y = 0.85m to 1.15m)
+ * - Dual cream-ochre livery pinstripes (#C8B898)
+ * - Hero window cutout (1.38m × 0.94m) centered at (0, 1.65, 0)
+ * - Softly frosted, dimly lit sleeper neighbor windows with mini bars and louvers
  */
 function CoachBody({ dimmed = false }: { dimmed?: boolean }) {
   const bodyColor = dimmed ? guideStationPalette.haze : guideStationPalette.coach;
@@ -206,53 +212,103 @@ function CoachBody({ dimmed = false }: { dimmed?: boolean }) {
 
   return (
     <group name={dimmed ? "NeighbourCoachBody" : "HeroCoachBody"}>
-      {/* Lower coach skirt / underframe beam (y: 0 to 0.9m) */}
-      <mesh position={[0, 0.45, 0]} castShadow receiveShadow>
-        <boxGeometry args={[22, 0.9, 0.42]} />
-        <meshStandardMaterial color={bodyColor} metalness={0.35} roughness={0.7} />
+      {/* Lower coach skirt / underframe beam (y: 0.35m to 0.85m) */}
+      <mesh position={[0, 0.60, 0]} castShadow receiveShadow>
+        <boxGeometry args={[22, 0.50, 0.42]} />
+        <meshStandardMaterial color={bodyColor} metalness={0.35} roughness={0.45} />
       </mesh>
 
-      {/* Cream livery band running horizontally across the coach (y: 1.15 to 1.25m) */}
-      <mesh position={[0, 1.2, 0.215]}>
-        <boxGeometry args={[21.9, 0.12, 0.02]} />
-        <meshStandardMaterial color={guideStationPalette.coachBand} metalness={0.15} roughness={0.75} />
+      {/* Corrugated horizontal ribs below window (y: 0.85m to 1.15m) */}
+      {[-0.08, 0.0, 0.08].map((dy) => (
+        <mesh key={dy} position={[0, 1.0 + dy, 0.22]}>
+          <boxGeometry args={[22, 0.035, 0.02]} />
+          <meshStandardMaterial color={bodyColor} metalness={0.4} roughness={0.45} />
+        </mesh>
+      ))}
+
+      {/* Dual cream-ochre livery pinstripes running across coach (y: 1.16m and 1.22m) */}
+      <mesh position={[0, 1.16, 0.22]}>
+        <boxGeometry args={[21.9, 0.025, 0.02]} />
+        <meshStandardMaterial color={guideStationPalette.coachBand} metalness={0.15} roughness={0.6} />
+      </mesh>
+      <mesh position={[0, 1.22, 0.22]}>
+        <boxGeometry args={[21.9, 0.025, 0.02]} />
+        <meshStandardMaterial color={guideStationPalette.coachBand} metalness={0.15} roughness={0.6} />
       </mesh>
 
-      {/* Left coach wall panel (x: -11m to -0.5m, y: 0.9m to 2.7m) */}
-      <mesh position={[-5.75, 1.8, 0]} castShadow receiveShadow>
-        <boxGeometry args={[10.5, 1.8, 0.42]} />
-        <meshStandardMaterial color={bodyColor} metalness={0.35} roughness={0.7} />
+      {/* Left coach wall panel (x: -11m to -0.69m, y: 0.85m to 2.70m) */}
+      <mesh position={[-5.845, 1.775, 0]} castShadow receiveShadow>
+        <boxGeometry args={[10.31, 1.85, 0.42]} />
+        <meshStandardMaterial color={bodyColor} metalness={0.35} roughness={0.45} />
       </mesh>
 
-      {/* Right coach wall panel (x: +0.5m to +11m, y: 0.9m to 2.7m) */}
-      <mesh position={[5.75, 1.8, 0]} castShadow receiveShadow>
-        <boxGeometry args={[10.5, 1.8, 0.42]} />
-        <meshStandardMaterial color={bodyColor} metalness={0.35} roughness={0.7} />
+      {/* Right coach wall panel (x: +0.69m to +11m, y: 0.85m to 2.70m) */}
+      <mesh position={[5.845, 1.775, 0]} castShadow receiveShadow>
+        <boxGeometry args={[10.31, 1.85, 0.42]} />
+        <meshStandardMaterial color={bodyColor} metalness={0.35} roughness={0.45} />
       </mesh>
 
-      {/* Wall panel below the hero window (x: -0.5m to +0.5m, y: 0.9m to 1.325m) */}
-      <mesh position={[0, 1.11, 0]} castShadow receiveShadow>
-        <boxGeometry args={[1.0, 0.42, 0.42]} />
-        <meshStandardMaterial color={bodyColor} metalness={0.35} roughness={0.7} />
+      {/* Wall panel below the hero window (x: -0.69m to +0.69m, y: 0.85m to 1.18m) */}
+      <mesh position={[0, 1.015, 0]} castShadow receiveShadow>
+        <boxGeometry args={[1.38, 0.33, 0.42]} />
+        <meshStandardMaterial color={bodyColor} metalness={0.35} roughness={0.45} />
       </mesh>
 
-      {/* Wall panel above the hero window (x: -0.5m to +0.5m, y: 2.075m to 2.7m) */}
-      <mesh position={[0, 2.39, 0]} castShadow receiveShadow>
-        <boxGeometry args={[1.0, 0.62, 0.42]} />
-        <meshStandardMaterial color={bodyColor} metalness={0.35} roughness={0.7} />
+      {/* Wall panel above the hero window (x: -0.69m to +0.69m, y: 2.12m to 2.70m) */}
+      <mesh position={[0, 2.41, 0]} castShadow receiveShadow>
+        <boxGeometry args={[1.38, 0.58, 0.42]} />
+        <meshStandardMaterial color={bodyColor} metalness={0.35} roughness={0.45} />
       </mesh>
 
-      {/* Secondary windows on the coach sides */}
-      {[-3.2, -6.0, 3.2, 6.0].map((x) => (
-        <group key={x} position={[x, 1.7, 0.215]}>
+      {/* Corrugated ribs above window (y: 2.22m and 2.36m) */}
+      {[-0.07, 0.07].map((dy) => (
+        <mesh key={dy} position={[0, 2.29 + dy, 0.22]}>
+          <boxGeometry args={[22, 0.035, 0.02]} />
+          <meshStandardMaterial color={bodyColor} metalness={0.4} roughness={0.45} />
+        </mesh>
+      ))}
+
+      {/* Upper cream livery pinstripe (y = 2.48m) */}
+      <mesh position={[0, 2.48, 0.22]}>
+        <boxGeometry args={[21.9, 0.025, 0.02]} />
+        <meshStandardMaterial color={guideStationPalette.coachBand} metalness={0.15} roughness={0.6} />
+      </mesh>
+
+      {/* Neighboring Compartment Windows on the coach */}
+      {[-2.55, -5.8, 2.55, 5.8].map((x) => (
+        <group key={x} position={[x, 1.65, 0.215]}>
+          {/* Aluminum & steel frame */}
           <mesh>
-            <boxGeometry args={[1.2, 0.8, 0.03]} />
-            <meshStandardMaterial color={guideStationPalette.boardInk} metalness={0.6} roughness={0.3} />
+            <boxGeometry args={[1.28, 0.88, 0.04]} />
+            <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.75} roughness={0.32} />
           </mesh>
+          {/* Dimly lit, softly frosted sleeper window glass with warm tungsten glow */}
           <mesh position={[0, 0, 0.015]}>
-            <boxGeometry args={[1.1, 0.7, 0.01]} />
-            <meshBasicMaterial color="#FFB84D" transparent opacity={0.12} />
+            <boxGeometry args={[1.18, 0.78, 0.01]} />
+            <meshStandardMaterial
+              color="#C87A38"
+              emissive="#C87A38"
+              emissiveIntensity={0.32}
+              roughness={0.25}
+              metalness={0.2}
+            />
           </mesh>
+          {/* Miniature horizontal safety bars */}
+          {[-0.22, -0.07, 0.08, 0.23].map((by) => (
+            <mesh key={by} position={[0, by, 0.028]} rotation={[0, 0, Math.PI / 2]}>
+              <cylinderGeometry args={[0.006, 0.006, 1.18, 8]} />
+              <meshStandardMaterial color="#14181D" metalness={0.85} roughness={0.25} />
+            </mesh>
+          ))}
+          {/* Semi-frosted upper shutter louvers */}
+          <mesh position={[0, 0.28, 0.025]}>
+            <boxGeometry args={[1.18, 0.18, 0.015]} />
+            <meshStandardMaterial color="#101720" metalness={0.8} roughness={0.3} />
+          </mesh>
+          {/* Warm point light spilling from left neighbor window at x = -2.55 */}
+          {x === -2.55 && (
+            <pointLight position={[0, 0, 0.2]} intensity={25} distance={3.5} color="#C87A38" decay={2} />
+          )}
         </group>
       ))}
 
@@ -273,7 +329,6 @@ function CoachBody({ dimmed = false }: { dimmed?: boolean }) {
             <boxGeometry args={[0.9, 1.7, 0.04]} />
             <meshStandardMaterial color="#101720" metalness={0.7} roughness={0.35} />
           </mesh>
-          {/* Metal handrails */}
           {[-0.48, 0.48].map((dx) => (
             <mesh key={dx} position={[dx, 0, 0.06]}>
               <cylinderGeometry args={[0.015, 0.015, 1.4, 8]} />
@@ -302,24 +357,24 @@ function CoachBody({ dimmed = false }: { dimmed?: boolean }) {
 
 /**
  * Wet concrete station platform at y = 0.
- * Includes concrete surface, yellow tactile safety line, puddle zones, and cast-iron bench.
+ * Features dark wet concrete surface, yellow tactile line at z = 0.45m, and cast-iron bench.
  */
 function WetPlatform() {
   return (
     <group name="WetPlatform">
-      {/* Platform slab */}
+      {/* Platform slab at y = 0.0m */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 12]} receiveShadow>
         <planeGeometry args={[75, 30]} />
         <meshStandardMaterial
           color={guideStationPalette.platform}
-          metalness={0.3}
-          roughness={0.22}
+          metalness={0.35}
+          roughness={0.20}
         />
       </mesh>
 
-      {/* Yellow tactile safety line at track edge (z = 0.8m) */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0.8]}>
-        <planeGeometry args={[75, 0.16]} />
+      {/* Yellow tactile safety line at track edge (z = 0.45m) */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0.45]}>
+        <planeGeometry args={[75, 0.14]} />
         <meshBasicMaterial color={guideStationPalette.platformEdge} toneMapped={false} />
       </mesh>
 
@@ -345,10 +400,9 @@ function WetPlatform() {
 }
 
 /**
- * Grand iron station rafters & roof trusses spanning y = 16m to 22m (PRD §5.5).
+ * Grand iron station rafters & roof trusses elevated to y >= 22m (PRD §5.5).
  */
 function HallRafters() {
-  // Trusses frame the outer bays (x = -18, -12, 12, 18), leaving central corridor (x = -12 to +12) completely open
   const trussX = [-18, -12, 12, 18];
 
   return (
@@ -364,18 +418,18 @@ function HallRafters() {
             <boxGeometry args={[0.2, 10, 0.25]} />
             <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.8} roughness={0.3} />
           </mesh>
-          {/* High horizontal cross-tie beam at y = 21.8m (4.3m above top of board at y = 17.5m) */}
-          <mesh position={[0, 21.8, 0]}>
+          {/* High horizontal cross-tie beam at y = 22.2m */}
+          <mesh position={[0, 22.2, 0]}>
             <boxGeometry args={[11, 0.24, 0.26]} />
             <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.8} roughness={0.3} />
           </mesh>
-          {/* High hanging sodium practical lamp at y = 21.2m */}
-          <mesh position={[0, 21.2, 0]}>
+          {/* High hanging sodium practical lamp at y = 21.6m */}
+          <mesh position={[0, 21.6, 0]}>
             <sphereGeometry args={[0.14, 12, 12]} />
             <meshBasicMaterial color={guideStationPalette.practicalWarm} toneMapped={false} />
           </mesh>
           <pointLight
-            position={[0, 21.0, 0]}
+            position={[0, 21.4, 0]}
             intensity={55}
             distance={24}
             color={guideStationPalette.practicalWarm}
@@ -404,11 +458,11 @@ function HallRafters() {
         </mesh>
       </group>
 
-      {/* Staggered volumetric diagonal roof light shafts positioned safely behind/above board */}
+      {/* Staggered soft diagonal roof light shafts positioned safely behind/above board */}
       {[-6.5, 0.0, 6.5].map((x, i) => (
         <mesh
           key={i}
-          position={[x, 19.5 + i * 1.5, -9.5 + i * 1.0]}
+          position={[x, 20.0 + i * 1.5, -9.5 + i * 1.0]}
           rotation={[0.42, 0, -0.32]}
           renderOrder={4}
         >
@@ -416,7 +470,7 @@ function HallRafters() {
           <meshBasicMaterial
             color="#FFB84D"
             transparent
-            opacity={0.022}
+            opacity={0.016}
             blending={THREE.AdditiveBlending}
             side={THREE.DoubleSide}
             depthWrite={false}
@@ -479,7 +533,7 @@ function TrainSet({ getProgress }: { getProgress: () => number }) {
 
   return (
     <group ref={trainRef} name="StationTrainSet">
-      {/* Hero Coach with 8-layer Window Assembly */}
+      {/* Hero Coach with Window Assembly */}
       <CoachBody />
       <WindowAssembly getProgress={getProgress} />
 
@@ -515,21 +569,28 @@ export function StationScene({
       <color attach="background" args={[guideStationPalette.fog]} />
       <fogExp2 attach="fog" args={[guideStationPalette.fog, GUIDE_STATION_FOG_DENSITY]} />
 
-      {/* Cinematic camera rig sampling guideRail.ts */}
+      {/* Cinematic camera rig sampling calibrated guideRail.ts */}
       <StationCamera getProgress={readProgress} getTargetProgress={readTargetProgress} />
 
-      {/* Lighting rig (PRD §5.4) */}
-      <hemisphereLight args={[guideStationPalette.rim, guideStationPalette.fog, 0.4]} />
-      <directionalLight position={[-8, 16, 8]} intensity={0.85} color={guideStationPalette.rim} />
+      {/* Dedicated Blue-Hour Lighting Rig: Illuminates +z coach face and wet platform */}
+      <hemisphereLight args={[guideStationPalette.rim, guideStationPalette.fog, 0.55]} />
+      <directionalLight position={[2.0, 6.0, 5.0]} intensity={1.8} color="#6CA6D8" />
+      <directionalLight position={[-6.0, 10.0, 8.0]} intensity={0.65} color={guideStationPalette.rim} />
 
-      {/* Window spotlight projecting warm gobo glow onto wet platform */}
-      <spotLight
-        position={[0, 6, 2.5]}
-        intensity={90}
-        angle={0.65}
-        penumbra={0.7}
-        color={guideStationPalette.windowGlow}
-      />
+      {/* Overhead Platform Mercury-Vapor / Blue-Hour Lamps */}
+      {[-3.2, 3.2].map((x) => (
+        <group key={x} position={[x, 4.0, 3.5]} name={`PlatformLamp_${x}`}>
+          <mesh position={[0, 0.15, 0]}>
+            <cylinderGeometry args={[0.22, 0.36, 0.22, 16, 1, true]} />
+            <meshStandardMaterial color="#1A2836" metalness={0.7} roughness={0.3} />
+          </mesh>
+          <mesh position={[0, 0.08, 0]}>
+            <sphereGeometry args={[0.1, 16, 16]} />
+            <meshBasicMaterial color="#7CB8F8" toneMapped={false} />
+          </mesh>
+          <pointLight color="#5B9BD5" intensity={55} distance={14} decay={1.8} />
+        </group>
+      ))}
 
       {/* Scene Elements */}
       <WetPlatform />

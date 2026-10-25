@@ -35,7 +35,7 @@ export function SdfSilhouette({
     const sdfB = getSilhouetteSdfTexture(kind, "B");
     if (!sdfA || !sdfB) return null;
 
-    const material = createSilhouetteMaterial({ sdfA, sdfB, fog });
+    const material = createSilhouetteMaterial({ sdfA, sdfB, fog, kind });
     return { material, sdfA, sdfB };
   }, [kind, fog]);
 

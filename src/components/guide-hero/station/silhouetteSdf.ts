@@ -78,193 +78,234 @@ function edt2d(grid: Float32Array, width: number, height: number): Float32Array 
 /**
  * Draw anatomical seated woman silhouette facing -x (left towards window).
  * Features:
- * - Seated profile posture
- * - Soft contoured hair bun at back of head
- * - Forehead, nose, lips, jawline tapering into neck
- * - Draped saree shoulder line flowing over arm
- * - Forearms resting near the window sill
- * - Pose A: looking straight forward
- * - Pose B: subtle downward glance (-4 degrees)
+ * - South Indian low hair bun (kondai) with mallipoo contour and loose wisps
+ * - Natural feminine forehead, delicate nose bridge, soft lips, rounded chin, graceful jawline
+ * - Draped saree shoulder and forearm resting near window sill
+ * - Pose A: looking straight forward; Pose B: gentle downward glance (-3.5°)
  */
 function drawWomanSilhouette(ctx: CanvasRenderingContext2D, w: number, h: number, pose: SilhouettePose) {
   const isB = pose === "B";
-  const tilt = isB ? 0.025 : 0.0;
-  const headYOffset = isB ? h * 0.012 : 0;
+  const tilt = isB ? 0.03 : 0.0;
+  const headYOffset = isB ? h * 0.015 : 0;
+
+  // Work in normalized coordinates scaled by w and h (nominally 1024x1024)
+  const sx = w / 1024;
+  const sy = h / 1024;
 
   ctx.fillStyle = "#ffffff";
   ctx.beginPath();
 
-  // Anatomical Head & Hair-Bun Portrait in Left Profile (-x)
-  // Cropped naturally at the lower sill (y = h)
-  const headX = w * 0.56;
-  const headY = h * 0.28 + headYOffset;
+  // Head center (560, 290)
+  const cx = 560 * sx;
+  const cy = (290 + headYOffset / sy) * sy;
 
-  // Start at back of neck/nape
-  ctx.moveTo(headX + w * 0.05, headY + h * 0.16);
+  // Start at back of neck/nape (595, 430)
+  ctx.moveTo(595 * sx, (430 + tilt * 100) * sy);
 
-  // Hair bun contour at back/occiput (graceful round chignon)
+  // Hair bun (kondai) at nape: center ~ (715, 365, r=58) with mallipoo flower strand contour
   ctx.bezierCurveTo(
-    headX + w * 0.16, headY + h * 0.14,
-    headX + w * 0.24, headY + h * 0.04,
-    headX + w * 0.20, headY - h * 0.06
+    650 * sx, (445 + tilt * 100) * sy,
+    720 * sx, (435 + tilt * 80) * sy,
+    760 * sx, (390 + tilt * 60) * sy
   );
+  // Mallipoo flower bulge on bun
   ctx.bezierCurveTo(
-    headX + w * 0.16, headY - h * 0.14,
-    headX + w * 0.06, headY - h * 0.16,
-    headX - w * 0.02, headY - h * 0.13
+    780 * sx, (365 + tilt * 50) * sy,
+    775 * sx, (330 + tilt * 40) * sy,
+    740 * sx, (320 + tilt * 30) * sy
   );
-
-  // Crown of head & hairline
+  // Transition from bun into crown volume
   ctx.bezierCurveTo(
-    headX - w * 0.10, headY - h * 0.12,
-    headX - w * 0.16, headY - h * 0.06,
-    headX - w * 0.18, headY - h * 0.01 + tilt * h
-  );
-
-  // Forehead to brow (left-facing)
-  ctx.bezierCurveTo(
-    headX - w * 0.20, headY + h * 0.03 + tilt * h,
-    headX - w * 0.21, headY + h * 0.07 + tilt * h,
-    headX - w * 0.20, headY + h * 0.09 + tilt * h
+    710 * sx, (280 + tilt * 20) * sy,
+    675 * sx, (210 + tilt * 10) * sy,
+    610 * sx, (175 + tilt * 5) * sy
   );
 
-  // Nose bridge & delicate tip
-  ctx.lineTo(headX - w * 0.24, headY + h * 0.12 + tilt * h);
-  ctx.lineTo(headX - w * 0.20, headY + h * 0.14 + tilt * h);
-
-  // Upper & lower lips
-  ctx.lineTo(headX - w * 0.215, headY + h * 0.16 + tilt * h);
-  ctx.lineTo(headX - w * 0.195, headY + h * 0.175 + tilt * h);
-
-  // Chin and jawline
+  // Crown of head and forehead dome
   ctx.bezierCurveTo(
-    headX - w * 0.21, headY + h * 0.20 + tilt * h,
-    headX - w * 0.17, headY + h * 0.23 + tilt * h,
-    headX - w * 0.10, headY + h * 0.235
+    540 * sx, 150 * sy,
+    480 * sx, 180 * sy,
+    445 * sx, (245 + tilt * 20) * sy
   );
 
-  // Elegant throat into collarbone
+  // Delicate forehead transitioning into nose bridge
   ctx.bezierCurveTo(
-    headX - w * 0.09, headY + h * 0.27,
-    headX - w * 0.12, headY + h * 0.31,
-    headX - w * 0.16, headY + h * 0.35
+    432 * sx, (270 + tilt * 30) * sy,
+    428 * sx, (295 + tilt * 40) * sy,
+    430 * sx, (308 + tilt * 45) * sy
   );
 
-  // Left shoulder & draped saree pallu flowing toward window
+  // Feminine nose bridge and tip (x=412, y=318)
+  ctx.lineTo(412 * sx, (318 + tilt * 50) * sy);
+  ctx.lineTo(422 * sx, (332 + tilt * 55) * sy);
+
+  // Philtrum, soft upper and lower lips (x=424, y=348-362)
+  ctx.lineTo(418 * sx, (348 + tilt * 60) * sy);
+  ctx.lineTo(426 * sx, (356 + tilt * 62) * sy);
+  ctx.lineTo(422 * sx, (364 + tilt * 65) * sy);
+
+  // Softly rounded chin (x=432, y=385)
   ctx.bezierCurveTo(
-    headX - w * 0.28, headY + h * 0.40,
-    headX - w * 0.36, headY + h * 0.48,
-    headX - w * 0.40, headY + h * 0.58
+    422 * sx, (375 + tilt * 70) * sy,
+    428 * sx, (386 + tilt * 75) * sy,
+    436 * sx, (388 + tilt * 75) * sy
   );
 
-  // Forearm extending and resting gracefully along bottom window sill (y -> h)
+  // Graceful jawline sweeping back to throat and collarbone
   ctx.bezierCurveTo(
-    headX - w * 0.43, headY + h * 0.65,
-    headX - w * 0.44, headY + h * 0.70,
-    headX - w * 0.42, h
+    470 * sx, (405 + tilt * 80) * sy,
+    515 * sx, (420 + tilt * 85) * sy,
+    525 * sx, (455 + tilt * 90) * sy
   );
+
+  // Throat down to collarbone and draped saree shoulder
+  ctx.bezierCurveTo(
+    510 * sx, 490 * sy,
+    450 * sx, 530 * sy,
+    410 * sx, 580 * sy
+  );
+
+  // Saree pallu draped over shoulder and upper arm
+  ctx.bezierCurveTo(
+    380 * sx, 620 * sy,
+    360 * sx, 680 * sy,
+    350 * sx, 740 * sy
+  );
+
+  // Left forearm angled forward toward window sill
+  ctx.bezierCurveTo(
+    340 * sx, 790 * sy,
+    335 * sx, 860 * sy,
+    340 * sx, 950 * sy
+  );
+  ctx.lineTo(345 * sx, h);
 
   // Bottom edge flush crop (resting on sill)
   ctx.lineTo(w, h);
 
-  // Upper back & shoulder contour rising to nape
+  // Back of torso and saree pleats rising to upper back
   ctx.bezierCurveTo(
-    headX + w * 0.35, headY + h * 0.55,
-    headX + w * 0.25, headY + h * 0.38,
-    headX + w * 0.18, headY + h * 0.26
+    880 * sx, 900 * sy,
+    820 * sx, 760 * sy,
+    760 * sx, 640 * sy
   );
   ctx.bezierCurveTo(
-    headX + w * 0.14, headY + h * 0.21,
-    headX + w * 0.09, headY + h * 0.18,
-    headX + w * 0.05, headY + h * 0.16
+    710 * sx, 540 * sy,
+    650 * sx, 470 * sy,
+    595 * sx, (430 + tilt * 100) * sy
   );
 
   ctx.closePath();
   ctx.fill();
 }
 
+/**
+ * Draw anatomical standing man silhouette facing +x (right towards window).
+ * Features:
+ * - Natural 3/4 back-and-side profile posture
+ * - Layered, collegiate tousled hair volume at crown
+ * - Defined brow, straight nose bridge, lips, clean jawline
+ * - Structured jacket / popped shirt collar, natural broad shoulder line
+ * - Distinct upper-arm and torso contours (NO flat cone or cape!)
+ * - Pose A: direct gaze; Pose B: subtle contemplative weight shift
+ */
 function drawManSilhouette(ctx: CanvasRenderingContext2D, w: number, h: number, pose: SilhouettePose) {
   const isB = pose === "B";
-  const tilt = isB ? -0.018 : 0.0;
+  const tilt = isB ? -0.02 : 0.0;
   const torsoShift = isB ? w * 0.015 : 0;
+
+  const sx = w / 1024;
+  const sy = h / 1024;
 
   ctx.fillStyle = "#ffffff";
   ctx.beginPath();
 
-  // Three-Quarter Back/Side Profile Bust (Head, collar, overcoat shoulders)
-  // Facing towards window (+x), cropped cleanly across the bottom
-  const headX = w * 0.42 + torsoShift;
-  const headY = h * 0.22;
+  // Head center (470, 250)
+  const hx = 470 * sx + torsoShift;
+  const hy = 250 * sy;
 
-  // Start at back of neck / hair contour
-  ctx.moveTo(headX - w * 0.06, headY + h * 0.10);
+  // Start at nape of neck below hair (440, 340)
+  ctx.moveTo(hx - 30 * sx, (340 + tilt * 50) * sy);
 
-  // Back of head / collegiate tousled hair texture
+  // Back of head with natural tousled hair volume
   ctx.bezierCurveTo(
-    headX - w * 0.14, headY + h * 0.07,
-    headX - w * 0.17, headY - h * 0.02,
-    headX - w * 0.13, headY - h * 0.08
+    hx - 110 * sx, (325 + tilt * 40) * sy,
+    hx - 135 * sx, (270 + tilt * 20) * sy,
+    hx - 120 * sx, (210 + tilt * 10) * sy
   );
   ctx.bezierCurveTo(
-    headX - w * 0.09, headY - h * 0.13,
-    headX - w * 0.02, headY - h * 0.15,
-    headX + w * 0.06, headY - h * 0.12 + tilt * h
+    hx - 105 * sx, (150 + tilt * 5) * sy,
+    hx - 40 * sx, 120 * sy,
+    hx + 30 * sx, (135 + tilt * 5) * sy
   );
 
-  // Hair peak & brow ridge
+  // Crown texture and forehead slope
   ctx.bezierCurveTo(
-    headX + w * 0.12, headY - h * 0.08 + tilt * h,
-    headX + w * 0.15, headY - h * 0.03 + tilt * h,
-    headX + w * 0.14, headY + h * 0.01 + tilt * h
+    hx + 90 * sx, (155 + tilt * 10) * sy,
+    hx + 115 * sx, (190 + tilt * 15) * sy,
+    hx + 112 * sx, (228 + tilt * 20) * sy
   );
 
-  // Clean nose profile
-  ctx.lineTo(headX + w * 0.19, headY + h * 0.04 + tilt * h);
-  ctx.lineTo(headX + w * 0.15, headY + h * 0.06 + tilt * h);
+  // Defined masculine brow (x = 582)
+  ctx.lineTo((582 * sx + torsoShift), (228 + tilt * 20) * sy);
 
-  // Lips & structured masculine jawline
-  ctx.lineTo(headX + w * 0.16, headY + h * 0.08 + tilt * h);
-  ctx.lineTo(headX + w * 0.14, headY + h * 0.095 + tilt * h);
+  // Straight nose bridge and tip (x = 604, y = 268)
+  ctx.lineTo((604 * sx + torsoShift), (268 + tilt * 25) * sy);
+  ctx.lineTo((592 * sx + torsoShift), (280 + tilt * 28) * sy);
+
+  // Subtle masculine lips (x = 596, y = 295)
+  ctx.lineTo((596 * sx + torsoShift), (295 + tilt * 30) * sy);
+  ctx.lineTo((588 * sx + torsoShift), (308 + tilt * 32) * sy);
+
+  // Clean jawline (x = 588, y = 335)
   ctx.bezierCurveTo(
-    headX + w * 0.15, headY + h * 0.12 + tilt * h,
-    headX + w * 0.12, headY + h * 0.14 + tilt * h,
-    headX + w * 0.07, headY + h * 0.15
+    (590 * sx + torsoShift), (322 + tilt * 35) * sy,
+    (588 * sx + torsoShift), (335 + tilt * 38) * sy,
+    (565 * sx + torsoShift), (348 + tilt * 40) * sy
   );
 
-  // Neck leading into sharp structured coat collar
-  ctx.lineTo(headX + w * 0.05, headY + h * 0.17);
-  // Turned-up coat collar peak
-  ctx.lineTo(headX + w * 0.18, headY + h * 0.20);
-  ctx.lineTo(headX + w * 0.13, headY + h * 0.24);
+  // Throat leading into structured popped shirt/jacket collar
+  ctx.lineTo((545 * sx + torsoShift), (365 + tilt * 42) * sy);
 
-  // Broad overcoat chest & lapel line facing the train window
+  // Popped collar front peak (x = 620, y = 390)
+  ctx.lineTo((620 * sx + torsoShift), 390 * sy);
+  ctx.lineTo((585 * sx + torsoShift), 425 * sy);
+
+  // Front chest / lapel line angled toward window
   ctx.bezierCurveTo(
-    headX + w * 0.24, headY + h * 0.32,
-    headX + w * 0.32, headY + h * 0.44,
-    headX + w * 0.38, headY + h * 0.58
+    (630 * sx + torsoShift), 465 * sy,
+    (655 * sx + torsoShift), 540 * sy,
+    (670 * sx + torsoShift), 630 * sy
   );
+  // Right upper arm and jacket side contour
   ctx.bezierCurveTo(
-    headX + w * 0.42, headY + h * 0.70,
-    headX + w * 0.44, headY + h * 0.85,
-    headX + w * 0.45, h
-  );
-
-  // Clean bottom edge crop
-  ctx.lineTo(0, h);
-
-  // Left broad coat shoulder & back contour
-  ctx.lineTo(0, headY + h * 0.65);
-  ctx.bezierCurveTo(
-    headX - w * 0.32, headY + h * 0.55,
-    headX - w * 0.26, headY + h * 0.40,
-    headX - w * 0.20, headY + h * 0.28
+    (685 * sx + torsoShift), 720 * sy,
+    (690 * sx + torsoShift), 830 * sy,
+    (695 * sx + torsoShift), h
   );
 
-  // Up to coat collar back & neck
+  // Bottom edge crop
+  ctx.lineTo(120 * sx, h);
+
+  // Left hip and jacket hem contour
   ctx.bezierCurveTo(
-    headX - w * 0.18, headY + h * 0.20,
-    headX - w * 0.12, headY + h * 0.15,
-    headX - w * 0.06, headY + h * 0.10
+    140 * sx, 860 * sy,
+    160 * sx, 740 * sy,
+    180 * sx, 640 * sy
+  );
+
+  // Left arm and broad shoulder contour (left shoulder at x = 240, y = 475)
+  ctx.bezierCurveTo(
+    200 * sx, 560 * sy,
+    220 * sx, 495 * sy,
+    260 * sx, 465 * sy
+  );
+
+  // Back shoulder seam up to rear jacket collar
+  ctx.bezierCurveTo(
+    320 * sx, 425 * sy,
+    380 * sx, 385 * sy,
+    hx - 30 * sx, (340 + tilt * 50) * sy
   );
 
   ctx.closePath();

@@ -28,9 +28,9 @@ export function RainStreaks() {
   const { geometry, material } = useMemo(() => {
     const geo = new THREE.InstancedBufferGeometry();
 
-    // Base ribbon quad: width 0.0018m, length 0.42m
-    const w = 0.0009;
-    const l = 0.42;
+    // Base ribbon quad: width 0.0016m, length 0.38m
+    const w = 0.0008;
+    const l = 0.38;
     const positions = new Float32Array([
       -w, 0, 0,
        w, 0, 0,
@@ -49,7 +49,7 @@ export function RainStreaks() {
     geo.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
     geo.setIndex(indices);
 
-    // Instanced attributes
+    // Instanced attributes: 350 streaks angled at ~4° wind slant
     const origins = new Float32Array(RAIN_COUNT * 3);
     const speeds = new Float32Array(RAIN_COUNT);
     const tilts = new Float32Array(RAIN_COUNT);
@@ -61,7 +61,8 @@ export function RainStreaks() {
       origins[i * 3 + 2] = 0.3 + (((i * 79) % 100) / 100) * 4.8;
 
       speeds[i] = 5.2 + (i % 7) * 0.45;
-      tilts[i] = -0.05 + ((i % 5) - 2) * 0.008;
+      // ~4° wind slant (-0.07 rad)
+      tilts[i] = -0.07 + ((i % 5) - 2) * 0.006;
     }
 
     geo.setAttribute("aOrigin", new THREE.InstancedBufferAttribute(origins, 3));
@@ -106,21 +107,25 @@ export function RainStreaks() {
           // Soft velocity tail falloff
           float tail = smoothstep(0.0, 0.25, vUv.y) * smoothstep(1.0, 0.35, vUv.y);
 
-          // Proximity to warm window spill cone (origin [0, 1.7, 0.0])
-          vec3 d = vWorldPos - vec3(0.0, 1.7, 0.0);
-          float distFromConeAxis = length(vec2(d.x, d.y * 1.4));
-          float coneRadiusAtZ = 0.45 + max(0.0, d.z) * 0.68;
+          // Proximity to warm window spill cone (origin [0, 1.65, 0.0])
+          vec3 d = vWorldPos - vec3(0.0, 1.65, 0.0);
+          float distFromConeAxis = length(vec2(d.x, d.y * 1.3));
+          float coneRadiusAtZ = 0.55 + max(0.0, d.z) * 0.72;
           float inWindowCone = (d.z > 0.0 && distFromConeAxis < coneRadiusAtZ) ?
             max(0.0, 1.0 - distFromConeAxis / coneRadiusAtZ) : 0.0;
 
-          // Golden amber when illuminated by compartment light, subtle cool blue in ambient drizzle
-          vec3 coldBlue = vec3(0.20, 0.28, 0.38);
+          // Proximity to blue-hour platform lamps
+          float dLamp1 = length(vWorldPos - vec3(-3.2, 4.0, 3.5));
+          float dLamp2 = length(vWorldPos - vec3(3.2, 4.0, 3.5));
+          float inLamp = clamp(1.0 - min(dLamp1, dLamp2) / 6.0, 0.0, 1.0);
+
+          vec3 coldBlue = vec3(0.40, 0.65, 0.90);
           vec3 warmAmber = vec3(1.0, 0.74, 0.36);
           vec3 col = mix(coldBlue, warmAmber, inWindowCone);
 
-          // Sub-pixel translucent alpha (peak <= 0.12)
-          float alpha = tail * (0.015 + inWindowCone * 0.095);
-          if (alpha < 0.005) discard;
+          // Sub-pixel translucent alpha (peak <= 0.14)
+          float alpha = tail * (0.02 + inWindowCone * 0.09 + inLamp * 0.03);
+          if (alpha < 0.004) discard;
 
           gl_FragColor = vec4(col, alpha);
         }
@@ -151,20 +156,7 @@ export function RainStreaks() {
 
   return (
     <group name="DrizzleAndShafts">
-      {/* Soft volumetric warm light shaft emerging from window onto the platform */}
-      <mesh position={[0, 1.2, 1.5]} rotation={[Math.PI / 2 + 0.2, 0, 0]} renderOrder={6}>
-        <cylinderGeometry args={[0.55, 1.6, 2.8, 16, 1, true]} />
-        <meshBasicMaterial
-          color={guideStationPalette.windowGlow}
-          transparent
-          opacity={0.035}
-          blending={THREE.AdditiveBlending}
-          side={THREE.DoubleSide}
-          depthWrite={false}
-        />
-      </mesh>
-
-      {/* Zero-CPU GPU Drizzle Streaks */}
+      {/* Zero-CPU GPU Drizzle Streaks (no polygonal cone/cylinder meshes!) */}
       <mesh
         ref={(el) => {
           if (el) materialRef.current = el.material as THREE.ShaderMaterial;
