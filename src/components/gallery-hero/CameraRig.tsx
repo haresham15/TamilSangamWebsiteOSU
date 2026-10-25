@@ -1,51 +1,65 @@
-// src/components/gallery-hero/CameraRig.tsx
 "use client";
 
 import React, { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
-import { heroState, registerCameraSnapHandler, unregisterCameraSnapHandler } from "./state";
-import { getCameraS, getCameraSpeed } from "./neck/fretMath";
-import { defaultRamp } from "@/gallery/ramp";
-import { getSharedHeroRefs } from "./props/types";
-
+import { heroState, registerCameraSnapHandler, unregisterCameraSnapHandler, triggerHeroPluck } from "./state";
 import { useTier } from "@/components/providers/TierProvider";
 
-interface CameraRigProps {
+/**
+ * LAYER 5: 3-ACT SHALLOW-ANGLE 85MM MACRO CAMERA SPLINE (CatmullRomCurve3)
+ * 
+ * - Act I (p = 0.00 -> 0.28): Intimate oblique macro angle ([-1.8, 0.75, 4.8], lookAt [0.15, 0.1, -1.2], FOV 34°)
+ * - Act II (p = 0.28 -> 0.78): Cinema rail parallel to strings (pos -> [0.9, 0.4, -3.5], lookAt -> [-0.2, 0.0, -7.5])
+ *   with subtle ±2° cinema Dutch roll. Plucks Vaaranam Aayiram D-Major9 arpeggio across scroll thresholds.
+ * - Act III (p = 0.78 -> 1.00): Rosette resonance close-up with seamless EditorialSheetHandoff
+ */
+
+const SCROLL_PLUCK_THRESHOLDS = [0.20, 0.32, 0.44, 0.56, 0.68, 0.78];
+
+export function CameraRig({
+  propRigRef,
+  children,
+}: {
   propRigRef?: React.RefObject<THREE.Group | null>;
   children?: React.ReactNode;
-}
-
-const MAX_CAMERA_WORLD_SPEED = 90.0; // su/s (§5.3 rate limiter)
-const MAX_FOV_SLEW_RATE = 40.0; // deg/s rate limit
-
-/**
- * CameraRig (§3.5, PRD v2 §5.3, §7)
- *
- * - Base FOV 35° long-lens compression, eye height y = 2.6 above fretboard.
- * - Dynamic kinematic FOV widening:
- *   - Tier A: up to +10° max (35° -> 45°)
- *   - Tier B: up to +6° max (35° -> 41°)
- *   - Tier C: 0° (constant 35°)
- * - Asymmetric critically damped spring: omega = 6 rad/s widening, 16 rad/s settling.
- * - Camera world speed limiter: capped at 90 su/s on extreme wheel gestures.
- * - Pitched down at look target 14.0 su ahead at y = 0.3.
- * - Handheld micro-sway: +-0.04 su breath (0.07 Hz) + 1.5° roll (off for reduced motion).
- * - Deterministic capture support: setProgress snaps spring and speed limiter.
- */
-export function CameraRig({ propRigRef, children }: CameraRigProps) {
+}) {
   const tier = useTier();
-  const currentLookAt = useRef(new THREE.Vector3(0, 0.3, -14.0));
-  const targetLookAt = useMemo(() => new THREE.Vector3(0, 0.3, -14.0), []);
-
   const prefersReducedMotion = useRef(false);
 
-  // Kinematic state for smooth tracking and limiting
-  const sCurrent = useRef<number>(0);
-  const fovCurrent = useRef<number>(35.0);
-  const fovVelocity = useRef<number>(0.0);
+  // Single-damped scroll progress (lambda = 4.2)
+  const smoothP = useRef<number>(0.0);
   const initialized = useRef(false);
+  const lastCrossedThreshold = useRef<number>(-1);
+
+  // 1. Camera Position Spline (3-Act Oblique Cinema Rail)
+  const cameraPath = useMemo(() => {
+    return new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-1.8, 0.75, 4.8),  // Act I start: intimate oblique macro
+      new THREE.Vector3(-1.0, 0.65, 2.2),  // Act I -> II transition
+      new THREE.Vector3(-0.1, 0.52, -0.2), // Act II corridor mid
+      new THREE.Vector3(0.7, 0.42, -2.4),  // Act II corridor lower
+      new THREE.Vector3(0.9, 0.40, -3.5),  // Act II end: parallel rail
+      new THREE.Vector3(0.45, 0.30, -2.2), // Act III: close-up on glowing rosette
+    ]);
+  }, []);
+
+  // 2. Camera LookAt Target Spline
+  const lookAtPath = useMemo(() => {
+    return new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0.15, 0.10, -1.2), // Act I: looking diagonally across strings
+      new THREE.Vector3(0.10, 0.08, -2.8), // Act I -> II: looking over soundhole
+      new THREE.Vector3(0.00, 0.05, -4.5), // Act II: corridor depth
+      new THREE.Vector3(-0.12, 0.02, -6.2),// Act II: towards bridge
+      new THREE.Vector3(-0.20, 0.00, -7.5),// Act II end: horizon sweep
+      new THREE.Vector3(0.00, -0.05, -2.4),// Act III: center of Mother-of-Pearl Rosette
+    ]);
+  }, []);
+
+  const currentLookAt = useRef(new THREE.Vector3(0.15, 0.10, -1.2));
+  const tempPos = useMemo(() => new THREE.Vector3(), []);
+  const tempLook = useMemo(() => new THREE.Vector3(), []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -54,111 +68,71 @@ export function CameraRig({ propRigRef, children }: CameraRigProps) {
       ).matches;
     }
 
-    // Register snap handler for deterministic screenshot / capture tooling (§5.3)
+    // Register snap handler for deterministic screenshot / capture tooling
     const handleSnap = (p: number) => {
-      const redMotion = prefersReducedMotion.current || tier === "C";
-      const targetS = getCameraS(p, redMotion);
-      sCurrent.current = targetS;
-      fovCurrent.current = 35.0;
-      fovVelocity.current = 0.0;
+      smoothP.current = p;
+      lastCrossedThreshold.current = -1;
     };
 
     registerCameraSnapHandler(handleSnap);
     return () => {
       unregisterCameraSnapHandler();
     };
-  }, [tier]);
+  }, []);
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
     const cam = state.camera;
     if (!cam) return;
 
-    const p = heroState.progress;
+    const targetP = heroState.progress;
     const isReduced = prefersReducedMotion.current || tier === "C";
 
-    // 1. Compute target distance along neck with kinematic speed ramp
-    const sTarget = getCameraS(p, isReduced);
-    const instantaneousSpeed = getCameraSpeed(p, isReduced);
-
     if (!initialized.current) {
-      sCurrent.current = sTarget;
-      fovCurrent.current = 35.0;
+      smoothP.current = targetP;
       initialized.current = true;
     }
 
-    // 2. Camera World Speed Limiter (cap at 90 su/s)
-    const sDiff = sTarget - sCurrent.current;
-    if (isReduced || Math.abs(sDiff) < 0.05) {
-      sCurrent.current = sTarget;
+    // Single-damper scroll physics (lambda = 4.2)
+    if (isReduced) {
+      smoothP.current = targetP;
     } else {
-      const maxStep = MAX_CAMERA_WORLD_SPEED * dt;
-      const step = Math.sign(sDiff) * Math.min(Math.abs(sDiff), maxStep);
-      sCurrent.current += step;
+      smoothP.current = THREE.MathUtils.damp(smoothP.current, targetP, 4.2, dt);
     }
 
-    const sCam = sCurrent.current;
+    const p = Math.min(1.0, Math.max(0.0, smoothP.current));
 
-    // 3. Dynamic Warp FOV & Asymmetric Spring (§5.3, §7)
-    // Target FOV: 35 + maxBoost * clamp((speed - 1) / (P - 1), 0, 1)
-    let targetFov = 35.0;
-    const maxBoost = tier === "B" ? 6.0 : 10.0; // Tier A: <= +10°, Tier B: <= +6°
-
-    if (!isReduced) {
-      const speedNormalized = Math.max(0, Math.min(1, (instantaneousSpeed - 1.0) / (defaultRamp.P - 1.0)));
-      targetFov = 35.0 + maxBoost * speedNormalized;
-
-      // Also blend with shared hero rig props (e.g. Era 3 finale narrowing)
-      const heroRefs = getSharedHeroRefs();
-      if (heroRefs.rig.fov.value !== 35.0) {
-        targetFov = heroRefs.rig.fov.value;
+    // Scroll threshold automatic arpeggio pluck trigger
+    SCROLL_PLUCK_THRESHOLDS.forEach((thresh, i) => {
+      if (p >= thresh && lastCrossedThreshold.current < i) {
+        lastCrossedThreshold.current = i;
+        triggerHeroPluck(i, 0.75);
       }
-
-      // Asymmetric spring: omega = 6.0 widening, 16.0 settling
-      const omega = targetFov > fovCurrent.current ? 6.0 : 16.0;
-      const k = omega * omega;
-      const c = 2.0 * omega; // critical damping
-
-      const accel = -k * (fovCurrent.current - targetFov) - c * fovVelocity.current;
-      fovVelocity.current += accel * dt;
-
-      // Rate limit: <= 40 deg/s
-      fovVelocity.current = Math.max(-MAX_FOV_SLEW_RATE, Math.min(MAX_FOV_SLEW_RATE, fovVelocity.current));
-      fovCurrent.current += fovVelocity.current * dt;
-    } else {
-      fovCurrent.current = 35.0;
-      fovVelocity.current = 0.0;
+    });
+    if (p < 0.15) {
+      lastCrossedThreshold.current = -1;
     }
 
-    if (cam instanceof THREE.PerspectiveCamera) {
-      if (Math.abs(cam.fov - fovCurrent.current) > 0.01) {
-        cam.fov = fovCurrent.current;
-        cam.updateProjectionMatrix();
-      }
-    }
+    // Evaluate position and lookAt on splines
+    cameraPath.getPointAt(p, tempPos);
+    lookAtPath.getPointAt(p, tempLook);
 
-    // 4. Natural breath sway (off if prefersReducedMotion)
-    const time = state.clock.getElapsedTime();
-    const breath = isReduced ? 0.0 : Math.sin(time * 0.44) * 0.035;
-    const roll = isReduced ? 0.0 : Math.sin(time * 0.28) * 0.012; // ~0.7° roll
+    // Subtle handheld breath sway and Dutch cinema roll
+    const t = state.clock.getElapsedTime();
+    const breath = isReduced ? 0.0 : Math.sin(t * 0.44) * 0.025;
+    const roll = isReduced
+      ? 0.0
+      : Math.sin(p * Math.PI) * 0.035 + Math.sin(t * 0.28) * 0.008; // ±2° Dutch roll
 
-    const heroRefs = getSharedHeroRefs();
-    const dolly = heroRefs.rig.dolly.value;
-
-    // 5. Camera world position: follows neck axis along negative Z, plus extra dolly
-    cam.position.set(0.0, 2.6 + breath, -sCam - dolly);
+    cam.position.set(tempPos.x, tempPos.y + breath, tempPos.z);
     cam.rotation.z = roll;
 
-    // 6. Look target 14 su ahead on the neck at y = 0.3
-    const sLookAhead = sCam + 14.0;
-    targetLookAt.set(0.0, 0.3, -sLookAhead);
-
-    currentLookAt.current.lerp(targetLookAt, Math.min(1.0, 9.0 * dt));
+    currentLookAt.current.lerp(tempLook, Math.min(1.0, 10.0 * dt));
     cam.lookAt(currentLookAt.current);
 
-    // 7. Update PropRig position (anchored 14 su ahead of camera)
+    // Prop rig position update
     if (propRigRef && propRigRef.current) {
-      propRigRef.current.position.set(0.0, 0.0, -sLookAhead);
+      propRigRef.current.position.copy(currentLookAt.current);
     }
   });
 
@@ -166,13 +140,14 @@ export function CameraRig({ propRigRef, children }: CameraRigProps) {
     <>
       <PerspectiveCamera
         makeDefault
-        position={[0.0, 2.6, 0.0]}
-        fov={35}
+        position={[-1.8, 0.75, 4.8]}
+        fov={34} // 85mm long-lens macro cinema compression
         near={0.01}
-        far={250}
+        far={350}
       />
       {children}
     </>
   );
 }
+
 export default CameraRig;

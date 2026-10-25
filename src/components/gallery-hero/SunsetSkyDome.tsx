@@ -5,170 +5,287 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { heroState } from "./state";
 
-// Custom atmospheric twilight shader for the Vaaranam Aayiram coastal horizon
-const SkyShader = {
+/**
+ * LAYER 1: RATHNAVELU 35MM GOLDEN-HOUR TWILIGHT DOME & BOKEH LIGHT FIELD
+ * 
+ * Inspired by Rathnavelu's 35mm cinematography in Vaaranam Aayiram (Nenjukkul Peithidum).
+ * 1. Coastal Sunset & Twilight Gradient Dome:
+ *    - Zenith (y = 1.0): Deep Midnight Indigo (#0B0E1A)
+ *    - Upper Mid (y = 0.65): Warm Twilight Plum (#1F1528)
+ *    - Lower Mid (y = 0.35): Burnt Terracotta Sienna (#6E2A1E)
+ *    - Horizon Glow (y = 0.0 - 0.22): Radiant Golden-Hour Amber (#E8923E -> #FFB85C bloom at [-2.5, 1.2, -12.0])
+ *    - Procedural 35mm film grain hash to guarantee zero color banding on OLED/HDR displays.
+ * 2. Out-of-Focus 35mm Cinema Bokeh Field (90 Orbs):
+ *    - Custom ShaderMaterial with authentic camera aperture bokeh disc + optical spherical aberration ring.
+ *    - 60% Warm Tungsten Amber (#FFB84D), 25% Sunset Coral (#E86F52), 15% Anamorphic Cyan-Teal (#55B8B0).
+ *    - Sinusoidal lateral & vertical drift with sympathetic Easter Egg reverie shimmer.
+ */
+
+const TwilightSkyShader = {
   uniforms: {
-    uColorZenith: { value: new THREE.Color("#120D18") }, // Deep Twilight Indigo
-    uColorMid: { value: new THREE.Color("#6E2E26") },    // Warm Terracotta Rose
-    uColorHorizon: { value: new THREE.Color("#E8984A") },// Golden-Hour Amber
-    uColorGround: { value: new THREE.Color("#14100E") }, // Deep Warm Obsidian
-    uReverieGlow: { value: 0.0 },
     uTime: { value: 0.0 },
+    uReverieGlow: { value: 0.0 },
+    uSunPos: { value: new THREE.Vector3(-2.5, 1.2, -12.0).normalize() },
+    uZenith: { value: new THREE.Color("#0B0E1A") },
+    uUpperMid: { value: new THREE.Color("#1F1528") },
+    uLowerMid: { value: new THREE.Color("#6E2A1E") },
+    uHorizonAmber: { value: new THREE.Color("#E8923E") },
+    uSunBloom: { value: new THREE.Color("#FFB85C") },
+    uGroundObsidian: { value: new THREE.Color("#0E0A0C") },
   },
   vertexShader: `
-    varying vec3 vWorldPosition;
+    varying vec3 vWorldDir;
+    varying vec2 vUv;
     void main() {
+      vUv = uv;
       vec4 worldPos = modelMatrix * vec4(position, 1.0);
-      vWorldPosition = worldPos.xyz;
+      vWorldDir = normalize(worldPos.xyz);
       gl_Position = projectionMatrix * viewMatrix * worldPos;
     }
   `,
   fragmentShader: `
-    uniform vec3 uColorZenith;
-    uniform vec3 uColorMid;
-    uniform vec3 uColorHorizon;
-    uniform vec3 uColorGround;
-    uniform float uReverieGlow;
     uniform float uTime;
-    varying vec3 vWorldPosition;
+    uniform float uReverieGlow;
+    uniform vec3 uSunPos;
+    uniform vec3 uZenith;
+    uniform vec3 uUpperMid;
+    uniform vec3 uLowerMid;
+    uniform vec3 uHorizonAmber;
+    uniform vec3 uSunBloom;
+    uniform vec3 uGroundObsidian;
+    varying vec3 vWorldDir;
+    varying vec2 vUv;
+
+    // Subtle 35mm film grain to prevent 8-bit banding
+    float grainHash(vec2 p, float t) {
+      return fract(sin(dot(p, vec2(12.9898, 78.233)) + fract(t * 0.15)) * 43758.5453);
+    }
 
     void main() {
-      vec3 dir = normalize(vWorldPosition);
-      float y = dir.y; // -1 to 1
+      vec3 dir = vWorldDir;
+      float y = dir.y; // -1.0 to 1.0
 
-      vec3 skyColor;
-      if (y > 0.0) {
-        // Sky hemisphere: Horizon -> Mid -> Zenith
-        float tMid = smoothstep(0.0, 0.35, y);
-        float tZenith = smoothstep(0.35, 0.95, y);
-        vec3 lower = mix(uColorHorizon, uColorMid, tMid);
-        skyColor = mix(lower, uColorZenith, tZenith);
+      vec3 sky;
+      if (y >= 0.0) {
+        // Upper hemisphere 4-stop gradient
+        if (y < 0.22) {
+          float t = smoothstep(0.0, 0.22, y);
+          sky = mix(uHorizonAmber, uLowerMid, t);
+        } else if (y < 0.65) {
+          float t = smoothstep(0.22, 0.65, y);
+          sky = mix(uLowerMid, uUpperMid, t);
+        } else {
+          float t = smoothstep(0.65, 1.0, y);
+          sky = mix(uUpperMid, uZenith, t);
+        }
       } else {
-        // Ground hemisphere: Horizon -> Ground
-        float tGround = smoothstep(0.0, -0.4, y);
-        skyColor = mix(uColorHorizon, uColorGround, tGround);
+        // Lower ground fade
+        float t = smoothstep(0.0, -0.45, y);
+        sky = mix(uHorizonAmber * 0.6, uGroundObsidian, t);
       }
 
-      // Subtle horizontal coastal haze shimmer
-      float haze = sin(dir.x * 4.0 + uTime * 0.25) * 0.03 * exp(-abs(y) * 8.0);
-      skyColor += vec3(0.08, 0.04, 0.01) * haze;
+      // Soft directional golden-hour sun bloom
+      float sunDot = max(0.0, dot(dir, uSunPos));
+      float sunGlow = pow(sunDot, 18.0) * 0.65 + pow(sunDot, 6.0) * 0.25;
+      sky += uSunBloom * sunGlow;
 
-      // Golden-Hour Reverie Easter Egg bloom
-      vec3 reverieWarmth = vec3(0.95, 0.65, 0.25);
-      skyColor = mix(skyColor, skyColor * 1.3 + reverieWarmth * 0.25, uReverieGlow);
+      // Vaaranam Aayiram Easter Egg golden reverie swell
+      vec3 reverieWarmth = vec3(1.0, 0.76, 0.38);
+      sky = mix(sky, sky * 1.35 + reverieWarmth * 0.30, uReverieGlow);
 
-      gl_FragColor = vec4(skyColor, 1.0);
+      // 35mm film grain (0.018 amplitude)
+      float grain = (grainHash(vUv * 650.0, uTime) - 0.5) * 0.018;
+      sky += vec3(grain);
+
+      gl_FragColor = vec4(sky, 1.0);
+    }
+  `,
+};
+
+// 35mm Camera Aperture Bokeh Disc Shader Material
+const BokehDiscShader = {
+  uniforms: {
+    uTime: { value: 0.0 },
+    uReverie: { value: 0.0 },
+  },
+  vertexShader: `
+    attribute float aSize;
+    attribute vec3 aColor;
+    attribute float aPhase;
+    attribute float aSpeed;
+    uniform float uTime;
+    uniform float uReverie;
+    varying vec3 vColor;
+    varying float vOpacity;
+
+    void main() {
+      vColor = aColor;
+
+      // Gentle vertical & lateral harmonic drift
+      vec3 pos = position;
+      pos.y += sin(uTime * aSpeed + aPhase) * 0.45;
+      pos.x += cos(uTime * (aSpeed * 0.8) + aPhase) * 0.35;
+
+      // Subtle pulse and Easter egg bloom
+      float pulse = 0.85 + 0.15 * sin(uTime * 1.8 + aPhase);
+      float reverieBoost = 1.0 + uReverie * 0.45;
+      vOpacity = pulse * (0.38 + uReverie * 0.42);
+
+      vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+      gl_PointSize = (aSize * pulse * reverieBoost) * (260.0 / -mvPosition.z);
+      gl_Position = projectionMatrix * mvPosition;
+    }
+  `,
+  fragmentShader: `
+    uniform float uReverie;
+    varying vec3 vColor;
+    varying float vOpacity;
+
+    void main() {
+      // Point coord is (0,0) to (1,1)
+      vec2 coord = gl_PointCoord - vec2(0.5);
+      float r = length(coord) * 2.0;
+      if (r > 1.0) discard;
+
+      // Soft inner disc + brighter spherical aberration outer ring (r = 0.78..0.96)
+      float disc = smoothstep(1.0, 0.78, r);
+      float ring = smoothstep(0.68, 0.88, r) * smoothstep(1.0, 0.88, r) * 0.75;
+      float alpha = (disc * 0.60 + ring) * vOpacity;
+
+      vec3 col = vColor;
+      if (uReverie > 0.01) {
+        col = mix(col, vec3(1.0, 0.88, 0.55), uReverie * 0.4);
+      }
+
+      gl_FragColor = vec4(col, alpha);
     }
   `,
 };
 
 export function SunsetSkyDome() {
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const bokehRef = useRef<THREE.Points>(null);
+  const skyMatRef = useRef<THREE.ShaderMaterial>(null);
+  const bokehMatRef = useRef<THREE.ShaderMaterial>(null);
+  const bokehGroupRef = useRef<THREE.Points>(null);
 
-  // Memoized dome geometry (inward facing sphere)
+  // Inverted sphere dome geometry
   const domeGeo = useMemo(() => {
-    const geo = new THREE.SphereGeometry(180, 32, 24);
-    geo.scale(-1, 1, 1); // Invert normals so interior is visible
+    const geo = new THREE.SphereGeometry(220, 32, 24);
+    geo.scale(-1, 1, 1);
     return geo;
   }, []);
 
-  // Procedural soft circular bokeh texture for points
-  const bokehTexture = useMemo(() => {
-    const size = 64;
-    const canvas = document.createElement("canvas");
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext("2d");
-    if (ctx) {
-      const grad = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-      grad.addColorStop(0, "rgba(255, 220, 150, 1.0)");
-      grad.addColorStop(0.35, "rgba(235, 145, 65, 0.65)");
-      grad.addColorStop(0.7, "rgba(180, 75, 45, 0.2)");
-      grad.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, size, size);
-    }
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.colorSpace = THREE.SRGBColorSpace;
-    return tex;
-  }, []);
-
-  // Floating horizon bokeh orbs (THREE.Points)
-  const [bokehGeo, bokehMat] = useMemo(() => {
+  // 90 Out-of-Focus 35mm Cinema Bokeh Orbs
+  const bokehGeo = useMemo(() => {
     const count = 90;
     const positions = new Float32Array(count * 3);
-    const scales = new Float32Array(count);
+    const sizes = new Float32Array(count);
+    const colors = new Float32Array(count * 3);
+    const phases = new Float32Array(count);
+    const speeds = new Float32Array(count);
 
-    // Pure deterministic pseudo-random generator to satisfy react-hooks/purity
+    // Deterministic PRNG for pure hook execution
     const prng = (s: number) => {
       const v = Math.sin(s * 12.9898 + 78.233) * 43758.5453;
       return v - Math.floor(v);
     };
 
-    for (let i = 0; i < count; i++) {
-      // Distribute in a wide arc behind the bridge along the coastal horizon
-      const angle = (prng(i * 3 + 1) - 0.5) * Math.PI * 0.95;
-      const radius = 60 + prng(i * 3 + 2) * 50;
-      positions[i * 3 + 0] = Math.sin(angle) * radius;
-      positions[i * 3 + 1] = -2.0 + prng(i * 3 + 3) * 16.0; // Near horizon line
-      positions[i * 3 + 2] = -Math.cos(angle) * radius - 20;
+    // Color swatches: 60% Amber, 25% Coral, 15% Teal
+    const amber = new THREE.Color("#FFB84D");
+    const coral = new THREE.Color("#E86F52");
+    const teal = new THREE.Color("#55B8B0");
 
-      scales[i] = 2.0 + prng(i * 5 + 4) * 4.5;
+    for (let i = 0; i < count; i++) {
+      // Scatter in Z-space between z = -3.0 and z = -22.0
+      const spreadX = (prng(i * 5 + 1) - 0.5) * 28.0;
+      const spreadY = -1.5 + prng(i * 5 + 2) * 14.0;
+      const spreadZ = -3.0 - prng(i * 5 + 3) * 19.0;
+
+      positions[i * 3 + 0] = spreadX;
+      positions[i * 3 + 1] = spreadY;
+      positions[i * 3 + 2] = spreadZ;
+
+      sizes[i] = 1.4 + prng(i * 5 + 4) * 2.8;
+      phases[i] = prng(i * 7 + 1) * Math.PI * 2.0;
+      speeds[i] = 0.25 + prng(i * 7 + 2) * 0.45;
+
+      // Color selection
+      const colorRoll = prng(i * 7 + 3);
+      let chosenColor = amber;
+      if (colorRoll > 0.85) {
+        chosenColor = teal;
+      } else if (colorRoll > 0.60) {
+        chosenColor = coral;
+      }
+
+      colors[i * 3 + 0] = chosenColor.r;
+      colors[i * 3 + 1] = chosenColor.g;
+      colors[i * 3 + 2] = chosenColor.b;
     }
 
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    geo.setAttribute("aScale", new THREE.BufferAttribute(scales, 1));
-
-    const mat = new THREE.PointsMaterial({
-      size: 3.5,
-      map: bokehTexture,
-      transparent: true,
-      opacity: 0.42,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-      color: "#FFB066",
-    });
-
-    return [geo, mat];
-  }, [bokehTexture]);
+    geo.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
+    geo.setAttribute("aColor", new THREE.BufferAttribute(colors, 3));
+    geo.setAttribute("aPhase", new THREE.BufferAttribute(phases, 1));
+    geo.setAttribute("aSpeed", new THREE.BufferAttribute(speeds, 1));
+    return geo;
+  }, []);
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
     const t = state.clock.getElapsedTime();
+    const targetReverie = heroState.easterEggActive ? 1.0 : 0.0;
 
-    if (materialRef.current) {
-      materialRef.current.uniforms.uTime.value = t;
-      // Animate reverie glow
-      const targetGlow = heroState.easterEggActive ? 1.0 : 0.0;
-      materialRef.current.uniforms.uReverieGlow.value = THREE.MathUtils.damp(
-        materialRef.current.uniforms.uReverieGlow.value,
-        targetGlow,
+    if (skyMatRef.current) {
+      skyMatRef.current.uniforms.uTime.value = t;
+      skyMatRef.current.uniforms.uReverieGlow.value = THREE.MathUtils.damp(
+        skyMatRef.current.uniforms.uReverieGlow.value,
+        targetReverie,
         3.5,
         dt
       );
     }
 
-    if (bokehRef.current) {
-      bokehRef.current.rotation.y = Math.sin(t * 0.03) * 0.04;
-      bokehMat.opacity = heroState.easterEggActive
-        ? THREE.MathUtils.damp(bokehMat.opacity, 0.75, 4.0, dt)
-        : THREE.MathUtils.damp(bokehMat.opacity, 0.42, 2.0, dt);
+    if (bokehMatRef.current) {
+      bokehMatRef.current.uniforms.uTime.value = t;
+      bokehMatRef.current.uniforms.uReverie.value = THREE.MathUtils.damp(
+        bokehMatRef.current.uniforms.uReverie.value,
+        targetReverie,
+        4.0,
+        dt
+      );
+    }
+
+    if (bokehGroupRef.current) {
+      // Subtle ambient orbital drift
+      bokehGroupRef.current.rotation.y = Math.sin(t * 0.04) * 0.03;
     }
   });
 
   return (
-    <group name="sunset-skydome">
-      <mesh geometry={domeGeo} position={[0, 0, -40]}>
+    <group name="rathnavelu-twilight-sky">
+      {/* 1. Filmic Coastal Sunset Sky Dome */}
+      <mesh geometry={domeGeo} position={[0, 0, 0]}>
         <shaderMaterial
-          ref={materialRef}
-          args={[SkyShader]}
+          ref={skyMatRef}
+          args={[TwilightSkyShader]}
           side={THREE.BackSide}
           depthWrite={false}
         />
       </mesh>
-      <points ref={bokehRef} geometry={bokehGeo} material={bokehMat} />
+
+      {/* 2. 90 Out-of-Focus Cinema Aperture Bokeh Orbs */}
+      <points ref={bokehGroupRef} geometry={bokehGeo}>
+        <shaderMaterial
+          ref={bokehMatRef}
+          args={[BokehDiscShader]}
+          transparent={true}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
     </group>
   );
 }
+
+export default SunsetSkyDome;

@@ -1,6 +1,7 @@
 import type * as THREE from "three";
 import { getCameraS } from "./neck/fretMath";
 import { triggerDustBurst } from "./props/types";
+import { soundEngine } from "@/lib/soundEngine";
 
 export type MotionTier = "A" | "B" | "C";
 
@@ -46,6 +47,7 @@ export const heroState: HeroState = {
 
 export const pluckedStringsSet = new Set<number>();
 const easterEggListeners = new Set<(active: boolean) => void>();
+const pluckChangeListeners = new Set<(activeStrings: number[]) => void>();
 
 export function subscribeEasterEgg(cb: (active: boolean) => void) {
   easterEggListeners.add(cb);
@@ -54,34 +56,44 @@ export function subscribeEasterEgg(cb: (active: boolean) => void) {
   };
 }
 
-import { soundEngine } from "@/lib/soundEngine";
+export function subscribePluckedStrings(cb: (activeStrings: number[]) => void) {
+  pluckChangeListeners.add(cb);
+  cb(Array.from(pluckedStringsSet));
+  return () => {
+    pluckChangeListeners.delete(cb);
+  };
+}
 
 export function triggerEasterEgg() {
   if (heroState.easterEggActive) return;
   heroState.easterEggActive = true;
   heroState.easterEggUnlockedAt = Date.now();
+  for (let i = 0; i < 6; i++) pluckedStringsSet.add(i);
+  pluckChangeListeners.forEach((fn) => fn(Array.from(pluckedStringsSet)));
   easterEggListeners.forEach((fn) => fn(true));
 
-  // Trigger 6-string golden arpeggio cascade
+  // Trigger 6-string golden arpeggio cascade (strings 0 -> 5 staggered by 55ms)
   for (let i = 0; i < 6; i++) {
     setTimeout(() => {
-      pluckHandler?.(i, 0.9 - i * 0.05);
-    }, i * 65);
+      pluckHandler?.(i, 0.92 - i * 0.04);
+    }, i * 55);
   }
 
-  // Play warm acoustic Major 7th / Add9 guitar chord swell
-  soundEngine.playAcousticMajor7ChordSwell();
+  // Play Harris Jayaraj Vaaranam Aayiram D-Major9 acoustic chord arpeggio
+  soundEngine.playVaaranamChord();
 
-  // Auto-reset after 6 seconds so user can experience it again
+  // Auto-reset after 5.5 seconds so user can discover it again
   setTimeout(() => {
     heroState.easterEggActive = false;
     pluckedStringsSet.clear();
+    pluckChangeListeners.forEach((fn) => fn([]));
     easterEggListeners.forEach((fn) => fn(false));
-  }, 6000);
+  }, 5500);
 }
 
 export function recordStringPluck(stringIndex: number) {
   pluckedStringsSet.add(stringIndex);
+  pluckChangeListeners.forEach((fn) => fn(Array.from(pluckedStringsSet)));
   if (pluckedStringsSet.size >= 6) {
     triggerEasterEgg();
   }
@@ -116,10 +128,6 @@ export function setHeroProgress(p: number) {
   heroState.cameraS = getCameraS(clamped);
   cameraSnapHandler?.(clamped);
 
-  // Era mapping:
-  // 0.00 - 0.334: Era 1 (Nut to Fret 5)
-  // 0.334 - 0.667: Era 2 (Fret 5 to Fret 12)
-  // 0.667 - 1.000: Era 3 (Fret 12 to Fret 24)
   if (clamped < 0.334) {
     heroState.currentEra = 1;
   } else if (clamped < 0.667) {
@@ -128,7 +136,6 @@ export function setHeroProgress(p: number) {
     heroState.currentEra = 3;
   }
 
-  // Fret approximate indicator: -12 * log2(1 - s/100)
   const s = heroState.cameraS;
   if (s <= 0) {
     heroState.currentFret = 0;
@@ -155,13 +162,14 @@ export function registerPluckHandlers(
 
 export function triggerHeroPluck(index: number, amp?: number) {
   pluckHandler?.(index, amp);
+  recordStringPluck(index);
 }
 
 export function triggerHeroAllPlucks(baseAmp?: number) {
   allPlucksHandler?.(baseAmp);
 }
 
-// Window test hook for automated verification (§9)
+// Window test hook for automated verification
 if (typeof window !== "undefined") {
   (window as unknown as { __galleryHero: unknown }).__galleryHero = {
     setProgress: (p: number) => setHeroProgress(p),
@@ -172,6 +180,7 @@ if (typeof window !== "undefined") {
     triggerPluck: (i: number, amp?: number) => triggerHeroPluck(i, amp),
     triggerAllPlucks: (baseAmp?: number) => triggerHeroAllPlucks(baseAmp),
     triggerDustBurst: (origin?: THREE.Vector3) => triggerDustBurst(origin),
+    triggerEasterEgg: () => triggerEasterEgg(),
     refresh: () => {},
   };
 }

@@ -3,208 +3,253 @@
 import React, { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { GUITAR_STRINGS } from "./stringMath";
-import { StringEnergyModel } from "./energy";
-import { createStringMaterial } from "./stringMaterial";
-import { getStringSpacing, getStringHeight } from "../neck/fretMath";
+import {
+  createKajiyaKayStringMaterial,
+  AnamorphicStreakShader,
+  type SingleStringUniforms,
+} from "./stringMaterial";
 import { heroState, registerPluckHandlers, recordStringPluck } from "../state";
-import { triggerStrumSequence } from "../props/strumStateMachine";
 import { soundEngine } from "@/lib/soundEngine";
+import { StringEnergyModel } from "./energy";
 
-// Global energy model instance accessible across components and debug HUD
 export const globalStringEnergy = new StringEnergyModel();
 
 if (typeof window !== "undefined") {
   (window as unknown as { __globalStringEnergy: StringEnergyModel }).__globalStringEnergy = globalStringEnergy;
 }
 
+/**
+ * LAYER 3: 6 KAJIYA-KAY ANISOTROPIC PHOSPHOR-BRONZE STRINGS
+ * 
+ * - True graduated gauges: [0.020, 0.017, 0.014, 0.011, 0.0085, 0.007]
+ * - 0: E2 (146.83Hz D-tuned), 1: A2, 2: D3, 3: G3 (Wound Phosphor Bronze)
+ * - 4: B3, 5: E4 (Plain High-Carbon Steel-Gold)
+ * - Anti-Aliased Micro-Helical Winding with fwidth() — ZERO sawtooth serrated blades
+ * - Anamorphic Horizontal Lens Streak Billboards flashing on pluck
+ * - Interactive pointer strumming & sympathetic scroll pluck
+ */
+
+const STRING_CONFIG = [
+  { index: 0, name: "E2", radius: 0.020, isWound: true, hz: 146.83 },
+  { index: 1, name: "A2", radius: 0.017, isWound: true, hz: 220.25 },
+  { index: 2, name: "D3", radius: 0.014, isWound: true, hz: 293.66 },
+  { index: 3, name: "G3", radius: 0.011, isWound: true, hz: 367.08 },
+  { index: 4, name: "B3", radius: 0.0085, isWound: false, hz: 440.49 },
+  { index: 5, name: "E4", radius: 0.007, isWound: false, hz: 659.25 },
+];
+
 export function Strings() {
-  const meshRef = useRef<THREE.InstancedMesh>(null);
   const prevPointerX = useRef<number | null>(null);
 
-  // 1. Material and Uniforms
-  const { material, uniforms } = useMemo(() => createStringMaterial(), []);
-  const uniformsRef = useRef(uniforms);
+  // Pluck physics state arrays
+  const pluckAmps = useRef<number[]>([0, 0, 0, 0, 0, 0]);
+  const streakMats = useRef<THREE.ShaderMaterial[]>([]);
+  const stringMeshes = useRef<(THREE.Mesh | null)[]>([]);
 
-  // 2. Base Cylinder Geometry oriented along Z (z = 0 at nut to z = -100 at bridge)
-  const geometry = useMemo(() => {
-    // 512 length segments along Z, 8 radial segments (§3.3)
-    const geo = new THREE.CylinderGeometry(1.0, 1.0, 100.0, 8, 512, true);
-    // Rotate so axis is Z and position spans [0, -100]
-    geo.rotateX(-Math.PI / 2);
-    geo.translate(0, 0, -50);
+  // 1. Create memoized geometries and materials for all 6 strings
+  const stringAssets = useMemo(() => {
+    // Speaking length L = distance from z = -5.35 (bridge saddle) to z = +4.8 (nut)
+    const length = 10.15;
 
-    // Per-instance attributes
-    const count = 6;
-    const freqs = new Float32Array(count);
-    const energies = new Float32Array(count);
-    const pluckTs = new Float32Array(count);
-    const pluckAmps = new Float32Array(count);
-    const phases = new Float32Array(count);
-    const radii = new Float32Array(count);
-    const wounds = new Float32Array(count);
+    return STRING_CONFIG.map((cfg, i) => {
+      // High-resolution cylinder geometry (radial 32, height 140)
+      const geo = new THREE.CylinderGeometry(cfg.radius, cfg.radius, length, 32, 140);
+      // Pivot at center, oriented along Y axis (0 to length)
+      geo.translate(0, length / 2, 0);
 
-    for (let i = 0; i < count; i++) {
-      const s = GUITAR_STRINGS[i];
-      freqs[i] = s.fundamentalHz;
-      energies[i] = 0.0;
-      pluckTs[i] = -1.0;
-      pluckAmps[i] = 0.0;
-      phases[i] = s.phase;
-      radii[i] = s.radius;
-      wounds[i] = s.isWound ? 1.0 : 0.0;
-    }
+      const { material, uniforms } = createKajiyaKayStringMaterial(cfg.isWound, cfg.hz);
 
-    geo.setAttribute("aFreq", new THREE.InstancedBufferAttribute(freqs, 1));
-    geo.setAttribute("aEnergy", new THREE.InstancedBufferAttribute(energies, 1));
-    geo.setAttribute("aPluckT", new THREE.InstancedBufferAttribute(pluckTs, 1));
-    geo.setAttribute("aPluckAmp", new THREE.InstancedBufferAttribute(pluckAmps, 1));
-    geo.setAttribute("aPhase", new THREE.InstancedBufferAttribute(phases, 1));
-    geo.setAttribute("aRadius", new THREE.InstancedBufferAttribute(radii, 1));
-    geo.setAttribute("aWound", new THREE.InstancedBufferAttribute(wounds, 1));
+      // Anamorphic Lens Streak Billboard geometry & material
+      const streakGeo = new THREE.PlaneGeometry(2.5, 0.06);
+      const streakMat = new THREE.ShaderMaterial({
+        ...AnamorphicStreakShader,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      });
 
-    return geo;
+      return {
+        geo,
+        material,
+        uniforms,
+        streakGeo,
+        streakMat,
+        config: cfg,
+        index: i,
+      };
+    });
   }, []);
 
-  // 3. Setup Instance Transforms (Fanning from nut to bridge)
+  // 2. Compute string 3D endpoint vectors in guitar group space
+  // Bridge saddle: z = -5.35, y = 0.18. Spacing: (i - 2.5) * 0.22
+  // Nut: z = 4.8, y = 0.16. Spacing: (i - 2.5) * 0.14
+  const stringTransforms = useMemo(() => {
+    const up = new THREE.Vector3(0, 1, 0);
+
+    return STRING_CONFIG.map((_, i) => {
+      const xBridge = (i - 2.5) * 0.22;
+      const xNut = (i - 2.5) * 0.14;
+
+      const pBridge = new THREE.Vector3(xBridge, 0.18, -5.35);
+      const pNut = new THREE.Vector3(xNut, 0.16, 4.8);
+
+      const dir = new THREE.Vector3().subVectors(pNut, pBridge).normalize();
+      const quat = new THREE.Quaternion().setFromUnitVectors(up, dir);
+
+      const midpoint = new THREE.Vector3().addVectors(pBridge, pNut).multiplyScalar(0.5);
+
+      return {
+        pBridge,
+        pNut,
+        quat,
+        midpoint,
+      };
+    });
+  }, []);
+
+  // Trigger pluck helper
+  const triggerPluck = (i: number, amp = 0.8) => {
+    const clamped = Math.min(1.0, Math.max(0.2, amp));
+    pluckAmps.current[i] = clamped;
+    globalStringEnergy.triggerPluck(i, clamped);
+    recordStringPluck(i);
+    soundEngine.playAcousticString(i, clamped);
+  };
+
+  // Register external pluck handlers
   useEffect(() => {
-    const mesh = meshRef.current;
-    if (!mesh) return;
-
-    const dummy = new THREE.Object3D();
-    const defaultDir = new THREE.Vector3(0, 0, -1);
-
-    for (let i = 0; i < 6; i++) {
-      // Nut position at s = 0
-      const spacingNut = getStringSpacing(0);
-      const x0 = (i - 2.5) * spacingNut;
-      const y0 = getStringHeight(0);
-      const z0 = 0.0;
-
-      // Bridge position at s = 100
-      const spacingBridge = getStringSpacing(100);
-      const x100 = (i - 2.5) * spacingBridge;
-      const y100 = getStringHeight(100);
-      const z100 = -100.0;
-
-      // Vector along string
-      const dir = new THREE.Vector3(x100 - x0, y100 - y0, z100 - z0);
-      const len = dir.length();
-      dir.normalize();
-
-      // Rotation quaternion from (0, 0, -1) to dir
-      const quat = new THREE.Quaternion().setFromUnitVectors(defaultDir, dir);
-
-      // Scale Z to match length exactly
-      dummy.position.set(x0, y0, z0);
-      dummy.quaternion.copy(quat);
-      dummy.scale.set(1.0, 1.0, len / 100.0);
-      dummy.updateMatrix();
-
-      mesh.setMatrixAt(i, dummy.matrix);
-    }
-
-    mesh.instanceMatrix.needsUpdate = true;
-  }, []);
-
-  // 4. Per-frame physics simulation and attribute streaming
-  useFrame((state, delta) => {
-    // Cap delta time to prevent physics explosions on tab suspension
-    const dt = Math.min(delta, 0.05);
-
-    // Update global uniforms via ref
-    const u = uniformsRef.current;
-    u.uTime.value = state.clock.getElapsedTime();
-    u.uDamperK.value = globalStringEnergy.damperK;
-    u.uDamperPos.value = globalStringEnergy.damperPos;
-    u.uLoadK.value = globalStringEnergy.loadK;
-    u.uLoadPos.value = globalStringEnergy.loadPos;
-
-    // Decay raw velocity toward 0 when user is not actively scrolling
-    if (performance.now() - heroState.lastScrollTime > 60) {
-      heroState.rawVelocity *= Math.exp(-dt / 0.05);
-      if (Math.abs(heroState.rawVelocity) < 1.0) {
-        heroState.rawVelocity = 0.0;
+    registerPluckHandlers(
+      (idx, amp) => triggerPluck(idx, amp ?? 0.8),
+      () => {
+        for (let i = 0; i < 6; i++) {
+          setTimeout(() => triggerPluck(i, 0.85 - i * 0.05), i * 55);
+        }
       }
+    );
+
+    return () => {
+      stringAssets.forEach((asset) => {
+        asset.geo.dispose();
+        asset.material.dispose();
+        asset.streakGeo.dispose();
+        asset.streakMat.dispose();
+      });
+    };
+  }, [stringAssets]);
+
+  // Per-frame physics simulation and uniform animation
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    const t = state.clock.getElapsedTime();
+    const camPos = state.camera.position;
+    const scrollVel = heroState.rawVelocity;
+
+    // Advance globalStringEnergy model
+    globalStringEnergy.update(dt, scrollVel, heroState.stringsDamperK);
+
+    // Decay pluck amplitudes exponentially (tau ~ 0.35s)
+    for (let i = 0; i < 6; i++) {
+      pluckAmps.current[i] *= Math.exp(-dt * 2.8);
+      if (pluckAmps.current[i] < 0.001) pluckAmps.current[i] = 0.0;
+      heroState.stringEnergies[i] = pluckAmps.current[i];
     }
 
-    // Interactive pointer string strumming (cursor pluck detection)
+    // Interactive pointer strumming
     const ptrX = state.pointer.x;
     if (prevPointerX.current !== null) {
       const pDelta = ptrX - prevPointerX.current;
       if (Math.abs(pDelta) > 0.0015) {
         const minX = Math.min(prevPointerX.current, ptrX);
         const maxX = Math.max(prevPointerX.current, ptrX);
+
         for (let i = 0; i < 6; i++) {
-          const stringScreenX = (i - 2.5) * 0.11;
-          if (stringScreenX >= minX && stringScreenX <= maxX) {
-            const amp = Math.min(1.0, Math.max(0.35, Math.abs(pDelta) * 12.0));
-            globalStringEnergy.triggerPluck(i, amp);
-            recordStringPluck(i);
-            soundEngine.playAcousticString(i, amp);
+          // Approximate normalized screen space line for each string
+          const screenX = (i - 2.5) * 0.12 - 0.05;
+          if (screenX >= minX && screenX <= maxX) {
+            const velocity = Math.min(1.0, Math.max(0.3, Math.abs(pDelta) * 14.0));
+            triggerPluck(i, velocity);
           }
         }
       }
     }
     prevPointerX.current = ptrX;
 
-    // Advance energy model using ScrollTrigger raw velocity
-    globalStringEnergy.update(dt, heroState.rawVelocity, heroState.stringsDamperK);
+    // Update string materials & anamorphic streaks
+    stringAssets.forEach((asset, i) => {
+      const u = asset.uniforms as SingleStringUniforms;
+      u.uTime.value = t;
+      u.uPluckAmp.value = pluckAmps.current[i];
+      u.uScrollVel.value = scrollVel;
+      u.uCameraPos.value.copy(camPos);
 
-    // Stream updated attributes to GPU buffer
-    const geo = meshRef.current?.geometry;
-    if (geo) {
-      const aEnergyAttr = geo.getAttribute("aEnergy") as THREE.InstancedBufferAttribute;
-      const aPluckTAttr = geo.getAttribute("aPluckT") as THREE.InstancedBufferAttribute;
-      const aPluckAmpAttr = geo.getAttribute("aPluckAmp") as THREE.InstancedBufferAttribute;
-
-      if (aEnergyAttr && aPluckTAttr && aPluckAmpAttr) {
-        for (let i = 0; i < 6; i++) {
-          aEnergyAttr.setX(i, globalStringEnergy.energy[i]);
-          aPluckTAttr.setX(i, globalStringEnergy.pluckT[i]);
-          aPluckAmpAttr.setX(i, globalStringEnergy.pluckAmp[i]);
-
-          // Update HUD telemetry mirror
-          heroState.stringEnergies[i] = globalStringEnergy.energy[i];
-        }
-
-        aEnergyAttr.needsUpdate = true;
-        aPluckTAttr.needsUpdate = true;
-        aPluckAmpAttr.needsUpdate = true;
+      // Streak billboard opacity
+      const streakMat = streakMats.current[i];
+      if (streakMat) {
+        streakMat.uniforms.uOpacity.value = THREE.MathUtils.damp(
+          streakMat.uniforms.uOpacity.value,
+          pluckAmps.current[i] * 0.85,
+          12.0,
+          dt
+        );
       }
-    }
+    });
   });
 
-  // 5. Wireframe variant preserving vertex patch animation (§6.3)
-  const wireMaterial = useMemo(() => {
-    const wm = material.clone();
-    wm.wireframe = true;
-    return wm;
-  }, [material]);
-
-  // 6. Register global pluck handlers and cleanup on unmount
-  useEffect(() => {
-    registerPluckHandlers(
-      (idx, amp) => globalStringEnergy.triggerPluck(idx, amp),
-      () => triggerStrumSequence()
-    );
-
-    return () => {
-      geometry.dispose();
-      material.dispose();
-      wireMaterial.dispose();
-    };
-  }, [geometry, material, wireMaterial]);
-
   return (
-    <instancedMesh
-      ref={meshRef}
-      args={[geometry, material, 6]}
-      castShadow
-      receiveShadow
-      name="guitar-strings"
-      frustumCulled={false}
-      userData={{ wireMaterial }}
-    />
+    // Strings assembly anchored inside the same guitar stage coordinate frame:
+    // position={[0.15, -0.15, -1.0]} rotation={[0.18, -0.28, -0.12]}
+    <group
+      name="kajiya-kay-strings-assembly"
+      position={[0.15, -0.15, -1.0]}
+      rotation={[0.18, -0.28, -0.12]}
+    >
+      {stringAssets.map((asset, i) => {
+        const tf = stringTransforms[i];
+
+        return (
+          <group key={i}>
+            {/* 1. Main High-Resolution Cylinder String */}
+            <mesh
+              ref={(el) => {
+                stringMeshes.current[i] = el;
+              }}
+              geometry={asset.geo}
+              material={asset.material}
+              position={tf.pBridge}
+              quaternion={tf.quat}
+              castShadow
+            />
+
+            {/* 2. Anamorphic Horizontal Lens Streak Billboard at Midpoint */}
+            <mesh
+              geometry={asset.streakGeo}
+              position={tf.midpoint}
+              ref={(el) => {
+                if (el) {
+                  // Keep billboard facing camera
+                  el.lookAt(stateCameraPosFallback(tf.midpoint));
+                }
+              }}
+            >
+              <shaderMaterial
+                ref={(mat) => {
+                  if (mat) streakMats.current[i] = mat;
+                }}
+                {...AnamorphicStreakShader}
+                transparent={true}
+                depthWrite={false}
+                blending={THREE.AdditiveBlending}
+              />
+            </mesh>
+          </group>
+        );
+      })}
+    </group>
   );
 }
+
+function stateCameraPosFallback(midpoint: THREE.Vector3) {
+  return new THREE.Vector3(midpoint.x - 1.5, midpoint.y + 1.2, midpoint.z + 4.0);
+}
+
+export default Strings;

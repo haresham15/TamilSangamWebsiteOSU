@@ -49,7 +49,7 @@ export const VAARANAM_6_STRINGS_HZ = [
   RAGA_MOHANAM_HZ.Sa,     // 293.66 Hz (D4)
   RAGA_MOHANAM_HZ.Ga3,    // 367.08 Hz (F#4)
   RAGA_MOHANAM_HZ.Pa,     // 440.49 Hz (A4)
-  RAGA_MOHANAM_HZ.Sa_hi,  // 587.33 Hz (D5)
+  659.25,                 // 659.25 Hz (E5) - Harris Jayaraj D-Major9 crowning tone
 ];
 
 class SoundEngine {
