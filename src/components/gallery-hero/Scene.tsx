@@ -16,6 +16,9 @@ import { useWarmup } from "@/components/gl/useWarmup";
 import { useThree, useFrame } from "@react-three/fiber";
 import { registerScene } from "@/director/wireframe";
 import { setHeroProgress } from "./state";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { useTier } from "@/components/providers/TierProvider";
+import { GradeStack } from "@/gl/grade/GradeStack";
 
 function ScrollProgressSync({ progressRef }: { progressRef?: React.MutableRefObject<number> }) {
   useFrame(() => {
@@ -43,6 +46,8 @@ function SceneRegistrar() {
 
 export default function Scene({ progressRef }: { progressRef?: React.MutableRefObject<number> }) {
   const propRigRef = useRef<THREE.Group>(null);
+  const tier = useTier();
+  const isCinematic = isHeroCinematicEnabled("gallery");
 
   return (
     <div className="w-full h-full relative">
@@ -74,6 +79,9 @@ export default function Scene({ progressRef }: { progressRef?: React.MutableRefO
 
         {/* Golden Rosin & Dust Burst Particle Simulation */}
         <GoldDustBurst />
+
+        {/* Cinematic LUT & Grade Stack */}
+        {isCinematic && <GradeStack tier={tier} profile="vaaranam-kodachrome" />}
       </View>
     </div>
   );

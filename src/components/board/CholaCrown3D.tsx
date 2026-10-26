@@ -3,10 +3,78 @@
 import React, { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
 
 interface CholaCrown3DProps {
   position?: [number, number, number];
   scale?: number | [number, number, number];
+}
+
+/**
+ * Micro-Detail 2: Specular filigree diamond/ruby glints that sparkle across the crown
+ */
+function CholaCrownFiligreeGlints() {
+  const glintsRef = useRef<THREE.Group>(null);
+  const glintPositions: [number, number, number][] = useMemo(
+    () => [
+      [0, 0.42, 0.52],     // Forehead central ruby
+      [-0.52, 0.22, 0.1],  // Left karnapatra crest
+      [0.52, 0.22, 0.1],   // Right karnapatra crest
+      [0, 0.96, 0.12],     // Kalasam lotus tier
+      [0, 1.40, 0.0],      // Stupi apex bud
+      [0, 0.82, -0.42],    // Rear Sirascakra top finial
+    ],
+    []
+  );
+
+  const glintGeos = useMemo(() => {
+    const plane1 = new THREE.PlaneGeometry(0.12, 0.024);
+    const plane2 = new THREE.PlaneGeometry(0.024, 0.12);
+    return { plane1, plane2 };
+  }, []);
+
+  const glintMat = useMemo(() => {
+    return new THREE.MeshBasicMaterial({
+      color: "#FFF5D0",
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    });
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      glintGeos.plane1.dispose();
+      glintGeos.plane2.dispose();
+      glintMat.dispose();
+    };
+  }, [glintGeos, glintMat]);
+
+  useFrame(({ clock }) => {
+    if (!glintsRef.current) return;
+    const t = clock.getElapsedTime();
+    glintsRef.current.children.forEach((child, idx) => {
+      const phase = idx * 1.05;
+      const sparkle = Math.pow(Math.max(0, Math.sin(t * 3.0 + phase)), 4.0);
+      const scale = sparkle * 0.9;
+      child.scale.set(scale, scale, scale);
+      child.rotation.z = t * 0.5 + phase;
+    });
+  });
+
+  return (
+    <group ref={glintsRef}>
+      {glintPositions.map((pos, i) => (
+        <group key={i} position={pos}>
+          <mesh geometry={glintGeos.plane1} material={glintMat} />
+          <mesh geometry={glintGeos.plane2} material={glintMat} />
+        </group>
+      ))}
+    </group>
+  );
 }
 
 /**
@@ -140,6 +208,23 @@ export function CholaCrown3D({
       roughness: 0.22,
     });
 
+    const isCinematic = isHeroCinematicEnabled("board");
+    if (isCinematic) {
+      const goldNormal = proceduralPbrMaps.getBrushedMetalNormal("chola-gold-normal", 256, 256);
+      const goldRough = proceduralPbrMaps.getNoiseRoughness("chola-gold-rough", 256, 256, 0.08, 0.22);
+      cholaGoldMat.normalMap = goldNormal;
+      cholaGoldMat.roughnessMap = goldRough;
+      cholaGoldMat.normalScale = new THREE.Vector2(0.25, 0.25);
+      cholaGoldMat.clearcoat = 0.85;
+      cholaGoldMat.clearcoatRoughness = 0.16;
+
+      polishedGoldMat.normalMap = goldNormal;
+      polishedGoldMat.roughnessMap = goldRough;
+      polishedGoldMat.normalScale = new THREE.Vector2(0.18, 0.18);
+      polishedGoldMat.clearcoat = 0.95;
+      polishedGoldMat.clearcoatRoughness = 0.10;
+    }
+
     return {
       geometries: {
         pedestalBaseGeo,
@@ -190,6 +275,10 @@ export function CholaCrown3D({
     return () => {
       Object.values(assets.geometries).forEach((g) => g.dispose());
       Object.values(assets.materials).forEach((m) => m.dispose());
+      if (isHeroCinematicEnabled("board")) {
+        proceduralPbrMaps.release("chola-gold-normal");
+        proceduralPbrMaps.release("chola-gold-rough");
+      }
     };
   }, [assets]);
 
@@ -248,6 +337,9 @@ export function CholaCrown3D({
       {/* 2. THE HOVERING CHOLA IMPERIAL CROWN (KIRITA MAKUTA)           */}
       {/* ------------------------------------------------------------- */}
       <group ref={crownMeshRef}>
+        {/* Micro-Detail 2: Specular filigree glints */}
+        {isHeroCinematicEnabled("board") && <CholaCrownFiligreeGlints />}
+
         {/* ----------------------------------------------------------- */}
         {/* A. Base Diadem (Patta / Forehead Band)                     */}
         {/* ----------------------------------------------------------- */}

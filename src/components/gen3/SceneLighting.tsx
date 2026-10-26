@@ -4,6 +4,8 @@ import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+
 export function SceneLighting() {
   const godLightRef = useRef<THREE.DirectionalLight>(null);
   const sweepSpot1Ref = useRef<THREE.SpotLight>(null);
@@ -13,6 +15,8 @@ export function SceneLighting() {
   // Cinematic floor sweep targets moving smoothly across the arena floor
   const sweepTarget1Ref = useRef<THREE.Object3D>(null);
   const sweepTarget2Ref = useRef<THREE.Object3D>(null);
+
+  const cinematic = isHeroCinematicEnabled("events");
 
   useEffect(() => {
     if (sweepSpot1Ref.current && sweepTarget1Ref.current) {
@@ -53,14 +57,14 @@ export function SceneLighting() {
       <object3D ref={sweepTarget2Ref} />
 
       {/* Deep, moody ambient fill to keep the scene cinematic */}
-      <ambientLight intensity={0.18} color="#161018" />
-      <hemisphereLight args={["#201610", "#030202", 0.18]} />
+      <ambientLight intensity={cinematic ? 0.24 : 0.18} color={cinematic ? "#181216" : "#161018"} />
+      <hemisphereLight args={cinematic ? ["#261A12", "#050303", 0.24] : ["#201610", "#030202", 0.18]} />
 
       {/* Primary God Light (Festival Arena Amber Sodium Vapor Flood) illuminating upper wall & architecture */}
       <directionalLight
         ref={godLightRef}
         position={[0, 6.5, -8]}
-        intensity={4.2}
+        intensity={cinematic ? 4.8 : 4.2}
         color="#FFA216"
         castShadow
         shadow-mapSize-width={2048}
@@ -76,14 +80,46 @@ export function SceneLighting() {
 
       {/* Focused Hero SpotLight on Central Coin and Turntable Platform */}
       <spotLight
-        position={[0, 8.0, 1.5]}
-        intensity={18.0}
-        color="#FFE6B0"
-        angle={0.52}
-        penumbra={0.7}
-        distance={22}
-        decay={1.4}
+        position={[0, 8.5, 1.8]}
+        intensity={cinematic ? 24.0 : 18.0}
+        color={cinematic ? "#FFA500" : "#FFE6B0"}
+        angle={cinematic ? 0.48 : 0.52}
+        penumbra={cinematic ? 0.82 : 0.7}
+        distance={24}
+        decay={1.35}
+        castShadow={cinematic}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-bias={-0.0004}
       />
+
+      {/* Cool Rim Spotlight on Back Stage & Performers (Cinematic V2) */}
+      {cinematic && (
+        <spotLight
+          position={[0, 6.0, -4.5]}
+          intensity={14.0}
+          color="#5099B0"
+          angle={0.65}
+          penumbra={0.85}
+          distance={20}
+          decay={1.4}
+          castShadow
+          shadow-mapSize-width={1024}
+          shadow-mapSize-height={1024}
+          shadow-bias={-0.0004}
+        />
+      )}
+
+      {/* Warm Under-Stage Bounce Fill (Cinematic V2) */}
+      {cinematic && (
+        <pointLight
+          position={[0, -0.6, 0]}
+          intensity={1.2}
+          color="#E58A1F"
+          distance={8}
+          decay={2.0}
+        />
+      )}
 
       {/* Primary Cinematic Sweeping Floor SpotLight (Amber Moving Head) */}
       <spotLight
@@ -119,8 +155,8 @@ export function SceneLighting() {
         penumbra={0.6}
       />
 
-      {/* Subtle Front Fill so the coin stencils pop crisply */}
-      <pointLight position={[0, 2.5, 5]} intensity={1.2} color="#FFE0B2" distance={12} decay={2.0} />
+      {/* Front Fill for crisp coin stencils */}
+      <pointLight position={[0, 2.5, 5]} intensity={cinematic ? 1.6 : 1.2} color="#FFE0B2" distance={12} decay={2.0} />
     </>
   );
 }

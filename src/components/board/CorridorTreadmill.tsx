@@ -7,6 +7,8 @@ import { OilLamp } from "./OilLamp";
 import { TapestryPortrait } from "./TapestryPortrait";
 import { CURRENT_BOARD } from "@/data/board";
 import { useBoardHeroStore } from "@/store/boardHeroStore";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
 
 // Corridor Dimensions
 export const UNIT_LENGTH = 5.0; // 5 meters per modular arch/pillar unit
@@ -264,7 +266,7 @@ function CholaModularSegment({
 export function CorridorTreadmill() {
   // Memoized shared geometries & materials pool (shared across all 7 segments)
   const sharedAssets = useMemo<SharedAssets>(() => {
-    return {
+    const assets: SharedAssets = {
       geometries: {
         floor: new THREE.BoxGeometry(AISLE_WIDTH + 2.4, 0.3, UNIT_LENGTH),
         inlay: new THREE.BoxGeometry(AISLE_WIDTH - 0.8, 0.01, UNIT_LENGTH - 0.1),
@@ -327,6 +329,28 @@ export function CorridorTreadmill() {
         opening: new THREE.MeshBasicMaterial({ color: "#1a110a" }),
       },
     };
+
+    const isCinematic = isHeroCinematicEnabled("board");
+    if (isCinematic) {
+      const graniteNormal = proceduralPbrMaps.getGraniteNormal("board-corridor-granite", 256, 256);
+      const floorRough = proceduralPbrMaps.getNoiseRoughness("board-corridor-rough", 256, 256, 0.14, 0.32);
+
+      assets.materials.floor.normalMap = graniteNormal;
+      assets.materials.floor.roughnessMap = floorRough;
+      assets.materials.floor.normalScale = new THREE.Vector2(0.35, 0.35);
+
+      assets.materials.inlay.normalMap = graniteNormal;
+      assets.materials.inlay.roughnessMap = floorRough;
+      assets.materials.inlay.normalScale = new THREE.Vector2(0.25, 0.25);
+
+      assets.materials.plinth.normalMap = graniteNormal;
+      assets.materials.plinth.normalScale = new THREE.Vector2(0.2, 0.2);
+
+      assets.materials.shaft.normalMap = graniteNormal;
+      assets.materials.shaft.normalScale = new THREE.Vector2(0.15, 0.15);
+    }
+
+    return assets;
   }, []);
 
   // Complete unmount lifecycle disposal for shared assets
@@ -334,6 +358,10 @@ export function CorridorTreadmill() {
     return () => {
       Object.values(sharedAssets.geometries).forEach((g) => g.dispose());
       Object.values(sharedAssets.materials).forEach((m) => m.dispose());
+      if (isHeroCinematicEnabled("board")) {
+        proceduralPbrMaps.release("board-corridor-granite");
+        proceduralPbrMaps.release("board-corridor-rough");
+      }
     };
   }, [sharedAssets]);
 

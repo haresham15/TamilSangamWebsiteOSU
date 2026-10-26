@@ -1,7 +1,7 @@
-"use client";
-
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import * as THREE from "three";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
 
 /**
  * NanbanQuadEnvironment:
@@ -15,18 +15,41 @@ import * as THREE from "three";
  * 5. Warm Post-Lanterns & Cast-Iron Avenue Lamps
  */
 export function NanbanQuadEnvironment() {
+  const isCinematic = isHeroCinematicEnabled("join");
+
+  const textures = useMemo(() => {
+    if (!isCinematic) return null;
+    const brickNormal = proceduralPbrMaps.getGraniteNormal("join-quad-brick-normal", 256, 256);
+    const brickRough = proceduralPbrMaps.getNoiseRoughness("join-quad-brick-rough", 256, 256, 0.78, 0.94);
+    const limestoneRough = proceduralPbrMaps.getNoiseRoughness("join-quad-limestone-rough", 256, 256, 0.65, 0.82);
+    return { brickNormal, brickRough, limestoneRough };
+  }, [isCinematic]);
+
+  useEffect(() => {
+    return () => {
+      if (isCinematic) {
+        proceduralPbrMaps.release("join-quad-brick-normal");
+        proceduralPbrMaps.release("join-quad-brick-rough");
+        proceduralPbrMaps.release("join-quad-limestone-rough");
+      }
+    };
+  }, [isCinematic]);
+
   // 1. Shared Materials
   const materials = useMemo(() => {
     const brick = new THREE.MeshStandardMaterial({
       color: "#6b2318",
       roughness: 0.88,
       metalness: 0.05,
+      normalMap: textures?.brickNormal,
+      roughnessMap: textures?.brickRough,
     });
 
     const limestone = new THREE.MeshStandardMaterial({
       color: "#cfc4b0",
       roughness: 0.75,
       metalness: 0.12,
+      roughnessMap: textures?.limestoneRough,
     });
 
     const iron = new THREE.MeshStandardMaterial({

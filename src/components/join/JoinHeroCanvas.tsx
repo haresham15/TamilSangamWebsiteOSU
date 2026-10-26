@@ -25,6 +25,8 @@ import { JoinMaterialsManager, type IronVariant } from "./JoinMaterialsManager";
 import { MorningCampusVignette } from "./vignette/MorningCampusVignette";
 import { NanbanQuadEnvironment } from "./NanbanQuadEnvironment";
 import { soundEngine } from "@/lib/soundEngine";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { GradeStack } from "@/gl/grade/GradeStack";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -52,6 +54,8 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
     if (typeof window !== "undefined" && window.innerWidth < 768) return "B";
     return "A";
   }, [propTier, reducedMotion]);
+
+  const isCinematic = isHeroCinematicEnabled("join");
 
   const [ironVariant, setIronVariant] = useState<IronVariant>(() => {
     if (typeof window !== "undefined") {
@@ -304,6 +308,9 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
 
             {/* Finale Sunrise Bloom */}
             <WhiteoutFinale scrollProgressRef={scrollProgressRef} gateProgressRef={gateProgressRef} />
+
+            {/* Cinematic LUT & Grade Stack */}
+            {isCinematic && <GradeStack tier={tier} profile="nanban-morning" />}
           </Suspense>
         </View>
 

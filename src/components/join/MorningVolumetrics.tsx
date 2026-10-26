@@ -2,6 +2,7 @@
 import React, { useRef, useMemo } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 
 interface MorningVolumetricsProps {
   gateProgressRef: React.RefObject<number>;
@@ -51,9 +52,14 @@ export function MorningVolumetrics({ gateProgressRef }: MorningVolumetricsProps)
     // Drift golden pollen motes forward toward the camera as light pours through
     if (motesRef.current) {
       const posAttr = motesRef.current.geometry.attributes.position;
+      const isCinematic = isHeroCinematicEnabled("join");
       for (let i = 0; i < moteCount; i++) {
         let z = posAttr.getZ(i) + dt * (0.35 + openFactor * 0.45);
         const y = posAttr.getY(i) + Math.sin(time * 0.8 + i) * 0.003;
+        if (isCinematic) {
+          const x = posAttr.getX(i) + Math.cos(time * 0.6 + i) * 0.002;
+          posAttr.setX(i, x);
+        }
         if (z > 4.5) z = -5.5;
         posAttr.setZ(i, z);
         posAttr.setY(i, y);

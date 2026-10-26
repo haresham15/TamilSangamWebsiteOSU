@@ -61,4 +61,5 @@ data/suggestions.json
 data/dispatches.json
 public/audio/
 public/videos/
+tests/artifacts/
 

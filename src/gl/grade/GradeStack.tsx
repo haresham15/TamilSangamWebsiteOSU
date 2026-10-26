@@ -6,7 +6,11 @@ import { EffectComposer, Bloom, ToneMapping, LUT, Vignette, Noise } from "@react
 import { BlendFunction } from "postprocessing";
 import type { LUT3DEffect } from "postprocessing";
 import { useGradeLut } from "./useGradeLut";
-import { gradeConfig } from "./gradeConfig";
+import {
+  gradeConfig,
+  HERO_GRADE_PROFILES,
+  type HeroGradeProfileName,
+} from "./gradeConfig";
 import { useDirectorStore } from "@/director/directorStore";
 import gsap from "gsap";
 
@@ -14,6 +18,7 @@ export interface GradeStackProps {
   tier: "A" | "B" | "C";
   gradeOn?: boolean;
   intensity?: number;
+  profile?: HeroGradeProfileName;
 }
 
 /**
@@ -28,11 +33,13 @@ export interface GradeStackProps {
  *   - Opacity blend driving: never unmount/remount LUT effect (rebuilding pass hitches frames)
  *   - Tier gating: only renders on Tier A; tier B uses material approximations; tier C has no canvas.
  *   - Director Viewport integration: Raw feed toggles animate LUT opacity to 0 over 250ms.
+ *   - Profile support: dynamically sets bloom, vignette, grain, and LUT opacity per hero route.
  */
 export function GradeStack({
   tier,
   gradeOn = true,
-  intensity = gradeConfig.intensity,
+  intensity,
+  profile,
 }: GradeStackProps) {
   const lut = useGradeLut();
   const lutRef = useRef<LUT3DEffect>(null);
@@ -40,26 +47,41 @@ export function GradeStack({
   const directorLutIntensity = useDirectorStore((s) => s.lutIntensity);
   const activeGradeOn = gradeOn && directorGradeOn;
 
+  const profileConfig = profile ? HERO_GRADE_PROFILES[profile] : null;
+  const effectiveBaseIntensity =
+    intensity !== undefined
+      ? intensity
+      : profileConfig
+      ? profileConfig.lutOpacity
+      : gradeConfig.intensity;
+
   useEffect(() => {
     if (lutRef.current) {
-      const effectiveIntensity = directorLutIntensity !== undefined ? directorLutIntensity : intensity;
+      const effectiveIntensity =
+        directorLutIntensity !== undefined
+          ? directorLutIntensity
+          : effectiveBaseIntensity;
       const targetOpacity = activeGradeOn ? effectiveIntensity : 0;
       gsap.to(lutRef.current.blendMode.opacity, {
         value: targetOpacity,
-        duration: 0.15,
+        duration: 0.25,
         ease: "power2.out",
       });
     }
-  }, [activeGradeOn, intensity, directorLutIntensity]);
+  }, [activeGradeOn, effectiveBaseIntensity, directorLutIntensity]);
 
   if (tier !== "A" || !lut) return null;
+
+  const bloomConfig = profileConfig ? profileConfig.bloom : gradeConfig.bloom;
+  const vignetteConfig = profileConfig ? profileConfig.vignette : gradeConfig.vignette;
+  const grainConfig = profileConfig ? profileConfig.grain : gradeConfig.grain;
 
   return (
     <EffectComposer multisampling={0} enableNormalPass={false}>
       <Bloom
-        mipmapBlur={gradeConfig.bloom.mipmapBlur}
-        luminanceThreshold={gradeConfig.bloom.luminanceThreshold}
-        intensity={gradeConfig.bloom.intensity}
+        mipmapBlur={bloomConfig.mipmapBlur}
+        luminanceThreshold={bloomConfig.luminanceThreshold}
+        intensity={bloomConfig.intensity}
       />
       <ToneMapping mode={gradeConfig.toneMappingMode} />
       <LUT
@@ -68,13 +90,13 @@ export function GradeStack({
         blendFunction={BlendFunction.NORMAL}
       />
       <Vignette
-        offset={gradeConfig.vignette.offset}
-        darkness={gradeConfig.vignette.darkness}
+        offset={vignetteConfig.offset}
+        darkness={vignetteConfig.darkness}
       />
       <Noise
         premultiply
         blendFunction={BlendFunction.SOFT_LIGHT}
-        opacity={gradeConfig.grain.opacity}
+        opacity={grainConfig.opacity}
       />
     </EffectComposer>
   );

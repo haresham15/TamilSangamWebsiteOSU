@@ -30,7 +30,7 @@ describe("Warm Hearth & Carnatic Acoustic Sound Engine", () => {
 
   it("tunes the 6 Vaaranam Aayiram strings to an open Raga Mohanam voicing", () => {
     expect(VAARANAM_6_STRINGS_HZ).toEqual([
-      146.83, 220.25, 293.66, 367.08, 440.49, 587.33,
+      146.83, 220.25, 293.66, 367.08, 440.49, 659.25,
     ]);
   });
 

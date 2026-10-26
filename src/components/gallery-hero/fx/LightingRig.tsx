@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { heroState } from "../state";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 
 /**
  * LightingRig: Rathnavelu 35mm Golden-Hour Cinematic Lighting
@@ -51,6 +52,8 @@ export function LightingRig() {
     }
   });
 
+  const isCinematic = isHeroCinematicEnabled("gallery");
+
   return (
     <group name="cinematic-lighting-rig">
       {/* 1. Golden-Hour Directional Key Light */}
@@ -69,6 +72,7 @@ export function LightingRig() {
         shadow-camera-top={6}
         shadow-camera-bottom={-6}
         shadow-bias={-0.0001}
+        shadow-normalBias={isCinematic ? 0.02 : 0}
       />
 
       {/* 2. Soft Twilight Sky / Warm Ground Bounce Hemisphere Light */}
@@ -86,6 +90,24 @@ export function LightingRig() {
         color="#FFD180"
         intensity={0.85}
       />
+
+      {/* 4. Cinematic Soundhole Chamber Glow & Coastal Twilight Fill */}
+      {isCinematic && (
+        <>
+          <pointLight
+            position={[0, -0.2, -2.4]}
+            color="#FF9933"
+            intensity={1.8}
+            distance={3.8}
+            decay={2}
+          />
+          <directionalLight
+            position={[-3.0, -1.5, 0.0]}
+            color="#1E122A"
+            intensity={0.4}
+          />
+        </>
+      )}
     </group>
   );
 }

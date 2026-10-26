@@ -4,6 +4,8 @@ import React, { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { heroState } from "./state";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
 
 /**
  * LAYER 2: SCULPTED ACOUSTIC GUITAR SOUNDBOARD, SOUNDHOLE & ABALONE KOLAM ROSETTE
@@ -321,6 +323,16 @@ export function AcousticSoundboard() {
     });
   }, []);
 
+  const isCinematic = isHeroCinematicEnabled("gallery");
+
+  const ebonyTextures = useMemo(() => {
+    if (!isCinematic) return null;
+    return {
+      normal: proceduralPbrMaps.getBrushedMetalNormal("soundboard-ebony-normal", 256, 256),
+      roughness: proceduralPbrMaps.getNoiseRoughness("soundboard-ebony-rough", 256, 256, 0.18, 0.35),
+    };
+  }, [isCinematic]);
+
   useEffect(() => {
     return () => {
       soundboardGeo.dispose();
@@ -333,6 +345,10 @@ export function AcousticSoundboard() {
       pinGeo.dispose();
       fingerboardGeo.dispose();
       fretMaterial.dispose();
+      if (isCinematic) {
+        proceduralPbrMaps.release("soundboard-ebony-normal");
+        proceduralPbrMaps.release("soundboard-ebony-rough");
+      }
     };
   }, [
     soundboardGeo,
@@ -345,6 +361,7 @@ export function AcousticSoundboard() {
     pinGeo,
     fingerboardGeo,
     fretMaterial,
+    isCinematic,
   ]);
 
   useFrame((state, delta) => {
@@ -440,7 +457,13 @@ export function AcousticSoundboard() {
       {/* 7. Contoured Rosewood Bridge at z = -5.4 */}
       <group position={[0, 0.02, -5.4]}>
         <mesh geometry={bridgeGeo} castShadow receiveShadow>
-          <meshStandardMaterial color="#1E0F0A" roughness={0.25} metalness={0.08} />
+          <meshStandardMaterial
+            color="#1E0F0A"
+            roughness={isCinematic ? 0.30 : 0.25}
+            metalness={0.08}
+            normalMap={ebonyTextures?.normal}
+            roughnessMap={ebonyTextures?.roughness}
+          />
         </mesh>
 
         {/* Bone Saddle with Intonation Angle */}
@@ -460,7 +483,12 @@ export function AcousticSoundboard() {
             <group key={i} position={[pinX, 0.14, -0.22]}>
               {/* Domed Brass Body */}
               <mesh geometry={pinGeo} castShadow>
-                <meshStandardMaterial color="#D4AF37" metalness={0.92} roughness={0.18} />
+                <meshStandardMaterial
+                  color="#D4AF37"
+                  metalness={0.92}
+                  roughness={0.18}
+                  {...(isCinematic ? { clearcoat: 0.85, clearcoatRoughness: 0.18 } : {})}
+                />
               </mesh>
               {/* Mother-of-Pearl Center Dot */}
               <mesh position={[0, 0.092, 0]}>
@@ -474,7 +502,13 @@ export function AcousticSoundboard() {
 
       {/* 8. Sleek Ebony Fingerboard */}
       <mesh geometry={fingerboardGeo} position={[0, 0.02, 0]} receiveShadow castShadow>
-        <meshStandardMaterial color="#141110" roughness={0.35} metalness={0.08} />
+        <meshStandardMaterial
+          color="#141110"
+          roughness={isCinematic ? 0.28 : 0.35}
+          metalness={0.08}
+          normalMap={ebonyTextures?.normal}
+          roughnessMap={ebonyTextures?.roughness}
+        />
       </mesh>
 
       {/* 9. Chamfered Nickel-Silver Frets (Spherical Ends, strictly inside neck width) */}

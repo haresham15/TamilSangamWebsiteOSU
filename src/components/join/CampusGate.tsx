@@ -6,6 +6,7 @@ import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
 import { createBrickTexture, createStoneBumpTexture, createIronBumpTexture } from "./textureUtils";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 
 interface CampusGateProps {
   gateProgressRef: React.RefObject<number>;
@@ -118,7 +119,15 @@ export function CampusGate({ gateProgressRef }: CampusGateProps) {
     // Dynamic warm sun-rim reflection sweeping across iron scrollwork
     if (sunRimRef.current) {
       sunRimRef.current.position.x = (pRight - pLeft) * 1.8;
-      sunRimRef.current.intensity = 3.0 + (pRight + pLeft) * 3.5;
+      const baseIntensity = 3.0 + (pRight + pLeft) * 3.5;
+      const isCinematic = isHeroCinematicEnabled("join");
+      if (isCinematic) {
+        // Micro-detail 2: Specular sun glint boost as gate latch clears threshold
+        const glint = p > 0.22 && p < 0.78 ? 1.0 + Math.sin((p - 0.22) * 5.6) * 0.35 : 1.0;
+        sunRimRef.current.intensity = baseIntensity * glint;
+      } else {
+        sunRimRef.current.intensity = baseIntensity;
+      }
     }
   });
 

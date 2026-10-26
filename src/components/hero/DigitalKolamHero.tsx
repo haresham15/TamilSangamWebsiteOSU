@@ -26,8 +26,10 @@ import { playCinematicWhoosh } from "@/audio/sounds";
 import { useReducedMotion } from "framer-motion";
 import { createHeroKineticsTracker } from "@/lib/heroKinetics";
 import muktaFont from "../../../public/fonts/mukta-malar-tamil.json";
-
-const STUDIO_LIGHT = { ivory: "#FAF7F2", terracotta: "#C85A32", gold: "#D4AF37" };
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { createCinemaCameraDamper, smootherstep } from "@/lib/cinemaCameraDamper";
+import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
+import { GradeStack } from "@/gl/grade/GradeStack";
 
 /**
  * Camera Vertical Truck Glide (§PRD 5.2)
@@ -38,6 +40,18 @@ function HeroTruckCamera() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const currentPos = useRef(new THREE.Vector3(0, 0, 12));
   const kineticsRef = useRef(createHeroKineticsTracker(4.2, 5.0, 4.0));
+  const { isLiteMode } = useLiteMode();
+  const reducedMotion = useReducedMotion();
+  const isReduced = Boolean(reducedMotion || isLiteMode);
+
+  const damperRef = useRef(
+    createCinemaCameraDamper({
+      lambdaPos: 6.0,
+      lambdaLook: 10.0,
+      breathingAmplitude: 0.0035,
+      breathingRoll: 0.0015,
+    })
+  );
 
   useSafeFrame((state, safeDelta) => {
     const rawP = heroDirectorState.scrubActive
@@ -45,31 +59,66 @@ function HeroTruckCamera() {
       : heroScrollProgress.current;
 
     const kinetics = kineticsRef.current.update(rawP, state.pointer, safeDelta);
-    const p = kinetics.smoothProgress;
+    const isCinematic = isHeroCinematicEnabled("home");
+    const p = isCinematic ? rawP : kinetics.smoothProgress;
 
     const { camY, camZ, pitchDeg } = evalCamera(p);
 
-    // Smooth camera damping shock absorber
-    const damp = 1 - Math.exp(-22 * safeDelta);
-    currentPos.current.y += (camY - currentPos.current.y) * damp;
-    currentPos.current.z += (camZ - currentPos.current.z) * damp;
+    if (isCinematic) {
+      // Workstream 1: Dual-Channel Camera Damper with C1 Hermite Portal Push
+      const pushT = Math.max(0, Math.min(1, (p - 0.62) / 0.16));
+      const easePush = smootherstep(pushT);
+      const portalZOffset = easePush * 6.5;
 
-    // Camera Portal Push-Through (Act II -> Act III: p = 0.62 -> 0.78)
-    const pushT = Math.max(0, Math.min(1, (p - 0.62) / 0.16));
-    const easePush = pushT * pushT * (3 - 2 * pushT);
-    const portalZOffset = easePush * 6.5;
+      const px = kinetics.smoothPointerX * 0.35;
+      const py = -kinetics.smoothPointerY * 0.25;
+      const aspectScale = state.viewport.aspect < 1.2 ? 1.2 / Math.max(state.viewport.aspect, 0.5) : 1.0;
 
-    // Pointer Parallax + Velocity Pitch/Bank Rig
-    const px = kinetics.smoothPointerX * 0.35;
-    const py = -kinetics.smoothPointerY * 0.25;
+      const targetPos = new THREE.Vector3(px, camY + py, (camZ - portalZOffset) * aspectScale);
+      const targetLookAt = new THREE.Vector3(0, camY + py * 0.4, -4.0);
 
-    const aspectScale = state.viewport.aspect < 1.2 ? 1.2 / Math.max(state.viewport.aspect, 0.5) : 1.0;
-    state.camera.position.set(px, currentPos.current.y + py, (currentPos.current.z - portalZOffset) * aspectScale);
-    state.camera.rotation.set(
-      (pitchDeg * (Math.PI / 180)) - kinetics.smoothPointerY * 0.035 + kinetics.velocityPitch,
-      kinetics.smoothPointerX * 0.045,
-      kinetics.velocityBank * 0.6
-    );
+      const damped = damperRef.current.update(targetPos, targetLookAt, p, safeDelta, {
+        isReducedMotion: isReduced,
+        isLiteMode,
+        additionalRoll: kinetics.velocityBank * 0.6,
+      });
+
+      state.camera.position.copy(damped.position);
+      state.camera.rotation.set(
+        pitchDeg * (Math.PI / 180) - kinetics.smoothPointerY * 0.035 + kinetics.velocityPitch,
+        kinetics.smoothPointerX * 0.045,
+        damped.roll
+      );
+    } else {
+      // Baseline fall-back damper
+      const damp = 1 - Math.exp(-22 * safeDelta);
+      currentPos.current.y += (camY - currentPos.current.y) * damp;
+      currentPos.current.z += (camZ - currentPos.current.z) * damp;
+
+      const pushT = Math.max(0, Math.min(1, (p - 0.62) / 0.16));
+      const easePush = pushT * pushT * (3 - 2 * pushT);
+      const portalZOffset = easePush * 6.5;
+
+      const px = kinetics.smoothPointerX * 0.35;
+      const py = -kinetics.smoothPointerY * 0.25;
+
+      const aspectScale = state.viewport.aspect < 1.2 ? 1.2 / Math.max(state.viewport.aspect, 0.5) : 1.0;
+      state.camera.position.set(px, currentPos.current.y + py, (currentPos.current.z - portalZOffset) * aspectScale);
+      state.camera.rotation.set(
+        pitchDeg * (Math.PI / 180) - kinetics.smoothPointerY * 0.035 + kinetics.velocityPitch,
+        kinetics.smoothPointerX * 0.045,
+        kinetics.velocityBank * 0.6
+      );
+    }
+
+    if (typeof window !== "undefined") {
+      (window as unknown as { __heroCameraDiagnostic?: unknown }).__heroCameraDiagnostic = {
+        position: [state.camera.position.x, state.camera.position.y, state.camera.position.z],
+        rotation: [state.camera.rotation.x, state.camera.rotation.y, state.camera.rotation.z],
+        fov: (state.camera as THREE.PerspectiveCamera).fov,
+        p,
+      };
+    }
   });
 
   return <PerspectiveCamera ref={cameraRef} makeDefault position={[0, 0, 12]} fov={35} />;
@@ -537,6 +586,20 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
   const specularLightRef = useRef<THREE.PointLight>(null);
   const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
   const elapsed = useRef(0);
+  const isCinematic = isHeroCinematicEnabled("home");
+
+  const roughMap = useMemo(() => {
+    if (!isCinematic) return null;
+    return proceduralPbrMaps.getNoiseRoughness("kolam-emblem-rough", 256, 256, 0.10, 0.22);
+  }, [isCinematic]);
+
+  useEffect(() => {
+    return () => {
+      if (roughMap) {
+        proceduralPbrMaps.release("kolam-emblem-rough");
+      }
+    };
+  }, [roughMap]);
 
   const emblemWireMat = useMemo(
     () =>
@@ -605,18 +668,111 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
           receiveShadow
         >
           அ
-          <meshPhysicalMaterial
-            ref={materialRef}
-            color="#F4EFE6"
-            metalness={0.96}
-            roughness={0.12}
-            clearcoat={1.0}
-            clearcoatRoughness={0.08}
-            envMapIntensity={2.4}
-          />
+          {isCinematic ? (
+            <meshPhysicalMaterial
+              ref={materialRef}
+              color="#F4EFE6"
+              metalness={0.94}
+              roughness={0.14}
+              roughnessMap={roughMap || undefined}
+              clearcoat={1.0}
+              clearcoatRoughness={0.08}
+              anisotropy={0.45}
+              anisotropyRotation={0.78}
+              envMapIntensity={2.2}
+            />
+          ) : (
+            <meshPhysicalMaterial
+              ref={materialRef}
+              color="#F4EFE6"
+              metalness={0.96}
+              roughness={0.12}
+              clearcoat={1.0}
+              clearcoatRoughness={0.08}
+              envMapIntensity={2.4}
+            />
+          )}
         </Text3D>
       </Center>
     </group>
+  );
+}
+
+/**
+ * Cinematic Detail 2: Instanced Brass Pulli (Dot) Registration Nodes
+ * Up to 36 subtle brass registration points that softly glint as the peeling Kolam passes.
+ */
+function PulliGridNodes({ isMobile }: { isMobile: boolean }) {
+  const meshRef = useRef<THREE.InstancedMesh>(null);
+  const lattice = useMemo(() => generatePulliLattice(isMobile), [isMobile]);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+
+  // Filter up to 36 dots around central weave zone
+  const dots = useMemo(() => {
+    const list: [number, number, number][] = [];
+    const maxHalf = 18;
+    for (let i = 0; i < lattice.dotCount && list.length < maxHalf; i++) {
+      const x = lattice.rightDots[i * 3];
+      const y = lattice.rightDots[i * 3 + 1];
+      const z = lattice.rightDots[i * 3 + 2];
+      if (Math.abs(y) <= 3.8) {
+        list.push([x, y, z]);
+      }
+    }
+    for (let i = 0; i < lattice.dotCount && list.length < maxHalf * 2; i++) {
+      const x = lattice.leftDots[i * 3];
+      const y = lattice.leftDots[i * 3 + 1];
+      const z = lattice.leftDots[i * 3 + 2];
+      if (Math.abs(y) <= 3.8) {
+        list.push([x, y, z]);
+      }
+    }
+    return list;
+  }, [lattice]);
+
+  useEffect(() => {
+    if (!meshRef.current) return;
+    dots.forEach((dot, idx) => {
+      dummy.position.set(dot[0], dot[1], dot[2] - 0.02);
+      dummy.scale.setScalar(1.0);
+      dummy.updateMatrix();
+      meshRef.current!.setMatrixAt(idx, dummy.matrix);
+    });
+    meshRef.current.instanceMatrix.needsUpdate = true;
+  }, [dots, dummy]);
+
+  useSafeFrame((state) => {
+    if (!meshRef.current) return;
+    const rawP = heroDirectorState.scrubActive
+      ? heroDirectorState.scrubProgress
+      : heroScrollProgress.current;
+    const time = state.clock.getElapsedTime();
+
+    dots.forEach((dot, idx) => {
+      const wave = Math.sin(time * 2.5 + dot[1] * 1.5 + rawP * 8.0);
+      const glintScale = 0.85 + 0.35 * Math.max(0, wave);
+      dummy.position.set(dot[0], dot[1], dot[2] - 0.02);
+      dummy.scale.setScalar(glintScale);
+      dummy.updateMatrix();
+      meshRef.current!.setMatrixAt(idx, dummy.matrix);
+    });
+    meshRef.current.instanceMatrix.needsUpdate = true;
+  });
+
+  if (dots.length === 0) return null;
+
+  return (
+    <instancedMesh ref={meshRef} args={[undefined, undefined, dots.length]}>
+      <sphereGeometry args={[0.024, 12, 12]} />
+      <meshPhysicalMaterial
+        color="#D4AF37"
+        emissive="#FFA01C"
+        emissiveIntensity={0.25}
+        metalness={0.92}
+        roughness={0.22}
+        clearcoat={0.6}
+      />
+    </instancedMesh>
   );
 }
 
@@ -724,52 +880,121 @@ export function DigitalKolamHero() {
           <fogExp2 attach="fog" args={["#050201", 0.03]} />
           <HeroTruckCamera />
 
-          {/* Sangam Studio Environment: High-Craft Lighting Rig */}
-          <Environment frames={1} resolution={256} background={false}>
-            {/* Warm Ivory Key Strip (-X) */}
-            <Lightformer
-              form="rect"
-              intensity={3.5}
-              color="#FFF8EB"
-              position={[-5, 3, 5]}
-              scale={[8, 5, 1]}
-              target={[0, 0, 0]}
-            />
-            {/* High-Contrast Terracotta/Gold Rim Strip (+X, Crucial for right-edge definition on 'அ') */}
-            <Lightformer
-              form="rect"
-              intensity={4.8}
-              color="#C85A32"
-              position={[6, 2, -2]}
-              scale={[6, 8, 1]}
-              target={[0, 0, 0]}
-            />
-            {/* Antique Brass Overhead Fill (+Y) */}
-            <Lightformer
-              form="ring"
-              intensity={2.4}
-              color="#D4AF37"
-              scale={10}
-              position={[0, 8, 0]}
-              target={[0, 0, 0]}
-            />
-            {/* Warm Espresso Floor Bounce (-Y) */}
-            <Lightformer
-              form="rect"
-              intensity={1.4}
-              color="#3A2618"
-              scale={[12, 4, 1]}
-              position={[0, -6, 2]}
-              target={[0, 0, 0]}
-            />
-          </Environment>
+          {isHeroCinematicEnabled("home") ? (
+            <>
+              {/* Sangam Studio Environment: Motivated 3-Point + Procedural IBL Rig */}
+              <Environment frames={1} resolution={256} background={false}>
+                {/* Warm Ivory Key Strip (-X) */}
+                <Lightformer
+                  form="rect"
+                  intensity={3.2}
+                  color="#FFF8EB"
+                  position={[-4, 3, 5]}
+                  scale={[8, 5, 1]}
+                  target={[0, 0, 0]}
+                />
+                {/* High-Contrast Terracotta/Gold Rim Strip (+X, Carving out right stem of 'அ') */}
+                <Lightformer
+                  form="rect"
+                  intensity={4.6}
+                  color="#C85A32"
+                  position={[5.5, 1.5, -1.5]}
+                  scale={[6, 8, 1]}
+                  target={[0, 0, 0]}
+                />
+                {/* Antique Brass Overhead Fill (+Y) */}
+                <Lightformer
+                  form="ring"
+                  intensity={2.0}
+                  color="#D4AF37"
+                  scale={10}
+                  position={[0, 7, 0]}
+                  target={[0, 0, 0]}
+                />
+                {/* Warm Espresso Floor Bounce (-Y) */}
+                <Lightformer
+                  form="rect"
+                  intensity={1.2}
+                  color="#3A2618"
+                  scale={[12, 4, 1]}
+                  position={[0, -5, 0]}
+                  target={[0, 0, 0]}
+                />
+              </Environment>
 
-          {/* Studio Key & Ambient Lighting */}
-          <ambientLight intensity={0.8} color="#2a1a08" />
-          <directionalLight position={[5, 8, 5]} intensity={3.0} color="#FFF8E7" castShadow />
-          <directionalLight position={[-5, 4, 4]} intensity={1.8} color="#FFE8B5" />
-          <pointLight position={[0, 0, 4.0]} intensity={4.5} color="#FFF5DE" distance={16} />
-          <pointLight position={[0, -2, 2.0]} intensity={3.0} color="#FFB84D" distance={12} />
+              {/* Directional Key with Soft Dimensional PCF Shadows */}
+              <directionalLight
+                position={[3, 5, 6]}
+                intensity={3.2}
+                color="#FFF8E7"
+                castShadow
+                shadow-mapSize-width={1024}
+                shadow-mapSize-height={1024}
+                shadow-camera-near={1}
+                shadow-camera-far={16}
+                shadow-camera-left={-4.5}
+                shadow-camera-right={4.5}
+                shadow-camera-top={4.5}
+                shadow-camera-bottom={-4.5}
+                shadow-bias={-0.0004}
+                shadow-normalBias={0.02}
+                shadow-radius={3}
+              />
+              <directionalLight position={[-4, 3, 3]} intensity={1.6} color="#FFE8B5" />
+              <ambientLight intensity={0.7} color="#2A1808" />
+              <pointLight position={[0, 0, 4.0]} intensity={4.0} color="#FFF5DE" distance={16} />
+              <pointLight position={[0, -2, 2.0]} intensity={2.5} color="#FFB84D" distance={12} />
+
+              {/* Detail 2: Brass Pulli Grid Registration Nodes */}
+              <PulliGridNodes isMobile={isMobile} />
+
+              {/* Color Grading Stack for Home Hero */}
+              <GradeStack tier={tier} profile="kolam-hearth" />
+            </>
+          ) : (
+            <>
+              {/* Baseline Studio Lighting */}
+              <Environment frames={1} resolution={256} background={false}>
+                <Lightformer
+                  form="rect"
+                  intensity={3.5}
+                  color="#FFF8EB"
+                  position={[-5, 3, 5]}
+                  scale={[8, 5, 1]}
+                  target={[0, 0, 0]}
+                />
+                <Lightformer
+                  form="rect"
+                  intensity={4.8}
+                  color="#C85A32"
+                  position={[6, 2, -2]}
+                  scale={[6, 8, 1]}
+                  target={[0, 0, 0]}
+                />
+                <Lightformer
+                  form="ring"
+                  intensity={2.4}
+                  color="#D4AF37"
+                  scale={10}
+                  position={[0, 8, 0]}
+                  target={[0, 0, 0]}
+                />
+                <Lightformer
+                  form="rect"
+                  intensity={1.4}
+                  color="#3A2618"
+                  scale={[12, 4, 1]}
+                  position={[0, -6, 2]}
+                  target={[0, 0, 0]}
+                />
+              </Environment>
+              <ambientLight intensity={0.8} color="#2a1a08" />
+              <directionalLight position={[5, 8, 5]} intensity={3.0} color="#FFF8E7" castShadow />
+              <directionalLight position={[-5, 4, 4]} intensity={1.8} color="#FFE8B5" />
+              <pointLight position={[0, 0, 4.0]} intensity={4.5} color="#FFF5DE" distance={16} />
+              <pointLight position={[0, -2, 2.0]} intensity={3.0} color="#FFB84D" distance={12} />
+            </>
+          )}
 
           {/* Ambient Floating Dust Motes */}
           <DustMotes isMobile={isMobile} tier={tier} />

@@ -5,6 +5,8 @@ import * as THREE from "three";
 import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { heroState } from "./state";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
 
 /**
  * LAYER 4: 8 FLOATING 35MM KODACHROME MEMORY FRAMES (SYMPATHETICALLY LINKED)
@@ -92,6 +94,13 @@ export function ArchivalPlanes() {
     });
   }, []);
 
+  const isCinematic = isHeroCinematicEnabled("gallery");
+
+  const mountNormal = useMemo(() => {
+    if (!isCinematic) return null;
+    return proceduralPbrMaps.getBrushedMetalNormal("kodachrome-mount-normal", 256, 256);
+  }, [isCinematic]);
+
   const haloGeo = useMemo(() => new THREE.PlaneGeometry(1.25, 0.938), []);
   const borderGeo = useMemo(() => new THREE.PlaneGeometry(1.16, 0.87), []);
   const photoGeo = useMemo(() => new THREE.PlaneGeometry(1.04, 0.76), []);
@@ -102,8 +111,11 @@ export function ArchivalPlanes() {
       haloGeo.dispose();
       borderGeo.dispose();
       photoGeo.dispose();
+      if (isCinematic) {
+        proceduralPbrMaps.release("kodachrome-mount-normal");
+      }
     };
-  }, [frameBorders, haloGeo, borderGeo, photoGeo]);
+  }, [frameBorders, haloGeo, borderGeo, photoGeo, isCinematic]);
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
@@ -142,6 +154,14 @@ export function ArchivalPlanes() {
         // Backlight halo blooms to 2.2x on pluck
         const targetOpacity = 0.22 + stringEnergy * 0.55 + easterEggBoost * 0.65;
         haloMat.opacity = THREE.MathUtils.damp(haloMat.opacity, Math.min(0.95, targetOpacity), 8.0, dt);
+
+        if (isCinematic) {
+          // Kodachrome warm amber/crimson halation shift during pluck
+          const r = 1.0;
+          const gCol = THREE.MathUtils.lerp(0.72, 0.45, Math.min(1.0, stringEnergy * 1.5));
+          const b = THREE.MathUtils.lerp(0.30, 0.12, Math.min(1.0, stringEnergy * 1.5));
+          haloMat.color.setRGB(r, gCol, b);
+        }
       }
     });
   });
@@ -179,12 +199,24 @@ export function ArchivalPlanes() {
 
             {/* 2. 35mm Slide Mount Casing with Gold Hairline Border & Index Markings */}
             <mesh geometry={borderGeo} position={[0, 0, 0.005]}>
-              <meshBasicMaterial
-                map={borderTex}
-                transparent={true}
-                opacity={0.96}
-                depthWrite={false}
-              />
+              {isCinematic ? (
+                <meshStandardMaterial
+                  map={borderTex}
+                  normalMap={mountNormal}
+                  roughness={0.42}
+                  metalness={0.15}
+                  transparent={true}
+                  opacity={0.98}
+                  depthWrite={false}
+                />
+              ) : (
+                <meshBasicMaterial
+                  map={borderTex}
+                  transparent={true}
+                  opacity={0.96}
+                  depthWrite={false}
+                />
+              )}
             </mesh>
 
             {/* 3. Real OSU Tamil Sangam Archival Photograph */}

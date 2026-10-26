@@ -10,6 +10,11 @@ import { useHeroStageVisibility } from "@/components/canvas/HeroScrollStage";
 import { SceneRegistrar } from "@/director/wireframe";
 import { BlueprintPin, BLUEPRINT_PINS, BlueprintSVG } from "./BlueprintSVG";
 import { buildOhioStadiumLines, StadiumGeometryData } from "./OhioStadiumWireframe";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { createCinemaCameraDamper, smootherstep } from "@/lib/cinemaCameraDamper";
+import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
+import { GradeStack } from "@/gl/grade/GradeStack";
+import { useTier } from "@/components/providers/TierProvider";
 
 interface EphemeralPin {
   id: string;
@@ -166,6 +171,7 @@ const StadiumLineShader = {
     uniform vec3 uColorField;
     uniform vec3 uColorRotunda;
     uniform float uTime;
+    uniform float uCinematic;
     varying float vOrigY;
     varying float vTag;
     varying float vScanIntensity;
@@ -197,6 +203,11 @@ const StadiumLineShader = {
         vec3 hotEdge = mix(vec3(1.0, 0.98, 0.92), vec3(0.35, 0.95, 0.85), 0.5 + 0.5 * sin(uTime * 6.0));
         color = mix(color, hotEdge, min(1.0, vScanIntensity * 2.5));
         alpha = 1.0;
+      } else if (uCinematic > 0.5) {
+        // Micro-detail 1: Subtle traveling electrical data shimmer along the architectural grid lines
+        float pulse = sin(vOrigY * 3.8 - uTime * 3.5);
+        float shimmer = smoothstep(0.72, 1.0, pulse) * 0.28;
+        color += vec3(0.95, 0.75, 0.35) * shimmer;
       }
 
       gl_FragColor = vec4(color, alpha);
@@ -207,6 +218,7 @@ const StadiumLineShader = {
 // 3D Ohio Stadium Real-Time Wireframe Component
 function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: React.MutableRefObject<number> }) {
   const lineMeshRef = useRef<THREE.LineSegments>(null);
+  const isCinematic = isHeroCinematicEnabled("suggestions");
 
   // Generate the complete Ohio Stadium wireframe geometry once
   const { geometry, maxHeight } = useMemo(() => {
@@ -227,6 +239,7 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: React.Mu
         uProgress: { value: 0 },
         uMaxHeight: { value: maxHeight },
         uTime: { value: 0 },
+        uCinematic: { value: isCinematic ? 1.0 : 0.0 },
         uColorBase: { value: new THREE.Color("#FFB84D") }, // Blazing cinematic amber/gold (#FFB84D)
         uColorGlow: { value: new THREE.Color("#FFA01C") }, // Deep amber construction glow
         uColorField: { value: new THREE.Color("#E59838") }, // Warm copper/amber turf lines
@@ -236,7 +249,7 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: React.Mu
       depthWrite: true,
       blending: THREE.AdditiveBlending,
     });
-  }, [maxHeight]);
+  }, [maxHeight, isCinematic]);
 
   // Unmount cleanup for stadium wireframe geometry & shader material
   useEffect(() => {
@@ -293,30 +306,88 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: React.Mu
 }
 
 // Steady Axonometric / Isometric Architectural Camera Controller with Interactive CAD Turntable Orbit
-function SteadyIsometricCamera() {
+function SteadyIsometricCamera({ scrollProgress }: { scrollProgress?: React.MutableRefObject<number> }) {
   const { camera } = useThree();
   const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
   const basePos = useMemo(() => new THREE.Vector3(16.0, 13.5, 18.5), []);
   const lookTarget = useMemo(() => new THREE.Vector3(0.0, 1.4, -1.2), []);
   const targetPos = useRef(new THREE.Vector3(16.0, 13.5, 18.5));
 
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+  const damperRef = useRef(
+    createCinemaCameraDamper({
+      lambdaPos: 5.5,
+      lambdaLook: 9.0,
+      enableBreathing: true,
+      breathingAmplitude: 0.002, // very subtle architectural stability
+      breathingRoll: 0.001,
+      breathFreqPrimary: 0.14,
+    })
+  );
+
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
     const kinetics = kineticsRef.current.update(0, state.pointer, dt);
 
-    // Interactive CAD turntable orbit: ±8° azimuth, ±4° elevation
+    if (!isCinematic) {
+      // Baseline behavior (100% reversible)
+      const azimuthOffset = kinetics.smoothPointerX * 2.2;
+      const elevationOffset = kinetics.smoothPointerY * 1.2;
+
+      targetPos.current.set(
+        basePos.x + azimuthOffset,
+        basePos.y + elevationOffset,
+        basePos.z - kinetics.smoothPointerX * 0.8
+      );
+
+      camera.position.lerp(targetPos.current, 1 - Math.exp(-4 * dt));
+      camera.lookAt(lookTarget);
+      camera.rotation.z = kinetics.velocityBank * 0.35;
+      return;
+    }
+
+    // Elevated Cinematic Behavior:
+    // 1. C1 Hermite Smootherstep on scrollProgress (construction progress of Ohio Stadium)
+    const rawP = Math.min(1, Math.max(0, scrollProgress?.current ?? 0));
+    const smoothP = smootherstep(rawP);
+
+    // 2. Architectural Isometric Vantage Arc:
+    // Base position drifts smoothly from [16.0, 13.5, 18.5] to [14.8, 14.5, 17.2]
+    // Look target elevates from [0.0, 1.4, -1.2] to [0.0, 2.0, -1.5]
+    const curBaseX = THREE.MathUtils.lerp(16.0, 14.8, smoothP);
+    const curBaseY = THREE.MathUtils.lerp(13.5, 14.5, smoothP);
+    const curBaseZ = THREE.MathUtils.lerp(18.5, 17.2, smoothP);
+
     const azimuthOffset = kinetics.smoothPointerX * 2.2;
     const elevationOffset = kinetics.smoothPointerY * 1.2;
 
     targetPos.current.set(
-      basePos.x + azimuthOffset,
-      basePos.y + elevationOffset,
-      basePos.z - kinetics.smoothPointerX * 0.8
+      curBaseX + azimuthOffset,
+      curBaseY + elevationOffset,
+      curBaseZ - kinetics.smoothPointerX * 0.8
     );
 
-    camera.position.lerp(targetPos.current, 1 - Math.exp(-4 * dt));
-    camera.lookAt(lookTarget);
-    camera.rotation.z = kinetics.velocityBank * 0.35;
+    const targetLook = new THREE.Vector3(
+      0.0,
+      THREE.MathUtils.lerp(1.4, 2.0, smoothP),
+      THREE.MathUtils.lerp(-1.2, -1.5, smoothP)
+    );
+
+    const isReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const dampResult = damperRef.current.update(
+      targetPos.current,
+      targetLook,
+      smoothP,
+      dt,
+      {
+        isReducedMotion: isReduced,
+        additionalRoll: kinetics.velocityBank * 0.25,
+      }
+    );
+
+    camera.position.copy(dampResult.position);
+    camera.lookAt(dampResult.lookAt);
+    camera.rotation.z = dampResult.roll;
   });
 
   return null;
@@ -651,6 +722,23 @@ function BrassDraftingCompass() {
   const legLength = 2.6;
   const spreadAngle = 0.26; // ~15 degrees each side
 
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+  const textures = useMemo(() => {
+    if (!isCinematic) return null;
+    const normalMap = proceduralPbrMaps.getBrushedMetalNormal("suggestions-compass-brass-normal", 256, 256);
+    const roughMap = proceduralPbrMaps.getNoiseRoughness("suggestions-compass-brass-rough", 256, 256, 0.28, 0.45);
+    return { normalMap, roughMap };
+  }, [isCinematic]);
+
+  useEffect(() => {
+    return () => {
+      if (isCinematic) {
+        proceduralPbrMaps.release("suggestions-compass-brass-normal");
+        proceduralPbrMaps.release("suggestions-compass-brass-rough");
+      }
+    };
+  }, [isCinematic]);
+
   return (
     <group position={compassPos} rotation={[0, -0.38, 0]}>
       {/* 1. Hinge Pivot Head Assembly */}
@@ -658,7 +746,14 @@ function BrassDraftingCompass() {
         {/* Central Cylindrical Brass Hinge Disc */}
         <mesh castShadow receiveShadow position={[0, 0.03, 0]}>
           <cylinderGeometry args={[0.22, 0.22, 0.08, 24]} />
-          <meshStandardMaterial color="#B5A642" metalness={0.8} roughness={0.4} />
+          <meshPhysicalMaterial
+            color="#B5A642"
+            metalness={0.8}
+            roughness={0.4}
+            normalMap={textures?.normalMap}
+            roughnessMap={textures?.roughMap}
+            clearcoat={isCinematic ? 0.35 : undefined}
+          />
         </mesh>
         {/* Steel Hinge Screw Core */}
         <mesh castShadow position={[0, 0.075, 0]}>
@@ -668,7 +763,13 @@ function BrassDraftingCompass() {
         {/* Knurled Brass Thumb Handle pointing backwards */}
         <mesh castShadow position={[0, 0.03, -0.32]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.065, 0.065, 0.45, 16]} />
-          <meshStandardMaterial color="#B5A642" metalness={0.8} roughness={0.45} />
+          <meshStandardMaterial
+            color="#B5A642"
+            metalness={0.8}
+            roughness={0.45}
+            normalMap={textures?.normalMap}
+            roughnessMap={textures?.roughMap}
+          />
         </mesh>
       </group>
 
@@ -677,7 +778,14 @@ function BrassDraftingCompass() {
         {/* Main Brass Arm */}
         <mesh castShadow receiveShadow position={[-0.03, 0.03, legLength * 0.4]}>
           <boxGeometry args={[0.09, 0.06, legLength * 0.8]} />
-          <meshStandardMaterial color="#B5A642" metalness={0.8} roughness={0.4} />
+          <meshPhysicalMaterial
+            color="#B5A642"
+            metalness={0.8}
+            roughness={0.4}
+            normalMap={textures?.normalMap}
+            roughnessMap={textures?.roughMap}
+            clearcoat={isCinematic ? 0.3 : undefined}
+          />
         </mesh>
         {/* Needle Holder Collar */}
         <mesh castShadow position={[-0.03, 0.03, legLength * 0.82]} rotation={[Math.PI / 2, 0, 0]}>
@@ -696,7 +804,14 @@ function BrassDraftingCompass() {
         {/* Main Brass Arm */}
         <mesh castShadow receiveShadow position={[0.03, 0.03, legLength * 0.4]}>
           <boxGeometry args={[0.09, 0.06, legLength * 0.8]} />
-          <meshStandardMaterial color="#B5A642" metalness={0.8} roughness={0.4} />
+          <meshPhysicalMaterial
+            color="#B5A642"
+            metalness={0.8}
+            roughness={0.4}
+            normalMap={textures?.normalMap}
+            roughnessMap={textures?.roughMap}
+            clearcoat={isCinematic ? 0.3 : undefined}
+          />
         </mesh>
         {/* Lead Clamp Collar & Thumb Screw */}
         <mesh castShadow position={[0.03, 0.03, legLength * 0.82]} rotation={[Math.PI / 2, 0, 0]}>
@@ -715,15 +830,55 @@ function BrassDraftingCompass() {
         {/* Threaded Brass Spindle Bar */}
         <mesh castShadow position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
           <cylinderGeometry args={[0.025, 0.025, 1.1, 12]} />
-          <meshStandardMaterial color="#B5A642" metalness={0.85} roughness={0.35} />
+          <meshStandardMaterial
+            color="#B5A642"
+            metalness={0.85}
+            roughness={0.35}
+            normalMap={textures?.normalMap}
+            roughnessMap={textures?.roughMap}
+          />
         </mesh>
         {/* Center Knurled Adjustment Wheel */}
         <mesh castShadow position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
           <cylinderGeometry args={[0.15, 0.15, 0.08, 24]} />
-          <meshStandardMaterial color="#9C8D35" metalness={0.8} roughness={0.5} />
+          <meshStandardMaterial
+            color="#9C8D35"
+            metalness={0.8}
+            roughness={0.5}
+            normalMap={textures?.normalMap}
+            roughnessMap={textures?.roughMap}
+          />
         </mesh>
       </group>
     </group>
+  );
+}
+
+function HydrologyWaterValveRing({ isCinematic }: { isCinematic: boolean }) {
+  const ringRef = useRef<THREE.Mesh>(null);
+  useFrame((state) => {
+    if (!isCinematic || !ringRef.current) return;
+    const t = state.clock.elapsedTime * 2.4;
+    const scale = 1.0 + (Math.sin(t) * 0.5 + 0.5) * 0.32;
+    ringRef.current.scale.set(scale, scale, 1);
+    const mat = ringRef.current.material as THREE.MeshBasicMaterial;
+    if (mat) {
+      mat.opacity = 0.75 - (scale - 1.0) * 0.8;
+    }
+  });
+
+  return (
+    <mesh ref={ringRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]}>
+      <ringGeometry args={[0.12, 0.18, 24]} />
+      <meshBasicMaterial
+        color="#00E5FF"
+        transparent
+        opacity={0.7}
+        blending={THREE.AdditiveBlending}
+        depthTest={false}
+        depthWrite={false}
+      />
+    </mesh>
   );
 }
 
@@ -735,6 +890,7 @@ function BrassDraftingCompass() {
 // Rendered with additive blending and depthTest={false} to create the iconic
 // "hidden water blueprint" x-ray effect from Kaththi.
 function HydrologyPipeNodes() {
+  const isCinematic = isHeroCinematicEnabled("suggestions");
   const pipeGeometry = useMemo(() => {
     // Interconnected underground municipal pipeline network (Jeeva's Chennai water map reference)
     const lines: number[] = [
@@ -815,18 +971,8 @@ function HydrologyPipeNodes() {
             />
           </mesh>
 
-          {/* Water Valve Pulse Ring on ground */}
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]}>
-            <ringGeometry args={[0.12, 0.18, 24]} />
-            <meshBasicMaterial
-              color="#00E5FF"
-              transparent
-              opacity={0.7}
-              blending={THREE.AdditiveBlending}
-              depthTest={false}
-              depthWrite={false}
-            />
-          </mesh>
+          {/* Water Valve Pulse Ring on ground (Micro-detail 2) */}
+          <HydrologyWaterValveRing isCinematic={isCinematic} />
         </group>
       ))}
     </group>
@@ -839,6 +985,21 @@ function HydrologyPipeNodes() {
 // A bundle of rolled architectural blueprints tied with copper ribbons on the outer East corner
 function RolledBlueprintScrolls() {
   const scrollGroupPos: [number, number, number] = [7.8, 0.0, -3.0];
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+
+  const textures = useMemo(() => {
+    if (!isCinematic) return null;
+    const roughMap = proceduralPbrMaps.getNoiseRoughness("suggestions-scroll-paper-rough", 256, 256, 0.65, 0.88);
+    return { roughMap };
+  }, [isCinematic]);
+
+  useEffect(() => {
+    return () => {
+      if (isCinematic) {
+        proceduralPbrMaps.release("suggestions-scroll-paper-rough");
+      }
+    };
+  }, [isCinematic]);
 
   return (
     <group position={scrollGroupPos} rotation={[0, 0.65, 0]}>
@@ -846,7 +1007,12 @@ function RolledBlueprintScrolls() {
       <group position={[0, 0.22, 0]} rotation={[0, 0, Math.PI / 2]}>
         <mesh castShadow receiveShadow>
           <cylinderGeometry args={[0.22, 0.22, 4.2, 24]} />
-          <meshStandardMaterial color="#D8C8AA" roughness={0.85} metalness={0.05} />
+          <meshStandardMaterial
+            color="#D8C8AA"
+            roughness={0.85}
+            metalness={0.05}
+            roughnessMap={textures?.roughMap}
+          />
         </mesh>
         {/* Dark spiral paper roll core (Left) */}
         <mesh position={[0, -2.11, 0]}>
@@ -871,7 +1037,12 @@ function RolledBlueprintScrolls() {
       <group position={[0.32, 0.18, 0.35]} rotation={[0, 0, Math.PI / 2]}>
         <mesh castShadow receiveShadow>
           <cylinderGeometry args={[0.18, 0.18, 3.8, 24]} />
-          <meshStandardMaterial color="#CCBA98" roughness={0.85} metalness={0.05} />
+          <meshStandardMaterial
+            color="#CCBA98"
+            roughness={0.85}
+            metalness={0.05}
+            roughnessMap={textures?.roughMap}
+          />
         </mesh>
         {/* Brass tie ribbons */}
         {[-0.9, 0.9].map((y, i) => (
@@ -886,7 +1057,12 @@ function RolledBlueprintScrolls() {
       <group position={[0.15, 0.38, 0.18]} rotation={[0, 0, Math.PI / 2]}>
         <mesh castShadow receiveShadow>
           <cylinderGeometry args={[0.16, 0.16, 3.6, 24]} />
-          <meshStandardMaterial color="#E0D2B8" roughness={0.8} metalness={0.05} />
+          <meshStandardMaterial
+            color="#E0D2B8"
+            roughness={0.8}
+            metalness={0.05}
+            roughnessMap={textures?.roughMap}
+          />
         </mesh>
         {/* Cyan drafting seal tape (Jeeva's water plan seal) */}
         <mesh castShadow position={[0, 0, 0]}>
@@ -961,6 +1137,19 @@ function DraftingPencil() {
 // modeled as an architect's precision scale modeling instrument.
 function ArchitectPrecisionUtilityBlade() {
   const bladePos: [number, number, number] = [-7.2, 0.05, -0.6];
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+  const edgeRef = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    if (!isCinematic || !edgeRef.current) return;
+    const mat = edgeRef.current.material as THREE.MeshPhysicalMaterial;
+    if (mat) {
+      // Micro-detail 3: Subtle glint/sparkle modulation catching overhead spotlight
+      const glint = Math.sin(state.clock.elapsedTime * 3.0) * 0.5 + 0.5;
+      mat.roughness = 0.06 + (1 - glint) * 0.08;
+      mat.clearcoatRoughness = 0.04 + (1 - glint) * 0.05;
+    }
+  });
 
   return (
     <group position={bladePos} rotation={[0, 0.45, 0]}>
@@ -986,8 +1175,8 @@ function ArchitectPrecisionUtilityBlade() {
             clearcoatRoughness={0.06}
           />
         </mesh>
-        {/* Polished blade bevel cutting edge */}
-        <mesh castShadow position={[0.015, -0.025, -0.75]}>
+        {/* Polished blade bevel cutting edge (Micro-detail 3) */}
+        <mesh ref={edgeRef} castShadow position={[0.015, -0.025, -0.75]}>
           <boxGeometry args={[0.008, 0.03, 1.48]} />
           <meshPhysicalMaterial
             color="#FFFFFF"
@@ -1047,18 +1236,48 @@ function ThanjavurSoilVial() {
 // Solid chamfered brass anchor weight holding down the outer blueprint paper corner
 function BrassPaperweight() {
   const weightPos: [number, number, number] = [-7.5, 0.06, 4.5];
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+
+  const textures = useMemo(() => {
+    if (!isCinematic) return null;
+    const normalMap = proceduralPbrMaps.getBrushedMetalNormal("suggestions-paperweight-brass-normal", 256, 256);
+    const roughMap = proceduralPbrMaps.getNoiseRoughness("suggestions-paperweight-brass-rough", 256, 256, 0.22, 0.38);
+    return { normalMap, roughMap };
+  }, [isCinematic]);
+
+  useEffect(() => {
+    return () => {
+      if (isCinematic) {
+        proceduralPbrMaps.release("suggestions-paperweight-brass-normal");
+        proceduralPbrMaps.release("suggestions-paperweight-brass-rough");
+      }
+    };
+  }, [isCinematic]);
 
   return (
     <group position={weightPos}>
       {/* Main chamfered brass disc */}
       <mesh castShadow receiveShadow>
         <cylinderGeometry args={[0.45, 0.48, 0.12, 32]} />
-        <meshStandardMaterial color="#C2A649" metalness={0.85} roughness={0.32} />
+        <meshPhysicalMaterial
+          color="#C2A649"
+          metalness={0.85}
+          roughness={0.32}
+          normalMap={textures?.normalMap}
+          roughnessMap={textures?.roughMap}
+          clearcoat={isCinematic ? 0.35 : undefined}
+        />
       </mesh>
       {/* Center recessed ergonomic finger grip ring */}
       <mesh castShadow position={[0, 0.05, 0]}>
         <cylinderGeometry args={[0.24, 0.20, 0.03, 24]} />
-        <meshStandardMaterial color="#8A7326" metalness={0.9} roughness={0.4} />
+        <meshStandardMaterial
+          color="#8A7326"
+          metalness={0.9}
+          roughness={0.4}
+          normalMap={textures?.normalMap}
+          roughnessMap={textures?.roughMap}
+        />
       </mesh>
     </group>
   );
@@ -1082,6 +1301,8 @@ function BlueprintSceneContent({
   newPin?: EphemeralPin | null;
 }) {
   useWarmup("ideas-blueprint");
+  const tier = useTier();
+  const isCinematic = isHeroCinematicEnabled("suggestions");
 
   return (
     <>
@@ -1091,7 +1312,16 @@ function BlueprintSceneContent({
 
       {/* Cinematic War Room Lighting */}
       <ambientLight intensity={0.8} color="#381D2C" />
-      <directionalLight position={[20, 25, 15]} intensity={1.8} color="#FFE6B8" />
+      <directionalLight
+        position={[20, 25, 15]}
+        intensity={1.8}
+        color="#FFE6B8"
+        castShadow={isCinematic}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-bias={-0.0001}
+        shadow-normalBias={0.02}
+      />
       <directionalLight position={[-15, 18, -15]} intensity={0.9} color="#8B5A2B" />
 
       {/* Soft overhead SpotLight creating a dramatic vignette pool of light on the blueprint floor */}
@@ -1104,6 +1334,8 @@ function BlueprintSceneContent({
         distance={45}
         decay={2}
         castShadow
+        shadow-bias={-0.0001}
+        shadow-normalBias={0.02}
       />
 
       {/* 1. Large Blueprint Ground Plane (y = 0) */}
@@ -1156,7 +1388,10 @@ function BlueprintSceneContent({
       <FloatingParticles />
 
       {/* 6. Steady Axonometric / Isometric Architectural Camera */}
-      <SteadyIsometricCamera />
+      <SteadyIsometricCamera scrollProgress={scrollProgress} />
+
+      {/* Cinematic LUT & Grade Stack */}
+      {isCinematic && <GradeStack tier={tier} profile="kaththi-blueprint" />}
     </>
   );
 }

@@ -19,6 +19,9 @@ import { createBespokeEnvironmentTexture } from "@/components/shared/createCusto
 import { useWarmup } from "@/components/gl/useWarmup";
 import { useHeroStageVisibility } from "@/components/canvas/HeroScrollStage";
 import { SceneRegistrar } from "@/director/wireframe";
+import { GradeStack } from "@/gl/grade/GradeStack";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { useTier } from "@/components/providers/TierProvider";
 
 // The strict blueprint mandate: magenta error state on failure, no silent fallbacks.
 class CanvasErrorBoundary extends Component<
@@ -88,6 +91,8 @@ function DepthTextureProvider({ children }: { children: React.ReactNode }) {
 
 function EventsConcertScene({ bespokeEnv, progressRef }: { bespokeEnv: THREE.Texture | null; progressRef: React.RefObject<number> }) {
   useWarmup("events-arena");
+  const cinematic = isHeroCinematicEnabled("events");
+  const tier = useTier();
 
   return (
     <>
@@ -121,6 +126,8 @@ function EventsConcertScene({ bespokeEnv, progressRef }: { bespokeEnv: THREE.Tex
             penumbra={0.6}
           />
           <JumpingCrowdSilhouettes />
+          {/* Cinematic Grade Profile Crossfade: Sodium amber contrast & high-energy concert grading */}
+          {cinematic && <GradeStack tier={tier} profile="leo-forge" />}
         </React.Suspense>
       </DepthTextureProvider>
     </>

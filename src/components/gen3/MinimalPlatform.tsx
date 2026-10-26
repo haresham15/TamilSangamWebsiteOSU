@@ -1,9 +1,15 @@
 "use client";
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { getScrollProgress } from "./useScrollCinematic";
 import { createHeroKineticsTracker } from "@/lib/heroKinetics";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
+
+const DECK_NORMAL_SCALE = new THREE.Vector2(0.3, 0.3);
+const PLINTH_NORMAL_SCALE = new THREE.Vector2(0.4, 0.4);
+const BRASS_NORMAL_SCALE = new THREE.Vector2(0.35, 0.35);
 
 export function MinimalPlatform() {
   const turntableRef = useRef<THREE.Group>(null);
@@ -12,14 +18,43 @@ export function MinimalPlatform() {
   const kineticsRef = useRef(createHeroKineticsTracker(8.0, 5.0, 4.0));
   const elapsed = useRef(0);
 
+  const cinematic = isHeroCinematicEnabled("events");
+
+  // PBR Texture Maps for elevated turntable and plinth
+  const pbrMaps = useMemo(() => {
+    if (!cinematic) return null;
+    return {
+      deckRough: proceduralPbrMaps.getNoiseRoughness("events-turntable-rough", 256, 256, 0.18, 0.38),
+      deckNormal: proceduralPbrMaps.getBrushedMetalNormal("events-turntable-normal", 256, 256),
+      plinthNormal: proceduralPbrMaps.getGraniteNormal("events-plinth-granite", 256, 256),
+      brassRough: proceduralPbrMaps.getNoiseRoughness("events-brass-rough", 256, 256, 0.12, 0.24),
+      brassNormal: proceduralPbrMaps.getBrushedMetalNormal("events-brass-normal", 256, 256),
+    };
+  }, [cinematic]);
+
+  useEffect(() => {
+    return () => {
+      if (cinematic) {
+        proceduralPbrMaps.release("events-turntable-rough");
+        proceduralPbrMaps.release("events-turntable-normal");
+        proceduralPbrMaps.release("events-plinth-granite");
+        proceduralPbrMaps.release("events-brass-rough");
+        proceduralPbrMaps.release("events-brass-normal");
+      }
+    };
+  }, [cinematic]);
+
   const deckMaterial = useMemo(() => {
     const mat = new THREE.MeshPhysicalMaterial({
       color: "#161210",
-      roughness: 0.32,
-      metalness: 0.82,
-      clearcoat: 0.8,
-      clearcoatRoughness: 0.14,
-      envMapIntensity: 1.8,
+      roughness: cinematic ? 0.28 : 0.32,
+      metalness: cinematic ? 0.88 : 0.82,
+      clearcoat: cinematic ? 0.95 : 0.8,
+      clearcoatRoughness: cinematic ? 0.1 : 0.14,
+      envMapIntensity: cinematic ? 2.2 : 1.8,
+      roughnessMap: pbrMaps?.deckRough ?? null,
+      normalMap: pbrMaps?.deckNormal ?? null,
+      normalScale: cinematic && pbrMaps ? DECK_NORMAL_SCALE : undefined,
     });
     mat.defines = { USE_UV: "" };
 
@@ -46,7 +81,7 @@ export function MinimalPlatform() {
     };
 
     return mat;
-  }, []);
+  }, [cinematic, pbrMaps]);
 
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.05);
@@ -75,10 +110,12 @@ export function MinimalPlatform() {
         <cylinderGeometry args={[3.8, 4.1, 0.12, 48]} />
         <meshPhysicalMaterial
           color="#14110F"
-          roughness={0.55}
+          roughness={cinematic ? 0.62 : 0.55}
           metalness={0.25}
           clearcoat={0.3}
           clearcoatRoughness={0.25}
+          normalMap={pbrMaps?.plinthNormal ?? null}
+          normalScale={cinematic && pbrMaps ? PLINTH_NORMAL_SCALE : undefined}
         />
       </mesh>
 
@@ -88,12 +125,15 @@ export function MinimalPlatform() {
         <meshPhysicalMaterial
           color="#D4AF37"
           emissive="#2A1808"
-          emissiveIntensity={0.18}
-          metalness={0.92}
-          roughness={0.22}
-          clearcoat={0.6}
-          clearcoatRoughness={0.2}
-          envMapIntensity={2.0}
+          emissiveIntensity={cinematic ? 0.22 : 0.18}
+          metalness={cinematic ? 0.95 : 0.92}
+          roughness={cinematic ? 0.18 : 0.22}
+          clearcoat={cinematic ? 0.8 : 0.6}
+          clearcoatRoughness={0.16}
+          envMapIntensity={cinematic ? 2.5 : 2.0}
+          roughnessMap={pbrMaps?.brassRough ?? null}
+          normalMap={pbrMaps?.brassNormal ?? null}
+          normalScale={cinematic && pbrMaps ? BRASS_NORMAL_SCALE : undefined}
         />
       </mesh>
 

@@ -6,6 +6,9 @@ import { useFrame } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
 import { heroState, registerCameraSnapHandler, unregisterCameraSnapHandler, triggerHeroPluck } from "./state";
 import { useTier } from "@/components/providers/TierProvider";
+import { useLiteMode } from "@/context/LiteModeContext";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { createCinemaCameraDamper, smootherstep } from "@/lib/cinemaCameraDamper";
 
 /**
  * LAYER 5: 3-ACT SHALLOW-ANGLE 85MM MACRO CAMERA SPLINE (CatmullRomCurve3)
@@ -14,6 +17,7 @@ import { useTier } from "@/components/providers/TierProvider";
  * - Act II (p = 0.28 -> 0.78): Cinema rail parallel to strings (pos -> [0.9, 0.4, -3.5], lookAt -> [-0.2, 0.0, -7.5])
  *   with subtle ±2° cinema Dutch roll. Plucks Vaaranam Aayiram D-Major9 arpeggio across scroll thresholds.
  * - Act III (p = 0.78 -> 1.00): Rosette resonance close-up with seamless EditorialSheetHandoff
+ * - Cinematic elevation: dual-channel cinema damper, Hermite smootherstep, dynamic FOV & micro-breathing.
  */
 
 const SCROLL_PLUCK_THRESHOLDS = [0.20, 0.32, 0.44, 0.56, 0.68, 0.78];
@@ -26,7 +30,19 @@ export function CameraRig({
   children?: React.ReactNode;
 }) {
   const tier = useTier();
+  const { isLiteMode } = useLiteMode();
   const prefersReducedMotion = useRef(false);
+
+  const damperRef = useRef(
+    createCinemaCameraDamper({
+      lambdaPos: 5.8,
+      lambdaLook: 9.5,
+      breathingAmplitude: 0.003,
+      breathingRoll: 0.002,
+      breathFreqPrimary: 0.26,
+      breathFreqSecondary: 1.12,
+    })
+  );
 
   // Single-damped scroll progress (lambda = 4.2)
   const smoothP = useRef<number>(0.0);
@@ -93,42 +109,87 @@ export function CameraRig({
       initialized.current = true;
     }
 
-    // Single-damper scroll physics (lambda = 4.2)
-    if (isReduced) {
-      smoothP.current = targetP;
-    } else {
-      smoothP.current = THREE.MathUtils.damp(smoothP.current, targetP, 4.2, dt);
-    }
+    const isCinematic = isHeroCinematicEnabled("gallery");
 
-    const p = Math.min(1.0, Math.max(0.0, smoothP.current));
-
-    // Scroll threshold automatic arpeggio pluck trigger
-    SCROLL_PLUCK_THRESHOLDS.forEach((thresh, i) => {
-      if (p >= thresh && lastCrossedThreshold.current < i) {
-        lastCrossedThreshold.current = i;
-        triggerHeroPluck(i, 0.75);
+    if (!isCinematic) {
+      // Baseline single-damper scroll physics (100% rollback preserved)
+      if (isReduced) {
+        smoothP.current = targetP;
+      } else {
+        smoothP.current = THREE.MathUtils.damp(smoothP.current, targetP, 4.2, dt);
       }
-    });
-    if (p < 0.15) {
-      lastCrossedThreshold.current = -1;
-    }
 
-    // Evaluate position and lookAt on splines
-    cameraPath.getPointAt(p, tempPos);
-    lookAtPath.getPointAt(p, tempLook);
+      const p = Math.min(1.0, Math.max(0.0, smoothP.current));
 
-    // Subtle handheld breath sway and Dutch cinema roll
-    const t = state.clock.getElapsedTime();
-    const breath = isReduced ? 0.0 : Math.sin(t * 0.44) * 0.025;
-    const roll = isReduced
-      ? 0.0
-      : Math.sin(p * Math.PI) * 0.035 + Math.sin(t * 0.28) * 0.008; // ±2° Dutch roll
+      // Scroll threshold automatic arpeggio pluck trigger
+      SCROLL_PLUCK_THRESHOLDS.forEach((thresh, i) => {
+        if (p >= thresh && lastCrossedThreshold.current < i) {
+          lastCrossedThreshold.current = i;
+          triggerHeroPluck(i, 0.75);
+        }
+      });
+      if (p < 0.15) {
+        lastCrossedThreshold.current = -1;
+      }
 
-    cam.position.set(tempPos.x, tempPos.y + breath, tempPos.z);
-    currentLookAt.current.lerp(tempLook, Math.min(1.0, 10.0 * dt));
-    cam.lookAt(currentLookAt.current);
-    if (!isReduced && roll !== 0) {
-      cam.rotateZ(roll);
+      // Evaluate position and lookAt on splines
+      cameraPath.getPointAt(p, tempPos);
+      lookAtPath.getPointAt(p, tempLook);
+
+      // Subtle handheld breath sway and Dutch cinema roll
+      const t = state.clock.getElapsedTime();
+      const breath = isReduced ? 0.0 : Math.sin(t * 0.44) * 0.025;
+      const roll = isReduced
+        ? 0.0
+        : Math.sin(p * Math.PI) * 0.035 + Math.sin(t * 0.28) * 0.008; // ±2° Dutch roll
+
+      cam.position.set(tempPos.x, tempPos.y + breath, tempPos.z);
+      currentLookAt.current.lerp(tempLook, Math.min(1.0, 10.0 * dt));
+      cam.lookAt(currentLookAt.current);
+      if (!isReduced && roll !== 0) {
+        cam.rotateZ(roll);
+      }
+    } else {
+      // Cinematic elevation: Hermite smootherstep + dual-channel exponential damper
+      const rawP = Math.min(1.0, Math.max(0.0, targetP));
+      const smoothedP = smootherstep(rawP);
+
+      SCROLL_PLUCK_THRESHOLDS.forEach((thresh, i) => {
+        if (smoothedP >= thresh && lastCrossedThreshold.current < i) {
+          lastCrossedThreshold.current = i;
+          triggerHeroPluck(i, 0.75);
+        }
+      });
+      if (smoothedP < 0.15) {
+        lastCrossedThreshold.current = -1;
+      }
+
+      cameraPath.getPointAt(smoothedP, tempPos);
+      lookAtPath.getPointAt(smoothedP, tempLook);
+
+      const targetRoll = isReduced ? 0.0 : Math.sin(smoothedP * Math.PI) * 0.035;
+      const damped = damperRef.current.update(tempPos, tempLook, smoothedP, dt, {
+        isReducedMotion: isReduced,
+        isLiteMode,
+        additionalRoll: targetRoll,
+      });
+
+      cam.position.copy(damped.position);
+      currentLookAt.current.copy(damped.lookAt);
+      cam.lookAt(damped.lookAt);
+      if (!isReduced && damped.roll !== 0) {
+        cam.rotation.z = damped.roll;
+      }
+
+      // Dynamic FOV expansion: 34° macro -> 42° mid rail -> 32° close-up
+      if ("fov" in cam) {
+        const persCam = cam as THREE.PerspectiveCamera;
+        const targetFov = smoothedP < 0.5
+          ? THREE.MathUtils.lerp(34, 42, smoothedP / 0.5)
+          : THREE.MathUtils.lerp(42, 32, (smoothedP - 0.5) / 0.5);
+        persCam.fov = targetFov;
+        persCam.updateProjectionMatrix();
+      }
     }
 
     // Prop rig position update

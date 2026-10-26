@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useState, useEffect, useRef } from "react";
+import React, { Suspense, useState, useEffect, useRef, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PerspectiveCamera, Environment, BakeShadows } from "@react-three/drei";
@@ -16,6 +16,13 @@ import { useWarmup } from "@/components/gl/useWarmup";
 import { governor } from "@/engine/governor";
 import { SceneRegistrar } from "@/director/wireframe";
 
+import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { useTier } from "@/components/providers/TierProvider";
+import { useLiteMode } from "@/context/LiteModeContext";
+import { GradeStack } from "@/gl/grade/GradeStack";
+
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
@@ -23,6 +30,78 @@ if (typeof window !== "undefined") {
 function BoardSceneWarmup() {
   useWarmup("board-corridor");
   return null;
+}
+
+/**
+ * Micro-Detail 3: Drifting incense embers and golden motes in the royal corridor
+ */
+function CorridorIncenseEmbers() {
+  const pointsRef = useRef<THREE.Points>(null);
+  const tier = useTier();
+  const { isLiteMode } = useLiteMode();
+
+  const particleCount = tier === "A" ? 48 : 24;
+  const { geometry, material, speeds, phases } = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    const spds = new Float32Array(particleCount);
+    const phs = new Float32Array(particleCount);
+
+    let seed = 4321;
+    const rand = () => {
+      seed = (seed * 16807) % 2147483647;
+      return (seed - 1) / 2147483646;
+    };
+
+    for (let i = 0; i < particleCount; i++) {
+      positions[i * 3 + 0] = (rand() - 0.5) * 3.6; // X in [-1.8, 1.8]
+      positions[i * 3 + 1] = 0.3 + rand() * 3.5;   // Y in [0.3, 3.8]
+      positions[i * 3 + 2] = 2.0 + rand() * 30.0;  // Z in [2, 32]
+      spds[i] = 0.08 + rand() * 0.14;              // gentle upward drift
+      phs[i] = rand() * Math.PI * 2;
+    }
+
+    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+    const mat = new THREE.PointsMaterial({
+      color: "#FFAE42",
+      size: 0.05,
+      transparent: true,
+      opacity: 0.65,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+
+    return { geometry: geo, material: mat, speeds: spds, phases: phs };
+  }, [particleCount]);
+
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+      material.dispose();
+    };
+  }, [geometry, material]);
+
+  useFrame(({ clock }, delta) => {
+    if (isLiteMode || tier === "C" || !pointsRef.current) return;
+    const dt = Math.min(delta, 0.05);
+    const t = clock.getElapsedTime();
+    const attr = geometry.attributes.position as THREE.BufferAttribute;
+    const pos = attr.array as Float32Array;
+
+    for (let i = 0; i < particleCount; i++) {
+      pos[i * 3 + 1] += dt * speeds[i];
+      if (pos[i * 3 + 1] > 3.8) {
+        pos[i * 3 + 1] = 0.3;
+      }
+      pos[i * 3 + 0] += Math.sin(t * 0.7 + phases[i]) * 0.0015;
+    }
+    attr.needsUpdate = true;
+  });
+
+  if (isLiteMode || tier === "C") return null;
+
+  return <points ref={pointsRef} geometry={geometry} material={material} />;
 }
 
 interface BoardHeroCanvasProps {
@@ -34,6 +113,8 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
   const sectionRef = useRef<HTMLDivElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const goldOverlayRef = useRef<HTMLDivElement>(null);
+  const tier = useTier();
+  const isCinematic = isHeroCinematicEnabled("board");
 
   const inViewRef = useRef(false);
   const [reducedMotion, setReducedMotion] = useState(() => {
@@ -176,21 +257,46 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
             {bespokeEnv && <Environment map={bespokeEnv} background={false} />}
 
             {/* Ambient & Rim Lighting (Moody torchlight balance, max 0.6 luminance) */}
-            <ambientLight intensity={0.45} color="#40281b" />
-            <directionalLight
-              position={[0, 8, 10]}
-              intensity={1.2}
-              color="#FFE8C2"
-              castShadow
-              shadow-mapSize-width={512}
-              shadow-mapSize-height={512}
-            />
+            {isCinematic ? (
+              <>
+                <ambientLight intensity={0.42} color="#40281b" />
+                <spotLight
+                  position={[0, 6.0, 26.5]}
+                  target-position={[0, 0.65, 23.5]}
+                  angle={0.42}
+                  penumbra={0.7}
+                  intensity={3.5}
+                  color="#FFE09A"
+                  castShadow
+                  shadow-mapSize-width={1024}
+                  shadow-mapSize-height={1024}
+                  shadow-bias={-0.0001}
+                  shadow-normalBias={0.02}
+                />
+                <directionalLight position={[0, 4.0, 15.0]} intensity={0.5} color="#2A1825" />
+                <directionalLight position={[0, -2.0, 20.0]} intensity={0.35} color="#D47B37" />
+                <CorridorIncenseEmbers />
+                <GradeStack tier={tier} profile="darbar-torch" />
+              </>
+            ) : (
+              <>
+                <ambientLight intensity={0.45} color="#40281b" />
+                <directionalLight
+                  position={[0, 8, 10]}
+                  intensity={1.2}
+                  color="#FFE8C2"
+                  castShadow
+                  shadow-mapSize-width={512}
+                  shadow-mapSize-height={512}
+                />
+              </>
+            )}
 
             {/* Static Mandapam Architecture Shadow Baking */}
             <BakeShadows />
 
             {/* Crane Camera Rig with spring-lag inertia (§6) */}
-            <CraneCameraRig scrollProgress={localProgress} />
+            <CraneCameraRig scrollProgress={localProgress} reducedMotion={reducedMotion} />
 
             {/* Floating Imperial Chola Crown placed lower near stone floor so camera glides above it (z = 23.5) */}
             <CholaCrown3D position={[0, 0.65, 23.5]} scale={0.88} />

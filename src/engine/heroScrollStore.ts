@@ -42,3 +42,12 @@ export function setHeroDirectorDotsVisible(visible: boolean) {
 export function setHeroDirectorSpeed(multiplier: number) {
   heroDirectorState.speedMultiplier = Math.max(0.1, Math.min(5.0, multiplier));
 }
+
+if (typeof window !== "undefined") {
+  (window as unknown as { __heroScrollStore?: unknown }).__heroScrollStore = {
+    setScrub: setHeroDirectorScrub,
+    setProgress: setHeroScrollProgress,
+    heroScrollProgress,
+    heroDirectorState,
+  };
+}

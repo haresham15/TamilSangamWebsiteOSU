@@ -5,6 +5,8 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { noise1D } from "./noise";
 
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+
 interface OilLampProps {
   position: [number, number, number];
   phaseOffset?: number;
@@ -16,6 +18,7 @@ interface OilLampProps {
  * - Flame core sits on bloom layer (layers.set(1) / layers.enable(1)) as designated bloom source.
  * - Noise-driven organic flicker with per-instance phase offset (never synchronized).
  * - Real PointLight is only active when `isRealLight` is true (capped at 2-3 scene-wide).
+ * - Micro-Detail 1: Wind flutter tip displacement & dynamic amber irradiance when cinematic enabled.
  */
 const flameVertexShader = `
   varying vec2 vUv;
@@ -30,9 +33,11 @@ const flameFragmentShader = `
   uniform float uTime;
   uniform float uPhase;
   uniform float uIntensity;
+  uniform float uCinematic;
 
   void main() {
-    vec2 centeredUv = vUv - vec2(0.5, 0.28);
+    float windFlutter = uCinematic > 0.5 ? sin(uTime * 14.0 + vUv.y * 7.0 + uPhase * 3.0) * 0.035 * (1.0 - vUv.y) : 0.0;
+    vec2 centeredUv = (vUv - vec2(0.5, 0.28)) + vec2(windFlutter, 0.0);
     float radial = smoothstep(0.48, 0.0, length(centeredUv * vec2(1.5, 0.88)));
     float verticalFade = pow(1.0 - clamp(vUv.y, 0.0, 1.0), 1.6);
     float flicker = 0.92 + 0.08 * sin(uTime * 13.0 + uPhase) * cos(uTime * 7.3);
@@ -53,6 +58,7 @@ export function OilLamp({
       uTime: { value: 0 },
       uPhase: { value: phaseOffset },
       uIntensity: { value: 1.0 },
+      uCinematic: { value: 0.0 },
     }),
     [phaseOffset]
   );
@@ -61,13 +67,19 @@ export function OilLamp({
     const dt = Math.min(delta, 0.05);
     if (dt <= 0) return;
     const time = clock.getElapsedTime();
+    const isCinematic = isHeroCinematicEnabled("board");
     uniforms.uTime.value = time;
+    uniforms.uCinematic.value = isCinematic ? 1.0 : 0.0;
     const n = noise1D(time * 4.2 + phaseOffset * 17.3);
     const flicker = 0.85 + 0.35 * n;
     uniforms.uIntensity.value = flicker * 1.5;
 
     if (isRealLight && pointLightRef.current) {
       pointLightRef.current.intensity = flicker * 2.8;
+      if (isCinematic) {
+        // Micro-Detail 1: warm amber-to-gold radiance shift with flicker
+        pointLightRef.current.color.setRGB(1.0, 0.60 + 0.08 * n, 0.24);
+      }
     }
   });
 

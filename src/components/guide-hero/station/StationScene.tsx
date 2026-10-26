@@ -17,6 +17,12 @@ import { RainStreaks } from "./RainStreaks";
 import { WindowAssembly } from "./WindowAssembly";
 import { SdfSilhouette } from "./SdfSilhouette";
 import { useGuideStore } from "../store/guideStore";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { createCinemaCameraDamper, smootherstep } from "@/lib/cinemaCameraDamper";
+import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
+import { GradeStack } from "@/gl/grade/GradeStack";
+import { useTier } from "@/components/providers/TierProvider";
+import { useLiteMode } from "@/context/LiteModeContext";
 
 interface StationSceneProps {
   progress?: number;
@@ -48,6 +54,26 @@ function StationCamera({
   const targetLookAt = useMemo(() => new THREE.Vector3(), []);
   const [reduceMotion, setReduceMotion] = useState(false);
   const { size } = useThree();
+  const { isLiteMode } = useLiteMode();
+  const isCinematic = isHeroCinematicEnabled("guide");
+
+  const damperRef = useRef(
+    createCinemaCameraDamper({
+      lambdaPos: 6.2,
+      lambdaLook: 9.5,
+      breathingAmplitude: 0.002,
+      breathingRoll: 0.0015,
+      enableBreathing: true,
+    })
+  );
+
+  useEffect(() => {
+    damperRef.current.init(
+      new THREE.Vector3(0.25, 1.48, 3.55),
+      new THREE.Vector3(-0.15, 1.52, 0.0),
+      0
+    );
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -58,6 +84,8 @@ function StationCamera({
   }, []);
 
   const simTime = useRef(0);
+  const tempPos = useMemo(() => new THREE.Vector3(), []);
+  const tempLook = useMemo(() => new THREE.Vector3(), []);
 
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.05);
@@ -66,52 +94,80 @@ function StationCamera({
     const camera = cameraRef.current;
     if (!camera) return;
 
-    const p = getProgress();
+    const rawP = getProgress();
     const aspect = size.width / Math.max(1, size.height);
-    const frame = sampleGuideRail(p, aspect);
 
-    // Handheld micro-drift (amplitude decays as camera rises to the board)
-    const driftAmp = reduceMotion ? 0 : frame.handheldAmplitude;
-    const driftX = Math.sin(simTime.current * 1.8) * driftAmp;
-    const driftY = Math.cos(simTime.current * 1.4) * driftAmp * 0.4;
+    if (!isCinematic) {
+      // 100% Baseline Rollback
+      const frame = sampleGuideRail(rawP, aspect);
+      const driftAmp = reduceMotion ? 0 : frame.handheldAmplitude;
+      const driftX = Math.sin(simTime.current * 1.8) * driftAmp;
+      const driftY = Math.cos(simTime.current * 1.4) * driftAmp * 0.4;
 
-    // Critically damped following (λ ≈ 6)
-    const dampLambda = 6.0;
-    const lerpFactor = 1.0 - Math.exp(-dampLambda * dt);
+      const dampLambda = 6.0;
+      const lerpFactor = 1.0 - Math.exp(-dampLambda * dt);
 
-    const destX = frame.position[0] + driftX;
-    const destY = frame.position[1] + driftY;
-    const destZ = frame.position[2];
+      const destX = frame.position[0] + driftX;
+      const destY = frame.position[1] + driftY;
+      const destZ = frame.position[2];
 
-    currentPos.current.x += (destX - currentPos.current.x) * lerpFactor;
-    currentPos.current.y += (destY - currentPos.current.y) * lerpFactor;
-    currentPos.current.z += (destZ - currentPos.current.z) * lerpFactor;
+      currentPos.current.x += (destX - currentPos.current.x) * lerpFactor;
+      currentPos.current.y += (destY - currentPos.current.y) * lerpFactor;
+      currentPos.current.z += (destZ - currentPos.current.z) * lerpFactor;
 
-    camera.position.copy(currentPos.current);
+      camera.position.copy(currentPos.current);
 
-    const destLookX = frame.lookAt[0] + driftX * 0.2;
-    const destLookY = frame.lookAt[1];
-    const destLookZ = frame.lookAt[2];
+      const destLookX = frame.lookAt[0] + driftX * 0.2;
+      const destLookY = frame.lookAt[1];
+      const destLookZ = frame.lookAt[2];
 
-    currentLookAt.current.x += (destLookX - currentLookAt.current.x) * lerpFactor;
-    currentLookAt.current.y += (destLookY - currentLookAt.current.y) * lerpFactor;
-    currentLookAt.current.z += (destLookZ - currentLookAt.current.z) * lerpFactor;
+      currentLookAt.current.x += (destLookX - currentLookAt.current.x) * lerpFactor;
+      currentLookAt.current.y += (destLookY - currentLookAt.current.y) * lerpFactor;
+      currentLookAt.current.z += (destLookZ - currentLookAt.current.z) * lerpFactor;
 
-    targetLookAt.copy(currentLookAt.current);
-    camera.lookAt(targetLookAt);
+      targetLookAt.copy(currentLookAt.current);
+      camera.lookAt(targetLookAt);
 
-    if (Math.abs(camera.fov - frame.fov) > 0.01) {
-      camera.fov += (frame.fov - camera.fov) * lerpFactor;
-      camera.updateProjectionMatrix();
+      if (Math.abs(camera.fov - frame.fov) > 0.01) {
+        camera.fov += (frame.fov - camera.fov) * lerpFactor;
+        camera.updateProjectionMatrix();
+      }
+
+      if (frame.roll !== 0) {
+        camera.rotateZ(frame.roll);
+      }
+      camera.updateMatrixWorld();
+    } else {
+      // Cinematic Elevation: C1 Hermite smootherstep + Dual-Channel Exponential Damper
+      const smoothP = smootherstep(Math.min(1.0, Math.max(0.0, rawP)));
+      const frame = sampleGuideRail(smoothP, aspect);
+
+      tempPos.set(frame.position[0], frame.position[1], frame.position[2]);
+      tempLook.set(frame.lookAt[0], frame.lookAt[1], frame.lookAt[2]);
+
+      const damped = damperRef.current.update(tempPos, tempLook, smoothP, dt, {
+        isReducedMotion: reduceMotion,
+        isLiteMode,
+        additionalRoll: frame.roll,
+      });
+
+      camera.position.copy(damped.position);
+      camera.lookAt(damped.lookAt);
+
+      if (!reduceMotion && damped.roll !== 0) {
+        camera.rotation.z = damped.roll;
+      }
+
+      const lerpFactor = 1.0 - Math.exp(-6.0 * dt);
+      if (Math.abs(camera.fov - frame.fov) > 0.01) {
+        camera.fov += (frame.fov - camera.fov) * lerpFactor;
+        camera.updateProjectionMatrix();
+      }
+      camera.updateMatrixWorld();
     }
-
-    if (frame.roll !== 0) {
-      camera.rotateZ(frame.roll);
-    }
-    camera.updateMatrixWorld();
 
     if (typeof window !== "undefined" && window.__guideStationCamera) {
-      window.__guideStationCamera.progress = frame.progress;
+      window.__guideStationCamera.progress = rawP;
       window.__guideStationCamera.targetProgress = getTargetProgress();
       window.__guideStationCamera.position[0] = camera.position.x;
       window.__guideStationCamera.position[1] = camera.position.y;
@@ -210,13 +266,32 @@ function CoachBody({ dimmed = false }: { dimmed?: boolean }) {
   const bodyColor = dimmed ? guideStationPalette.haze : guideStationPalette.coach;
   const roofColor = dimmed ? guideStationPalette.hazeBright : guideStationPalette.coachEdge;
   const edgeColor = guideStationPalette.coachEdge;
+  const isCinematic = isHeroCinematicEnabled("guide");
+
+  const coachNormal = useMemo(() => {
+    if (!isCinematic || dimmed) return null;
+    return proceduralPbrMaps.getBrushedMetalNormal("guide-coach-normal", 256, 256);
+  }, [isCinematic, dimmed]);
+
+  useEffect(() => {
+    return () => {
+      if (isCinematic && !dimmed) {
+        proceduralPbrMaps.release("guide-coach-normal");
+      }
+    };
+  }, [isCinematic, dimmed]);
 
   return (
     <group name={dimmed ? "NeighbourCoachBody" : "HeroCoachBody"}>
       {/* Lower coach skirt / underframe beam (y: 0.35m to 0.85m) */}
       <mesh position={[0, 0.60, 0]} castShadow receiveShadow>
         <boxGeometry args={[22, 0.50, 0.42]} />
-        <meshStandardMaterial color={bodyColor} metalness={0.35} roughness={0.45} />
+        <meshStandardMaterial
+          color={bodyColor}
+          metalness={0.35}
+          roughness={isCinematic ? 0.38 : 0.45}
+          normalMap={coachNormal ?? undefined}
+        />
       </mesh>
 
       {/* Corrugated horizontal ribs below window (y: 0.85m to 1.15m) */}
@@ -361,6 +436,24 @@ function CoachBody({ dimmed = false }: { dimmed?: boolean }) {
  * Features dark wet concrete surface, yellow tactile line at z = 0.45m, and cast-iron bench.
  */
 function WetPlatform() {
+  const isCinematic = isHeroCinematicEnabled("guide");
+  const platformTextures = useMemo(() => {
+    if (!isCinematic) return null;
+    return {
+      normal: proceduralPbrMaps.getGraniteNormal("guide-platform-normal", 256, 256),
+      roughness: proceduralPbrMaps.getNoiseRoughness("guide-platform-rough", 256, 256, 0.12, 0.28),
+    };
+  }, [isCinematic]);
+
+  useEffect(() => {
+    return () => {
+      if (isCinematic) {
+        proceduralPbrMaps.release("guide-platform-normal");
+        proceduralPbrMaps.release("guide-platform-rough");
+      }
+    };
+  }, [isCinematic]);
+
   return (
     <group name="WetPlatform">
       {/* Platform slab at y = 0.0m */}
@@ -368,15 +461,23 @@ function WetPlatform() {
         <planeGeometry args={[75, 30]} />
         <meshStandardMaterial
           color={guideStationPalette.platform}
-          metalness={0.35}
-          roughness={0.20}
+          metalness={isCinematic ? 0.45 : 0.35}
+          roughness={isCinematic ? 0.16 : 0.20}
+          normalMap={platformTextures?.normal}
+          roughnessMap={platformTextures?.roughness}
         />
       </mesh>
 
       {/* Yellow tactile safety line at track edge (z = 0.45m) */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0.45]}>
         <planeGeometry args={[75, 0.14]} />
-        <meshBasicMaterial color={guideStationPalette.platformEdge} toneMapped={false} />
+        <meshStandardMaterial
+          color={guideStationPalette.platformEdge}
+          metalness={0.2}
+          roughness={0.3}
+          emissive={isCinematic ? guideStationPalette.platformEdge : "#000000"}
+          emissiveIntensity={isCinematic ? 0.35 : 0}
+        />
       </mesh>
 
       {/* Cast-iron station bench at x = -10, z = 4.5 */}
@@ -581,6 +682,76 @@ function PlatformFigures() {
 }
 
 /**
+ * Atmospheric rain mist particles swirling in the station beam (Alaipayuthey blue-hour).
+ */
+function StationMistyParticles() {
+  const count = 48;
+  const meshRef = useRef<THREE.InstancedMesh>(null);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+
+  const particles = useMemo(() => {
+    return Array.from({ length: count }, (_, i) => ({
+      x: Math.sin(i * 1.7) * 4.2,
+      y: 0.4 + ((i * 1.25) % 4.6),
+      z: 0.8 + Math.cos(i * 2.3) * 2.4,
+      speedY: 0.08 + (i % 7) * 0.02,
+      phase: i * 0.45,
+      scale: 0.012 + (i % 5) * 0.005,
+    }));
+  }, [count]);
+
+  const geo = useMemo(() => new THREE.SphereGeometry(1, 6, 6), []);
+  const mat = useMemo(
+    () =>
+      new THREE.MeshBasicMaterial({
+        color: "#9BD0F5",
+        transparent: true,
+        opacity: 0.32,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    []
+  );
+
+  useEffect(() => {
+    return () => {
+      geo.dispose();
+      mat.dispose();
+    };
+  }, [geo, mat]);
+
+  useFrame((state, delta) => {
+    const mesh = meshRef.current;
+    if (!mesh) return;
+    const t = state.clock.getElapsedTime();
+    const dt = Math.min(delta, 0.05);
+
+    particles.forEach((p, i) => {
+      p.y -= p.speedY * dt;
+      if (p.y < 0.2) p.y = 5.0;
+
+      const swayX = Math.sin(t * 0.8 + p.phase) * 0.08;
+      const swayZ = Math.cos(t * 0.6 + p.phase) * 0.08;
+
+      dummy.position.set(p.x + swayX, p.y, p.z + swayZ);
+      dummy.scale.setScalar(p.scale);
+      dummy.updateMatrix();
+      mesh.setMatrixAt(i, dummy.matrix);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+  });
+
+  return (
+    <instancedMesh
+      ref={meshRef}
+      args={[geo, mat, count]}
+      frustumCulled={false}
+      renderOrder={15}
+    />
+  );
+}
+
+/**
  * The complete Guide Hero v3 "Station Sequence" 3D Scene.
  */
 export function StationScene({
@@ -594,6 +765,8 @@ export function StationScene({
     () => getTargetProgress ?? readProgress,
     [getTargetProgress, readProgress]
   );
+  const tier = useTier();
+  const isCinematic = isHeroCinematicEnabled("guide");
 
   return (
     <>
@@ -605,8 +778,17 @@ export function StationScene({
       <StationCamera getProgress={readProgress} getTargetProgress={readTargetProgress} />
 
       {/* Dedicated Blue-Hour Lighting Rig: Illuminates +z coach face and wet platform */}
-      <hemisphereLight args={[guideStationPalette.rim, guideStationPalette.fog, 0.55]} />
-      <directionalLight position={[2.0, 6.0, 5.0]} intensity={1.8} color="#6CA6D8" />
+      <hemisphereLight args={[guideStationPalette.rim, guideStationPalette.fog, isCinematic ? 0.65 : 0.55]} />
+      <directionalLight
+        position={[2.0, 6.0, 5.0]}
+        intensity={isCinematic ? 2.4 : 1.8}
+        color="#6CA6D8"
+        castShadow={isCinematic}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-bias={-0.0001}
+        shadow-normalBias={0.02}
+      />
       <directionalLight position={[-6.0, 10.0, 8.0]} intensity={0.65} color={guideStationPalette.rim} />
 
       {/* Overhead Platform Mercury-Vapor / Blue-Hour Lamps */}
@@ -620,7 +802,7 @@ export function StationScene({
             <sphereGeometry args={[0.1, 16, 16]} />
             <meshBasicMaterial color="#7CB8F8" toneMapped={false} />
           </mesh>
-          <pointLight color="#5B9BD5" intensity={55} distance={14} decay={1.8} />
+          <pointLight color="#5B9BD5" intensity={isCinematic ? 75 : 55} distance={16} decay={1.8} />
         </group>
       ))}
 
@@ -629,9 +811,13 @@ export function StationScene({
       <PlatformFigures />
       <TrainSet getProgress={readProgress} />
       <RainStreaks />
+      {isCinematic && <StationMistyParticles />}
       <HallRafters />
       <LuminousHaze />
       <StationBoard getProgress={readProgress} board={board} />
+
+      {/* Cinematic LUT & Grade Stack */}
+      {isCinematic && <GradeStack tier={tier} profile="alaipayuthey-bluehour" />}
     </>
   );
 }

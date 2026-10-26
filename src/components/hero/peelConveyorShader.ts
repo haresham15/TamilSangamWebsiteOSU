@@ -248,6 +248,11 @@ export function createPeelConveyorMaterial(
       // PRD §7.6: Tapered tip highlight / terminal glow at strand heads
       float tipHighlight = (1.0 - smoothstep(0.0, 0.40, vDistHead)) * 0.45;
       totalEmissiveRadiance += vec3(1.0, 0.82, 0.35) * tipHighlight;
+
+      // Cinematic Schlick Fresnel edge sheen on thread contours
+      vec3 viewDir = normalize(vViewPosition);
+      float fresnel = pow(1.0 - max(0.0, dot(normalize(vNormal), viewDir)), 3.0);
+      totalEmissiveRadiance += vec3(0.98, 0.72, 0.28) * (fresnel * 0.35);
       `
     );
 

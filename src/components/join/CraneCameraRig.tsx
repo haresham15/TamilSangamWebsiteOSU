@@ -1,14 +1,28 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { createCinemaCameraDamper, smootherstep } from "@/lib/cinemaCameraDamper";
 
 interface CraneCameraRigProps {
   scrollProgressRef: React.RefObject<number>;
 }
 
 export function CraneCameraRig({ scrollProgressRef }: CraneCameraRigProps) {
+  const isCinematic = isHeroCinematicEnabled("join");
+  const damperRef = useRef(
+    createCinemaCameraDamper({
+      lambdaPos: 5.8,
+      lambdaLook: 9.5,
+      enableBreathing: true,
+      breathingAmplitude: 0.003,
+      breathingRoll: 0.0015,
+      breathFreqPrimary: 0.18,
+    })
+  );
+
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
     const p = scrollProgressRef.current ?? 0;
@@ -39,17 +53,55 @@ export function CraneCameraRig({ scrollProgressRef }: CraneCameraRigProps) {
       targetLookY = THREE.MathUtils.lerp(2.6, 2.4, t);
     }
 
-    // Frame-rate independent damped inertia (§1.3)
-    camera.position.x = 0;
-    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 4.8, dt);
-    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 4.8, dt);
+    if (!isCinematic) {
+      // Baseline frame-rate independent damped inertia (§1.3)
+      camera.position.x = 0;
+      camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 4.8, dt);
+      camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 4.8, dt);
+      camera.lookAt(0, targetLookY, -6);
 
-    camera.lookAt(0, targetLookY, -6);
+      if ("fov" in camera) {
+        const targetFov = THREE.MathUtils.lerp(42, 46, p);
+        const persCamera = camera as THREE.PerspectiveCamera;
+        persCamera.fov = THREE.MathUtils.damp(persCamera.fov, targetFov, 4.0, dt);
+        persCamera.updateProjectionMatrix();
+      }
+      return;
+    }
+
+    // Elevated Dual-Channel Cinematic Damper with Hermite Smootherstep & Crane Roll Bank
+    const smoothP = smootherstep(Math.min(1, Math.max(0, p)));
+    const isReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Crane roll banking during the gate swing phase (p=0.25 to 0.75)
+    let craneRoll = 0;
+    if (p > 0.25 && p < 0.75) {
+      const gateT = (p - 0.25) / 0.5;
+      craneRoll = Math.sin(gateT * Math.PI) * 0.0025;
+    }
+
+    const targetPos = new THREE.Vector3(0, targetY, targetZ);
+    const targetLook = new THREE.Vector3(0, targetLookY, -6);
+
+    const dampResult = damperRef.current.update(
+      targetPos,
+      targetLook,
+      smoothP,
+      dt,
+      {
+        isReducedMotion: isReduced,
+        additionalRoll: craneRoll,
+      }
+    );
+
+    camera.position.copy(dampResult.position);
+    camera.lookAt(dampResult.lookAt);
+    camera.rotation.z = dampResult.roll;
 
     if ("fov" in camera) {
-      const targetFov = THREE.MathUtils.lerp(42, 46, p);
+      const targetFov = THREE.MathUtils.lerp(42, 46, smoothP);
       const persCamera = camera as THREE.PerspectiveCamera;
-      persCamera.fov = THREE.MathUtils.damp(persCamera.fov, targetFov, 4.0, dt);
+      persCamera.fov = THREE.MathUtils.damp(persCamera.fov, targetFov, 4.5, dt);
       persCamera.updateProjectionMatrix();
     }
   });

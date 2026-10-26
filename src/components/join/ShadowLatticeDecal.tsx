@@ -1,9 +1,24 @@
-"use client";
-
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import * as THREE from "three";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
 
 export function ShadowLatticeDecal() {
+  const isCinematic = isHeroCinematicEnabled("join");
+
+  const walkwayNormal = useMemo(() => {
+    if (!isCinematic) return null;
+    return proceduralPbrMaps.getGraniteNormal("join-walkway-granite-normal", 256, 256);
+  }, [isCinematic]);
+
+  useEffect(() => {
+    return () => {
+      if (isCinematic) {
+        proceduralPbrMaps.release("join-walkway-granite-normal");
+      }
+    };
+  }, [isCinematic]);
+
   // Load Cobblestone PBR textures with morning dew glints via TextureLoader in useMemo
   const cobblestoneDiffuse = useMemo(() => {
     const tex = new THREE.TextureLoader().load("/textures/join/cobblestone_diffuse.png?v=3");
@@ -29,6 +44,8 @@ export function ShadowLatticeDecal() {
       color: "#D1CCC0",
       map: cobblestoneDiffuse,
       roughnessMap: cobblestoneRoughness,
+      normalMap: walkwayNormal || undefined,
+      normalScale: isCinematic ? new THREE.Vector2(0.5, 0.5) : undefined,
       roughness: 0.95,
       metalness: 0.04,
       transparent: true,
@@ -39,10 +56,24 @@ export function ShadowLatticeDecal() {
         .replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;");
       shader.fragmentShader = shader.fragmentShader
         .replace("#include <common>", "#include <common>\nvarying vec3 vWorldPos;")
-        .replace("#include <dithering_fragment>", "#include <dithering_fragment>\nfloat depthFade = smoothstep(-48.0, -42.0, vWorldPos.z);\ngl_FragColor.a *= depthFade;");
+        .replace(
+          "#include <dithering_fragment>",
+          `#include <dithering_fragment>
+float depthFade = smoothstep(-48.0, -42.0, vWorldPos.z);
+gl_FragColor.a *= depthFade;
+${
+  isCinematic
+    ? `
+// Micro-detail 3: Morning dewdrop specular shimmer on cobblestone
+float dew = smoothstep(0.92, 1.0, sin(vWorldPos.x * 14.0 + vWorldPos.z * 16.0)) * 0.14;
+gl_FragColor.rgb += vec3(1.0, 0.95, 0.85) * dew;
+`
+    : ""
+}`
+        );
     };
     return mat;
-  }, [cobblestoneDiffuse, cobblestoneRoughness]);
+  }, [cobblestoneDiffuse, cobblestoneRoughness, walkwayNormal, isCinematic]);
 
   const curbMaterial = useMemo(() => {
     const mat = new THREE.MeshStandardMaterial({
