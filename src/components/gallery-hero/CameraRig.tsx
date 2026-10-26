@@ -125,10 +125,11 @@ export function CameraRig({
       : Math.sin(p * Math.PI) * 0.035 + Math.sin(t * 0.28) * 0.008; // ±2° Dutch roll
 
     cam.position.set(tempPos.x, tempPos.y + breath, tempPos.z);
-    cam.rotation.z = roll;
-
     currentLookAt.current.lerp(tempLook, Math.min(1.0, 10.0 * dt));
     cam.lookAt(currentLookAt.current);
+    if (!isReduced && roll !== 0) {
+      cam.rotateZ(roll);
+    }
 
     // Prop rig position update
     if (propRigRef && propRigRef.current) {

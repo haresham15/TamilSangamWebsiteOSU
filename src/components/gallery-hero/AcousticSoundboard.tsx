@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { heroState } from "./state";
@@ -312,6 +312,41 @@ export function AcousticSoundboard() {
     return frets;
   }, []);
 
+  const fretMaterial = useMemo(() => {
+    return new THREE.MeshStandardMaterial({
+      color: "#DCDCD7",
+      metalness: 0.96,
+      roughness: 0.16,
+      envMapIntensity: 1.8,
+    });
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      soundboardGeo.dispose();
+      chamberGeo.dispose();
+      xBraceGeo.dispose();
+      rosetteGeo.dispose();
+      shockwaveGeo.dispose();
+      bridgeGeo.dispose();
+      saddleGeo.dispose();
+      pinGeo.dispose();
+      fingerboardGeo.dispose();
+      fretMaterial.dispose();
+    };
+  }, [
+    soundboardGeo,
+    chamberGeo,
+    xBraceGeo,
+    rosetteGeo,
+    shockwaveGeo,
+    bridgeGeo,
+    saddleGeo,
+    pinGeo,
+    fingerboardGeo,
+    fretMaterial,
+  ]);
+
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
     const t = state.clock.getElapsedTime();
@@ -445,14 +480,14 @@ export function AcousticSoundboard() {
       {/* 9. Chamfered Nickel-Silver Frets (Spherical Ends, strictly inside neck width) */}
       <group position={[0, 0.082, 0]}>
         {fretData.map((fret, i) => (
-          <mesh key={i} position={[0, 0, fret.z]} castShadow>
+          <mesh
+            key={i}
+            position={[0, 0, fret.z]}
+            rotation={[0, 0, Math.PI / 2]}
+            material={fretMaterial}
+            castShadow
+          >
             <cylinderGeometry args={[0.024, 0.024, fret.width, 16]} />
-            <meshStandardMaterial
-              color="#DCDCD7"
-              metalness={0.96}
-              roughness={0.16}
-              envMapIntensity={1.8}
-            />
           </mesh>
         ))}
       </group>

@@ -15,6 +15,7 @@ import {
 } from "./palette";
 import { RainStreaks } from "./RainStreaks";
 import { WindowAssembly } from "./WindowAssembly";
+import { SdfSilhouette } from "./SdfSilhouette";
 import { useGuideStore } from "../store/guideStore";
 
 interface StationSceneProps {
@@ -549,6 +550,37 @@ function TrainSet({ getProgress }: { getProgress: () => number }) {
 }
 
 /**
+ * Platform figures that remain stationary on the wet concrete platform (Alaipayuthey homage).
+ * When the train coach translates left along -x during departure (p = 0.35 to 0.85),
+ * the standing man remains stationary on the platform watching the train depart.
+ */
+function PlatformFigures() {
+  return (
+    <group name="StationPlatformFigures">
+      {/* Standing Man SDF on the platform facing +x toward where the train window was */}
+      <SdfSilhouette
+        kind="man"
+        position={[-0.52, 1.52, 0.62]}
+        scale={1.05}
+        fog={true}
+      />
+
+      {/* Atmospheric Blue-Hour Mist Card Behind the Man for silhouette rim contrast */}
+      <mesh position={[-1.1, 1.5, 0.25]} renderOrder={19}>
+        <planeGeometry args={[2.4, 2.0]} />
+        <meshBasicMaterial
+          color="#2A5272"
+          transparent
+          opacity={0.22}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+/**
  * The complete Guide Hero v3 "Station Sequence" 3D Scene.
  */
 export function StationScene({
@@ -594,6 +626,7 @@ export function StationScene({
 
       {/* Scene Elements */}
       <WetPlatform />
+      <PlatformFigures />
       <TrainSet getProgress={readProgress} />
       <RainStreaks />
       <HallRafters />

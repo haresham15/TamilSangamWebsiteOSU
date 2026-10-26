@@ -92,11 +92,18 @@ export function ArchivalPlanes() {
     });
   }, []);
 
+  const haloGeo = useMemo(() => new THREE.PlaneGeometry(1.25, 0.938), []);
+  const borderGeo = useMemo(() => new THREE.PlaneGeometry(1.16, 0.87), []);
+  const photoGeo = useMemo(() => new THREE.PlaneGeometry(1.04, 0.76), []);
+
   useEffect(() => {
     return () => {
       frameBorders.forEach((tex) => tex.dispose());
+      haloGeo.dispose();
+      borderGeo.dispose();
+      photoGeo.dispose();
     };
-  }, [frameBorders]);
+  }, [frameBorders, haloGeo, borderGeo, photoGeo]);
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
@@ -157,8 +164,7 @@ export function ArchivalPlanes() {
             scale={tf.scale as [number, number, number]}
           >
             {/* 1. Golden Backlight Halo Quad (Additive bloom behind frame) */}
-            <mesh position={[0, 0, -0.015]}>
-              <planeGeometry args={[1.25, 1.25]} />
+            <mesh geometry={haloGeo} position={[0, 0, -0.015]}>
               <meshBasicMaterial
                 ref={(mat) => {
                   if (mat) haloMatsRef.current[idx] = mat;
@@ -172,8 +178,7 @@ export function ArchivalPlanes() {
             </mesh>
 
             {/* 2. 35mm Slide Mount Casing with Gold Hairline Border & Index Markings */}
-            <mesh position={[0, 0, 0.005]}>
-              <planeGeometry args={[1.06, 1.06]} />
+            <mesh geometry={borderGeo} position={[0, 0, 0.005]}>
               <meshBasicMaterial
                 map={borderTex}
                 transparent={true}
@@ -183,8 +188,7 @@ export function ArchivalPlanes() {
             </mesh>
 
             {/* 3. Real OSU Tamil Sangam Archival Photograph */}
-            <mesh position={[0, 0, 0]}>
-              <planeGeometry args={[1.0, 0.75]} />
+            <mesh geometry={photoGeo} position={[0, 0, 0]}>
               <meshBasicMaterial
                 map={tex}
                 transparent={true}

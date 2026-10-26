@@ -80,6 +80,17 @@ export function Strings() {
     });
   }, []);
 
+  useEffect(() => {
+    return () => {
+      stringAssets.forEach((asset) => {
+        asset.geo.dispose();
+        asset.material.dispose();
+        asset.streakGeo.dispose();
+        asset.streakMat.dispose();
+      });
+    };
+  }, [stringAssets]);
+
   // 2. Compute string 3D endpoint vectors in guitar group space
   // Bridge saddle: z = -5.35, y = 0.18. Spacing: (i - 2.5) * 0.22
   // Nut: z = 4.8, y = 0.16. Spacing: (i - 2.5) * 0.14
@@ -183,7 +194,7 @@ export function Strings() {
       u.uCameraPos.value.copy(camPos);
 
       // Streak billboard opacity
-      const streakMat = streakMats.current[i];
+      const streakMat = asset.streakMat;
       if (streakMat) {
         streakMat.uniforms.uOpacity.value = THREE.MathUtils.damp(
           streakMat.uniforms.uOpacity.value,
@@ -223,6 +234,7 @@ export function Strings() {
             {/* 2. Anamorphic Horizontal Lens Streak Billboard at Midpoint */}
             <mesh
               geometry={asset.streakGeo}
+              material={asset.streakMat}
               position={tf.midpoint}
               ref={(el) => {
                 if (el) {
@@ -230,17 +242,7 @@ export function Strings() {
                   el.lookAt(stateCameraPosFallback(tf.midpoint));
                 }
               }}
-            >
-              <shaderMaterial
-                ref={(mat) => {
-                  if (mat) streakMats.current[i] = mat;
-                }}
-                {...AnamorphicStreakShader}
-                transparent={true}
-                depthWrite={false}
-                blending={THREE.AdditiveBlending}
-              />
-            </mesh>
+            />
           </group>
         );
       })}

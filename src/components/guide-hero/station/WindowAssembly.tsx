@@ -390,33 +390,7 @@ export function WindowAssembly({ progress = 0, getProgress }: WindowAssemblyProp
       </mesh>
 
       {/* =========================================================================
-          LAYER 9 (z = +0.25): Atmospheric Blue-Hour Mist Card Behind the Man
-          Ensures high contrast for the standing man's silhouette against coach wall
-          ========================================================================= */}
-      <mesh position={[-1.1, 1.5, 0.25]} renderOrder={19}>
-        <planeGeometry args={[2.4, 2.0]} />
-        <meshBasicMaterial
-          color="#2A5272"
-          transparent
-          opacity={0.22}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </mesh>
-
-      {/* =========================================================================
-          LAYER 10 (z = +0.62): Standing Man SDF plane on the platform
-          At x = -0.52, y = 1.52, facing +x toward the woman, scale = 1.05
-          ========================================================================= */}
-      <SdfSilhouette
-        kind="man"
-        position={[-0.52, 1.52, 0.62]}
-        scale={1.05}
-        fog={true}
-      />
-
-      {/* =========================================================================
-          LAYER 11: Wet Puddle Reflection & 6-Bar Shadow Stripe Spill on Platform
+          LAYER 9: Wet Puddle Reflection & 6-Bar Shadow Stripe Spill on Platform
           Directly in front of window (y = 0.005m, z = +2.2m)
           ========================================================================= */}
       <mesh

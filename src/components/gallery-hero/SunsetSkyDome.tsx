@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { heroState } from "./state";
@@ -230,6 +230,13 @@ export function SunsetSkyDome() {
     geo.setAttribute("aSpeed", new THREE.BufferAttribute(speeds, 1));
     return geo;
   }, []);
+
+  useEffect(() => {
+    return () => {
+      domeGeo.dispose();
+      bokehGeo.dispose();
+    };
+  }, [domeGeo, bokehGeo]);
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
