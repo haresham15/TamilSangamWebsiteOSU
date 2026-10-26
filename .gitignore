@@ -49,6 +49,8 @@ next-env.d.ts
 
 # local tools & agent cache
 .codegraph/
+.kiro/
+.agents/rules/global.md
 
 # Runtime data files (generated at runtime, not committed)
 data/*.sqlite
