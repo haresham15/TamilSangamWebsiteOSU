@@ -1,13 +1,35 @@
 // src/components/games-hero/BeachCompoundScene.tsx
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+import { PORTRAIT_STANDOFF_SCALE } from "./gamesRail";
+
+const WORLD_COLORS = {
+  iron: new THREE.Color("#111114"),
+  wall: new THREE.Color("#C98A6B"),
+  compound: new THREE.Color("#B87B5E"),
+  hedge: new THREE.Color("#416B36"),
+  ocean: new THREE.Color("#62D0DC"),
+  trunk: new THREE.Color("#5E4C3D"),
+  palm: new THREE.Color("#2B5738"),
+  cream: new THREE.Color("#EADFC4"),
+  suv: new THREE.Color("#3A3D34"),
+  char: new THREE.Color("#171811"),
+};
+
+function mergeStaticGeometry(parts: THREE.BufferGeometry[]) {
+  const merged = mergeGeometries(parts)!;
+  parts.forEach((part) => part.dispose());
+  return merged;
+}
 
 interface BeachCompoundProps {
   scrollP: number;
   backgroundBokeh: number; // 0 (sharp) to 6.5 (macro out-of-focus bokeh)
+  portrait?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -120,109 +142,36 @@ const sandFragmentShader = /* glsl */ `
 // ---------------------------------------------------------------------------
 // 3. WROUGHT-IRON SPEAR FENCE PANELS & PIERS
 // ---------------------------------------------------------------------------
-function WroughtIronFence({ _backgroundBokeh }: { _backgroundBokeh?: number }) {
-  // Angle along diagonal from [x=-9, z=+4] to [x=-22, z=-34]
-  const pierPositions = useMemo(() => {
-    const list: [number, number, number][] = [];
-    const steps = 9;
-    for (let i = 0; i < steps; i++) {
-      const t = i / (steps - 1);
-      const x = THREE.MathUtils.lerp(-9.0, -22.0, t);
-      const z = THREE.MathUtils.lerp(4.0, -34.0, t);
-      list.push([x, 0, z]);
+function WroughtIronFence() {
+  const { iron, masonry } = useMemo(() => {
+    const ironParts: THREE.BufferGeometry[] = [];
+    const stoneParts: THREE.BufferGeometry[] = [new THREE.BoxGeometry(0.38, 0.9, 28.5).translate(-9.5, 0.45, -21.25)];
+    for (let z = -7; z >= -35; z -= 0.12) {
+      ironParts.push(new THREE.CylinderGeometry(0.016, 0.016, 1.7, 5).translate(-9.5, 1.75, z));
+      ironParts.push(new THREE.ConeGeometry(0.042, 0.2, 4).translate(-9.5, 2.7, z));
+      ironParts.push(new THREE.TorusGeometry(0.055, 0.009, 4, 8).rotateY(Math.PI / 2).translate(-9.5, 1.2, z));
     }
-    return list;
+    for (const y of [1.1, 2.5]) ironParts.push(new THREE.BoxGeometry(0.04, 0.04, 28.5).translate(-9.5, y, -21.25));
+    for (const z of [-16.6, -27.3, -35]) {
+      stoneParts.push(new THREE.BoxGeometry(0.55, 2.7, 0.55).translate(-9.5, 1.35, z));
+      stoneParts.push(new THREE.BoxGeometry(0.68, 0.12, 0.68).translate(-9.5, 2.75, z));
+      stoneParts.push(new THREE.SphereGeometry(0.14, 8, 6).translate(-9.5, 2.86, z));
+    }
+    return { iron: mergeStaticGeometry(ironParts), masonry: mergeStaticGeometry(stoneParts) };
   }, []);
-
-  return (
-    <group name="WroughtIronFenceGroup">
-      {/* Ocean water strip visible beyond the fence on far left */}
-      <mesh position={[-38, -0.15, -15]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[30, 80]} />
-        <meshStandardMaterial
-          color="#289DB0"
-          roughness={0.12}
-          metalness={0.3}
-        />
-      </mesh>
-
-      {/* Terracotta masonry curb */}
-      {pierPositions.map((p, idx) => {
-        if (idx === pierPositions.length - 1) return null;
-        const next = pierPositions[idx + 1];
-        const midX = (p[0] + next[0]) / 2;
-        const midZ = (p[2] + next[2]) / 2;
-        const dx = next[0] - p[0];
-        const dz = next[2] - p[2];
-        const length = Math.sqrt(dx * dx + dz * dz);
-        const rotY = Math.atan2(dx, dz);
-
-        return (
-          <group key={`bay-${idx}`} position={[midX, 0, midZ]} rotation={[0, rotY, 0]}>
-            {/* Low Curb */}
-            <mesh position={[0, 0.275, 0]}>
-              <boxGeometry args={[0.38, 0.55, length]} />
-              <meshStandardMaterial color="#C98A6B" roughness={0.78} />
-            </mesh>
-
-            {/* Wrought-Iron Spear Pickets */}
-            {Array.from({ length: 8 }).map((_, pickIdx) => {
-              const pz = (pickIdx / 7 - 0.5) * (length - 0.5);
-              return (
-                <group key={`picket-${pickIdx}`} position={[0, 0.55, pz]}>
-                  {/* Vertical bar */}
-                  <mesh position={[0, 0.65, 0]}>
-                    <cylinderGeometry args={[0.016, 0.016, 1.3, 8]} />
-                    <meshStandardMaterial color="#111114" roughness={0.35} metalness={0.85} />
-                  </mesh>
-                  {/* Spear finial */}
-                  <mesh position={[0, 1.38, 0]}>
-                    <coneGeometry args={[0.038, 0.16, 4]} />
-                    <meshStandardMaterial color="#1A1A1E" roughness={0.3} metalness={0.9} />
-                  </mesh>
-                  {/* S-scroll ring near bottom */}
-                  <mesh position={[0, 0.25, 0]} rotation={[Math.PI / 2, 0, 0]}>
-                    <torusGeometry args={[0.065, 0.012, 6, 12]} />
-                    <meshStandardMaterial color="#111114" roughness={0.35} metalness={0.85} />
-                  </mesh>
-                </group>
-              );
-            })}
-
-            {/* Top & bottom horizontal iron rails */}
-            <mesh position={[0, 0.72, 0]}>
-              <boxGeometry args={[0.04, 0.04, length]} />
-              <meshStandardMaterial color="#111114" roughness={0.35} metalness={0.85} />
-            </mesh>
-            <mesh position={[0, 1.75, 0]}>
-              <boxGeometry args={[0.04, 0.04, length]} />
-              <meshStandardMaterial color="#111114" roughness={0.35} metalness={0.85} />
-            </mesh>
-          </group>
-        );
-      })}
-
-      {/* Terracotta-Stone Piers */}
-      {pierPositions.map(([px, py, pz], idx) => (
-        <group key={`pier-${idx}`} position={[px, py, pz]}>
-          <mesh position={[0, 1.2, 0]}>
-            <boxGeometry args={[0.55, 2.4, 0.55]} />
-            <meshStandardMaterial color="#B87B5E" roughness={0.8} />
-          </mesh>
-          {/* Pier Cap */}
-          <mesh position={[0, 2.45, 0]}>
-            <boxGeometry args={[0.68, 0.12, 0.68]} />
-            <meshStandardMaterial color="#A56A4F" roughness={0.7} />
-          </mesh>
-          {/* Decorative stone finial sphere */}
-          <mesh position={[0, 2.65, 0]}>
-            <sphereGeometry args={[0.14, 12, 12]} />
-            <meshStandardMaterial color="#D9C7B2" roughness={0.5} />
-          </mesh>
-        </group>
-      ))}
-    </group>
-  );
+  useEffect(() => () => { iron.dispose(); masonry.dispose(); }, [iron, masonry]);
+  return <group name="WroughtIronFenceGroup">
+    <mesh position={[-65.5, -0.6, -95]} rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[109, 210]} />
+      <meshStandardMaterial color={WORLD_COLORS.ocean} roughness={0.18} metalness={0.25} />
+    </mesh>
+    <mesh geometry={masonry}><meshStandardMaterial color={WORLD_COLORS.wall} roughness={0.78} /></mesh>
+    <mesh geometry={iron}><meshStandardMaterial color={WORLD_COLORS.iron} roughness={0.35} metalness={0.85} /></mesh>
+    <mesh position={[-8.4, 0.23, -22]}>
+      <boxGeometry args={[0.65, 0.45, 25]} />
+      <meshStandardMaterial color={WORLD_COLORS.hedge} roughness={0.9} />
+    </mesh>
+  </group>;
 }
 
 // ---------------------------------------------------------------------------
@@ -231,36 +180,35 @@ function WroughtIronFence({ _backgroundBokeh }: { _backgroundBokeh?: number }) {
 function BreachedTerracottaWall() {
   return (
     <group position={[0, 0, -35]} name="BreachedWallGroup">
-      {/* Intact Left Segment (x = -24 to -4.8) */}
-      <mesh position={[-14, 1.8, 0]}>
-        <boxGeometry args={[18.4, 3.6, 0.75]} />
+      {/* The two openings keep the measured 1.6 m clear width. */}
+      <mesh position={[-6.29, 1.225, 0]}>
+        <boxGeometry args={[6.42, 2.45, 0.75]} />
         <meshStandardMaterial color="#B87B5E" roughness={0.82} />
       </mesh>
 
-      {/* Center Segment between Blast Hole 1 & Blast Hole 2 (x = -2.2 to +1.2) */}
-      <mesh position={[-0.5, 1.5, 0]}>
-        <boxGeometry args={[3.4, 3.0, 0.75]} />
+      <mesh position={[0.48, 1.225, 0]}>
+        <boxGeometry args={[3.92, 2.45, 0.75]} />
         <meshStandardMaterial color="#A86E53" roughness={0.85} />
       </mesh>
 
-      {/* Intact Right Segment (x = +3.8 to +24) */}
-      <mesh position={[14, 1.8, 0]}>
-        <boxGeometry args={[20.4, 3.6, 0.75]} />
+      <mesh position={[24.52, 1.225, 0]}>
+        <boxGeometry args={[40.96, 2.45, 0.75]} />
         <meshStandardMaterial color="#B87B5E" roughness={0.82} />
       </mesh>
 
-      {/* Scorched blast hole edges around x = -3.6 and x = +2.6 */}
-      <mesh position={[-3.6, 0.8, 0]}>
-        <boxGeometry args={[1.8, 1.6, 0.85]} />
-        <meshStandardMaterial color="#3A2820" roughness={0.95} />
-      </mesh>
-      <mesh position={[2.6, 0.9, 0]}>
-        <boxGeometry args={[2.0, 1.8, 0.85]} />
+      {[-2.28, 3.24].map((x) => (
+        <mesh key={x} position={[x, 2.075, 0]}>
+          <boxGeometry args={[1.6, 0.75, 0.75]} />
+          <meshStandardMaterial color={WORLD_COLORS.compound} roughness={0.85} />
+        </mesh>
+      ))}
+      <mesh position={[3.24, 0.55, 0]} rotation={[0.2, 0.3, 0.15]}>
+        <dodecahedronGeometry args={[0.85, 0]} />
         <meshStandardMaterial color="#33241C" roughness={0.95} />
       </mesh>
 
       {/* Red Bougainvillea Vines on Upper Wall */}
-      <group position={[-8, 3.5, 0.2]}>
+      <group position={[-8, 2.5, 0.2]}>
         <mesh scale={[1.8, 0.45, 0.35]}>
           <boxGeometry args={[1, 1, 1]} />
           <meshStandardMaterial color="#8B1E3F" roughness={0.7} />
@@ -270,7 +218,7 @@ function BreachedTerracottaWall() {
           <meshStandardMaterial color="#2E5E3A" roughness={0.75} />
         </mesh>
       </group>
-      <group position={[8, 3.5, 0.2]}>
+      <group position={[5, 2.5, 0.2]}>
         <mesh scale={[1.9, 0.45, 0.35]}>
           <boxGeometry args={[1, 1, 1]} />
           <meshStandardMaterial color="#A32448" roughness={0.7} />
@@ -282,11 +230,11 @@ function BreachedTerracottaWall() {
       </group>
 
       {/* Masonry Rubble on sand below holes */}
-      <mesh position={[-3.6, 0.3, 1.2]} rotation={[0.3, 0.5, 0.1]}>
+      <mesh position={[-2.28, 0.3, 1.2]} rotation={[0.3, 0.5, 0.1]}>
         <boxGeometry args={[0.8, 0.45, 0.6]} />
         <meshStandardMaterial color="#B87B5E" roughness={0.9} />
       </mesh>
-      <mesh position={[2.5, 0.25, 1.5]} rotation={[-0.2, 0.4, 0.2]}>
+      <mesh position={[3.24, 0.25, 1.5]} rotation={[-0.2, 0.4, 0.2]}>
         <boxGeometry args={[0.9, 0.4, 0.7]} />
         <meshStandardMaterial color="#945D44" roughness={0.9} />
       </mesh>
@@ -300,15 +248,16 @@ function BreachedTerracottaWall() {
 interface SUVProps {
   position: [number, number, number];
   rotationY?: number;
+  hit: boolean;
 }
 
-function TacticalSUV({ position, rotationY = 0 }: SUVProps) {
+function TacticalSUV({ position, rotationY = 0, hit }: SUVProps) {
   return (
-    <group position={position} rotation={[0, rotationY, 0]}>
+    <group position={position} rotation={[0, rotationY, 0]} scale={[1, 1.61 / 1.9, 1]}>
       {/* Main Boxy Lower Body */}
       <mesh position={[0, 0.75, 0]}>
         <boxGeometry args={[2.1, 0.85, 4.4]} />
-        <meshStandardMaterial color="#2E3330" roughness={0.45} metalness={0.65} />
+        <meshStandardMaterial color={hit ? WORLD_COLORS.char : WORLD_COLORS.suv} roughness={hit ? 0.9 : 0.45} metalness={0.65} />
       </mesh>
 
       {/* Cabin & Windshield */}
@@ -361,7 +310,7 @@ function TacticalSUV({ position, rotationY = 0 }: SUVProps) {
       </mesh>
 
       {/* 2 Dark Villain Silhouettes standing on the roof / flatbed */}
-      <group position={[-0.35, 2.65, -0.4]}>
+      <group position={[-0.35, 2.65, -0.4]} visible={!hit}>
         {/* Torso */}
         <mesh position={[0, -0.3, 0]}>
           <boxGeometry args={[0.38, 0.65, 0.22]} />
@@ -383,7 +332,7 @@ function TacticalSUV({ position, rotationY = 0 }: SUVProps) {
         </mesh>
       </group>
 
-      <group position={[0.45, 2.65, 0.2]}>
+      <group position={[0.45, 2.65, 0.2]} visible={!hit}>
         <mesh position={[0, -0.3, 0]}>
           <boxGeometry args={[0.38, 0.65, 0.22]} />
           <meshStandardMaterial color="#151518" roughness={0.9} />
@@ -410,7 +359,7 @@ function TacticalSUV({ position, rotationY = 0 }: SUVProps) {
 // ---------------------------------------------------------------------------
 function FountainAndGarden() {
   return (
-    <group position={[9.5, 0, -15]} name="GardenFountainGroup">
+    <group position={[12.1, 0, -19.7]} name="GardenFountainGroup" scale={[1, 3.1 / 3.0, 0.55]}>
       {/* Terracotta Octagonal Planter Basin */}
       <mesh position={[0, 0.35, 0]}>
         <cylinderGeometry args={[2.4, 2.6, 0.7, 8]} />
@@ -441,7 +390,7 @@ function FountainAndGarden() {
 
 function PatioUmbrella() {
   return (
-    <group position={[15.5, 0, -26]}>
+    <group position={[20, 0, -30]}>
       {/* Umbrella Pole */}
       <mesh position={[0, 1.6, 0]}>
         <cylinderGeometry args={[0.04, 0.04, 3.2, 8]} />
@@ -449,64 +398,52 @@ function PatioUmbrella() {
       </mesh>
       {/* Canopy */}
       <mesh position={[0, 2.9, 0]}>
-        <coneGeometry args={[2.1, 0.9, 8]} />
-        <meshStandardMaterial color="#FAF5EE" roughness={0.6} side={THREE.DoubleSide} />
+        <coneGeometry args={[1.3, 0.6, 8]} />
+        <meshStandardMaterial color={WORLD_COLORS.cream} roughness={0.6} side={THREE.DoubleSide} />
       </mesh>
     </group>
   );
 }
 
 function PalmGrove() {
-  // 18 coconut palms behind the breached wall (z = -37 to -46)
-  const palmData = useMemo(() => {
-    const list: { pos: [number, number, number]; rotY: number; lean: number; height: number }[] = [];
-    const count = 18;
-    for (let i = 0; i < count; i++) {
-      const x = THREE.MathUtils.lerp(-22, 24, i / (count - 1)) + (Math.sin(i * 3.7) * 2.2);
-      const z = -37.0 - (i % 4) * 2.5;
-      const rotY = (i * 0.7) % (Math.PI * 2);
-      const lean = 0.08 + (Math.sin(i * 1.5) * 0.06);
-      const height = 9.0 + (i % 3) * 1.4;
-      list.push({ pos: [x, 0, z], rotY, lean, height });
+  const { trunks, crowns } = useMemo(() => {
+    const trunkParts: THREE.BufferGeometry[] = [], leafParts: THREE.BufferGeometry[] = [];
+    const leaf = new THREE.PlaneGeometry(1, 1, 1, 16);
+    const vertices = leaf.getAttribute("position");
+    for (let i = 0; i < vertices.count; i++) {
+      const t = vertices.getY(i) + 0.5;
+      const width = Math.sin(t * Math.PI) * (i % 4 < 2 ? 0.50 : 0.34);
+      vertices.setXYZ(i, vertices.getX(i) * width, Math.sin(t * Math.PI) * 0.7 - t * t * 1.4, t * 3.3);
     }
-    return list;
+    leaf.computeVertexNormals();
+    for (let i = 0; i < 19; i++) {
+      const lone = i === 18;
+      const x = lone ? -7.3 : THREE.MathUtils.lerp(5, 40, i / 17) + Math.sin(i * 3.7) * 2.2;
+      const z = lone ? -38 : -37 - (i % 4) * 2.5;
+      const height = lone ? 7.9 : 8.0 + (i % 3) * 1.2;
+      const lean = lone ? 0.025 : 0.08 + Math.sin(i * 1.5) * 0.06;
+      const trunk = new THREE.CylinderGeometry(0.16, 0.28, height, 7, 20).translate(0, height / 2, 0).rotateZ(lean).translate(x, 0, z);
+      trunkParts.push(trunk);
+      for (let j = 0; j < 22; j++) {
+        const angle = j / 22 * Math.PI * 2 + i * 0.7;
+        leafParts.push(leaf.clone().rotateX((j % 3) * 0.16 - 0.08).rotateY(angle).translate(x - Math.sin(lean) * height, height, z));
+      }
+    }
+    leaf.dispose();
+    return { trunks: mergeStaticGeometry(trunkParts), crowns: mergeStaticGeometry(leafParts) };
   }, []);
-
-  return (
-    <group name="PalmGroveGroup">
-      {palmData.map((palm, i) => (
-        <group key={`palm-${i}`} position={palm.pos} rotation={[0, palm.rotY, palm.lean]}>
-          {/* Curved Palm Trunk */}
-          <mesh position={[0, palm.height * 0.5, 0]}>
-            <cylinderGeometry args={[0.22, 0.38, palm.height, 8]} />
-            <meshStandardMaterial color="#5E4C3D" roughness={0.85} />
-          </mesh>
-          {/* Palm Frond Crown */}
-          <group position={[0, palm.height, 0]}>
-            {Array.from({ length: 7 }).map((_, frondIdx) => {
-              const angle = (frondIdx / 7) * Math.PI * 2;
-              return (
-                <mesh
-                  key={`frond-${frondIdx}`}
-                  position={[Math.cos(angle) * 1.2, -0.4, Math.sin(angle) * 1.2]}
-                  rotation={[0.45, angle, -0.3]}
-                >
-                  <coneGeometry args={[0.65, 3.2, 4]} />
-                  <meshStandardMaterial color="#2B5738" roughness={0.65} side={THREE.DoubleSide} />
-                </mesh>
-              );
-            })}
-          </group>
-        </group>
-      ))}
-    </group>
-  );
+  useEffect(() => () => { trunks.dispose(); crowns.dispose(); }, [trunks, crowns]);
+  return <group name="PalmGroveGroup">
+    <mesh geometry={trunks}><meshStandardMaterial color={WORLD_COLORS.trunk} roughness={0.85} /></mesh>
+    <mesh geometry={crowns}><meshStandardMaterial color={WORLD_COLORS.palm} roughness={0.65} side={THREE.DoubleSide} /></mesh>
+  </group>;
 }
 
 // ---------------------------------------------------------------------------
 // MASTER BEACH COMPOUND COMPONENT
 // ---------------------------------------------------------------------------
-export function BeachCompoundScene({ scrollP: _scrollP, backgroundBokeh }: BeachCompoundProps) {
+export function BeachCompoundScene({ scrollP, backgroundBokeh, portrait = false }: BeachCompoundProps) {
+  const standoffScale = portrait ? PORTRAIT_STANDOFF_SCALE : 1;
   const skyUniforms = useMemo(
     () => ({
       uZenithColor: { value: new THREE.Color("#4DB6CE") },
@@ -541,6 +478,12 @@ export function BeachCompoundScene({ scrollP: _scrollP, backgroundBokeh }: Beach
         color="#FFF4D6"
         castShadow
         shadow-mapSize={[2048, 2048]}
+        shadow-bias={-0.0004}
+        shadow-normalBias={0.02}
+        shadow-camera-left={-30}
+        shadow-camera-right={30}
+        shadow-camera-top={20}
+        shadow-camera-bottom={-20}
       />
       <hemisphereLight
         color="#7CE0F4"
@@ -549,7 +492,7 @@ export function BeachCompoundScene({ scrollP: _scrollP, backgroundBokeh }: Beach
       />
 
       {/* 1. Procedural Sky Dome */}
-      <mesh position={[0, 0, 0]} scale={[200, 200, 200]} renderOrder={-1000}>
+      <mesh position={[0, 0, 0]} scale={[300, 300, 300]} renderOrder={-1000}>
         <sphereGeometry args={[1, 32, 24]} />
         <shaderMaterial
           vertexShader={skyVertexShader}
@@ -562,7 +505,7 @@ export function BeachCompoundScene({ scrollP: _scrollP, backgroundBokeh }: Beach
 
       {/* 2. Golden Beach Sand Floor */}
       <mesh
-        position={[0, 0, -15]}
+        position={[0, 0, -14]}
         rotation={[-Math.PI / 2, 0, 0]}
         receiveShadow
       >
@@ -575,15 +518,17 @@ export function BeachCompoundScene({ scrollP: _scrollP, backgroundBokeh }: Beach
       </mesh>
 
       {/* 3. Left Wrought-Iron Spear Fence on Curb */}
-      <WroughtIronFence _backgroundBokeh={backgroundBokeh} />
+      <WroughtIronFence />
 
       {/* 4. Breached Terracotta Wall at z = -35m */}
-      <BreachedTerracottaWall />
+      <group position={[0.43 * (1 - standoffScale), 0, 0]} scale={[standoffScale, 1, 1]}>
+        <BreachedTerracottaWall />
 
       {/* 5. The 3 Tactical 4x4 SUVs at z = -31m */}
-      <TacticalSUV position={[-6.2, 0, -31]} rotationY={0.06} />
-      <TacticalSUV position={[-0.5, 0, -31]} rotationY={0.0} />
-      <TacticalSUV position={[5.2, 0, -31]} rotationY={-0.08} />
+        <TacticalSUV position={[-4.06, 0, -31]} hit={scrollP >= 0.640} />
+        <TacticalSUV position={[0.43, 0, -31]} hit={scrollP >= 0.646} />
+        <TacticalSUV position={[4.92, 0, -31]} hit={scrollP >= 0.652} />
+      </group>
 
       {/* 6. Right Marble Fountain & Patio Umbrella */}
       <FountainAndGarden />
