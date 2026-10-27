@@ -32,11 +32,13 @@ export const blurFragment = /* glsl */ `
     for (int i = 0; i < 32; i++) {
       if (float(i) >= uTaps) break;
       float radius = sqrt((float(i) + 0.5) / uTaps);
-      float angle = float(i) * 2.39996323; // Golden angle Vogel disc
+      float angle = float(i) * 2.39996323; // Golden angle Vogel disc (137.508 deg)
       vec2 sampleUv = vUv + vec2(cos(angle), sin(angle)) * radius * uRadius * radiusScale;
       vec4 sampleColor = texture2D(uSource, clamp(sampleUv, 0.0, 1.0));
       float luma = dot(sampleColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-      float weight = 1.0 + uHighlightBoost * 3.0 * smoothstep(0.8, 1.6, luma);
+      // Cinema 35mm bokeh: sample weighting with highlight bloom and subtle iris edge ring
+      float irisRing = 1.0 + 0.22 * smoothstep(0.65, 0.98, radius);
+      float weight = (1.0 + uHighlightBoost * 2.5 * smoothstep(0.75, 1.2, luma)) * irisRing;
       sum += sampleColor * weight;
       totalWeight += weight;
     }
