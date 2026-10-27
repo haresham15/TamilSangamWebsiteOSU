@@ -1,307 +1,151 @@
-// src/components/games-hero/EyeglassHandRig.tsx
 "use client";
 
-import React, { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { useFrame } from "@react-three/fiber";
-import { evaluateForegroundRig } from "./gamesRail";
+import { evaluateForegroundRig, LENS_CENTERS, LENS_HEIGHT, LENS_WIDTH } from "./gamesRail";
 
-interface EyeglassHandRigProps {
-  scrollP: number;
-  foregroundBlur: number; // 0 (tack sharp) to 5.0 (soft defocus blur)
+const palette = {
+  acetate: "#08080A", silver: "#B9BDC2", skin: "#7A3B22",
+  sky: "#F4F6F4", coating: "#7FE3D0", mask: "#FFFFFF",
+};
+
+function roundedLens(path: THREE.Path, width: number, height: number, radius: number) {
+  const x = width / 2;
+  const y = height / 2;
+  const bottom = x / 1.04;
+  path.moveTo(-bottom + radius, -y);
+  path.lineTo(bottom - radius, -y);
+  path.quadraticCurveTo(bottom, -y, bottom, -y + radius);
+  path.lineTo(x, y - radius);
+  path.quadraticCurveTo(x, y, x - radius, y);
+  path.lineTo(-x + radius, y);
+  path.quadraticCurveTo(-x, y, -x, y - radius);
+  path.lineTo(-bottom, -y + radius);
+  path.quadraticCurveTo(-bottom, -y, -bottom + radius, -y);
+  path.closePath();
 }
 
-/**
- * Procedural Glass Lens Shader with Optical Refraction Zoom & Contrast Boost
- */
-const lensVertexShader = /* glsl */ `
-  varying vec2 vUv;
-  varying vec3 vWorldNormal;
-  varying vec3 vViewPosition;
-  void main() {
-    vUv = uv;
-    vWorldNormal = normalize(normalMatrix * normal);
-    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-    vViewPosition = -mvPosition.xyz;
-    gl_Position = projectionMatrix * mvPosition;
-  }
-`;
+function mergeParts(parts: THREE.BufferGeometry[]) {
+  const triangles = parts.map(part => part.index ? part.toNonIndexed() : part);
+  const geometry = mergeGeometries(triangles);
+  new Set([...parts, ...triangles]).forEach(part => part.dispose());
+  if (!geometry) throw new Error("Beach Blast rig geometry attributes do not match");
+  return geometry;
+}
 
-const lensFragmentShader = /* glsl */ `
-  uniform float uRefractionZoom;
-  uniform float uContrastBoost;
-  uniform vec3 uTint;
-  uniform float uOpacity;
-  varying vec2 vUv;
-  varying vec3 vWorldNormal;
-  varying vec3 vViewPosition;
+function capsuleBetween(a: number[], b: number[], radius: number) {
+  const start = new THREE.Vector3(...a);
+  const end = new THREE.Vector3(...b);
+  const delta = end.clone().sub(start);
+  const geometry = new THREE.CapsuleGeometry(radius, delta.length(), 4, 8);
+  geometry.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), delta.normalize()));
+  geometry.translate(...start.add(end).multiplyScalar(0.5).toArray());
+  return geometry;
+}
 
-  void main() {
-    vec3 normal = normalize(vWorldNormal);
-    vec3 viewDir = normalize(vViewPosition);
-
-    // Fresnel reflectance rim
-    float fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 3.0);
-
-    // Subtle anti-reflective coating sheen (cyan-green tint on glancing angle)
-    vec3 arSheen = vec3(0.35, 0.95, 0.85) * fresnel * 0.45;
-
-    // Center lens clear transmission with warm golden tint from explosions
-    vec3 baseGlass = uTint;
-    if (uContrastBoost > 0.01) {
-      baseGlass = mix(baseGlass, vec3(1.05, 0.92, 0.75), uContrastBoost * 0.5);
-    }
-
-    vec3 finalColor = baseGlass + arSheen;
-    float alpha = clamp(0.12 + fresnel * 0.4 + uContrastBoost * 0.15, 0.0, 1.0) * uOpacity;
-
-    gl_FragColor = vec4(finalColor, alpha);
-  }
-`;
-
-export function EyeglassHandRig({ scrollP, foregroundBlur }: EyeglassHandRigProps) {
+/** Real aperture holes; focus is applied to premultiplied foreground colour by the compositor. */
+export function EyeglassHandRig({ scrollP }: { scrollP: number; foregroundBlur?: number }) {
   const groupRef = useRef<THREE.Group>(null);
-
-  // Compute glasses frame geometry using ExtrudeGeometry with 2 rectangular lens cutouts
-  const frameGeometry = useMemo(() => {
+  const resources = useMemo(() => {
     const shape = new THREE.Shape();
-    // Outer frame bounds: width 0.28m, height 0.098m
-    const w = 0.145;
-    const h = 0.049;
-    const r = 0.012; // corner radius
+    roundedLens(shape, 0.071, 0.054, 0.012);
+    const aperture = new THREE.Path();
+    roundedLens(aperture, LENS_WIDTH, LENS_HEIGHT, 0.009);
+    shape.holes.push(aperture);
+    const rim = new THREE.ExtrudeGeometry(shape, { depth: 0.006, bevelEnabled: true, bevelSegments: 3, bevelSize: 0.0008, bevelThickness: 0.0008, steps: 1, curveSegments: 10 });
+    const frameParts: THREE.BufferGeometry[] = LENS_CENTERS.map(x => rim.clone().translate(x, 0, 0));
+    rim.dispose();
+    const bridge = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.012, 0.016, 0), new THREE.Vector3(0, 0.021, 0), new THREE.Vector3(0.012, 0.016, 0),
+    ]);
+    frameParts.push(new THREE.TubeGeometry(bridge, 12, 0.0028, 6, false));
+    for (const side of [-1, 1]) {
+      const temple = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(side * 0.073, 0.016, 0),
+        new THREE.Vector3(side * 0.074, 0.019, 0.055),
+        new THREE.Vector3(side * 0.071, 0.024, 0.115),
+        new THREE.Vector3(side * 0.067, 0.009, 0.144),
+      ]);
+      frameParts.push(new THREE.TubeGeometry(temple, 16, 0.0035, 6, false));
+    }
+    const frame = mergeParts(frameParts);
+    const lensShape = new THREE.Shape();
+    roundedLens(lensShape, LENS_WIDTH, LENS_HEIGHT, 0.009);
+    const lens = new THREE.ShapeGeometry(lensShape, 12);
 
-    shape.moveTo(-w + r, -h);
-    shape.lineTo(w - r, -h);
-    shape.quadraticCurveTo(w, -h, w, -h + r);
-    shape.lineTo(w, h - r);
-    shape.quadraticCurveTo(w, h, w - r, h);
-    shape.lineTo(-w + r, h);
-    shape.quadraticCurveTo(-w, h, -w, h - r);
-    shape.lineTo(-w, -h + r);
-    shape.quadraticCurveTo(-w, -h, -w + r, -h);
-
-    // Left Lens Cutout (centered at x = -0.068, y = 0)
-    const leftHole = new THREE.Path();
-    const lw = 0.057;
-    const lh = 0.038;
-    const lr = 0.008;
-    const lx = -0.068;
-    leftHole.moveTo(lx - lw + lr, -lh);
-    leftHole.lineTo(lx + lw - lr, -lh);
-    leftHole.quadraticCurveTo(lx + lw, -lh, lx + lw, -lh + lr);
-    leftHole.lineTo(lx + lw, lh - lr);
-    leftHole.quadraticCurveTo(lx + lw, lh, lx + lw - lr, lh);
-    leftHole.lineTo(lx - lw + lr, lh);
-    leftHole.quadraticCurveTo(lx - lw, lh, lx - lw, lh - lr);
-    leftHole.lineTo(lx - lw, -lh + lr);
-    leftHole.quadraticCurveTo(lx - lw, -lh, lx - lw + lr, -lh);
-    shape.holes.push(leftHole);
-
-    // Right Lens Cutout (centered at x = +0.068, y = 0)
-    const rightHole = new THREE.Path();
-    const rx = 0.068;
-    rightHole.moveTo(rx - lw + lr, -lh);
-    rightHole.lineTo(rx + lw - lr, -lh);
-    rightHole.quadraticCurveTo(rx + lw, -lh, rx + lw, -lh + lr);
-    rightHole.lineTo(rx + lw, lh - lr);
-    rightHole.quadraticCurveTo(rx + lw, lh, rx + lw - lr, lh);
-    rightHole.lineTo(rx - lw + lr, lh);
-    rightHole.quadraticCurveTo(rx - lw, lh, rx - lw, lh - lr);
-    rightHole.lineTo(rx - lw, -lh + lr);
-    rightHole.quadraticCurveTo(rx - lw, -lh, rx - lw + lr, -lh);
-    shape.holes.push(rightHole);
-
-    const extrudeSettings: THREE.ExtrudeGeometryOptions = {
-      depth: 0.014,
-      bevelEnabled: true,
-      bevelSegments: 4,
-      steps: 1,
-      bevelSize: 0.0035,
-      bevelThickness: 0.0035,
-    };
-
-    return new THREE.ExtrudeGeometry(shape, extrudeSettings);
-  }, []);
-
-  // Material: Glossy Jet-Black Acetate
-  const acetateMaterial = useMemo(() => {
-    return new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#08080A"),
-      roughness: 0.12,
-      metalness: 0.1,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.06,
-      reflectivity: 0.9,
+    // Static connected grip: rounded palm, articulated capsule phalanges and tapered forearm.
+    const palm = new THREE.SphereGeometry(1, 16, 12);
+    palm.scale(0.0425, 0.0475, 0.015);
+    palm.rotateZ(-0.45);
+    palm.translate(0.135, 0.067, 0.034);
+    const handParts: THREE.BufferGeometry[] = [palm];
+    const fingers = [
+      [[0.107, 0.086, 0.038], [0.091, 0.059, 0.050], [0.083, 0.032, 0.044], [0.077, 0.013, 0.020]],
+      [[0.127, 0.078, 0.036], [0.113, 0.043, 0.054], [0.105, 0.020, 0.043], [0.093, 0.014, 0.024]],
+      [[0.146, 0.072, 0.031], [0.134, 0.037, 0.046], [0.126, 0.015, 0.034], [0.115, 0.019, 0.019]],
+      [[0.161, 0.065, 0.026], [0.154, 0.036, 0.039], [0.145, 0.019, 0.028], [0.135, 0.022, 0.015]],
+      [[0.110, 0.049, 0.035], [0.083, 0.029, 0.049], [0.072, 0.012, 0.037]],
+    ];
+    fingers.forEach((finger, index) => {
+      for (let segment = 0; segment < finger.length - 1; segment++) {
+        handParts.push(capsuleBetween(finger[segment], finger[segment + 1], (index === 4 ? 0.012 : 0.010 - index * 0.001) * (1 - segment * 0.12)));
+      }
     });
+    const forearm = new THREE.CylinderGeometry(0.033, 0.025, 0.28, 14);
+    forearm.rotateZ(-0.70);
+    forearm.translate(0.235, 0.181, 0.026);
+    handParts.push(forearm);
+    const hand = mergeParts(handParts);
+
+    const pixels = new Uint8Array(512 * 512 * 4);
+    for (let y = 0; y < 512; y++) {
+      for (let x = 0; x < 512; x++) {
+        const i = (y * 512 + x) * 4;
+        const pore = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+        pixels[i] = 128 + 20 * (pore - Math.floor(pore) - 0.5);
+        pixels[i + 1] = 128 + 12 * Math.sin(y * 0.7 + Math.sin(x * 0.06));
+        pixels[i + 2] = 253;
+        pixels[i + 3] = 255;
+      }
+    }
+    const skinNormal = new THREE.DataTexture(pixels, 512, 512);
+    skinNormal.wrapS = skinNormal.wrapT = THREE.RepeatWrapping;
+    skinNormal.needsUpdate = true;
+    const acetate = new THREE.MeshPhysicalMaterial({ color: palette.acetate, roughness: 0.12, metalness: 0.04, clearcoat: 1, clearcoatRoughness: 0.06 });
+    const skin = new THREE.MeshPhysicalMaterial({ color: palette.skin, roughness: 0.18, clearcoat: 0.65, clearcoatRoughness: 0.09, normalMap: skinNormal, normalScale: new THREE.Vector2(0.35, 0.35) });
+    const silver = new THREE.MeshStandardMaterial({ color: palette.silver, metalness: 1, roughness: 0.15 });
+    const mask = new THREE.MeshBasicMaterial({ color: palette.mask, side: THREE.DoubleSide });
+    const glint = new THREE.MeshBasicMaterial({ color: palette.coating, transparent: true, opacity: 0.35, depthWrite: false, blending: THREE.AdditiveBlending });
+    const sheen = new THREE.MeshBasicMaterial({ color: palette.sky, transparent: true, opacity: 0.05, depthWrite: false, blending: THREE.AdditiveBlending });
+    const pin = new THREE.CylinderGeometry(0.00175, 0.00175, 0.008, 8);
+    const highlight = new THREE.PlaneGeometry(0.012, 0.006);
+    return { frame, lens, hand, skinNormal, acetate, skin, silver, mask, glint, sheen, pin, highlight };
   }, []);
 
-  // Silver Hinge Pin Material
-  const silverMaterial = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#D8DCDE"),
-      roughness: 0.22,
-      metalness: 0.95,
-    });
-  }, []);
+  useEffect(() => () => Object.values(resources).forEach(resource => resource.dispose()), [resources]);
 
-  // Sun-Bronzed Skin Material with Wet Specular Highlights
-  const skinMaterial = useMemo(() => {
-    return new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#7A3B22"), // Mid mahogany
-      roughness: 0.22, // Wet sheen
-      metalness: 0.04,
-      clearcoat: 0.75, // Sweat/oil sheen
-      clearcoatRoughness: 0.12,
-      reflectivity: 0.6,
-    });
-  }, []);
-
-  // Glass Lens Shader Uniforms
-  const lensUniforms = useMemo(
-    () => ({
-      uRefractionZoom: { value: 1.0 },
-      uContrastBoost: { value: 0.0 },
-      uTint: { value: new THREE.Color("#E8F4F8") },
-      uOpacity: { value: 1.0 },
-    }),
-    []
-  );
-
-  useFrame(() => {
+  useFrame(({ camera }) => {
     if (!groupRef.current) return;
-    const rig = evaluateForegroundRig(scrollP);
-
+    const rig = evaluateForegroundRig(scrollP, (camera as THREE.PerspectiveCamera).aspect);
     groupRef.current.position.copy(rig.position);
     groupRef.current.rotation.copy(rig.rotation);
-    groupRef.current.visible = rig.opacity > 0.01;
-
-    // Lens optical response in Beat 3
-    if (scrollP >= 0.52) {
-      const snap = Math.min(1.0, (scrollP - 0.52) / 0.12);
-      lensUniforms.uRefractionZoom.value = 1.0 + snap * 0.08;
-      lensUniforms.uContrastBoost.value = snap * 0.18;
-    } else {
-      lensUniforms.uRefractionZoom.value = 1.0;
-      lensUniforms.uContrastBoost.value = 0.0;
-    }
-    lensUniforms.uOpacity.value = rig.opacity;
-
-    // Apply foreground blur defocus to materials when snapping to distant SUVs in Beat 3
-    if (foregroundBlur > 0.05) {
-      acetateMaterial.roughness = Math.min(0.85, 0.12 + foregroundBlur * 0.12);
-      skinMaterial.roughness = Math.min(0.88, 0.22 + foregroundBlur * 0.14);
-      acetateMaterial.clearcoat = Math.max(0.1, 1.0 - foregroundBlur * 0.18);
-      skinMaterial.clearcoat = Math.max(0.1, 0.75 - foregroundBlur * 0.14);
-    } else {
-      acetateMaterial.roughness = 0.12;
-      skinMaterial.roughness = 0.22;
-      acetateMaterial.clearcoat = 1.0;
-      skinMaterial.clearcoat = 0.75;
-    }
+    groupRef.current.visible = rig.opacity > 0;
   });
 
   return (
-    <group ref={groupRef} name="EyeglassHandRigGroup">
-      {/* ------------------------------------------------------------------ */}
-      {/* 1. JET-BLACK RECTANGULAR ACETATE EYEGLASSES                        */}
-      {/* ------------------------------------------------------------------ */}
-      <group name="GlassesFrameAssembly">
-        {/* Main Extruded Frame with 2 Lens Apertures */}
-        <mesh geometry={frameGeometry} material={acetateMaterial} castShadow />
-
-        {/* Left Temple Arm (hinged backward at x = -0.142) */}
-        <mesh position={[-0.142, 0.018, -0.09]} rotation={[0, -0.12, 0]}>
-          <boxGeometry args={[0.009, 0.022, 0.18]} />
-          <primitive object={acetateMaterial} attach="material" />
-        </mesh>
-        {/* Left Silver Hinge Pin */}
-        <mesh position={[-0.138, 0.024, 0.008]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.0022, 0.0022, 0.006, 8]} />
-          <primitive object={silverMaterial} attach="material" />
-        </mesh>
-
-        {/* Right Temple Arm (hinged backward at x = +0.142, gripped by hand) */}
-        <mesh position={[0.142, 0.018, -0.09]} rotation={[0, 0.12, 0]}>
-          <boxGeometry args={[0.009, 0.022, 0.18]} />
-          <primitive object={acetateMaterial} attach="material" />
-        </mesh>
-        {/* Right Silver Hinge Pin */}
-        <mesh position={[0.138, 0.024, 0.008]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.0022, 0.0022, 0.006, 8]} />
-          <primitive object={silverMaterial} attach="material" />
-        </mesh>
-
-        {/* Left Glass Lens */}
-        <mesh position={[-0.068, 0, 0.006]}>
-          <boxGeometry args={[0.114, 0.076, 0.003]} />
-          <shaderMaterial
-            vertexShader={lensVertexShader}
-            fragmentShader={lensFragmentShader}
-            uniforms={lensUniforms}
-            transparent
-            depthWrite={false}
-          />
-        </mesh>
-
-        {/* Right Glass Lens */}
-        <mesh position={[0.068, 0, 0.006]}>
-          <boxGeometry args={[0.114, 0.076, 0.003]} />
-          <shaderMaterial
-            vertexShader={lensVertexShader}
-            fragmentShader={lensFragmentShader}
-            uniforms={lensUniforms}
-            transparent
-            depthWrite={false}
-          />
-        </mesh>
-      </group>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 2. SCULPTED SUN-BRONZED RIGHT HAND GRIPPING THE FRAME              */}
-      {/* ------------------------------------------------------------------ */}
-      <group position={[0.18, 0.045, -0.02]} name="HandAndArmRig">
-        {/* Thumb: pressing the inner/upper right corner of the frame */}
-        <mesh position={[-0.032, -0.012, 0.025]} rotation={[-0.35, 0.45, 0.2]}>
-          <capsuleGeometry args={[0.013, 0.045, 8, 8]} />
-          <primitive object={skinMaterial} attach="material" />
-        </mesh>
-
-        {/* Index Finger: curled over the top-right frame corner */}
-        <mesh position={[-0.018, 0.028, -0.012]} rotation={[0.4, 0.15, -0.5]}>
-          <capsuleGeometry args={[0.011, 0.048, 8, 8]} />
-          <primitive object={skinMaterial} attach="material" />
-        </mesh>
-
-        {/* Middle Finger: curled along the right temple arm */}
-        <mesh position={[-0.006, 0.012, -0.042]} rotation={[0.2, 0.1, -0.3]}>
-          <capsuleGeometry args={[0.011, 0.052, 8, 8]} />
-          <primitive object={skinMaterial} attach="material" />
-        </mesh>
-
-        {/* Ring Finger: tucked behind */}
-        <mesh position={[0.012, -0.008, -0.065]} rotation={[0.1, 0.05, -0.2]}>
-          <capsuleGeometry args={[0.01, 0.048, 8, 8]} />
-          <primitive object={skinMaterial} attach="material" />
-        </mesh>
-
-        {/* Pinky Finger: tucked behind ring finger */}
-        <mesh position={[0.026, -0.025, -0.082]} rotation={[0.05, 0.0, -0.1]}>
-          <capsuleGeometry args={[0.009, 0.042, 8, 8]} />
-          <primitive object={skinMaterial} attach="material" />
-        </mesh>
-
-        {/* Palm & Knuckles */}
-        <mesh position={[0.025, 0.015, -0.045]} rotation={[0.1, 0.2, -0.25]}>
-          <boxGeometry args={[0.045, 0.065, 0.075]} />
-          <primitive object={skinMaterial} attach="material" />
-        </mesh>
-
-        {/* Muscular Wrist & Forearm angling up-right toward upper-right frame edge */}
-        <mesh position={[0.095, 0.075, -0.095]} rotation={[-0.45, 0.4, -0.75]}>
-          <cylinderGeometry args={[0.034, 0.042, 0.22, 12]} />
-          <primitive object={skinMaterial} attach="material" />
-        </mesh>
-      </group>
+    <group ref={groupRef} name="EyeglassHandRigGroup" dispose={null}>
+      <mesh geometry={resources.frame} material={resources.acetate} name="GlassesFrameAssembly" />
+      <mesh geometry={resources.hand} material={resources.skin} name="HandAndArmRig" />
+      {LENS_CENTERS.map((x, index) => (
+        <group key={x}>
+          <mesh name={index === 0 ? "LeftLensMask" : "RightLensMask"} position={[x, 0, 0]} geometry={resources.lens} material={resources.mask} layers={2} />
+          <mesh position={[x - 0.011, 0.011, 0.004]} rotation={[0, 0, -0.55]} geometry={resources.highlight} material={resources.sheen} />
+          <mesh position={[Math.sign(x) * 0.073, 0.015, 0.004]} geometry={resources.pin} material={resources.silver} />
+        </group>
+      ))}
+      <mesh position={[0.057, -0.012, 0.004]} rotation={[0, 0, -0.35]} geometry={resources.highlight} material={resources.glint} />
     </group>
   );
 }
