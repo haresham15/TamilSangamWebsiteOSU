@@ -823,6 +823,10 @@ class SoundEngine {
     this.playTempleChime();
   }
 
+  public playBellChime() {
+    this.playTempleChime();
+  }
+
   // Backward compatibility alias for marimba / pillar hover
   public playMarimbaTransient(freq?: number) {
     this.playPillarHover(freq ?? 0);

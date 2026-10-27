@@ -14,6 +14,7 @@ export default defineConfig({
       "src/components/guide-hero/station/**/*.test.ts",
       "src/components/suggestions/**/*.test.ts",
       "src/components/join/**/*.test.ts",
+      "src/components/games/**/*.test.ts",
     ],
     environment: "node",
   },

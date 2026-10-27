@@ -5,80 +5,132 @@ import { ALL_PILLARS } from "@/data/pillars";
 import { SITE_URL } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  const baseDate = new Date("2026-10-24T12:00:00.000Z");
 
-  // Core static pages with exact priority weights
+  const buildAlternates = (path: string = "") => {
+    const url = path ? `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}` : SITE_URL;
+    return {
+      languages: {
+        "en-US": url,
+        "ta-IN": url,
+        "x-default": url,
+      },
+    };
+  };
+
+  const parseSafeDate = (dateStr: string): Date => {
+    const ts = Date.parse(dateStr);
+    return !isNaN(ts) ? new Date(ts) : baseDate;
+  };
+
+  // Core static routes
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: SITE_URL,
-      lastModified: now,
+      lastModified: baseDate,
       changeFrequency: "weekly",
       priority: 1.0,
-    },
-    {
-      url: `${SITE_URL}/join`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
+      alternates: buildAlternates("/"),
+      images: [`${SITE_URL}/emblem.svg`],
     },
     {
       url: `${SITE_URL}/events`,
-      lastModified: now,
+      lastModified: baseDate,
       changeFrequency: "weekly",
       priority: 0.9,
+      alternates: buildAlternates("/events"),
+      images: [`${SITE_URL}/emblem.svg`],
     },
     {
       url: `${SITE_URL}/about`,
-      lastModified: now,
-      changeFrequency: "weekly",
+      lastModified: baseDate,
+      changeFrequency: "monthly",
       priority: 0.9,
+      alternates: buildAlternates("/about"),
+      images: [`${SITE_URL}/emblem.svg`],
     },
     {
       url: `${SITE_URL}/guide`,
-      lastModified: now,
+      lastModified: baseDate,
       changeFrequency: "weekly",
       priority: 0.9,
+      alternates: buildAlternates("/guide"),
+    },
+    {
+      url: `${SITE_URL}/games`,
+      lastModified: baseDate,
+      changeFrequency: "weekly",
+      priority: 0.95,
+      alternates: buildAlternates("/games"),
+    },
+    {
+      url: `${SITE_URL}/join`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.9,
+      alternates: buildAlternates("/join"),
     },
     {
       url: `${SITE_URL}/board`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.85,
+      alternates: buildAlternates("/board"),
     },
     {
       url: `${SITE_URL}/gallery`,
-      lastModified: now,
+      lastModified: baseDate,
       changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${SITE_URL}/ideas`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
+      priority: 0.85,
+      alternates: buildAlternates("/gallery"),
     },
     {
       url: `${SITE_URL}/suggestions`,
-      lastModified: now,
-      changeFrequency: "weekly",
+      lastModified: baseDate,
+      changeFrequency: "monthly",
       priority: 0.8,
+      alternates: buildAlternates("/suggestions"),
+    },
+    {
+      url: `${SITE_URL}/initiatives`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.85,
+      alternates: buildAlternates("/initiatives"),
+    },
+    {
+      url: `${SITE_URL}/links`,
+      lastModified: baseDate,
+      changeFrequency: "monthly",
+      priority: 0.7,
+      alternates: buildAlternates("/links"),
+    },
+    {
+      url: `${SITE_URL}/privacy`,
+      lastModified: baseDate,
+      changeFrequency: "yearly",
+      priority: 0.3,
+      alternates: buildAlternates("/privacy"),
     },
   ];
 
   // Dynamic Pillar Pages (The Five Pillars)
   const pillarPages: MetadataRoute.Sitemap = ALL_PILLARS.map((pillar) => ({
     url: `${SITE_URL}/pillars/${pillar.slug}`,
-    lastModified: now,
-    changeFrequency: "weekly",
+    lastModified: baseDate,
+    changeFrequency: "monthly",
     priority: 0.85,
+    alternates: buildAlternates(`/pillars/${pillar.slug}`),
+    images: [`${SITE_URL}/emblem.svg`],
   }));
 
   // Dynamic Event Dossier pages with image attachments for Google Image Search
   const eventPages: MetadataRoute.Sitemap = EVENTS.map((event) => ({
     url: `${SITE_URL}/events/${event.slug}`,
-    lastModified: now,
-    changeFrequency: "weekly",
+    lastModified: parseSafeDate(event.date),
+    changeFrequency: event.status === "upcoming" ? "weekly" : "monthly",
     priority: event.status === "upcoming" ? 0.95 : 0.8,
+    alternates: buildAlternates(`/events/${event.slug}`),
     images: [
       event.posterImage?.startsWith("http")
         ? event.posterImage
@@ -89,9 +141,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Dynamic Gallery Album pages with photo previews
   const galleryPages: MetadataRoute.Sitemap = GALLERY_ALBUMS.map((album) => ({
     url: `${SITE_URL}/gallery/${album.slug}`,
-    lastModified: now,
+    lastModified: parseSafeDate(album.eventDate),
     changeFrequency: "monthly",
     priority: 0.75,
+    alternates: buildAlternates(`/gallery/${album.slug}`),
     images: [
       album.coverImage?.startsWith("http")
         ? album.coverImage

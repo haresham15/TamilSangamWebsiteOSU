@@ -6,7 +6,10 @@ import type { Metadata } from "next";
  */
 
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://tamil-sangam-website-osu.vercel.app"
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "") ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
+  "https://tamil-sangam-website-osu.vercel.app"
 ).replace(/\/$/, "");
 
 export const SEO_ENTITY = {
@@ -88,56 +91,80 @@ export const ROUTE_METADATA = {
   home: {
     title: "OSU Tamil Sangam | Official Tamil Student Organization at The Ohio State University",
     description:
-      "Welcome to OSU Tamil Sangam ( ஒஹையோ மாநிலப் பல்கலைக்கழகத் தமிழ்ச் சங்கம் ) — the official Tamil cultural student organization at The Ohio State University in Columbus, Ohio. 100% free membership, Kollywood galas, Pongal banquets, and Buckeye community.",
+      "Official Tamil cultural student organization at The Ohio State University (Columbus, OH). 100% free membership, Kollywood galas, Pongal feasts & community.",
     path: "/",
   },
   events: {
     title: "Campus Events & Festivals | OSU Tamil Sangam at Ohio State",
     description:
-      "Explore upcoming and archived gatherings hosted by Tamil Sangam at OSU — including Kollywood Kollai, Diwali, Pongal banquets, Namma Jathara Carnival, and South Oval picnics in Columbus, OH.",
+      "Upcoming and archived gatherings at Ohio State: Kollywood Kollai, Diwali, Pongal banquets, Namma Jathara Carnival, and South Oval picnics in Columbus, OH.",
     path: "/events",
   },
   about: {
     title: "About Us & Heritage (யாதும் ஊரே யாவரும் கேளிர்) | OSU Tamil Sangam",
     description:
-      "Learn the history, mission, and Five Pillars (Aatam, Paatam, Kondatam, Santhippum, Katral) of Tamil Sangam at The Ohio State University — a home for all languages on the banks of the Olentangy.",
+      "Mission, history, and Five Pillars of Tamil Sangam at The Ohio State University — an open cultural home for all students on the banks of the Olentangy River.",
     path: "/about",
   },
   board: {
     title: "Executive Board & Student Leadership | OSU Tamil Sangam",
     description:
-      "Meet the elected Executive Board officers and Subcommittee Coordinators leading OSU Tamil Sangam across The Ohio State University campus in Columbus, Ohio.",
+      "Meet the elected student executive board and coordinators leading OSU Tamil Sangam across The Ohio State University campus in Columbus, Ohio.",
     path: "/board",
   },
   gallery: {
     title: "Photo Gallery & 35mm Campus Archive | OSU Tamil Sangam",
     description:
-      "Browse candid photographs, competitive Kahoot trivia, hot biryani tables, and South Oval memories from Tamil Sangam at OSU.",
+      "Browse 35mm candid photos, cultural performances, biryani feasts, and South Oval memories from Tamil Sangam at The Ohio State University.",
     path: "/gallery",
+  },
+  games: {
+    title: "The Sangam Arcade · களஞ்சியம் | Monthly Tamil Wordle & Connections | OSU Tamil Sangam",
+    description:
+      "Play monthly Tamil games: Sollu (Tamil & Tanglish Wordle with grapheme clusters) and Thodarpu (Tamil Connections) with streak tracking and spoiler-free share cards.",
+    path: "/games",
   },
   guide: {
     title: "Student Guide & Frequently Asked Questions | OSU Tamil Sangam",
     description:
-      "Everything you need to know about joining Tamil Sangam at OSU: 100% free zero-dues membership, open to all majors and languages at Ohio State, Columbus Tamil dining, and campus resources.",
+      "Everything you need to know: 100% free zero-dues membership, open to all majors & languages at Ohio State, Columbus Tamil dining, CABS transit, and FAQs.",
     path: "/guide",
   },
   ideas: {
     title: "The Ideas Hearth — Propose a Campus Event | OSU Tamil Sangam",
     description:
-      "Submit event proposals, music jam ideas, Tamil language workshops, and campus collaborations directly to the OSU Tamil Sangam Executive Board.",
+      "Submit event proposals, music jam ideas, Tamil workshops, and campus collaborations directly to the OSU Tamil Sangam Executive Board.",
     path: "/ideas",
   },
   suggestions: {
     title: "The Ideas Hearth — Propose a Campus Event | OSU Tamil Sangam",
     description:
-      "Submit event proposals, music jam ideas, Tamil language workshops, and campus collaborations directly to the OSU Tamil Sangam Executive Board.",
+      "Submit event proposals, music jam ideas, Tamil workshops, and campus collaborations directly to the OSU Tamil Sangam Executive Board.",
     path: "/suggestions",
   },
   join: {
     title: "Join OSU Tamil Sangam | Free Membership Guestbook at Ohio State",
     description:
-      "Join Tamil Sangam at The Ohio State University. 100% free, zero dues, and open to every Buckeye student regardless of language. Sign our campus guestbook today.",
+      "Join Tamil Sangam at The Ohio State University. 100% free, zero dues, open to every Buckeye student regardless of language. Sign our guestbook today.",
     path: "/join",
+  },
+  initiatives: {
+    title: "The Five Pillars: Aatam, Paatam, Kondatam & Initiatives | OSU Tamil Sangam",
+    description:
+      "Explore the core pillars of OSU Tamil Sangam: Aatam (Dance), Paatam (Music), and Kondatam (Celebration) at The Ohio State University in Columbus, OH.",
+    path: "/initiatives",
+  },
+  links: {
+    title: "Official Bio Links & Social Channels | OSU Tamil Sangam",
+    description:
+      "Official quick-links for OSU Tamil Sangam: student GroupMe, Instagram, event tickets, calendar subscription, and campus feedback forms.",
+    path: "/links",
+  },
+  privacy: {
+    title: "Privacy & Anonymous FAQ Telemetry | OSU Tamil Sangam",
+    description:
+      "Privacy disclosure explaining anonymous aggregate FAQ engagement metrics and zero-tracker privacy commitments at OSU Tamil Sangam.",
+    path: "/privacy",
   },
 } as const;
 
@@ -199,6 +226,8 @@ export function buildRouteMetadata(config: {
       card: "summary_large_image",
       title: config.title,
       description: config.description,
+      site: "@tamilsangam.osu",
+      creator: "@tamilsangam.osu",
       images: [ogImage],
     },
   };

@@ -18,6 +18,7 @@ interface NavRoute {
   href: string;
   en: string;
   ta: string;
+  badge?: boolean;
 }
 
 const NAV_ROUTES: NavRoute[] = [
@@ -26,6 +27,7 @@ const NAV_ROUTES: NavRoute[] = [
   { href: "/about", en: "About", ta: "அறிமுகம்" },
   { href: "/board", en: "Board", ta: "அவை" },
   { href: "/gallery", en: "Gallery", ta: "நினைவுகள்" },
+  { href: "/games", en: "Games", ta: "விளையாட்டு", badge: true },
   { href: "/guide", en: "Guide & FAQ", ta: "வழிகாட்டி" },
   { href: "/suggestions", en: "Ideas", ta: "கருத்து" },
 ];
@@ -43,7 +45,7 @@ export const FloatingNav: React.FC = () => {
 
   // Dark 3D Hero sections at the top of specific pages
   const normalizedPath = pathname.replace(/\/+$/, "") || "/";
-  const darkHeroRoutes = ["/", "/events", "/about", "/board", "/gallery", "/guide", "/suggestions", "/join"];
+  const darkHeroRoutes = ["/", "/events", "/about", "/board", "/gallery", "/games", "/guide", "/suggestions", "/join"];
   const isHeroRoute = darkHeroRoutes.includes(normalizedPath);
 
   // Visibility & Contextual Backdrop State
@@ -539,7 +541,7 @@ export const FloatingNav: React.FC = () => {
                   >
                     {/* Primary Navigation Text */}
                     <span
-                      className={`font-sans text-[12px] xl:text-[13px] leading-tight tracking-tight whitespace-nowrap transition-colors duration-200 ${
+                      className={`font-sans text-[12px] xl:text-[13px] leading-tight tracking-tight whitespace-nowrap transition-colors duration-200 inline-flex items-center gap-1 ${
                         isDarkHero
                           ? isActive
                             ? "font-semibold text-[#FAF9F6]"
@@ -550,6 +552,9 @@ export const FloatingNav: React.FC = () => {
                       }`}
                     >
                       {locale === "ta" ? route.ta : route.en}
+                      {route.badge && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_5px_#D4AF37] animate-pulse" />
+                      )}
                     </span>
 
                     {/* Secondary Color Text (Tamil Subtitle - Compact & Clear) */}
@@ -670,8 +675,11 @@ export const FloatingNav: React.FC = () => {
                       }`}
                     >
                       <div className="flex flex-col text-left">
-                        <span className="font-sans text-base font-medium">
+                        <span className="font-sans text-base font-medium inline-flex items-center gap-1.5">
                           {locale === "ta" ? route.ta : route.en}
+                          {route.badge && (
+                            <span className="w-2 h-2 rounded-full bg-[#D4AF37] shadow-[0_0_6px_#D4AF37]" />
+                          )}
                         </span>
                         <span
                           lang="ta"

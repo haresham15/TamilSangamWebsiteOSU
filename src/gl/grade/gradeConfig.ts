@@ -9,7 +9,8 @@ export type HeroGradeProfileName =
   | "vaaranam-kodachrome"
   | "alaipayuthey-bluehour"
   | "kaththi-blueprint"
-  | "nanban-morning";
+  | "nanban-morning"
+  | "jailer-sunblast";
 
 export interface HeroGradeProfile {
   lutPath: string;
@@ -166,6 +167,20 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
       fillLightTint: "#2B3828",
       fogTint: "#FAF5EA",
       exposureBias: 1.0,
+    },
+  },
+  "jailer-sunblast": {
+    lutPath: "/luts/heritage-33.png",
+    lutSize: 33,
+    lutOpacity: 0.74,
+    bloom: { luminanceThreshold: 0.72, intensity: 0.65, mipmapBlur: true },
+    vignette: { offset: 0.38, darkness: 0.38 },
+    grain: { opacity: 0.035 },
+    tierBFallback: {
+      keyLightTint: "#FFF4D6",
+      fillLightTint: "#E8C574",
+      fogTint: "#B8E6E8",
+      exposureBias: 1.08,
     },
   },
 };

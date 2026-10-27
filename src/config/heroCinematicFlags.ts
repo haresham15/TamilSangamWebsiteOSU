@@ -17,6 +17,7 @@ export type HeroCinematicKey =
   | "about"
   | "board"
   | "gallery"
+  | "games"
   | "guide"
   | "suggestions"
   | "join";
@@ -27,6 +28,7 @@ export const CINEMATIC_V2_FLAGS: Record<HeroCinematicKey, boolean> = {
   about: true, // Hero 3 target
   board: true, // Hero 4 target
   gallery: true, // Hero 5 target
+  games: true, // Hero 9 target (Jailer 2 Beach Blast)
   guide: true, // Hero 6 target
   suggestions: true, // Hero 7 target
   join: true, // Hero 8 target
