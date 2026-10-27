@@ -4,8 +4,8 @@ Spec: PRD — Games Page v1.1 · The Sangam Arcade & Beach Blast Sequence (/game
 Plan details: docs/superpowers/plans/2026-10-26-games-v1-1.md
 
 ## Milestones
-- [ ] Milestone 1: Validated Games Data, Tamil Grapheme Splitter, Dictionary & Data Gate (`src/lib/tamilGraphemes.ts`, `src/data/solluDictionary.ts`, `src/data/gamesData.ts`, `scripts/verify-games-data.mjs`)
-- [ ] Milestone 2: Lens-Shifted Projection Math & Parity / Registration Scripts (`src/components/games-hero/camera/projectionMath.ts`, `scripts/verify-frame-parity.mjs`, `scripts/verify-lens-registration.mjs`, `src/components/games-hero/gamesRail.ts`)
+- [x] Milestone 1: Validated Games Data, Tamil Grapheme Splitter, Dictionary & Data Gate (`src/lib/tamilGraphemes.ts`, `src/data/solluDictionary.ts`, `src/data/gamesData.ts`, `scripts/verify-games-data.mjs`)
+- [x] Milestone 2: Lens-Shifted Projection Math & Parity / Registration Scripts (`src/components/games-hero/camera/projectionMath.ts`, `scripts/verify-frame-parity.mjs`, `scripts/verify-lens-registration.mjs`, `src/components/games-hero/gamesRail.ts`)
 - [ ] Milestone 3: Calibrated J1 Coastal Compound Scene & Shaders (`src/components/games-hero/BeachCompoundScene.tsx`)
 - [ ] Milestone 4: 1:1 Foreground Eyeglasses & Sun-Bronzed Hand Rig (`src/components/games-hero/EyeglassHandRig.tsx`)
 - [ ] Milestone 5: Layered Focus Compositor & Sunblast Grade Profile (`src/components/games-hero/compositor/LayeredFocusCompositor.ts`, `src/components/games-hero/GamesFocusScene.tsx`)
