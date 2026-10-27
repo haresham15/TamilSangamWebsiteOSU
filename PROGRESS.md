@@ -6,4 +6,5 @@
 - [x] Milestone 4: 1:1 Foreground Eyeglasses & Sun-Bronzed Hand Rig.
 - [x] Milestone 5: Layered Focus Compositor & Sunblast Grade Profile.
 - [x] Milestone 6: Scrubbable Missile Contrails, Blackbody Fireballs & Dual-Rail Portal.
-- [ ] Milestone 7: NYT-Style Sangam Arcade Hub, Sollu & Thodarpu.
+- [x] Milestone 7: NYT-Style Sangam Arcade Hub, Sollu & Thodarpu.
+- [ ] Milestone 8: Route, Navigation, Accessibility, Performance & E2E Verification.

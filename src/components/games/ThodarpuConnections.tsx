@@ -11,6 +11,7 @@ import {
   type ThodarpuCategory,
   type ThodarpuTile,
 } from "@/data/gamesData";
+import { getArcadeStorage, saveArcadeStorage } from "@/lib/gamesStorage";
 
 interface ThodarpuConnectionsProps {
   editionKey: string; // "2026-10" | "2026-11" | "2026-12"
@@ -33,9 +34,9 @@ const TIER_COLORS = {
     emoji: "🟩",
   },
   3: {
-    bg: "bg-[#C85A32]",
+    bg: "bg-[#B24A25]", // Semman Dark (5.00:1 contrast, D-13 resolved)
     text: "text-[#FAF6F0]",
-    border: "border-[#A64420]",
+    border: "border-[#8E3416]",
     label: "Challenging · கடினம்",
     emoji: "🟧",
   },
@@ -58,9 +59,26 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
     return edition.categories.flatMap((cat: ThodarpuCategory) => cat.tiles);
   }, [edition]);
 
-  // Shuffled tile array state
+  // Load initial state from storage if available
+  const [solvedCategories, setSolvedCategories] = useState<ThodarpuCategory[]>(() => {
+    const store = getArcadeStorage();
+    const saved = store.thodarpu[editionKey];
+    if (saved?.solvedTierIds) {
+      return edition.categories.filter((cat) => saved.solvedTierIds.includes(cat.tier as 1 | 2 | 3 | 4));
+    }
+    return [];
+  });
+
+  // Shuffled tile array state excluding solved tiles
   const [boardTiles, setBoardTiles] = useState<ThodarpuTile[]>(() => {
-    const shuffled = [...initialTiles];
+    const store = getArcadeStorage();
+    const saved = store.thodarpu[editionKey];
+    const solvedTiers = saved?.solvedTierIds || [];
+    const remaining = initialTiles.filter((t) => {
+      const cat = edition.categories.find((c) => c.titleEn === t.categoryTitle);
+      return !cat || !solvedTiers.includes(cat.tier as 1 | 2 | 3 | 4);
+    });
+    const shuffled = [...remaining];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const seed = Math.sin((i + 1) * 93.123) * 43758.5453;
       const r = seed - Math.floor(seed);
@@ -70,12 +88,20 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
     return shuffled;
   });
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [solvedCategories, setSolvedCategories] = useState<ThodarpuCategory[]>([]);
-  const [mistakesRemaining, setMistakesRemaining] = useState<number>(4);
+  const [mistakesRemaining, setMistakesRemaining] = useState<number>(() => {
+    const store = getArcadeStorage();
+    const saved = store.thodarpu[editionKey];
+    return saved ? saved.mistakesRemaining : 4;
+  });
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [shakeSelection, setShakeSelection] = useState<boolean>(false);
   const [showHints, setShowHints] = useState<boolean>(false);
-  const [guessHistory, setGuessHistory] = useState<number[][]>([]); // array of tier numbers per guess for share card
+  const [guessHistory, setGuessHistory] = useState<number[][]>(() => {
+    const store = getArcadeStorage();
+    const saved = store.thodarpu[editionKey];
+    return saved?.guessHistory || [];
+  });
+  const [submittedCombos, setSubmittedCombos] = useState<string[]>([]);
   const [copiedShare, setCopiedShare] = useState<boolean>(false);
 
   // Toggle selection
@@ -117,6 +143,15 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
   const handleSubmit = useCallback(() => {
     if (selectedIds.length !== 4) return;
 
+    // Check if duplicate combination was already guessed
+    const sortedKey = [...selectedIds].sort().join(",");
+    if (submittedCombos.includes(sortedKey)) {
+      setToastMessage("Already guessed! · ஏற்கனவே முயற்சித்தது");
+      setTimeout(() => setToastMessage(null), 1800);
+      return;
+    }
+    setSubmittedCombos((prev) => [...prev, sortedKey]);
+
     // Check which category each selected tile belongs to
     const selectedTiles = boardTiles.filter((t) => selectedIds.includes(t.id));
     const catCount: Record<string, number> = {};
@@ -130,7 +165,8 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
     }
 
     // Record guess history for emoji share
-    setGuessHistory((prev) => [...prev, catTiers]);
+    const nextHistory = [...guessHistory, catTiers];
+    setGuessHistory(nextHistory);
 
     // Check for 4 matching
     const solvedTitle = Object.keys(catCount).find((cat) => catCount[cat] === 4);
@@ -138,11 +174,23 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
       const category = edition.categories.find((c: ThodarpuCategory) => c.titleEn === solvedTitle);
       if (category) {
         soundEngine.playBellChime();
-        setSolvedCategories((prev) => [...prev, category]);
+        const nextSolved = [...solvedCategories, category];
+        setSolvedCategories(nextSolved);
         setBoardTiles((prev) => prev.filter((t) => !selectedIds.includes(t.id)));
         setSelectedIds([]);
 
-        if (solvedCategories.length + 1 === 4) {
+        const isWin = nextSolved.length === 4;
+        const store = getArcadeStorage();
+        store.thodarpu[editionKey] = {
+          solvedTierIds: nextSolved.map((c) => c.tier as 1 | 2 | 3 | 4),
+          guessHistory: nextHistory,
+          mistakesRemaining,
+          status: isWin ? "won" : "in_progress",
+          completedAt: isWin ? new Date().toISOString() : undefined,
+        };
+        saveArcadeStorage(store);
+
+        if (isWin) {
           onSolved?.();
         }
       }
@@ -164,6 +212,17 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
     const nextMistakes = mistakesRemaining - 1;
     setMistakesRemaining(nextMistakes);
 
+    const isLost = nextMistakes <= 0;
+    const store = getArcadeStorage();
+    store.thodarpu[editionKey] = {
+      solvedTierIds: solvedCategories.map((c) => c.tier as 1 | 2 | 3 | 4),
+      guessHistory: nextHistory,
+      mistakesRemaining: Math.max(0, nextMistakes),
+      status: isLost ? "lost" : "in_progress",
+      completedAt: isLost ? new Date().toISOString() : undefined,
+    };
+    saveArcadeStorage(store);
+
     if (nextMistakes <= 0) {
       // Auto-reveal remaining categories
       setToastMessage("Out of attempts! Revealing solutions...");
@@ -174,7 +233,17 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
         setToastMessage(null);
       }, 1400);
     }
-  }, [selectedIds, boardTiles, edition, mistakesRemaining, solvedCategories.length, onSolved]);
+  }, [
+    selectedIds,
+    submittedCombos,
+    boardTiles,
+    edition,
+    guessHistory,
+    mistakesRemaining,
+    solvedCategories,
+    editionKey,
+    onSolved,
+  ]);
 
   // Copy GroupMe Share Card
   const copyShareResults = () => {
@@ -185,17 +254,20 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
     });
 
     const isWin = solvedCategories.length === 4 && mistakesRemaining > 0;
-    const header = `OSU Tamil Sangam · Thodarpu #${editionKey} (${edition.monthEn}) 🔗✨`;
+    const editionNum = editionKey.replace("2026-", "");
+    const header = `OSU Tamil Sangam · Thodarpu #${editionNum} (${edition.monthEn}) 🕶️💥`;
     const score = isWin ? `Solved in ${guessHistory.length} guesses!` : `Completed with solutions`;
 
     const text = `${header}\n${score}\n\n${emojis.join(
       "\n"
-    )}\n\nPlay at: tamil-sangam-website-osu.vercel.app/games`;
+    )}\n\nPlay: https://tamil-sangam-website-osu.vercel.app/games`;
 
-    navigator.clipboard.writeText(text).then(() => {
-      setCopiedShare(true);
-      setTimeout(() => setCopiedShare(false), 2400);
-    });
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        setCopiedShare(true);
+        setTimeout(() => setCopiedShare(false), 2400);
+      });
+    }
   };
 
   const isGameOver = solvedCategories.length === 4 || mistakesRemaining <= 0;
@@ -394,6 +466,15 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
                 </>
               )}
             </button>
+
+            <a
+              href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-mono text-[#161210]/80 hover:text-[#C85A32] underline underline-offset-4 px-2 py-1 transition-colors"
+            >
+              Post in OSU TS GroupMe ↗
+            </a>
 
             <button
               onClick={() => {

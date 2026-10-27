@@ -1,59 +1,63 @@
 // src/components/games/GamesHub.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Flame,
   Trophy,
   HelpCircle,
   X,
   Calendar,
   Grid,
   Layers,
+  Lock,
+  Share2,
+  Check,
+  Clock,
 } from "lucide-react";
 import { SolluWordle } from "./SolluWordle";
 import { ThodarpuConnections } from "./ThodarpuConnections";
 import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import { SOLLU_MONTHLY_EDITIONS } from "@/data/gamesData";
+import {
+  isEditionUnlocked,
+  getUnlockCountdown,
+  getEditionSolvedCount,
+  getAllTimeEditionsCompleted,
+} from "@/lib/gamesStorage";
 
 export function GamesHub() {
   const [selectedEdition, setSelectedEdition] = useState<string>("2026-10");
   const [activeTab, setActiveTab] = useState<"sollu" | "thodarpu">("sollu");
   const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
+  const [copiedHub, setCopiedHub] = useState<boolean>(false);
 
-  // Player Stats persisted in localStorage
-  const [streak] = useState<number>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("ts_games_streak");
-      if (saved) return parseInt(saved, 10);
-    }
-    return 1;
-  });
-  const [solvedCount, setSolvedCount] = useState<number>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("ts_games_solved");
-      if (saved) return parseInt(saved, 10);
-    }
-    return 0;
-  });
-
+  // Sync state update on solve
+  const [solvedVersion, setSolvedVersion] = useState<number>(0);
   const handleGameSolved = () => {
-    setSolvedCount((prev) => {
-      const next = prev + 1;
-      if (typeof window !== "undefined") {
-        localStorage.setItem("ts_games_solved", String(next));
-      }
-      return next;
-    });
+    setSolvedVersion((v) => v + 1);
   };
 
   useModalScrollLock(isHelpOpen, () => setIsHelpOpen(false));
 
   const currentEditionMeta = SOLLU_MONTHLY_EDITIONS[selectedEdition] || SOLLU_MONTHLY_EDITIONS["2026-10"];
+  const isUnlocked = isEditionUnlocked(selectedEdition);
+  const countdown = getUnlockCountdown(selectedEdition);
+  const thisMonthSolved = getEditionSolvedCount(selectedEdition);
+  const allTimeCompleted = getAllTimeEditionsCompleted();
+
+  const handleShareHub = () => {
+    const url = "https://tamil-sangam-website-osu.vercel.app/games";
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(`Play The Sangam Arcade — Monthly Tamil Puzzles at Ohio State! 🕶️💥\n${url}`).then(() => {
+        setCopiedHub(true);
+        setTimeout(() => setCopiedHub(false), 2400);
+      });
+    }
+  };
 
   return (
-    <section id="games-hub" className="w-full bg-[#FAF6F0] text-[#161210] py-16 sm:py-24 px-4 sm:px-8">
+    <section id="arcade" tabIndex={-1} className="w-full bg-[#FAF6F0] text-[#161210] py-16 sm:py-24 px-4 sm:px-8 border-t border-[#D4AF37]/40 outline-hidden">
       <div className="max-w-5xl mx-auto">
         {/* ---------------------------------------------------------------- */}
         {/* 1. NEWSPAPER-GRADE EDITORIAL MASTHEAD                            */}
@@ -64,37 +68,50 @@ export function GamesHub() {
             <div className="flex items-center gap-2">
               <Calendar className="size-3.5 text-[#C85A32]" />
               <span className="font-bold">
-                {currentEditionMeta.monthEn} {currentEditionMeta.year} EDITION ·{" "}
+                {currentEditionMeta.monthEn} {currentEditionMeta.year} ·{" "}
                 <span lang="ta" className="font-tamil font-semibold">
-                  {currentEditionMeta.monthTa} மாதம்
+                  {currentEditionMeta.monthTa}
                 </span>{" "}
-                · NO. 01
+                · EDITION NO. {selectedEdition === "2026-10" ? "01" : selectedEdition === "2026-11" ? "02" : "03"}
               </span>
             </div>
 
-            {/* Edition Switcher Dropdown */}
+            {/* Edition Switcher Selector */}
             <div className="flex items-center gap-2">
-              <span className="text-xs text-[#161210]/50">Archive:</span>
-              <select
-                value={selectedEdition}
-                onChange={(e) => setSelectedEdition(e.target.value)}
-                className="bg-[#F2EAE0] border border-[#161210]/20 rounded-md px-2.5 py-1 text-xs font-mono font-semibold text-[#161210] cursor-pointer focus:outline-hidden focus:ring-1 focus:ring-[#D4AF37]"
-              >
-                <option value="2026-10">October 2026 (ஐப்பசி)</option>
-                <option value="2026-11">November 2026 (கார்த்திகை)</option>
-                <option value="2026-12">December 2026 (மார்கழி)</option>
-              </select>
+              <span className="text-xs text-[#161210]/50">Edition:</span>
+              <div className="flex items-center gap-1 bg-[#F2EAE0] p-1 rounded-lg border border-[#161210]/20">
+                {(["2026-10", "2026-11", "2026-12"] as const).map((edId) => {
+                  const meta = SOLLU_MONTHLY_EDITIONS[edId];
+                  const unlocked = isEditionUnlocked(edId);
+                  const isSelected = selectedEdition === edId;
+
+                  return (
+                    <button
+                      key={edId}
+                      onClick={() => setSelectedEdition(edId)}
+                      className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-mono font-semibold transition-all ${
+                        isSelected
+                          ? "bg-[#161210] text-[#FAF6F0] shadow-xs"
+                          : "text-[#161210]/70 hover:text-[#161210]"
+                      }`}
+                    >
+                      {!unlocked && <Lock className="size-3 text-[#C85A32]" />}
+                      <span>{meta.monthEn.slice(0, 3)}</span>
+                      {edId === "2026-10" && <span className="text-[10px] text-emerald-500 font-bold">●</span>}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Player Stats */}
+            {/* Player Monthly Completion Ledger (D-14) */}
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5 text-[#C85A32] font-bold">
-                <Flame className="size-4 fill-current" />
-                <span>{streak} STREAK</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-[#D4AF37] font-bold">
                 <Trophy className="size-4" />
-                <span>{solvedCount}/6 SOLVED</span>
+                <span>{thisMonthSolved}/2 SOLVED THIS MONTH</span>
+              </div>
+              <div className="hidden sm:flex items-center gap-1.5 text-[#D4AF37] font-bold">
+                <span>{allTimeCompleted} COMPLETED ALL-TIME</span>
               </div>
               <button
                 onClick={() => setIsHelpOpen(true)}
@@ -103,6 +120,14 @@ export function GamesHub() {
               >
                 <HelpCircle className="size-4" />
                 <span className="hidden sm:inline">Rules</span>
+              </button>
+              <button
+                onClick={handleShareHub}
+                className="flex items-center gap-1 text-[#161210]/60 hover:text-[#C85A32] transition-colors"
+                title="Share Arcade"
+              >
+                {copiedHub ? <Check className="size-4 text-emerald-500" /> : <Share2 className="size-4" />}
+                <span className="hidden sm:inline">{copiedHub ? "Copied!" : "Share Hub"}</span>
               </button>
             </div>
           </div>
@@ -120,7 +145,7 @@ export function GamesHub() {
             </p>
             <p className="font-sans text-xs sm:text-sm text-[#161210]/70 max-w-xl mx-auto leading-relaxed">
               New York Times-grade monthly cultural puzzles for Buckeyes, students, and Tamil cinema enthusiasts.
-              Solve, learn the cultural roots, and share your spoiler-free grids!
+              Solve, uncover authentic cultural roots, and share spoiler-free grids!
             </p>
           </div>
         </header>
@@ -157,21 +182,60 @@ export function GamesHub() {
         </div>
 
         {/* ---------------------------------------------------------------- */}
-        {/* 3. ACTIVE GAME PLAYING ARENA                                     */}
+        {/* 3. ACTIVE GAME PLAYING ARENA / LOCKED TEASER                     */}
         {/* ---------------------------------------------------------------- */}
         <div className="w-full bg-[#FAF6F0] min-h-[520px] flex items-center justify-center">
-          {activeTab === "sollu" ? (
-            <SolluWordle
-              key={`sollu-${selectedEdition}`}
-              editionKey={selectedEdition}
-              onSolved={handleGameSolved}
-            />
+          {isUnlocked ? (
+            activeTab === "sollu" ? (
+              <SolluWordle
+                key={`sollu-${selectedEdition}-${solvedVersion}`}
+                editionKey={selectedEdition}
+                onSolved={handleGameSolved}
+              />
+            ) : (
+              <ThodarpuConnections
+                key={`thodarpu-${selectedEdition}-${solvedVersion}`}
+                editionKey={selectedEdition}
+                onSolved={handleGameSolved}
+              />
+            )
           ) : (
-            <ThodarpuConnections
-              key={`thodarpu-${selectedEdition}`}
-              editionKey={selectedEdition}
-              onSolved={handleGameSolved}
-            />
+            /* Locked Edition Teaser (D-14) */
+            <div className="w-full max-w-md mx-auto p-8 bg-[#F2EAE0] rounded-2xl border-2 border-[#D4AF37]/50 shadow-xl text-center">
+              <div className="size-14 mx-auto mb-4 rounded-full bg-[#161210] text-[#D4AF37] flex items-center justify-center shadow-md">
+                <Lock className="size-7" />
+              </div>
+
+              <span className="font-mono text-xs uppercase tracking-widest text-[#C85A32] font-bold block mb-1">
+                LOCKED EDITION · எதிர்காலப் புதிர்
+              </span>
+
+              <h3 className="font-serif text-2xl font-bold text-[#161210] mb-2">
+                {currentEditionMeta.monthEn} {currentEditionMeta.year} Edition
+              </h3>
+
+              <p lang="ta" className="font-tamil text-base text-[#161210]/80 mb-4 font-semibold">
+                {currentEditionMeta.monthTa} மாதம்
+              </p>
+
+              <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-[#FAF6F0] rounded-xl border border-[#161210]/15 mb-6 text-sm font-mono text-[#161210]">
+                <Clock className="size-4 text-[#D4AF37]" />
+                <span>
+                  Unlocks in {countdown.days}d {countdown.hours}h (Nov 1, 00:00 EDT)
+                </span>
+              </div>
+
+              <p className="text-xs text-[#161210]/70 mb-6 font-sans leading-relaxed">
+                New puzzles unlock at midnight on the 1st of each month. In local development or preview environments, append <code className="bg-[#161210]/10 px-1.5 py-0.5 rounded text-[11px]">?unlock=all</code> to test all editions.
+              </p>
+
+              <button
+                onClick={() => setSelectedEdition("2026-10")}
+                className="w-full py-2.5 px-4 bg-[#161210] hover:bg-[#C85A32] text-[#FAF6F0] rounded-xl font-bold text-xs tracking-wider uppercase transition-colors shadow-md"
+              >
+                Play October Launch Edition
+              </button>
+            </div>
           )}
         </div>
 
@@ -180,85 +244,61 @@ export function GamesHub() {
         {/* ---------------------------------------------------------------- */}
         <AnimatePresence>
           {isHelpOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#161210]/80 backdrop-blur-xs select-none">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#161210]/80 backdrop-blur-xs">
               <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 16 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 16 }}
-                className="bg-[#FAF6F0] text-[#161210] max-w-lg w-full rounded-2xl p-6 sm:p-8 shadow-2xl border-2 border-[#D4AF37]/50 relative"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="bg-[#FAF6F0] border-2 border-[#161210] text-[#161210] max-w-lg w-full rounded-2xl p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto"
               >
                 <button
                   onClick={() => setIsHelpOpen(false)}
-                  className="absolute top-5 right-5 p-1.5 rounded-full hover:bg-[#F2EAE0] transition-colors"
+                  className="absolute top-5 right-5 text-[#161210]/50 hover:text-[#161210] transition-colors"
                 >
                   <X className="size-5" />
                 </button>
 
-                <h3 className="font-serif text-2xl font-bold mb-1">How to Play · விதிகள்</h3>
-                <p className="text-xs font-mono text-[#C85A32] mb-6">THE SANGAM ARCADE GUIDE</p>
+                <h3 className="font-serif text-2xl font-bold mb-1">How to Play The Sangam Arcade</h3>
+                <p className="font-tamil text-sm text-[#C85A32] font-semibold mb-6">விதிமுறைகள் மற்றும் வழிகாட்டி</p>
 
-                <div className="space-y-5 text-xs sm:text-sm leading-relaxed text-[#161210]/85 font-sans max-h-[60vh] overflow-y-auto pr-2">
-                  <div>
-                    <h4 className="font-bold text-sm text-[#161210] mb-1 flex items-center gap-1.5">
+                <div className="space-y-6 text-xs sm:text-sm font-sans leading-relaxed text-[#161210]/85">
+                  <div className="border-b border-[#161210]/15 pb-4">
+                    <h4 className="font-bold text-sm text-[#161210] mb-2 flex items-center gap-1.5">
                       <Grid className="size-4 text-[#C85A32]" />
-                      <span>Sollu · சொல்லு (Wordle)</span>
+                      <span>01 Sollu (சொல்லு) · The Monthly Wordle</span>
                     </h4>
                     <p className="mb-2">
-                      Guess the monthly secret word in 6 tries. Words connect to Ohio State campus life, Tamil cinema, food, or literature.
+                      Guess the secret 5-letter Tanglish word or variable-length Tamil Akshara word in 6 attempts.
                     </p>
-                    <ul className="space-y-1 text-xs">
-                      <li className="flex items-center gap-2">
-                        <span className="size-4 rounded bg-[#2E6F4E] text-[#FAF6F0] font-bold flex items-center justify-center text-[10px]">
-                          ✓
-                        </span>
-                        <span><strong>Green:</strong> Letter is in the word and in the correct spot.</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="size-4 rounded bg-[#D49B27] text-[#161210] font-bold flex items-center justify-center text-[10px]">
-                          •
-                        </span>
-                        <span><strong>Yellow:</strong> Letter is in the word but in the wrong spot.</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="size-4 rounded bg-[#3A332E] text-[#FAF6F0] font-bold flex items-center justify-center text-[10px]">
-                          ✕
-                        </span>
-                        <span><strong>Charcoal:</strong> Letter is not in the word.</span>
-                      </li>
+                    <ul className="list-disc pl-5 space-y-1 text-xs">
+                      <li><strong className="text-[#2E6F4E]">Green (🟩):</strong> Letter is in the word and in the correct spot.</li>
+                      <li><strong className="text-[#D49B27]">Yellow (🟨):</strong> Letter is in the word but in the wrong spot.</li>
+                      <li><strong className="text-[#3A332E]">Gray (⬛):</strong> Letter is not in the word in any spot.</li>
                     </ul>
                   </div>
 
-                  <div className="pt-3 border-t border-[#161210]/15">
-                    <h4 className="font-bold text-sm text-[#161210] mb-1 flex items-center gap-1.5">
-                      <Layers className="size-4 text-[#D4AF37]" />
-                      <span>Thodarpu · தொடர்பு (Connections)</span>
+                  <div>
+                    <h4 className="font-bold text-sm text-[#161210] mb-2 flex items-center gap-1.5">
+                      <Layers className="size-4 text-[#3B4978]" />
+                      <span>02 Thodarpu (தொடர்பு) · The Cultural Connections</span>
                     </h4>
                     <p className="mb-2">
-                      Find 4 groups of 4 items that share a common cultural or campus thread. You get 4 chances to make mistakes.
+                      Find 4 groups of 4 culturally connected tiles without making 4 mistakes.
                     </p>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="p-2 rounded bg-[#E8B94F]/30 border border-[#E8B94F]">
-                        <span className="font-bold">🟨 Straightforward:</span> Common daily items or foods.
-                      </div>
-                      <div className="p-2 rounded bg-[#3D7A5A]/30 border border-[#3D7A5A]">
-                        <span className="font-bold">🟩 Medium:</span> Film, music, or campus landmarks.
-                      </div>
-                      <div className="p-2 rounded bg-[#C85A32]/30 border border-[#C85A32]">
-                        <span className="font-bold">🟧 Challenging:</span> Classical history or instruments.
-                      </div>
-                      <div className="p-2 rounded bg-[#3B4978]/30 border border-[#3B4978]">
-                        <span className="font-bold">🟦 Tricky / Wordplay:</span> Campus puns or shared prefixes.
-                      </div>
-                    </div>
+                    <ul className="list-disc pl-5 space-y-1 text-xs">
+                      <li>Select 4 tiles and press <strong>Submit · சரிபார்</strong>.</li>
+                      <li>Categories range in difficulty from <strong>Straightforward 🟨</strong>, <strong>Medium 🟩</strong>, <strong>Challenging 🟧</strong>, to <strong>Tricky 🟦</strong>.</li>
+                      <li>Turn on <strong>Cultural Hints</strong> for non-spoiler definitions of classical instruments, dishes, and cinema lore.</li>
+                    </ul>
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-[#161210]/15 flex justify-end">
+                <div className="mt-8 pt-4 border-t border-[#161210]/15 flex justify-end">
                   <button
                     onClick={() => setIsHelpOpen(false)}
-                    className="px-5 py-2 rounded-full bg-[#161210] hover:bg-[#C85A32] text-[#FAF6F0] text-xs font-bold transition-colors"
+                    className="px-6 py-2.5 bg-[#161210] hover:bg-[#C85A32] text-[#FAF6F0] rounded-xl text-xs font-bold font-mono transition-colors shadow-md"
                   >
-                    Got It! (புரிந்தது)
+                    Got It · தொடங்குக
                   </button>
                 </div>
               </motion.div>

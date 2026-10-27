@@ -11,6 +11,7 @@ import {
   splitTamilAksharas,
   type SolluEdition,
 } from "@/data/gamesData";
+import { getArcadeStorage, saveArcadeStorage } from "@/lib/gamesStorage";
 
 interface SolluWordleProps {
   editionKey: string; // "2026-10" | "2026-11" | "2026-12"
@@ -25,9 +26,12 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
   }, [editionKey]);
 
   // Mode: "tanglish" (5-letter English letters) vs "tamil" (Tamil script Aksharas)
-  const [mode, setMode] = useState<"tanglish" | "tamil">("tanglish");
+  const [mode, setMode] = useState<"tanglish" | "tamil">(() => {
+    const store = getArcadeStorage();
+    return store.preferences.solluMode || "tanglish";
+  });
 
-  // Game state
+  // Target word & tokens
   const targetWord = useMemo(() => {
     return mode === "tanglish" ? edition.tanglishWord.toUpperCase() : edition.tamilWord;
   }, [mode, edition]);
@@ -39,9 +43,18 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
   const wordLength = targetTokens.length;
   const maxGuesses = 6;
 
-  const [guesses, setGuesses] = useState<string[]>([]);
+  // Load initial guesses from storage if available
+  const [guesses, setGuesses] = useState<string[]>(() => {
+    const store = getArcadeStorage();
+    const saved = store.sollu[`${editionKey}:${mode}`];
+    return saved ? saved.guesses.map((g) => g.join("")) : [];
+  });
   const [currentGuess, setCurrentGuess] = useState<string>("");
-  const [gameStatus, setGameStatus] = useState<"playing" | "won" | "lost">("playing");
+  const [gameStatus, setGameStatus] = useState<"playing" | "won" | "lost">(() => {
+    const store = getArcadeStorage();
+    const saved = store.sollu[`${editionKey}:${mode}`];
+    return saved?.status === "won" ? "won" : saved?.status === "lost" ? "lost" : "playing";
+  });
   const [shakeRow, setShakeRow] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [copiedShare, setCopiedShare] = useState<boolean>(false);
@@ -49,11 +62,15 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
   const handleModeChange = (newMode: "tanglish" | "tamil") => {
     if (newMode === mode) return;
     setMode(newMode);
-    setGuesses([]);
+    const store = getArcadeStorage();
+    store.preferences.solluMode = newMode;
+    const saved = store.sollu[`${editionKey}:${newMode}`];
+    setGuesses(saved ? saved.guesses.map((g) => g.join("")) : []);
     setCurrentGuess("");
-    setGameStatus("playing");
+    setGameStatus(saved?.status === "won" ? "won" : saved?.status === "lost" ? "lost" : "playing");
     setErrorMessage(null);
     setCopiedShare(false);
+    saveArcadeStorage(store);
   };
 
   // Tokenize an arbitrary guess string
@@ -179,8 +196,20 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
     setCurrentGuess("");
     setErrorMessage(null);
 
+    const isWon = currentGuess === targetWord;
+    const isLost = !isWon && nextGuesses.length >= maxGuesses;
+    const status = isWon ? "won" : isLost ? "lost" : "in_progress";
+
+    const store = getArcadeStorage();
+    store.sollu[`${editionKey}:${mode}`] = {
+      guesses: nextGuesses.map((g) => getTokens(g)),
+      status,
+      completedAt: isWon || isLost ? new Date().toISOString() : undefined,
+    };
+    saveArcadeStorage(store);
+
     // Win condition
-    if (currentGuess === targetWord) {
+    if (isWon) {
       setGameStatus("won");
       setTimeout(() => {
         soundEngine.playBellChime();
@@ -190,7 +219,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
     }
 
     // Loss condition
-    if (nextGuesses.length >= maxGuesses) {
+    if (isLost) {
       setGameStatus("lost");
     }
   }, [
@@ -202,6 +231,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
     targetWord,
     guesses,
     maxGuesses,
+    editionKey,
     onSolved,
   ]);
 
@@ -247,14 +277,18 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
     });
 
     const score = gameStatus === "won" ? `${guesses.length}/${maxGuesses}` : `X/${maxGuesses}`;
-    const text = `OSU Tamil Sangam · Sollu #${editionKey} (${edition.monthEn}) 🕶️💥\n${score}\n\n${rows.join(
+    const editionNum = editionKey.replace("2026-", "");
+    const modeLabel = mode === "tanglish" ? "Tanglish" : "தமிழ்";
+    const text = `OSU Tamil Sangam · Sollu #${editionNum} (${edition.monthEn} · ${modeLabel}) 🕶️💥\n${score}\n\n${rows.join(
       "\n"
-    )}\n\nPlay at: tamil-sangam-website-osu.vercel.app/games`;
+    )}\n\nPlay: https://tamil-sangam-website-osu.vercel.app/games`;
 
-    navigator.clipboard.writeText(text).then(() => {
-      setCopiedShare(true);
-      setTimeout(() => setCopiedShare(false), 2400);
-    });
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        setCopiedShare(true);
+        setTimeout(() => setCopiedShare(false), 2400);
+      });
+    }
   };
 
   // English QWERTY keyboard layout
@@ -419,6 +453,15 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
                   </>
                 )}
               </button>
+
+              <a
+                href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-mono text-[#161210]/80 hover:text-[#C85A32] underline underline-offset-4 px-2 py-1 transition-colors"
+              >
+                Post in OSU TS GroupMe ↗
+              </a>
 
               <button
                 onClick={() => {
