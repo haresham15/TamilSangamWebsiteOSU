@@ -1,5 +1,5 @@
 <USER_REQUEST>
-Edit the hero aniamtion and refine it according to this 
+Edit the hero aniamtion and refine it according to this
 
 # PRD — Home Hero v3: "The Wreath Split" (3 Acts) + The Monolith
 
@@ -50,6 +50,7 @@ The directive's vision is preserved: a full-screen digital kolam, a chrome "அ"
 ## 2. Goals, non-goals, success criteria
 
 ### Goals
+
 1. A **cinematic first 10 seconds** that is beautiful as a still *and* in motion.
 2. A **mathematically clean, reversible** wreath deformation (scrubbing backward undoes it exactly).
 3. **Cultural fidelity:** the kolam must read as a real kolam (pulli + continuous interlaced line logic), and the Kural must be accurate.
@@ -57,11 +58,13 @@ The directive's vision is preserved: a full-screen digital kolam, a chrome "அ"
 5. **Accessible and fast:** real DOM text, reduced-motion fallback, navigation reachable.
 
 ### Non-goals
+
 - No audio. No `framer-motion` on this page.
 - No third-party HDRIs or font JSON downloads at runtime.
 - No changes to the global tick/governor/tier logic (this hero only registers with them).
 
 ### Success criteria
+
 | Metric | Target |
 |---|---|
 | Frame rate (Tier A, M1 Air @ 1440p) | median ≥ 55 fps through Acts I–II |
@@ -108,9 +111,11 @@ The directive's vision is preserved: a full-screen digital kolam, a chrome "அ"
 ## 5. Scroll and layout architecture (get this right once)
 
 ### 5.1 Why this section exists
+
 The Guide hero used a `340vh` ScrollTrigger distance against a `340dvh` section containing a `100dvh` sticky stage. The stage is pinned for only 240dvh, so progress reached ≈ 0.71 when it unpinned. **Do not repeat this.** One constant, one formula, one real-scroll test.
 
 ### 5.2 DOM structure
+
 ```html
 <main id="app-root">
   <section id="home-hero" data-home-hero style="--hero-d: 300dvh">
@@ -128,11 +133,13 @@ The Guide hero used a `340vh` ScrollTrigger distance against a `340dvh` section 
   </section>
 </main>
 ```
+
 - **Hero section height** = `calc(var(--hero-d) + 100dvh)` → the stage is pinned while `scrollY ∈ [0, D]`.
 - **Monolith overlap:** `margin-top = −(1 − ACT3_START) × D` = **−0.38 × D = −114dvh**. The Monolith's top edge enters the viewport bottom exactly when `p = 0.62` and covers the viewport fully when `scrollY = 0.62D + 100dvh = 286dvh`, i.e. `p ≈ 0.953`. Its motion is the natural 1:1 page scroll (no scrubbed translate needed), so it can never desync.
 - `z-20` and `bg-[#050201]` on the Monolith so it hides the stage.
 
 ### 5.3 ScrollTrigger (no magic numbers)
+
 ```ts
 ScrollTrigger.create({
   trigger: "#home-hero",
@@ -142,14 +149,17 @@ ScrollTrigger.create({
   onUpdate: (self) => { homeHeroProgress.current = self.progress; }  // ref only
 });
 ```
+
 Constants live in `homeHero.constants.ts`: `HERO_D_VH = {desktop:300, mobile:260}`, `ACT3_START = 0.62`, and the CSS margin is derived from them (via a CSS variable set at mount, not duplicated literals).
 
 ### 5.4 Tests that must exist
+
 1. **Pin geometry:** scroll to `section.bottom − innerHeight`; assert `progress ≥ 0.999` and the stage is still `position: sticky`-pinned.
 2. **Slate timing:** at `p = 0.62`, the Monolith's top equals the viewport bottom (±2 px); at `p = 0.953`, it covers the viewport.
 3. **Breakpoint parity:** CSS and JS "mobile" definitions come from one source (`matchMedia("(max-width: 767.98px)")` in both), tested at 767/768/769 px.
 
 ### 5.5 Rendering control
+
 - The hero registers `governor.request("home-hero", 2)` while visible and `p < 0.62` (smooth 60 fps for the first impression); drops to `1` during dwell; `0` and `view.visible = false` at `p ≥ 0.953`.
 - Never toggle `group.visible` on a threshold while it is in frame (Guide board pop-in lesson); fade instead.
 
@@ -162,11 +172,13 @@ Constants live in `homeHero.constants.ts`: `HERO_D_VH = {desktop:300, mobile:260
 **Design brief (cultural fidelity).** A **pulli kolam** (dot-lattice) with **sikku-style interlaced lines** that flows as continuous loops around the dots, symmetrical about the vertical axis, edge-to-edge across the screen with a **clear central void** (radius ≈ 0.18 × viewport height) for the emblem. Have a member or advisor who practices kolam review the pattern for authenticity before build. Provide **two authored layouts**: *landscape* and *portrait*.
 
 **Authoring pipeline.**
+
 1. Author `kolam-half-{landscape,portrait}.svg`: the **right half only** (x ≥ 0), one `<path>` per stroke, plus a `<g id="pulli">` of dot circles. Lines that cross the seam must do so **perpendicularly** (mirror symmetry) at a small, listed set of seam points (≤ 12).
 2. `scripts/build-kolam.mjs` samples each path at uniform arc length (≈ 0.05 world units), computes cumulative arc `aArc`, normalised pattern coordinates `(s, t)` for every sample, flags **seam ends** (`aSeam`), and writes a compact Float32 **centreline** file (≈ 8–10k points; gzip ≤ 150 KB).
 3. At load (or in a worker), build the **tube mesh** from the centreline: `radialSegments 12`, smooth normals, `Uint32` indices.
 
 **Per-vertex attributes (the contract with the shader):**
+
 | Attribute | Meaning |
 |---|---|
 | `position` | tube surface vertex (flat layout, right-half local space) |
@@ -182,6 +194,7 @@ Constants live in `homeHero.constants.ts`: `HERO_D_VH = {desktop:300, mobile:260
 **Pulli dots.** One `InstancedMesh` (≈ 120–200 spheres, 16×12 segments) per half (again sharing geometry, mirrored by scale). They run the same deformation (as points: `aCenter = position`, tiny cross-section).
 
 **Material (digital kolam).** `MeshStandardMaterial` patched via `onBeforeCompile` (keeps PBR, fog, and tone mapping):
+
 - base `#F1E9D2`, emissive `#F1E9D2` at 0.55, roughness 0.35, metalness 0
 - **Draw-on:** discard/shrink radius where `aArc > uDraw` (intro, §6.4)
 - **Pulse:** `emissive *= 1 + 0.9 * smoothstep(0.92, 1.0, sin(aArc*TAU*3.0 - uTime*0.9)*0.5+0.5)`: slow light waves travelling along lines; warm tint `#FFB84D` at the crest
@@ -192,11 +205,13 @@ Constants live in `homeHero.constants.ts`: `HERO_D_VH = {desktop:300, mobile:260
 ### 6.2 The emblem: chrome "அ"
 
 **Geometry.** Convert "அ" from an **OFL-licensed Tamil serif** (e.g., Noto Serif Tamil) to a single-glyph asset: either (a) a **facetype.js/typeface JSON subset containing only that glyph** for `<Text3D>`, or (b) outline → SVG → `ExtrudeGeometry`. Use (b) if the glyph appears mirrored/inverted (see below). Record the font licence in `docs/assets-licenses.md`.
+
 - Settings: `curveSegments 24–32`, `bevelEnabled`, `bevelSize 0.015`, `bevelThickness 0.03`, `bevelSegments 6`, depth ≈ 0.18. (`curveSegments={64}` from the directive is allowed on Tier A only if triangle budget holds; bevel segments matter more.)
 - **Orientation fix:** diagnose first. If the glyph reads mirrored from the front, the clean fix is to flip the geometry on X (or use the typeface `reverse` option at conversion), not a `rotation={[0, π, 0]}` that exposes the back face and its inverted bevel lighting. If the directive's rotation is used, verify that normals/bevels light correctly.
 - Size: glyph height ≈ **0.30 × viewport height**, centred in the kolam's central void.
 
 **Material (premium chrome).** `meshPhysicalMaterial`: `color #fff`, `metalness 1`, `roughness 0.10–0.18`, `clearcoat 0.3`, `envMapIntensity 2`. (`roughness 0.05` + `clearcoat 1` on a metal mostly doubles specular cost; keep the glyph slightly softer so highlights bloom instead of aliasing.)
+
 - Set `transparent = true` from the start and enable `alphaHash` so the exit dissolve never triggers material changes.
 
 **Environment (no CDN).** `<Environment frames={1} resolution={256}>` containing `<Lightformer>`s: a large warm softbox upper-left (`#FFD9A0`, intensity 4), a narrow cool strip right (`#9FD6FF`, 1.5), a bright warm kicker low (`#FFB84D`, 2), and a faint dark floor. The kolam is **not** in the reflection; the site's warm palette is. Tune until the glyph shows crisp bright edges against a dark body. `background={false}`.
@@ -204,6 +219,7 @@ Constants live in `homeHero.constants.ts`: `HERO_D_VH = {desktop:300, mobile:260
 **Idle motion.** In one `useSafeFrame`: `y = A·sin(2π·t/6)` with `A = 0.08`; `rotation.y = ±4°` slow wobble (so highlights slide); pointer parallax ±1.2°; all amplitudes scaled by `(1 − emblemExit)`; disabled when reduced motion.
 
 ### 6.3 Scene setup
+
 - Camera: perspective, FOV 35°, position `(0, 0, 12)`, looking at the origin. Viewport height at z = 0: `Hv = 2·12·tan(17.5°) ≈ 7.57`; `Wv = Hv·aspect`.
 - Kolam placement: half-width `X = 0.5·Wv·1.12`, height `Y = Hv·1.12` (12% bleed), centred at the origin.
 - Fog: `FogExp2("#050201", 0.03)`. Check at z = −30 (distance 42): `1 − exp(−(0.03·42)²) ≈ 80%` fogged ✓ ("swallowed by fog"); kolam at distance 12: ≈ 12% ✓. Chrome and kolam materials have `fog: true`.
@@ -211,6 +227,7 @@ Constants live in `homeHero.constants.ts`: `HERO_D_VH = {desktop:300, mobile:260
 - **Grade:** the hero must be affected by the global grade (bloom threshold ≈ 0.85, LUT, vignette, grain). **Phase 0 spike:** prove the `<View>` is graded, or implement the in-scene fallback (additive glow sprites on pulli dots, a CSS vignette/grain overlay). *Do not* ship a hero with no bloom.
 
 ### 6.4 Intro and idle ("alive at rest")
+
 - **Draw-on:** `uDraw: 0 → 1` over 2.6 s (ease `power2.out`), ordered by **distance from the centre** (precompute `aArc` ordering by radial distance), pulli dots pop with a 40 ms stagger per ring.
 - **Emblem:** emerges from `z = −8` (fogged) to `z = 0`, alpha-hash 0 → 1 over 1.8 s, starting at 0.6 s.
 - **Idle:** kolam pulse waves every ~6 s; very slow rotation of the ghost layer (±0.4°); dust motes (≤ 120 points) drifting; emblem float.
@@ -223,41 +240,52 @@ Constants live in `homeHero.constants.ts`: `HERO_D_VH = {desktop:300, mobile:260
 *This section answers the directive's "detail the mathematical approach" requirement.*
 
 ### 7.1 Coordinates and parameters
+
 - Work in **right-half local space** `(x ≥ 0)`; the left half is the same mesh mirrored by `scale.x = −1`.
 - Pattern coordinates per vertex: `s ∈ [0,1]` (distance from seam, 0 at the seam, 1 at the screen edge), `t ∈ [0,1]` (top → bottom).
 - Flat position: `F(s,t) = (s·X, Y·(0.5 − t), 0)`: this is simply `aCenter`.
 - **Act II progress** `q ∈ [0,1]`.
 
 ### 7.2 The zipper stagger (split from the top)
+
 Per-vertex openness:
+
 ```
 g(t, q) = clamp( (q − δ·t) / (1 − δ), 0, 1 )      δ = 0.5
 e(t, q) = smootherstep(g)  = g³(g(6g − 15) + 10)
 ```
+
 - At `t = 0` (top) `g` reaches 1 at `q = 0.5`; at `t = 1` (bottom) it starts at `q = 0.5` and ends at `q = 1`. The "zip" travels top→bottom across the whole of Act II.
 - The seam stays joined at the bottom until the very end, then the join is the wreath's tie.
 
 ### 7.3 The wreath target `W(s,t)` (open at top, tied at bottom)
+
 ```
 φ(t) = φ_gap + t·(π − φ_gap)                    // angle from 12 o'clock, clockwise
 r(s) = R_in + s^γ·(R_out − R_in)                // γ = 0.85
 W(s,t) = ( C.x + r·sin φ,  C.y + ε·r·cos φ,  w_z(t) )
 w_z(t) = z_tip·(1 − t)² − z_belly·sin(π t)      // tips curl toward camera, belly bows back
 ```
+
 - `C` = wreath centre (slightly above screen centre, matching the Kural block's centre).
 - `φ_gap ≈ 14°` (opening at the top); at `t = 1`, `φ = π` and `W(0,1) = (0, C.y − ε·R_in)`, **the same point for both halves**, so the halves tie at the bottom ✓.
 - `ε` = ellipse factor (1.0 landscape; ≈ 1.4–1.5 portrait) so the wreath fits tall screens.
 
 ### 7.4 The bend pose (why it "bends the opposite way")
+
 A straight blend `mix(F, W, e)` can collapse through the middle. Use a **quadratic Bézier** with a mid-pose `M` that pushes each half outward and *back* in depth:
+
 ```
 M = F + ( a_x·X·s^1.2·√(1 − t),  0,  −a_z·Hv·sin(π·min(1, 1.2t))·(0.4 + 0.6 s) )
 P = (1 − e)²·F + 2(1 − e)e·M + e²·W
 ```
+
 Because the left mesh is mirrored, the same formula yields **opposite-direction** bends for the two halves.
 
 ### 7.5 Keeping tubes round: the rigid cross-section approximation
+
 Deform the **centreline**, not the tube surface:
+
 ```
 offset = position − aCenter                   // cross-section vector
 β      = smootherstep(e) · (π/2 − φ(t))       // local frame rotation from flat to wreath tangent
@@ -267,10 +295,12 @@ k     *= mix(1, smoothstep(0, 0.2, e), aCap)                        // seam bead
 worldPos = P + k·offset
 normal   = Rz(β)·normal
 ```
+
 - `k_w ≈ 0.55` compensates for the pattern compressing into the ring; `f_out ≈ 0.7` thins/fades the outermost columns so the wreath does not clutter (see density, §7.7).
 - `Rz(β)` in GLSL: `mat2(c, s, −s, c)`.
 
 ### 7.6 GLSL (patched into `MeshStandardMaterial` at `#include <begin_vertex>`)
+
 ```glsl
 uniform float uQ, uDelta, uRin, uRout, uPhiGap, uEps, uTubeScale, uFadeOut;
 uniform vec2  uHalf;      // (X, Y)
@@ -304,6 +334,7 @@ vNormalObj = vec3(R * normal.xy, normal.z);   // feed into the standard normal c
 ```
 
 ### 7.7 Density and starting parameters
+
 The flat half-page area (~1.1 H²) maps into an annular sector (~0.3 H²), a ≈ 3.8× area compression. Mitigate with: `k_w = 0.55`, outer-column fade (`f_out`), and radii that extend slightly beyond the screen edge so the ring is cropped rather than cramped.
 
 | Parameter | Landscape | Portrait |
@@ -320,20 +351,24 @@ The flat half-page area (~1.1 H²) maps into an annular sector (~0.3 H²), a ≈
 All of these are tunable live in the `/home/lab` page (§12).
 
 ### 7.8 Reversibility and numerical care
+
 - The deformation is a **pure function of `(s, t, q)`**; no integration, no state, so scrubbing is exactly reversible.
 - Clamp `q` to [0,1]; precompute `aST` on the CPU in float32; avoid `pow(0, γ)` NaNs with `max(s, 1e-5)`.
 - Provide the same math as a **CPU reference** (`wreathMath.ts`) used for: unit tests, the static fallback SVG generation script, and the `?debug=ref` overlay (draws CPU-computed centreline samples over the GPU result to prove they agree).
 
 ### 7.9 Emblem exit
+
 ```
 g_e   = clamp(q / 0.60, 0, 1)
 z     = lerp(0, −30, easeInOutCubic(g_e))
 alpha = 1 − smoothstep(0.35, 1.0, g_e)           // via alphaHash + opacity in the last 20%
 scale = 1 (optional counter-scale c = (12 − z)/12 for the first 40% of g_e to hold apparent size)
 ```
+
 Apparent size at `z = −30`: `12 / 42 ≈ 29%`. Fog handles the rest. The float animation is multiplied by `(1 − g_e)`.
 
 ### 7.10 The Kural reveal (DOM, in the centre of the wreath)
+
 Positioned by CSS in the stage's centre; the **wreath's inner void** is sized (`R_in`) so the block fits: block width ≤ `1.5·R_in` in screen px (an inscribed 1.6:1 rectangle), centred at `C`.
 
 | Tier | Content | Trigger (`q`) | Animation |
@@ -343,6 +378,7 @@ Positioned by CSS in the stage's centre; the **wreath's inner void** is sized (`
 | 3 | Mono caption "Adhigaaram 9" | 0.85 → 1.0 | Fades in at the bottom of the block |
 
 Implementation notes:
+
 - Driven by GSAP **scrubbed tweens on the same master timeline** (reversible), writing CSS variables / transforms directly; **no React state per tick**.
 - `filter: blur()` on a large block is costly; limit to Tier 1, give it `will-change: filter, transform`, and release `will-change` when done.
 - **Tamil splitting:** split by **line** or **word**; if per-glyph animation is desired, use `Intl.Segmenter("ta", {granularity:"grapheme"})`. Never `split("")`.
@@ -350,6 +386,7 @@ Implementation notes:
 - **Content:** Chapter 9 of the Kural (*Virundhombal*, hospitality) per the directive; the opening couplet of the chapter is the natural candidate. **Take the Tamil text from a trusted edition and have it reviewed**; use a public-domain or self-authored translation (e.g., a 19th-century public-domain translation) rather than a modern copyrighted one.
 
 ### 7.11 UI purge (Acts I–II)
+
 - Toggle `document.body.dataset.heroPurge = "true"` while `p < 0.62`.
 - CSS: `[data-hero-purge="true"] :is(.site-nav, .ask-nanba) { opacity:0; pointer-events:none; transition: opacity .4s }`.
 - **Reveal paths:** `:focus-within` on the nav (keyboard Tab shows it), pointer within the top 72 px, any scroll-up intent (wheel/touch up for > 40 px), and `p ≥ 0.62`.
@@ -361,9 +398,11 @@ Implementation notes:
 ## 8. Act III: The Curtain Rise
 
 ### 8.1 Behaviour
+
 The slate is the Monolith section itself, entering via natural scroll (§5.2). While it rises, the pinned scene keeps rendering until the slate covers more than ~90% of the viewport, then `governor.request("home-hero", 0)`. Optional polish: as the slate rises, scale the Kural block to 0.97 and dim its opacity (parallax "recede") using the same progress.
 
 ### 8.2 Edge handling
+
 - Scroll restoration / hash links to `#monolith`: set `p` immediately; do not replay Act II.
 - Back navigation from another route returns to the *earned* state (store a lightweight `homeHeroSeen` flag in memory/`sessionStorage` guarded by try/catch) and skips the intro draw-on.
 - `inert`/focus: while the slate fully covers the stage, set `inert` on the stage's DOM (the Kural text) so focus cannot land under the slate; remove it when scrolling back.
@@ -373,9 +412,11 @@ The slate is the Monolith section itself, entering via natural scroll (§5.2). W
 ## 9. The Monolith (content)
 
 ### 9.1 Layout
+
 `grid grid-cols-12`, min-height `100dvh`, background `#050201`, **no rounding, no shadows**.
 
 **Left column (`col-span-4`)**
+
 - Watermark `௦௧` (Tamil digits 0 and 1), **3% opacity**, enormous (`clamp(14rem, 32vw, 36rem)`), `aria-hidden`, positioned bottom-left, clipped.
 - **Right border:** `border-r border-white/10`, full column height.
 - **Telemetry (monospace, bottom-aligned, `text-[11px] tracking-[0.18em]`):**
@@ -385,6 +426,7 @@ The slate is the Monolith section itself, entering via natural scroll (§5.2). W
 - Uses existing CSS variable for mono (`--font-azeret-mono`).
 
 **Right column (`col-span-8`)**
+
 - **Hook:** "A hearth on the banks of the Olentangy." Serif, `font-size: clamp(2.75rem, 6.2vw, 7rem)`, `leading-[0.95]`, `tracking-[-0.02em]`, left-aligned, generous top padding.
 - **Dossier ribbons**, three full-width strips separated by `border-b border-white/10`:
 
@@ -395,13 +437,16 @@ The slate is the Monolith section itself, entering via natural scroll (§5.2). W
 | KINSHIP | 03 | Friends who become family, far from home | `/about` or `/join` |
 
   Each ribbon: mono index (left), large serif title, descriptor in muted white (`text-white/50`), trailing `→`. **Hover/focus-visible:** `translate-x-3` and text colour `#FFB84D`; `transition-[transform,color] duration-300 ease-out`; `motion-reduce:transition-none`. Entire strip is one focusable link. On touch, the arrow and gold index are always visible (no hover dependency).
+
 - **Delete** the "AATAM PAATAM KONDATAM" ribbon and its CSS/JS; add a test that the string no longer appears in the built home page.
 
 ### 9.2 Responsive
+
 - `< md`: stack columns; left column becomes a compact top strip (watermark behind, telemetry in a 2-column mono grid); ribbons remain full width; hook scales down via `clamp`.
 - Maintain 1 px borders and 0 radius at all sizes.
 
 ### 9.3 Content to confirm
+
 Ribbon descriptors, destinations, member count, founding year. All Tamil text flagged for native review.
 
 ---
@@ -423,6 +468,7 @@ Ribbon descriptors, destinations, member count, founding year. All Tamil text fl
 ---
 
 ## 11. Accessibility, i18n, content integrity
+
 - Canvas is decorative (`aria-hidden`). The Kural block is real text; reading order = Tamil, English, caption.
 - Navigation remains reachable (§7.11); the skip control jumps to `#monolith`.
 - `prefers-reduced-motion` → Tier C composition; no blur animation; no flashing.
@@ -436,9 +482,11 @@ Ribbon descriptors, destinations, member count, founding year. All Tamil text fl
 ## 12. Testing and QA tooling
 
 ### 12.1 Lab page
+
 `/home/lab?p=0.0..1.0&debug=1` (noindex, not linked, blocked in production unless `?lab=1` + env flag). Controls: `p` slider, `q`, tier switch, parameter sliders for §7.7, "ref overlay" (CPU vs GPU), wireframe, freeze time, FPS/`renderer.info`.
 
 ### 12.2 Automated tests
+
 - **Math unit tests (`wreathMath.test`)**: seam join at bottom (`W(0,1)` equal for both halves), mirror symmetry, monotonic zip (`e` non-decreasing in `q`; non-increasing in `t` at fixed `q`), endpoints (`q=0 → F`, `q=1 → W`), reversibility, no NaNs on `s=0`.
 - **Pin geometry tests** (§5.4).
 - **Static greps:** no `framer-motion`, no `rounded-` (except `rounded-none`), no `shadow-` in hero/Monolith; no "AATAM PAATAM KONDATAM".
@@ -448,6 +496,7 @@ Ribbon descriptors, destinations, member count, founding year. All Tamil text fl
 - **Frame-time capture** through a scripted scroll (≥ 55 fps median on Tier A hardware).
 
 ### 12.3 Approval frames
+
 | Frame | `p` | Must show |
 |---|---|---|
 | **A1** | 0.0 | Full-screen kolam, bright chrome "அ" with crisp bevels and warm reflections, dark central void, bloom on lines |
@@ -478,6 +527,7 @@ Ribbon descriptors, destinations, member count, founding year. All Tamil text fl
 ---
 
 ## 14. Risks and mitigations
+
 | Risk | Mitigation |
 |---|---|
 | Wreath mid-states look like a tangle | Bézier mid-pose, `δ` zip stagger, outer-column fade, lab sliders; rigid fallback available |
@@ -492,6 +542,7 @@ Ribbon descriptors, destinations, member count, founding year. All Tamil text fl
 | Triangle/memory overshoot | 12/8 radial segments, shared geometry, centreline-only payload |
 
 ## 15. Open questions
+
 1. Who authors the kolam (or which existing pattern do we adapt), and who signs off authenticity?
 2. Which Kural (confirm chapter 9, couplet number) and which translation?
 3. Tamil serif: Noto Serif Tamil, or the site's existing Tamil face?
@@ -542,6 +593,7 @@ before asking to proceed.
 
 FIRST REPLY: acknowledge constraints, list unanswered items from PRD §15, then deliver the MATH FIRST plan only.
 ```
+
 </USER_REQUEST>
 <ADDITIONAL_METADATA>
 The current local time is: 2026-10-09T14:29:00-04:00.
@@ -550,8 +602,9 @@ The user's current state is as follows:
 Active Document: c:\Users\hares\OneDrive\Desktop\CS_Projects\TamilSangamWebsiteOSU\src\director\wireframe.ts (LANGUAGE_TYPESCRIPT)
 Cursor is on line: 1
 Other open documents:
+
 - c:\Users\hares\OneDrive\Desktop\CS_Projects\TamilSangamWebsiteOSU\src\director\wireframe.ts (LANGUAGE_TYPESCRIPT)
 Browser State:
-  Page 1033A8E3F4B533E595FAC3974D52DDC8 (OSU Tamil Sangam · The Ohio State University) - http://localhost:3000/ [ACTIVE]
+  Page 1033A8E3F4B533E595FAC3974D52DDC8 (OSU Tamil Sangam · The Ohio State University) - <http://localhost:3000/> [ACTIVE]
     Viewport: 1707x898, Page Height: 6654
 </ADDITIONAL_METADATA>

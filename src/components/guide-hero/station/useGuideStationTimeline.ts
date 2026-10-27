@@ -53,7 +53,7 @@ export function useGuideStationTimeline(sequenceElement: RefObject<HTMLElement |
           progressState.target = initialProgress;
           return;
         }
-        const damping = 1 - Math.exp(-6 * dt);
+        const damping = 1 - Math.exp(-22 * dt);
         progressState.current += (progressState.target - progressState.current) * damping;
       },
     });

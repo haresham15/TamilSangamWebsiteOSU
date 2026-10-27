@@ -91,6 +91,11 @@ export const BoardJsonLd: React.FC<{
 };
 
 export const PhotoAlbumJsonLd: React.FC<{ album: GalleryAlbum }> = ({ album }) => {
+  const toAbsoluteUrl = (path?: string) => {
+    if (!path) return `${SITE_URL}/emblem.svg`;
+    return path.startsWith("http") ? path : `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ImageGallery",
@@ -99,7 +104,7 @@ export const PhotoAlbumJsonLd: React.FC<{ album: GalleryAlbum }> = ({ album }) =
     description: album.descriptionEn,
     datePublished: album.eventDate,
     url: `${SITE_URL}/gallery/${album.slug}`,
-    image: album.coverImage,
+    image: toAbsoluteUrl(album.coverImage),
     author: {
       "@type": "EducationalOrganization",
       name: "OSU Tamil Sangam",
@@ -107,7 +112,7 @@ export const PhotoAlbumJsonLd: React.FC<{ album: GalleryAlbum }> = ({ album }) =
     },
     hasPart: album.photos.map((photo) => ({
       "@type": "ImageObject",
-      contentUrl: photo.imageUrl,
+      contentUrl: toAbsoluteUrl(photo.imageUrl),
       caption: photo.captionEn,
       name: photo.titleEn,
     })),

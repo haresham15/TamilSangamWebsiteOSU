@@ -555,7 +555,8 @@ function ScrollExpandIntroOverlay() {
           THE OHIO STATE UNIVERSITY
         </span>
         <h1 className="font-anek-tamil text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] mt-1 sm:mt-1.5">
-          TAMIL SANGAM
+          <span className="sr-only">OSU </span>TAMIL SANGAM
+          <span className="sr-only"> (ஒஹையோ மாநிலப் பல்கலைக்கழகத் தமிழ்ச் சங்கம்) — Official Tamil Student Organization at The Ohio State University</span>
         </h1>
       </div>
 
@@ -747,16 +748,10 @@ function PulliGridNodes({ isMobile }: { isMobile: boolean }) {
       ? heroDirectorState.scrubProgress
       : heroScrollProgress.current;
     const time = state.clock.getElapsedTime();
-
-    dots.forEach((dot, idx) => {
-      const wave = Math.sin(time * 2.5 + dot[1] * 1.5 + rawP * 8.0);
-      const glintScale = 0.85 + 0.35 * Math.max(0, wave);
-      dummy.position.set(dot[0], dot[1], dot[2] - 0.02);
-      dummy.scale.setScalar(glintScale);
-      dummy.updateMatrix();
-      meshRef.current!.setMatrixAt(idx, dummy.matrix);
-    });
-    meshRef.current.instanceMatrix.needsUpdate = true;
+    const mat = meshRef.current.material as THREE.MeshPhysicalMaterial;
+    if (mat) {
+      mat.emissiveIntensity = 0.22 + 0.18 * Math.max(0, Math.sin(time * 2.5 + rawP * 8.0));
+    }
   });
 
   if (dots.length === 0) return null;

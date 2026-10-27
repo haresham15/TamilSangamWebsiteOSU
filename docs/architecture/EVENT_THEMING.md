@@ -26,13 +26,17 @@ The OSU Tamil Sangam homepage features an editorial, interactive art installatio
 To update the flagship gathering for a new season or event (e.g., transitioning from Halloween's *Kollywood Kollai* to January's *Thai Pongal Thiruvizha*):
 
 ### Step 1: Add High-Contrast Silhouette Asset
+
 Place a transparent PNG or SVG silhouette of the seasonal motif into the `public/images/themes/` directory:
+
 ```bash
 public/images/themes/pongal-pot.png
 ```
+
 *Tip: High-contrast silhouettes with clear negative space produce the most striking Bayer dithering patterns.*
 
 ### Step 2: Update `config/upcomingEvent.ts`
+
 Modify the `activeUpcomingEvent` export with the new event parameters:
 
 ```typescript
@@ -73,6 +77,7 @@ export const activeUpcomingEvent: FlagshipEventConfig = {
 ```
 
 ### Step 3: Verify & Deploy
+
 Save the file. Hot module reloading updates the entire homepage instantly across desktop and mobile breakpoints with zero UI regressions, zero manual CSS edits, and zero layout adjustments.
 
 ---

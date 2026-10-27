@@ -161,7 +161,7 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
       (entries) => {
         const entry = entries[entries.length - 1];
         inViewRef.current = entry.isIntersecting;
-        governor.request("board-corridor", inViewRef.current ? 1 : 0);
+        governor.request("board-corridor", inViewRef.current ? 2 : 0);
       },
       { threshold: 0.05 }
     );
@@ -192,7 +192,7 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
           const p = self.progress;
           localProgress.current = p;
           if (debugActive) useBoardHeroStore.getState().setScrollProgress(p);
-          governor.request("board-corridor", inViewRef.current ? (Math.abs(self.getVelocity()) > 10 ? 2 : 1) : 0);
+          governor.request("board-corridor", inViewRef.current ? 2 : 0);
 
           // If user scrolls back up into corridor, smoothly restore canvas opacity & reset gold flash
           if (p < 0.96) {

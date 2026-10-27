@@ -51,6 +51,7 @@ That is a **thread-pulling** motion, not a shape morph. This PRD specifies it pr
  y = −1.2 Hv  │   ( W R E A T H   around the Kural )          │ ← camera ends here
               └─────────────────────────────────────────────┘
 ```
+
 `Hv` = world height of the viewport at z = 0 (7.57 units at FOV 35°, camera z = 12).
 
 ### 2.2 States
@@ -67,6 +68,7 @@ That is a **thread-pulling** motion, not a shape morph. This PRD specifies it pr
 | **0.60 → Act III** | Hold | Reading dwell; ambient shimmer only |
 
 ### 2.3 Topology (please confirm, see §14 Q1)
+
 - **Kolam top → wreath bottom. Kolam bottom → wreath top.** (The pattern is turned over as it pours around the text.)
 - Threads flow **downward** out of the weave's bottom, then **curve inward and under**, then **climb** the ring and end at its top, leaving a small **gap at the top** ("the bottom part disconnects and becomes the top of the wreath").
 - **Crossed wreath (default):** threads from the right half pass under the ring's bottom and climb the **left** arc; left-half threads climb the **right** arc. They cross at the bottom like a tied wreath. Because each half's inward curve ends up on the opposite side, this is the "inward curves invert" behaviour you described.
@@ -77,6 +79,7 @@ That is a **thread-pulling** motion, not a shape morph. This PRD specifies it pr
 ## 3. Goals, non-goals, success criteria
 
 ### Goals
+
 1. The motion reads as **fluid threads being drawn out of a weave**, not a morph.
 2. **Top-only split**: the first visible event is a V-notch at the top; nothing happens at the bottom of the weave until threads emerge there.
 3. **Dots and "அ" never move** (only dot brightness may respond).
@@ -85,9 +88,11 @@ That is a **thread-pulling** motion, not a shape morph. This PRD specifies it pr
 6. 60 fps on Tier A, no per-tick React state, no allocations in `useFrame`.
 
 ### Non-goals
+
 No physics simulation, no GPU compute, no `framer-motion`. Motion is analytic (path-following), so it's cheap and reversible.
 
 ### Success criteria
+
 | Metric | Target |
 |---|---|
 | Kink test | On CPU-sampled centrelines at 11 values of `p`, max turning angle between consecutive samples ≤ 8° (rest, mid, end) |
@@ -101,6 +106,7 @@ No physics simulation, no GPU compute, no `framer-motion`. Motion is analytic (p
 ---
 
 ## 4. Constraints carried over
+
 `frameloop="never"` on the global canvas; `safeDelta = Math.min(delta, 0.05)` in every `useFrame`; no `framer-motion`, no `rounded-*`, no shadows; 1 px `border-white/10`; progress from ScrollTrigger is written to a **ref** only; the hero draws through the global bloom/grade (or an in-scene fallback); Tamil is never split by code unit; nav/chat are visually purged but remain reachable.
 
 ---
@@ -108,6 +114,7 @@ No physics simulation, no GPU compute, no `framer-motion`. Motion is analytic (p
 ## 5. World model and camera
 
 ### 5.1 Layers
+
 | Layer | Moves? | Notes |
 |---|---|---|
 | **Pulli dots** | **No** | `InstancedMesh`, matrices written once at mount. Only a per-instance **alpha/glow uniform** may change (§8.4) |
@@ -116,7 +123,9 @@ No physics simulation, no GPU compute, no `framer-motion`. Motion is analytic (p
 | **Ghost/dust layers** | Optional | Behind the dots (z < 0); may drift; cheap |
 
 ### 5.2 Camera
+
 Pure vertical truck with a gentle settle.
+
 ```
 camY(p)   = y0 + (y_c − y0) · smootherstep( clamp((p − p_c0)/(p_c1 − p_c0), 0, 1) )
 p_c0 = 0.04,  p_c1 = 0.60
@@ -124,14 +133,17 @@ y0 = 0,  y_c = −1.2·Hv
 camZ(p)   = 12 → 11.2   (slight push-in over the same window)
 pitch(p)  = −4° → 0°    (starts looking marginally down, settles level)
 ```
+
 Camera speed is *slower* than scroll on purpose (≈ 0.55 Hv per 100dvh), so the dots drift past with weight and the choreography has room to breathe. These values are starting points; the **composition rules** (§10.3) are normative.
 
 ### 5.3 "அ" correctness
+
 - Placed in the **central void** of the weave at the start frame, centred on screen.
 - **Acceptance:** at `p ≥ 0.45` it is entirely outside the frustum; at no `p` does it appear over the Kural text.
 - Remove any leftover z-exit/fade code and any screen-space positioning of the emblem.
 
 ### 5.4 Dots
+
 Reuse the existing pulli lattice generator (the approved look: small warm-gold dots, diamond/oval lattice with a central void). **Extend it vertically** to cover `y ∈ [+0.6 Hv, −1.9 Hv]` so the camera always has dots in view. The lattice must be mirror-symmetric about `x = 0` and **the seam passes between the two innermost dot columns**.
 
 ---
@@ -139,6 +151,7 @@ Reuse the existing pulli lattice generator (the approved look: small warm-gold d
 ## 6. The strands at rest (the kolam weave)
 
 ### 6.1 Design rules ("organic, fluid, still a kolam")
+
 - **One strand per dot column** on each half (≈ 7 per half for the current lattice), plus optional short **link strands**. Strands run **mostly top-to-bottom** (this is essential: it is what makes them wrap around a ring later).
 - Each strand **weaves around the dots in its column**: it passes alternately left and right of each dot, and every Nth dot it makes a **loop** around the dot (a prolate trochoid: `x = x_k + A·sinθ`, `y = y_j + c·θ + B·cosθ`, `B > c` gives the loop). Adjacent strands use opposite phase so they **interlace** (over/under via a ±0.02 z offset at crossings). This is the sikku/pulli logic.
 - **Fluid, not jittery:** C² splines (centripetal Catmull-Rom or cubic B-spline) through waypoints generated from the dot positions; one consistent wavelength (≈ 2 dot spacings), consistent loop size, slight low-frequency irregularity (≤ 6% of dot spacing) sampled from `|x|` so symmetry holds.
@@ -147,9 +160,11 @@ Reuse the existing pulli lattice generator (the approved look: small warm-gold d
 - **Cultural review:** a kolam practitioner should sign off the pattern before the build is "approved".
 
 ### 6.2 Sampling
+
 Resample each strand to uniform arc length `ds_path = 0.02` (path texture) and `ds_tube = 0.045` (tube rings, Tier A) / `0.07` (Tier B). Reject any generated strand with a turning angle > 6° between path samples (the generator must smooth/regenerate).
 
 ### 6.3 Parameters (starting)
+
 | Parameter | Value |
 |---|---|
 | Strands per half `K` | 7 (match dot columns), max 10 |
@@ -164,52 +179,66 @@ Resample each strand to uniform arc length `ds_path = 0.02` (path texture) and `
 ## 7. The flow mechanism (core of this PRD)
 
 ### 7.1 Concept: a rope on a conveyor
+
 Each strand is a **fixed-length rope** of length `L`. It slides along a **composite path Π** made of two parts:
+
 1. its own **weave curve** (traversed from tail to head), then
 2. an authored **stream-and-lane path Γ** (down the side, under the ring, up the ring).
 
 Because the rope slides *along its own weave curve*, the woven part of the kolam **looks unchanged** (the curve is identical; only the rope slides along it). The visible changes happen only at the two ends:
+
 - At the **tail** (top), the rope **leaves the weave**, so lines are progressively *consumed from the top*. That is the **top-only split**.
 - At the **head** (bottom), the rope **pours out** along Γ, flows down the sides, curves under, and climbs the ring.
 
 This gives the unravelling thread feel, guarantees continuity (no tearing), and is reversible.
 
 ### 7.2 Definitions
+
 - Rope coordinate `a ∈ [0, L]`: distance from the **head** (a = 0 head, a = L tail).
 - Path `Π(s)`, `s ∈ [−L, S_end]`: `s < 0` is the weave interior (`−s` = arc position from the head end), `s ≥ 0` is Γ. `s = 0` is the **weave exit point** (head end of the weave).
 - **Feed** `f(p)`: how far the rope has been pulled. A rope point `a` sits at
+
   ```
   s(a, p) = f(p) − a                         position = Π(s)
   ```
+
   At rest (`f = 0`): point `a` is at `Π(−a)`, i.e., exactly its woven position ✓.
 - Lane start `s_L0` (path distance from the weave exit to the lane's start) and lane end `s_L1 = s_L0 + L`. The **final feed** is
+
   ```
   F = s_L0 + L        →  head at s = F = s_L1 (ring top),  tail at s = F − L = s_L0 (ring bottom)
   ```
+
   So the rope ends *exactly filling* its lane. **Kolam top (tail) → ring bottom; kolam bottom (head) → ring top** ✓.
 
 ### 7.3 Feed schedule (per strand `k`)
+
 ```
 x_k(p) = clamp( (p − p0_k) / Δp , 0, 1 )
 f_k(p) = F_k · E(x_k)           E = smootherstep, with a short settle term (below)
 p0_k   = p_a + γ·rank_k + jitter_k           // rank 0 = innermost strand, 1 = outermost
 ```
+
 Starting values: `p_a = 0.04`, `γ = 0.16`, `Δp = 0.42`, `jitter ≤ ±0.01`. The last strand therefore completes at `p ≈ 0.62` (= camera arrival).
 
 **Settle (arrival ripple):** for `x_k > 0.9` add `ε·sin(ω(x_k−0.9))·exp(−κ(x_k−0.9))` to `E` (ε ≤ 1.5% of `F_k`) so threads relax into place instead of stopping dead. This is still a pure function of `p`.
 
 ### 7.4 Why the split is top-only, and what it looks like
+
 Each strand's **tail** retracts down its own weave by `f_k(p)`. Strands nearest the seam start first (`rank` small), so at any `p` the inner strands' tails are lower than the outer strands' tails. The vacated region (dots only) is therefore a **V-shaped notch with its apex pointing down at the seam, widening toward the top edge**: exactly an unzipping from the top. **Nothing happens at the bottom of the weave** until threads emerge there.
 
 **Peel-lift (so it curls off, not just fades):** the last `ℓ = 0.18 Hv` of rope next to the tail, *while still inside the weave*, lifts out of plane:
+
 ```
 w(a)   = clamp(1 − (L − a)/ℓ, 0, 1)²                     // 1 at the tail, 0 at ℓ away
 g(s_t) = smoothstep(−ℓ, −0.02, s_t) · (1 − smoothstep(0, 0.12, s_t))   // s_t = f − L (tail position)
 lift   = w · g · ( A_x · outward + A_z · ẑ + A_n · curlNoise(σ) )
 ```
+
 (`A_x ≈ 0.10 Hv`, `A_z ≈ 0.07 Hv`, `outward` = away from the seam.) Peeling edges curl toward the camera and outward like paper. Continuous and zero when `w` or `g` is zero ✓.
 
 ### 7.5 The stream path Γ ("flow like water")
+
 Built per strand, **C¹ at `s = 0`** (starts along the weave's head tangent), in four phases:
 
 | Phase | Shape | Rules |
@@ -220,6 +249,7 @@ Built per strand, **C¹ at `s = 0`** (starts along the weave's head tangent), in
 | **4. Lane** | Climbs the ring (§7.6) | Tangent continuous with the under-sweep at the lane start |
 
 Build with centripetal Catmull-Rom through authored waypoints, then **re-parameterise by arc length** into `N` samples. **Water qualities (normative):**
+
 1. **Follow-through:** heads lead, tails trail (inherent to the conveyor).
 2. **No linear moves:** every trajectory is a smooth curve; no straight lerps anywhere.
 3. **Variation:** per-strand speed jitter (±8%), waypoint offsets, and noise seed.
@@ -227,27 +257,33 @@ Build with centripetal Catmull-Rom through authored waypoints, then **re-paramet
 5. **Settle:** see §7.3.
 
 ### 7.6 The wreath lane (the ring)
+
 - Ring centre `C = (0, y_c)`; inner clear radius `R_in = 0.32 Hv` (sized so the Kural block fits, see §10.4); band `[R_in + 0.03 Hv, R_in + 0.03 Hv + 0.20 Hv]`.
 - Strand `k` gets its own **lane radius** `r_k` (evenly spaced across the band, innermost strand → innermost lane so the lanes never cross).
 - **Lane curve (right-half rope, crossed wreath):** starts at the ring bottom `θ = π` heading toward −x, climbs the **left** arc to the top: `θ ∈ [π, 2π − φ_gap]` (clockwise from 6 o'clock to just before 12 o'clock). `φ_gap = 14°` leaves the **open gap at the top**.
+
   ```
   r(θ) = r_k + A_k · sin(ν·θ + ψ_k) · bell(θ)             // ripple absorbs excess rope length
   pos  = C + ( r(θ)·sinθ , ε·r(θ)·cosθ , z(θ) )           // ε: ellipse factor
   ```
+
 - **Length matching (mandatory solver):** the lane's arc length must equal the rope length `L_k`. Choose integer `ν` (waves per half ring, ≈ 10–14) and solve `A_k` by bisection so `lane_length(A_k) = L_k`. If `A_k` exceeds `0.35·(lane spacing)` (neighbouring lanes would collide), increase `ν`, shorten the weave strands, or widen the band. This is what prevents the "pile" in the screenshot.
 - The mirrored (left) half produces the **right arc**; both halves' tails meet at the bottom crossing, both heads end at the top gap with **tapered tips**.
 - Optional **tip ornament** (tiny leaf-bud or bead) at the gap ends.
 
 ### 7.7 Putting it together (per rope point)
+
 ```
 s    = f_k(p) − a
 P    = Π_k(s) + lift(a, p) + ripple(s, t)
 T    = normalize( Π_k(s+h) − Π_k(s−h) ),   h = ds_path/2
 ρ    = r0 · taper(a)                       // thin at both ends
 ```
+
 Everything is analytic: **no state, no integration, no history.**
 
 ### 7.8 Reversibility and numerics
+
 - Depends only on `p` (and time for the small ambient ripple).
 - Clamp `s` to `[−L, S_end]`; clamp `x_k`; guard normalisation (`max(len, 1e-6)`).
 - CPU reference `flowMath.ts` implements `Π`, `f_k`, `lift` for tests, the debug overlay, and the static fallback.
@@ -257,11 +293,13 @@ Everything is analytic: **no state, no integration, no history.**
 ## 8. Rendering
 
 ### 8.1 Data layout
+
 - **Path texture** `uPath` (RGBA32F, `N × K`): row = strand, texel = `(x, y, z, 0)` of `Π_k` at uniformly spaced `s`. Also uniforms per strand: `s_min,k = −L_k`, `ds`, `F_k`, `p0_k`, `L_k`. `K ≈ 7–10`, `N ≈ 4096` ⇒ ≈ 0.6 MB. Use `texelFetch` + manual linear interpolation (no float-linear filtering requirement).
 - **Tube geometry** (static, built once): vertices indexed by `(strand k, ring index m, radial index ω)`. Attributes: `aStrand` (row), `aA = m·ds_tube` (rope coordinate `a`), `aOmega` (angle). Indices never change.
 - **Two meshes, one geometry/material:** `RightHalf` and `LeftHalf` (`scale.x = −1`). Per-mesh uniform `uZBias = ±0.03` separates the crossing.
 
 ### 8.2 Vertex shader (tube frames that never twist)
+
 ```glsl
 // per vertex
 float k  = aStrand;
@@ -283,11 +321,13 @@ vec3  P   = C0 + peelLift(aA, s, k) + rippleOffset(N, s, uTime);
 vec3  surface = P + rho * (cos(aOmega) * N + sin(aOmega) * B);
 vNormalObj = cos(aOmega) * N + sin(aOmega) * B;      // smooth normals
 ```
+
 - Three fetches per vertex (plus interpolation) is fine at ≤ 80k vertices per half.
 - The camera-facing reference frame keeps tubes round and prevents twisting under heavy deformation (this replaces Frenet/rigid rotation).
 - Material: keep the current **gold PBR** look (patched `MeshStandardMaterial` via `onBeforeCompile`, fog on). Add a faint **light pulse** travelling along `aA`.
 
 ### 8.3 Performance
+
 | Item | Tier A | Tier B |
 |---|---|---|
 | Radial segments | 10 | 8 |
@@ -299,6 +339,7 @@ vNormalObj = cos(aOmega) * N + sin(aOmega) * B;      // smooth normals
 Zero allocations per frame; uniforms written from refs; one `uP` update per frame.
 
 ### 8.4 Dots, emblem, grade
+
 - **Dots:** static. A shader uniform `uTextMask` fades dot alpha to ~0.15 inside radius `1.15·R_in` around `C` once the wreath forms (smooth by `p`), so the Kural stays legible. A soft **glow pulse** may travel down the lattice following the peel front (brightness only).
 - **Emblem:** chrome material as in the current build, static.
 - **Grade:** the hero draws through the global bloom/grade (Phase 0 check). Without it the gold will not glow; if the global stack can't be used, add an in-scene additive glow and a CSS vignette/grain overlay.
@@ -308,12 +349,14 @@ Zero allocations per frame; uniforms written from refs; one `uP` update per fram
 ## 9. Timeline and scroll architecture
 
 Use the same pinned-stage + overlapping-Monolith pattern, with a **simplified formula**:
+
 ```
 hero section height   = D + 100dvh              (stage sticky for D)
 Monolith margin-top   = −100dvh                  (always)
 ACT3_START            = 1 − 100/D_vh             (e.g. D = 420 → 0.762)
 ScrollTrigger         = start "top top", end "bottom bottom", scrub 0.6   (progress → ref only)
 ```
+
 (The slate then enters exactly when `p = ACT3_START` and fully covers the stage exactly when the pin ends.)
 
 | Range `p` (D = 420dvh) | What happens |
@@ -334,11 +377,13 @@ UI purge, Kural text/translation requirements, accessibility, and Monolith conte
 ## 10. Motion quality rules and composition targets
 
 ### 10.1 Feel
+
 - Gentle ease-in at the very start (the first notch should feel like a thread catching), smooth mid-speed streaming, a soft settle.
 - No sudden speed changes; first and second derivatives of `f_k(p)` are continuous.
 - Threads never visibly stretch, snap, or pass through the tubes of their own half (same-half lanes are separated radially; cross-half crossings are z-biased).
 
 ### 10.2 Parameter table (all live-tunable in the lab)
+
 | Parameter | Start | Range |
 |---|---|---|
 | `p_a`, `γ`, `Δp` | 0.04, 0.16, 0.42 | — |
@@ -352,6 +397,7 @@ UI purge, Kural text/translation requirements, accessibility, and Monolith conte
 | Settle `ε`, `ω`, `κ` | 0.015, 18, 7 | — |
 
 ### 10.3 Composition rules (normative, tune parameters to hit them)
+
 1. For `p ∈ [0.06, 0.40]` the **notch/peel front is in the top half of the frame** and the unpeeled weave is visible below it.
 2. At `p ≈ 0.28` at least **three** streaming threads are visible on each side.
 3. At `p ≈ 0.40` the ring's **bottom crossing** is visible entering from the bottom of the frame.
@@ -359,11 +405,13 @@ UI purge, Kural text/translation requirements, accessibility, and Monolith conte
 5. The upper third of the frame **never** contains orphaned/loose strand fragments after `p = 0.45`.
 
 ### 10.4 Kural fit
+
 Inscribed text block ≤ `1.5·R_in` wide (px), centred at `C`; Tamil couplet `font-size` clamped so two lines fit; the translation and caption sit beneath within the void.
 
 ---
 
 ## 11. Fallbacks
+
 - **Tier B:** fewer strands, coarser tubes, same maths.
 - **Simplified fallback (only if the conveyor approach cannot ship):** per-vertex delayed Bézier from rest to lane position (`P = Bézier(F, M, W; e)` with `e` staggered by distance from the seam and by arc length along the strand) plus the same camera descent and static dots/emblem. It keeps "top-only split" and "ring at the bottom" but loses true thread continuity. Document it as the fallback, not the target.
 - **Reduced motion / Tier C / no WebGL:** a static **end-state SVG** (ring of lanes drawn from `flowMath.ts` at `p = 1`), Kural text visible, no pin.
@@ -373,6 +421,7 @@ Inscribed text block ≤ `1.5·R_in` wide (px), centred at `C`; Tamil couplet `f
 ## 12. Testing and QA
 
 ### 12.1 Unit tests on `flowMath.ts` / `pathBuilder.ts`
+
 - Path is **C¹** at `s = 0`; tangent angle error < 1°.
 - Rope **length conservation** across `p` (< 0.5%).
 - **Lane length match** (`|lane − L| / L < 0.5%`); lanes inside the band; no two same-half lanes within 1.5 tube diameters.
@@ -382,6 +431,7 @@ Inscribed text block ≤ `1.5·R_in` wide (px), centred at `C`; Tamil couplet `f
 - No NaN/Inf for `p ∈ [0,1]` and for `s` at the clamps.
 
 ### 12.2 Integration/visual
+
 - **Real-scroll pin test** (guards the Guide-hero bug class): scroll to `section.bottom − innerHeight`, assert `progress ≥ 0.999` while the stage is still pinned; assert the slate's top equals the viewport bottom at `p = ACT3_START`.
 - **Static-layer test:** dot instance matrices and emblem transform identical at `p = 0` and `p = 0.6`.
 - **Emblem off-screen test** at `p ≥ 0.45`.
@@ -390,6 +440,7 @@ Inscribed text block ≤ `1.5·R_in` wide (px), centred at `C`; Tamil couplet `f
 - **Perf capture** across a scripted scroll; triangles/draw calls logged.
 
 ### 12.3 Approval frames
+
 | Frame | `p` | Must show |
 |---|---|---|
 | **P0** | 0.00 | Full weave around dots, chrome "அ" centred, no kinks; strands visibly follow the dots |
@@ -401,6 +452,7 @@ Inscribed text block ≤ `1.5·R_in` wide (px), centred at `C`; Tamil couplet `f
 | **P6** | 0.60 | Complete ring, top gap, dots dimmed near text, Kural revealed legibly |
 
 ### 12.4 Lab page
+
 `/home/lab?p=…&debug=1` (noindex): `p` slider; per-strand feed sliders; draw **Π paths** (weave in blue, Γ in orange, lane in green); show rope-coordinate gradient; freeze time; CPU-vs-GPU overlay; tier switch; FPS/`renderer.info`.
 
 ---
@@ -421,6 +473,7 @@ Inscribed text block ≤ `1.5·R_in` wide (px), centred at `C`; Tamil couplet `f
 ---
 
 ## 14. Open questions (please answer; defaults in brackets)
+
 1. **Topology:** Is *kolam top → wreath bottom, kolam bottom → wreath top*, with **crossed** wreath arcs, what you picture? [Yes, crossed; same-side available as a flag.]
 2. Should the top gap of the wreath stay **open** at the end? [Yes, ~14°.]
 3. **Strand count/density:** keep ≈ 7 strands per half (clear, elegant) or denser? [7]
@@ -487,7 +540,9 @@ FIRST REPLY: acknowledge constraints, list unanswered items from PRD §14, then 
 ## 15. Philosophical Intent, Literary Genesis & Media Artifacts
 
 ### 15.1 The Threshold Art & Thirukkural Genesis
+
 The home page hero (`/`) embodies the foundational cultural ritual of the Tamil household:
+
 - **Arisi Maavu (அரிசி மாவு — Ground Rice Flour) Kolam:** In Tamil tradition, every morning begins before sunrise with women drawing symmetrical geometric patterns (*pulli kolam*) with ground rice flour at the threshold of the home. This ritual serves dual purposes: welcoming guests and the divine (*Lakshmi Kataksham*), while providing sustenance to birds and ants, embodying nonviolent co-existence with nature (*Ahimsa*).
 - **The Sacred Dot Lattice & Lissajous Weave:** 3D curves parameterized by harmonic frequencies weave around the static pulli dot matrix without touching them—reflecting the mathematical discipline of *Sikku Kolam*.
 - **The Thirukkural Genesis:** Suspended in the central void is the primordial first letter of the Tamil alphabet: **"அ"** (Akara). As the user scrolls, the kolam strands unpeel and form a protective circular wreath around the first couplet of the *Thirukkural* by Thiruvalluvar:
@@ -496,15 +551,18 @@ The home page hero (`/`) embodies the foundational cultural ritual of the Tamil 
   This establishes the digital presence of Ohio State Tamil Sangam as grounded in universal ethics, wisdom, and literature.
 
 ### 15.2 Content Integration: The Courtyard Unmasking
+
 As the kolam threads peel upward through the parabolic vertex shader (`peelConveyorShader.ts`), the 3D scene effortlessly yields to the **Muttram Courtyard Broadsheet**:
+
 1. **Next Flagship Gathering:** Prominent live calendar announcement with dual Gregorian and Tamil calendar lockup.
 2. **The Five Pillars:** Dance (ஆட்டம்), Music (பாட்டம்), Celebration (கொண்டாட்டம்), Service (தொண்டு), and Literature (தமிழ்).
 3. **Moments on the Olentangy:** Natural, non-boxed photo collage of campus life.
 4. **Cultural Glossary:** Interactive explanations of foundational Tamil concepts for visitors and students.
 
 ### 15.3 Hero Media Artifacts
+
 - **Video Capture:** [`docs/heroes/media/home_hero_animation.webm`](./media/home_hero_animation.webm)
 - **Animated GIF:** [`docs/heroes/media/home_hero_animation.gif`](./media/home_hero_animation.gif)
 - **Rest Frame (p=0 Kolam):** [`docs/heroes/media/home_hero_rest.png`](./media/home_hero_rest.png)
 - **Mid-Scroll Peel:** [`docs/heroes/media/home_hero_mid.png`](./media/home_hero_mid.png)
-- **Thirukkural Wreath Reveal:** [`docs/heroes/media/home_hero_reveal.png`](./media/home_hero_reveal.png)
+- **Thirukkural Wreath Reveal:** [`docs/heroes/media/home_hero_reveal.png`](./media/home_hero_reveal.png)

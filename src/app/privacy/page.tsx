@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { buildRouteMetadata, ROUTE_METADATA } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Privacy for FAQ popularity",
-  description: "How OSU Tamil Sangam uses anonymous aggregate FAQ engagement to improve its guide board.",
-};
+export const metadata: Metadata = buildRouteMetadata({
+  title: ROUTE_METADATA.privacy.title,
+  description: ROUTE_METADATA.privacy.description,
+  path: ROUTE_METADATA.privacy.path,
+});
 
 export default function PrivacyPage() {
   return (

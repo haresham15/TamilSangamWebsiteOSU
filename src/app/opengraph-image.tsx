@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { SITE_URL } from "@/lib/seo";
 
 export const alt = "OSU Tamil Sangam · The Ohio State University";
 export const size = {
@@ -190,7 +191,7 @@ export default async function Image() {
               fontFamily: "monospace",
             }}
           >
-            <span>tamil-sangam-website-osu.vercel.app</span>
+            <span>{SITE_URL.replace(/^https?:\/\//, "")}</span>
           </div>
         </div>
       </div>

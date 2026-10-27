@@ -1,4 +1,5 @@
 # PRD — Guide Hero v3: "The Station Sequence"
+
 ### Window → Crane → Departure Board (Alaipayuthey-inspired cinematic expansion)
 
 **Project:** OSU Tamil Sangam website · Next.js 16 · React 19 · R3F v9 · drei · postprocessing · GSAP ScrollTrigger · Lenis · Zustand
@@ -20,6 +21,7 @@ A single continuous shot. You are on a rain-damp platform at blue hour, face-on 
 ## 1. Goals, non-goals, success criteria
 
 ### Goals
+
 1. **One unbroken, cinematic camera move** that reads like a film crane shot, not a scripted tween.
 2. **A silhouette pair that lands emotionally** within 2 seconds of page load: legible shapes, clean edges, warm glow, stillness with life.
 3. **Scale and awe in the reveal:** the viewer must feel the station is *massive* relative to the coach.
@@ -28,12 +30,14 @@ A single continuous shot. You are on a rain-damp platform at blue hour, face-on 
 6. **Legal and ethical cleanliness:** original silhouette art, no film assets, no actor likenesses (Section 9).
 
 ### Non-goals
+
 - No rigged 3D humans, no film footage/stills/music/logos, no real railway branding.
 - No scroll-jacking (native scroll stays native).
 - No changes to the board's InstancedMesh engine, atlas, or FlapEngine (Section 6.4 defines the integration contract).
 - No audio by default.
 
 ### Success criteria
+
 | Metric | Target |
 |---|---|
 | Visual gate | Frames **F1–F6** (Section 5.6) approved by the team before motion work |
@@ -70,12 +74,15 @@ A single continuous shot. You are on a rain-damp platform at blue hour, face-on 
 ## 3. Creative direction
 
 ### 3.1 Pitch
+
 *Blue hour on a South Indian platform. A coach window glows like a lantern. Two silhouettes, a barred window between them, a drizzle you can only see in the light. Then the world opens: the camera lifts out of the moment and the station's iron rafters wheel overhead, and a board the size of a building starts to flip.*
 
 ### 3.2 Mood and grade
+
 Teal–orange: **cool, damp, blue shadows (`#0A0F14` → `#14283a`) against a single warm source (`#FFB84D`)**. Heavy atmosphere, soft halation, anamorphic streaks, light grain. Intimate first, monumental second.
 
 ### 3.3 Palette
+
 | Role | Value | Notes |
 |---|---|---|
 | Fog / deep shadow | `#0A0F14` | Distant colour, never pure black |
@@ -88,9 +95,10 @@ Teal–orange: **cool, damp, blue shadows (`#0A0F14` → `#14283a`) against a si
 | Platform (wet) | `#1b2229` base; reflections of window light | Roughness 0.25 in puddle zones |
 | Station practicals | Sodium/tube `#ffd9a0`; far lamps `#9fd6ff` mix | Gives depth cues in fog |
 | Anamorphic streak | Cool teal/blue `#55CCA2` → `#6bb6ff` | Brand mint ties it to the site |
-| Board | As v2: housing `#0c0c0e`, glyph ivory `#f1e9d2`, amber `#ffb000`, accent = theme token |
+| Board | As v2: housing `#0c0c0e`, glyph ivory `#f1e9d2`, amber `#ffb000` | Accent = theme token |
 
 ### 3.4 Lens and camera language
+
 - **Start:** 32° vertical FOV (≈ 40 mm-equivalent look), eye height ≈ 1.55 m, face-on to the coach side. Static, slightly handheld.
 - **Move:** dolly back + jib up + tilt up; FOV widens 32° → 36° (gentle, not a dolly-zoom).
 - **Rack focus:** shallow DOF at start (window sharp, foreground man slightly soft) → focus pulls to the woman → to the coach wall during the pull-back → to the board at arrival.
@@ -98,6 +106,7 @@ Teal–orange: **cool, damp, blue shadows (`#0A0F14` → `#14283a`) against a si
 - **Frame:** consider 2.39:1 letterbox only if it does not crush the board; default off.
 
 ### 3.5 Staging (the shot, spatially)
+
 Origin `(0,0,0)` = platform surface at the coach's window axis. **+x right, +y up, +z toward camera.** Units = metres. All values below are **starting values to be tuned by eye.**
 
 ```
@@ -111,6 +120,7 @@ Origin `(0,0,0)` = platform surface at the coach's window axis. **+x right, +y u
       z=+1.2   rail-side spill pool on platform begins
       z=+5.6   camera (F1)
 ```
+
 - **Window:** centre `(0, 1.7)`, opening ≈ 1.0 × 0.75 m (approximate; tune by eye), 7 horizontal iron bars (r = 0.009 m, pitch ≈ 0.1 m), shutter partially raised.
 - **Man:** height 1.75 m, head centre y ≈ 1.65, x ≈ −0.95, three-quarter profile facing the window.
 - **Woman:** seated; head centre y ≈ 1.6, x ≈ +0.15, profile facing −x (toward him). **Their sightline crosses the bars.** This crossing is the composition's emotional centre.
@@ -137,20 +147,25 @@ Single GSAP ScrollTrigger (`scrub: 0.8`) writes `progressRef`. Every curve in §
 ## 5. Environment specification
 
 ### 5.1 Layered diorama strategy
+
 Real geometry only where parallax sells it (coach, window assembly, platform, rafters/trusses, pillars). Everything else is **layered cards in fog**: far hall, station mouth, secondary trains, shaft cards, crowd silhouettes. Total draw-call budget in §10.
 
 ### 5.2 The coach (hero + two neighbours)
+
 **Geometry (low-poly, high-detail surface):**
+
 - Body profile as a curved-roof `ExtrudeGeometry` along the coach length; the hero coach's side wall built from **panels around the window opening** (or an extruded `Shape` with a window hole) so the cutout is real, not a see-through plane.
 - Roof curvature, rain gutter, door with handrails and vestibule step, window shutters, ventilator louvres, number/stencil panels (fictional), underframe and bogies (dark, partially fog-hidden), couplers and buffers at the ends.
 - Neighbour coaches are **instanced** copies with different grime seeds; train length vanishes into fog both ways.
 
 **Materials (`MeshStandardMaterial`):**
+
 - Body: `#1A242F`, roughness 0.7, metalness 0.35, **normal map** (panel seams, rivets), **grime/AO map** (vertical rain streaks, rust at seams and window frames), **decal layer** for cream band and stencil text.
 - Wet look: roughness lowered by a mask in rain-streak areas (0.7 → 0.35) so window light slides along the metal.
 - Edge highlights come from the cool rim light, not bevel geometry.
 
 **Window assembly (z-ordered, back to front):**
+
 1. Compartment backdrop: emissive gradient plane (warm centre → amber → deep red edge), **vignetted**, z = −2.4
 2. Interior set: seat-back silhouettes, luggage rack, ceiling tube light (emissive HDR), fan blades (slow)
 3. **Woman** silhouette plane (z = −0.7)
@@ -163,11 +178,13 @@ Real geometry only where parallax sells it (coach, window assembly, platform, ra
 ### 5.3 The silhouettes (billboard rig)
 
 **Asset requirements**
+
 - Two figures, **original artwork** (commissioned or club-made vector illustration; see §9). Era-neutral, generic clothing; shapes must read instantly in pure black.
 - Each figure has **two idle poses** (A/B) differing slightly (head tilt, weight shift, hand position).
 - Delivered as SVG → baked to **single-channel SDF PNGs** (≈ 512 px on the long edge, `NoColorSpace`/linear, mipmaps). Optional vector fallback via `SVGLoader → ShapeGeometry`.
 
 **Material (custom unlit shader; sketch)**
+
 ```glsl
 // fragment — unlit, SDF-based, crisp at any zoom, with backlight halation
 float d    = mix(texture2D(uSdfA, vUv).r, texture2D(uSdfB, vUv).r, uPose); // pose crossfade
@@ -177,10 +194,12 @@ float halo = smoothstep(0.5 - uHaloWidth, 0.5, d) * (1.0 - body); // bleed outsi
 vec3  col  = uInk * body + uRim * halo * uRimStrength;           // near-black ink + warm wrap
 gl_FragColor = vec4(col, max(body, halo * uRimStrength));
 ```
+
 - `transparent: true`, `depthWrite: false`, explicit `renderOrder`; `fog: false` for the woman (interior), `fog: true` for the man (outside, mist should soften him slightly).
 - Add 1–2 px of animated film noise to the ink so it is not a dead-flat vector.
 
 **Life at rest (all subtle, none loops visibly):**
+
 - Woman: pose crossfade A↔B every 6–9 s over 0.5 s (a glance down, a glance up).
 - Man: ±0.5° sway about the feet, 2 px breathing bob, one slow weight shift every ~10 s.
 - Parallax: planes at distinct depths move relative to each other as the camera shifts.
@@ -202,6 +221,7 @@ gl_FragColor = vec4(col, max(body, halo * uRimStrength));
 **Drizzle:** ~500 instanced thin line streaks falling at ≈ 6 m/s, **visible only inside light cones** (alpha multiplied by a cone mask). Density 0.35 default; 0 on reduced-motion/Low.
 
 ### 5.5 Station hall and atmosphere
+
 - **Shell:** Egmore-*inspired* (non-literal): riveted steel trusses (arched and pitched), cast-iron columns with ornamental brackets, a few brick arches in the far wall, clerestory gaps. Fictional signage: "SANGAM JUNCTION" (Tamil sign text requires native review). No real railway logos.
 - **Rafters (S3 hero):** repeated trusses (instanced) every 6 m, hanging fans (blades with radial blur), tube-light rows, dust in shafts.
 - **Platform:** concrete with a **wet mask** (rain-damp, puddles), tactile edge strip, yellow safety line, a bench, a luggage trolley, a chai stall glow far away.
@@ -217,9 +237,11 @@ gl_FragColor = vec4(col, max(body, halo * uRimStrength));
 | 45 m | 84% | 55% | 40% |
 
   **Decision:** global `FogExp2('#0A0F14', 0.018)`, plus: board `fog:false`; **height fog** (denser near the floor via a shader chunk or low fog cards); **luminous haze** behind the board (large soft emissive gradient plane through the roof opening) so the dark board silhouettes against light; **fog-colour grading** (teal in distance).
+
 - **Wet platform reflections:** High tier uses drei `MeshReflectorMaterial` limited to the platform strip (resolution 512, blur ~[300,100], mix ~0.6). Medium: mirrored emissive decals of window/lamps with a blur gradient. Low: none.
 
 ### 5.6 Approval frames (must pass before any motion work)
+
 | Frame | `p` | What it must show |
 |---|---|---|
 | **F1** | 0.00 | Window glowing, both silhouettes crisp, bars crossing their sightline, bokeh'd rain, bloom on the glow, no board in frame |
@@ -234,7 +256,9 @@ gl_FragColor = vec4(col, max(body, halo * uRimStrength));
 ## 6. Camera system, board placement, integration
 
 ### 6.1 Camera rig architecture
+
 `<CinematicCameraRig>` reads `progressRef` and evaluates **rails** each frame:
+
 ```ts
 // guideRail.ts — all curves keyed to p ∈ [0,1]
 position:  CatmullRomCurve3(points, /*closed*/ false, 'centripetal')
@@ -243,11 +267,13 @@ fov:       keyframes(p → deg)       roll: keyframes(p → deg)
 focusTarget: CatmullRomCurve3 (world point for DOF)
 exposure / bloom / drizzle / fogDensity: keyframes
 ```
+
 Following is **critically damped** (`maath` `damp3`, λ ≈ 6) so camera never snaps to scroll notches; `scrub: 0.8` and Lenis add smoothing at the input. `gsap.ticker.lagSmoothing(0)`; wire Lenis → ScrollTrigger (`lenis.on('scroll', ScrollTrigger.update)`; `gsap.ticker.add(t => lenis.raf(t*1000))`). R3F keeps its own render loop; the rig only *reads* progress refs. No GSAP tweening of `camera.position` directly.
 
 Handheld: low-frequency simplex noise (≈ 0.3 Hz drift, 3 Hz tremor) with amplitude `A(p) = 0.012 → 0.002 m` and roll ±0.25° falling to ±0.05°.
 
 ### 6.2 Starting rail values (verify visually; table doubles as a geometry check)
+
 | p | Position | Look-at | vFOV | Focus point | Tilt (up) | Board visible? |
 |---|---|---|---|---|---|---|
 | 0.00 | (0.2, 1.55, 5.6) | (−0.25, 1.7, 0) | 32° | man↔window mid (z 0.4) | ~1.5° | No (bottom edge ≈ 37.6° above axis; frame top ≈ 16°) |
@@ -262,6 +288,7 @@ Framing solver (**aspect-aware**, used at `p = 0`): `d = (W / f / 2) / (tan(vFOV
 Yaw limit while the window is in view: ±12° so the flat planes never reveal their thinness.
 
 ### 6.3 Exposure and effect curves (starting)
+
 | p | Exposure | Bloom intensity | Drizzle | GodRays | Notes |
 |---|---|---|---|---|---|
 | 0 | 1.00 | 0.9 | 0.35 | 0.2 | Window blooms; keep silhouettes crisp |
@@ -270,6 +297,7 @@ Yaw limit while the window is in view: ±12° so the flat planes never reveal th
 | 1.00 | 1.25 | 0.35 | 0.15 | 0.4 | Legibility first |
 
 ### 6.4 Board integration contract (do not break the engine)
+
 - Wrap the existing board in `<group name="BoardRoot" position={[0,14,-6]} scale={…}>`. **Only the wrapper transform changes.** No edits to InstancedMesh creation, glyph atlas, FlapEngine, or layout engine.
 - Scale the root so **cell height ≈ 0.88 m, 22 × 8 grid ⇒ 14 × 7 m**. Verify hinge-gap AA still holds at the new on-screen size; adjust only *render-side* parameters (gap width uniform) if the lab page shows shimmer.
 - Set `fog = false` on all board materials (including housing and rods).
@@ -278,6 +306,7 @@ Yaw limit while the window is in view: ±12° so the flat planes never reveal th
 - Regression test: the existing `/guide/lab` page (or equivalent) must pass unchanged; flap-timing unit tests untouched.
 
 ### 6.5 Interaction with v2 features
+
 | v2 feature | v3 behaviour |
 |---|---|
 | Bridge (accordion ⇄ board ⇄ search ⇄ hash) | **Unchanged.** If the hero is not at S4/S5 when a selection happens, the board updates **silently in place** (cells swap without a visible cascade) and cascades when it enters frame; never auto-scrolls the camera. |
@@ -290,12 +319,15 @@ Yaw limit while the window is in view: ±12° so the flat planes never reveal th
 ## 7. Dynamic "Most Asked" board system
 
 ### 7.1 Behaviour
+
 At F6/S4 the board cascades into the **#1 most-asked FAQ**, in **detail state**: status cell `MOST ASKED`, headline (≤ 3 rows), summary (≤ 3 rows), footer `CATEGORY · PF 0x`. After 12 s idle it moves to the v2 carousel (starting at #2) or the departure list sorted by popularity (#1 marked `BOARDING`). User actions override immediately.
 
 ### 7.2 What counts as an engagement
+
 Counted: accordion opened by user; board row selected by user; search result selected with Enter/click. **Not counted:** `hash` deep-link opens, carousel, programmatic opens, repeat opens by the same visitor within 24 h.
 
 ### 7.3 Data and API (use the project's existing datastore if any; otherwise Upstash Redis / Vercel KV or Supabase)
+
 - `POST /api/faq/engage` `{ faqId, kind: 'open' | 'board' | 'search' }` → `204`. Fire with `navigator.sendBeacon` / `fetch keepalive`.
 - `GET /api/faq/popular` → `{ ranked: [{ id, rank }], generatedAt }` (no public raw counts).
 - Storage: per-day hash `faq:clicks:{YYYY-MM-DD}` → `HINCRBY faqId 1`, TTL 35 days.
@@ -304,15 +336,18 @@ Counted: accordion opened by user; board row selected by user; search result sel
 - **Caching:** compute in a server function; cache ≈ 5 min with the project's Next 16 caching mechanism (check current docs: `'use cache'`/`cacheLife` or segment `revalidate`). The page server component passes `popularFaqId` and the ranked list to the hero as props, so the **poster and first frame already contain the right text** (no loading flash).
 
 ### 7.4 Abuse and privacy
+
 - Dedupe key: `dedupe:{day}:{visitorHash}:{faqId}` (TTL 24 h) with `visitorHash = truncate(HMAC(dailySalt, ip + userAgent))`. **No raw IP stored, no cookies, no third-party analytics.**
 - Rate limit: 30 engagements/min per visitorHash; drop obvious bots (UA list, missing `Accept-Language`).
 - Admin tools: pin override via env var / config; protected reset endpoint (secret header).
 - State on the site's privacy page: anonymous aggregate counters.
 
 ### 7.5 Content requirements
+
 Each FAQ needs `boardHeadlineEn/Ta` (≤ 40 chars) and `boardSummaryEn/Ta` (≤ 120 chars) as in v2 §4.5. Build fails if the top-N FAQs cannot fit 14 × 10 (mobile). **Never display the raw question string**; always the board-fit headline. All Tamil strings flagged for native review.
 
 ### 7.6 Trigger logic (robust to deep links, refresh, and scroll-back)
+
 Drive from **state, not events**: `if (progress ≥ 0.82 && !revealed) → reveal()`. `reveal()` is idempotent, runs the cascade once, and sets `revealed = true`. Landing mid-page (scroll restoration, hash link) sets `revealed` immediately after the first frame at that `p` and plays the cascade once if the board is in view. Scrolling back up never "un-flips" the board.
 
 ---
@@ -320,6 +355,7 @@ Drive from **state, not events**: `if (progress ≥ 0.82 && !revealed) → revea
 ## 8. Performance, fallbacks, QA tooling
 
 ### 8.1 Budgets and tiers
+
 | Tier | Settings |
 |---|---|
 | **High** | DPR ≤ 1.75; DOF; GodRays; reflector platform; spot gobo with shadow; 500 drizzle; 3 coaches; 12 crowd; full bloom/anamorphic |
@@ -332,9 +368,11 @@ Drive from **state, not events**: `if (progress ≥ 0.82 && !revealed) → revea
 - **Load order:** poster → window-assembly assets (priority) → rest of station (can pop in behind fog as the camera pulls back) → board atlas.
 
 ### 8.2 Debug toggles (`?debug=…`)
+
 `fps`, `tier=…`, `p=0.62` (freeze at a progress), `rail` (draw rails + frustum), `sil` (show silhouette planes' bounds), `fogoff`, `unlit`, `info` (renderer.info + shader errors), `slowmo`, `departure=0|1`, `drizzle=0..1`, `lights` (helpers). A **scrub slider** in the lab page makes `p` manual.
 
 ### 8.3 Automated checks (Playwright + pixel probes)
+
 - Screenshots F1–F6 at 1440×900 and 390×844, per tier.
 - **Silhouette contrast probe (F1):** sample the pixels inside each silhouette mask vs a 12 px ring outside it; assert inner median luminance < 0.04 and ring median > 0.45.
 - **Board legibility probe (F6):** measure a row's cell height in pixels (≥ 40) and glyph-to-flap contrast (≥ 7:1).
@@ -347,6 +385,7 @@ Drive from **state, not events**: `if (progress ≥ 0.82 && !revealed) → revea
 ## 9. Accessibility, legal, and content guidance
 
 ### 9.1 Accessibility
+
 - Canvas is `aria-hidden`; the real content is the FAQ DOM. A visually hidden `aria-live="polite"` region announces "Most asked: …" once.
 - **Skip intro** button (keyboard-focusable, visible on focus, also visible after 2 s of dwell) jumps to p ≈ 0.92 via `lenis.scrollTo`. Do not trap scroll.
 - `prefers-reduced-motion`: Fallback tier (no crane, no drizzle, no cascades, instant board text swap).
@@ -354,6 +393,7 @@ Drive from **state, not events**: `if (progress ≥ 0.82 && !revealed) → revea
 - Overlay text contrast ≥ 4.5:1; safe zones for nav and "Ask Nanba."
 
 ### 9.2 Asset and IP guidance (not legal advice)
+
 - The silhouettes must be **original, generic artwork**. Do **not** trace, rotoscope, or reference stills/frames from the film; do **not** use film audio, music, stills, titles, or logos; do **not** make the figures recognisable as specific actors.
 - Keep file names, alt text, component names, and metadata **generic** (`silhouette-man`, `silhouette-woman`), not actor or character names.
 - The scene should work for any viewer as "a man at a train window and a woman inside"; viewers who know the film will bring the association themselves.
@@ -361,11 +401,13 @@ Drive from **state, not events**: `if (progress ≥ 0.82 && !revealed) → revea
 - Record artwork authorship and license in `docs/assets-licenses.md`. If the club plans wide promotion, consider a quick review by campus counsel.
 
 ### 9.3 Tamil
+
 All Tamil copy (board, sign text, labels) is flagged `// TODO: native review`. Cells use grapheme-cluster handling per v2 §5.2.4.
 
 ---
 
 ## 10. Scene budget summary
+
 | Group | Approx. draw calls | Notes |
 |---|---|---|
 | Coach hero + body details | 10–14 | Panels, roof, bogies, door, handrails |
@@ -400,6 +442,7 @@ All Tamil copy (board, sign text, labels) is flagged `// TODO: native review`. C
 ## 12. QA checklist
 
 **Per approval frame:**
+
 - [ ] Silhouettes read instantly as a man and a woman, with clean edges and a subtle warm halo; no pixelation, fringing, or white halos.
 - [ ] Bars cross their sightline; bars catch window light.
 - [ ] The window is the brightest thing in F1–F3; everything else supports it.
@@ -410,12 +453,14 @@ All Tamil copy (board, sign text, labels) is flagged `// TODO: native review`. C
 - [ ] No hard-edged planes, visible card borders, or low-poly faceting on curved surfaces (coach roof, fans).
 
 **Motion:**
+
 - [ ] No stutter on notched wheels or trackpad flicks; reverse scroll is exact.
 - [ ] Rack focus is smooth and purposeful (man → woman → wall → board).
 - [ ] Silhouette planes never show their thinness (yaw limit works).
 - [ ] The departure beat is scroll-reversible and never desyncs from the camera.
 
 **Function:**
+
 - [ ] Board shows the server-ranked #1 headline on first reveal, in EN and TA.
 - [ ] Deep link, refresh mid-scroll, and back-forward restore all produce the right state.
 - [ ] Selecting an FAQ before the board is in frame updates silently, then cascades on arrival.
@@ -427,6 +472,7 @@ All Tamil copy (board, sign text, labels) is flagged `// TODO: native review`. C
 ---
 
 ## 13. Risks and mitigations
+
 | Risk | Mitigation |
 |---|---|
 | Silhouettes look like cut-out stickers | SDF edges + halation, depth layering with bars/curtain/glass, film noise, pose crossfade, bloom |
@@ -441,6 +487,7 @@ All Tamil copy (board, sign text, labels) is flagged `// TODO: native review`. C
 | Agent drifts | Phase gates with human-approved stills; Part B protocol |
 
 ## 14. Open questions
+
 1. "Front view" is interpreted as **face-on to the coach side window** (not head-on to the locomotive). Confirm.
 2. Is a pre-dawn blue-hour mood final, or should it be dusk? (Grade/exposure curves change; staging doesn't.)
 3. Who creates the original silhouette art, and by when? (Placeholders until then.)
@@ -827,21 +874,23 @@ Before calling v3 complete:
 ## 24. Cinematic Intent, Movie Connections & Media Artifacts
 
 ### 24.1 The *Alaipayuthey* (2000) Homage
+
 The `/guide` hero sequence is an explicit cinematic homage to Mani Ratnam’s landmark suburban romance *Alaipayuthey*, starring Madhavan (Karthik) and Shalini (Shakthi), with music by A.R. Rahman:
+
 - **The Blue Hour Railway Platform:** Captured at dusk/blue hour on a rain-slicked platform, echoing the daily suburban train commutes between Tambaram and Chennai Central where Karthik and Shakthi's romance unfolds.
 - **The Compartment Window Silhouettes:** Backlit by warm compartment light, a woman sits inside in silhouette looking out through barred glass, while on the platform a man stands looking in. This represents the emotional threshold of every new student: arriving in an unfamiliar city, peering in, wondering what lies ahead.
 - **The Railway Crane Shot:** As the user scrolls, the camera pulls back and cranes up into the vast rafters of the station hall—mirroring P.C. Sreeram’s sweeping crane camera choreography—revealing the towering mechanical Solari departure board.
 
 ### 24.2 Mechanical Flap Acoustics & Content Bridging
+
 - **Solari Split-Flap State Machine (`FlapGrid.tsx`):** A $24 \times 6$ grid of mechanical flap units that clatters out incoming student questions in alternating English and Tamil.
 - **Coalesced 8ms Audio Bus (`impactBus.ts`):** Mechanical clicking sounds synthesize the authentic acoustic clatter of 1970s Solari departure boards without browser audio clipping.
 - **Handoff to Student Knowledge Base:** The split-flap board answers the most-asked campus question before smoothly handing off to the **Open Book Knowledge Base** below: curated guides to Columbus Indian groceries, campus bus lines, local vegetarian dining, and academic mentorship.
 
 ### 24.3 Hero Media Artifacts
+
 - **Video Capture:** [`docs/heroes/media/guide_hero_animation.webm`](./media/guide_hero_animation.webm)
 - **Animated GIF:** [`docs/heroes/media/guide_hero_animation.gif`](./media/guide_hero_animation.gif)
 - **Rest Frame (p=0 Window):** [`docs/heroes/media/guide_hero_rest.png`](./media/guide_hero_rest.png)
 - **Mid-Scroll (Station Hall Crane):** [`docs/heroes/media/guide_hero_mid.png`](./media/guide_hero_mid.png)
 - **Departure Board Reveal:** [`docs/heroes/media/guide_hero_reveal.png`](./media/guide_hero_reveal.png)
-
-

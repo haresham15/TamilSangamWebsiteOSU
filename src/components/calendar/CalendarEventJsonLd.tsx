@@ -1,5 +1,6 @@
 import React from "react";
 import { CalendarEvent } from "@/lib/calendar/types";
+import { SITE_URL } from "@/lib/seo";
 
 interface CalendarEventJsonLdProps {
   events: CalendarEvent[];
@@ -36,7 +37,7 @@ export const CalendarEventJsonLd: React.FC<CalendarEventJsonLdProps> = ({ events
     organizer: {
       "@type": "Organization",
       name: "OSU Tamil Sangam",
-      url: "https://tamilsangamosu.org",
+      url: SITE_URL,
     },
   }));
 

@@ -1,4 +1,5 @@
 # DESIGN_SYSTEM.md — The "Muttram" (Courtyard / முற்றம்) Design System
+
 **Target Engine:** Next.js 16, React Three Fiber (R3F v9), Tailwind CSS v4, GSAP  
 **Architectural Archetype:** The Sunlit South Indian Courtyard (திண்ணை / முற்றம்)  
 **Standard Compliance:** W3C DTCG Three-Tier Tokens, OKLCH Perceptually Uniform Palette, WCAG 2.1 AAA Contrast  
@@ -10,6 +11,7 @@
 The **Muttram (முற்றம்)** is the traditional central, open-sky, sunlit courtyard of a South Indian ancestral home. Surrounded by wooden pillars and stone thinnai verandas, it is a space of congregation, natural daylight, soft breezes, shared filter coffee, and celebration.
 
 ### Fundamental Laws of the Muttram Architecture
+
 1. **Light & Air Over Enclosure**: Abolish pitch-black matrices (`#050201`), hostile cyberpunk terminals, and heavy grids. Surfaces are washed with Warm Ivory (`#FAF9F6`) and Sunbaked Sand (`#F4EFE6`).
 2. **Negative Space as Structure**: Eliminate strict 1px dividing lines (`divide-y`, `border-b border-white/10`). Sections are separated by generous, organic negative space (`py-24`, `py-32`).
 3. **Conversational Warmth**: Interfaces speak like a welcoming elder or student host inviting a guest to sit on the thinnai, not a Unix shell (`TERMINAL PROTOCOL` eradicated; replaced with human warmth: *"Hi there, what is your name?"*).

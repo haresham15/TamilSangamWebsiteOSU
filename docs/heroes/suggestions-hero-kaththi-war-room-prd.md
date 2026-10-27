@@ -1,4 +1,5 @@
 # PRD — Suggestions Hero: "The Kaththi War Room & Ohio Stadium Blueprint"
+
 ### Axonometric Architectural Mesh, Coin Drop Intersection & Tactical Pipeline Schematics
 
 > **Surface:** `/suggestions` (Ideas, Proposals & Community Ledger)  
@@ -6,6 +7,7 @@
 > **Cinematic Anchor:** *Kaththi* (2014) (A.R. Murugadoss / Thalapathy Vijay / Anirudh Ravichander / Kathiresan's Chennai Water Pipeline Blueprint)  
 > **Core Subsystems:** `BlueprintScene3D.tsx`, `OhioStadiumWireframe.ts`, `BlueprintSVG.tsx`, `SuggestionForm.tsx`  
 > **Media Artifacts:**
+>
 > - Video Capture: [`docs/heroes/media/suggestions_hero_animation.webm`](./media/suggestions_hero_animation.webm)
 > - Animated GIF: [`docs/heroes/media/suggestions_hero_animation.gif`](./media/suggestions_hero_animation.gif)
 > - Rest Frame: [`docs/heroes/media/suggestions_hero_rest.png`](./media/suggestions_hero_rest.png)
@@ -17,14 +19,18 @@
 ## 1. Creative Intent & Thematic Architecture
 
 ### 1.1 Beyond Passive Suggestion Boxes
+
 Most collegiate clubs bury their feedback in an unmonitored Google Form or an abandoned suggestions box:
+
 - Feedback feels futile, passive, and bureaucratic.
 - Students feel like their ideas disappear into a void without accountability.
 - Zero intellectual excitement or sense of collective movement.
 
 ### 1.2 The Solution: The Tactical War Room
-In *Kaththi*, Kathiresan transforms technical civil engineering blueprints into an instrument of nonviolent rebellion, bringing a metropolitan city to a standstill to amplify the plight of suffering farmers. 
+
+In *Kaththi*, Kathiresan transforms technical civil engineering blueprints into an instrument of nonviolent rebellion, bringing a metropolitan city to a standstill to amplify the plight of suffering farmers.
 By translating the suggestions page into the **Kaththi War Room Archive**:
+
 1. **Student Agency as Engineering:** Every idea proposed by a student—whether it is a new cultural initiative, a festival concept, or a campus reform—is treated as an architectural blueprint for community transformation.
 2. **Iconic Ohio State Landmark:** Rather than a fictional building, the 3D wireframe reconstructs **Ohio Stadium ("The Horseshoe")**, the hallowed ground of Ohio State pride, connecting Buckeye campus geography with Tamil tactical cinematic lore.
 3. **Transparent Public Ledger:** Submissions are not lost in an inbox; they route into a live, transparent public tracking ledger showing proposal statuses from intake to execution.
@@ -34,6 +40,7 @@ By translating the suggestions page into the **Kaththi War Room Archive**:
 ## 2. Cinematic Homage & Memorabilia Easter Eggs
 
 ### 2.1 The *Kaththi* Planning Headquarters Aesthetic
+
 The 3D environment reproduces the visual grading, lighting, and tactile props of the famous war room sequence in *Kaththi*:
 
 | Cinematic Element | *Kaththi* (2014) Film Reference | 3D WebGL Implementation |
@@ -51,7 +58,9 @@ The 3D environment reproduces the visual grading, lighting, and tactile props of
 ## 3. Mathematical & Geometric Wireframe Engineering
 
 ### 3.1 Ohio Stadium Procedural Geometry (`OhioStadiumWireframe.ts`)
+
 The Horseshoe is constructed parametrically without importing heavy external `.gltf` CAD files:
+
 - **The U-Bend Horseshoe Curve:** Modeled via semicircular polar equations:
   $$x(\theta) = R \cos(\theta), \quad z(\theta) = R \sin(\theta), \quad \theta \in [0, \pi]$$
   Coupled with straight sideline bleacher extrusions extending toward the South Scoreboard.
@@ -60,6 +69,7 @@ The Horseshoe is constructed parametrically without importing heavy external `.g
 - **The Historic North Rotunda:** 8 towering semicircular arches crowned by stained-glass cornices, reconstructed with glowing copper line vectors.
 
 ### 3.2 Holographic Line Construction Shader (`BlueprintScene3D.tsx`)
+
 As the visitor scrolls, a holographic scan wave sweeps from North to South. Lines entering the wave front ignite with high-emissivity bloom before settling into architectural bronze:
 $$I_{\text{line}}(z, t) = I_{\text{base}} + I_{\text{peak}} \cdot \exp\left(-\frac{(z - z_{\text{scan}}(t))^2}{2\sigma^2}\right)$$
 Where $\sigma = 1.2\text{ m}$ governs the width of the active construction wave.
@@ -69,6 +79,7 @@ Where $\sigma = 1.2\text{ m}$ governs the width of the active construction wave.
 ## 4. Content Integration: The Ideas Hearth
 
 Once the visitor completes the architectural tour of the stadium, the camera settles onto the **Ideas Hearth**:
+
 1. **Conversational Proposal Form:** A distraction-free, elegant form allowing students to submit ideas across four categories:
    - *Event Concepts:* Novel cultural celebrations, movie nights, or culinary banquets.
    - *Guest Speakers & Artists:* Collaborations with Tamil filmmakers, Carnatic musicians, or tech leaders.

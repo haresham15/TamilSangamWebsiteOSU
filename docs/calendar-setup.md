@@ -50,7 +50,7 @@ The integration syncs events from a shared Google Calendar to the website automa
 | `GOOGLE_CALENDAR_ID` | `c_xxxxxxxxxxxx@group.calendar.google.com` | Club Google Calendar ID |
 | `GOOGLE_CALENDAR_API_KEY` | `AIzaSy...` | Restricted Google Cloud API key |
 
-4. After saving the variables, trigger a **Redeploy** on Vercel (or push a new commit) for the variables to take effect.
+1. After saving the variables, trigger a **Redeploy** on Vercel (or push a new commit) for the variables to take effect.
 
 ---
 
@@ -59,28 +59,35 @@ The integration syncs events from a shared Google Calendar to the website automa
 Any officer with edit permissions can create or update events directly in Google Calendar on their phone or laptop. Events appear on the website within ~5 minutes.
 
 ### A. Title Convention (Bilingual)
+
 Format: `English Title | தமிழ் தலைப்பு`
+
 - Use a single vertical bar (`|`) to separate the English title from the Tamil title.
 - *Example:* `Kollywood Kollai | கோலிவுட் கொள்ளை`
 - *Example:* `Pongal Thiruvizha | பொங்கல் திருவிழா`
 - If no Tamil title is available, simply write the English title (`Chai & Chill`).
 
 ### B. Date & Time
+
 - Always create events in **Eastern Time (ET / America/New_York)**.
 - Both timed events (e.g., 6:30 PM – 9:00 PM) and all-day events are supported.
 - For all-day cultural holidays or multi-day conventions, select "All day". The website automatically normalizes Google's end-date conventions.
 
 ### C. Location Field
+
 - Enter the campus venue or room.
 - *Examples:* `Performance Hall, Ohio Union`, `The Oval`, `Hitchcock Hall 131`.
 
 ### D. Description Field (Blurb & Dossier Link)
+
 - Write the event summary, what to bring, and itinerary details.
 - Standard URLs (e.g., `https://...`) are automatically converted into clickable, safe links on the website.
 - **Optional Dossier Slug:** If the event has a dedicated dossier page on the website (e.g., `/events/kollywood-kollai`), add this as the **very last line** of the description:
+
   ```text
   slug: kollywood-kollai
   ```
+
   When present, the website modal will render an **"Open event dossier →"** link directly to that page.
 
 ---
@@ -88,6 +95,7 @@ Format: `English Title | தமிழ் தலைப்பு`
 ## 5. Public Subscription Links
 
 The website provides student subscription buttons:
+
 - **Google Calendar Subscription:** `https://calendar.google.com/calendar/r?cid={CALENDAR_ID}`
 - **Apple Calendar / Outlook (Webcal):** `webcal://calendar.google.com/calendar/ical/{CALENDAR_ID}/public/basic.ics`
 - **Dynamic Site Feed:** `https://tamil-sangam-website-osu.vercel.app/calendars/almanac.ics`

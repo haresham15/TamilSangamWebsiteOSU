@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { EVENTS } from "@/data/events";
 import { SingleEventJsonLd, BreadcrumbJsonLd } from "@/components/global/JsonLd";
+import { constructAlternates, constructCanonical, DEFAULT_ROBOTS, SITE_URL } from "@/lib/seo";
 
 interface EventLayoutProps {
   children: React.ReactNode;
@@ -22,12 +23,17 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${event.titleEn} | ${event.titleTa}`;
+  const title = `${event.titleEn} (${event.titleTa}) | OSU Tamil Sangam`;
   const description = `${event.descriptionEn} Happening on ${event.date} (${event.time}) at ${event.location}. Open to all Ohio State students and friends.`;
-  const poster = event.posterImage || "/emblem.svg";
+  const canonical = constructCanonical(`/events/${event.slug}`);
+  const poster = event.posterImage?.startsWith("http")
+    ? event.posterImage
+    : `${SITE_URL}${event.posterImage || "/emblem.svg"}`;
 
   return {
-    title,
+    title: {
+      absolute: title,
+    },
     description,
     keywords: [
       event.titleEn,
@@ -41,13 +47,12 @@ export async function generateMetadata({
       "Columbus Tamil events",
       "Ohio Union Tamil Sangam",
     ],
-    alternates: {
-      canonical: `https://osutamilsangam.org/events/${event.slug}`,
-    },
+    alternates: constructAlternates(`/events/${event.slug}`),
+    robots: DEFAULT_ROBOTS,
     openGraph: {
       title: `${event.titleEn} · OSU Tamil Sangam`,
       description,
-      url: `https://osutamilsangam.org/events/${event.slug}`,
+      url: canonical,
       siteName: "OSU Tamil Sangam",
       type: "article",
       images: [

@@ -52,15 +52,15 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Initialize Lenis with cinematic pacing & heavyweight inertial damping
+    // Initialize Lenis with smooth cinematic pacing and responsive damping
     const lenis = new Lenis({
-      lerp: 0.052,
+      lerp: 0.082,
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       syncTouch: false,
-      touchMultiplier: 0.85,
-      wheelMultiplier: 0.70,
+      touchMultiplier: 0.95,
+      wheelMultiplier: 0.88,
       autoRaf: false,
     });
 
@@ -75,14 +75,14 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     // Sync ScrollTrigger with Lenis scroll
     lenis.on("scroll", ScrollTrigger.update);
 
-    // Drive Lenis tick via GSAP ticker for synchronized 60-120fps frame updates
+    // Drive Lenis tick via GSAP ticker for synchronized frame updates
     const tickerCallback = (time: number) => {
       lenis.raf(time * 1000);
     };
 
     gsap.ticker.add(tickerCallback);
-    // Disable lag smoothing so GSAP never stutters, pauses, or jumps frames during load or render
-    gsap.ticker.lagSmoothing(0);
+    // Smooth out stalls: clamp any frame spike > 120ms to 24ms to eliminate freeze-and-teleport cuts
+    gsap.ticker.lagSmoothing(120, 24);
 
     return () => {
       gsap.ticker.remove(tickerCallback);

@@ -93,9 +93,17 @@ Our campus initiatives are organized across Five Pillars:
 - **Executive Board Leadership**: https://tamil-sangam-website-osu.vercel.app/board
 - **35mm Photo Gallery & Campus Archive**: https://tamil-sangam-website-osu.vercel.app/gallery
 - **Student Guide & FAQ**: https://tamil-sangam-website-osu.vercel.app/guide
-- **The Ideas Hearth (Propose Events)**: https://tamil-sangam-website-osu.vercel.app/ideas
+- **The Ideas Hearth (Propose Events)**: https://tamil-sangam-website-osu.vercel.app/suggestions
+- **The Five Pillars & Initiatives**: https://tamil-sangam-website-osu.vercel.app/initiatives
+- **Pillar 1 · ஆட்டம் (Dance & Movement)**: https://tamil-sangam-website-osu.vercel.app/pillars/aatam
+- **Pillar 2 · பாட்டம் (Music & Harmony)**: https://tamil-sangam-website-osu.vercel.app/pillars/paatam
+- **Pillar 3 · கொண்டாட்டம் (Celebrations)**: https://tamil-sangam-website-osu.vercel.app/pillars/kondatam
+- **Pillar 4 · சந்திப்பும் (Fellowship & Socials)**: https://tamil-sangam-website-osu.vercel.app/pillars/santhippum
+- **Pillar 5 · கற்றல் (Learning & Heritage)**: https://tamil-sangam-website-osu.vercel.app/pillars/katral
+- **Official Bio Links Hub**: https://tamil-sangam-website-osu.vercel.app/links
 - **Join Sangam (Free Guestbook)**: https://tamil-sangam-website-osu.vercel.app/join
 - **XML Sitemap**: https://tamil-sangam-website-osu.vercel.app/sitemap.xml
+- **RSS Event Feed**: https://tamil-sangam-website-osu.vercel.app/feed.xml
 - **Robots Directives**: https://tamil-sangam-website-osu.vercel.app/robots.txt
 
 ---

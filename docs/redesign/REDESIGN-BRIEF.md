@@ -1,4 +1,5 @@
 # Creative Brief: "Emblem Engine"
+
 ### OSU Tamil Sangam — Redesign Ground Truth
 
 *Adopted September 20, 2026*

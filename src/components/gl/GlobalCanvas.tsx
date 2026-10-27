@@ -71,6 +71,8 @@ export function GlobalCanvas() {
           gl.setClearAlpha(0);
           gl.shadowMap.enabled = true;
           gl.shadowMap.type = THREE.PCFShadowMap;
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.toneMappingExposure = 1.05;
         }}
       >
         <RendererBridge />

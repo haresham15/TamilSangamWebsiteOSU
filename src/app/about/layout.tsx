@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/seo/JsonLd";
+import { BreadcrumbJsonLd, FaqJsonLd, AboutPageJsonLd } from "@/components/seo/JsonLd";
 import { buildRouteMetadata, ROUTE_METADATA } from "@/lib/seo";
 import { FAQS } from "@/data/faq";
 
@@ -34,6 +34,7 @@ export default function AboutLayout({ children }: { children: React.ReactNode })
 
   return (
     <>
+      <AboutPageJsonLd />
       <BreadcrumbJsonLd items={breadcrumbItems} />
       <FaqJsonLd items={faqItems} />
       {children}

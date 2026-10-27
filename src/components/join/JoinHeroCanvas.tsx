@@ -126,7 +126,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
        (entries) => {
          const entry = entries[entries.length - 1];
          inViewRef.current = entry.isIntersecting;
-         governor.request("join-hero", inViewRef.current ? 1 : 0);
+         governor.request("join-hero", inViewRef.current ? 2 : 0);
        },
        { threshold: 0.05 }
      );
@@ -161,8 +161,8 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
           const p = self.progress;
           scrollProgressRef.current = p;
 
-          // Request level 2 on active scrolling (§4.3)
-          governor.request("join-hero", inViewRef.current ? (Math.abs(self.getVelocity()) > 10 ? 2 : 1) : 0);
+          // Request level 2 while visible (§4.3)
+          governor.request("join-hero", inViewRef.current ? 2 : 0);
 
           // Strict Hero HUD Exit Window (p = 0.70 -> 0.78):
           if (skipLinkRef.current) {

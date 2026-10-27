@@ -168,13 +168,49 @@ function toIsoDate(dateStr: string): string {
   return "2026-10-23";
 }
 
+function parseEventIsoTimes(dateStr: string, timeStr?: string): { startDate: string; endDate: string } {
+  const isoDate = toIsoDate(dateStr);
+  if (!timeStr) {
+    return {
+      startDate: `${isoDate}T18:00:00-04:00`,
+      endDate: `${isoDate}T21:00:00-04:00`,
+    };
+  }
+
+  const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)\s*-\s*(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (match) {
+    let startH = parseInt(match[1], 10);
+    const startM = match[2];
+    const startPeriod = match[3].toUpperCase();
+    if (startPeriod === "PM" && startH < 12) startH += 12;
+    if (startPeriod === "AM" && startH === 12) startH = 0;
+
+    let endH = parseInt(match[4], 10);
+    const endM = match[5];
+    const endPeriod = match[6].toUpperCase();
+    if (endPeriod === "PM" && endH < 12) endH += 12;
+    if (endPeriod === "AM" && endH === 12) endH = 0;
+
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return {
+      startDate: `${isoDate}T${pad(startH)}:${startM}:00-04:00`,
+      endDate: `${isoDate}T${pad(endH)}:${endM}:00-04:00`,
+    };
+  }
+
+  return {
+    startDate: `${isoDate}T18:00:00-04:00`,
+    endDate: `${isoDate}T21:00:00-04:00`,
+  };
+}
+
 /**
  * Single Event Schema for individual dossiers and flagship highlights.
  */
 export function EventJsonLd({ event }: { event?: SangamEvent } = {}) {
   const targetEvent = event || EVENTS.find((e) => e.status === "upcoming") || EVENTS[0];
   if (!targetEvent) return null;
-  const isoDate = toIsoDate(targetEvent.date);
+  const { startDate, endDate } = parseEventIsoTimes(targetEvent.date, targetEvent.time);
   const eventLd = {
     "@context": "https://schema.org",
     "@type": "Festival",
@@ -182,8 +218,8 @@ export function EventJsonLd({ event }: { event?: SangamEvent } = {}) {
     name: `${targetEvent.titleEn} (${targetEvent.titleTa})`,
     alternateName: targetEvent.titleTa,
     description: targetEvent.descriptionEn || targetEvent.taglineEn,
-    startDate: `${isoDate}T18:00:00-04:00`,
-    endDate: `${isoDate}T21:00:00-04:00`,
+    startDate,
+    endDate,
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     eventStatus: "https://schema.org/EventScheduled",
     image: [
@@ -237,7 +273,7 @@ export function EventsCollectionJsonLd({ events }: { events?: SangamEvent[] }) {
     description:
       "Explore upcoming and archived gatherings hosted by Tamil Sangam at The Ohio State University.",
     itemListElement: eventList.map((event, index) => {
-      const isoDate = toIsoDate(event.date);
+      const { startDate, endDate } = parseEventIsoTimes(event.date, event.time);
       return {
         "@type": "ListItem",
         position: index + 1,
@@ -247,8 +283,8 @@ export function EventsCollectionJsonLd({ events }: { events?: SangamEvent[] }) {
           name: `${event.titleEn} (${event.titleTa})`,
           alternateName: event.titleTa,
           description: event.descriptionEn || event.taglineEn,
-          startDate: `${isoDate}T18:00:00-04:00`,
-          endDate: `${isoDate}T21:00:00-04:00`,
+          startDate,
+          endDate,
           eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
           eventStatus: "https://schema.org/EventScheduled",
           location: {
@@ -312,21 +348,72 @@ export function BoardJsonLd({
           : `${SITE_URL}${member.photoUrl || "/emblem.svg"}`,
         email: member.email ? `mailto:${member.email}` : undefined,
         affiliation: {
-          "@id": `${SITE_URL}/#organization`,
-        },
-        memberOf: {
           "@type": "CollegeOrUniversity",
           name: "The Ohio State University",
           url: "https://www.osu.edu",
           sameAs: "https://en.wikipedia.org/wiki/Ohio_State_University",
         },
-        alumniOf: {
-          "@type": "CollegeOrUniversity",
-          name: "The Ohio State University",
-          url: "https://www.osu.edu",
+        memberOf: {
+          "@id": `${SITE_URL}/#organization`,
         },
       },
     })),
+  };
+
+  return <JsonLd data={jsonLd} />;
+}
+
+/**
+ * AboutPage Schema for /about
+ */
+export function AboutPageJsonLd() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "@id": `${SITE_URL}/about#webpage`,
+    url: `${SITE_URL}/about`,
+    name: "About Us & Heritage | OSU Tamil Sangam",
+    description:
+      "Mission, history, and Five Pillars of Tamil Sangam at The Ohio State University — an open cultural home for all students on the banks of the Olentangy River.",
+    isPartOf: {
+      "@id": `${SITE_URL}/#website`,
+    },
+    about: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    inLanguage: ["en-US", "ta-IN"],
+  };
+
+  return <JsonLd data={jsonLd} />;
+}
+
+/**
+ * Join Page WebPage Schema for /join
+ */
+export function JoinPageJsonLd() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${SITE_URL}/join#webpage`,
+    url: `${SITE_URL}/join`,
+    name: "Join OSU Tamil Sangam | Free Membership Guestbook",
+    description:
+      "Join Tamil Sangam at The Ohio State University. 100% free, zero dues, open to every Buckeye student regardless of language.",
+    isPartOf: {
+      "@id": `${SITE_URL}/#website`,
+    },
+    potentialAction: {
+      "@type": "JoinAction",
+      target: `${SITE_URL}/join`,
+      name: "Sign Campus Guestbook",
+      result: {
+        "@type": "Role",
+        roleName: "Member",
+        price: "0",
+        priceCurrency: "USD",
+      },
+    },
+    inLanguage: ["en-US", "ta-IN"],
   };
 
   return <JsonLd data={jsonLd} />;

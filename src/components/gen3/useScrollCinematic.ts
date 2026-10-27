@@ -14,6 +14,10 @@ export function getScrollProgress() {
   return scrollProgress;
 }
 
+export function setScrollProgress(p: number) {
+  scrollProgress = p;
+}
+
 export function useScrollCinematic(triggerId: string = "events-hero-trigger") {
   useEffect(() => {
     // 1. Respect prefers-reduced-motion

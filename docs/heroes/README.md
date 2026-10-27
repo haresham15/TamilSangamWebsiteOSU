@@ -1,4 +1,5 @@
 # The Cinematic Universe of OSU Tamil Sangam
+
 ## Master Hero Animation Architecture, Cultural PRDs & Movie Easter Eggs Matrix
 
 > **Author:** Antigravity Autonomous Orchestrator  
@@ -10,9 +11,10 @@
 
 ## 1. Executive Philosophy: Why Tamil Cinema & Literature Anchor Our Campus Identity
 
-For a diaspora student organization at a massive Midwestern university (The Ohio State University, 66,000+ students), the digital presence cannot be a sterile bulleted portal or generic Linktree. 
+For a diaspora student organization at a massive Midwestern university (The Ohio State University, 66,000+ students), the digital presence cannot be a sterile bulleted portal or generic Linktree.
 
 Tamil culture possesses two of the world's most emotionally resonant artistic forces:
+
 1. **Classical Sangam Literature (சங்க இலக்கியம், c. 300 BCE – 300 CE):** Rooted in the five ecological landscapes (*Aintinai* / ஐந்திணை) and an egalitarian humanism (*"யாதும் ஊரே யாவரும் கேளிர்"* / "To us all towns are home, everyone our kin").
 2. **Tamil Popular Cinema (தமிழ் சினிமா):** A cultural lifeline connecting students thousands of miles from home through shared soundtracks (A.R. Rahman, Ilaiyaraaja, Harris Jayaraj, Anirudh), mythic storytelling (Mani Ratnam, Gautham Vasudev Menon, Lokesh Kanagaraj, A.R. Murugadoss), and unforgettable collegiate anthems.
 
@@ -39,46 +41,55 @@ Each page on the OSU Tamil Sangam website is engineered as a **theatrical prolog
 ## 3. Detailed Page Intent & Narrative Architecture
 
 ### 3.1 Home (`/`): The Digital Kolam & Thirukkural Genesis
+
 - **Intent:** Establish the website not as a commercial product, but as a consecrated home threshold (*Thinnai* / திண்ணை). In Tamil homes, each dawn begins with drawing rice-flour kolams at the entrance to welcome prosperity and feed nature's creatures.
 - **Cinematic & Literary Tie:** The central chrome **"அ"** unpeels into Thirukkural Kural 1 (*"அகர முதல எழுத்தெல்லாம் ஆதி பகவன் முதற்றே உலகு"*), linking digital code with humanity's timeless wisdom.
 - **Content Handoff:** The parabolic peeling vertex shader scrolls upward like a rolled parchment, seamlessly revealing the flagship event countdown, the Five Pillars, and the Olentangy photo story.
 
 ### 3.2 Events (`/events`): The Leo Factory Concert Arena
+
 - **Intent:** Student cultural shows are explosions of dance, bass, and communal adrenaline. Conventional static calendars fail to evoke the thrill of being in a packed stadium.
 - **Cinematic Homage:** Direct tribute to Lokesh Kanagaraj's *Leo* (2023) and Anirudh's 128 BPM track "Naa Ready". The sodium-vapor "God Light" carves an unmistakable silhouette, while 8,000 crowd silhouettes bounce in harmonic synchronization.
 - **Content Handoff:** An intense bloom blowout transition carries the user into the **Gatherings River** with one-click `.ics` and Google Calendar export.
 
 ### 3.3 About (`/about`): The 5-Tala Gopuram Z-Scroll
+
 - **Intent:** Counteract corporate mission statements by anchoring the club's identity in the 2,500-year architectural and poetic history of the Dravidian civilization.
 - **Cinematic Homage:** Echoes the historical grandeur of Selvaraghavan's *Aayirathil Oruvan* (2010). Traveling along the Z-axis of a 5-Tala Dravidian Gopuram tower framed by mathematical *Brahma Mudi* Sikku Kolam bronze rings.
 - **Content Handoff:** Parallaxing through the ancient verse of *Yaathum Oore Yaavarum Kelir* (Puranaanooru 192) delivers the visitor into the center-snaking SVG river timeline (2021–2026).
 
 ### 3.4 Board (`/board`): The Ponniyin Selvan Chola Darbar Corridor
+
 - **Intent:** Honor student executive leaders not as corporate LinkedIn headshots, but as royal ministers (*Amaichargal*) and cultural guardians holding assembly in an Imperial Chola Darbar.
 - **Cinematic Homage:** Mani Ratnam's *Ponniyin Selvan*. Carved granite pillars glide on an infinite treadmill, illuminated by floating brass *agal vilakku* oil lamps with dynamic particle flames. Silk tapestry banners wave with cloth vertex shaders, leading to the 3D *Karanda Makuta* (Imperial Chola Crown) with its rotating Sirascakra lotus halo.
 - **Content Handoff:** Unmasks into warm editorial portrait photography with interactive holographic trading cards.
 
 ### 3.5 Gallery (`/gallery`): The Vaaranam Aayiram 24-Fret Acoustic Highway
+
 - **Intent:** College is a whirlwind of musical memories, lawn jams, and bittersweet nostalgia.
 - **Cinematic Homage:** Gautham Vasudev Menon's *Vaaranam Aayiram* (2008). A 24-fret true 12-TET acoustic guitar neck spans a golden-hour coastal highway. Plucking strings with scroll velocity ejects photographic memories. Suriya's single red rose lands at $p=0.52$, followed by military dog tags at $p=0.755$.
 - **Content Handoff:** The golden sunset flare dissolves into an expansive 35mm physical film masonry on Warm Ivory.
 
 ### 3.6 Guide (`/guide`): The Alaipayuthey Blue Hour Railway Station
+
 - **Intent:** Entering university life feels like stepping off a train onto an unfamiliar platform, searching for direction and kinship.
 - **Cinematic Homage:** Mani Ratnam's *Alaipayuthey* (2000). The hero opens on a rain-damp suburban platform at blue hour. Through a barred compartment window, a woman and man exchange glances in silhouette. The camera cranes into the station hall rafters, where a Solari mechanical split-flap departure board clatters out collegiate answers.
 - **Content Handoff:** Hands off to the curated campus guide (Columbus Indian groceries, bus routes, temple timings, and bilingual FAQs).
 
 ### 3.7 Suggestions (`/suggestions`): The Kaththi War Room & Ohio Stadium 3D Blueprint
+
 - **Intent:** Re-frame student suggestions from a passive feedback box into a strategic, tactical act of community engineering and student empowerment.
 - **Cinematic Homage:** A.R. Murugadoss's *Kaththi* (2014). An axonometric blueprint grid in bruised plum (`#241021`) reconstructs Ohio Stadium ("The Horseshoe") in 3D wireframe. Features Kathiresan's coin drop intersection (`[3.6, 0.05, 4.4]`), the brass drafting compass, rolled scrolls, and glowing hydrology pipe nodes.
 - **Content Handoff:** Routes directly into the conversational campus proposal form and public ledger of student initiatives.
 
 ### 3.8 Join (`/join`): The Morning Campus Courtyard Gates & Leaf Drift
+
 - **Intent:** Create an architectural embrace for every student, explicitly assuring them that fluency is not required to belong.
 - **Cinematic Homage:** The campus nostalgia of *Autograph* and *Minnale*. Monumental collegiate wrought-iron gates swing open on realistic hinges to welcome the visitor, accompanied by an emotional GPU particle simulation: **90% Ohio Buckeye leaves intermingled with 10% fragrant white Madurai Jasmine petals (*malli poo*)**.
 - **Content Handoff:** Opens directly onto the conversational guestbook application and GroupMe invite gateway.
 
 ### 3.9 Event Dossier (`/events/[slug]`): The Sunlit Randomized Dossier
+
 - **Intent:** Treat every single campus gathering as an Awwwards-caliber high-fashion art magazine spread.
 - **Engineering Highlights:** Server-side Fisher-Yates array shuffle selecting a fresh 5–8 photo slice per request; ReactBits `SplitText` letterpress cascade; 3-track `ParallaxScatter` light table; and the magnetic proximity `VaultGateway` door pulling visitors into the Google Photos archive.
 

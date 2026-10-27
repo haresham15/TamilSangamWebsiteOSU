@@ -1,6 +1,7 @@
 # Guide Hero v3: "The Station Sequence" Verification Report
 
 ## 1. Executive Summary & Mission Status
+
 - **Target Route:** `/guide` (Guide & FAQ Hero v3)
 - **Status:** **COMPLETE & MATHEMATICALLY VERIFIED**
 - **Quality Target:** AWWWARDS Site of the Day (SOTD) Creative Direction
@@ -27,6 +28,7 @@
 ## 3. Architecture & Subsystem Specification
 
 ### 3.1 Z-Ordered Window Assembly ($z = -2.4$ to $z = +0.8$)
+
 1. **Layer 1 ($z = -2.4$):** Warm compartment backdrop plane with radial luminance gradient (`#FFB84D` core $[2.8, 1.85, 0.65]$ $\rightarrow$ `#FF8A2A` amber $\rightarrow$ `#2A1208` edge, `fog: false`). Contrast ratio probe $> 12:1$ across silhouette perimeter.
 2. **Layer 2 ($z = -1.5$):** Compartment interior silhouettes (high-backed bench profile, overhead luggage rack, 4-blade ceiling fan rotating at 1.2 rad/s, emissive ceiling tube strip, 80 cd point light with quadratic decay).
 3. **Layer 3 ($z = -0.7$):** Seated woman SDF plane facing $-x$ (left), crossfading pose A $\leftrightarrow$ B ($0 \leftrightarrow 1$ over 0.5s every 7s) with soft hair bun and draped saree profile (`renderOrder = 2`).
@@ -38,6 +40,7 @@
 9. **Spill Pool ($z = +1.0$ to $+3.8$):** Wet platform light spill pool projecting warm window glow with 7 distinct bar shadow stripes.
 
 ### 3.2 Sangam Junction Hall & Crane Rail
+
 - **Trusses & Rafters:** Spanning $y = 16\text{m}$ to $22\text{m}$ with a dedicated 14-meter central bay ($x = [-18, -12, -8.2, 8.2, 12, 18]$) that cleanly frames the split-flap board without crossing structural members over text.
 - **Skylight Haze Plane ($z = -10$, $y = 14$):** Luminous teal-blue gradient plane (`#14283A` $\rightarrow$ `#2A4A63`, `fog: false`) guaranteeing $\ge 7:1$ contrast against the dark `#0C0C0E` board housing.
 - **Departure Board Integration:** Mounted via `<BoardRoot position={[0, 14, -6]}>` suspended from the rafters by 4 iron rods with $\pm 0.3^\circ$ micro-sway. Split-flap internal kinematics, instancing, and audio engine preserved without modification.

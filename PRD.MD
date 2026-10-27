@@ -1,5 +1,7 @@
 # (ஐந்திணை) — OSU Tamil Sangam Website
+
 # Master Product Requirements Document & Technical Architecture Ground Truth
+
 **PRD v3.3 (Active Production Architectural Ground Truth)** · October 2026 · Owner: Haresh  
 **Core Engine:** Next.js 16.3.5 (App Router, Turbopack) · React 19.2.8 · Three.js r186 / React Three Fiber v9.7 · @react-three/drei · @react-three/postprocessing v3.1 · GSAP 3.15 (ScrollTrigger, SplitText, ScrambleText) · Lenis 1.3 · Tailwind CSS v4 (@theme OKLCH tokens) · Web Audio API synthesis · ReactBits Kinematics · Playwright Direct3D11 Capture Pipeline  
 **Working Title:** *Aintinai* (ஐந்திணை) — Grounded in the five classical landscapes of Sangam literature (*Marutham*, *Neithal*, *Mullai*, *Paalai*, *Kurinji*).  
@@ -42,11 +44,13 @@
 ## 1. Executive Vision, Cultural Architecture & Cinema Connections
 
 ### 1.1 The Genesis & Mission
+
 The Ohio State University Tamil Sangam represents 120+ active Buckeye students, alumni, and friends in Columbus, Ohio. Founded informally in 2021 and officially chartered as a recognized student organization in 2024, our community bridges ancient Tamil heritage with modern collegiate celebration under the open principle: **"No Tamil required — everyone belongs at our hearth."**
 
 Before this platform, the organization relied on fragmented Linktree hubs, ephemeral Google Forms, and uncaptioned Google Photos folders. *Aintinai* replaces fragmentation with a permanent cultural institution, collegiate record, and digital broadsheet.
 
 ### 1.2 The Five Ecological Landscapes (*Aintinai* / ஐந்திணை)
+
 Classical Sangam poetry (*Sangam Ilakkiyam*, c. 300 BCE – 300 CE) organizes human emotion and social life into five distinct natural landscapes (*tinai*), each paired with an ecological mood, deity, and time of day. This website maps its primary routes to these five classical landscapes:
 
 1. **மருதம் (Marutham — Fertile Plains / Agricultural Basin):**
@@ -66,14 +70,18 @@ Classical Sangam poetry (*Sangam Ilakkiyam*, c. 300 BCE – 300 CE) organizes hu
    - *Expression:* **Join & Community Portal ([`/join`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/join/page.tsx))** — The morning threshold where students cross collegiate gates into lifelong brotherhood.
 
 ### 1.3 Why Tamil Cinema & Literature Anchor Our Identity
+
 For diaspora students thousands of miles from Tamil Nadu, Sri Lanka, Malaysia, Singapore, and India, two cultural forces create instant emotional kinship:
+
 1. **Classical Tamil Literature:** Written over two millennia ago, verses like Kaniyan Poongundranar's *"யாதும் ஊரே யாவரும் கேளிர்"* (*Puranaanooru* 192 — "To us all towns are home, everyone our kin") establish universal openness and anti-parochial humanism.
 2. **Tamil Popular Cinema (தமிழ் சினிமா):** The shared cultural soundtrack of our generation — Mani Ratnam's visual lyricism, Gautham Vasudev Menon's romantic nostalgia, Lokesh Kanagaraj's kinetic adrenaline, A.R. Murugadoss's tactical heroism, and the scores of A.R. Rahman, Ilaiyaraaja, Harris Jayaraj, and Anirudh Ravichander.
 
 Every route opens with a theatrical 3D prologue that emotionally primes the visitor before rolling out the sunlit courtyard (*Muttram*) broadsheet.
 
 ### 1.4 The "Muttram" (Courtyard) Anti-Slop Design Constitution
+
 The platform enforces a strict anti-slop aesthetic discipline to eradicate generic AI interface tropes:
+
 - **Zero Generic Boxed Cards:** Content never sits inside repetitive `p-6 rounded-2xl border shadow-md` cards. Information flows directly on the Warm Ivory (`#FAF9F6`) field using asymmetric editorial grouping.
 - **Negative Space as Architecture:** Visual weight is achieved through expansive whitespace (`gap-16`, `gap-24`, `mt-32`) and crisp hairline divider rules (`border-b border-[#2A2825]/12`).
 - **Color Discipline (OKLCH Only):**
@@ -89,6 +97,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
 ## 2. Exhaustive Route Specifications & Cinematic Easter Eggs
 
 ### 2.1 `/` — Home (முகப்பு): Digital Kolam Conveyor & Thirukkural Genesis
+
 - **Intent:** Consecrates the digital threshold as a traditional home porch (*Thinnai* / திண்ணை). At dawn, Tamil households draw rice-flour kolams to invite harmony and feed insects/birds, symbolizing generous living without expectation.
 - **Cinematic & Literary Tie:** Thirukkural Kural 1 (*"அகர முதல எழுத்தெல்லாம் ஆதி பகவன் முதற்றே உலகு"*) and Kural 81 (*"இருந்தோம்பி இல்வாழ்வ தெல்லாம் விருந்தோம்பி வேளாண்மை செய்தற் பொருட்டு"*).
 - **3D Hero Composition ([`DigitalKolamHero.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/hero/DigitalKolamHero.tsx)):**
@@ -105,6 +114,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
 - **Documentation & Media:** Detailed PRD at [`docs/heroes/home-hero-peel-and-flow-prd.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/docs/heroes/home-hero-peel-and-flow-prd.md). Captured media: `home_hero_animation.gif` (614 KB), `home_hero_animation.webm`.
 
 ### 2.2 `/events` — Events (நிகழ்வுகள்): The Leo Concert Arena Gen 3
+
 - **Intent:** Evoke the raw, pulsating adrenaline of packed collegiate South Asian concert halls, dance competitions, and street-food nights.
 - **Cinematic Anchor:** Lokesh Kanagaraj's ***Leo* (2023)** (Thalapathy Vijay / Anirudh Ravichander / "Naa Ready").
 - **3D Hero Composition ([`EventsGen3Canvas.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/gen3/EventsGen3Canvas.tsx)):**
@@ -121,6 +131,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
 - **Documentation & Media:** Detailed PRD at [`docs/heroes/events-hero-leo-concert-arena-prd.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/docs/heroes/events-hero-leo-concert-arena-prd.md). Captured media: `events_hero_animation.gif` (2.39 MB), `events_hero_animation.webm`.
 
 ### 2.3 `/about` — About (அறிமுகம்): 5-Tala Gopuram Z-Scroll Fly-Through
+
 - **Intent:** Ground the diaspora student community in the deep, egalitarian antiquity of Dravidian stone architecture and classical poetry.
 - **Cinematic Anchor:** Selvaraghavan's ***Aayirathil Oruvan* (2010)** & Classical *Puranaanooru* 192.
 - **3D Hero Composition ([`GopuramZScroll.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/about/GopuramZScroll.tsx)):**
@@ -135,6 +146,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
 - **Documentation & Media:** Detailed PRD at [`docs/heroes/about-hero-gopuram-z-scroll-prd.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/docs/heroes/about-hero-gopuram-z-scroll-prd.md). Captured media: `about_hero_animation.gif` (1.87 MB), `about_hero_animation.webm`.
 
 ### 2.4 `/board` — Board (அவை): Ponniyin Selvan Chola Darbar Corridor
+
 - **Intent:** Honor student executive leaders not as corporate LinkedIn headshots, but as royal ministers (*Amaichargal*) and cultural guardians holding council in an Imperial Chola Darbar.
 - **Cinematic Anchor:** Mani Ratnam's ***Ponniyin Selvan I & II* (2022–2023)** (Kalki Krishnamurthy / A.R. Rahman).
 - **3D Hero Composition ([`BoardHeroCanvas.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/board/BoardHeroCanvas.tsx), [`CorridorTreadmill.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/board/CorridorTreadmill.tsx)):**
@@ -149,6 +161,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
 - **Documentation & Media:** Detailed PRD at [`docs/heroes/board-hero-chola-darbar-prd.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/docs/heroes/board-hero-chola-darbar-prd.md). Captured media: `board_hero_animation.gif` (1.28 MB), `board_hero_animation.webm`.
 
 ### 2.5 `/gallery` — Gallery (நினைவுகள்): Vaaranam Aayiram 24-Fret Guitar Highway
+
 - **Intent:** Evoke the bittersweet nostalgia of college life, late-night guitar jams on the dorm lawn, and friendships forged across campus.
 - **Cinematic Anchor:** Gautham Vasudev Menon's ***Vaaranam Aayiram* (2008)** (Suriya / Harris Jayaraj).
 - **3D Hero Composition ([`GalleryHero.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/gallery-hero/GalleryHero.tsx)):**
@@ -164,6 +177,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
 - **Documentation & Media:** Detailed PRD at [`docs/heroes/gallery-hero-prd.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/docs/heroes/gallery-hero-prd.md). Captured media: `gallery_hero_animation.gif` (1.35 MB), `gallery_hero_animation.webm`.
 
 ### 2.6 `/guide` — Guide & FAQ (வழிகாட்டி): Alaipayuthey Railway Station Sequence
+
 - **Intent:** Welcome new freshmen, transfer students, and graduate arrivals who feel like they are stepping off a train onto an unfamiliar platform, searching for community.
 - **Cinematic Anchor:** Mani Ratnam's ***Alaipayuthey* (2000)** (R. Madhavan & Shalini / A.R. Rahman).
 - **3D Hero Composition ([`GuideHero.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/guide-hero/GuideHero.tsx), [`BoardRoot.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/guide-hero/BoardRoot.tsx)):**
@@ -177,6 +191,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
 - **Documentation & Media:** Detailed PRD at [`docs/heroes/guide-hero-v3-station-sequence-prd.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/docs/heroes/guide-hero-v3-station-sequence-prd.md). Captured media: `guide_hero_animation.gif` (851 KB), `guide_hero_animation.webm`.
 
 ### 2.7 `/suggestions` — Ideas (கருத்து): Kaththi War Room & Ohio Stadium 3D Blueprint
+
 - **Intent:** Elevate student proposals from an overlooked feedback box into a strategic, tactical act of community engineering and student empowerment.
 - **Cinematic Anchor:** A.R. Murugadoss's ***Kaththi* (2014)** (Thalapathy Vijay / Anirudh Ravichander).
 - **3D Hero Composition ([`BlueprintScene3D.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/suggestions/BlueprintScene3D.tsx)):**
@@ -191,6 +206,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
 - **Documentation & Media:** Detailed PRD at [`docs/heroes/suggestions-hero-kaththi-war-room-prd.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/docs/heroes/suggestions-hero-kaththi-war-room-prd.md). Captured media: `suggestions_hero_animation.gif` (1.07 MB), `suggestions_hero_animation.webm`.
 
 ### 2.8 `/join` — Join (இணையுங்கள்): Morning Campus Courtyard Gates & Leaf Drift
+
 - **Intent:** Create an architectural embrace for every student, explicitly assuring them that fluency is not required to belong.
 - **Cinematic Anchor:** Cheran's ***Autograph* (2004)** & Gautham Menon's ***Minnale* (2001)**.
 - **3D Hero Composition ([`JoinHeroCanvas.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/join/JoinHeroCanvas.tsx), [`CampusGate.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/join/CampusGate.tsx), [`LeafDrift.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/join/LeafDrift.tsx)):**
@@ -205,6 +221,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
 - **Documentation & Media:** Detailed PRD at [`docs/heroes/join-hero-collegiate-gates-prd.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/docs/heroes/join-hero-collegiate-gates-prd.md). Captured media: `join_hero_animation.gif` (2.45 MB), `join_hero_animation.webm`.
 
 ### 2.9 `/events/[slug]` — Event Dossier (நிகழ்ச்சி ஆவணம்): Sunlit Randomized Magazine
+
 - **Intent:** Treat every single campus gathering as an Awwwards-caliber high-fashion art magazine spread.
 - **Engineering Architecture ([`src/app/events/[slug]/page.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/events/[slug]/page.tsx), [`EventDossierView.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/events/[slug]/page.tsx)):**
   - **Server-Side Fisher-Yates Randomizer:** Node.js file system scanner slices a fresh 5–8 photo slice per request with `force-dynamic` (zero CLS, zero client API calls) via [`src/lib/event-photos.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/lib/event-photos.ts).
@@ -214,6 +231,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
 - **Documentation & Media:** Detailed PRD at [`docs/heroes/event-dossier-prd.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/docs/heroes/event-dossier-prd.md). Captured media: `event-dossier_hero_animation.gif` (740 KB), `event-dossier_hero_animation.webm`.
 
 ### 2.10 `/initiatives` — Campus Hubs, Cultural Pillars & Art Forms
+
 - **Intent:** Showcase the structured sub-chapters of Tamil Sangam that allow dancers, musicians, foodies, and organizers to lead their own groups on campus.
 - **Architecture ([`src/app/initiatives/page.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/initiatives/page.tsx)):**
   - **The Three Pillars:** Aatam (Movement & Dance), Paatam (Music & Vocals), Kondatam (Culinary Arts & Celebrations).
@@ -221,6 +239,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
   - **Interactive Chamfered Tabs:** Direct wood-click audio tactile feedback upon selecting pillars.
 
 ### 2.11 `/links` — Native High-Performance Linktree Replacement
+
 - **Intent:** Eliminate commercial bio links (Linktree, Beacons) that load 3MB+ of tracking scripts and third-party advertising.
 - **Architecture ([`src/app/links/page.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/links/page.tsx)):**
   - Direct live query into the next scheduled event with RSVP link.
@@ -228,12 +247,14 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
   - One-tap clipboard copy for emails and quick links with inline toast feedback.
 
 ### 2.12 `/privacy` — Zero-Cookie Anonymous FAQ Engagement Policy
+
 - **Intent:** Protect student privacy with full transparency on data minimization.
 - **Architecture ([`src/app/privacy/page.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/privacy/page.tsx)):**
   - Zero raw IP addresses stored; zero third-party tracking cookies; zero selling of student metadata.
   - Anonymous guide popularity counters salted with a 24-hour rotating daily HMAC key to prevent ballot stuffing without tracking individual users.
 
 ### 2.13 Global Overlays & Modals
+
 1. **Command Palette (`Cmd+K` / `Ctrl+K`) ([`CommandPalette.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/global/CommandPalette.tsx)):**
    - High-speed fuzzy search across all 9 pages, upcoming events, 8 executive board officers, FAQs, and cultural glossary terms.
    - Arrow-key keyboard navigation, instant audio click feedback, and escape-key dismissal.
@@ -268,6 +289,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
 ## 4. Deep Mathematical, Physics & Shader Engineering
 
 ### 4.1 Digital Kolam Weaving & Parabolic Peel Vertex Shader
+
 - **Mathematical Curve Generation ([`flowMath.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/hero/flowMath.ts)):**
   - Dot lattice constructed on a symmetric Cartesian grid with spacing $S = 48\text{px}$.
   - Continuous loop paths generated using cubic Bezier curves parameterized by harmonic frequencies:
@@ -281,6 +303,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
   - As $\theta \to \frac{\pi}{2}$, the 3D kolam plane rolls upward into an off-screen conveyor spool, seamlessly revealing Act II.
 
 ### 4.2 Leo Concert Arena Instancing & Crowd Harmonic Bounce
+
 - **Crowd Simulation ([`JumpingCrowdSilhouettes.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/gen3/JumpingCrowdSilhouettes.tsx)):**
   - 8,000 instanced dancing figures rendered in a single draw call via `THREE.InstancedMesh`.
   - Custom vertex shader computes vertical harmonic bounce driven by audio clock time:
@@ -294,6 +317,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
     $$I_{\text{rim}} = (1.0 - \mathbf{N} \cdot \mathbf{V})^\gamma$$
 
 ### 4.3 12-TET Mathematical Fret Spacing & 6-String Physics
+
 - **12-TET Formula ([`fretMath.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/gallery-hero/neck/fretMath.ts)):**
   - Physical scale length $L = 648\text{mm}$ (standard 25.5" acoustic guitar).
   - Exact fret positions calculated via twelve-tone equal temperament:
@@ -304,6 +328,7 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
     $$y(x, t) = \sum_{m=1}^{M} A_m \sin\left(\frac{m\pi x}{L}\right) \cos(\omega_m t) e^{-\zeta_m t}$$
 
 ### 4.4 Solari Split-Flap Mechanical State Machine
+
 - **Flap Gravity Physics ([`FlapGrid.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/splitflap/SplitFlapBoard.tsx)):**
   - 24-column $\times$ 6-row matrix of independent flap units.
   - Top flap remains stationary until bottom flap passes $\theta = \frac{\pi}{2}$; then top flap accelerates with gravitational constant $FALL = 0.7$:
@@ -316,13 +341,17 @@ The platform enforces a strict anti-slop aesthetic discipline to eradicate gener
 ## 5. Global 3D Engine & Runtime Architecture
 
 ### 5.1 Single `<GlobalCanvas>` Singleton & Drei `<View>` Scissoring
+
 To prevent GPU memory leaks and WebGL context loss, the application mounts **exactly one persistent `<Canvas>`** at the DOM root (`#app-root`) ([`GlobalCanvas.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/gl/GlobalCanvas.tsx)).
+
 - **Frameloop Discipline:** `frameloop="never"` — rendering is triggered strictly via `masterTick` advance calls.
 - **View Scissoring:** Individual pages mount lightweight Drei `<View>` components that project their respective 3D scenes through CSS-positioned DOM tracking boxes with hardware-accelerated scissoring.
 - **Tier C Invariant:** In Tier C or Lite Mode, `<GlobalCanvas>` renders nothing (`null`), saving 100% of GPU cycles.
 
 ### 5.2 Dynamic Governor & Frame Budgeting ([`governor.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/engine/governor.ts))
+
 The governor maintains a centralized priority queue of render requests:
+
 - **Level 0 (Idle / Sleep):** 0 FPS. Canvas paused when no 3D elements are in viewport.
 - **Level 1 (Ambient / Idle Motion):** 30 FPS. Dust motes, gentle water, subtle lights.
 - **Level 2 (Active Kinematics / Scroll Scrub):** 60 FPS. Full scroll scrubbing, camera trucking, concert crowd bouncing.
@@ -340,7 +369,9 @@ The governor maintains a centralized priority queue of render requests:
 | **Hitboxes** | Magnetic pull enabled | Standard cursor | Standard cursor |
 
 ### 5.4 State Management & LocalStorage Persistence Schema
+
 All client preferences persist across user sessions without third-party tracking:
+
 - `sangam_tier`: Hardware tier string (`"A"` | `"B"` | `"C"`). Defaults to auto-probed hardware capability.
 - `sangam_lite_mode`: Boolean string (`"true"` | `"false"`). When `"true"`, enforces Tier C globally.
 - `sangam_audio_muted`: Boolean string (`"true"` | `"false"`). Defaults to `"true"` until unlocked via user gesture.
@@ -351,11 +382,13 @@ All client preferences persist across user sessions without third-party tracking
 ## 6. Sensory Layer: Cinematic Color Grading & Diegetic Audio
 
 ### 6.1 DaVinci Resolve AGX Tone Mapping & 33³ Compacted LUT
+
 - **AgX Tone Mapping:** Configured via `<Canvas flat>` and postprocessing `ToneMappingMode.AGX`, preserving specular highlights without crushing warm courtyard tones.
 - **Compacted 33³ PNG Strip LUT (`heritage-33.png`):** Compacted $1089 \times 33$ PNG strip (33 slices of $33 \times 33$ RGB lattices), weighing only 76.8 KB. Live trilinear interpolation ensures $\Delta E_{00} \le 4.0$ JND consistency with heritage bronze and silk tones.
 - **Procedural Film Grain:** Simulates 35mm photochemical emulsion using procedural simplex noise (disabled in Tier C / Save-Data).
 
 ### 6.2 Diegetic Web Audio Synthesis Engine
+
 - **Audio Controller Architecture ([`AudioController.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/audio/AudioController.ts)):** Singleton `AudioContext` with master stereo compressor, limiter, and high-pass filter ($f_c = 40\text{Hz}$).
 - **Passive Gesture Unlock ([`armUnlock.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/audio/armUnlock.ts)):** Prepares audio nodes on first pointerdown/keydown without unwanted autoplay.
 - **Cultural Sound Palette ([`sounds.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/audio/sounds.ts)):**
@@ -367,6 +400,7 @@ All client preferences persist across user sessions without third-party tracking
   - *Mechanical Flap Slap:* 8ms coalesced impact click for Solari board rotations.
 
 ### 6.3 Backend Services, Server Actions & Storage Architecture
+
 - **Student Proposal Action ([`src/app/actions/suggestion.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/actions/suggestion.ts)):**
   - Receives structured proposal submissions with field sanitization, character limits, and IP rate-limiting.
   - Stores submissions to persistent ledger store ([`src/lib/ledgerStore.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/lib/ledgerStore.ts)) and optionally triggers brutalist email notifications ([`brutalistEmailTemplates.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/lib/brutalistEmailTemplates.ts)) via Resend.
@@ -381,7 +415,9 @@ All client preferences persist across user sessions without third-party tracking
 ## 7. Tamil Text Engineering & Typography System
 
 ### 7.1 Grapheme Cluster Integrity Protocol
+
 Standard JavaScript string splitting (`str.split('')`) corrupts Tamil combining vowel signs (*uyirezhuthu*) and pulli diacritics (*meiyezhuthu*). The platform strictly mandates `Intl.Segmenter`:
+
 ```ts
 const segmenter = new Intl.Segmenter("ta", { granularity: "grapheme" });
 const clusters = Array.from(segmenter.segment("தமிழ்"), (s) => s.segment);
@@ -389,6 +425,7 @@ const clusters = Array.from(segmenter.segment("தமிழ்"), (s) => s.segme
 ```
 
 ### 7.2 Typography Tokens & Loading Strategy
+
 - **Tamil Display & Inscriptions:** **Halant** & **Anek Tamil** (`var(--font-serif)` / `var(--font-anek-tamil)`). Majestic, chiselled letterforms rooted in temple stone inscriptions.
 - **Tamil Body & UI:** **Mukta Malar** (`var(--font-body)` / `var(--font-mukta-malar)`). High-legibility modern sans-serif with ample vertical breathing room (minimum line-height 1.6).
 - **Metadata & Telemetry:** **JetBrains Mono** (`var(--font-mono)`). Monospace precision for schedules, colophons, and plate indices.
@@ -405,6 +442,7 @@ const clusters = Array.from(segmenter.segment("தமிழ்"), (s) => s.segme
 All colors, radii, spacing, and elevations strictly trace back to [`design/tokens.json`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/design/tokens.json) and are mirrored into [`src/app/globals.css`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/globals.css) via Tailwind CSS v4 `@theme` directives. Inline arbitrary hex codes and magic pixel numbers are strictly forbidden.
 
 ### 8.1 Primitive Tier (Raw Values)
+
 ```json
 {
   "--color-gold-500": "oklch(0.78 0.18 80)",
@@ -416,6 +454,7 @@ All colors, radii, spacing, and elevations strictly trace back to [`design/token
 ```
 
 ### 8.2 Semantic Tier (Intent Mappings)
+
 ```css
 @theme {
   --color-canvas-base: var(--color-ivory-50);
@@ -428,6 +467,7 @@ All colors, radii, spacing, and elevations strictly trace back to [`design/token
 ```
 
 ### 8.3 Component Tier (Micro-Properties)
+
 ```css
 --button-bg-primary: var(--color-brand-accent);
 --button-text-primary: var(--color-canvas-base);
@@ -435,6 +475,7 @@ All colors, radii, spacing, and elevations strictly trace back to [`design/token
 ```
 
 ### 8.4 Component Design System & UI Primitive Catalog
+
 - [`MuttramButton.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/muttram/MuttramButton.tsx) & [`PalagaiButton.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/ui/PalagaiButton.tsx): Tactile wooden/ticket button with chamfered geometry, micro-spring hover kinematics, and audio tap response.
 - [`DepthCarousel.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/ui/DepthCarousel.tsx): Z-axis card deck allowing interactive 3D perspective panning of collegiate event moments.
 - [`DitherVeil.tsx`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/ui/DitherVeil.tsx): Hardware-accelerated ordered dithering shader producing fine artistic grain without performance cost.
@@ -448,7 +489,9 @@ All colors, radii, spacing, and elevations strictly trace back to [`design/token
 ## 9. Hardware-Accelerated Capture Pipeline & Visual Inspection Board
 
 ### 9.1 Direct3D11 Headless Capture Engine ([`scripts/capture-all-heroes.mjs`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/scripts/capture-all-heroes.mjs))
+
 To capture live Three.js r186 WebGL2 shaders, AgX tone mapping, and 33³ LUT post-processing without software fallback artifacts, the test harness runs headless Chromium with hardware acceleration:
+
 ```javascript
 const browser = await chromium.launch({
   headless: true,
@@ -464,13 +507,17 @@ const browser = await chromium.launch({
 ```
 
 ### 9.2 Adaptive 256-Color GIF Compiler ([`scripts/compile_gifs.py`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/scripts/compile_gifs.py))
+
 Compiles frame bursts into crisp, lightweight animated GIFs using Python Pillow with LANCZOS downsampling and adaptive palette quantization:
+
 ```bash
 py scripts/compile_gifs.py <frame_dir> <output_gif> 160
 ```
 
 ### 9.3 Live Interactive Content Audit Board
+
 Open [`screenshots/content-audit/index.html`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/screenshots/content-audit/index.html) in any browser to inspect:
+
 - **Full Page:** Complete 1440p Retina scroll captures of all 9 routes.
 - **Hero GIF Animation:** Looping animated GIFs demonstrating particle physics and kinematics.
 - **WebM Video:** High-definition 60fps video playback of the hero sequence.

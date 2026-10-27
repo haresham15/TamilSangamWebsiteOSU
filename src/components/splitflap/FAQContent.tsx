@@ -100,9 +100,9 @@ export function FAQContent({
         {/* EDITORIAL HEADER (Sanity CMS-Ready Architecture)                         */}
         {/* ========================================================================= */}
         <div className="text-left mb-12">
-          <h1 className="text-[clamp(2.25rem,5vw,5rem)] font-extrabold text-[#fdfaf5] tracking-tight font-display mb-3 leading-[1.1]">
+          <h2 className="text-[clamp(2.25rem,5vw,5rem)] font-extrabold text-[#fdfaf5] tracking-tight font-display mb-3 leading-[1.1]">
             Frequently Asked Questions
-          </h1>
+          </h2>
           <p className="text-base sm:text-lg text-[#c59b27] font-tamil font-medium mb-4">
             அடிக்கடி கேட்கப்படும் கேள்விகள் மற்றும் விளக்கங்கள்
           </p>

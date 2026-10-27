@@ -24,7 +24,7 @@ import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
 import { Providers } from "@/components/providers/Providers";
 import { GlobalCanvas } from "@/components/gl/GlobalCanvas";
 import { AppShell } from "@/components/global/AppShell";
-import { RootGraphJsonLd, EventJsonLd } from "@/components/seo/JsonLd";
+import { RootGraphJsonLd } from "@/components/seo/JsonLd";
 import { SITE_URL, ROUTE_METADATA, DEFAULT_ROBOTS, constructAlternates } from "@/lib/seo";
 import { ViewfinderCursor } from "@/components/ui/ViewfinderCursor";
 
@@ -208,7 +208,13 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  alternates: constructAlternates("/"),
+  manifest: "/manifest.webmanifest",
+  alternates: {
+    ...constructAlternates("/"),
+    types: {
+      "application/rss+xml": `${SITE_URL}/feed.xml`,
+    },
+  },
   openGraph: {
     title: ROUTE_METADATA.home.title,
     description: ROUTE_METADATA.home.description,
@@ -231,6 +237,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: ROUTE_METADATA.home.title,
     description: ROUTE_METADATA.home.description,
+    site: "@tamilsangam.osu",
+    creator: "@tamilsangam.osu",
     images: [`${SITE_URL}/opengraph-image`],
   },
   icons: {
@@ -243,6 +251,12 @@ export const metadata: Metadata = {
     ],
   },
   robots: DEFAULT_ROBOTS,
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+  },
+  other: {
+    "apple-mobile-web-app-title": "OSU Tamil Sangam",
+  },
 };
 
 export default function RootLayout({
@@ -270,7 +284,6 @@ export default function RootLayout({
 
         {/* Linked Schema.org Knowledge Graph (@graph) for Search Engines */}
         <RootGraphJsonLd />
-        <EventJsonLd />
 
         <Providers>
           <div id="app-root" className="min-h-full flex flex-col flex-1">

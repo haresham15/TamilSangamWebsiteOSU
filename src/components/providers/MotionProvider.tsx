@@ -43,12 +43,12 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
       return () => cancelAnimationFrame(frameId);
     }
 
-    // Initialize Lenis with cinematic pacing & heavyweight inertial damping
+    // Initialize Lenis with smooth cinematic pacing and responsive inertial damping
     const lenis = new Lenis({
       autoRaf: false,
-      lerp: 0.052,
-      wheelMultiplier: 0.70,
-      touchMultiplier: 0.85,
+      lerp: 0.082,
+      wheelMultiplier: 0.88,
+      touchMultiplier: 0.95,
       smoothWheel: true,
       syncTouch: false, // Keep native touch momentum scrolling on iOS and mobile
       anchors: true,
@@ -69,7 +69,8 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
     };
 
     gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
+    // Smooth out stalls: clamp any frame spike > 120ms to 24ms to eliminate freeze-and-teleport cuts
+    gsap.ticker.lagSmoothing(120, 24);
 
     return () => {
       gsap.ticker.remove(tick);

@@ -2,6 +2,7 @@
 
 **Scope:** Two authentic, detailed, world-static purple Sikku Kolams flanking the Home Hero start frame.  
 **Approved Sibling Pair (Option A):**
+
 - **Kolam L (Left Flank):** Candidate #1 (ID `46815`, Fundamental Config: `AXXXBABABX`)
 - **Kolam R (Right Flank):** Candidate #2 (ID `46895`, Fundamental Config: `XBXXXABABX`)
 

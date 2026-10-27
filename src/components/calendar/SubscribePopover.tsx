@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Calendar, Check, Copy, ExternalLink, CalendarPlus, ChevronDown } from "lucide-react";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
+import { SITE_URL } from "@/lib/seo";
 
 interface SubscribePopoverProps {
   className?: string;
@@ -51,7 +52,7 @@ export const SubscribePopover: React.FC<SubscribePopoverProps> = ({
     const icsUrl =
       typeof window !== "undefined"
         ? `${window.location.origin}/calendars/almanac.ics`
-        : "https://tamilsangamosu.org/calendars/almanac.ics";
+        : `${SITE_URL}/calendars/almanac.ics`;
 
     navigator.clipboard.writeText(icsUrl).then(() => {
       setCopied(true);

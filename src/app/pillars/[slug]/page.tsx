@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { PILLARS_DATA, ALL_PILLARS, PillarSlug } from "@/data/pillars";
 import { PillarDetailView } from "@/components/pillars/PillarDetailView";
 import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
-import { constructCanonical, SITE_URL } from "@/lib/seo";
+import { constructCanonical, constructAlternates, SITE_URL } from "@/lib/seo";
 
 interface PillarPageProps {
   params: Promise<{ slug: string }>;
@@ -44,9 +44,7 @@ export async function generateMetadata({ params }: PillarPageProps): Promise<Met
       "Tamil student initiatives OSU",
       "Ohio State University Tamil culture",
     ],
-    alternates: {
-      canonical,
-    },
+    alternates: constructAlternates(`/pillars/${slug}`),
     openGraph: {
       title,
       description,

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { BreadcrumbJsonLd, JoinPageJsonLd } from "@/components/seo/JsonLd";
 import { buildRouteMetadata, ROUTE_METADATA } from "@/lib/seo";
 
 export const metadata: Metadata = buildRouteMetadata({
@@ -25,6 +25,7 @@ export default function JoinLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <>
+      <JoinPageJsonLd />
       <BreadcrumbJsonLd items={breadcrumbItems} />
       {children}
     </>

@@ -1,6 +1,18 @@
 {
   "default": true,
+  "MD001": false,
   "MD013": false,
+  "MD024": {
+    "siblings_only": true
+  },
   "MD025": false,
-  "MD041": false
+  "MD033": {
+    "allowed_elements": ["br", "div", "span", "details", "summary", "video", "iframe", "img"]
+  },
+  "MD036": false,
+  "MD040": false,
+  "MD041": false,
+  "MD048": false,
+  "MD060": false,
+  "MD004": false
 }

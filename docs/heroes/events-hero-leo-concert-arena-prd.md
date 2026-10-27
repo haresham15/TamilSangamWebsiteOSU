@@ -1,4 +1,5 @@
 # PRD — Events Hero: "The Leo Concert Arena Gen 3"
+
 ### Theatrical Factory Stadium, 8,000 Dancers at 128 BPM & The God Light
 
 > **Surface:** `/events` (Gatherings River, Campus Traditions & RFC 5545 Calendar)  
@@ -6,6 +7,7 @@
 > **Cinematic Anchor:** Lokesh Kanagaraj's *Leo* (2023) / Thalapathy Vijay / Anirudh Ravichander / "Naa Ready" Factory Concert Choreography  
 > **Core Subsystems:** `EventsGen3Canvas.tsx`, `LeoFactoryEnvironment.tsx`, `JumpingCrowdSilhouettes.tsx`, `PhoneTorches.tsx`, `CameraChoreography.tsx`  
 > **Media Artifacts:**
+>
 > - Video Capture: [`docs/heroes/media/events_hero_animation.webm`](./media/events_hero_animation.webm)
 > - Animated GIF: [`docs/heroes/media/events_hero_animation.gif`](./media/events_hero_animation.gif)
 > - Rest Frame: [`docs/heroes/media/events_hero_rest.png`](./media/events_hero_rest.png)
@@ -17,14 +19,18 @@
 ## 1. Creative Intent & Thematic Architecture
 
 ### 1.1 The Stagnation of Event Calendars
+
 Traditional collegiate event pages resemble static school bulletins:
+
 - Flat lists of event titles, dates, and times.
 - Zero theatrical energy, anticipation, or communal adrenaline.
 - Fails to capture the electrifying cultural excitement of massive South Asian student gatherings.
 
 ### 1.2 The Solution: The Theatrical Arena
+
 In Tamil culture, university events are not formal sit-down lectures—they are roof-shattering celebrations filled with synchronized Kuthu dance performances, booming live percussion, and thousands of students singing in unison.
 By modeling the `/events` hero after the iconic industrial factory concert sequence from *Leo*:
+
 1. **Electrifying Scale:** The visitor is immersed in a massive 3D stadium containing an audience of thousands roaring in silhouette.
 2. **Kinetic Camera Trajectory:** A dramatic crane descent plunges the viewer from the high rafters down into the pulsating crowd origin.
 3. **The God Light:** A single incandescent sodium-vapor backlight carves a sharp, legendary silhouette out of the lone central performer, capturing the mythological mass-cinema energy of Tamil cinema.
@@ -34,6 +40,7 @@ By modeling the `/events` hero after the iconic industrial factory concert seque
 ## 2. Cinematic Homage & Film Easter Eggs
 
 ### 2.1 The *Leo* (2023) Factory Sequence
+
 The entire 300vh scroll-pinned stage draws directly from the aesthetic and mechanical design of the "Naa Ready" stadium number from Lokesh Kanagaraj's blockbuster:
 
 | Cinematic Feature | *Leo* Reference | 3D WebGL Implementation |
@@ -64,14 +71,17 @@ The entire 300vh scroll-pinned stage draws directly from the aesthetic and mecha
 ```
 
 ### 3.1 128 BPM Harmonic Vertex Shader (`JumpingCrowdSilhouettes.tsx`)
+
 Rather than running expensive CPU animations for 8,000 figures, the crowd is rendered in a single draw call via `InstancedMesh`. Vertical displacement is computed natively on the GPU:
 $$y_{\text{offset}}(t) = \left| \sin\left(2\pi \cdot \frac{128}{60} \cdot t + \phi_i\right) \right| \cdot h_i$$
 Where:
+
 - $\frac{128}{60} = 2.133\text{ Hz}$ (The exact tempo of Anirudh's "Naa Ready")
 - $\phi_i \in [0, 2\pi]$ (Per-instance phase offset preventing robotic synchronization)
 - $h_i \in [0.15\text{m}, 0.35\text{m}]$ (Individualized jumping height)
 
 ### 3.2 Stochastic Phone Torch Twinkle (`PhoneTorches.tsx`)
+
 Each torch point sprite calculates dynamic intensity modulation:
 $$I_i(t) = I_0 \cdot \left[ 0.7 + 0.3 \sin(\omega_i t) \cos(\nu_i t) \right]$$
 Simulating the organic sway and wobble of audience members holding up their smartphones in a darkened auditorium.
@@ -81,6 +91,7 @@ Simulating the organic sway and wobble of audience members holding up their smar
 ## 4. Content Integration: The Gatherings River
 
 Following the cinematic blowout, the page transitions cleanly into the **Gatherings River**:
+
 1. **The Gatherings River Catalog:** Linear chronological stream of upcoming and historical celebrations on campus:
    - *Pongal Vizha:* Harvest banquet, traditional veshti/saree attire, and live folk music.
    - *Namma Jathara:* Massive collaborative spring carnival with Telugu Tamasha.

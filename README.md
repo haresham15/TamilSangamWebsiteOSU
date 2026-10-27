@@ -72,21 +72,26 @@ TamilSangamWebsiteOSU/
 ## ⚡ Getting Started
 
 ### Prerequisites
+
 - Node.js $\ge 20.0.0$
 - npm or pnpm
 
 ### Installation
+
 ```bash
 npm install
 ```
 
 ### Development Server
+
 Starts the Next.js Turbopack development server on `http://localhost:3000`:
+
 ```bash
 npm run dev
 ```
 
 ### Verification & Testing
+
 ```bash
 # Type integrity check (0 errors required)
 npm run typecheck
@@ -113,4 +118,5 @@ node scripts/capture-content-audit.mjs
 ---
 
 ## 📄 License & Student Organization
+
 © 2026 OSU Tamil Sangam. Registered Student Organization at The Ohio State University, Columbus, OH.

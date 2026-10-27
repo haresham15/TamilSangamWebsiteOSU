@@ -5,6 +5,7 @@ This directory contains updated full-page screenshots, animated hero GIFs, WebM 
 ---
 
 ## 🎨 Interactive Framer Board with Live Hero Video & GIF Previews
+
 Open [`index.html`](./index.html) in any browser to inspect all 9 page artboards side-by-side with live toggles between **Full Page Screenshots**, **Hero Animated GIFs**, **WebM Video Loops**, and **Kinematic Stills**, complete with cinematic Easter egg breakdowns and links to technical PRDs.
 
 ---
@@ -26,6 +27,7 @@ Open [`index.html`](./index.html) in any browser to inspect all 9 page artboards
 ---
 
 ## 📐 Capture Specifications
+
 - **Viewport**: 1440 × 900 px (Desktop)
 - **Engine**: Playwright Chromium (SwiftShader / ANGLE WebGL enabled)
 - **Format**: PNG Full-Page, Animated GIF (Lanczos / Adaptive 256 palette), WebM 60fps Video

@@ -62,4 +62,5 @@ data/dispatches.json
 public/audio/
 public/videos/
 tests/artifacts/
+graphify-out/cache/
 

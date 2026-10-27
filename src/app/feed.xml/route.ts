@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { EVENTS } from "@/data/events";
+import { SITE_URL } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,7 @@ function parseEventDate(dateStr: string): string {
 }
 
 export async function GET() {
-  const baseUrl = "https://osutamilsangam.org";
+  const baseUrl = SITE_URL;
   const now = new Date().toUTCString();
 
   const itemsXml = EVENTS.map((event) => {

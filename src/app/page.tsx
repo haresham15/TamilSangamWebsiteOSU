@@ -24,6 +24,7 @@ import { EventsDepthShowcase } from "@/components/home/EventsDepthShowcase";
 import { NextFlagshipGathering } from "@/components/home/NextFlagshipGathering";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
+import { EventJsonLd } from "@/components/seo/JsonLd";
 
 export default function HomePage() {
   const { playClick } = useAudio();
@@ -253,6 +254,9 @@ export default function HomePage() {
 
   return (
     <div className="relative w-full overflow-clip font-body text-left">
+      {/* Flagship Event Schema for Search Engine Rich Snippets */}
+      <EventJsonLd />
+
       {/* Accessible Skip Link (PRD §7.11) */}
       <a
         href={staticHero ? "#flagship-gathering" : "#monolith"}
@@ -260,11 +264,6 @@ export default function HomePage() {
       >
         SKIP TO CONTENT &rarr;
       </a>
-
-      {/* Semantic SSR H1 for Search Engine Crawlers and Screen Readers */}
-      <h1 className="sr-only">
-        OSU Tamil Sangam (ஒஹையோ மாநிலப் பல்கலைக்கழகத் தமிழ்ச் சங்கம்) — Official Tamil Student Organization at The Ohio State University in Columbus, Ohio
-      </h1>
 
       {/* 0. Tactile Heritage Sandstone Texture Overlay */}
       <HeritageTextureOverlay variant="sandstone" opacity={0.02} />

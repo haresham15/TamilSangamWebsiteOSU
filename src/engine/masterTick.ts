@@ -54,22 +54,26 @@ let last = 0;
 let lastRenderTime = 0;
 let lastSyncedClock: unknown = null;
 let lastScrollActiveTime = 0;
+let masterSimTime = 0;
 
 export function resetMasterClock() {
   last = 0;
   lastRenderTime = 0;
   lastSyncedClock = null;
   lastScrollActiveTime = 0;
+  masterSimTime = 0;
 }
 
 export function masterTick(timeSec: number, lenis: Lenis | null) {
-  // Delta clamp (dt <= 1/20 s) to guard against backgrounded tab lag-smoothing spikes (§4.1)
-  const dt = last === 0 ? 1 / 60 : Math.min(timeSec - last, 1 / 20);
+  // Delta clamp (dt <= 1/30 s) to guard against any lag spikes or tab switch pauses (§4.1)
+  const rawDt = last === 0 ? 1 / 60 : timeSec - last;
   last = timeSec;
+  const dt = Math.max(0.0005, Math.min(rawDt, 1 / 30));
+  masterSimTime += dt;
 
-  // 1) Smooth scroll step
+  // 1) Smooth scroll step driven with synchronized monotonic clamped time (ms)
   if (lenis) {
-    lenis.raf(timeSec * 1000);
+    lenis.raf(masterSimTime * 1000);
   } else if (typeof window !== "undefined") {
     // Synchronize ScrollTrigger with window scroll when Lenis is not active
     ScrollTrigger.update();
@@ -95,9 +99,9 @@ export function masterTick(timeSec: number, lenis: Lenis | null) {
     heroScrollProgress.current = heroScrollProgress.target;
   }
 
-  // 3) Update subsystems in explicit order
+  // 3) Update subsystems in explicit order with clamped monotonic time
   for (let i = 0; i < systems.length; i++) {
-    systems[i].step(dt, timeSec);
+    systems[i].step(dt, masterSimTime);
   }
 
   // 4) Governor-controlled render
@@ -107,7 +111,7 @@ export function masterTick(timeSec: number, lenis: Lenis | null) {
   }
 
   // Maintain full 60fps rendering during active scroll and throughout inertia settling (1000ms window)
-  const isVelocityActive = Math.abs(scroll.velocity) > 0.01;
+  const isVelocityActive = Math.abs(scroll.velocity) > 0.005;
   const now = performance.now();
   if (isVelocityActive || isHeroDamping) {
     lastScrollActiveTime = now;
@@ -126,16 +130,12 @@ export function masterTick(timeSec: number, lenis: Lenis | null) {
     lastRenderTime = now;
   }
 
-  // R3F manual timestamps are seconds. Keep the timestamp absolute so a
-  // remount cannot desynchronize the render clock from browser time.
-  const renderTimestampSec = performance.now() / 1000;
-
   // Prime a new R3F clock before its first manual advance to avoid a first-frame spike.
   const r3fClock = getRendererClock();
   if (r3fClock && r3fClock !== lastSyncedClock) {
     lastSyncedClock = r3fClock;
-    r3fClock.elapsedTime = renderTimestampSec;
+    r3fClock.elapsedTime = masterSimTime;
   }
 
-  rendererAdvance(renderTimestampSec, true);
+  rendererAdvance(masterSimTime, true);
 }

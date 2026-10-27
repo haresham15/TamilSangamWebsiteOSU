@@ -1,5 +1,7 @@
 <USER_REQUEST>
+
 # Global Architecture — "One Canvas, One Clock"
+
 ### Execution-grade PRD v2 + agent directive (supersedes the "Phase 2 UI/UX Overhaul" master directive)
 
 **Scope:** site-wide rendering and interaction infrastructure. **Package manager: `npm` only** (commit `package-lock.json`, use `npm ci` in CI).
@@ -68,6 +70,7 @@ body  { background: transparent; }
 #gl-root  { position: fixed; top: 0; left: 0; width: 100%; height: 100lvh; z-index: 0; pointer-events: none; }
 #app-root { position: relative; z-index: 1; }   /* all DOM content sits above the canvas */
 ```
+
 Any DOM area that should *show* WebGL (a View, an image well) must have a transparent background. Opaque sections naturally cover the canvas. Use `svh` for DOM hero wrappers and `lvh` for the canvas.
 
 ```tsx
@@ -89,6 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   );
 }
 ```
+
 Do not use `template.tsx` anywhere above pages that use Views; it remounts on navigation.
 
 ```tsx
@@ -130,9 +134,11 @@ Page usage:
 ```
 
 ### 3.2 Events
+
 With `pointer-events: none` on the canvas and `eventSource` bound to `#app-root`, R3F listens to DOM events and raycasts. Two rules: (1) only objects that need interaction get `onClick`/`onPointerMove`; (2) DOM buttons mark themselves with `data-no-gl` and the scene's handlers return early if the original event target is inside one, so a DOM click never fires a 3D object behind it.
 
 ### 3.3 Lifecycle
+
 - Each scene disposes its geometries, materials, textures, and render targets on unmount. A dev-mode leak guard logs `renderer.info.memory` before/after each route.
 - Handle `webglcontextlost`: switch the tier to C for the session, show the Lite stills.
 - The governor (§4.3) renders nothing when no View is visible.
@@ -195,12 +201,15 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 ```
+
 `syncTouch: false` keeps native touch scrolling (better on iOS and in-app browsers). Use `data-lenis-prevent` on any nested scrollable area. React StrictMode double-mounts effects in dev; the cleanup above makes that safe.
 
 ### 4.2 R3F on the same clock
+
 `<Canvas frameloop="never">`; `registerRenderer` stores the `advance` function from `onCreated`; `masterTick` calls it. Inside scenes, `useFrame((state, delta) => …)` runs once per `advance`, and its `delta` comes from that same timestamp. Clamp it again (`Math.min(delta, 0.05)`) in any scene that integrates motion.
 
 ### 4.3 Frame governor
+
 Systems declare why they need frames; nothing renders if nobody asks.
 
 ```ts
@@ -212,9 +221,11 @@ export const governor = {
   level(): Level { if (document.hidden) return 0; let m: Level = 0; for (const v of asks.values()) if (v > m) m = v as Level; return m; },
 };
 ```
+
 Typical requests: scroll active (2), a flip animation running (2), a hero's idle breathing while visible (1), pointer over an interactive 3D object (2). A page with no visible View requests nothing, so the GPU idles.
 
 ### 4.4 Scroll and route behaviour
+
 - On pathname change: `lenis.scrollTo(0, { immediate: true, force: true })`, then `lenis.resize()` and `ScrollTrigger.refresh()` after the new page's content and fonts settle (`document.fonts.ready`).
 - Scroll velocity for effects (e.g., the Gallery strings, plane skew) comes from `scroll.velocity`. Note Lenis smooths velocity, so constants tuned against raw wheel velocity need retuning.
 - Reduced motion: no Lenis; native scroll; `scroll.velocity` computed from deltas or set to 0.
@@ -237,12 +248,15 @@ Typical requests: scroll active (2), a flip animation running (2), a hero's idle
 ## 6. Phase 3 — Boot sequence and shader warm-up
 
 ### 6.1 When it runs
+
 Only if **all** are true: first page load of the session (`sessionStorage`), tier A, not an in-app browser, no reduced motion, no Save-Data. Otherwise skip straight to the page. Content is server-rendered under the slate, the slate has a visible **Skip** control, and a hard **3 s** cap releases it no matter what. A `<noscript>` rule hides it.
 
 ### 6.2 Progress honesty
+
 `progress = max(prev, realProgress)`, never decreasing. `useProgress` caveats: if `total === 0` treat as 100; on `errors.length` log and continue; the 3 s cap overrides. Readout is monospace with `font-variant-numeric: tabular-nums`, formatted `00.00%`. **Copy is just the readout and the club name**, with no build narration ("COMPILING SHADERS…").
 
 ### 6.3 Warm-up (per scene, via a hook)
+
 ```ts
 // gl/useWarmup.ts
 export function useWarmup(sceneId: string) {
@@ -260,12 +274,15 @@ export function useWarmup(sceneId: string) {
   }, [gl, scene, camera, sceneId]);
 }
 ```
+
 Rules: set `customProgramCacheKey` on every `onBeforeCompile`-patched material (string board, flap cells, dissolve props, DOM planes) so variants are keyed deliberately; compile with every object visible (compilation walks visible objects); re-warm if the tier changes. Log per-scene compile time in the debug HUD.
 
 ### 6.4 Interaction freeze
+
 `lenis.stop()` plus `inert` on `#app-root` while the slate is up, then `lenis.start()` and remove `inert`. Announce "Loading" via `role="status"` and remove the announcement on release. Never leave the page frozen if the boot errors; the `finally` always releases.
 
 ### 6.5 The reveal
+
 Two panels (top and bottom halves) animate `yPercent: -100` / `100` with `expo.inOut`, ~0.9 s, compositor-only. Optional: a single kolam line draws along the seam as it opens. A strict cascade follows: hero intro timeline → headline reveal (Tamil text split by grapheme with `Intl.Segmenter`, never by code unit) → nav → secondary content. The same shutter component is reused for route transitions (§5).
 
 ---
@@ -284,12 +301,15 @@ Two panels (top and bottom halves) animate `yPercent: -100` / `100` with `expo.i
 :lang(ta) { letter-spacing: 0; text-transform: none; line-height: 1.65; }
 :lang(ta) .display { line-height: 1.25; }                  /* tall Tamil glyphs: never clip vowel signs */
 ```
+
 Verify: browser zoom to 200% must visibly enlarge body and heading text; no horizontal scroll at 320 px; `text-wrap: balance` on headings. Check Tamil and Latin side by side and apply a per-script size adjustment if one looks smaller. The directive's example (2.5rem → 8rem) is fine for decorative watermark text, not for readable headings. If you want serif headings, confirm the Tamil pairing against the site's current display face first.
 
 ### 7.2 Overlap rules (asymmetrical grid collisions)
+
 Overlap with named grid areas (`grid-area` layering), not absolute positioning. Rules: the **DOM order stays logical** (heading before its image); text stays real, selectable DOM text above the image; AA contrast must hold at every point text crosses the image (use a tinted scrim or `mix-blend-mode` only with a verified fallback); focus rings are never hidden under overlapping neighbors; the stacked layout is used at ≤ 640 px and under reduced motion.
 
 ### 7.3 Parallax (`data-speed`)
+
 ```ts
 // engine/parallax.ts  (inside gsap.context; torn down on route change)
 gsap.utils.toArray<HTMLElement>("[data-speed]").forEach((el) => {
@@ -301,6 +321,7 @@ gsap.utils.toArray<HTMLElement>("[data-speed]").forEach((el) => {
   });
 });
 ```
+
 Transform-only; decorative layers only (`aria-hidden`, never body text); at most ~8 animated layers per page; disabled on `(pointer: coarse)`, tier B/C, and reduced motion.
 
 ---
@@ -316,6 +337,7 @@ export class Spring {
   get settled() { return Math.abs(this.v) < 0.01 && Math.abs(this.x - this.target) < 0.01; }
 }
 ```
+
 `k = 150, c = 15` is underdamped (damping ratio ≈ 0.61, ≈ 9% overshoot, settles in well under a second), which matches "snaps back forcefully". Register it as a system on the master tick; request governor level 2 only while unsettled.
 
 - **Which buttons:** only primary CTAs (Join, tickets). Not nav, not form fields.
@@ -328,6 +350,7 @@ export class Spring {
 ## 9. Phase 6 — DOM → WebGL image planes
 
 ### 9.1 Structure
+
 - **Real `<img>` stays** (served by `next/image`, same-origin, so no CORS trouble). When its plane is ready, set `data-gl-ready` and hide the image with `opacity: 0` (never `display:none`/`visibility:hidden`, which break accessibility). Tier B/C and WebGL failure leave the `<img>` visible.
 - **One `<View>` per image grid** with an `<OrthographicCamera makeDefault>` so 1 world unit = 1 CSS px. Plane position inside the View: `x = rect.left − view.left + w/2 − view.width/2`, `y = −(rect.top − view.top + h/2 − view.height/2)`. Cache each image's rect on `ResizeObserver`/load, not every frame. The View tracks its own rect, so scroll needs no extra math.
 - **Image wells must have a transparent background**; rounded corners are applied in the shader, not with `overflow: hidden`.
@@ -408,52 +431,63 @@ src/styles/{globals.css,type.css}
 Paste one at a time and `/clear` between phases.
 
 **Standing preamble:**
+
 ```text
 Read docs/redesign/global-architecture-prd-v2.md. Package manager is npm only. Next.js is 16.x, React 19.2, R3F v9, drei v10, lenis. Use Context7 for current docs. Do not add features outside the current phase. Run tsc, eslint and next build; capture Playwright screenshots at 390/768/1440 and report fps with the Chrome DevTools MCP.
 ```
 
 **Phase 0 — Audit** *(read-only)*
+
 ```text
 Do NOT edit files. Inventory: every <Canvas> in the repo and what scene it mounts (including the Events crowd scene), every use of useFrame, EffectComposer, SoftShadows, MeshTransmissionMaterial and custom shaders, every requestAnimationFrame / Lenis / ScrollTrigger / framer-motion usage, current Lenis init, the layout.tsx tree, the tier hook, installed versions, and `npm ls three`. For the Events crowd scene, report whether it depicts real people or film IP. List contradictions with the PRD.
 ```
 
 **Phase 1 — Global canvas + spike**
+
 ```text
 Implement section 3: stacking CSS, layout.tsx, GlobalCanvas (frameloop="never"), two demo Views (a pinned hero and a tall image grid with an orthographic camera) and the debug HUD. Run spikes S1-S5 and report pass/fail with numbers. Do not migrate real heroes yet.
 ```
 
 **Phase 2 — Master ticker** *(then STOP)*
+
 ```text
 Implement section 4: MotionProvider with Lenis (autoRaf false, ScrollTrigger.update), masterTick with explicit order and dt clamp, advance() integration, the governor, route-change scroll reset. Output the exact layout.tsx and the Lenis/GSAP init files plus the spike results, then stop and wait for my approval.
 ```
+
 **Gate (explicit approval required).**
 
 **Phase 3 — Transitions, boot, warm-up**
+
 ```text
 Implement sections 5 and 6: Shutter, TransitionProvider (Link onNavigate), warm-up hook with compileAsync/initTexture, BootSlate with all gating conditions, the 3 s cap, Skip, inert, noscript, and honest progress. Neutral copy only.
 ```
 
 **Phase 4 — Typography and layout**
+
 ```text
 Implement section 7: type tokens, Tamil rules, zoom and 320 px tests, the overlap grid pattern with contrast checks, and ScrollTrigger-based data-speed parallax. Apply to the Hero headers and the About page only first.
 ```
 
 **Phase 5 — Magnetic**
+
 ```text
 Implement section 8: Spring on the master tick, Magnetic wrapper for the Join/ticket CTAs only, with all guardrails. Remove framer-motion if nothing else needs it.
 ```
 
 **Phase 6 — DOM image planes**
+
 ```text
 Implement section 9 for the Gallery grid only: ImageGridView with orthographic camera, DomPlane, IntersectionObserver gating, texture budget, and the shader. Keep the real <img>; confirm tier B/C and WebGL failure leave the images visible.
 ```
 
 **Phase 7 — Hero migration**
+
 ```text
 Migrate the Gallery, Join and Guide heroes into Views one at a time per section 1, resolving the post-processing and SoftShadows decisions recorded in the spike. Verify each hero's own acceptance checklist still passes.
 ```
 
 **Phase 8 — Hardening**
+
 ```text
 Run the section 10 measurements and section 12 tests. Use perf-a11y-auditor and design-critic. Produce pass/fail against every budget and a ranked must-fix list.
 ```
@@ -494,6 +528,7 @@ The user's current state is as follows:
 Active Document: c:\Users\hares\OneDrive\Desktop\CS_Projects\TamilSangamWebsiteOSU\src\components\guide-hero\board\audio.ts (LANGUAGE_TYPESCRIPT)
 Cursor is on line: 10
 Other open documents:
+
 - c:\Users\hares\OneDrive\Desktop\CS_Projects\TamilSangamWebsiteOSU\src\components\guide-hero\board\audio.ts (LANGUAGE_TYPESCRIPT)
 - c:\Users\hares\OneDrive\Desktop\CS_Projects\TamilSangamWebsiteOSU\src\components\guide-hero\board\cells.tsx (LANGUAGE_TSX)
 - c:\Users\hares\OneDrive\Desktop\CS_Projects\TamilSangamWebsiteOSU\src\components\guide-hero\store\guideStore.ts (LANGUAGE_TYPESCRIPT)
