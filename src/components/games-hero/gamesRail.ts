@@ -39,7 +39,6 @@ const smooth = THREE.MathUtils.smoothstep;
 const smoother = THREE.MathUtils.smootherstep;
 const lerp = THREE.MathUtils.lerp;
 const radians = THREE.MathUtils.degToRad;
-const cubic = (q: number) => q < 0.5 ? 4 * q ** 3 : 1 - (-2 * q + 2) ** 3 / 2;
 
 export function getDebugScrollProgress(): number | null {
   if (typeof window === "undefined") return null;
@@ -48,34 +47,21 @@ export function getDebugScrollProgress(): number | null {
   return Number(value.replace(/^p=/, ""));
 }
 
-/** Locked, level camera until the final 28 metre portal rail. Blur radii are CSS pixels at 1440px. */
-export function evaluateCameraRail(p: number, timeSeconds = 0, aspect = DESIGN_ASPECT): CameraState {
+/** The camera stays locked; only focus changes. Blur radii are CSS pixels at 1440px. */
+export function evaluateCameraRail(p: number, _timeSeconds = 0, aspect = DESIGN_ASPECT): CameraState {
   p = clamp(p);
   const projection = heroProjection(aspect);
-  const q = clamp((p - 0.85) / 0.12);
-  const travel = q < 0.5 ? 2 * q * q : 1 - (-2 * q + 2) ** 2 / 2;
-  const position = new THREE.Vector3(lerp(projection.cameraX, 0.43, travel), 1.65, 6 - 28 * travel);
+  const position = new THREE.Vector3(projection.cameraX, 1.65, 6);
   const lookAt = position.clone().add(new THREE.Vector3(0, 0, -37));
-  const shakeAge = p - 0.64;
-  const impulse = shakeAge >= 0 && shakeAge <= 0.03
-    ? Math.exp(-shakeAge / 0.01) * Math.sin(shakeAge / 0.03 * 10 * Math.PI)
-    : 0;
-  // Background orientation only: the foreground camera never inherits this impulse.
-  lookAt.x += Math.tan(radians(0.16) * impulse) * 37;
-  lookAt.y += Math.tan(radians(0.12) * impulse) * 37;
-  if (timeSeconds > 0 && p < 0.85) {
-    lookAt.x += Math.sin(timeSeconds * 0.15 * Math.PI * 2) * 0.001 * 37 * projection.tanH;
-    lookAt.y += Math.sin(timeSeconds * 0.15 * Math.PI * 2 * 0.8) * 0.001 * 37 * projection.tanV;
-  }
   const focus = smooth(p, 0.25, 0.42) * (1 - smoother(p, 0.52, 0.60));
   return {
     position, lookAt, fov: projection.fov, lensShift: projection.lensShift,
     dofFocusDistance: 37 * (0.36 / 37) ** focus,
     backgroundBokeh: 24 * focus,
-    foregroundBlur: p >= 0.935 ? 0 : 18 * smoother(p, 0.52, 0.64) + 8 * smoother(p, 0.85, 0.93),
+    foregroundBlur: 18 * smoother(p, 0.52, 0.64),
     lensRefractionZoom: 1,
     lensContrastBoost: 0.12 * smoother(p, 0.52, 0.60),
-    cameraShake: impulse,
+    cameraShake: 0,
   };
 }
 
@@ -83,14 +69,14 @@ export function evaluateCameraRail(p: number, timeSeconds = 0, aspect = DESIGN_A
 export function evaluateForegroundRig(p: number, aspect = DESIGN_ASPECT): ForegroundRigState {
   p = clamp(p);
   const { portrait, cameraX } = heroProjection(aspect);
-  // Descent normalized to p in [0.22, 0.40]: tau = (p - 0.22) / 0.18, lambda = 6
+  // Zero velocity and acceleration at both ends of the entrance.
   const q = clamp((p - 0.22) / 0.18);
-  const descent = (1 - (1 + 6 * q) * Math.exp(-6 * q)) / (1 - 7 * Math.exp(-6));
+  const descent = smoother(q, 0, 1);
   const settle = smoother(p, 0.52, 0.60);
   const distance = lerp(0.46, portrait ? 0.233 : 0.36, descent);
   // Calibrated anchor: uTarget = 0.580 (within +-0.01 tolerance of 0.5875) ensures G1 & G2 pass all viewports
   const u = lerp(0.80, lerp(0.563, 0.580, settle), descent);
-  const v = lerp(-0.30, lerp(0.565, 0.575, settle), descent) + 0.04 * Math.sin(Math.PI * q);
+  const v = lerp(-0.30, lerp(0.565, 0.575, settle), descent) + 0.04 * Math.sin(Math.PI * descent);
   const tanV = Math.tan(radians(17));
   const tanH = DESIGN_ASPECT * tanV;
   const position = new THREE.Vector3((2 * u - 1) * distance * tanH, (1 - 2 * v + 0.35) * distance * tanV, -distance);
@@ -99,32 +85,16 @@ export function evaluateForegroundRig(p: number, aspect = DESIGN_ASPECT): Foregr
     // Freeze portrait metres; y=0.016 keeps both centroids within their aperture across portrait aspects.
     position.y = lerp(0.24, 0.016, descent);
   }
-  let roll = lerp(34.5, lerp(18.5, 6.5, settle), descent);
-  if (p >= 0.50 && p <= 0.54) {
-    const tremor = (p - 0.50) / 0.04;
-    roll += 2 * Math.sin(8 * Math.PI * tremor) * Math.sin(Math.PI * tremor);
-  }
+  const roll = lerp(34.5, lerp(18.5, 6.5, settle), descent);
   const rotation = new THREE.Euler(0.08, -0.22, radians(roll), "YXZ");
-  if (p > 0.85) {
-    const portal = cubic(clamp((p - 0.85) / 0.08));
-    const flatten = smoother(clamp((p - 0.85) / 0.08), 0, 0.7);
-    const d = (portrait ? 0.233 : 0.36) * (0.034 / (portrait ? 0.233 : 0.36)) ** portal;
-    rotation.set(0.08 * (1 - flatten), -0.22 * (1 - flatten), radians(6.5) * (1 - flatten), "YXZ");
-    const left = new THREE.Vector3(LENS_CENTERS[0], 0, 0).applyEuler(rotation);
-    const projection = heroProjection(portrait ? aspect : DESIGN_ASPECT);
-    const centreY = -projection.lensShift * d * projection.tanV;
-    position.x = lerp(position.x, -left.x, portal);
-    position.y = lerp(position.y, centreY - left.y, portal);
-    position.z = -d - left.z;
-  }
   position.add(new THREE.Vector3(cameraX, 1.65, 6));
-  return { position, rotation, opacity: p >= 0.22 && p < 0.935 ? 1 : 0 };
+  return { position, rotation, opacity: smoother(p, 0.22, 0.26) * (1 - smoother(p, 0.86, 0.93)) };
 }
 
 export const FIREBALLS = [
   { x: -5.46, radius: 2.3, height: 2.6, column: 6, hit: 0.640 },
-  { x: 0.43, radius: 3, height: 2.9, column: 7.5, hit: 0.646 },
-  { x: 6.32, radius: 1.9, height: 2.8, column: 5.5, hit: 0.652 },
+  { x: 0.43, radius: 3, height: 2.9, column: 7.5, hit: 0.657 },
+  { x: 6.32, radius: 1.9, height: 2.8, column: 5.5, hit: 0.674 },
 ] as const;
 
 export function evaluateFireball(p: number, index: number) {

@@ -305,13 +305,13 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
 
   return (
     <div className="w-full max-w-xl mx-auto flex flex-col items-center">
-      {/* Mode Switcher Pill */}
-      <div className="flex items-center gap-2 mb-6 p-1 bg-[#F2EAE0] rounded-full border border-[#161210]/15">
+      {/* Mode Switcher Segmented Control */}
+      <div className="flex items-center gap-1.5 mb-6 p-1 bg-[#F2EAE0] rounded-xl border border-[#161210]/15">
         <button
           onClick={() => handleModeChange("tanglish")}
-          className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all ${
+          className={`px-4 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${
             mode === "tanglish"
-              ? "bg-[#161210] text-[#FAF6F0] shadow-sm"
+              ? "bg-[#161210] text-[#FAF6F0] shadow-xs"
               : "text-[#161210]/70 hover:text-[#161210]"
           }`}
         >
@@ -319,9 +319,9 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
         </button>
         <button
           onClick={() => handleModeChange("tamil")}
-          className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all ${
+          className={`px-4 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${
             mode === "tamil"
-              ? "bg-[#161210] text-[#FAF6F0] shadow-sm"
+              ? "bg-[#161210] text-[#FAF6F0] shadow-xs"
               : "text-[#161210]/70 hover:text-[#161210]"
           }`}
         >

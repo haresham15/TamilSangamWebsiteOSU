@@ -395,7 +395,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
         <div className="flex flex-wrap items-center justify-center gap-2.5">
           <button
             onClick={handleShuffle}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-[#161210]/25 bg-[#FAF6F0] hover:bg-[#F2EAE0] text-xs font-semibold text-[#161210] transition-colors"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-[#161210]/20 bg-[#FAF6F0] hover:bg-[#F2EAE0] text-xs font-semibold text-[#161210] transition-colors"
           >
             <Shuffle className="size-3.5" />
             <span>Shuffle · கலைத்துப் போடு</span>
@@ -404,17 +404,17 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
           <button
             onClick={handleDeselectAll}
             disabled={selectedIds.length === 0}
-            className="px-4 py-2 rounded-full border border-[#161210]/25 bg-[#FAF6F0] hover:bg-[#F2EAE0] disabled:opacity-40 text-xs font-semibold text-[#161210] transition-colors"
+            className="px-4 py-2.5 rounded-xl border border-[#161210]/20 bg-[#FAF6F0] hover:bg-[#F2EAE0] disabled:opacity-40 text-xs font-semibold text-[#161210] transition-colors"
           >
             Deselect All · நீக்கு
           </button>
 
           <button
             onClick={() => setShowHints(!showHints)}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-semibold transition-colors ${
+            className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl border text-xs font-semibold transition-colors ${
               showHints
                 ? "bg-[#D4AF37] text-[#161210] border-[#D4AF37]"
-                : "bg-[#FAF6F0] text-[#161210]/80 border-[#161210]/25 hover:bg-[#F2EAE0]"
+                : "bg-[#FAF6F0] text-[#161210]/80 border-[#161210]/20 hover:bg-[#F2EAE0]"
             }`}
           >
             <Lightbulb className="size-3.5" />
@@ -424,7 +424,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
           <button
             onClick={handleSubmit}
             disabled={selectedIds.length !== 4}
-            className="px-6 py-2 rounded-full bg-[#161210] hover:bg-[#C85A32] disabled:opacity-40 text-[#FAF6F0] text-xs font-bold transition-colors shadow-md"
+            className="px-6 py-2.5 rounded-xl bg-[#161210] hover:bg-[#C85A32] disabled:opacity-40 text-[#FAF6F0] text-xs font-bold transition-colors shadow-xs"
           >
             Submit · சரிபார்
           </button>

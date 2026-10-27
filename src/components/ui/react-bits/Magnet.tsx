@@ -108,10 +108,6 @@ export function Magnet({
     };
   }, [disabled, shouldReduceMotion, padding, magnetStrength, maxOffset, tilt, x, y, rotateX, rotateY]);
 
-  if (shouldReduceMotion || disabled) {
-    return <div className={`inline-block ${className}`}>{children}</div>;
-  }
-
   return (
     <motion.div
       ref={ref}
@@ -122,7 +118,7 @@ export function Magnet({
         rotateY: smoothRotateY,
         transformStyle: "preserve-3d",
       }}
-      className={`inline-block will-change-transform ${className}`}
+      className={`inline-block will-change-transform motion-reduce:transform-none motion-reduce:will-change-auto ${className}`}
     >
       {children}
     </motion.div>

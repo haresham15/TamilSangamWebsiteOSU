@@ -1,0 +1,48 @@
+{
+  "downloadedAt": "2026-10-27",
+  "assets": [
+    {
+      "file": "source/base.obj",
+      "creator": "MakeHuman core team; original file credits Data Collection AB, Joel Palmius, Jonas Hauquier",
+      "source": "https://raw.githubusercontent.com/makehumancommunity/makehuman/master/makehuman/data/3dobjs/base.obj",
+      "license": "CC0-1.0",
+      "licenseEvidence": "https://github.com/makehumancommunity/makehuman/blob/master/LICENSE.ASSETS.md",
+      "localLicense": "licenses/MAKEHUMAN-CC0.md",
+      "sha256": "8e761e6624b8f54536409135d1636da63b32486a90d4897f84e121d144f6fb4c",
+      "modifications": "Crop connected right hand and forearm, transfer joint coordinates into fixed glasses grip, subdivision and UV repack; original generated skin candidate maps",
+      "outputs": ["/models/games/hand-grip.glb", "/media/games-hybrid/v1/posters/"]
+    },
+    {
+      "files": ["source/coast_sand_02_diff_1k.jpg", "source/coast_sand_02_nor_gl_1k.jpg"],
+      "creator": "Rob Tuytel / Poly Haven",
+      "source": "https://polyhaven.com/a/coast_sand_02",
+      "downloadSources": ["https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/coast_sand_02/coast_sand_02_diff_1k.jpg", "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/coast_sand_02/coast_sand_02_nor_gl_1k.jpg"],
+      "license": "CC0-1.0",
+      "licenseEvidence": "https://polyhaven.com/license",
+      "sha256": ["6854bc49936d7b2971b579095c21342ad2c8fd1495aa3382b840335202964f53", "285a9b5c7f39215a1446c51a69d81228a01277ebafc48b9aeebd115066b4f796"],
+      "modifications": "Original Blender ground material, contact lighting and scene rendering; maps are offline source only",
+      "outputs": ["/media/games-hybrid/v1/landscape/", "/media/games-hybrid/v1/posters/"]
+    },
+    {
+      "file": "source/rough_plaster_03_diff_1k.jpg",
+      "creator": "Rob Tuytel / Poly Haven",
+      "source": "https://polyhaven.com/a/rough_plaster_03",
+      "downloadSource": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rough_plaster_03/rough_plaster_03_diff_1k.jpg",
+      "license": "CC0-1.0",
+      "licenseEvidence": "https://polyhaven.com/license",
+      "sha256": "0d4eb2248bbef9637e6a9e6a636e93e3d533f5c434103eaa35f023f51444b81f",
+      "modifications": "Original Blender wall geometry, material scaling and coherent offline light; map is offline source only",
+      "outputs": ["/media/games-hybrid/v1/landscape/", "/media/games-hybrid/v1/posters/"]
+    }
+  ],
+  "originalAssets": {
+    "source": "scripts/render-games-hybrid.py and scripts/games-hybrid-assets.mjs skin",
+    "items": ["unbranded SUV geometry", "coconut palm geometry", "wall and fountain geometry", "posed poster eyewear", "skin basecolor, tangent normal and roughness candidate maps", "volumetric fire/smoke/dust shading"],
+    "rights": "Repository-authored original contributions; no film frames, film posters, extracted footage, actor likenesses, logos or audio used. No new public-domain dedication is asserted for original contributions."
+  },
+  "tools": {
+    "blender": "4.5.3 LTS; official portable archive https://download.blender.org/release/Blender4.5/blender-4.5.3-windows-x64.zip",
+    "blenderArtworkLicenseEvidence": "https://www.blender.org/about/license/",
+    "encoding": "Existing installed sharp/libvips WebP encoder; no new dependency or paid service"
+  }
+}

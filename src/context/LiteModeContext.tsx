@@ -11,16 +11,20 @@ interface LiteModeContextType {
 const LiteModeContext = createContext<LiteModeContextType | undefined>(undefined);
 
 export function LiteModeProvider({ children }: { children: React.ReactNode }) {
-  const [isLiteMode, setIsLiteModeState] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("sangam_lite_mode");
-        if (saved !== null) return saved === "true";
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
-      } catch {}
-    }
-    return false;
-  });
+  const [isLiteMode, setIsLiteModeState] = useState<boolean>(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("sangam_lite_mode");
+      if (saved !== null) {
+        setIsLiteModeState(saved === "true");
+        return;
+      }
+      const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const connection = (navigator as unknown as { connection?: { saveData?: boolean } }).connection;
+      setIsLiteModeState(media.matches || Boolean(connection?.saveData));
+    } catch {}
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");

@@ -10,35 +10,23 @@ export const fullscreenVertex = /* glsl */ `
 `;
 
 export const blurFragment = /* glsl */ `
-  #include <packing>
   uniform sampler2D uSource;
-  uniform sampler2D uDepth;
   uniform vec2 uRadius;
   uniform float uTaps;
-  uniform float uBackground;
-  uniform float uHighlightBoost;
   varying vec2 vUv;
 
   void main() {
-    float radiusScale = 1.0;
-    if (uBackground > 0.5) {
-      float depth = texture2D(uDepth, vUv).x;
-      float distanceToCamera = -perspectiveDepthToViewZ(depth, 1.0, 400.0);
-      radiusScale = 0.8 + 0.4 * (1.0 - smoothstep(8.0, 60.0, distanceToCamera));
-    }
-
     vec4 sum = vec4(0.0);
     float totalWeight = 0.0;
     for (int i = 0; i < 32; i++) {
       if (float(i) >= uTaps) break;
       float radius = sqrt((float(i) + 0.5) / uTaps);
       float angle = float(i) * 2.39996323; // Golden angle Vogel disc (137.508 deg)
-      vec2 sampleUv = vUv + vec2(cos(angle), sin(angle)) * radius * uRadius * radiusScale;
+      vec2 sampleUv = vUv + vec2(cos(angle), sin(angle)) * radius * uRadius;
       vec4 sampleColor = texture2D(uSource, clamp(sampleUv, 0.0, 1.0));
-      float luma = dot(sampleColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-      // Cinema 35mm bokeh: sample weighting with highlight bloom and subtle iris edge ring
+      // Restrained iris edge weighting for the foreground's defocus disc.
       float irisRing = 1.0 + 0.22 * smoothstep(0.65, 0.98, radius);
-      float weight = (1.0 + uHighlightBoost * 2.5 * smoothstep(0.75, 1.2, luma)) * irisRing;
+      float weight = irisRing;
       sum += sampleColor * weight;
       totalWeight += weight;
     }
@@ -48,9 +36,11 @@ export const blurFragment = /* glsl */ `
 `;
 
 export const compositeFragment = /* glsl */ `
+  #include <tonemapping_pars_fragment>
   uniform sampler2D uBackground;
   uniform sampler2D uForeground;
   uniform sampler2D uLensMask;
+  uniform float uForegroundOpacity;
   uniform float uLensPop;
   uniform vec2 uTexel;
   uniform float uFxaa;
@@ -59,7 +49,11 @@ export const compositeFragment = /* glsl */ `
   vec3 compositeAt(vec2 uv) {
     vec3 background = texture2D(uBackground, uv).rgb;
     vec4 foreground = texture2D(uForeground, uv);
-    float lens = texture2D(uLensMask, uv).r * uLensPop;
+    // Render targets contain scene-linear premultiplied foreground; grade straight color once.
+    foreground.rgb = foreground.a > 0.00001
+      ? ACESFilmicToneMapping(foreground.rgb / foreground.a) * foreground.a : vec3(0.0);
+    foreground *= uForegroundOpacity;
+    float lens = texture2D(uLensMask, uv).r * uLensPop * uForegroundOpacity;
 
     // +12% micro-contrast & subtle golden sunlit pop inside the lens apertures
     vec3 lensColor = max((background - 0.18) * 1.12 + 0.18, 0.0);
@@ -90,17 +84,14 @@ export const compositeFragment = /* glsl */ `
       color = resultLuma < lo || resultLuma > hi ? a : b;
     }
     gl_FragColor = vec4(color, 1.0);
-    #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }
 `;
 
 export interface LayeredFocusTargets {
   hdr: boolean;
-  background: THREE.WebGLRenderTarget;
   foreground: THREE.WebGLRenderTarget;
   mask: THREE.WebGLRenderTarget;
-  backgroundBlur: THREE.WebGLRenderTarget;
   foregroundBlur: THREE.WebGLRenderTarget;
   maskBlur: THREE.WebGLRenderTarget;
   geometry: THREE.BufferGeometry;
@@ -118,24 +109,20 @@ export function createLayeredFocusTargets(
   const hdr = gl.extensions.has("EXT_color_buffer_float");
   const type = hdr ? THREE.HalfFloatType : THREE.UnsignedByteType;
 
-  const makeTarget = (depthBuffer = false) =>
+  const makeTarget = (depthBuffer = false, targetType = type) =>
     new THREE.WebGLRenderTarget(1, 1, {
-      type,
+      type: targetType,
       depthBuffer,
       minFilter: THREE.LinearFilter,
       magFilter: THREE.LinearFilter,
     });
 
-  const background = makeTarget(true);
-  background.depthTexture = new THREE.DepthTexture(1, 1, THREE.UnsignedIntType);
-
   const foreground = makeTarget(true);
-  foreground.samples = tier === "A" ? Math.min(4, gl.capabilities.maxSamples) : 0;
+  foreground.samples = tier === "C" ? 0 : Math.min(2, gl.capabilities.maxSamples);
 
-  const mask = makeTarget();
-  const backgroundBlur = makeTarget();
+  const mask = makeTarget(false, THREE.UnsignedByteType);
   const foregroundBlur = makeTarget();
-  const maskBlur = makeTarget();
+  const maskBlur = makeTarget(false, THREE.UnsignedByteType);
 
   const geometry = new THREE.PlaneGeometry(2, 2);
   const maskMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
@@ -147,12 +134,9 @@ export function createLayeredFocusTargets(
     depthWrite: false,
     toneMapped: false,
     uniforms: {
-      uSource: { value: background.texture },
-      uDepth: { value: background.depthTexture },
+      uSource: { value: foreground.texture },
       uRadius: { value: new THREE.Vector2() },
       uTaps: { value: 32 },
-      uBackground: { value: 0 },
-      uHighlightBoost: { value: 0 },
     },
   });
 
@@ -161,10 +145,13 @@ export function createLayeredFocusTargets(
     fragmentShader: compositeFragment,
     depthTest: false,
     depthWrite: false,
+    toneMapped: false,
     uniforms: {
-      uBackground: { value: background.texture },
+      toneMappingExposure: { value: gl.toneMappingExposure },
+      uBackground: { value: null },
       uForeground: { value: foreground.texture },
       uLensMask: { value: mask.texture },
+      uForegroundOpacity: { value: 0 },
       uLensPop: { value: 0 },
       uTexel: { value: new THREE.Vector2(1, 1) },
       uFxaa: { value: foreground.samples > 0 ? 0 : 1 },
@@ -180,10 +167,8 @@ export function createLayeredFocusTargets(
 
   return {
     hdr,
-    background,
     foreground,
     mask,
-    backgroundBlur,
     foregroundBlur,
     maskBlur,
     geometry,
@@ -196,11 +181,8 @@ export function createLayeredFocusTargets(
 }
 
 export function disposeLayeredFocusTargets(targets: LayeredFocusTargets): void {
-  targets.background.dispose();
-  targets.background.depthTexture?.dispose();
   targets.foreground.dispose();
   targets.mask.dispose();
-  targets.backgroundBlur.dispose();
   targets.foregroundBlur.dispose();
   targets.maskBlur.dispose();
   targets.geometry.dispose();

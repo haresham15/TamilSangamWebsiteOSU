@@ -66,14 +66,19 @@ for (const [width, height] of viewports) {
   assert.equal(blast.foregroundBlur, 18);
   assert.equal(start.fov, blast.fov);
   assert.deepEqual(start.position, blast.position);
-  assert.equal(evaluateCameraRail(0.97, 0, aspect).position.z, -22);
+  const exit = evaluateCameraRail(0.97, 30, aspect);
+  assert.deepEqual(exit.position, start.position);
+  assert.deepEqual(exit.lookAt, start.lookAt);
+  assert.equal(exit.cameraShake, 0);
   assert.equal(evaluateForegroundRig(0.935, aspect).opacity, 0);
-  const portal = evaluateForegroundRig(0.93, aspect);
-  const lens = new THREE.Vector3(LENS_CENTERS[0], 0, 0).applyEuler(portal.rotation).add(portal.position);
-  const centred = project(lens);
-  assert.ok(Math.abs(centred.u - 0.5) < 1e-8 && Math.abs(centred.v - 0.5) < 1e-8);
+  const held = evaluateForegroundRig(0.72, aspect);
+  const fading = evaluateForegroundRig(0.93, aspect);
+  assert.deepEqual(fading.position, held.position);
+  assert.deepEqual(fading.rotation, held.rotation);
+  assert.equal(fading.opacity, 0);
+  assert.ok(evaluateForegroundRig(0.9, aspect).opacity > 0 && evaluateForegroundRig(0.9, aspect).opacity < 1);
   const states = [0.1, 0.42, 0.72, 0.95].map(p => JSON.stringify([evaluateForegroundRig(p, aspect), evaluateCameraRail(p, 0, aspect), evaluateFireball(p, 1)]));
   assert.deepEqual([0.95, 0.72, 0.42, 0.1].map(p => JSON.stringify([evaluateForegroundRig(p, aspect), evaluateCameraRail(p, 0, aspect), evaluateFireball(p, 1)])).reverse(), states);
 }
 assert.equal(failures.length, 0, failures.slice(0, 12).join('\n'));
-console.log('PASS: registration, deterministic reverse scrub, focus transfer, locked camera and portal centering.');
+console.log('PASS: registration, deterministic reverse scrub, focus transfer, fixed camera and foreground fade.');

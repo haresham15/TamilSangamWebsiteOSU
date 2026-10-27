@@ -35,7 +35,7 @@ export function StarBorder({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Tag = Component as any;
 
-  const active = !hoverOnly || isHovered;
+  const active = (!hoverOnly || isHovered) && !shouldReduceMotion;
 
   return (
     <Tag
@@ -47,18 +47,16 @@ export function StarBorder({
       style={{ padding: `${thickness}px` }}
     >
       {/* Animated Conic Light Glint */}
-      {!shouldReduceMotion && (
-        <div
-          aria-hidden="true"
-          className={`pointer-events-none absolute inset-[-150%] transition-opacity duration-300 ${
-            active ? "opacity-100" : "opacity-0"
-          }`}
-          style={{
-            background: `conic-gradient(from 0deg, transparent 0%, ${trailColor} 65%, ${color} 85%, transparent 100%)`,
-            animation: `star-border-spin ${speed} linear infinite`,
-          }}
-        />
-      )}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-[-150%] transition-opacity duration-300 motion-reduce:hidden ${
+          active ? "opacity-100" : "opacity-0"
+        }`}
+        style={{
+          background: `conic-gradient(from 0deg, transparent 0%, ${trailColor} 65%, ${color} 85%, transparent 100%)`,
+          animation: `star-border-spin ${speed} linear infinite`,
+        }}
+      />
 
       {/* Inner Content Surface */}
       <div className="relative z-10 w-full h-full rounded-[inherit]">

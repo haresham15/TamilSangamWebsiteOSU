@@ -1,29 +1,30 @@
 // src/components/games/GamesHub.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Trophy,
   HelpCircle,
   X,
   Calendar,
-  Grid,
-  Layers,
-  Lock,
   Share2,
   Check,
   Clock,
+  Lock,
+  ArrowLeft,
+  ArrowRight,
+  Sparkles,
 } from "lucide-react";
 import { SolluWordle } from "./SolluWordle";
 import { ThodarpuConnections } from "./ThodarpuConnections";
+import { SolluThumbnail } from "./SolluThumbnail";
+import { ThodarpuThumbnail } from "./ThodarpuThumbnail";
 import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import { SOLLU_MONTHLY_EDITIONS } from "@/data/gamesData";
 import {
   isEditionUnlocked,
   getUnlockCountdown,
   getEditionSolvedCount,
-  getAllTimeEditionsCompleted,
 } from "@/lib/gamesStorage";
 
 export function GamesHub() {
@@ -37,19 +38,20 @@ export function GamesHub() {
     }
     return "2026-10";
   });
-  const [activeTab, setActiveTab] = useState<"sollu" | "thodarpu">(() => {
+
+  const [activeGame, setActiveGame] = useState<"sollu" | "thodarpu" | null>(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const game = params.get("game");
       if (game === "sollu" || game === "thodarpu") return game;
     }
-    return "sollu";
+    return null;
   });
+
   const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
   const [copiedHub, setCopiedHub] = useState<boolean>(false);
-
-  // Sync state update on solve
   const [solvedVersion, setSolvedVersion] = useState<number>(0);
+
   const handleGameSolved = () => {
     setSolvedVersion((v) => v + 1);
   };
@@ -59,8 +61,26 @@ export function GamesHub() {
   const currentEditionMeta = SOLLU_MONTHLY_EDITIONS[selectedEdition] || SOLLU_MONTHLY_EDITIONS["2026-10"];
   const isUnlocked = isEditionUnlocked(selectedEdition);
   const countdown = getUnlockCountdown(selectedEdition);
-  const thisMonthSolved = getEditionSolvedCount(selectedEdition);
-  const allTimeCompleted = getAllTimeEditionsCompleted();
+
+  // Sync selected game with URL query param without full reload
+  const selectGame = useCallback((game: "sollu" | "thodarpu" | null) => {
+    setActiveGame(game);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (game) {
+        url.searchParams.set("game", game);
+      } else {
+        url.searchParams.delete("game");
+      }
+      window.history.replaceState(null, "", url.toString());
+
+      // Scroll smoothly to games hub surface if returning or launching
+      const el = document.getElementById("arcade");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, []);
 
   const handleShareHub = () => {
     const url = "https://tamil-sangam-website-osu.vercel.app/games";
@@ -73,14 +93,14 @@ export function GamesHub() {
   };
 
   return (
-    <section id="games-hub" className="w-full bg-[#FAF6F0] text-[#161210] py-16 sm:py-24 px-4 sm:px-8 border-t border-[#D4AF37]/40 outline-hidden">
+    <section id="games-hub" className="w-full bg-[#FAF6F0] text-[#161210] py-12 sm:py-20 px-4 sm:px-8 border-t border-[#D4AF37]/30 outline-hidden">
       <div className="max-w-5xl mx-auto">
         {/* ---------------------------------------------------------------- */}
-        {/* 1. NEWSPAPER-GRADE EDITORIAL MASTHEAD                            */}
+        {/* 1. CLEAN EDITORIAL MASTHEAD (DECLUTTERED)                         */}
         {/* ---------------------------------------------------------------- */}
-        <header className="border-b-2 border-[#161210] pb-6 mb-8 select-none">
-          {/* Top Bar: Date, Edition Dropdown & Player Ledger */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[#161210]/20 text-xs font-mono uppercase tracking-wider text-[#161210]/75">
+        <header className="border-b-2 border-[#161210] pb-6 mb-10 select-none">
+          {/* Top Line: Date & Minimal Actions */}
+          <div className="flex items-center justify-between gap-4 pb-4 border-b border-[#161210]/15 text-xs font-mono uppercase tracking-widest text-[#161210]/70">
             <div className="flex items-center gap-2">
               <Calendar className="size-3.5 text-[#C85A32]" />
               <span className="font-bold">
@@ -88,67 +108,30 @@ export function GamesHub() {
                 <span lang="ta" className="font-tamil font-semibold">
                   {currentEditionMeta.monthTa}
                 </span>{" "}
-                · EDITION NO. {selectedEdition === "2026-10" ? "01" : selectedEdition === "2026-11" ? "02" : "03"}
+                · EDITION 01
               </span>
             </div>
 
-            {/* Edition Switcher Selector */}
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-[#161210]/50">Edition:</span>
-              <div className="flex items-center gap-1 bg-[#F2EAE0] p-1 rounded-lg border border-[#161210]/20">
-                {(["2026-10", "2026-11", "2026-12"] as const).map((edId) => {
-                  const meta = SOLLU_MONTHLY_EDITIONS[edId];
-                  const unlocked = isEditionUnlocked(edId);
-                  const isSelected = selectedEdition === edId;
-
-                  return (
-                    <button
-                      key={edId}
-                      onClick={() => setSelectedEdition(edId)}
-                      className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-mono font-semibold transition-all ${
-                        isSelected
-                          ? "bg-[#161210] text-[#FAF6F0] shadow-xs"
-                          : "text-[#161210]/70 hover:text-[#161210]"
-                      }`}
-                    >
-                      {!unlocked && <Lock className="size-3 text-[#C85A32]" />}
-                      <span>{meta.monthEn.slice(0, 3)}</span>
-                      {edId === "2026-10" && <span className="text-[10px] text-emerald-500 font-bold">●</span>}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Player Monthly Completion Ledger (D-14) */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1.5 text-[#C85A32] font-bold">
-                <Trophy className="size-4" />
-                <span>{thisMonthSolved}/2 SOLVED THIS MONTH</span>
-              </div>
-              <div className="hidden sm:flex items-center gap-1.5 text-[#D4AF37] font-bold">
-                <span>{allTimeCompleted} COMPLETED ALL-TIME</span>
-              </div>
+            <div className="flex items-center gap-5 text-xs font-sans">
               <button
                 onClick={() => setIsHelpOpen(true)}
-                className="flex items-center gap-1 text-[#161210]/60 hover:text-[#161210] transition-colors"
-                title="How to Play"
+                className="flex items-center gap-1.5 text-[#161210]/75 hover:text-[#C85A32] font-semibold transition-colors"
               >
-                <HelpCircle className="size-4" />
-                <span className="hidden sm:inline">Rules</span>
+                <HelpCircle className="size-3.5 text-[#C85A32]" />
+                <span>Rules · வழிகாட்டி</span>
               </button>
+
               <button
                 onClick={handleShareHub}
-                className="flex items-center gap-1 text-[#161210]/60 hover:text-[#C85A32] transition-colors"
-                title="Share Arcade"
+                className="flex items-center gap-1.5 text-[#161210]/75 hover:text-[#C85A32] font-semibold transition-colors"
               >
-                {copiedHub ? <Check className="size-4 text-emerald-500" /> : <Share2 className="size-4" />}
-                <span className="hidden sm:inline">{copiedHub ? "Copied!" : "Share Hub"}</span>
+                {copiedHub ? <Check className="size-3.5 text-emerald-600" /> : <Share2 className="size-3.5" />}
+                <span>{copiedHub ? "Copied Link!" : "Share · பகிர்"}</span>
               </button>
             </div>
           </div>
 
-          {/* Main Title & Subtitle */}
+          {/* Central Newspaper Masthead Title */}
           <div className="pt-6 text-center">
             <h2 className="font-serif text-4xl sm:text-6xl font-normal text-[#161210] tracking-tight mb-2">
               The Sangam Arcade
@@ -159,104 +142,232 @@ export function GamesHub() {
             >
               களஞ்சியம் · தமிழ்ச் சங்கப் புதிர்கள்
             </p>
-            <p className="font-sans text-xs sm:text-sm text-[#161210]/70 max-w-xl mx-auto leading-relaxed">
-              New York Times-grade monthly cultural puzzles for Buckeyes, students, and Tamil cinema enthusiasts.
-              Solve, uncover authentic cultural roots, and share spoiler-free grids!
+            <p className="font-sans text-xs sm:text-sm text-[#161210]/75 max-w-xl mx-auto leading-relaxed">
+              New York Times-grade monthly cultural puzzles rooted in Tamil heritage, cinema, and campus life.
             </p>
           </div>
         </header>
 
         {/* ---------------------------------------------------------------- */}
-        {/* 2. DUAL-GAME MODE SELECTOR TABS                                  */}
+        {/* 2. CONDITIONAL VIEW: CARDS CATALOG VS FOCUSED GAME ARENA          */}
         {/* ---------------------------------------------------------------- */}
-        <div className="flex justify-center mb-10 select-none">
-          <div className="grid grid-cols-2 max-w-md w-full p-1 bg-[#F2EAE0] rounded-2xl border border-[#161210]/15 shadow-inner">
-            <button
-              onClick={() => setActiveTab("sollu")}
-              className={`flex items-center justify-center gap-2 py-3 rounded-xl font-sans font-bold text-xs sm:text-sm transition-all ${
-                activeTab === "sollu"
-                  ? "bg-[#161210] text-[#FAF6F0] shadow-md"
-                  : "text-[#161210]/70 hover:text-[#161210]"
-              }`}
-            >
-              <Grid className="size-4" />
-              <span>01 Sollu · சொல்லு</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("thodarpu")}
-              className={`flex items-center justify-center gap-2 py-3 rounded-xl font-sans font-bold text-xs sm:text-sm transition-all ${
-                activeTab === "thodarpu"
-                  ? "bg-[#161210] text-[#FAF6F0] shadow-md"
-                  : "text-[#161210]/70 hover:text-[#161210]"
-              }`}
-            >
-              <Layers className="size-4" />
-              <span>02 Thodarpu · தொடர்பு</span>
-            </button>
-          </div>
-        </div>
-
-        {/* ---------------------------------------------------------------- */}
-        {/* 3. ACTIVE GAME PLAYING ARENA / LOCKED TEASER                     */}
-        {/* ---------------------------------------------------------------- */}
-        <div className="w-full bg-[#FAF6F0] min-h-[520px] flex items-center justify-center">
-          {isUnlocked ? (
-            activeTab === "sollu" ? (
-              <SolluWordle
-                key={`sollu-${selectedEdition}-${solvedVersion}`}
-                editionKey={selectedEdition}
-                onSolved={handleGameSolved}
-              />
-            ) : (
-              <ThodarpuConnections
-                key={`thodarpu-${selectedEdition}-${solvedVersion}`}
-                editionKey={selectedEdition}
-                onSolved={handleGameSolved}
-              />
-            )
-          ) : (
-            /* Locked Edition Teaser (D-14) */
-            <div className="w-full max-w-md mx-auto p-8 bg-[#F2EAE0] rounded-2xl border-2 border-[#D4AF37]/50 shadow-xl text-center">
-              <div className="size-14 mx-auto mb-4 rounded-full bg-[#161210] text-[#D4AF37] flex items-center justify-center shadow-md">
-                <Lock className="size-7" />
-              </div>
-
-              <span className="font-mono text-xs uppercase tracking-widest text-[#C85A32] font-bold block mb-1">
-                LOCKED EDITION · எதிர்காலப் புதிர்
-              </span>
-
-              <h3 className="font-serif text-2xl font-bold text-[#161210] mb-2">
-                {currentEditionMeta.monthEn} {currentEditionMeta.year} Edition
-              </h3>
-
-              <p lang="ta" className="font-tamil text-base text-[#161210]/80 mb-4 font-semibold">
-                {currentEditionMeta.monthTa} மாதம்
-              </p>
-
-              <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-[#FAF6F0] rounded-xl border border-[#161210]/15 mb-6 text-sm font-mono text-[#161210]">
-                <Clock className="size-4 text-[#D4AF37]" />
-                <span>
-                  Unlocks in {countdown.days}d {countdown.hours}h (Nov 1, 00:00 EDT)
-                </span>
-              </div>
-
-              <p className="text-xs text-[#161210]/70 mb-6 font-sans leading-relaxed">
-                New puzzles unlock at midnight on the 1st of each month. In local development or preview environments, append <code className="bg-[#161210]/10 px-1.5 py-0.5 rounded text-[11px]">?unlock=all</code> to test all editions.
-              </p>
-
-              <button
-                onClick={() => setSelectedEdition("2026-10")}
-                className="w-full py-2.5 px-4 bg-[#161210] hover:bg-[#C85A32] text-[#FAF6F0] rounded-xl font-bold text-xs tracking-wider uppercase transition-colors shadow-md"
+        {activeGame === null ? (
+          /* ============================================================== */
+          /* 2A. MASSIVE GAMES CARDS EXHIBITION                             */
+          /* ============================================================== */
+          <div className="w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+              {/* CARD 1: 01 SOLLU · சொல்லு */}
+              <motion.article
+                whileHover={{ y: -6 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                onClick={() => selectGame("sollu")}
+                className="cursor-pointer group relative bg-[#F5EFEB] rounded-2xl border-2 border-[#161210]/15 hover:border-[#D4AF37] p-6 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300"
               >
-                Play October Launch Edition
-              </button>
+                {/* Top Meta Bar */}
+                <div>
+                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#161210]/15">
+                    <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#C85A32]">
+                      01 · THE CULTURAL WORDLE
+                    </span>
+                    <span className="font-mono text-[11px] text-[#161210]/55 uppercase tracking-wider">
+                      DAILY & MONTHLY
+                    </span>
+                  </div>
+
+                  <h3 className="font-serif text-3xl sm:text-4xl text-[#161210] font-normal tracking-tight mb-1">
+                    Sollu · <span lang="ta" className="font-tamil font-semibold text-[#C85A32]">சொல்லு</span>
+                  </h3>
+                  <p className="font-sans text-xs sm:text-sm text-[#161210]/75 leading-relaxed mb-6">
+                    Guess the secret 5-letter cultural word in 6 attempts. Featuring Tanglish cinema and classical Tamil Akshara editions.
+                  </p>
+                </div>
+
+                {/* Massive Bespoke Thumbnail */}
+                <div className="my-2">
+                  <SolluThumbnail />
+                </div>
+
+                {/* Bottom Specifications & Direct Action Button */}
+                <div className="mt-6 pt-5 border-t border-[#161210]/15 flex flex-col gap-3">
+                  <div className="flex items-center justify-between text-[11px] font-mono text-[#161210]/65 uppercase tracking-wider">
+                    <span>6 ATTEMPTS</span>
+                    <span>•</span>
+                    <span>TANGLISH & AKSHARA</span>
+                    <span>•</span>
+                    <span>SPOILER-FREE</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      selectGame("sollu");
+                    }}
+                    aria-label="01 Sollu · சொல்லு"
+                    className="w-full py-4 px-6 bg-[#161210] group-hover:bg-[#C85A32] text-[#FAF6F0] rounded-xl font-bold font-sans text-sm tracking-wide transition-colors duration-200 flex items-center justify-between shadow-sm focus:outline-hidden focus:ring-2 focus:ring-[#C85A32]"
+                  >
+                    <span className="font-bold flex items-center gap-2">
+                      <span>01 Sollu</span>
+                      <span className="opacity-70 font-normal">· Play Wordle</span>
+                    </span>
+                    <span className="font-tamil font-medium text-xs opacity-90 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      <span>சொல்லு விளையாடு</span>
+                      <ArrowRight className="size-3.5" />
+                    </span>
+                  </button>
+                </div>
+              </motion.article>
+
+              {/* CARD 2: 02 THODARPU · தொடர்பு */}
+              <motion.article
+                whileHover={{ y: -6 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                onClick={() => selectGame("thodarpu")}
+                className="cursor-pointer group relative bg-[#F5EFEB] rounded-2xl border-2 border-[#161210]/15 hover:border-[#D4AF37] p-6 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300"
+              >
+                {/* Top Meta Bar */}
+                <div>
+                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#161210]/15">
+                    <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#3B4978]">
+                      02 · CULTURAL CONNECTIONS
+                    </span>
+                    <span className="font-mono text-[11px] text-[#161210]/55 uppercase tracking-wider">
+                      MONTHLY EDITION
+                    </span>
+                  </div>
+
+                  <h3 className="font-serif text-3xl sm:text-4xl text-[#161210] font-normal tracking-tight mb-1">
+                    Thodarpu · <span lang="ta" className="font-tamil font-semibold text-[#3B4978]">தொடர்பு</span>
+                  </h3>
+                  <p className="font-sans text-xs sm:text-sm text-[#161210]/75 leading-relaxed mb-6">
+                    Find four groups of four culturally connected items. Test your depth across cinema lore, Carnatic ragas, and traditions.
+                  </p>
+                </div>
+
+                {/* Massive Bespoke Thumbnail */}
+                <div className="my-2">
+                  <ThodarpuThumbnail />
+                </div>
+
+                {/* Bottom Specifications & Direct Action Button */}
+                <div className="mt-6 pt-5 border-t border-[#161210]/15 flex flex-col gap-3">
+                  <div className="flex items-center justify-between text-[11px] font-mono text-[#161210]/65 uppercase tracking-wider">
+                    <span>16 TILES</span>
+                    <span>•</span>
+                    <span>4 GROUPS OF 4</span>
+                    <span>•</span>
+                    <span>4 MISTAKES MAX</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      selectGame("thodarpu");
+                    }}
+                    aria-label="02 Thodarpu · தொடர்பு"
+                    className="w-full py-4 px-6 bg-[#161210] group-hover:bg-[#C85A32] text-[#FAF6F0] rounded-xl font-bold font-sans text-sm tracking-wide transition-colors duration-200 flex items-center justify-between shadow-sm focus:outline-hidden focus:ring-2 focus:ring-[#C85A32]"
+                  >
+                    <span className="font-bold flex items-center gap-2">
+                      <span>02 Thodarpu</span>
+                      <span className="opacity-70 font-normal">· Play Connections</span>
+                    </span>
+                    <span className="font-tamil font-medium text-xs opacity-90 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      <span>தொடர்பு விளையாடு</span>
+                      <ArrowRight className="size-3.5" />
+                    </span>
+                  </button>
+                </div>
+              </motion.article>
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          /* ============================================================== */
+          /* 2B. FOCUSED ACTIVE GAME ARENA                                  */
+          /* ============================================================== */
+          <div className="w-full">
+            {/* Elegant Back Navigation Bar */}
+            <div className="flex items-center justify-between pb-6 mb-8 border-b border-[#161210]/15 select-none">
+              <button
+                onClick={() => selectGame(null)}
+                className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#161210]/75 hover:text-[#C85A32] transition-colors py-2 px-3.5 rounded-lg hover:bg-[#F2EAE0] border border-transparent hover:border-[#161210]/15"
+              >
+                <ArrowLeft className="size-4" />
+                <span>All Games · அனைத்து புதிர்கள்</span>
+              </button>
+
+              <div className="flex items-center gap-4 text-xs font-mono">
+                <span className="font-bold text-[#161210]">
+                  {activeGame === "sollu" ? "01 Sollu (சொல்லு)" : "02 Thodarpu (தொடர்பு)"}
+                </span>
+                <span className="text-[#161210]/30 hidden sm:inline">|</span>
+                <button
+                  onClick={() => selectGame(activeGame === "sollu" ? "thodarpu" : "sollu")}
+                  className="hidden sm:inline-flex items-center gap-1 text-[#161210]/65 hover:text-[#C85A32] font-semibold transition-colors"
+                >
+                  <span>Switch to {activeGame === "sollu" ? "02 Thodarpu" : "01 Sollu"}</span>
+                  <ArrowRight className="size-3" />
+                </button>
+              </div>
+            </div>
+
+            {/* Active Game Component Canvas */}
+            <div className="w-full bg-[#FAF6F0] min-h-[520px] flex items-center justify-center">
+              {isUnlocked ? (
+                activeGame === "sollu" ? (
+                  <SolluWordle
+                    key={`sollu-${selectedEdition}-${solvedVersion}`}
+                    editionKey={selectedEdition}
+                    onSolved={handleGameSolved}
+                  />
+                ) : (
+                  <ThodarpuConnections
+                    key={`thodarpu-${selectedEdition}-${solvedVersion}`}
+                    editionKey={selectedEdition}
+                    onSolved={handleGameSolved}
+                  />
+                )
+              ) : (
+                /* Locked Edition Teaser */
+                <div className="w-full max-w-md mx-auto p-8 bg-[#F2EAE0] rounded-2xl border-2 border-[#D4AF37]/50 shadow-xl text-center">
+                  <div className="size-14 mx-auto mb-4 rounded-full bg-[#161210] text-[#D4AF37] flex items-center justify-center shadow-md">
+                    <Lock className="size-7" />
+                  </div>
+
+                  <span className="font-mono text-xs uppercase tracking-widest text-[#C85A32] font-bold block mb-1">
+                    LOCKED EDITION · எதிர்காலப் புதிர்
+                  </span>
+
+                  <h3 className="font-serif text-2xl font-bold text-[#161210] mb-2">
+                    {currentEditionMeta.monthEn} {currentEditionMeta.year} Edition
+                  </h3>
+
+                  <p lang="ta" className="font-tamil text-base text-[#161210]/80 mb-4 font-semibold">
+                    {currentEditionMeta.monthTa} மாதம்
+                  </p>
+
+                  <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-[#FAF6F0] rounded-xl border border-[#161210]/15 mb-6 text-sm font-mono text-[#161210]">
+                    <Clock className="size-4 text-[#D4AF37]" />
+                    <span>
+                      Unlocks in {countdown.days}d {countdown.hours}h
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => setSelectedEdition("2026-10")}
+                    className="w-full py-3 px-4 bg-[#161210] hover:bg-[#C85A32] text-[#FAF6F0] rounded-xl font-bold text-xs tracking-wider uppercase transition-colors shadow-md"
+                  >
+                    Play October Launch Edition
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* ---------------------------------------------------------------- */}
-        {/* 4. HOW TO PLAY MODAL                                             */}
+        {/* 3. HOW TO PLAY MODAL                                             */}
         {/* ---------------------------------------------------------------- */}
         <AnimatePresence>
           {isHelpOpen && (
@@ -279,9 +390,8 @@ export function GamesHub() {
 
                 <div className="space-y-6 text-xs sm:text-sm font-sans leading-relaxed text-[#161210]/85">
                   <div className="border-b border-[#161210]/15 pb-4">
-                    <h4 className="font-bold text-sm text-[#161210] mb-2 flex items-center gap-1.5">
-                      <Grid className="size-4 text-[#C85A32]" />
-                      <span>01 Sollu (சொல்லு) · The Monthly Wordle</span>
+                    <h4 className="font-bold text-sm text-[#161210] mb-2">
+                      01 Sollu (சொல்லு) · The Cultural Wordle
                     </h4>
                     <p className="mb-2">
                       Guess the secret 5-letter Tanglish word or variable-length Tamil Akshara word in 6 attempts.
@@ -294,9 +404,8 @@ export function GamesHub() {
                   </div>
 
                   <div>
-                    <h4 className="font-bold text-sm text-[#161210] mb-2 flex items-center gap-1.5">
-                      <Layers className="size-4 text-[#3B4978]" />
-                      <span>02 Thodarpu (தொடர்பு) · The Cultural Connections</span>
+                    <h4 className="font-bold text-sm text-[#161210] mb-2">
+                      02 Thodarpu (தொடர்பு) · Cultural Connections
                     </h4>
                     <p className="mb-2">
                       Find 4 groups of 4 culturally connected tiles without making 4 mistakes.

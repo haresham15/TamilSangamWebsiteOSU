@@ -13,8 +13,10 @@ const GamesHeroCanvas = dynamic(
     ssr: false,
     loading: () => (
       <div className="relative h-dvh bg-hearth-espresso">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/games-hero/j1.avif" alt="Sunlit beach compound" width={1912} height={800} fetchPriority="high" className="h-full w-full object-contain" />
+        <picture>
+          <source media="(aspect-ratio < 13/10)" srcSet="/media/games-hybrid/v1/posters/portrait-establishing.webp" />
+          <img src="/media/games-hybrid/v1/posters/establishing.webp" alt="Sunlit beach compound" width={1912} height={800} fetchPriority="high" className="h-full w-full object-contain" />
+        </picture>
         <a href="#arcade" className="absolute bottom-8 right-6 rounded-full bg-hearth-espresso px-6 py-4 text-khadi-ivory">Skip to Arcade ↓</a>
       </div>
     ),

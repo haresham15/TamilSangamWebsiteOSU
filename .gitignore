@@ -63,4 +63,5 @@ public/audio/
 public/videos/
 tests/artifacts/
 graphify-out/cache/
+.vitest/
 

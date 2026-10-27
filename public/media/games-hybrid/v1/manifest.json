@@ -1,0 +1,685 @@
+{
+  "schemaVersion": 1,
+  "revision": "games-hybrid-2a7aee909b824ace",
+  "calibration": "games-hybrid-694c1bf76962",
+  "width": 1912,
+  "height": 800,
+  "contentAspect": 2.39,
+  "colorSpace": "srgb",
+  "sampleInterval": [
+    0,
+    1
+  ],
+  "samples": [
+    {
+      "p": 0,
+      "url": "landscape/frame-0000.webp",
+      "bytes": 51942
+    },
+    {
+      "p": 0.1,
+      "url": "landscape/frame-0001.webp",
+      "bytes": 51942
+    },
+    {
+      "p": 0.2,
+      "url": "landscape/frame-0002.webp",
+      "bytes": 51942
+    },
+    {
+      "p": 0.22,
+      "url": "landscape/frame-0003.webp",
+      "bytes": 51942
+    },
+    {
+      "p": 0.2265,
+      "url": "landscape/frame-0004.webp",
+      "bytes": 51942
+    },
+    {
+      "p": 0.233,
+      "url": "landscape/frame-0005.webp",
+      "bytes": 51942
+    },
+    {
+      "p": 0.2395,
+      "url": "landscape/frame-0006.webp",
+      "bytes": 51942
+    },
+    {
+      "p": 0.246,
+      "url": "landscape/frame-0007.webp",
+      "bytes": 51942
+    },
+    {
+      "p": 0.2525,
+      "url": "landscape/frame-0008.webp",
+      "bytes": 51942
+    },
+    {
+      "p": 0.259,
+      "url": "landscape/frame-0009.webp",
+      "bytes": 50808
+    },
+    {
+      "p": 0.2655,
+      "url": "landscape/frame-0010.webp",
+      "bytes": 50672
+    },
+    {
+      "p": 0.272,
+      "url": "landscape/frame-0011.webp",
+      "bytes": 50978
+    },
+    {
+      "p": 0.2785,
+      "url": "landscape/frame-0012.webp",
+      "bytes": 50834
+    },
+    {
+      "p": 0.285,
+      "url": "landscape/frame-0013.webp",
+      "bytes": 50782
+    },
+    {
+      "p": 0.2915,
+      "url": "landscape/frame-0014.webp",
+      "bytes": 51020
+    },
+    {
+      "p": 0.298,
+      "url": "landscape/frame-0015.webp",
+      "bytes": 50532
+    },
+    {
+      "p": 0.3045,
+      "url": "landscape/frame-0016.webp",
+      "bytes": 49916
+    },
+    {
+      "p": 0.311,
+      "url": "landscape/frame-0017.webp",
+      "bytes": 48492
+    },
+    {
+      "p": 0.3175,
+      "url": "landscape/frame-0018.webp",
+      "bytes": 45270
+    },
+    {
+      "p": 0.324,
+      "url": "landscape/frame-0019.webp",
+      "bytes": 41168
+    },
+    {
+      "p": 0.3305,
+      "url": "landscape/frame-0020.webp",
+      "bytes": 35454
+    },
+    {
+      "p": 0.337,
+      "url": "landscape/frame-0021.webp",
+      "bytes": 29894
+    },
+    {
+      "p": 0.3435,
+      "url": "landscape/frame-0022.webp",
+      "bytes": 25280
+    },
+    {
+      "p": 0.35,
+      "url": "landscape/frame-0023.webp",
+      "bytes": 21276
+    },
+    {
+      "p": 0.3565,
+      "url": "landscape/frame-0024.webp",
+      "bytes": 18738
+    },
+    {
+      "p": 0.363,
+      "url": "landscape/frame-0025.webp",
+      "bytes": 16618
+    },
+    {
+      "p": 0.3695,
+      "url": "landscape/frame-0026.webp",
+      "bytes": 14738
+    },
+    {
+      "p": 0.376,
+      "url": "landscape/frame-0027.webp",
+      "bytes": 13684
+    },
+    {
+      "p": 0.3825,
+      "url": "landscape/frame-0028.webp",
+      "bytes": 12780
+    },
+    {
+      "p": 0.389,
+      "url": "landscape/frame-0029.webp",
+      "bytes": 12278
+    },
+    {
+      "p": 0.3955,
+      "url": "landscape/frame-0030.webp",
+      "bytes": 11822
+    },
+    {
+      "p": 0.402,
+      "url": "landscape/frame-0031.webp",
+      "bytes": 11562
+    },
+    {
+      "p": 0.4085,
+      "url": "landscape/frame-0032.webp",
+      "bytes": 11268
+    },
+    {
+      "p": 0.415,
+      "url": "landscape/frame-0033.webp",
+      "bytes": 11208
+    },
+    {
+      "p": 0.42,
+      "url": "landscape/frame-0034.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.4215,
+      "url": "landscape/frame-0035.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.428,
+      "url": "landscape/frame-0036.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.4345,
+      "url": "landscape/frame-0037.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.441,
+      "url": "landscape/frame-0038.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.4475,
+      "url": "landscape/frame-0039.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.454,
+      "url": "landscape/frame-0040.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.4605,
+      "url": "landscape/frame-0041.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.467,
+      "url": "landscape/frame-0042.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.4735,
+      "url": "landscape/frame-0043.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.48,
+      "url": "landscape/frame-0044.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.4865,
+      "url": "landscape/frame-0045.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.493,
+      "url": "landscape/frame-0046.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.4995,
+      "url": "landscape/frame-0047.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.506,
+      "url": "landscape/frame-0048.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.5125,
+      "url": "landscape/frame-0049.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.519,
+      "url": "landscape/frame-0050.webp",
+      "bytes": 11166
+    },
+    {
+      "p": 0.5255,
+      "url": "landscape/frame-0051.webp",
+      "bytes": 11136
+    },
+    {
+      "p": 0.532,
+      "url": "landscape/frame-0052.webp",
+      "bytes": 11430
+    },
+    {
+      "p": 0.5385,
+      "url": "landscape/frame-0053.webp",
+      "bytes": 12258
+    },
+    {
+      "p": 0.545,
+      "url": "landscape/frame-0054.webp",
+      "bytes": 14028
+    },
+    {
+      "p": 0.5515,
+      "url": "landscape/frame-0055.webp",
+      "bytes": 18260
+    },
+    {
+      "p": 0.558,
+      "url": "landscape/frame-0056.webp",
+      "bytes": 27056
+    },
+    {
+      "p": 0.5645,
+      "url": "landscape/frame-0057.webp",
+      "bytes": 42044
+    },
+    {
+      "p": 0.571,
+      "url": "landscape/frame-0058.webp",
+      "bytes": 49566
+    },
+    {
+      "p": 0.5775,
+      "url": "landscape/frame-0059.webp",
+      "bytes": 50782
+    },
+    {
+      "p": 0.584,
+      "url": "landscape/frame-0060.webp",
+      "bytes": 21698
+    },
+    {
+      "p": 0.5905,
+      "url": "landscape/frame-0061.webp",
+      "bytes": 21698
+    },
+    {
+      "p": 0.597,
+      "url": "landscape/frame-0062.webp",
+      "bytes": 21698
+    },
+    {
+      "p": 0.6035,
+      "url": "landscape/frame-0063.webp",
+      "bytes": 21698
+    },
+    {
+      "p": 0.61,
+      "url": "landscape/frame-0064.webp",
+      "bytes": 21698
+    },
+    {
+      "p": 0.6165,
+      "url": "landscape/frame-0065.webp",
+      "bytes": 21698
+    },
+    {
+      "p": 0.623,
+      "url": "landscape/frame-0066.webp",
+      "bytes": 21698
+    },
+    {
+      "p": 0.6295,
+      "url": "landscape/frame-0067.webp",
+      "bytes": 21698
+    },
+    {
+      "p": 0.636,
+      "url": "landscape/frame-0068.webp",
+      "bytes": 21698
+    },
+    {
+      "p": 0.64,
+      "url": "landscape/frame-0069.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.6425,
+      "url": "landscape/frame-0070.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.646,
+      "url": "landscape/frame-0071.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.649,
+      "url": "landscape/frame-0072.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.652,
+      "url": "landscape/frame-0073.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.6555,
+      "url": "landscape/frame-0074.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.662,
+      "url": "landscape/frame-0075.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.6685,
+      "url": "landscape/frame-0076.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.675,
+      "url": "landscape/frame-0077.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.6815,
+      "url": "landscape/frame-0078.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.688,
+      "url": "landscape/frame-0079.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.6945,
+      "url": "landscape/frame-0080.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.701,
+      "url": "landscape/frame-0081.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.7075,
+      "url": "landscape/frame-0082.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.714,
+      "url": "landscape/frame-0083.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.72,
+      "url": "landscape/frame-0084.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.7205,
+      "url": "landscape/frame-0085.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.727,
+      "url": "landscape/frame-0086.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.7335,
+      "url": "landscape/frame-0087.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.74,
+      "url": "landscape/frame-0088.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.7465,
+      "url": "landscape/frame-0089.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.753,
+      "url": "landscape/frame-0090.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.7595,
+      "url": "landscape/frame-0091.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.766,
+      "url": "landscape/frame-0092.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.7725,
+      "url": "landscape/frame-0093.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.779,
+      "url": "landscape/frame-0094.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.7855,
+      "url": "landscape/frame-0095.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.792,
+      "url": "landscape/frame-0096.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.7985,
+      "url": "landscape/frame-0097.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.805,
+      "url": "landscape/frame-0098.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.8115,
+      "url": "landscape/frame-0099.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.818,
+      "url": "landscape/frame-0100.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.8245,
+      "url": "landscape/frame-0101.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.831,
+      "url": "landscape/frame-0102.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.8375,
+      "url": "landscape/frame-0103.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.844,
+      "url": "landscape/frame-0104.webp",
+      "bytes": 53930
+    },
+    {
+      "p": 0.8505,
+      "url": "landscape/frame-0105.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.857,
+      "url": "landscape/frame-0106.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.8635,
+      "url": "landscape/frame-0107.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.87,
+      "url": "landscape/frame-0108.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.8765,
+      "url": "landscape/frame-0109.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.883,
+      "url": "landscape/frame-0110.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.8895,
+      "url": "landscape/frame-0111.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.896,
+      "url": "landscape/frame-0112.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.9025,
+      "url": "landscape/frame-0113.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.909,
+      "url": "landscape/frame-0114.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.9155,
+      "url": "landscape/frame-0115.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.922,
+      "url": "landscape/frame-0116.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.9285,
+      "url": "landscape/frame-0117.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.93,
+      "url": "landscape/frame-0118.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.935,
+      "url": "landscape/frame-0119.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.9415,
+      "url": "landscape/frame-0120.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.948,
+      "url": "landscape/frame-0121.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.9545,
+      "url": "landscape/frame-0122.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.961,
+      "url": "landscape/frame-0123.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.9675,
+      "url": "landscape/frame-0124.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.974,
+      "url": "landscape/frame-0125.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.9805,
+      "url": "landscape/frame-0126.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.987,
+      "url": "landscape/frame-0127.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 0.9935,
+      "url": "landscape/frame-0128.webp",
+      "bytes": 81934
+    },
+    {
+      "p": 1,
+      "url": "landscape/frame-0129.webp",
+      "bytes": 81934
+    }
+  ],
+  "posters": {
+    "landscape": [
+      "posters/establishing.webp",
+      "posters/closeup.webp",
+      "posters/blast.webp",
+      "posters/exit.webp"
+    ],
+    "portrait": [
+      "posters/portrait-establishing.webp",
+      "posters/portrait-closeup.webp",
+      "posters/portrait-blast.webp",
+      "posters/portrait-exit.webp"
+    ]
+  },
+  "foreground": {
+    "url": "/models/games/hand-grip.glb",
+    "bytes": 977736
+  },
+  "totalBytes": 5866044,
+  "productionStatus": "draft-art-review-required"
+}
