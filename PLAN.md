@@ -11,4 +11,4 @@ Plan details: docs/superpowers/plans/2026-10-26-games-v1-1.md
 - [x] Milestone 5: Layered Focus Compositor & Sunblast Grade Profile (`src/components/games-hero/compositor/LayeredFocusCompositor.ts`, `src/components/games-hero/GamesFocusScene.tsx`)
 - [x] Milestone 6: Scrubbable Missile Contrails, Blackbody Fireballs & Dual-Rail Portal (`src/components/games-hero/MissilePyroSystem.tsx`)
 - [x] Milestone 7: NYT-Style Sangam Arcade Hub, Sollu & Thodarpu (`src/lib/gamesStorage.ts`, `src/components/games/SolluWordle.tsx`, `src/components/games/ThodarpuConnections.tsx`, `src/components/games/GamesHub.tsx`)
-- [ ] Milestone 8: Route, Navigation, Accessibility, Performance & E2E Verification (`src/app/games/page.tsx`, `src/components/global/FloatingNav.tsx`, `src/components/global/CommandPalette.tsx`, `src/app/sitemap.ts`)
+- [x] Milestone 8: Route, Navigation, Accessibility, Performance & E2E Verification (`src/app/games/page.tsx`, `src/components/global/FloatingNav.tsx`, `src/components/global/CommandPalette.tsx`, `src/app/sitemap.ts`)

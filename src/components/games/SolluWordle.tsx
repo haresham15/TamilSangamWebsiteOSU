@@ -27,6 +27,11 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
 
   // Mode: "tanglish" (5-letter English letters) vs "tamil" (Tamil script Aksharas)
   const [mode, setMode] = useState<"tanglish" | "tamil">(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const m = params.get("mode");
+      if (m === "tanglish" || m === "tamil") return m;
+    }
     const store = getArcadeStorage();
     return store.preferences.solluMode || "tanglish";
   });

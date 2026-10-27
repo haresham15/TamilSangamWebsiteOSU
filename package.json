@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node --experimental-strip-types scripts/verify-games-data.mjs && node --experimental-strip-types scripts/verify-frame-parity.mjs && node --experimental-strip-types scripts/verify-lens-registration.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

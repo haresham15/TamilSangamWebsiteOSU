@@ -10,6 +10,7 @@ import { useAudio } from "@/context/AudioContext";
 import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import { Menu, X } from "lucide-react";
 import { Magnet } from "@/components/ui/react-bits";
+import { isEditionComplete } from "@/lib/gamesStorage";
 
 // ============================================================================
 // 1. NAVIGATION ROUTE CONFIGURATION
@@ -36,6 +37,11 @@ export const FloatingNav: React.FC = () => {
   const pathname = usePathname();
   const { locale } = useLocale();
   const { playClick, playSilkSwish } = useAudio();
+
+  const [gamesUnsolved, setGamesUnsolved] = useState(true);
+  useEffect(() => {
+    setGamesUnsolved(!isEditionComplete("2026-10"));
+  }, [pathname]);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const handleCloseMobileMenu = useCallback(() => {
@@ -530,6 +536,11 @@ export const FloatingNav: React.FC = () => {
                     }}
                     onClick={handleLinkClick}
                     aria-current={isActive ? "page" : undefined}
+                    aria-label={
+                      route.badge && gamesUnsolved
+                        ? `${locale === "ta" ? route.ta : route.en}, new puzzles available`
+                        : undefined
+                    }
                     className={`relative flex flex-col items-center justify-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-full px-2.5 py-0.5 transition-colors ${
                       isActive
                         ? isDarkHero
@@ -552,8 +563,11 @@ export const FloatingNav: React.FC = () => {
                       }`}
                     >
                       {locale === "ta" ? route.ta : route.en}
-                      {route.badge && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_5px_#D4AF37] animate-pulse" />
+                      {route.badge && gamesUnsolved && (
+                        <span
+                          className="size-[5px] rounded-full bg-[#D4AF37] ring-1 ring-[#161210] shadow-[0_0_4px_#D4AF37] animate-pulse"
+                          aria-hidden="true"
+                        />
                       )}
                     </span>
 

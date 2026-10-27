@@ -1,0 +1,32 @@
+.runway { position: relative; height: 340dvh; }
+.runway[data-static="true"] { height: 100dvh; }
+.stage { position: sticky; top: 0; width: 100%; height: 100dvh; overflow: clip; color: var(--color-khadi-ivory); }
+.frame { position: absolute; inset: 0; pointer-events: none; }
+.view { position: absolute !important; inset: 0; width: 100%; height: 100%; }
+.poster { position: absolute; width: 100%; height: 100%; object-fit: cover; }
+.frame[data-ready="true"] > .poster { opacity: 0; transition: opacity .25s; }
+.intro { position: absolute; top: max(100px, 13%); left: 5%; font-size: 12px; letter-spacing: .1em; pointer-events: none; }
+.intro p + p { margin-top: 12px; }
+.caption { position: absolute; bottom: 5%; left: 5%; right: 5%; pointer-events: none; }
+.caption p { margin-top: 8px; }
+.skip { position: absolute; z-index: 5; right: 5%; bottom: 5%; display: flex; align-items: center; gap: 16px; min-height: 48px; padding: 12px 22px; border: 1px solid var(--color-antique-gold); border-radius: 999px; color: var(--color-khadi-ivory); background: var(--color-hearth-espresso); font-size: 14px; }
+.skip:focus-visible, .stills button:focus-visible { outline: 3px solid var(--color-antique-gold); outline-offset: 5px; }
+.stills { display: flex; margin-top: 12px; pointer-events: auto; }
+.stills button { width: 48px; height: 48px; border-bottom: 2px solid transparent; }
+.stills button[aria-pressed="true"] { border-color: var(--color-antique-gold); color: var(--color-antique-gold); }
+.sheet { position: relative; z-index: 20; margin-top: -100dvh; transform: translate3d(0, var(--games-sheet-offset, 100dvh), 0); }
+:global(#games-page[data-static-hero="true"]) .sheet { margin-top: 0; transform: none; }
+@media (min-aspect-ratio: 13/10) and (max-aspect-ratio: 1999/1000) {
+  .frame { top: 50%; bottom: auto; height: auto; aspect-ratio: 2.39; transform: translateY(-50%); }
+  .stage::before, .stage::after { content: ""; position: absolute; z-index: 1; left: 0; right: 0; height: calc((100dvh - 100vw / 2.39) / 2 + 1px); background: var(--color-hearth-espresso); }
+  .stage::before { top: 0; }
+  .stage::after { bottom: 0; }
+  .intro, .caption { z-index: 2; }
+  .intro { top: 11%; }
+}
+@media (max-width: 767px) {
+  .runway { height: 260dvh; }
+  .skip { bottom: 24px; right: 6%; }
+  .caption { bottom: 94px; left: 6%; }
+  .intro { top: 120px; left: 6%; }
+}

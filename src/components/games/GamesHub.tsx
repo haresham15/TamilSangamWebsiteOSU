@@ -27,8 +27,24 @@ import {
 } from "@/lib/gamesStorage";
 
 export function GamesHub() {
-  const [selectedEdition, setSelectedEdition] = useState<string>("2026-10");
-  const [activeTab, setActiveTab] = useState<"sollu" | "thodarpu">("sollu");
+  const [selectedEdition, setSelectedEdition] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const ed = params.get("edition");
+      if (ed && (ed === "2026-10" || ed === "2026-11" || ed === "2026-12")) {
+        if (isEditionUnlocked(ed)) return ed;
+      }
+    }
+    return "2026-10";
+  });
+  const [activeTab, setActiveTab] = useState<"sollu" | "thodarpu">(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const game = params.get("game");
+      if (game === "sollu" || game === "thodarpu") return game;
+    }
+    return "sollu";
+  });
   const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
   const [copiedHub, setCopiedHub] = useState<boolean>(false);
 
@@ -57,7 +73,7 @@ export function GamesHub() {
   };
 
   return (
-    <section id="arcade" tabIndex={-1} className="w-full bg-[#FAF6F0] text-[#161210] py-16 sm:py-24 px-4 sm:px-8 border-t border-[#D4AF37]/40 outline-hidden">
+    <section id="games-hub" className="w-full bg-[#FAF6F0] text-[#161210] py-16 sm:py-24 px-4 sm:px-8 border-t border-[#D4AF37]/40 outline-hidden">
       <div className="max-w-5xl mx-auto">
         {/* ---------------------------------------------------------------- */}
         {/* 1. NEWSPAPER-GRADE EDITORIAL MASTHEAD                            */}
