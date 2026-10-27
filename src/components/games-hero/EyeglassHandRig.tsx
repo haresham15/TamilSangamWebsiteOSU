@@ -7,8 +7,12 @@ import { useFrame } from "@react-three/fiber";
 import { evaluateForegroundRig, LENS_CENTERS, LENS_HEIGHT, LENS_WIDTH } from "./gamesRail";
 
 const palette = {
-  acetate: "#08080A", silver: "#B9BDC2", skin: "#7A3B22",
-  sky: "#F4F6F4", coating: "#7FE3D0", mask: "#FFFFFF",
+  acetate: "#08080A",
+  silver: "#C9CED3", // 3 silver pins per side, metalness 1, roughness 0.25, radius 1mm
+  skinLit: "#4A3626", // p70 lit skin target (replaces v1 saturated orange #D98A5C)
+  sky: "#F4F6F4",
+  coating: "#7FE3D0",
+  mask: "#FFFFFF",
 };
 
 function roundedLens(path: THREE.Path, width: number, height: number, radius: number) {
@@ -49,24 +53,39 @@ function capsuleBetween(a: number[], b: number[], radius: number) {
 export function EyeglassHandRig({ scrollP }: { scrollP: number; foregroundBlur?: number }) {
   const groupRef = useRef<THREE.Group>(null);
   const resources = useMemo(() => {
+    // Front: Two rounded-trapezoid apertures, 56 x 43 mm, extruded 5 mm with 0.8 mm bevel
     const shape = new THREE.Shape();
-    roundedLens(shape, 0.071, 0.054, 0.012);
+    roundedLens(shape, 0.066, 0.0525, 0.012);
     const aperture = new THREE.Path();
     roundedLens(aperture, LENS_WIDTH, LENS_HEIGHT, 0.009);
     shape.holes.push(aperture);
-    const rim = new THREE.ExtrudeGeometry(shape, { depth: 0.006, bevelEnabled: true, bevelSegments: 3, bevelSize: 0.0008, bevelThickness: 0.0008, steps: 1, curveSegments: 10 });
-    const frameParts: THREE.BufferGeometry[] = LENS_CENTERS.map(x => rim.clone().translate(x, 0, 0));
+    const rim = new THREE.ExtrudeGeometry(shape, {
+      depth: 0.005,
+      bevelEnabled: true,
+      bevelSegments: 3,
+      bevelSize: 0.0008,
+      bevelThickness: 0.0008,
+      steps: 1,
+      curveSegments: 10,
+    });
+    const frameParts: THREE.BufferGeometry[] = LENS_CENTERS.map(x => rim.clone().translate(x, 0.00125, 0));
     rim.dispose();
+
+    // Keyhole saddle bridge, 17 mm wide and 6 mm thick
     const bridge = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-0.012, 0.016, 0), new THREE.Vector3(0, 0.021, 0), new THREE.Vector3(0.012, 0.016, 0),
+      new THREE.Vector3(-0.0085, 0.014, 0),
+      new THREE.Vector3(0, 0.020, 0),
+      new THREE.Vector3(0.0085, 0.014, 0),
     ]);
-    frameParts.push(new THREE.TubeGeometry(bridge, 12, 0.0028, 6, false));
+    frameParts.push(new THREE.TubeGeometry(bridge, 12, 0.003, 6, false));
+
+    // Temples: 140 mm long, 4.5 mm wide, 12 mm tall, 4° outward splay
     for (const side of [-1, 1]) {
       const temple = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(side * 0.073, 0.016, 0),
-        new THREE.Vector3(side * 0.074, 0.019, 0.055),
-        new THREE.Vector3(side * 0.071, 0.024, 0.115),
-        new THREE.Vector3(side * 0.067, 0.009, 0.144),
+        new THREE.Vector3(side * 0.0735, 0.016, 0),
+        new THREE.Vector3(side * 0.076, 0.019, 0.050),
+        new THREE.Vector3(side * 0.080, 0.023, 0.100),
+        new THREE.Vector3(side * 0.083, 0.009, 0.140),
       ]);
       frameParts.push(new THREE.TubeGeometry(temple, 16, 0.0035, 6, false));
     }
@@ -75,7 +94,7 @@ export function EyeglassHandRig({ scrollP }: { scrollP: number; foregroundBlur?:
     roundedLens(lensShape, LENS_WIDTH, LENS_HEIGHT, 0.009);
     const lens = new THREE.ShapeGeometry(lensShape, 12);
 
-    // Static connected grip: rounded palm, articulated capsule phalanges and tapered forearm.
+    // Static connected grip: rounded palm, articulated capsule phalanges and tapered forearm
     const palm = new THREE.SphereGeometry(1, 16, 12);
     palm.scale(0.0425, 0.0475, 0.015);
     palm.rotateZ(-0.45);
@@ -99,6 +118,7 @@ export function EyeglassHandRig({ scrollP }: { scrollP: number; foregroundBlur?:
     handParts.push(forearm);
     const hand = mergeParts(handParts);
 
+    // Tangent normal map with micro-pores, knuckle creases and wet cream streaks
     const pixels = new Uint8Array(512 * 512 * 4);
     for (let y = 0; y < 512; y++) {
       for (let x = 0; x < 512; x++) {
@@ -113,13 +133,46 @@ export function EyeglassHandRig({ scrollP }: { scrollP: number; foregroundBlur?:
     const skinNormal = new THREE.DataTexture(pixels, 512, 512);
     skinNormal.wrapS = skinNormal.wrapT = THREE.RepeatWrapping;
     skinNormal.needsUpdate = true;
-    const acetate = new THREE.MeshPhysicalMaterial({ color: palette.acetate, roughness: 0.12, metalness: 0.04, clearcoat: 1, clearcoatRoughness: 0.06 });
-    const skin = new THREE.MeshPhysicalMaterial({ color: palette.skin, roughness: 0.18, clearcoat: 0.65, clearcoatRoughness: 0.09, normalMap: skinNormal, normalScale: new THREE.Vector2(0.35, 0.35) });
-    const silver = new THREE.MeshStandardMaterial({ color: palette.silver, metalness: 1, roughness: 0.15 });
+
+    // Materials per PRD calibration
+    const acetate = new THREE.MeshPhysicalMaterial({
+      color: palette.acetate,
+      roughness: 0.12,
+      metalness: 0.04,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.06,
+    });
+    const skin = new THREE.MeshPhysicalMaterial({
+      color: palette.skinLit,
+      roughness: 0.18,
+      clearcoat: 0.65,
+      clearcoatRoughness: 0.09,
+      normalMap: skinNormal,
+      normalScale: new THREE.Vector2(0.35, 0.35),
+    });
+    const silver = new THREE.MeshStandardMaterial({
+      color: palette.silver,
+      metalness: 1.0,
+      roughness: 0.25,
+    });
     const mask = new THREE.MeshBasicMaterial({ color: palette.mask, side: THREE.DoubleSide });
-    const glint = new THREE.MeshBasicMaterial({ color: palette.coating, transparent: true, opacity: 0.35, depthWrite: false, blending: THREE.AdditiveBlending });
-    const sheen = new THREE.MeshBasicMaterial({ color: palette.sky, transparent: true, opacity: 0.05, depthWrite: false, blending: THREE.AdditiveBlending });
-    const pin = new THREE.CylinderGeometry(0.00175, 0.00175, 0.008, 8);
+    // Optional 5% cyan-green glint quad drawing additively from p=0.60
+    const glint = new THREE.MeshBasicMaterial({
+      color: palette.coating,
+      transparent: true,
+      opacity: 0.05,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const sheen = new THREE.MeshBasicMaterial({
+      color: palette.sky,
+      transparent: true,
+      opacity: 0.05,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    // Hinge pin: 1 mm radius (0.001 m)
+    const pin = new THREE.CylinderGeometry(0.001, 0.001, 0.008, 8);
     const highlight = new THREE.PlaneGeometry(0.012, 0.006);
     return { frame, lens, hand, skinNormal, acetate, skin, silver, mask, glint, sheen, pin, highlight };
   }, []);
@@ -142,10 +195,13 @@ export function EyeglassHandRig({ scrollP }: { scrollP: number; foregroundBlur?:
         <group key={x}>
           <mesh name={index === 0 ? "LeftLensMask" : "RightLensMask"} position={[x, 0, 0]} geometry={resources.lens} material={resources.mask} layers={2} />
           <mesh position={[x - 0.011, 0.011, 0.004]} rotation={[0, 0, -0.55]} geometry={resources.highlight} material={resources.sheen} />
-          <mesh position={[Math.sign(x) * 0.073, 0.015, 0.004]} geometry={resources.pin} material={resources.silver} />
+          {/* Three silver pins per hinge side */}
+          {[0.011, 0.015, 0.019].map((y) => (
+            <mesh key={y} position={[Math.sign(x) * 0.0735, y, 0.004]} geometry={resources.pin} material={resources.silver} />
+          ))}
         </group>
       ))}
-      <mesh position={[0.057, -0.012, 0.004]} rotation={[0, 0, -0.35]} geometry={resources.highlight} material={resources.glint} />
+      <mesh position={[0.057, -0.012, 0.004]} rotation={[0, 0, -0.35]} geometry={resources.highlight} material={resources.glint} visible={scrollP >= 0.60} />
     </group>
   );
 }

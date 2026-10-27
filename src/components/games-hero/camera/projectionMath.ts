@@ -19,7 +19,9 @@ export const PORTRAIT_HFOV_DEG = 44;
 export const PORTRAIT_HALF_HFOV_RAD = (22 * Math.PI) / 180;
 export const PORTRAIT_LENS_SHIFT = -0.12; // puts horizon at v = (1 - (-0.12)) / 2 = 0.56
 export const PORTRAIT_CAMERA_X = 6.7;
-export const PORTRAIT_STANDOFF_SCALE = 0.36 / 0.243;
+export const PORTRAIT_DISTANCE = 0.233; // d = 0.147 / (0.78 * 2 * tan 22°) = 0.233m
+export const DESKTOP_DISTANCE = 0.36;
+export const PORTRAIT_STANDOFF_SCALE = DESKTOP_DISTANCE / PORTRAIT_DISTANCE;
 
 export interface HeroOptics {
   portrait: boolean;

@@ -58,19 +58,20 @@ const skyFragmentShader = /* glsl */ `
     vec3 dir = normalize(vWorldPosition);
     float height = clamp(dir.y, 0.0, 1.0);
     
-    // Smooth gradient from horizon sea-foam to zenith cyan
+    // Smooth gradient from horizon sea-foam #B8E6E8 to zenith cyan #4DB6CE
     vec3 sky = mix(uHorizonColor, uZenithColor, pow(height, 0.72));
 
-    // Subtle sun flare
-    vec3 sunDir = normalize(uSunPosition);
-    float sunDot = max(dot(dir, sunDir), 0.0);
-    sky += vec3(1.0, 0.95, 0.8) * pow(sunDot, 64.0) * 0.4;
-    sky += vec3(0.9, 0.96, 1.0) * pow(sunDot, 12.0) * 0.15;
+    // Cirrus streaks left (u 0.15-0.35, v 0.35-0.45)
+    float cirrusLeft = smoothstep(0.35, 0.75, sin(dir.x * 5.0 + dir.y * 2.5)) 
+      * smoothstep(0.08, 0.25, height) * (1.0 - smoothstep(0.35, 0.65, height))
+      * step(-0.85, dir.x) * (1.0 - step(-0.1, dir.x));
 
-    // Soft wispy cloud streaks
-    float cloudNoise = sin(dir.x * 4.0 + dir.z * 2.0) * cos(dir.y * 6.0);
-    float clouds = smoothstep(0.4, 0.8, cloudNoise * 0.5 + 0.5) * (1.0 - height * 0.8);
-    sky = mix(sky, vec3(0.96, 0.98, 1.0), clouds * 0.35);
+    // Cumulus behind right palms (u 0.66-0.72 and 0.80-0.88, v 0.40-0.55)
+    float cumulusRight = smoothstep(0.4, 0.85, sin(dir.x * 4.0 - 1.5) * cos(dir.z * 3.0)) 
+      * smoothstep(0.05, 0.30, height) * (1.0 - smoothstep(0.45, 0.75, height))
+      * step(0.15, dir.x);
+
+    sky = mix(sky, vec3(0.96, 0.98, 1.0), cirrusLeft * 0.35 + cumulusRight * 0.4);
 
     // Bokeh softness blur simulation
     if (uBokeh > 0.1) {
@@ -82,7 +83,7 @@ const skyFragmentShader = /* glsl */ `
 `;
 
 // ---------------------------------------------------------------------------
-// 2. WIND-RIPPLED GOLDEN BEACH SAND SHADER
+// 2. WIND-RIPPLED GOLDEN BEACH SAND SHADER WITH DUNE BERM
 // ---------------------------------------------------------------------------
 const sandVertexShader = /* glsl */ `
   varying vec2 vUv;
@@ -92,18 +93,24 @@ const sandVertexShader = /* glsl */ `
     vUv = uv;
     vNormal = normalize(normalMatrix * normal);
     vec4 worldPos = modelMatrix * vec4(position, 1.0);
-    // Subtle sand dunes on far right
-    if (worldPos.x > 8.0) {
-      worldPos.y += sin(worldPos.x * 0.25 + worldPos.z * 0.15) * 0.65;
+    
+    // Dune berm: strip from x = +10 to +40, rising 0.9 m, with a shaded trench
+    if (worldPos.x >= 10.0 && worldPos.x <= 40.0) {
+      float span = (worldPos.x - 10.0) / 30.0;
+      float bermHeight = sin(span * 3.14159) * 0.9;
+      // Shaded rut / trench near base
+      float rut = -0.15 * smoothstep(0.1, 0.25, span) * (1.0 - smoothstep(0.25, 0.45, span));
+      worldPos.y += bermHeight + rut;
     }
+
     vWorldPosition = worldPos.xyz;
     gl_Position = projectionMatrix * viewMatrix * worldPos;
   }
 `;
 
 const sandFragmentShader = /* glsl */ `
-  uniform vec3 uSandColorA; // Sunlit sand
-  uniform vec3 uSandColorB; // Shadow/ripple sand
+  uniform vec3 uSandColorA; // #F3D58D Sunlit sand
+  uniform vec3 uSandColorB; // #E2BC6B Shadow/ripple sand
   uniform vec3 uSunDirection;
   uniform float uBokeh;
   varying vec2 vUv;
@@ -111,19 +118,19 @@ const sandFragmentShader = /* glsl */ `
   varying vec3 vNormal;
 
   void main() {
-    // Procedural wind ripples
-    float ripple = sin(vWorldPosition.x * 2.2 + vWorldPosition.z * 1.4) * 0.5 + 0.5;
-    float micro = sin(vWorldPosition.x * 12.0) * cos(vWorldPosition.z * 12.0) * 0.25;
+    // Procedural wind ripples: 0.35 m wavelength (frequency ~17.95 rad/m)
+    float ripple = sin(vWorldPosition.x * 17.95 + vWorldPosition.z * 12.0) * 0.5 + 0.5;
+    float micro = sin(vWorldPosition.x * 35.0) * cos(vWorldPosition.z * 35.0) * 0.2;
     float ripplePattern = clamp(ripple + micro, 0.0, 1.0);
 
     vec3 sandCol = mix(uSandColorB, uSandColorA, ripplePattern);
 
-    // Subtle sun lighting
+    // Sun directional lighting
     vec3 lightDir = normalize(uSunDirection);
     float diff = max(dot(vNormal, lightDir), 0.0);
     vec3 lit = sandCol * (0.55 + diff * 0.7);
 
-    // Micro-mica sun glint
+    // Micro-mica sparkle
     vec3 viewDir = normalize(cameraPosition - vWorldPosition);
     vec3 halfVec = normalize(lightDir + viewDir);
     float spec = pow(max(dot(vNormal, halfVec), 0.0), 48.0);
@@ -254,9 +261,9 @@ interface SUVProps {
 function TacticalSUV({ position, rotationY = 0, hit }: SUVProps) {
   return (
     <group position={position} rotation={[0, rotationY, 0]} scale={[1, 1.61 / 1.9, 1]}>
-      {/* Main Boxy Lower Body */}
+      {/* Main Boxy Lower Body: 2.15 m wide, 4.4 m long, cab roof 1.61 m */}
       <mesh position={[0, 0.75, 0]}>
-        <boxGeometry args={[2.1, 0.85, 4.4]} />
+        <boxGeometry args={[2.15, 0.85, 4.4]} />
         <meshStandardMaterial color={hit ? WORLD_COLORS.char : WORLD_COLORS.suv} roughness={hit ? 0.9 : 0.45} metalness={0.65} />
       </mesh>
 
@@ -309,45 +316,42 @@ function TacticalSUV({ position, rotationY = 0, hit }: SUVProps) {
         <meshStandardMaterial color="#141416" roughness={0.8} />
       </mesh>
 
-      {/* 2 Dark Villain Silhouettes standing on the roof / flatbed */}
-      <group position={[-0.35, 2.65, -0.4]} visible={!hit}>
-        {/* Torso */}
+      {/* 2 to 3 flat-black silhouettes (#0E0D0C with #3A3D34 rim), 1.1 m tall, no weapons/insignia */}
+      <group position={[-0.35, 2.45, -0.4]} scale={[0.66, 0.66, 0.66]} visible={!hit}>
         <mesh position={[0, -0.3, 0]}>
           <boxGeometry args={[0.38, 0.65, 0.22]} />
-          <meshStandardMaterial color="#121214" roughness={0.9} />
+          <meshStandardMaterial color="#0E0D0C" roughness={0.9} emissive="#3A3D34" emissiveIntensity={0.12} />
         </mesh>
-        {/* Head */}
         <mesh position={[0, 0.18, 0]}>
           <sphereGeometry args={[0.14, 8, 8]} />
-          <meshStandardMaterial color="#121214" roughness={0.9} />
+          <meshStandardMaterial color="#0E0D0C" roughness={0.9} emissive="#3A3D34" emissiveIntensity={0.12} />
         </mesh>
-        {/* Legs */}
         <mesh position={[-0.1, -0.9, 0]}>
           <cylinderGeometry args={[0.06, 0.06, 0.75, 6]} />
-          <meshStandardMaterial color="#121214" roughness={0.9} />
+          <meshStandardMaterial color="#0E0D0C" roughness={0.9} />
         </mesh>
         <mesh position={[0.1, -0.9, 0]}>
           <cylinderGeometry args={[0.06, 0.06, 0.75, 6]} />
-          <meshStandardMaterial color="#121214" roughness={0.9} />
+          <meshStandardMaterial color="#0E0D0C" roughness={0.9} />
         </mesh>
       </group>
 
-      <group position={[0.45, 2.65, 0.2]} visible={!hit}>
+      <group position={[0.45, 2.45, 0.2]} scale={[0.66, 0.66, 0.66]} visible={!hit}>
         <mesh position={[0, -0.3, 0]}>
           <boxGeometry args={[0.38, 0.65, 0.22]} />
-          <meshStandardMaterial color="#151518" roughness={0.9} />
+          <meshStandardMaterial color="#0E0D0C" roughness={0.9} emissive="#3A3D34" emissiveIntensity={0.12} />
         </mesh>
         <mesh position={[0, 0.18, 0]}>
           <sphereGeometry args={[0.14, 8, 8]} />
-          <meshStandardMaterial color="#151518" roughness={0.9} />
+          <meshStandardMaterial color="#0E0D0C" roughness={0.9} emissive="#3A3D34" emissiveIntensity={0.12} />
         </mesh>
         <mesh position={[-0.1, -0.9, 0]}>
           <cylinderGeometry args={[0.06, 0.06, 0.75, 6]} />
-          <meshStandardMaterial color="#151518" roughness={0.9} />
+          <meshStandardMaterial color="#0E0D0C" roughness={0.9} />
         </mesh>
         <mesh position={[0.1, -0.9, 0]}>
           <cylinderGeometry args={[0.06, 0.06, 0.75, 6]} />
-          <meshStandardMaterial color="#151518" roughness={0.9} />
+          <meshStandardMaterial color="#0E0D0C" roughness={0.9} />
         </mesh>
       </group>
     </group>
@@ -355,34 +359,44 @@ function TacticalSUV({ position, rotationY = 0, hit }: SUVProps) {
 }
 
 // ---------------------------------------------------------------------------
-// 6. RIGHT MARBLE FOUNTAIN, UMBRELLA & COCONUT PALMS
+// 6. RIGHT MARBLE FOUNTAIN, STATUE GROUP & UMBRELLA SET
 // ---------------------------------------------------------------------------
 function FountainAndGarden() {
   return (
-    <group position={[12.1, 0, -19.7]} name="GardenFountainGroup" scale={[1, 3.1 / 3.0, 0.55]}>
-      {/* Terracotta Octagonal Planter Basin */}
+    <group position={[12.1, 0, -19.7]} name="GardenFountainGroup">
+      {/* Terracotta Planter Basin: 4.0 x 2.2 m */}
       <mesh position={[0, 0.35, 0]}>
-        <cylinderGeometry args={[2.4, 2.6, 0.7, 8]} />
+        <boxGeometry args={[4.0, 0.7, 2.2]} />
         <meshStandardMaterial color="#C87E5E" roughness={0.75} />
       </mesh>
-      {/* Interior Water Pool */}
-      <mesh position={[0, 0.65, 0]}>
-        <cylinderGeometry args={[2.2, 2.2, 0.05, 16]} />
-        <meshStandardMaterial color="#3FA8B8" roughness={0.15} metalness={0.4} />
+      {/* Tiered White Marble Fountain Plinth & Statue: 3.1 m tall, #ECE8E0 */}
+      <mesh position={[0, 1.0, 0]}>
+        <cylinderGeometry args={[0.65, 0.95, 0.6, 12]} />
+        <meshStandardMaterial color="#ECE8E0" roughness={0.25} />
       </mesh>
-      {/* Tiered White Marble Fountain Plinth */}
-      <mesh position={[0, 1.2, 0]}>
-        <cylinderGeometry args={[0.65, 0.95, 1.1, 12]} />
-        <meshStandardMaterial color="#E8E2D8" roughness={0.25} />
+      <mesh position={[0, 1.5, 0]}>
+        <cylinderGeometry args={[1.1, 0.6, 0.4, 12]} />
+        <meshStandardMaterial color="#ECE8E0" roughness={0.25} />
       </mesh>
-      <mesh position={[0, 1.85, 0]}>
-        <cylinderGeometry args={[1.2, 0.7, 0.35, 12]} />
-        <meshStandardMaterial color="#E8E2D8" roughness={0.25} />
+      <mesh position={[0, 2.35, 0]}>
+        <cylinderGeometry args={[0.22, 0.35, 1.3, 8]} />
+        <meshStandardMaterial color="#ECE8E0" roughness={0.28} />
       </mesh>
-      {/* Classical Statue Silhouette */}
-      <mesh position={[0, 2.45, 0]}>
-        <cylinderGeometry args={[0.2, 0.35, 1.1, 8]} />
-        <meshStandardMaterial color="#E4DDD0" roughness={0.3} />
+
+      {/* Two Urns at x = +10.2 and +11.0 (relative: -1.9 and -1.1) */}
+      <mesh position={[-1.9, 0.7, 0]}>
+        <cylinderGeometry args={[0.22, 0.15, 0.55, 8]} />
+        <meshStandardMaterial color="#C87E5E" roughness={0.7} />
+      </mesh>
+      <mesh position={[-1.1, 0.7, 0]}>
+        <cylinderGeometry args={[0.22, 0.15, 0.55, 8]} />
+        <meshStandardMaterial color="#C87E5E" roughness={0.7} />
+      </mesh>
+
+      {/* Cycad & Agave cluster at x = +10.4 (relative: -1.7), 2.2 m tall */}
+      <mesh position={[-1.7, 1.1, 0.6]}>
+        <coneGeometry args={[0.65, 2.2, 7]} />
+        <meshStandardMaterial color="#2A5C38" roughness={0.8} />
       </mesh>
     </group>
   );
@@ -390,16 +404,33 @@ function FountainAndGarden() {
 
 function PatioUmbrella() {
   return (
-    <group position={[20, 0, -30]}>
+    <group position={[20, 0, -30]} name="PatioUmbrellaSet">
       {/* Umbrella Pole */}
       <mesh position={[0, 1.6, 0]}>
         <cylinderGeometry args={[0.04, 0.04, 3.2, 8]} />
         <meshStandardMaterial color="#E2D4C0" roughness={0.4} />
       </mesh>
-      {/* Canopy */}
+      {/* Cream #EADFC4 8-rib canopy, 2.6 m across (1.3 m radius) */}
       <mesh position={[0, 2.9, 0]}>
         <coneGeometry args={[1.3, 0.6, 8]} />
         <meshStandardMaterial color={WORLD_COLORS.cream} roughness={0.6} side={THREE.DoubleSide} />
+      </mesh>
+      {/* Table and two chairs */}
+      <mesh position={[0, 0.5, 0]}>
+        <cylinderGeometry args={[0.5, 0.5, 0.04, 12]} />
+        <meshStandardMaterial color="#EADFC4" roughness={0.5} />
+      </mesh>
+      <mesh position={[0, 0.25, 0]}>
+        <cylinderGeometry args={[0.04, 0.04, 0.5, 8]} />
+        <meshStandardMaterial color="#4A453E" roughness={0.6} />
+      </mesh>
+      <mesh position={[-0.7, 0.3, 0]}>
+        <boxGeometry args={[0.4, 0.45, 0.4]} />
+        <meshStandardMaterial color="#C8BAA0" roughness={0.7} />
+      </mesh>
+      <mesh position={[0.7, 0.3, 0]}>
+        <boxGeometry args={[0.4, 0.45, 0.4]} />
+        <meshStandardMaterial color="#C8BAA0" roughness={0.7} />
       </mesh>
     </group>
   );

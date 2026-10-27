@@ -43,6 +43,7 @@ export function GamesFocusScene({ scrollP, stageRef, onReady }: GamesFocusSceneP
   const resources = useMemo(() => {
     const targets = createLayeredFocusTargets(gl, tier as "A" | "B" | "C");
     const backgroundScene = new THREE.Scene();
+    backgroundScene.fog = new THREE.FogExp2("#BFE6EA", 0.007);
     const foregroundScene = new THREE.Scene();
     const backgroundCamera = new THREE.PerspectiveCamera(34, 2.39, 1, 400);
     const foregroundCamera = new THREE.PerspectiveCamera(34, 2.39, 0.01, 2);

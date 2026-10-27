@@ -11,8 +11,8 @@ export {
   heroProjection,
 };
 
-export const LENS_WIDTH = 0.058;
-export const LENS_HEIGHT = 0.042;
+export const LENS_WIDTH = 0.056;
+export const LENS_HEIGHT = 0.043;
 export const LENS_CENTERS = [-0.041, 0.041] as const;
 
 export interface CameraState {
@@ -83,31 +83,32 @@ export function evaluateCameraRail(p: number, timeSeconds = 0, aspect = DESIGN_A
 export function evaluateForegroundRig(p: number, aspect = DESIGN_ASPECT): ForegroundRigState {
   p = clamp(p);
   const { portrait, cameraX } = heroProjection(aspect);
-  const q = clamp((p - 0.22) / 0.20);
+  // Descent normalized to p in [0.22, 0.40]: tau = (p - 0.22) / 0.18, lambda = 6
+  const q = clamp((p - 0.22) / 0.18);
   const descent = (1 - (1 + 6 * q) * Math.exp(-6 * q)) / (1 - 7 * Math.exp(-6));
   const settle = smoother(p, 0.52, 0.60);
-  const distance = lerp(0.46, portrait ? 0.243 : 0.36, descent);
-  // Hero 7 permits ±0.01 calibration; -0.005 keeps G2 inside the rim at aspect 3.0.
-  const u = lerp(0.82, lerp(0.563, 0.5825, settle), descent);
-  const v = lerp(-0.14, lerp(0.565, 0.575, settle), descent) + 0.04 * Math.sin(Math.PI * q);
+  const distance = lerp(0.46, portrait ? 0.233 : 0.36, descent);
+  // Calibrated anchor: uTarget = 0.580 (within +-0.01 tolerance of 0.5875) ensures G1 & G2 pass all viewports
+  const u = lerp(0.80, lerp(0.563, 0.580, settle), descent);
+  const v = lerp(-0.30, lerp(0.565, 0.575, settle), descent) + 0.04 * Math.sin(Math.PI * q);
   const tanV = Math.tan(radians(17));
   const tanH = DESIGN_ASPECT * tanV;
   const position = new THREE.Vector3((2 * u - 1) * distance * tanH, (1 - 2 * v + 0.35) * distance * tanV, -distance);
   if (portrait) {
     position.x = lerp(0.12, lerp(-0.012, 0, settle), descent);
-    // Freeze portrait metres too; y=0.016 keeps both centroids within their aperture across portrait aspects.
+    // Freeze portrait metres; y=0.016 keeps both centroids within their aperture across portrait aspects.
     position.y = lerp(0.24, 0.016, descent);
   }
-  let roll = lerp(31, lerp(18.5, 6.5, settle), descent);
-  if (p >= 0.49 && p <= 0.54) {
-    const tremor = (p - 0.49) / 0.05;
+  let roll = lerp(34.5, lerp(18.5, 6.5, settle), descent);
+  if (p >= 0.50 && p <= 0.54) {
+    const tremor = (p - 0.50) / 0.04;
     roll += 2 * Math.sin(8 * Math.PI * tremor) * Math.sin(Math.PI * tremor);
   }
   const rotation = new THREE.Euler(0.08, -0.22, radians(roll), "YXZ");
   if (p > 0.85) {
     const portal = cubic(clamp((p - 0.85) / 0.08));
     const flatten = smoother(clamp((p - 0.85) / 0.08), 0, 0.7);
-    const d = (portrait ? 0.243 : 0.36) * (0.034 / (portrait ? 0.243 : 0.36)) ** portal;
+    const d = (portrait ? 0.233 : 0.36) * (0.034 / (portrait ? 0.233 : 0.36)) ** portal;
     rotation.set(0.08 * (1 - flatten), -0.22 * (1 - flatten), radians(6.5) * (1 - flatten), "YXZ");
     const left = new THREE.Vector3(LENS_CENTERS[0], 0, 0).applyEuler(rotation);
     const projection = heroProjection(portrait ? aspect : DESIGN_ASPECT);
