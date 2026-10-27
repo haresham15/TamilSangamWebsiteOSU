@@ -4,4 +4,5 @@
 - [x] Milestone 2: Lens-Shifted Projection Math & Parity / Registration Scripts.
 - [x] Milestone 3: Calibrated J1 Coastal Compound Scene & Shaders.
 - [x] Milestone 4: 1:1 Foreground Eyeglasses & Sun-Bronzed Hand Rig.
-- [ ] Milestone 5: Layered Focus Compositor & Sunblast Grade Profile.
+- [x] Milestone 5: Layered Focus Compositor & Sunblast Grade Profile.
+- [ ] Milestone 6: Scrubbable Missile Contrails, Blackbody Fireballs & Dual-Rail Portal.
