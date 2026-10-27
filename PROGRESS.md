@@ -5,4 +5,5 @@
 - [x] Milestone 3: Calibrated J1 Coastal Compound Scene & Shaders.
 - [x] Milestone 4: 1:1 Foreground Eyeglasses & Sun-Bronzed Hand Rig.
 - [x] Milestone 5: Layered Focus Compositor & Sunblast Grade Profile.
-- [ ] Milestone 6: Scrubbable Missile Contrails, Blackbody Fireballs & Dual-Rail Portal.
+- [x] Milestone 6: Scrubbable Missile Contrails, Blackbody Fireballs & Dual-Rail Portal.
+- [ ] Milestone 7: NYT-Style Sangam Arcade Hub, Sollu & Thodarpu.

@@ -1,426 +1,234 @@
-// src/components/games-hero/MissilePyroSystem.tsx
-"use client";
+﻿"use client";
 
-import React, { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { evaluateMissilesAndPyro } from "./gamesRail";
+import { FIREBALLS, evaluateFireball, PORTRAIT_STANDOFF_SCALE } from "./gamesRail";
 
 interface MissilePyroSystemProps {
   scrollP: number;
+  portrait?: boolean;
 }
 
-// ---------------------------------------------------------------------------
-// 1. BILLOWING WHITE SMOKE CONTRAIL SHADER
-// ---------------------------------------------------------------------------
-const contrailVertexShader = /* glsl */ `
-  uniform float uProgress;
+const FX_COLORS = {
+  head: new THREE.Color("#FFF6B0"),
+  debris: new THREE.Color("#2A2420"),
+  dust: new THREE.Color("#E5C478"),
+};
+const LAUNCHES = [0.540, 0.550, 0.560];
+const PATHS = [
+  [[-0.01, 0.07], [0.10, 0.19], [0.20, 0.325], [0.30, 0.47], [0.376, 0.585], [0.425, 0.70]],
+  [[-0.01, 0.415], [0.108, 0.483], [0.215, 0.56], [0.323, 0.648], [0.403, 0.693], [0.508, 0.70]],
+  [[1.02, -0.10], [0.806, 0.273], [0.753, 0.368], [0.699, 0.438], [0.645, 0.508], [0.608, 0.572], [0.591, 0.70]],
+];
+const vertexShader = /* glsl */ `
   varying vec2 vUv;
-  varying float vLife;
-
   void main() {
     vUv = uv;
-    // Along curve parameter
-    vLife = uv.x;
-    vec3 transformed = position;
-    // Subtle curl expansion
-    transformed += normal * sin(uv.x * 24.0) * 0.18;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
 `;
-
-const contrailFragmentShader = /* glsl */ `
-  uniform float uProgress;
-  uniform vec3 uColorLit;
-  uniform vec3 uColorShade;
+const contrailShader = /* glsl */ `
   varying vec2 vUv;
-  varying float vLife;
-
+  uniform float uProgress;
   void main() {
-    // Only render up to current flight progress
-    if (vLife > uProgress) discard;
-
-    // Billowing smoke puff noise
-    float billow = sin(vUv.x * 32.0 + vUv.y * 8.0) * 0.5 + 0.5;
-    vec3 smokeCol = mix(uColorShade, uColorLit, billow);
-
-    // Soft feathered edges
-    float edgeAlpha = sin(vUv.y * 3.14159);
-    float headAlpha = clamp((uProgress - vLife) / 0.12, 0.0, 1.0);
-
-    float alpha = edgeAlpha * clamp(headAlpha * 0.95, 0.0, 1.0);
-    gl_FragColor = vec4(smokeCol, alpha);
+    if (vUv.x > uProgress) discard;
+    float curl = sin(vUv.x * 183.0) * sin(vUv.x * 51.0) * 0.12;
+    float edge = 1.0 - smoothstep(0.25, 0.5, abs(vUv.y - 0.5 + curl));
+    float head = smoothstep(0.0, 0.012, uProgress - vUv.x);
+    vec3 col = mix(vec3(0.62, 0.65, 0.66), vec3(0.957, 0.965, 0.957), vUv.y);
+    col = mix(col, vec3(0.91, 0.875, 0.784), smoothstep(0.72, 1.0, vUv.x) * 0.3);
+    gl_FragColor = vec4(col, edge * head * 0.78);
   }
 `;
-
-// ---------------------------------------------------------------------------
-// 2. VOLUMETRIC FBM FIREBALL EXPLOSION SHADER
-// ---------------------------------------------------------------------------
-const fireballVertexShader = /* glsl */ `
-  uniform float uTime;
-  varying vec3 vNormal;
-  varying vec3 vPosition;
-
-  void main() {
-    vNormal = normalize(normalMatrix * normal);
-    // Radial pulsing turbulent billowing displacement
-    vec3 displaced = position + normal * (sin(position.x * 4.0 + uTime * 5.0) * cos(position.y * 4.0) * 0.22);
-    vPosition = displaced;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(displaced, 1.0);
-  }
-`;
-
-const fireballFragmentShader = /* glsl */ `
-  uniform float uTime;
+const plumeShader = /* glsl */ `
+  varying vec2 vUv;
   uniform float uAge;
-  uniform float uIntensity;
-  varying vec3 vNormal;
-  varying vec3 vPosition;
-
+  uniform float uBrightness;
+  uniform float uSoot;
+  uniform float uSmoke;
+  uniform float uSeed;
+  float hash(vec3 p) { return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453); }
+  float noise(vec3 p) {
+    vec3 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(mix(hash(i), hash(i + vec3(1,0,0)), f.x),
+                   mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
+               mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
+                   mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
+  }
   void main() {
-    float r = length(vPosition);
-    // Incandescent color gradient: Core white-yellow -> Orange -> Crimson -> Smoke soot
-    vec3 coreColor = vec3(1.0, 0.98, 0.85);   // #FFFAD9 white-hot
-    vec3 midColor = vec3(1.0, 0.46, 0.02);    // #FF7505 blazing fiery orange
-    vec3 outerColor = vec3(0.85, 0.12, 0.0);  // #D91E00 deep crimson
-    vec3 sootColor = vec3(0.18, 0.14, 0.11);  // #2E241C dark soot
-
-    // Color gradient radially from center to edge + cooling into smoke
-    float radial = clamp(r / 1.25, 0.0, 1.0);
-    float t = clamp(radial * 0.7 + uAge * 0.65, 0.0, 1.0);
-
-    vec3 col = coreColor;
-    if (t < 0.32) {
-      col = mix(coreColor, midColor, t / 0.32);
-    } else if (t < 0.72) {
-      col = mix(midColor, outerColor, (t - 0.32) / 0.40);
-    } else {
-      col = mix(outerColor, sootColor, (t - 0.72) / 0.28);
+    vec2 xy = (vUv - 0.5) * 2.7;
+    float density = 0.0, heat = 0.0;
+    for (int i = 0; i < 18; i++) {
+      vec3 p = vec3(xy, -1.0 + float(i) / 8.5);
+      float n = noise(p * 3.8 + vec3(uSeed, -uAge * 3.0, 0.0));
+      n += 0.5 * noise(p * 8.0 + vec3(0.0, -uAge * 5.0, uSeed));
+      float d = max(0.0, 1.0 - length(p) + (n - 0.65) * 0.7);
+      density += d * 0.22;
+      heat += d * n * 0.12;
     }
-
-    // Outer edge alpha falloff: solid core, soft billowing smoke rim
-    float edgeFalloff = 1.0 - smoothstep(0.65, 1.35, r);
-    float alpha = edgeFalloff * clamp(1.0 - uAge * 0.3, 0.0, 1.0) * uIntensity;
-    gl_FragColor = vec4(col, clamp(alpha * 0.98, 0.0, 1.0));
+    float alpha = 1.0 - exp(-density * 2.3);
+    if (alpha < 0.005) discard;
+    vec3 soot = mix(vec3(0.165, 0.118, 0.09), vec3(0.35, 0.31, 0.26), clamp(heat, 0.0, 1.0));
+    vec3 flame = mix(vec3(0.62, 0.106, 0.0), vec3(1.0, 0.416, 0.0), smoothstep(0.06, 0.36, heat));
+    flame = mix(flame, vec3(1.0, 0.965, 0.69), smoothstep(0.36, 0.78, heat));
+    gl_FragColor = uSmoke > 0.5
+      ? vec4(soot, alpha * uSoot)
+      : vec4(flame * (1.0 + uBrightness), alpha * uBrightness);
   }
 `;
 
-export function MissilePyroSystem({ scrollP }: MissilePyroSystemProps) {
-  const pyroState = useMemo(() => evaluateMissilesAndPyro(scrollP), [scrollP]);
-
-  // Contrail Curves for the 3 incoming missiles
-  const { curve1, curve2, curve3, contrailGeom1, contrailGeom2, contrailGeom3 } = useMemo(() => {
-    // 1. Upper-Left High -> Center SUV (-0.5, 1.6, -31)
-    const c1 = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-26, 16.5, 2),
-      new THREE.Vector3(-14, 10.5, -12),
-      new THREE.Vector3(-0.5, 1.6, -31),
-    ]);
-    // 2. Mid-Left Low -> Left SUV (-6.2, 1.4, -31)
-    const c2 = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-26, 7.2, 0),
-      new THREE.Vector3(-16, 5.0, -14),
-      new THREE.Vector3(-6.2, 1.4, -31),
-    ]);
-    // 3. Upper-Right -> Right SUV (+5.2, 1.6, -31)
-    const c3 = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(22, 13.5, 2),
-      new THREE.Vector3(14, 8.5, -13),
-      new THREE.Vector3(5.2, 1.6, -31),
-    ]);
-
-    const geom1 = new THREE.TubeGeometry(c1, 64, 0.55, 8, false);
-    const geom2 = new THREE.TubeGeometry(c2, 64, 0.48, 8, false);
-    const geom3 = new THREE.TubeGeometry(c3, 64, 0.52, 8, false);
-
-    return {
-      curve1: c1,
-      curve2: c2,
-      curve3: c3,
-      contrailGeom1: geom1,
-      contrailGeom2: geom2,
-      contrailGeom3: geom3,
-    };
-  }, []);
-
-  const contrailUniforms = useMemo(
-    () => ({
-      uProgress: { value: 0 },
-      uColorLit: { value: new THREE.Color("#F4F6F4") },
-      uColorShade: { value: new THREE.Color("#9EA6A8") },
-    }),
-    []
-  );
-
-  const fireballUniforms = useMemo(
-    () => ({
-      uTime: { value: 0 },
-      uAge: { value: 0 },
-      uScale: { value: 0 },
-      uIntensity: { value: 1.0 },
-    }),
-    []
-  );
-
-  // Instanced Debris Chunks (80 particles)
-  const debrisCount = 80;
-  const debrisData = useMemo(() => {
-    const list: {
-      origin: THREE.Vector3;
-      velocity: THREE.Vector3;
-      rotationSpeed: THREE.Vector3;
-      scale: number;
-    }[] = [];
-
-    for (let i = 0; i < debrisCount; i++) {
-      // Pick one of the 3 explosion epicenters
-      const epicenter =
-        i % 3 === 0
-          ? new THREE.Vector3(-0.5, 1.6, -31) // Center SUV
-          : i % 3 === 1
-          ? new THREE.Vector3(5.2, 1.6, -31)  // Right SUV
-          : new THREE.Vector3(-6.2, 1.4, -31); // Left SUV
-
-      // Deterministic pseudo-random seed per debris index
-      const seed1 = Math.sin(i * 12.9898) * 43758.5453;
-      const r1 = seed1 - Math.floor(seed1);
-      const seed2 = Math.sin((i + 31) * 78.233) * 43758.5453;
-      const r2 = seed2 - Math.floor(seed2);
-      const seed3 = Math.sin((i + 71) * 45.164) * 43758.5453;
-      const r3 = seed3 - Math.floor(seed3);
-
-      const angle = r1 * Math.PI * 2;
-      const speed = 6.0 + r2 * 14.0;
-      const velocity = new THREE.Vector3(
-        Math.cos(angle) * speed * 0.6,
-        12.0 + r3 * 18.0,
-        Math.sin(angle) * speed * 0.6
-      );
-      const rotationSpeed = new THREE.Vector3(
-        (r1 - 0.5) * 8.0,
-        (r2 - 0.5) * 8.0,
-        (r3 - 0.5) * 8.0
-      );
-      const scale = 0.15 + r1 * 0.45;
-      list.push({ origin: epicenter, velocity, rotationSpeed, scale });
+function MissileTrail({ index, scrollP, portrait }: { index: number; scrollP: number; portrait: boolean }) {
+  const head = useRef<THREE.Mesh>(null);
+  const { curve, geometry, uniforms } = useMemo(() => {
+    const curve = new THREE.CatmullRomCurve3(PATHS[index].map(([u, v]) => new THREE.Vector3(u, v, 0)));
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(65 * 6), 3));
+    const uv = new Float32Array(65 * 4);
+    const triangles: number[] = [];
+    for (let i = 0; i <= 64; i++) {
+      uv.set([i / 64, 0, i / 64, 1], i * 4);
+      if (i < 64) triangles.push(i * 2, i * 2 + 1, i * 2 + 2, i * 2 + 1, i * 2 + 3, i * 2 + 2);
     }
-    return list;
-  }, []);
+    geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+    geometry.setIndex(triangles);
+    return { curve, geometry, uniforms: { uProgress: { value: 0 } } };
+  }, [index]);
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  const point = useMemo(() => new THREE.Vector3(), []);
+  const next = useMemo(() => new THREE.Vector3(), []);
 
-  const debrisInstancedMeshRef = useRef<THREE.InstancedMesh>(null);
-  const tempMatrix = useMemo(() => new THREE.Matrix4(), []);
-  const tempPosition = useMemo(() => new THREE.Vector3(), []);
-  const tempEuler = useMemo(() => new THREE.Euler(), []);
-  const tempQuaternion = useMemo(() => new THREE.Quaternion(), []);
-  const tempScale = useMemo(() => new THREE.Vector3(), []);
-
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-    fireballUniforms.uTime.value = time;
-
-    const data = evaluateMissilesAndPyro(scrollP);
-    contrailUniforms.uProgress.value = data.missileProgress;
-    fireballUniforms.uAge.value = data.detonationProgress;
-    fireballUniforms.uScale.value = data.fireballScale;
-    fireballUniforms.uIntensity.value = Math.max(0, 1.0 - data.detonationProgress * 0.4);
-
-    // Update Debris Particles along parabolic arc: y(t) = y0 + v0y*t - 0.5*g*t^2
-    if (debrisInstancedMeshRef.current) {
-      const g = 19.6; // Gravitational acceleration
-      const t = data.detonated ? data.detonationProgress * 1.6 : 0;
-
-      for (let i = 0; i < debrisCount; i++) {
-        if (!data.detonated || t <= 0) {
-          tempMatrix.makeScale(0, 0, 0);
-          debrisInstancedMeshRef.current.setMatrixAt(i, tempMatrix);
-          continue;
-        }
-
-        const item = debrisData[i];
-        tempPosition.x = item.origin.x + item.velocity.x * t;
-        tempPosition.y = Math.max(0.2, item.origin.y + item.velocity.y * t - 0.5 * g * t * t);
-        tempPosition.z = item.origin.z + item.velocity.z * t;
-
-        tempEuler.set(
-          item.rotationSpeed.x * t,
-          item.rotationSpeed.y * t,
-          item.rotationSpeed.z * t
-        );
-        tempQuaternion.setFromEuler(tempEuler);
-
-        // Fade scale slightly as they descend
-        const s = item.scale * Math.max(0.2, 1.0 - data.detonationProgress * 0.35);
-        tempScale.set(s, s, s);
-
-        tempMatrix.compose(tempPosition, tempQuaternion, tempScale);
-        debrisInstancedMeshRef.current.setMatrixAt(i, tempMatrix);
-      }
-      debrisInstancedMeshRef.current.instanceMatrix.needsUpdate = true;
+  useFrame(() => {
+    const q = Math.pow(THREE.MathUtils.clamp((scrollP - LAUNCHES[index]) / (FIREBALLS[index].hit - LAUNCHES[index]), 0, 1), 1.3);
+    uniforms.uProgress.value = q;
+    const positions = geometry.getAttribute("position");
+    const k = portrait ? PORTRAIT_STANDOFF_SCALE : 1;
+    const project = (t: number, out: THREE.Vector3) => {
+      curve.getPointAt(t, out);
+      const depth = THREE.MathUtils.lerp(index === 2 ? 12 : 14, 37, t * t * (3 - 2 * t));
+      out.set(0.43 + ((2 * out.x - 1) * depth * 0.7307 - 0.43) * k,
+        1.65 + (1 - 2 * out.y + 0.35) * depth * Math.tan(17 * Math.PI / 180), 6 - depth);
+      return depth;
+    };
+    for (let i = 0; i <= 64; i++) {
+      const t = i / 64;
+      const depth = project(t, point);
+      project(Math.min(1, t + 0.001), next);
+      const dx = next.x - point.x, dy = next.y - point.y;
+      const length = Math.hypot(dx, dy) || 1;
+      const age = Math.max(0, scrollP - LAUNCHES[index] - t * (FIREBALLS[index].hit - LAUNCHES[index]));
+      const width = (0.012 + 0.023 * Math.min(age / 0.1, 1)) * depth * Math.tan(17 * Math.PI / 180);
+      positions.setXYZ(i * 2, point.x - dy / length * width, point.y + dx / length * width, point.z);
+      positions.setXYZ(i * 2 + 1, point.x + dy / length * width, point.y - dx / length * width, point.z);
+    }
+    positions.needsUpdate = true;
+    if (head.current) {
+      project(q, head.current.position);
+      head.current.visible = scrollP >= LAUNCHES[index] && scrollP < FIREBALLS[index].hit;
     }
   });
+  return <group>
+    <mesh geometry={geometry} frustumCulled={false}>
+      <shaderMaterial vertexShader={vertexShader} fragmentShader={contrailShader} uniforms={uniforms} transparent depthWrite={false} side={THREE.DoubleSide} />
+    </mesh>
+    <mesh ref={head} visible={false}>
+      <sphereGeometry args={[0.12, 8, 6]} />
+      <meshBasicMaterial color={FX_COLORS.head} toneMapped={false} />
+    </mesh>
+  </group>;
+}
 
-  return (
-    <group name="MissilePyroSystemGroup">
-      {/* ------------------------------------------------------------------ */}
-      {/* 1. THREE MISSILE SMOKE CONTRAIL TUBES                              */}
-      {/* ------------------------------------------------------------------ */}
-      {scrollP >= 0.52 && (
-        <group name="ContrailTubes">
-          <mesh geometry={contrailGeom1}>
-            <shaderMaterial
-              vertexShader={contrailVertexShader}
-              fragmentShader={contrailFragmentShader}
-              uniforms={contrailUniforms}
-              transparent
-              depthWrite={false}
-              side={THREE.DoubleSide}
-            />
-          </mesh>
-          <mesh geometry={contrailGeom2}>
-            <shaderMaterial
-              vertexShader={contrailVertexShader}
-              fragmentShader={contrailFragmentShader}
-              uniforms={contrailUniforms}
-              transparent
-              depthWrite={false}
-              side={THREE.DoubleSide}
-            />
-          </mesh>
-          <mesh geometry={contrailGeom3}>
-            <shaderMaterial
-              vertexShader={contrailVertexShader}
-              fragmentShader={contrailFragmentShader}
-              uniforms={contrailUniforms}
-              transparent
-              depthWrite={false}
-              side={THREE.DoubleSide}
-            />
-          </mesh>
+function Fireball({ index, scrollP, portrait }: { index: number; scrollP: number; portrait: boolean }) {
+  const flame = useRef<THREE.Mesh>(null);
+  const smoke = useRef<THREE.Mesh>(null);
+  const uniforms = useMemo(() => ({ uAge: { value: 0 }, uBrightness: { value: 0 }, uSoot: { value: 0 }, uSmoke: { value: 0 }, uSeed: { value: index * 17.3 } }), [index]);
+  const smokeUniforms = useMemo(() => ({ ...uniforms, uSmoke: { value: 1 } }), [uniforms]);
+  useFrame(({ camera }) => {
+    const fx = evaluateFireball(scrollP, index);
+    const x = 0.43 + (FIREBALLS[index].x - 0.43) * (portrait ? PORTRAIT_STANDOFF_SCALE : 1);
+    uniforms.uAge.value = fx.age;
+    uniforms.uBrightness.value = fx.brightness;
+    uniforms.uSoot.value = fx.soot;
+    if (flame.current) {
+      flame.current.visible = scrollP > FIREBALLS[index].hit;
+      flame.current.position.set(x, fx.height, -31);
+      flame.current.scale.setScalar(fx.radius * 2.7);
+      flame.current.quaternion.copy(camera.quaternion);
+    }
+    if (smoke.current) {
+      smoke.current.visible = scrollP > FIREBALLS[index].hit;
+      smoke.current.position.set(x, fx.height + fx.column * 0.48, -31.3);
+      smoke.current.scale.set(fx.radius * 2.3, Math.max(0.001, fx.column) * 1.35, 1);
+      smoke.current.quaternion.copy(camera.quaternion);
+    }
+  });
+  return <group>
+    <mesh ref={smoke} visible={false} renderOrder={1}>
+      <planeGeometry />
+      <shaderMaterial vertexShader={vertexShader} fragmentShader={plumeShader} uniforms={smokeUniforms} transparent depthWrite={false} />
+    </mesh>
+    <mesh ref={flame} visible={false} renderOrder={2}>
+      <planeGeometry />
+      <shaderMaterial vertexShader={vertexShader} fragmentShader={plumeShader} uniforms={uniforms} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+    </mesh>
+  </group>;
+}
 
-          {/* Active Missile Warhead Flares during incoming flight (p = 0.54 -> 0.65) */}
-          {pyroState.missilesActive && (
-            <group name="MissileWarheads">
-              <mesh position={curve1.getPoint(pyroState.missileProgress)}>
-                <sphereGeometry args={[0.38, 12, 12]} />
-                <meshBasicMaterial color="#FFF8D6" />
-              </mesh>
-              <mesh position={curve2.getPoint(pyroState.missileProgress)}>
-                <sphereGeometry args={[0.34, 12, 12]} />
-                <meshBasicMaterial color="#FFF8D6" />
-              </mesh>
-              <mesh position={curve3.getPoint(pyroState.missileProgress)}>
-                <sphereGeometry args={[0.36, 12, 12]} />
-                <meshBasicMaterial color="#FFF8D6" />
-              </mesh>
-            </group>
-          )}
-        </group>
-      )}
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 2. THREE TOWERING FIREBALL DETONATIONS                             */}
-      {/* ------------------------------------------------------------------ */}
-      {pyroState.detonated && (
-        <group name="FireballsGroup">
-          {/* Fireball A (Left SUV at x = -6.2, z = -31, just outside left temple arm) */}
-          <group position={[-6.2, 2.6, -31]}>
-            <mesh
-              scale={[
-                4.2 * pyroState.fireballScale,
-                6.5 * pyroState.fireballScale,
-                4.2 * pyroState.fireballScale,
-              ]}
-            >
-              <sphereGeometry args={[1, 20, 20]} />
-              <shaderMaterial
-                vertexShader={fireballVertexShader}
-                fragmentShader={fireballFragmentShader}
-                uniforms={fireballUniforms}
-                transparent
-                depthWrite={false}
-                blending={THREE.NormalBlending}
-              />
-            </mesh>
-          </group>
-
-          {/* Fireball B (Center SUV at x = -0.5, z = -31, FRAMED IN LEFT LENS!) */}
-          <group position={[-0.5, 3.2, -31]}>
-            <mesh
-              scale={[
-                5.0 * pyroState.fireballScale,
-                8.2 * pyroState.fireballScale,
-                5.0 * pyroState.fireballScale,
-              ]}
-            >
-              <sphereGeometry args={[1, 24, 24]} />
-              <shaderMaterial
-                vertexShader={fireballVertexShader}
-                fragmentShader={fireballFragmentShader}
-                uniforms={fireballUniforms}
-                transparent
-                depthWrite={false}
-                blending={THREE.NormalBlending}
-              />
-            </mesh>
-          </group>
-
-          {/* Fireball C (Right SUV at x = +5.2, z = -31, FRAMED IN RIGHT LENS!) */}
-          <group position={[5.2, 2.8, -31]}>
-            <mesh
-              scale={[
-                4.5 * pyroState.fireballScale,
-                7.0 * pyroState.fireballScale,
-                4.5 * pyroState.fireballScale,
-              ]}
-            >
-              <sphereGeometry args={[1, 22, 22]} />
-              <shaderMaterial
-                vertexShader={fireballVertexShader}
-                fragmentShader={fireballFragmentShader}
-                uniforms={fireballUniforms}
-                transparent
-                depthWrite={false}
-                blending={THREE.NormalBlending}
-              />
-            </mesh>
-          </group>
-
-          {/* Golden Sand Shockwave Ring surging forward across the beach floor */}
-          {pyroState.shockwaveRadius > 0.5 && (
-            <mesh
-              position={[0, 0.08, -31 + pyroState.shockwaveRadius * 0.45]}
-              rotation={[-Math.PI / 2, 0, 0]}
-            >
-              <ringGeometry
-                args={[
-                  Math.max(0.1, pyroState.shockwaveRadius - 2.5),
-                  pyroState.shockwaveRadius,
-                  32,
-                ]}
-              />
-              <meshBasicMaterial
-                color="#E5C478"
-                transparent
-                opacity={pyroState.shockwaveOpacity}
-                depthWrite={false}
-                side={THREE.DoubleSide}
-              />
-            </mesh>
-          )}
-        </group>
-      )}
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 3. INSTANCED DEBRIS PARTICLES TUMBLING ON GRAVITY ARCS             */}
-      {/* ------------------------------------------------------------------ */}
-      <instancedMesh
-        ref={debrisInstancedMeshRef}
-        args={[undefined, undefined, debrisCount]}
-        frustumCulled={false}
-      >
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#241B16" roughness={0.9} metalness={0.2} />
-      </instancedMesh>
-    </group>
-  );
+export function MissilePyroSystem({ scrollP, portrait = false }: MissilePyroSystemProps) {
+  const debris = useRef<THREE.InstancedMesh>(null);
+  const dust = useRef<THREE.InstancedMesh>(null);
+  const ring = useRef<THREE.Mesh>(null);
+  const data = useMemo(() => Array.from({ length: 80 }, (_, i) => {
+    const random = (n: number) => { const x = Math.sin(n * 12.9898) * 43758.5453; return x - Math.floor(x); };
+    const a = random(i + 1), b = random(i + 31), c = random(i + 71);
+    return { index: i < 24 ? 0 : i < 56 ? 1 : 2, vx: Math.cos(a * Math.PI * 2) * b * 4, vz: Math.sin(a * Math.PI * 2) * b * 4, vy: 6 + c * 8, scale: 0.15 + a * 0.35, spin: a * 8 };
+  }), []);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  useFrame(() => {
+    data.forEach((item, i) => {
+      const source = FIREBALLS[item.index];
+      const t = Math.max(0, 12 * (scrollP - source.hit));
+      dummy.position.set(0.43 + (source.x - 0.43) * (portrait ? PORTRAIT_STANDOFF_SCALE : 1) + item.vx * t,
+        Math.max(0.12, 1.2 + item.vy * t - 4.9 * t * t), -31 + item.vz * t);
+      dummy.rotation.set(item.spin * t, item.spin * 0.7 * t, item.spin * 1.3 * t);
+      dummy.scale.setScalar(t > 0 ? item.scale : 0);
+      if (i === 24 && t > 0) dummy.scale.set(0.9, 0.08, 0.65);
+      dummy.updateMatrix();
+      debris.current?.setMatrixAt(i, dummy.matrix);
+    });
+    if (debris.current) debris.current.instanceMatrix.needsUpdate = true;
+    const q = THREE.MathUtils.clamp((scrollP - 0.642) / 0.208, 0, 1);
+    const radius = 38 * Math.pow(q, 0.85);
+    if (ring.current) { ring.current.visible = q > 0; ring.current.scale.setScalar(radius); }
+    for (let i = 0; i < 78; i++) {
+      const fence = i >= 60;
+      const a = i / 60 * Math.PI * 2;
+      const age = Math.max(0, scrollP - (0.664 + (i - 60) / 17 * 0.036));
+      dummy.position.set(fence ? -9.5 : 0.43 + Math.cos(a) * radius, fence ? age * 12 : 0.25 + q * 0.45, fence ? -34 + (i - 60) / 17 * 24 : -31 + Math.sin(a) * radius);
+      dummy.rotation.set(0, a, 0);
+      const size = fence ? Math.min(0.8, age * 18) : q > 0 ? 0.6 + q * 0.8 : 0;
+      dummy.scale.set(size * 1.5, size * 0.7, size);
+      dummy.updateMatrix();
+      dust.current?.setMatrixAt(i, dummy.matrix);
+    }
+    if (dust.current) dust.current.instanceMatrix.needsUpdate = true;
+  });
+  return <group name="MissilePyroSystemGroup">
+    {FIREBALLS.map((_, index) => <group key={index}>
+      <MissileTrail index={index} scrollP={scrollP} portrait={portrait} />
+      <Fireball index={index} scrollP={scrollP} portrait={portrait} />
+    </group>)}
+    <mesh ref={ring} position={[0.43, 0.08, -31]} rotation={[-Math.PI / 2, 0, 0]} visible={false}>
+      <ringGeometry args={[0.94, 1, 64]} />
+      <meshBasicMaterial color={FX_COLORS.dust} transparent opacity={0.65} depthWrite={false} side={THREE.DoubleSide} />
+    </mesh>
+    <instancedMesh ref={debris} args={[undefined, undefined, 80]} frustumCulled={false}>
+      <boxGeometry />
+      <meshStandardMaterial color={FX_COLORS.debris} roughness={0.9} />
+    </instancedMesh>
+    <instancedMesh ref={dust} args={[undefined, undefined, 78]} frustumCulled={false}>
+      <icosahedronGeometry args={[1, 1]} />
+      <meshBasicMaterial color={FX_COLORS.dust} transparent opacity={0.18} depthWrite={false} />
+    </instancedMesh>
+  </group>;
 }
