@@ -11,7 +11,7 @@ import { evaluateCameraRail, evaluateForegroundRig, DESIGN_ASPECT, heroProjectio
 
 const root = process.cwd();
 const art = path.join(root, "art/games-hybrid");
-const delivery = path.join(root, "public/media/games-hybrid/v1");
+const delivery = process.env.GAMES_DELIVERY_ROOT || path.join(root, "public/media/games-hybrid/v1");
 const checkpoints = [0.1, 0.42, 0.72, 0.93];
 const beats = ["establishing", "closeup", "blast", "exit"];
 const required = [0, ...checkpoints, ...FIREBALLS.map((blast) => blast.hit), 1];
@@ -56,7 +56,7 @@ export function validateManifest(manifest) {
   }
   assert.equal(manifest.foreground.url, "/models/games/hand-grip.glb");
   assert.ok(manifest.foreground.bytes > 0 && manifest.foreground.bytes <= 3 * 1024 ** 2);
-  assert.ok(manifest.totalBytes <= 18 * 1024 ** 2, "Sequence exceeds 18 MiB");
+  assert.ok(manifest.totalBytes <= 8 * 1024 ** 2, "Sequence exceeds 8 MiB");
   assert.equal(manifest.totalBytes, manifest.samples.reduce((n, s) => n + s.bytes, 0));
 }
 
@@ -149,14 +149,8 @@ async function encode() {
     const name = `frame-${String(i).padStart(4, "0")}`;
     const url = `landscape/${name}.webp`;
     const p = camera.samples[i].p;
-    let srcFile = path.join(masterRoot, `${name}.png`);
-    const exists = await fs.stat(srcFile).then(() => true).catch(() => false);
-    if (!exists) {
-      if (p < 0.22) srcFile = path.join(masterRoot, "poster-landscape-0.png");
-      else if (p < 0.64) srcFile = path.join(masterRoot, "macro-0.42.png");
-      else if (p < 0.85) srcFile = path.join(masterRoot, "preview-0.72.png");
-      else srcFile = path.join(masterRoot, "preview-0.93.png");
-    }
+    const srcFile = path.join(masterRoot, `${name}.png`);
+    await fs.access(srcFile);
     await sharp(srcFile).removeAlpha().webp({ quality: 83, effort: 5 }).toFile(path.join(delivery, url));
     samples.push({ p, url, bytes: (await fs.stat(path.join(delivery, url))).size });
   }
@@ -191,6 +185,7 @@ async function verifyFiles(manifest) {
   manifest ??= JSON.parse(await fs.readFile(path.join(delivery, "manifest.json"), "utf8"));
   validateManifest(manifest);
   const movingHashes = new Set();
+  const contentHashes = [];
   for (const sample of manifest.samples) {
     const file = path.join(delivery, sample.url);
     assert.equal((await fs.stat(file)).size, sample.bytes, `Byte mismatch ${file}`);
@@ -198,21 +193,26 @@ async function verifyFiles(manifest) {
     assert.equal(metadata.width, manifest.width);
     assert.equal(metadata.height, manifest.height);
     assert.equal(metadata.hasAlpha, false);
-    recordMovingHash(sample.p, hash(await fs.readFile(file)), movingHashes);
+    const digest = hash(await fs.readFile(file));
+    contentHashes.push(digest);
+    recordMovingHash(sample.p, digest, movingHashes);
   }
   for (const orientation of ["landscape", "portrait"]) {
-    for (const url of manifest.posters[orientation]) {
+    for (const [index, url] of manifest.posters[orientation].entries()) {
       const file = path.join(delivery, url);
-      assert.ok((await fs.stat(file)).size <= 250 * 1024, "Poster exceeds 250 KiB");
+      assert.ok((await fs.stat(file)).size <= (index === 0 ? 90 : 120) * 1024, "Poster exceeds optimized byte budget");
       const metadata = await sharp(file).metadata();
       assert.equal(metadata.width, orientation === "landscape" ? 1912 : 780);
       assert.equal(metadata.height, orientation === "landscape" ? 800 : 1688);
+      contentHashes.push(hash(await fs.readFile(file)));
     }
   }
   const glb = await fs.readFile(path.join(root, "public", manifest.foreground.url));
   assert.equal(glb.toString("ascii", 0, 4), "glTF");
   assert.equal(glb.readUInt32LE(4), 2);
   assert.equal(glb.length, manifest.foreground.bytes);
+  contentHashes.push(hash(glb));
+  assert.equal(manifest.revision, `games-hybrid-${hash(manifest.calibration + contentHashes.join(":")).slice(0, 16)}`, "Delivery content does not match manifest revision");
   assert.equal(glb.readUInt32LE(8), glb.length);
   const jsonLength = glb.readUInt32LE(12);
   const gltf = JSON.parse(glb.toString("utf8", 20, 20 + jsonLength));
@@ -238,7 +238,7 @@ function selfTest() {
   validateManifest(fixture);
   assert.throws(() => validateManifest({ ...fixture, samples: [...samples].reverse() }));
   assert.throws(() => validateManifest({ ...fixture, samples: [{ ...samples[0], url: "../secret" }, ...samples.slice(1)] }));
-  assert.throws(() => validateManifest({ ...fixture, totalBytes: 19 * 1024 ** 2 }));
+  assert.throws(() => validateManifest({ ...fixture, totalBytes: 8 * 1024 ** 2 + 1 }), /Sequence exceeds 8 MiB/);
   assert.throws(() => validateManifest({ ...fixture, samples: samples.filter((s) => s.p !== 0.42) }));
   for (let i = 1; i < samples.length; i++) if (samples[i].p >= 0.64) assert.ok(samples[i].p - samples[i - 1].p <= 0.005001);
   const moving = new Set();

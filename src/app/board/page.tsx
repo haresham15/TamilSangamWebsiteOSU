@@ -23,18 +23,16 @@ import CountUp from "@/components/CountUp";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { SpotlightCard } from "@/components/ui/react-bits";
+import { PronounceableQuote } from "@/components/ui/PronounceableQuote";
 import { TechFiresideGateway } from "@/components/gateways/TechFiresideGateway";
+import { HeroKolamLoader } from "@/components/ui/HeroKolamLoader";
 import styles from "./board.module.css";
 
 const BoardHeroCanvas = dynamic(
   () => import("@/components/board/BoardHeroCanvas").then((m) => m.BoardHeroCanvas),
   {
     ssr: false,
-    loading: () => (
-      <div className="h-dvh bg-hero-espresso text-antique-gold grid place-items-center">
-        <Crown aria-label="Loading student leadership colonnade" />
-      </div>
-    ),
+    loading: () => <HeroKolamLoader route="/board" />,
   }
 );
 
@@ -270,8 +268,7 @@ export default function BoardPage() {
               <div className={`${styles.dossierCard} !bg-[#EFE6DA] !border-[#D4AF37]/30 !shadow-[inset_0_2px_10px_rgba(22,18,16,0.05),0_12px_36px_rgba(22,18,16,0.06)]`}>
                 {/* Dossier Header Bar with Quick Nav */}
                 <div className="flex items-center justify-between border-b border-hearth-espresso/15 pb-3 mb-4 select-none">
-                  <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest text-hearth-terracotta uppercase">
-                    <span className="w-2 h-2 rounded-full bg-hearth-terracotta animate-pulse inline-block" />
+                  <div className="text-[10px] font-mono tracking-widest text-hearth-terracotta uppercase">
                     <span>{locale === "ta" ? "நிர்வாக ஆவணம்" : "OFFICER DOSSIER"}</span>
                   </div>
                   <div className="flex items-center gap-1">
@@ -316,7 +313,7 @@ export default function BoardPage() {
                     {/* Identity & Role Meta */}
                     <div className="space-y-2 pt-1">
                       <div className="flex items-center justify-between gap-2 flex-wrap">
-                        <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#B85C38] bg-[#B85C38]/10 px-3 py-1 rounded-full">
+                        <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#B85C38]">
                           {hoveredMember.roleEn}
                         </span>
                         <span className="text-xs font-mono text-hearth-espresso/60">
@@ -368,9 +365,17 @@ export default function BoardPage() {
 
                     {/* Cultural Quote */}
                     {hoveredMember.quote && (
-                      <blockquote className="text-xs font-serif italic text-hearth-espresso/90 bg-[#F4ECE1]/60 border-l-2 border-hearth-terracotta px-3.5 py-2.5 rounded-r-md leading-relaxed">
-                        &ldquo;{hoveredMember.quote}&rdquo;
-                      </blockquote>
+                      <PronounceableQuote
+                        tamilText={hoveredMember.quote}
+                        label={`Cultural Quote: ${hoveredMember.quote}. Click to hear pronunciation.`}
+                        tone="light"
+                        badgePosition="inline"
+                        className="p-0.5 block"
+                      >
+                        <blockquote className="text-xs font-serif italic text-hearth-espresso/90 bg-[#F4ECE1]/60 border-l-2 border-hearth-terracotta px-3.5 py-2.5 rounded-r-md leading-relaxed">
+                          &ldquo;{hoveredMember.quote}&rdquo;
+                        </blockquote>
+                      </PronounceableQuote>
                     )}
 
                     {/* Direct Contact Actions */}
@@ -560,9 +565,17 @@ export default function BoardPage() {
 
                           {/* Quote */}
                           {member.quote && (
-                            <blockquote className="text-xs font-serif italic text-hearth-espresso/90 bg-[#F4ECE1]/60 border-l-2 border-hearth-terracotta px-3 py-2 rounded-r-md leading-relaxed">
-                              &ldquo;{member.quote}&rdquo;
-                            </blockquote>
+                            <PronounceableQuote
+                              tamilText={member.quote}
+                              label={`Cultural Quote: ${member.quote}. Click to hear pronunciation.`}
+                              tone="light"
+                              badgePosition="inline"
+                              className="p-0.5 block"
+                            >
+                              <blockquote className="text-xs font-serif italic text-hearth-espresso/90 bg-[#F4ECE1]/60 border-l-2 border-hearth-terracotta px-3 py-2 rounded-r-md leading-relaxed">
+                                &ldquo;{member.quote}&rdquo;
+                              </blockquote>
+                            </PronounceableQuote>
                           )}
 
                           {/* Contact Links */}

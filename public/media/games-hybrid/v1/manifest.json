@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": "games-hybrid-9e90de73624a94ff",
-  "calibration": "games-hybrid-8711113f4a97",
+  "revision": "games-hybrid-4f58ef6abe6ce549",
+  "calibration": "games-hybrid-3b0518ed4bef",
   "width": 1912,
   "height": 800,
   "contentAspect": 2.39,
@@ -14,747 +14,747 @@
     {
       "p": 0,
       "url": "landscape/frame-0000.webp",
-      "bytes": 52142
+      "bytes": 52212
     },
     {
       "p": 0.1,
       "url": "landscape/frame-0001.webp",
-      "bytes": 52102
+      "bytes": 52194
     },
     {
       "p": 0.2,
       "url": "landscape/frame-0002.webp",
-      "bytes": 52130
+      "bytes": 52242
     },
     {
       "p": 0.22,
       "url": "landscape/frame-0003.webp",
-      "bytes": 52104
+      "bytes": 52232
     },
     {
       "p": 0.24,
       "url": "landscape/frame-0004.webp",
-      "bytes": 52062
+      "bytes": 52270
     },
     {
       "p": 0.26,
       "url": "landscape/frame-0005.webp",
-      "bytes": 52004
+      "bytes": 52182
     },
     {
       "p": 0.28,
       "url": "landscape/frame-0006.webp",
-      "bytes": 51994
+      "bytes": 52232
     },
     {
       "p": 0.3,
       "url": "landscape/frame-0007.webp",
-      "bytes": 51998
+      "bytes": 52214
     },
     {
       "p": 0.32,
       "url": "landscape/frame-0008.webp",
-      "bytes": 47752
+      "bytes": 48232
     },
     {
       "p": 0.34,
       "url": "landscape/frame-0009.webp",
-      "bytes": 32444
+      "bytes": 32524
     },
     {
       "p": 0.36,
       "url": "landscape/frame-0010.webp",
-      "bytes": 19312
+      "bytes": 19996
     },
     {
       "p": 0.38,
       "url": "landscape/frame-0011.webp",
-      "bytes": 13666
+      "bytes": 13824
     },
     {
       "p": 0.4,
       "url": "landscape/frame-0012.webp",
-      "bytes": 11686
+      "bytes": 11822
     },
     {
       "p": 0.42,
       "url": "landscape/frame-0013.webp",
-      "bytes": 11064
+      "bytes": 11182
     },
     {
       "p": 0.44,
       "url": "landscape/frame-0014.webp",
-      "bytes": 11096
+      "bytes": 11160
     },
     {
       "p": 0.46,
       "url": "landscape/frame-0015.webp",
-      "bytes": 11076
+      "bytes": 11214
     },
     {
       "p": 0.48,
       "url": "landscape/frame-0016.webp",
-      "bytes": 11080
+      "bytes": 11134
     },
     {
       "p": 0.5,
       "url": "landscape/frame-0017.webp",
-      "bytes": 11120
+      "bytes": 11226
     },
     {
       "p": 0.52,
       "url": "landscape/frame-0018.webp",
-      "bytes": 11072
+      "bytes": 11152
     },
     {
       "p": 0.54,
       "url": "landscape/frame-0019.webp",
-      "bytes": 12964
+      "bytes": 13038
     },
     {
       "p": 0.545,
       "url": "landscape/frame-0020.webp",
-      "bytes": 14642
+      "bytes": 14678
     },
     {
       "p": 0.55,
       "url": "landscape/frame-0021.webp",
-      "bytes": 18472
+      "bytes": 18508
     },
     {
       "p": 0.555,
       "url": "landscape/frame-0022.webp",
-      "bytes": 26652
+      "bytes": 26818
     },
     {
       "p": 0.56,
       "url": "landscape/frame-0023.webp",
-      "bytes": 36402
+      "bytes": 36646
     },
     {
       "p": 0.565,
       "url": "landscape/frame-0024.webp",
-      "bytes": 46938
+      "bytes": 46370
     },
     {
       "p": 0.57,
       "url": "landscape/frame-0025.webp",
-      "bytes": 52924
+      "bytes": 52524
     },
     {
       "p": 0.575,
       "url": "landscape/frame-0026.webp",
-      "bytes": 52744
+      "bytes": 52862
     },
     {
       "p": 0.58,
       "url": "landscape/frame-0027.webp",
-      "bytes": 52730
+      "bytes": 52796
     },
     {
       "p": 0.585,
       "url": "landscape/frame-0028.webp",
-      "bytes": 52756
+      "bytes": 52616
     },
     {
       "p": 0.59,
       "url": "landscape/frame-0029.webp",
-      "bytes": 52844
+      "bytes": 52740
     },
     {
       "p": 0.595,
       "url": "landscape/frame-0030.webp",
-      "bytes": 52954
+      "bytes": 52940
     },
     {
       "p": 0.6,
       "url": "landscape/frame-0031.webp",
-      "bytes": 52894
+      "bytes": 53138
     },
     {
       "p": 0.605,
       "url": "landscape/frame-0032.webp",
-      "bytes": 52858
+      "bytes": 52932
     },
     {
       "p": 0.61,
       "url": "landscape/frame-0033.webp",
-      "bytes": 52898
+      "bytes": 53140
     },
     {
       "p": 0.615,
       "url": "landscape/frame-0034.webp",
-      "bytes": 52910
+      "bytes": 53066
     },
     {
       "p": 0.62,
       "url": "landscape/frame-0035.webp",
-      "bytes": 52698
+      "bytes": 53158
     },
     {
       "p": 0.625,
       "url": "landscape/frame-0036.webp",
-      "bytes": 52786
+      "bytes": 53278
     },
     {
       "p": 0.63,
       "url": "landscape/frame-0037.webp",
-      "bytes": 52798
+      "bytes": 53246
     },
     {
       "p": 0.635,
       "url": "landscape/frame-0038.webp",
-      "bytes": 52744
+      "bytes": 53170
     },
     {
       "p": 0.638,
       "url": "landscape/frame-0039.webp",
-      "bytes": 52654
+      "bytes": 53076
     },
     {
       "p": 0.64,
       "url": "landscape/frame-0040.webp",
-      "bytes": 53766
+      "bytes": 54410
     },
     {
       "p": 0.6405,
       "url": "landscape/frame-0041.webp",
-      "bytes": 53568
+      "bytes": 54380
     },
     {
       "p": 0.643,
       "url": "landscape/frame-0042.webp",
-      "bytes": 53538
+      "bytes": 54302
     },
     {
       "p": 0.6455,
       "url": "landscape/frame-0043.webp",
-      "bytes": 53720
+      "bytes": 54610
     },
     {
       "p": 0.648,
       "url": "landscape/frame-0044.webp",
-      "bytes": 53868
+      "bytes": 54374
     },
     {
       "p": 0.6505,
       "url": "landscape/frame-0045.webp",
-      "bytes": 53750
+      "bytes": 54398
     },
     {
       "p": 0.653,
       "url": "landscape/frame-0046.webp",
-      "bytes": 53756
+      "bytes": 54436
     },
     {
       "p": 0.6555,
       "url": "landscape/frame-0047.webp",
-      "bytes": 53954
+      "bytes": 54634
     },
     {
       "p": 0.657,
       "url": "landscape/frame-0048.webp",
-      "bytes": 54228
+      "bytes": 55210
     },
     {
       "p": 0.658,
       "url": "landscape/frame-0049.webp",
-      "bytes": 54070
+      "bytes": 55332
     },
     {
       "p": 0.6605,
       "url": "landscape/frame-0050.webp",
-      "bytes": 54608
+      "bytes": 55632
     },
     {
       "p": 0.663,
       "url": "landscape/frame-0051.webp",
-      "bytes": 54800
+      "bytes": 55820
     },
     {
       "p": 0.6655,
       "url": "landscape/frame-0052.webp",
-      "bytes": 54880
+      "bytes": 55964
     },
     {
       "p": 0.668,
       "url": "landscape/frame-0053.webp",
-      "bytes": 54916
+      "bytes": 55982
     },
     {
       "p": 0.6705,
       "url": "landscape/frame-0054.webp",
-      "bytes": 54816
+      "bytes": 55832
     },
     {
       "p": 0.673,
       "url": "landscape/frame-0055.webp",
-      "bytes": 55190
+      "bytes": 56320
     },
     {
       "p": 0.674,
       "url": "landscape/frame-0056.webp",
-      "bytes": 55454
+      "bytes": 56316
     },
     {
       "p": 0.6755,
       "url": "landscape/frame-0057.webp",
-      "bytes": 55786
+      "bytes": 56396
     },
     {
       "p": 0.678,
       "url": "landscape/frame-0058.webp",
-      "bytes": 56110
+      "bytes": 57482
     },
     {
       "p": 0.6805,
       "url": "landscape/frame-0059.webp",
-      "bytes": 56136
+      "bytes": 58114
     },
     {
       "p": 0.683,
       "url": "landscape/frame-0060.webp",
-      "bytes": 56376
+      "bytes": 57930
     },
     {
       "p": 0.6855,
       "url": "landscape/frame-0061.webp",
-      "bytes": 56392
+      "bytes": 58304
     },
     {
       "p": 0.688,
       "url": "landscape/frame-0062.webp",
-      "bytes": 56498
+      "bytes": 58438
     },
     {
       "p": 0.6905,
       "url": "landscape/frame-0063.webp",
-      "bytes": 56912
+      "bytes": 58520
     },
     {
       "p": 0.693,
       "url": "landscape/frame-0064.webp",
-      "bytes": 57100
+      "bytes": 59130
     },
     {
       "p": 0.6955,
       "url": "landscape/frame-0065.webp",
-      "bytes": 57348
+      "bytes": 59702
     },
     {
       "p": 0.698,
       "url": "landscape/frame-0066.webp",
-      "bytes": 57396
+      "bytes": 59684
     },
     {
       "p": 0.7005,
       "url": "landscape/frame-0067.webp",
-      "bytes": 57920
+      "bytes": 59972
     },
     {
       "p": 0.703,
       "url": "landscape/frame-0068.webp",
-      "bytes": 57578
+      "bytes": 59842
     },
     {
       "p": 0.7055,
       "url": "landscape/frame-0069.webp",
-      "bytes": 57850
+      "bytes": 59576
     },
     {
       "p": 0.708,
       "url": "landscape/frame-0070.webp",
-      "bytes": 57742
+      "bytes": 59710
     },
     {
       "p": 0.7105,
       "url": "landscape/frame-0071.webp",
-      "bytes": 57952
+      "bytes": 59868
     },
     {
       "p": 0.713,
       "url": "landscape/frame-0072.webp",
-      "bytes": 57918
+      "bytes": 59958
     },
     {
       "p": 0.7155,
       "url": "landscape/frame-0073.webp",
-      "bytes": 58090
+      "bytes": 60766
     },
     {
       "p": 0.718,
       "url": "landscape/frame-0074.webp",
-      "bytes": 58110
+      "bytes": 60768
     },
     {
       "p": 0.72,
       "url": "landscape/frame-0075.webp",
-      "bytes": 58172
+      "bytes": 60582
     },
     {
       "p": 0.7205,
       "url": "landscape/frame-0076.webp",
-      "bytes": 58068
+      "bytes": 60530
     },
     {
       "p": 0.723,
       "url": "landscape/frame-0077.webp",
-      "bytes": 57950
+      "bytes": 60902
     },
     {
       "p": 0.7255,
       "url": "landscape/frame-0078.webp",
-      "bytes": 57904
+      "bytes": 60394
     },
     {
       "p": 0.728,
       "url": "landscape/frame-0079.webp",
-      "bytes": 57878
+      "bytes": 60812
     },
     {
       "p": 0.7305,
       "url": "landscape/frame-0080.webp",
-      "bytes": 57894
+      "bytes": 60886
     },
     {
       "p": 0.733,
       "url": "landscape/frame-0081.webp",
-      "bytes": 57722
+      "bytes": 60912
     },
     {
       "p": 0.7355,
       "url": "landscape/frame-0082.webp",
-      "bytes": 57990
+      "bytes": 61544
     },
     {
       "p": 0.738,
       "url": "landscape/frame-0083.webp",
-      "bytes": 57892
+      "bytes": 62160
     },
     {
       "p": 0.7405,
       "url": "landscape/frame-0084.webp",
-      "bytes": 58004
+      "bytes": 61844
     },
     {
       "p": 0.743,
       "url": "landscape/frame-0085.webp",
-      "bytes": 58018
+      "bytes": 62048
     },
     {
       "p": 0.7455,
       "url": "landscape/frame-0086.webp",
-      "bytes": 58164
+      "bytes": 62402
     },
     {
       "p": 0.748,
       "url": "landscape/frame-0087.webp",
-      "bytes": 58224
+      "bytes": 62470
     },
     {
       "p": 0.7505,
       "url": "landscape/frame-0088.webp",
-      "bytes": 58062
+      "bytes": 62482
     },
     {
       "p": 0.753,
       "url": "landscape/frame-0089.webp",
-      "bytes": 57656
+      "bytes": 62182
     },
     {
       "p": 0.7555,
       "url": "landscape/frame-0090.webp",
-      "bytes": 57524
+      "bytes": 62280
     },
     {
       "p": 0.758,
       "url": "landscape/frame-0091.webp",
-      "bytes": 57348
+      "bytes": 62922
     },
     {
       "p": 0.7605,
       "url": "landscape/frame-0092.webp",
-      "bytes": 57380
+      "bytes": 62904
     },
     {
       "p": 0.763,
       "url": "landscape/frame-0093.webp",
-      "bytes": 57716
+      "bytes": 63834
     },
     {
       "p": 0.7655,
       "url": "landscape/frame-0094.webp",
-      "bytes": 57788
+      "bytes": 63128
     },
     {
       "p": 0.768,
       "url": "landscape/frame-0095.webp",
-      "bytes": 57684
+      "bytes": 63028
     },
     {
       "p": 0.7705,
       "url": "landscape/frame-0096.webp",
-      "bytes": 57604
+      "bytes": 62926
     },
     {
       "p": 0.773,
       "url": "landscape/frame-0097.webp",
-      "bytes": 57660
+      "bytes": 62576
     },
     {
       "p": 0.7755,
       "url": "landscape/frame-0098.webp",
-      "bytes": 57760
+      "bytes": 62900
     },
     {
       "p": 0.778,
       "url": "landscape/frame-0099.webp",
-      "bytes": 57640
+      "bytes": 62706
     },
     {
       "p": 0.7805,
       "url": "landscape/frame-0100.webp",
-      "bytes": 57554
+      "bytes": 62982
     },
     {
       "p": 0.783,
       "url": "landscape/frame-0101.webp",
-      "bytes": 57418
+      "bytes": 62718
     },
     {
       "p": 0.7855,
       "url": "landscape/frame-0102.webp",
-      "bytes": 57360
+      "bytes": 62688
     },
     {
       "p": 0.788,
       "url": "landscape/frame-0103.webp",
-      "bytes": 57408
+      "bytes": 62802
     },
     {
       "p": 0.7905,
       "url": "landscape/frame-0104.webp",
-      "bytes": 57514
+      "bytes": 62368
     },
     {
       "p": 0.793,
       "url": "landscape/frame-0105.webp",
-      "bytes": 57234
+      "bytes": 62200
     },
     {
       "p": 0.7955,
       "url": "landscape/frame-0106.webp",
-      "bytes": 57276
+      "bytes": 62040
     },
     {
       "p": 0.798,
       "url": "landscape/frame-0107.webp",
-      "bytes": 57018
+      "bytes": 61328
     },
     {
       "p": 0.8,
       "url": "landscape/frame-0108.webp",
-      "bytes": 56764
+      "bytes": 61454
     },
     {
       "p": 0.805,
       "url": "landscape/frame-0109.webp",
-      "bytes": 56900
+      "bytes": 61756
     },
     {
       "p": 0.81,
       "url": "landscape/frame-0110.webp",
-      "bytes": 56718
+      "bytes": 61854
     },
     {
       "p": 0.815,
       "url": "landscape/frame-0111.webp",
-      "bytes": 56518
+      "bytes": 60784
     },
     {
       "p": 0.82,
       "url": "landscape/frame-0112.webp",
-      "bytes": 56378
+      "bytes": 60750
     },
     {
       "p": 0.825,
       "url": "landscape/frame-0113.webp",
-      "bytes": 56634
+      "bytes": 61178
     },
     {
       "p": 0.83,
       "url": "landscape/frame-0114.webp",
-      "bytes": 56610
+      "bytes": 60790
     },
     {
       "p": 0.835,
       "url": "landscape/frame-0115.webp",
-      "bytes": 56478
+      "bytes": 60186
     },
     {
       "p": 0.84,
       "url": "landscape/frame-0116.webp",
-      "bytes": 56452
+      "bytes": 60082
     },
     {
       "p": 0.845,
       "url": "landscape/frame-0117.webp",
-      "bytes": 56078
+      "bytes": 60008
     },
     {
       "p": 0.85,
       "url": "landscape/frame-0118.webp",
-      "bytes": 55962
+      "bytes": 59778
     },
     {
       "p": 0.855,
       "url": "landscape/frame-0119.webp",
-      "bytes": 56288
+      "bytes": 59724
     },
     {
       "p": 0.86,
       "url": "landscape/frame-0120.webp",
-      "bytes": 56258
+      "bytes": 59526
     },
     {
       "p": 0.865,
       "url": "landscape/frame-0121.webp",
-      "bytes": 56074
+      "bytes": 59352
     },
     {
       "p": 0.87,
       "url": "landscape/frame-0122.webp",
-      "bytes": 55896
+      "bytes": 59162
     },
     {
       "p": 0.875,
       "url": "landscape/frame-0123.webp",
-      "bytes": 56014
+      "bytes": 59318
     },
     {
       "p": 0.88,
       "url": "landscape/frame-0124.webp",
-      "bytes": 56314
+      "bytes": 58744
     },
     {
       "p": 0.885,
       "url": "landscape/frame-0125.webp",
-      "bytes": 55418
+      "bytes": 58696
     },
     {
       "p": 0.89,
       "url": "landscape/frame-0126.webp",
-      "bytes": 55560
+      "bytes": 58612
     },
     {
       "p": 0.895,
       "url": "landscape/frame-0127.webp",
-      "bytes": 55246
+      "bytes": 58320
     },
     {
       "p": 0.9,
       "url": "landscape/frame-0128.webp",
-      "bytes": 55014
+      "bytes": 57856
     },
     {
       "p": 0.905,
       "url": "landscape/frame-0129.webp",
-      "bytes": 54804
+      "bytes": 57566
     },
     {
       "p": 0.91,
       "url": "landscape/frame-0130.webp",
-      "bytes": 54474
+      "bytes": 56888
     },
     {
       "p": 0.915,
       "url": "landscape/frame-0131.webp",
-      "bytes": 54640
+      "bytes": 57078
     },
     {
       "p": 0.92,
       "url": "landscape/frame-0132.webp",
-      "bytes": 54560
+      "bytes": 57294
     },
     {
       "p": 0.925,
       "url": "landscape/frame-0133.webp",
-      "bytes": 54604
+      "bytes": 56756
     },
     {
       "p": 0.93,
       "url": "landscape/frame-0134.webp",
-      "bytes": 54452
+      "bytes": 56730
     },
     {
       "p": 0.935,
       "url": "landscape/frame-0135.webp",
-      "bytes": 55012
+      "bytes": 57322
     },
     {
       "p": 0.94,
       "url": "landscape/frame-0136.webp",
-      "bytes": 54760
+      "bytes": 56892
     },
     {
       "p": 0.945,
       "url": "landscape/frame-0137.webp",
-      "bytes": 54194
+      "bytes": 56162
     },
     {
       "p": 0.95,
       "url": "landscape/frame-0138.webp",
-      "bytes": 54406
+      "bytes": 56350
     },
     {
       "p": 0.955,
       "url": "landscape/frame-0139.webp",
-      "bytes": 54420
+      "bytes": 56234
     },
     {
       "p": 0.96,
       "url": "landscape/frame-0140.webp",
-      "bytes": 54264
+      "bytes": 56220
     },
     {
       "p": 0.965,
       "url": "landscape/frame-0141.webp",
-      "bytes": 54458
+      "bytes": 56204
     },
     {
       "p": 0.97,
       "url": "landscape/frame-0142.webp",
-      "bytes": 54680
+      "bytes": 56356
     },
     {
       "p": 0.975,
       "url": "landscape/frame-0143.webp",
-      "bytes": 54414
+      "bytes": 56048
     },
     {
       "p": 0.98,
       "url": "landscape/frame-0144.webp",
-      "bytes": 54228
+      "bytes": 55526
     },
     {
       "p": 0.985,
       "url": "landscape/frame-0145.webp",
-      "bytes": 54042
+      "bytes": 55414
     },
     {
       "p": 0.99,
       "url": "landscape/frame-0146.webp",
-      "bytes": 53452
+      "bytes": 54696
     },
     {
       "p": 0.995,
       "url": "landscape/frame-0147.webp",
-      "bytes": 54042
+      "bytes": 55438
     },
     {
       "p": 1,
       "url": "landscape/frame-0148.webp",
-      "bytes": 54546
+      "bytes": 55794
     }
   ],
   "posters": {
@@ -775,6 +775,6 @@
     "url": "/models/games/hand-grip.glb",
     "bytes": 977736
   },
-  "totalBytes": 7680772,
+  "totalBytes": 7999474,
   "productionStatus": "draft-art-review-required"
 }

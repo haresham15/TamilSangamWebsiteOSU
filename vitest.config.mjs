@@ -4,6 +4,7 @@ import path from "node:path";
 export default defineConfig({
   test: {
     include: [
+      "src/lib/**/*.test.ts",
       "src/lib/calendar/**/*.test.ts",
       "src/lib/soundEngine.test.ts",
       "src/lib/cinemaCameraDamper.test.ts",
@@ -15,6 +16,7 @@ export default defineConfig({
       "src/components/suggestions/**/*.test.ts",
       "src/components/join/**/*.test.ts",
       "src/components/games/**/*.test.ts",
+      "src/components/navigation/**/*.test.ts",
     ],
     environment: "node",
   },

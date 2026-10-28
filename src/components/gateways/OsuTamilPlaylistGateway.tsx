@@ -13,14 +13,6 @@ export function OsuTamilPlaylistGateway({
 }: OsuTamilPlaylistGatewayProps) {
   const isDark = variant === "dark";
 
-  const ERA_PILLS = [
-    { label: "80s & 90s Ilaiyaraaja Classics", ta: "இளையராஜா சகாப்தம்" },
-    { label: "A.R. Rahman Soundscape", ta: "ஏ.ஆர். ரஹ்மான் இசைப்புயல்" },
-    { label: "2000s Harris & Yuvan Nostalgia", ta: "ஹாரிஸ் & யுவன் நினைவுகள்" },
-    { label: "Anirudh Hype & Modern Kuthu", ta: "அனிருத் & குத்து பாடல்கள்" },
-    { label: "Chennai Indie & Diaspora Hip-Hop", ta: "சுயாதீனத் தமிழ் இசை" },
-  ];
-
   return (
     <section
       aria-labelledby="playlist-gateway-heading"
@@ -37,15 +29,15 @@ export function OsuTamilPlaylistGateway({
       />
 
       <div className="relative max-w-4xl mx-auto space-y-8">
-        {/* Top Badges Strip */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-5 border-current/10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium tracking-wide uppercase bg-[#E5A93C]/15 text-[#B85C38] dark:bg-[#E5A93C]/20 dark:text-[#E5A93C]">
-            <Radio className="w-3.5 h-3.5 animate-pulse" aria-hidden="true" />
-            <span>OPEN GATEWAY · COMMUNITY CURATED</span>
+        {/* Editorial Header Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-4 border-current/10 text-xs font-mono tracking-wider uppercase">
+          <div className={`flex items-center gap-2 ${isDark ? "text-[#E5A93C]" : "text-[#B85C38]"}`}>
+            <Radio className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Community Curated</span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-stone-500 uppercase">
-            <Disc3 className="w-4 h-4 text-[#B85C38]" aria-hidden="true" />
+          <div className="flex items-center gap-2 text-stone-500">
+            <Disc3 className="w-3.5 h-3.5 text-[#B85C38]" aria-hidden="true" />
             <span>Olentangy FM · Only Tamil Tracks</span>
           </div>
         </div>
@@ -68,26 +60,10 @@ export function OsuTamilPlaylistGateway({
               We&apos;re building a massive, multi-year OSU collaborative playlist—strictly Tamil tracks added by Buckeyes across every cohort, from 80s Ilaiyaraaja &amp; A.R. Rahman to Anirudh and underground Chennai indie.
             </p>
 
-            {/* Era Tags */}
-            <div className="pt-2">
-              <span className="block text-xs font-mono font-semibold uppercase tracking-wider text-stone-500 mb-2">
-                Included Soundscapes &amp; Cohort Eras:
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {ERA_PILLS.map((pill) => (
-                  <span
-                    key={pill.label}
-                    className={`text-xs px-2.5 py-1 rounded-md border font-sans ${
-                      isDark
-                        ? "bg-[#211E1C] border-white/10 text-stone-300"
-                        : "bg-white border-[#E6DDCE] text-[#57524C]"
-                    }`}
-                  >
-                    {pill.label}
-                  </span>
-                ))}
-              </div>
-            </div>
+            {/* Soundscapes Line */}
+            <p className="text-xs font-mono tracking-wide text-stone-500 pt-1">
+              Soundscapes: 80s/90s Raja &amp; Rahman · 2000s Yuvan/Harris · Anirudh / Modern Kuthu · Chennai Indie &amp; Street Folk
+            </p>
           </div>
 
           {/* Action Ledger Box */}

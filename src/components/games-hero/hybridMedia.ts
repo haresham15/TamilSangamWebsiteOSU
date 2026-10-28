@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { gamesDiagnosticsEnabled } from "./compositor/GamesRenderDiagnostics";
 
 export const HYBRID_MANIFEST_URL = "/media/games-hybrid/v1/manifest.json";
 export const HYBRID_POSTERS = ["establishing", "closeup", "blast", "exit"] as const;
@@ -71,18 +72,22 @@ export function nearestSample(samples: HybridSample[], progress: number): number
 }
 
 export interface DecodedPlate { index: number; sample: HybridSample; image: ImageBitmap }
-type Decode = (sample: HybridSample, signal: AbortSignal) => Promise<ImageBitmap>;
+type DecodeTiming = (fetchMs: number, decodeMs: number) => void;
+type Decode = (sample: HybridSample, signal: AbortSignal, timing?: DecodeTiming) => Promise<ImageBitmap>;
 
-export async function decodePlate(sample: HybridSample, signal: AbortSignal): Promise<ImageBitmap> {
+export async function decodePlate(sample: HybridSample, signal: AbortSignal, timing?: DecodeTiming): Promise<ImageBitmap> {
+  const started = timing ? performance.now() : 0;
   const response = await fetch(mediaUrl(sample.url), { signal });
   if (!response.ok) throw new Error(`Plate HTTP ${response.status}`);
   const blob = await response.blob();
   if (blob.size !== sample.bytes) throw new Error("Plate byte mismatch");
+  const fetched = timing ? performance.now() : 0;
   const image = await createImageBitmap(blob, { imageOrientation: "flipY", premultiplyAlpha: "none", colorSpaceConversion: "none" });
   if (signal.aborted || image.width !== 1912 || image.height !== 800) {
     image.close();
     throw new Error("Plate decode cancelled or incompatible");
   }
+  timing?.(fetched - started, performance.now() - fetched);
   return image;
 }
 
@@ -92,8 +97,12 @@ export class HybridFrameCache {
   private pending = new Map<number, AbortController>();
   private attempts = new Map<number, number>();
   private wanted = -1;
+  private requestedProgress = 0;
+  private exact = false;
   private displayed = -1;
   private direction = 1;
+  private directionChanges = 0;
+  private lastLoad: { index: number; totalMs: number; fetchMs: number | null; decodeMs: number | null } | null = null;
   private active = true;
   private disposed = false;
   private failed = false;
@@ -110,24 +119,35 @@ export class HybridFrameCache {
     this.decode = decode;
   }
 
-  request(progress: number) {
+  request(progress: number, exact = false) {
     if (this.disposed || this.failed) return;
+    const requestedProgress = Math.max(0, Math.min(1, progress));
+    // Dense, nonuniform samples can advance several indices during ordinary scrolling.
+    let reprioritize = exact || Math.abs(requestedProgress - this.requestedProgress) > 0.08;
+    this.requestedProgress = requestedProgress;
+    this.exact = exact;
     const index = nearestSample(this.samples, progress);
     if (index !== this.wanted) {
-      this.direction = index < this.wanted ? -1 : 1;
+      const direction = index < this.wanted ? -1 : 1;
+      if (gamesDiagnosticsEnabled && this.wanted >= 0 && direction !== this.direction) this.directionChanges++;
+      reprioritize ||= this.wanted < 0 || direction !== this.direction;
+      this.direction = direction;
       this.wanted = index;
       this.attempts.delete(index);
-      // Obsolete callbacks cannot occupy the priority slots during a fast jump.
-      for (const [key, request] of this.pending) {
-        if (Math.abs(key - index) > 3) {
-          this.pending.delete(key);
-          this.attempts.delete(key);
-          request.abort();
+      // Ordinary scrolling lets bounded decodes finish; only jumps/reversals discard obsolete work.
+      if (reprioritize) {
+        const relevant = [index, index + direction, index + 2 * direction, index - direction];
+        for (const [key, request] of this.pending) {
+          if (!relevant.includes(key)) {
+            this.pending.delete(key);
+            this.attempts.delete(key);
+            request.abort();
+          }
         }
       }
     }
     this.publish();
-    this.pump();
+    this.pump(reprioritize);
   }
 
   setActive(active: boolean) {
@@ -135,17 +155,30 @@ export class HybridFrameCache {
     if (!active) {
       this.pending.forEach((request, index) => { this.attempts.delete(index); request.abort(); });
       this.pending.clear();
-    } else this.pump();
+    } else { this.publish(); this.pump(this.exact); }
   }
 
   private publish() {
-    const image = this.cache.get(this.wanted);
-    if (!this.active || !image || this.displayed === this.wanted || this.disposed) return;
-    this.displayed = this.wanted;
-    this.show({ index: this.wanted, sample: this.samples[this.wanted], image });
+    if (!this.active || this.disposed || this.failed) return;
+    let index = this.wanted;
+    if (!this.exact && this.cache.size) {
+      const available = [...this.cache.keys()]
+        .filter(key => this.direction > 0 ? key <= this.wanted : key >= this.wanted)
+        .sort((a, b) => a - b);
+      if (!available.length) return;
+      index = available[0];
+      for (const candidate of available.slice(1)) {
+        if (this.requestedProgress <= (this.samples[index].p + this.samples[candidate].p) / 2) break;
+        index = candidate;
+      }
+    }
+    const image = this.cache.get(index);
+    if (!image || this.displayed === index) return;
+    this.displayed = index;
+    this.show({ index, sample: this.samples[index], image });
   }
 
-  private pump() {
+  private pump(reprioritize = false) {
     if (!this.active || this.disposed || this.failed || this.wanted < 0) return;
     if (!this.cache.has(this.wanted) && !this.pending.has(this.wanted) && (this.attempts.get(this.wanted) ?? 0) >= 2) {
       this.failed = true;
@@ -153,7 +186,7 @@ export class HybridFrameCache {
       return;
     }
     const queue = [this.wanted, this.wanted + this.direction, this.wanted + 2 * this.direction, this.wanted - this.direction];
-    if (!this.cache.has(this.wanted) && !this.pending.has(this.wanted) && this.pending.size >= 4) {
+    if (reprioritize && !this.cache.has(this.wanted) && !this.pending.has(this.wanted) && this.pending.size >= 4) {
       const victim = [...this.pending.keys()].sort((a, b) => Math.abs(b - this.wanted) - Math.abs(a - this.wanted))[0];
       const obsolete = this.pending.get(victim)!;
       this.pending.delete(victim);
@@ -175,9 +208,11 @@ export class HybridFrameCache {
     let deadline: ReturnType<typeof setTimeout> | undefined;
     let timedOut = false;
     let decoded: ImageBitmap | undefined;
+    const started = gamesDiagnosticsEnabled ? performance.now() : 0;
+    let phases: [number, number] | null = null;
     try {
       const image = await Promise.race([
-        this.decode(this.samples[index], controller.signal).then(image => {
+        this.decode(this.samples[index], controller.signal, gamesDiagnosticsEnabled ? (fetchMs, decodeMs) => { phases = [fetchMs, decodeMs]; } : undefined).then(image => {
           if (controller.signal.aborted) { image.close(); throw new Error("Obsolete plate"); }
           decoded = image;
           return image;
@@ -188,6 +223,7 @@ export class HybridFrameCache {
         }),
       ]);
       if (this.disposed || !this.active || controller.signal.aborted || this.pending.get(index) !== controller) return;
+      if (gamesDiagnosticsEnabled) this.lastLoad = { index, totalMs: performance.now() - started, fetchMs: phases?.[0] ?? null, decodeMs: phases?.[1] ?? null };
       this.attempts.delete(index);
       this.cache.set(index, image);
       decoded = undefined;
@@ -222,7 +258,9 @@ export class HybridFrameCache {
     this.cache.clear();
   }
 
-  get stats() { return { decoded: this.cache.size, pending: this.pending.size, displayed: this.displayed, wanted: this.wanted }; }
+  get stats() { return { decoded: this.cache.size, pending: this.pending.size, displayed: this.displayed, wanted: this.wanted,
+    ...(gamesDiagnosticsEnabled ? { requestedProgress: this.requestedProgress, direction: this.direction, directionChanges: this.directionChanges,
+      decodedPixelBytes: [...this.cache.values()].reduce((sum, image) => sum + image.width * image.height * 4, 0), lastLoad: this.lastLoad } : {}) }; }
 }
 
 export function disposeForeground(root: THREE.Group) {

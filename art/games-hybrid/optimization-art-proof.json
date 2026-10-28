@@ -1,0 +1,101 @@
+{
+  "status": "installed-asset-verification-passed",
+  "date": "2026-10-27",
+  "installedDate": "2026-10-28",
+  "baseline": {
+    "revision": "games-hybrid-f410c08628fed149",
+    "calibration": "games-hybrid-8711113f4a97",
+    "directory": "%TEMP%/games-hybrid-optimization-art-baseline",
+    "sha256File": "sha256.json",
+    "verifiedFiles": 179
+  },
+  "renderedSourceSha256": {
+    "scripts/render-games-hybrid.py": "edf4aa4feaab7eed8e500a3d006a47895285745666f462a3103489650c1fe8b0",
+    "scripts/games-hybrid-assets.mjs": "a3dac7a147bfa0d147ddd393668425f1e1da7d89e67362ee082a62107669384d",
+    "art/games-hybrid/camera-samples.json": "6c2f554d47dcf0ebac415c7999d73bcedf041489cba7fbef3fb79ae9360f1f7f",
+    "public/models/games/hand-grip.glb": "b0a41d916bebced9d4c1231e9aa83eb2ac3eafcdcdfb9318047aa35dd85028d1"
+  },
+  "deliveryMetadataSha256": {
+    "art/games-hybrid/camera-samples.json": "f6dfb8d3d7ddaa46ef5c7cdbc25c3568f97a533cce4a61dee51ddb063f004559",
+    "art/games-hybrid/poster-eyewear.json": "7d33b9fce98ea6843f3744efdf09fc3f97e030bd189150325c019233d2b2efc8"
+  },
+  "metadataParity": {
+    "renderedCalibration": "games-hybrid-8711113f4a97",
+    "deliveredCalibration": "games-hybrid-3b0518ed4bef",
+    "reason": "Authorized live foreground-blur correction changes the gamesRail source fingerprint. Blender does not consume foregroundBlur.",
+    "proof": "Deep equality passed after removing only revision/calibration/source-hash metadata and foregroundBlur. All camera/background DOF/bokeh, foreground transforms/opacity, samples, impacts, color and dimensions remain identical. Exact exported eyewear positions and indices also match.",
+    "foregroundBlurChanges": { "landscapeSamples": 34, "portraitSamples": 1 },
+    "renderedMetadataPreservedAt": "%TEMP%/games-hybrid-optimization-final/rendered-camera-samples.json"
+  },
+  "protected": {
+    "sampleCount": 149,
+    "cameraPolicy": "locked",
+    "impactProgress": [0.640, 0.657, 0.674],
+    "handBytes": 977736,
+    "handGeometryAndMaps": "unchanged",
+    "sourceAssets": "existing original and licensed assets only; source manifest unchanged",
+    "sunDirection": [12, 24, 14],
+    "sunEnergy": 2.5,
+    "worldStrength": 0.25
+  },
+  "correctedPreviewDirectory": "%TEMP%/games-hybrid-optimization-preview-final",
+  "correctedPreviewProgress": [0.6, 0.6905, 0.93],
+  "previewApproval": "Root visual review approved corrected trails, retained early fire, late cooling and small static details before bulk rendering.",
+  "masterDirectory": "%TEMP%/games-hybrid-optimization-final",
+  "masterReuse": "Three exact approved preview PNGs reused as frame masters with SHA256 proof in optimization-reused-previews.json; all other frames and eight posters rendered from the same source.",
+  "peakAreaCheck": {
+    "progress": 0.6905,
+    "baselineFrameIndex": 63,
+    "roi": { "x": 550, "y": 300, "width": 730, "height": 280 },
+    "warmPredicate": "R > 180 && G > 90 && R > 1.15 * B, display-referred 8-bit PNG RGB",
+    "warmPixels": { "baseline": 101308, "candidate": 99404 },
+    "creamPredicate": "R > 210 && G > 190 && B > 170",
+    "creamPixels": { "baseline": 19443, "candidate": 14013 },
+    "limitation": "Heuristic baseline comparison only; not perceptual impact, registered lens occupancy, lawful-reference parity or photographic approval."
+  },
+  "checksPassed": [
+    "all baseline snapshot hashes",
+    "Blender five fixed-camera landmark reprojections",
+    "trail endpoints match actual existing SUV contacts; finite sampled coordinates",
+    "unchanged impact schedule and 149 samples",
+    "asset self-test and existing f410 byte/dimension/content-revision verification",
+    "frame parity and seven-viewport lens registration",
+    "node --check scripts/games-hybrid-assets.mjs",
+    "npx eslint --no-ignore scripts/games-hybrid-assets.mjs"
+  ],
+  "deliveryInstalled": true,
+  "delivery": {
+    "revision": "games-hybrid-4f58ef6abe6ce549",
+    "calibration": "games-hybrid-3b0518ed4bef",
+    "sequenceBytes": 7999474,
+    "sequenceMiB": 7.62889289855957,
+    "sampleCount": 149,
+    "uniqueMovingHashes": 126,
+    "posterCount": 8,
+    "maximumPosterBytes": 67878,
+    "handBytes": 977736,
+    "sha256Inventory": "optimization-delivery-sha256.json",
+    "inventoryFiles": 158,
+    "rollbackDirectory": "%TEMP%/games-hybrid-installed-rollback-f410",
+    "installation": "Verified staging directory installed as a matching directory pair while all Games browser readers were closed. Previous complete directory preserved; independent public verify passed after installation.",
+    "checks": ["strict missing-master ENOENT probe", "encode actual-file verification", "independent staged manifest verification", "public content-revision, dimensions, hashes and byte-budget verification"]
+  },
+  "renderMeasurements": {
+    "engine": "Blender 4.5.3 LTS EEVEE offline GPU",
+    "samples": 64,
+    "newFrameRenders": 146,
+    "reusedApprovedPreviewRenders": 3,
+    "frameRenderSecondsIncludingReusedPreviews": 611.63,
+    "medianFrameSeconds": 3.77,
+    "maximumFrameSeconds": 36.04,
+    "posterRenderSeconds": 27.48,
+    "benchmark": "optimization-render-benchmark.jsonl",
+    "reusedPreviewTimes": "%TEMP%/games-hybrid-optimization-preview-final/render-benchmark.jsonl",
+    "limitation": "Measured offline render wall durations, not browser FPS or guaranteed future render rates. Exploratory and rejected preview renders are excluded."
+  },
+  "limitations": [
+    "Original deterministic procedural volume shading, not baked gas simulation.",
+    "Hand anatomy/contact and reference-based color gates require human review.",
+    "No new reference imagery, public film assets, paid services, dependencies or deployment."
+  ]
+}

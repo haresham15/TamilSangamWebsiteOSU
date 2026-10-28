@@ -1,0 +1,23 @@
+[
+    {
+        "p":  0.6,
+        "from":  "C:\\Users\\hares\\AppData\\Local\\Temp\\games-hybrid-optimization-preview-final\\preview-0.60.png",
+        "sha256":  "6fe6a98c0a311d5976bf6e906445cabb044b023ab6fbfa4b959d1632c1234f03",
+        "name":  "frame-0031.png",
+        "reason":  "Exact same approved source, calibration, 64 samples, 1912x800, background-only"
+    },
+    {
+        "p":  0.6905,
+        "from":  "C:\\Users\\hares\\AppData\\Local\\Temp\\games-hybrid-optimization-preview-final\\preview-0.69.png",
+        "sha256":  "a499e50fef2496d3407e2ea95f2fc92a6dfec0948ede47330db2488cb6ee8fe1",
+        "name":  "frame-0063.png",
+        "reason":  "Exact same approved source, calibration, 64 samples, 1912x800, background-only"
+    },
+    {
+        "p":  0.93,
+        "from":  "C:\\Users\\hares\\AppData\\Local\\Temp\\games-hybrid-optimization-preview-final\\preview-0.93.png",
+        "sha256":  "8d28deec3f58a865defc7dcd159b5abc58da8ac7e1462c223788e5569f99eb52",
+        "name":  "frame-0134.png",
+        "reason":  "Exact same approved source, calibration, 64 samples, 1912x800, background-only"
+    }
+]

@@ -476,6 +476,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
             <Link href="/gallery" className="hover:text-[#E5A93C] transition-colors">{t("nav.gallery")}</Link>
             <Link href="/guide" className="hover:text-[#E5A93C] transition-colors">{locale === "ta" ? "வழிகாட்டி & கேள்வி-பதில்" : "Guide & FAQ"}</Link>
             <Link href="/suggestions" className="hover:text-[#E5A93C] transition-colors">{locale === "ta" ? "கருத்துகள்" : "Ideas"}</Link>
+            <Link href="/games" className="hover:text-[#E5A93C] transition-colors inline-flex items-center gap-1.5">
+              <span>{locale === "ta" ? "விளையாட்டு" : "Games"}</span>
+              <span className="font-mono text-[8.5px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full bg-[#E5A93C]/20 text-[#E5A93C] border border-[#E5A93C]/40">
+                {locale === "ta" ? "புதிது" : "NEW"}
+              </span>
+            </Link>
             <Link href="/join" className="hover:text-[#E5A93C] font-semibold text-[#E5A93C] transition-colors">{t("nav.join")}</Link>
             <a 
               href={`mailto:${SITE_CONFIG.contactEmail}`}

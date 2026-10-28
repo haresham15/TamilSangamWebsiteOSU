@@ -14,26 +14,98 @@ import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { ThirukkuralExplorer } from "@/components/gateways/ThirukkuralExplorer";
 import { AramPhilanthropyGateway } from "@/components/gateways/AramPhilanthropyGateway";
+import { PronounceableQuote } from "@/components/ui/PronounceableQuote";
 
 export default function AboutPage() {
   const { locale } = useLocale();
+  const quoteContainerRef = useRef<HTMLDivElement>(null);
+  const tagRef = useRef<HTMLSpanElement>(null);
   const quoteRef = useRef<HTMLQuoteElement>(null);
+  const tamilRef = useRef<HTMLDivElement>(null);
   const watermarkRef = useRef<HTMLSpanElement>(null);
   const reduced = useReducedMotion();
+
   useEffect(() => {
-    if (reduced || !quoteRef.current) return;
+    if (reduced || !quoteRef.current || !quoteContainerRef.current) return;
     gsap.registerPlugin(ScrollTrigger, SplitText);
+
     const split = new SplitText(quoteRef.current, { type: "words" });
+
     const ctx = gsap.context(() => {
-      gsap.fromTo(split.words, { opacity: 0.18, filter: "blur(4px)" }, {
-        opacity: 1, filter: "blur(0px)", stagger: 0.08,
-        scrollTrigger: { trigger: quoteRef.current, start: "top 85%", end: "center center", scrub: true, invalidateOnRefresh: true },
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: quoteContainerRef.current,
+          start: "top 82%",
+          end: "center 48%",
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
       });
-      gsap.fromTo(watermarkRef.current, { xPercent: -8 }, { xPercent: 8,
-        scrollTrigger: { trigger: quoteRef.current, start: "top bottom", end: "bottom top", scrub: true, invalidateOnRefresh: true },
+
+      // 1. Tagline badge reveal
+      if (tagRef.current) {
+        tl.fromTo(
+          tagRef.current,
+          { opacity: 0, y: -16 },
+          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
+          0
+        );
+      }
+
+      // 2. Tamil script slide-up + unblur (The Thirukkural/Purananuru classical verse)
+      if (tamilRef.current) {
+        tl.fromTo(
+          tamilRef.current,
+          { opacity: 0, y: 28, filter: "blur(8px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power2.out" },
+          0.05
+        );
+      }
+
+      // 3. English translation words cascade with subtle blur & lift
+      if (split.words && split.words.length > 0) {
+        tl.fromTo(
+          split.words,
+          { opacity: 0.12, filter: "blur(4px)", y: 12 },
+          { opacity: 1, filter: "blur(0px)", y: 0, stagger: 0.02, duration: 0.6, ease: "power1.out" },
+          0.15
+        );
+      }
+
+      // 4. Subtle watermark horizontal parallax
+      if (watermarkRef.current) {
+        gsap.fromTo(
+          watermarkRef.current,
+          { xPercent: -12 },
+          {
+            xPercent: 12,
+            ease: "none",
+            scrollTrigger: {
+              trigger: quoteContainerRef.current,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+      }
+    }, quoteContainerRef);
+
+    if (typeof document !== "undefined" && document.fonts) {
+      document.fonts.ready.then(() => {
+        ScrollTrigger.refresh();
       });
-    });
-    return () => { ctx.revert(); split.revert(); };
+    }
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 250);
+
+    return () => {
+      clearTimeout(timer);
+      ctx.revert();
+      split.revert();
+    };
   }, [reduced, locale]);
 
   const timelineMilestones = [
@@ -137,17 +209,43 @@ export default function AboutPage() {
           />
 
           {/* The Hero Quote: Naked Architectural Monument with Warm Amber Halo */}
-          <div className="relative my-24 sm:my-36 text-center space-y-8 max-w-4xl mx-auto py-12 px-6 rounded-2xl bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08),rgba(200,90,50,0.03)_50%,transparent_75%)]">
-            <span className="font-sans text-xs uppercase tracking-widest text-[#B85C38] font-semibold block">
+          <div
+            ref={quoteContainerRef}
+            className="relative my-24 sm:my-36 text-center space-y-8 max-w-4xl mx-auto py-12 px-6 rounded-2xl bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08),rgba(200,90,50,0.03)_50%,transparent_75%)]"
+          >
+            <span
+              ref={tagRef}
+              className="font-sans text-xs uppercase tracking-widest text-[#B85C38] font-semibold block will-change-[transform,opacity]"
+            >
               புறநானூறு 192 · கணியன் பூங்குன்றனார்
             </span>
-            <span ref={watermarkRef} aria-hidden="true" lang="ta" className="pointer-events-none absolute inset-x-0 top-1/3 font-tamil text-8xl text-[#B85C38]/[0.035] whitespace-nowrap tracking-normal">யாதும் ஊரே யாவரும் கேளிர்</span>
-            <blockquote ref={quoteRef} className="text-3xl sm:text-5xl lg:text-6xl font-serif font-light text-[#2A2825] leading-snug tracking-tight">
+            <span
+              ref={watermarkRef}
+              aria-hidden="true"
+              lang="ta"
+              className="pointer-events-none absolute inset-x-0 top-1/3 font-tamil text-8xl text-[#B85C38]/[0.035] whitespace-nowrap tracking-normal will-change-transform"
+            >
+              யாதும் ஊரே யாவரும் கேளிர்
+            </span>
+            <blockquote
+              ref={quoteRef}
+              className="text-3xl sm:text-5xl lg:text-6xl font-serif font-light text-[#2A2825] leading-snug tracking-tight will-change-[transform,opacity]"
+            >
               &ldquo;<strong className="font-medium text-[#B85C38]">To Us All Towns Are Home, Everyone Our Kin.</strong> Born from the deep longing for home-cooked flavors, authentic kinship, and the resonant cadence of <strong className="font-medium text-[#E5A93C]">Sangam verses</strong> beneath Midwest skies.&rdquo;
             </blockquote>
-            <p className="font-tamil text-xl sm:text-2xl text-[#B85C38]" lang="ta">
-              யாதும் ஊரே யாவரும் கேளிர் — கணியன் பூங்குன்றனார்
-            </p>
+            <div ref={tamilRef} className="will-change-[transform,opacity]">
+              <PronounceableQuote
+                tamilText="யாதும் ஊரே யாவரும் கேளிர்"
+                label="Purananuru 192: Yadhum Oore Yaavarum Kaelir. Click to hear pronunciation."
+                tone="light"
+                badgePosition="beside"
+                className="inline-block mx-auto px-4 py-2"
+              >
+                <p className="font-tamil text-xl sm:text-2xl text-[#B85C38]" lang="ta">
+                  யாதும் ஊரே யாவரும் கேளிர் — கணியன் பூங்குன்றனார்
+                </p>
+              </PronounceableQuote>
+            </div>
           </div>
 
           <KolamSectionRule tone="sandstone" />

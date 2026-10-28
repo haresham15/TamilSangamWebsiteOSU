@@ -41,16 +41,16 @@ export function AramPhilanthropyGateway({
       } ${className}`}
     >
       <div className="relative max-w-5xl mx-auto space-y-8">
-        {/* Top Badges */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-5 border-current/10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium tracking-wide uppercase bg-[#B85C38]/10 text-[#B85C38] dark:bg-[#B85C38]/20 dark:text-[#E07A5F]">
+        {/* Editorial Header Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-4 border-current/10 text-xs font-mono tracking-wider uppercase">
+          <div className="flex items-center gap-2 text-[#B85C38]">
             <HeartHandshake className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>OPEN GATEWAY · CAMPUS IMPACT BLUEPRINT</span>
+            <span>Campus Impact Blueprint</span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-stone-500 uppercase">
-            <Sprout className="w-4 h-4 text-[#55CCA2]" aria-hidden="true" />
-            <span>அறம் · விருந்தோம்பல்</span>
+          <div className="flex items-center gap-2 text-stone-500">
+            <Sprout className="w-3.5 h-3.5 text-[#55CCA2]" aria-hidden="true" />
+            <span lang="ta">அறம் · விருந்தோம்பல்</span>
           </div>
         </div>
 

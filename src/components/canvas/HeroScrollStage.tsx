@@ -23,7 +23,7 @@ export function HeroScrollStage({ children, className = "", id, runway = 280, pr
   const stage = useRef<HTMLDivElement>(null);
   const key = useId();
   const governorKey = id || key;
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   const effectiveStatic = mounted && isStatic;

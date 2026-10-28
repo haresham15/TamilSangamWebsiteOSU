@@ -108,7 +108,7 @@ export function PillarDetailView({ pillar }: PillarDetailViewProps) {
               <span className="font-serif text-lg font-bold text-[#D4AF37]">
                 {pillar.number}
               </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C85A32]" />
+              <span className="text-xs text-[#FAF6F0]/40 font-mono">/</span>
               <span className="font-mono text-xs uppercase tracking-widest text-[#FAF6F0]/80">
                 {pillar.categoryLabel}
               </span>
@@ -296,7 +296,7 @@ export function PillarDetailView({ pillar }: PillarDetailViewProps) {
             <StarBorder color="#D4AF37" speed="7s">
               <div className="bg-[#1E1916] p-8 sm:p-12 rounded-2xl border border-[#D4AF37]/30 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
                 <div className="space-y-3 max-w-2xl">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#D4AF37] px-2.5 py-0.5 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30">
+                  <span className="text-[11px] font-mono uppercase tracking-widest text-[#D4AF37]">
                     Primary Community Track
                   </span>
                   <h4 className="font-serif text-2xl sm:text-3xl text-[#FAF6F0] font-normal leading-snug">

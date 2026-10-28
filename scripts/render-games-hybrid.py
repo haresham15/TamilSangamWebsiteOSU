@@ -28,6 +28,7 @@ parser.add_argument("--points", default="0.10,0.42,0.72,0.93")
 parser.add_argument("--macro", action="store_true")
 parser.add_argument("--engine", choices=["cycles", "eevee"], default="cycles")
 parser.add_argument("--keep-hand", action="store_true")
+parser.add_argument("--from-progress", type=float)
 args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
 ROOT = Path(args.root)
 ART = ROOT / "art/games-hybrid"
@@ -301,6 +302,10 @@ for x in range(-40, -8):
     line("Iron picket", [(x, 1.1, -35), (x, 3.1, -35)], .022, dark)
 for y in [1.4, 2.7]:
     line("Iron rail", [(-40, y, -35), (-9, y, -35)], .035, dark)
+for x in [-38, -31, -24, -17, -10]:
+    box("Fence masonry pier", (x, 1.27, -35), (.32, 2.54, .46), plaster, .035)
+    box("Fence pier coping", (x, 2.57, -35), (.44, .12, .56), stone, .025)
+box("Retaining wall coping", (-24.8, 1.13, -35), (30.6, .12, .98), stone, .025)
 
 
 def suv(x, z):
@@ -365,7 +370,7 @@ for y,r in [(.95,.85),(1.5,.32),(2,.65),(2.4,.15)]:
     sphere("Carved garden fountain", (12.1,y,-19.7), (r,.18,r), stone)
 line("Garden parasol pole", [(14,0,-20),(14,3,-20)],.055,stone)
 bpy.ops.mesh.primitive_cone_add(vertices=32,radius1=1.6,radius2=0,depth=.6,location=xyz((14,3,-20)))
-bpy.context.object.data.materials.append(stone)
+bpy.context.object.data.materials.append(material("Cream canvas parasol", (.72,.65,.50), .92))
 
 
 def volume_material(name, fire=False, dust=False):
@@ -400,8 +405,9 @@ def volume_material(name, fire=False, dust=False):
     contrast.inputs["From Max"].default_value=.65
     links.new(noise.outputs["Fac"],contrast.inputs["Value"])
     density=nodes.new("ShaderNodeMath")
+    density.name="DensityGain"
     density.operation="MULTIPLY"
-    density.inputs[1].default_value=(.9 if dust else 5) if not fire else 1.2
+    density.inputs[1].default_value=(.9 if dust else 5) if not fire else 8
     links.new(contrast.outputs["Result"],density.inputs[0])
     shaped=nodes.new("ShaderNodeMath")
     shaped.operation="MULTIPLY"
@@ -409,16 +415,31 @@ def volume_material(name, fire=False, dust=False):
     links.new(falloff.outputs["Result"],shaped.inputs[1])
     links.new(shaped.outputs[0],vol.inputs["Density"])
     if fire:
+        hot=nodes.new("ShaderNodeMath")
+        hot.operation="POWER"
+        hot.inputs[1].default_value=8
+        links.new(contrast.outputs["Result"],hot.inputs[0])
+        hot_density=nodes.new("ShaderNodeMath")
+        hot_density.operation="MULTIPLY"
+        links.new(shaped.outputs[0],hot_density.inputs[0])
+        links.new(hot.outputs[0],hot_density.inputs[1])
         emission=nodes.new("ShaderNodeMath")
+        emission.name="HeatGain"
         emission.operation="MULTIPLY"
-        emission.inputs[1].default_value=2.5
-        links.new(shaped.outputs[0],emission.inputs[0])
-        links.new(emission.outputs[0],vol.inputs["Blackbody Intensity"])
+        emission.inputs[1].default_value=60.0/8.0
+        links.new(hot_density.outputs[0],emission.inputs[0])
+        links.new(emission.outputs[0],vol.inputs["Emission Strength"])
         heat=nodes.new("ShaderNodeMapRange")
-        heat.inputs["To Min"].default_value=1200
-        heat.inputs["To Max"].default_value=2600
+        heat.name="HeatTemperature"
+        heat.clamp=True
+        heat.inputs["From Min"].default_value=.4
+        heat.inputs["From Max"].default_value=.65
+        heat.inputs["To Min"].default_value=1600
+        heat.inputs["To Max"].default_value=5500
         links.new(noise.outputs["Fac"],heat.inputs["Value"])
-        links.new(heat.outputs["Result"],vol.inputs["Temperature"])
+        blackbody=nodes.new("ShaderNodeBlackbody")
+        links.new(heat.outputs["Result"],blackbody.inputs["Temperature"])
+        links.new(blackbody.outputs["Color"],vol.inputs["Emission Color"])
     links.new(vol.outputs["Volume"],output.inputs["Volume"])
     return mat
 
@@ -427,17 +448,66 @@ smoke=volume_material("Original noise-shaped persistent smoke")
 fire=volume_material("Original volumetric fire blackbody",True)
 dust=volume_material("Low spatially bounded dust",dust=True)
 dust.node_tree.nodes.get("Principled Volume").inputs["Color"].default_value=(.42,.31,.19,1)
+trail_mat=bpy.data.materials.new("Aged pale warm missile vapor")
+trail_mat.use_nodes=True
+trail_nodes,trail_links=trail_mat.node_tree.nodes,trail_mat.node_tree.links
+trail_nodes.clear()
+trail_output=trail_nodes.new("ShaderNodeOutputMaterial")
+trail_volume=trail_nodes.new("ShaderNodeVolumePrincipled")
+trail_volume.inputs["Color"].default_value=(.84,.86,.82,1)
+trail_volume.inputs["Anisotropy"].default_value=.15
+trail_coords=trail_nodes.new("ShaderNodeTexCoord")
+trail_noise=trail_nodes.new("ShaderNodeTexNoise")
+trail_noise.inputs["Scale"].default_value=3.6
+trail_noise.inputs["Detail"].default_value=3
+trail_links.new(trail_coords.outputs["Object"],trail_noise.inputs["Vector"])
+trail_gain=trail_nodes.new("ShaderNodeMath")
+trail_gain.name="TrailOpacity"
+trail_gain.operation="MULTIPLY"
+trail_links.new(trail_noise.outputs["Fac"],trail_gain.inputs[0])
+trail_links.new(trail_gain.outputs[0],trail_volume.inputs["Density"])
+trail_links.new(trail_volume.outputs[0],trail_output.inputs["Volume"])
+
+# Source design curves, reprojected into the locked camera and fitted to each SUV.
+trail_controls=[[(.004,.115),(.108,.225),(.204,.344),(.301,.474),(.366,.578),(.425,.655)],[(.004,.415),(.108,.488),(.204,.560),(.300,.628),(.400,.680),(.508,.725)],[(.930,.095),(.839,.230),(.758,.353),(.677,.475),(.620,.560),(.591,.610)]]
+def trail_point(index,t):
+    controls=[Vector(point) for point in trail_controls[index]]
+    while len(controls)>1:
+        controls=[a.lerp(b,t) for a,b in zip(controls,controls[1:])]
+    uv=controls[0]
+    z=-58+27*t
+    d=6-z
+    point=Vector(((2*uv.x-1)*d*math.tan(math.radians(17))*2.39,1.65+(1.35-2*uv.y)*d*math.tan(math.radians(17)),z))
+    endpoint=trail_controls[index][-1]
+    final=Vector(((2*endpoint[0]-1)*37*math.tan(math.radians(17))*2.39,1.65+(1.35-2*endpoint[1])*37*math.tan(math.radians(17)),-31))
+    return point+(Vector(([-4.06,.43,4.92][index],1.2,-31))-final)*t*t
+
+for index,target_x in enumerate([-4.06,.43,4.92]):
+    assert (trail_point(index,1)-Vector((target_x,1.2,-31))).length<1e-5
+    assert all(math.isfinite(value) for j in range(96) for value in trail_point(index,j/95))
+assert [impact["hit"] for impact in CAL["impacts"]]==[.640,.657,.674]
+assert len(CAL["samples"])==149
+
+fence_dust=[]
+fence_rng=random.Random(9071)
+for j in range(12):
+    puff_mat=dust.copy()
+    obj=sphere("Low irregular fence-base dust",(-9.5,.18,-34+j*24/11),(1,1,1),puff_mat)
+    fence_dust.append((obj,.646+j*.002,fence_rng.uniform(.65,1.25),puff_mat))
 blasts=[]
 for index,impact in enumerate(CAL["impacts"]):
     x,onset,radius=impact["x"],impact["hit"],impact["radius"]
     rng=random.Random(900+index)
+    impact_smoke=smoke.copy()
+    impact_fire=fire.copy()
+    impact_trail=trail_mat.copy()
     objects=[]
     for j in range(9):
         offset=Vector((rng.uniform(-.4,.4),.7+j*.24,rng.uniform(-.3,.3)))
-        objects.append((sphere("Asymmetric smoke lobe",(x,1,-31),(1,1,1),smoke),offset,rng.uniform(.28,.53),False))
+        objects.append((sphere("Asymmetric smoke lobe",(x,1,-31),(1,1,1),impact_smoke),offset,rng.uniform(.28,.53),False))
     for j in range(9):
         offset=Vector((rng.uniform(-.45,.45),rng.uniform(.1,1.4),rng.uniform(-.35,.35)))
-        objects.append((sphere("Turbulent fire core",(x,1,-30),(1,1,1),fire),offset,rng.uniform(.25,.48),True))
+        objects.append((sphere("Turbulent fire core",(x,1,-30),(1,1,1),impact_fire),offset,rng.uniform(.25,.48),True))
     dust_obj=sphere("Expanding ground dust",(x,.3,-31),(1,1,1),dust)
     bpy.ops.object.light_add(type="POINT",location=xyz((x,1.5,-30)))
     light=bpy.context.object
@@ -452,9 +522,10 @@ for index,impact in enumerate(CAL["impacts"]):
     shock=bpy.context.object
     shock.name="Expanding turbulent dust shockwave"
     shock.data.materials.append(dust)
-    trail=line("Incoming missile vapor trail",[(x,4,-31),(x,8,-34)],.055,stone)
+    trail=line("Persistent curved incoming vapor trail",[trail_point(index,j/95) for j in range(96)],.095,impact_trail)
+    trail.data.use_fill_caps=True
     missile=sphere("Incoming missile",(x,4,-31),(.08,.08,.35),dark)
-    blasts.append((x,onset,radius,objects,dust_obj,light,debris,shock,trail,missile))
+    blasts.append((x,onset,radius,objects,dust_obj,light,debris,shock,trail,missile,impact_smoke,impact_fire,impact_trail))
 
 bpy.ops.object.camera_add()
 camera=bpy.context.object
@@ -484,51 +555,68 @@ def state_at(sample,width=1912,height=800,poster=False):
     foreground.matrix_world=BASIS.to_4x4() @ transform @ BASIS.to_4x4().inverted()
     for obj in poster_objects:
         obj.hide_render=not poster or rig["opacity"]==0
-    for mat in [smoke,fire,dust]:
+    for mat in [smoke,fire,dust]+[mat for blast in blasts for mat in blast[-3:-1]]:
         mat.node_tree.nodes.get("Noise Texture").inputs["W"].default_value=p*15
-    for x,onset,radius,objects,dust_obj,light,debris,shock,trail,missile in blasts:
+    for obj,onset,factor,puff_mat in fence_dust:
+        age=max(0,(p-onset)/.154)
+        obj.hide_render=p<onset or age>=1
+        obj.scale=(factor*(.2+age*2.4),factor*(.3+age*1.3),factor*(.16+math.sin(min(1,age)*math.pi)*.45))
+        puff_mat.node_tree.nodes["DensityGain"].inputs[1].default_value=.9*max(0,1-age)**1.3
+    for index,(x,onset,radius,objects,dust_obj,light,debris,shock,trail,missile,impact_smoke,impact_fire,impact_trail) in enumerate(blasts):
         active=p>=onset
         age=max(0,(p-onset)/.2)
         grow=1-(1-min(age/.3,1))**3
+        impact_smoke.node_tree.nodes["DensityGain"].inputs[1].default_value=5*min(1,max(0,(age-.08)/.5))
+        cooling=math.exp(-max(0,age-.48)*4.8)
+        impact_fire.node_tree.nodes["HeatGain"].inputs[1].default_value=60/8*cooling
+        impact_fire.node_tree.nodes["HeatTemperature"].inputs["To Max"].default_value=2200+3300*cooling
         for obj,offset,factor,is_fire in objects:
             obj.hide_render=not active
             rise=age*2.6*max(0,(offset.y-.7)/2.0) if not is_fire else age*.5
             bloom=1+.8*math.exp(-((age-.35)/.30)**2) if is_fire else 1
-            spread=Vector((offset.x*bloom,offset.y,offset.z))
-            obj.location=xyz(Vector((x, .4+rise,-30 if is_fire else -32))+spread*radius*grow)
+            spread=Vector((offset.x*bloom*(1.4 if is_fire else 1),offset.y,offset.z))
+            obj.location=xyz(Vector((x, .4+rise+(1 if is_fire else 0),-30 if is_fire else -32))+spread*radius*grow)
             size=max(.002,radius*grow*factor*(max(.16,1-age*.45) if is_fire else 1+age*.3))
+            if is_fire:
+                size*=2
             obj.scale=(size*bloom,size*.85,size*(1.3 if not is_fire else 1.15))
         dust_obj.hide_render=not active
         dust_obj.scale=(max(.01,age*6),max(.01,age*3.5),max(.01,.35+age*.4))
         light.data.energy=(24000*math.exp(-age/.035)+9000*math.exp(-age*2.8)) if active else 0
         seconds=max(0,(p-onset)*8)
+        debris_seconds=max(0,(p-onset)*18)
         for obj,velocity,spin in debris:
-            obj.hide_render=not active or seconds>1.8
-            position=Vector((x,.3,-31))+velocity*seconds+Vector((0,-4.9*seconds*seconds,0))
+            obj.hide_render=not active
+            landing=(velocity.y+math.sqrt(velocity.y**2+4*4.9*.22))/(2*4.9)
+            flight=min(debris_seconds,landing)
+            position=Vector((x,.3,-31))+velocity*flight+Vector((0,-4.9*flight*flight,0))
             position.y=max(.08,position.y)
             obj.location=xyz(position)
-            obj.rotation_euler=spin*seconds*7
+            obj.rotation_euler=spin*flight*7
         shock.hide_render=not active
         shock.scale=(max(.01,seconds*9),max(.01,seconds*9),max(.05,.6/(1+seconds*3)))
-        approach=(p-.54)/(onset-.54)
-        trail.hide_render=missile.hide_render=not (.54<=p<onset)
-        if .54<=p<onset:
-            end=Vector((x,.8,-31))
-            start=Vector((x+(-22 if x<1 else 24),22,-45))
-            head=start.lerp(end,approach)
-            tail=start.lerp(end,max(0,approach-.16))
+        enter=[.540,.546,.552][index]
+        approach=max(0,min(1,(p-enter)/(onset-enter)))**1.4
+        residue=math.exp(-max(0,p-onset)*5.0)
+        trail.hide_render=p<enter
+        missile.hide_render=not (enter<=p<onset)
+        trail.data.bevel_depth=.095*(1+.6*min(1,max(0,(p-onset)/(.85-onset))))
+        impact_trail.node_tree.nodes["TrailOpacity"].inputs[1].default_value=4.5*residue
+        spline=trail.data.splines[0]
+        for j,point in enumerate(spline.points):
+            point.co=(*xyz(trail_point(index,approach*j/95)),1)
+            point.radius=.12+.88*math.sin(math.pi*(j+.5)/96)**.35
+        if enter<=p<onset:
+            head=trail_point(index,approach)
             missile.location=xyz(head)
-            direction=xyz(end-start)
+            direction=xyz(trail_point(index,min(1,approach+.01))-head)
             missile.rotation_euler=direction.to_track_quat("Y","Z").to_euler()
-            spline=trail.data.splines[0]
-            spline.points[0].co=(*xyz(head),1)
-            spline.points[1].co=(*xyz(tail),1)
     bpy.context.view_layer.update()
 
 
-def render(sample,name,width=1912,height=800,poster=False):
+def render(sample,name,width=1912,height=800,poster=False,replace=False):
     dest=OUT/f"{name}.png"
-    if dest.exists():
+    if dest.exists() and not replace:
         return
     state_at(sample,width,height,poster)
     scene.render.filepath=str(dest)
@@ -560,7 +648,9 @@ if args.posters:
         render(CAL["portrait"]["samples"][i],f"poster-portrait-{i}",780,1688,poster=True)
 if args.all:
     for i,sample in enumerate(CAL["samples"]):
-        render(sample,f"frame-{i:04d}")
+        if args.from_progress is None or sample["p"]>=args.from_progress:
+            render(sample,f"frame-{i:04d}",replace=args.from_progress is not None)
     for i,p in enumerate([.1,.42,.72,.93]):
-        render(next(s for s in CAL["samples"] if s["p"]==p),f"poster-landscape-{i}",poster=True)
-        render(CAL["portrait"]["samples"][i],f"poster-portrait-{i}",780,1688,poster=True)
+        if args.from_progress is None or p>=args.from_progress:
+            render(next(s for s in CAL["samples"] if s["p"]==p),f"poster-landscape-{i}",poster=True,replace=args.from_progress is not None)
+            render(CAL["portrait"]["samples"][i],f"poster-portrait-{i}",780,1688,poster=True,replace=args.from_progress is not None)

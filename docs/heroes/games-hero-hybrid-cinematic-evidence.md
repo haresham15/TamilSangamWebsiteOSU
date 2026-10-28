@@ -3,6 +3,31 @@
 Date: 2026-10-27. Baseline source: `3cad14a5f73835b2bde911a25f6c008a3e9fa0a9`. Branch: `feat/games-hybrid-cinematic`.
 Requirements: [production PRD](games-hero-hybrid-cinematic-prd.md). This report distinguishes engineering checks from art and production approval.
 
+## Current candidate and verification
+
+- Final tested working tree is based on `6262ff78700944bf6a24235e972987dcc124752a`, with subsequent runtime/cache fixes included. Stronger-fire media is `games-hybrid-f410c08628fed149`, calibration `games-hybrid-8711113f4a97`: 149 full-size plates, 7,972,676 sequence bytes (7.60 MiB), 126 unique moving hashes, eight verified posters and 977,736-byte foreground.
+- Parent reports 91 unit tests in 13 files passing, including 20 cache/rail cases; final typecheck, affected-code lint, production build, script syntax and `git diff --check` passed. Final build required an approved network-enabled retry for Google Fonts downloads. Independent current-media hash checks pass. Browser checks use the matching `http://localhost:3000` development origin.
+- All 21 browser cases passed on final source/media with actual Intel Iris Xe ANGLE/Direct3D11, across bounded runs: first 13, ordinary-scroll/touch two, lifecycle/delayed five, then neutral-ramp one. Coverage includes static/no-sequence modes, keyboard skip, native 375px touch, ordinary arcade flow, all viewport variants, reverse cycles/pause, continuous foreground on held plates, hidden-before-first-draw, actual offscreen unmount/reentry and immediate exit-poster/focus on skip. Delayed 120 ms plate responses produced 67 distinct drawn samples in 181 observations during continuous three-second scrubbing; monotonic advancement passed.
+- Isolated hardware measurement after rendering and other browser jobs stopped: first ready 2,055.1 ms; warm forward/reverse duration 16,016.5 ms; 946 animation callbacks, p95 callback interval 16.9 ms; longest observed completed moving-sample advance interval 200.2 ms; at most six decoded/four pending frames; no page errors. These measure callbacks and delivered plate advances, not actual WebGL draw FPS. Existing HUD reads 10 FPS because `GlobalDebugHUD.tsx:45–50` counts callbacks from its 100 ms interval at line 78; this is a preexisting timer diagnostic bug, not a renderer measurement. It remains outside this change. No 60 FPS or physical-device gate is claimed. Earlier multi-second starvation was reproduced and fixed with retained in-flight decodes, nearest completed samples and direction filtering.
+- Actual `p=0.42` composite is visible with no clipped forearm boundary; skin and eyewear remain stylized and dark. Later fire is broader and evolves into soot; fixed background landmarks retain scale. This is not photoreal art approval, a Mantaflow gas bake claim or reference-image parity approval.
+- Current installed browser is Chromium 134. Actual-device Safari, Firefox, complete graphics-memory accounting and production hosting/deployment verification remain open. No deployment authorized.
+
+Historical diagnostics below explain discovered failures and fixes; their old pending snapshots do not override the current summary above.
+
+## Current checklist mapping
+
+| Package | Completed engineering evidence | Remaining acceptance |
+| --- | --- | --- |
+| Baseline, provenance and delivery | Baseline checks; original source pipeline/rights register; final manifest, dimensions, bytes and moving hashes validated | Pristine pre-edit screenshot unavailable; no external reference attachments for parity approval |
+| Hybrid feasibility and integration | Shared canvas visible; canonical contained framing; neutral RGB ramp within one level after poster fade; bounded cache and failure recovery | Complete graphics-memory accounting and actual draw FPS |
+| Hand and environment | Actual close-up inspected; grip remains continuous within held background intervals; no visible cut boundary; camera/background scale fixed | Photoreal anatomy, skin, eyewear reflection and edge-quality art approval |
+| Explosion and final media | 149 rendered samples; moving hashes unique; actual fire-to-soot composites inspected; no late zoom | Original cinematic quality gates, including any gas-simulation requirement, remain unapproved |
+| Browser and accessibility | 21 hardware Chromium cases; 375px native touch, keyboard, reduced motion/Lite, reverse, hidden/offscreen and ordinary flow | Actual-device Safari, Firefox and production hosting |
+
+Final captures and clean capture metadata: `%TEMP%/games-hybrid-final-captures/final-{0.10,0.42,0.72,0.93,375}.png`, `metadata.json` (no page errors or failed media responses; portrait width/scrollWidth both 375). Actual desktop images and portrait were visually inspected. Profile: `%TEMP%/games-hybrid-fixed-camera-qa/hardware-profile-final.json`. Browser logs: `%TEMP%/games-hybrid-final-hardware-browser.log`, `games-hybrid-final-hardware-remaining.log`, `games-hybrid-final-hardware-lifecycle.log`, `games-hybrid-final-ramp.log`. Initial ordinary-scroll and ramp failures were harness assumptions: tall GamesHub content requires continued wheel input; pixel capture must wait for poster opacity zero. Assertions retain normal-flow/focus checks and original color tolerance.
+
+Commands used installed Chromium `1161` through temporary config `%TEMP%/games-hybrid-hardware.playwright.config.cjs`: `node node_modules/playwright/cli.js test --config <config>`, with focused `--grep` reruns after harness corrections. Hardware launch used `--enable-webgl --ignore-gpu-blocklist --enable-gpu`; no SwiftShader flag. The isolated profile used `%TEMP%/games-hybrid-hardware-profile.cjs`, eight seconds forward and eight reverse after one warm-up cycle. Full source checks were performed by the parent; browser, pixel, interaction and profile checks above were independent QA.
+
 ## Baseline
 
 - Existing working tree initially contained only the untracked production PRD. No runtime edits were reverted.
@@ -16,7 +41,7 @@ Requirements: [production PRD](games-hero-hybrid-cinematic-prd.md). This report 
 
 ## Implementation evidence
 
-Integration checks and browser captures pending. Source code alone does not establish anatomical quality, camera-plate alignment, flash safety, physical-device performance or production readiness.
+Historical implementation diagnostics follow. Current completed checks appear above; source code alone does not establish anatomical quality, flash safety, physical-device performance or production readiness.
 
 - Initial browser probe used Chromium `134.0.6998.35`, headless SwiftShader, `1912×800`, while implementation files were changing. It is not a pristine baseline capture. Manifest/posters had not yet been generated, so all four debug requests fell back to static, reported displayed progress `0.000`, and the poster was missing. Two Fast Refresh errors (`Cannot read properties of undefined (reading 'image')`) occurred during intermediate edits; final clean-navigation results must replace this provisional observation.
 - Provisional captures and metadata: `%TEMP%/games-hybrid-qa/baseline-*.png`, `%TEMP%/games-hybrid-qa/baseline.json`. The filenames are historical; they do not establish source-baseline or art parity.
@@ -28,7 +53,7 @@ Integration checks and browser captures pending. Source code alone does not esta
 - Feasibility capture: `%TEMP%/games-hybrid-qa/pilot-0.42.png`; metadata at the matching `.json`. Intercepted fixture revision `qa-feasibility-only-0e338ef4e77e`, Chromium `134.0.6998.35`, `1912×800`, displayed/requested progress `0.420`, frame/drawn index `2`, decoded cache `4`, pending `0`, no page/console errors. One aborted initial manifest reflected development effect cleanup. The latest screenshot at this filename replaced the initially blank attempt.
 - Visual comparison against the improved offline `poster-landscape-1.png` found substantially darker live finger undersides and eyewear with weak readable reflection, plus a differently bent left glasses temple. No cropped forearm boundary was visible at this checkpoint. These observations are not close-up art approval; matched lighting/materials and complete-path inspection remain required.
 
-## Work-package status
+## Historical work-package snapshot (superseded by current summary)
 
 | PRD package | Evidence achieved | Remaining gate |
 | --- | --- | --- |
@@ -41,12 +66,12 @@ Integration checks and browser captures pending. Source code alone does not esta
 | 6. Final media | Delivery manifest/validation tooling being authored | Final files, dimensions, byte totals, licenses and all exact samples |
 | 7. Integration and QA | Missing-media/context-loss/keyboard-skip subset passed | Full browser matrix, live original media, reverse cycles, performance and physical-device evidence |
 
-## Release gates still requiring evidence
+## Release gates still requiring evidence (current revision)
 
 - Approved original keyframes and anatomical textured hand at `p=0.42`.
-- Reproducible offline scene, baked gas simulation, final calibrated exit travel, matched foreground lighting and original source rights.
-- Neutral-ramp/skin/sky color comparison and clean alpha edges.
-- Measured sequence/foreground bytes, decoded cache and graphics-memory accounting, warm scrub frame intervals and visible sample advancement.
+- Production-quality gas simulation, matched foreground lighting and anatomical art acceptance. Offline source and original-rights register are supplied; the latest ruling removes exit camera travel.
+- Skin/sky artistic comparison and clean alpha edges; neutral-ramp transform check passed.
+- Complete graphics-memory accounting and independently established actual WebGL draw FPS. Sequence/foreground bytes, cache bounds, callback intervals and visible sample advancement were measured.
 - Full browser/failure/accessibility matrix including Firefox and actual-device Safari.
 - Hosting capacity and separately authorized deployment of tested source/media revision.
 

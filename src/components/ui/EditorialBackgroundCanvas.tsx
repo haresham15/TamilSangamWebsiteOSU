@@ -41,6 +41,7 @@ export function EditorialBackgroundCanvas({
     let currentX = 50;
     let currentY = 30;
     let isLoopRunning = false;
+    let visible = false;
 
     let rect = container.getBoundingClientRect();
     let isRectDirty = false;
@@ -49,7 +50,7 @@ export function EditorialBackgroundCanvas({
     };
 
     const onPointerMove = (e: PointerEvent) => {
-      if (e.pointerType === "touch") return;
+      if (!visible || e.pointerType === "touch") return;
       if (isRectDirty) {
         rect = container.getBoundingClientRect();
         isRectDirty = false;
@@ -66,7 +67,7 @@ export function EditorialBackgroundCanvas({
 
     const onScroll = () => {
       markRectDirty();
-      if (reducedMotion || isLiteMode) return;
+      if (!visible || reducedMotion || isLiteMode) return;
       const y = window.scrollY;
       const deg = (y * 0.025) % 360;
       const dash = (y * 0.08) % 400;
@@ -89,11 +90,24 @@ export function EditorialBackgroundCanvas({
       }
     };
 
+    // Offscreen inherited variables otherwise restyle every descendant during hero scrolling.
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) onScroll();
+      else {
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        rafId = null;
+        isLoopRunning = false;
+      }
+    }, { rootMargin: "100px 0px" });
+    observer.observe(container);
+
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", markRectDirty, { passive: true });
 
     return () => {
+      observer.disconnect();
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", markRectDirty);

@@ -26,7 +26,7 @@ export function TierProvider({ children }: { children: React.ReactNode }) {
     if (typeof window !== "undefined") {
       try {
         const saved = localStorage.getItem("sangam_tier");
-        if (saved === "A" || saved === "B" || saved === "C") return saved;
+        if (saved === "A" || saved === "B") return saved;
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "C";
       } catch {}
     }
@@ -55,20 +55,12 @@ export function TierProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      // Check manual override
-      const saved = localStorage.getItem("sangam_tier");
-      if (saved === "C") {
-        setTierState("C");
-        return;
-      }
-
-      // Probe once per mount; saved tiers cannot restore unsupported WebGL.
+      // Probe once per mount; check WebGL2 support safely without emitting webglcontextlost
       if (webglAvailable === undefined) {
         try {
           const canvas = document.createElement("canvas");
           const gl2 = canvas.getContext("webgl2");
           webglAvailable = Boolean(gl2);
-          gl2?.getExtension("WEBGL_lose_context")?.loseContext();
         } catch {
           webglAvailable = false;
         }
@@ -77,22 +69,34 @@ export function TierProvider({ children }: { children: React.ReactNode }) {
         setTierState("C");
         return;
       }
-      setTierState(saved === "A" || saved === "B" ? saved : inApp ? "B" : "A");
+
+      // Check manual override
+      const saved = localStorage.getItem("sangam_tier");
+      if (saved === "A" || saved === "B") {
+        setTierState(saved);
+        return;
+      }
+
+      setTierState(inApp ? "B" : "A");
     };
-    const frameId = requestAnimationFrame(selectTier);
+
+    selectTier();
     motionQuery.addEventListener("change", selectTier);
 
-    // Context loss handler switch to Tier C
+    // Context loss handler switch to Tier C only for the active application canvas inside #gl-root
     const handleContextLost = (e: Event) => {
+      const target = e.target as HTMLElement | null;
+      if (!target || !target.closest?.("#gl-root")) {
+        return;
+      }
       e.preventDefault();
       contextLost = true;
-      console.warn("[TierProvider] WebGL Context Lost - degrading to Tier C (Lite)");
+      console.warn("[TierProvider] WebGL Context Lost on #gl-root - degrading to Tier C (Lite)");
       setTierState("C");
     };
 
     window.addEventListener("webglcontextlost", handleContextLost, true);
     return () => {
-      cancelAnimationFrame(frameId);
       motionQuery.removeEventListener("change", selectTier);
       window.removeEventListener("webglcontextlost", handleContextLost, true);
     };

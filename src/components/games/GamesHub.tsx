@@ -164,58 +164,40 @@ export function GamesHub() {
                 onClick={() => selectGame("sollu")}
                 className="cursor-pointer group relative bg-[#F5EFEB] rounded-2xl border-2 border-[#161210]/15 hover:border-[#D4AF37] p-6 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300"
               >
-                {/* Top Meta Bar */}
+                {/* Editorial Header */}
                 <div>
-                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#161210]/15">
-                    <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#C85A32]">
-                      01 · THE CULTURAL WORDLE
+                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#161210]/10">
+                    <span className="font-mono text-xs uppercase tracking-wider text-[#C85A32]">
+                      The Cultural Wordle
                     </span>
                     <span className="font-mono text-[11px] text-[#161210]/55 uppercase tracking-wider">
-                      DAILY & MONTHLY
+                      Daily &amp; Monthly
                     </span>
                   </div>
 
-                  <h3 className="font-serif text-3xl sm:text-4xl text-[#161210] font-normal tracking-tight mb-1">
+                  <h3 className="font-serif text-3xl sm:text-4xl text-[#161210] font-normal tracking-tight mb-2">
                     Sollu · <span lang="ta" className="font-tamil font-semibold text-[#C85A32]">சொல்லு</span>
                   </h3>
-                  <p className="font-sans text-xs sm:text-sm text-[#161210]/75 leading-relaxed mb-6">
+                  <p className="font-sans text-xs sm:text-sm text-[#161210]/75 leading-relaxed mb-4">
                     Guess the secret 5-letter cultural word in 6 attempts. Featuring Tanglish cinema and classical Tamil Akshara editions.
                   </p>
                 </div>
 
-                {/* Massive Bespoke Thumbnail */}
+                {/* Bespoke Thumbnail */}
                 <div className="my-2">
                   <SolluThumbnail />
                 </div>
 
-                {/* Bottom Specifications & Direct Action Button */}
-                <div className="mt-6 pt-5 border-t border-[#161210]/15 flex flex-col gap-3">
-                  <div className="flex items-center justify-between text-[11px] font-mono text-[#161210]/65 uppercase tracking-wider">
-                    <span>6 ATTEMPTS</span>
-                    <span>•</span>
-                    <span>TANGLISH & AKSHARA</span>
-                    <span>•</span>
-                    <span>SPOILER-FREE</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      selectGame("sollu");
-                    }}
-                    aria-label="01 Sollu · சொல்லு"
-                    className="w-full py-4 px-6 bg-[#161210] group-hover:bg-[#C85A32] text-[#FAF6F0] rounded-xl font-bold font-sans text-sm tracking-wide transition-colors duration-200 flex items-center justify-between shadow-sm focus:outline-hidden focus:ring-2 focus:ring-[#C85A32]"
-                  >
-                    <span className="font-bold flex items-center gap-2">
-                      <span>01 Sollu</span>
-                      <span className="opacity-70 font-normal">· Play Wordle</span>
-                    </span>
-                    <span className="font-tamil font-medium text-xs opacity-90 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                      <span>சொல்லு விளையாடு</span>
-                      <ArrowRight className="size-3.5" />
-                    </span>
-                  </button>
+                {/* Editorial Action Footer */}
+                <div className="mt-6 pt-4 border-t border-[#161210]/10 flex items-center justify-between text-sm font-sans font-medium text-[#161210]">
+                  <span className="flex items-center gap-1.5 group-hover:text-[#C85A32] transition-colors">
+                    <span>Play Sollu</span>
+                    <span lang="ta" className="font-tamil text-xs text-[#C85A32]">(சொல்லு)</span>
+                  </span>
+                  <span className="flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#C85A32] group-hover:translate-x-1 transition-transform">
+                    <span>Start Game</span>
+                    <ArrowRight className="size-3.5" aria-hidden="true" />
+                  </span>
                 </div>
               </motion.article>
 
@@ -226,58 +208,40 @@ export function GamesHub() {
                 onClick={() => selectGame("thodarpu")}
                 className="cursor-pointer group relative bg-[#F5EFEB] rounded-2xl border-2 border-[#161210]/15 hover:border-[#D4AF37] p-6 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300"
               >
-                {/* Top Meta Bar */}
+                {/* Editorial Header */}
                 <div>
-                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#161210]/15">
-                    <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#3B4978]">
-                      02 · CULTURAL CONNECTIONS
+                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#161210]/10">
+                    <span className="font-mono text-xs uppercase tracking-wider text-[#3B4978]">
+                      Cultural Connections
                     </span>
                     <span className="font-mono text-[11px] text-[#161210]/55 uppercase tracking-wider">
-                      MONTHLY EDITION
+                      Monthly Edition
                     </span>
                   </div>
 
-                  <h3 className="font-serif text-3xl sm:text-4xl text-[#161210] font-normal tracking-tight mb-1">
+                  <h3 className="font-serif text-3xl sm:text-4xl text-[#161210] font-normal tracking-tight mb-2">
                     Thodarpu · <span lang="ta" className="font-tamil font-semibold text-[#3B4978]">தொடர்பு</span>
                   </h3>
-                  <p className="font-sans text-xs sm:text-sm text-[#161210]/75 leading-relaxed mb-6">
-                    Find four groups of four culturally connected items. Test your depth across cinema lore, Carnatic ragas, and traditions.
+                  <p className="font-sans text-xs sm:text-sm text-[#161210]/75 leading-relaxed mb-4">
+                    Find four groups of four culturally connected items across cinema lore, Carnatic ragas, and traditions.
                   </p>
                 </div>
 
-                {/* Massive Bespoke Thumbnail */}
+                {/* Bespoke Thumbnail */}
                 <div className="my-2">
                   <ThodarpuThumbnail />
                 </div>
 
-                {/* Bottom Specifications & Direct Action Button */}
-                <div className="mt-6 pt-5 border-t border-[#161210]/15 flex flex-col gap-3">
-                  <div className="flex items-center justify-between text-[11px] font-mono text-[#161210]/65 uppercase tracking-wider">
-                    <span>16 TILES</span>
-                    <span>•</span>
-                    <span>4 GROUPS OF 4</span>
-                    <span>•</span>
-                    <span>4 MISTAKES MAX</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      selectGame("thodarpu");
-                    }}
-                    aria-label="02 Thodarpu · தொடர்பு"
-                    className="w-full py-4 px-6 bg-[#161210] group-hover:bg-[#C85A32] text-[#FAF6F0] rounded-xl font-bold font-sans text-sm tracking-wide transition-colors duration-200 flex items-center justify-between shadow-sm focus:outline-hidden focus:ring-2 focus:ring-[#C85A32]"
-                  >
-                    <span className="font-bold flex items-center gap-2">
-                      <span>02 Thodarpu</span>
-                      <span className="opacity-70 font-normal">· Play Connections</span>
-                    </span>
-                    <span className="font-tamil font-medium text-xs opacity-90 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                      <span>தொடர்பு விளையாடு</span>
-                      <ArrowRight className="size-3.5" />
-                    </span>
-                  </button>
+                {/* Editorial Action Footer */}
+                <div className="mt-6 pt-4 border-t border-[#161210]/10 flex items-center justify-between text-sm font-sans font-medium text-[#161210]">
+                  <span className="flex items-center gap-1.5 group-hover:text-[#3B4978] transition-colors">
+                    <span>Play Thodarpu</span>
+                    <span lang="ta" className="font-tamil text-xs text-[#3B4978]">(தொடர்பு)</span>
+                  </span>
+                  <span className="flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#3B4978] group-hover:translate-x-1 transition-transform">
+                    <span>Start Game</span>
+                    <ArrowRight className="size-3.5" aria-hidden="true" />
+                  </span>
                 </div>
               </motion.article>
             </div>

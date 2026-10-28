@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { HybridFrameCache, nearestSample, parseHybridManifest, type HybridManifest, type HybridSample } from "../games-hero/hybridMedia";
+import { decodePlate, HybridFrameCache, nearestSample, parseHybridManifest, type HybridManifest, type HybridSample } from "../games-hero/hybridMedia";
 import { DESIGN_ASPECT, evaluateCameraRail, evaluateForegroundRig } from "../games-hero/gamesRail";
 
 const samples = [0, 0.1, 0.22, 0.42, 0.52, 0.6, 0.64, 0.646, 0.652, 0.72, 0.85, 0.93, 1]
@@ -11,7 +11,30 @@ const manifest = (): HybridManifest => ({ schemaVersion: 1, revision: "test", ca
   posters: { landscape: ["a", "b", "c", "d"], portrait: ["e", "f", "g", "h"] },
   foreground: { url: "/models/games/hand-grip.glb", bytes: 100 } });
 
-afterEach(() => vi.useRealTimers());
+afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
+
+it("separates transfer/body and bitmap decode timings without changing decoded ownership", async () => {
+  const bitmap = image();
+  vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, blob: async () => new Blob([new Uint8Array(100)]) })));
+  vi.stubGlobal("createImageBitmap", vi.fn(async () => bitmap));
+  vi.spyOn(performance, "now").mockReturnValueOnce(10).mockReturnValueOnce(25).mockReturnValueOnce(45);
+  const timing = vi.fn();
+  expect(await decodePlate(samples[0], new AbortController().signal, timing)).toBe(bitmap);
+  expect(timing).toHaveBeenCalledWith(15, 20);
+  expect(bitmap.close).not.toHaveBeenCalled();
+});
+
+it("reports requested progress, true reversals and bounded decoded storage", async () => {
+  const cache = new HybridFrameCache(samples, vi.fn(), vi.fn(), async () => image());
+  cache.request(0.42); await flush();
+  cache.request(0.52); await flush();
+  cache.request(0.42); await flush();
+  expect(cache.stats).toMatchObject({ requestedProgress: 0.42, direction: -1, directionChanges: 1 });
+  expect(cache.stats.decodedPixelBytes).toBe(cache.stats.decoded * 1912 * 800 * 4);
+  expect(cache.stats.lastLoad?.totalMs).toBeGreaterThanOrEqual(0);
+  cache.dispose();
+  expect(cache.stats.decodedPixelBytes).toBe(0);
+});
 
 describe("fixed cinematic framing", () => {
   it("keeps the camera completely fixed through impacts and the content handoff", () => {
@@ -230,6 +253,68 @@ describe("bounded decoded frame controller", () => {
       await flush();
       expect(bitmap.close).toHaveBeenCalledOnce();
       expect(shown).not.toHaveBeenCalled();
+    } finally { cache.dispose(); }
+  });
+
+  it.each([1, 4])("advances completed plates during continuous requests of %i samples faster than decoding", async stride => {
+    vi.useFakeTimers();
+    const dense = Array.from({ length: 180 }, (_, index) => ({ p: index / 179, url: `frame-${index}`, bytes: 1 }));
+    const shown: number[] = [];
+    let aborts = 0;
+    const cache = new HybridFrameCache(dense, plate => shown.push(plate.index), vi.fn(), (_sample, signal) => {
+      signal.addEventListener("abort", () => aborts++, { once: true });
+      return new Promise(resolve => setTimeout(() => resolve(image()), 90));
+    });
+    try {
+      for (let step = 0; step < 40; step++) {
+        cache.request(dense[10 + step * stride].p);
+        await vi.advanceTimersByTimeAsync(25);
+        expect(cache.stats.pending).toBeLessThanOrEqual(4);
+        expect(cache.stats.decoded).toBeLessThanOrEqual(6);
+      }
+      expect(shown.length).toBeGreaterThanOrEqual(5);
+      expect(shown.at(-1)).toBeGreaterThanOrEqual(10 + 30 * stride);
+      expect(aborts).toBe(0);
+      await vi.advanceTimersByTimeAsync(100);
+      expect(shown.at(-1)).toBe(10 + 39 * stride);
+    } finally { cache.dispose(); await vi.advanceTimersByTimeAsync(100); }
+  });
+
+  it("keeps exact captures on the requested sample while nearby plates complete", async () => {
+    const jobs: { p: number; resolve: (bitmap: ImageBitmap) => void }[] = [];
+    const shown: number[] = [];
+    const cache = new HybridFrameCache(samples, plate => shown.push(plate.sample.p), vi.fn(), sample =>
+      new Promise(resolve => jobs.push({ p: sample.p, resolve })));
+    try {
+      cache.request(0.42, true);
+      jobs.find(job => job.p === 0.52)!.resolve(image()); await flush();
+      expect(shown).toEqual([]);
+      jobs.find(job => job.p === 0.42)!.resolve(image()); await flush();
+      expect(shown).toEqual([0.42]);
+    } finally { cache.dispose(); }
+  });
+
+  it.each(["forward", "reverse"])("keeps reordered %s completions behind the wanted frame and catches up", async direction => {
+    const jobs: { p: number; signal: AbortSignal; resolve: (bitmap: ImageBitmap) => void }[] = [];
+    const shown: number[] = [];
+    const cache = new HybridFrameCache(samples, plate => shown.push(plate.sample.p), vi.fn(), (sample, signal) =>
+      new Promise(resolve => jobs.push({ p: sample.p, signal, resolve })));
+    const complete = async (p: number) => {
+      jobs.find(job => job.p === p && !job.signal.aborted)!.resolve(image());
+      await flush();
+    };
+    try {
+      if (direction === "reverse") cache.request(0.93);
+      cache.request(0.5);
+      await complete(direction === "forward" ? 0.6 : 0.42);
+      expect(shown).toEqual([]);
+      cache.request(direction === "forward" ? 0.501 : 0.499);
+      await complete(direction === "forward" ? 0.42 : 0.6);
+      expect(shown).toEqual([direction === "forward" ? 0.42 : 0.6]);
+      await complete(0.52);
+      expect(shown).toEqual(direction === "forward" ? [0.42, 0.52] : [0.6, 0.52]);
+      cache.request(direction === "forward" ? 0.4 : 0.6);
+      expect(shown.at(-1)).toBe(direction === "forward" ? 0.42 : 0.6);
     } finally { cache.dispose(); }
   });
 });

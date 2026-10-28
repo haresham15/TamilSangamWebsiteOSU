@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "revision": "games-hybrid-8711113f4a97",
-  "calibration": "games-hybrid-8711113f4a97",
-  "sourceCommit": "3cad14a5f73835b2bde911a25f6c008a3e9fa0a9",
+  "revision": "games-hybrid-3b0518ed4bef",
+  "calibration": "games-hybrid-3b0518ed4bef",
+  "sourceCommit": "6262ff78700944bf6a24235e972987dcc124752a",
   "sourceHashes": {
-    "src/components/games-hero/gamesRail.ts": "375d05c37595eb4527ce606194cd9d70fcf49b67140a4c3bd9314c0f3f541748",
+    "src/components/games-hero/gamesRail.ts": "cf35ea90376b22cf7a23c48f0b02754bb173f6383b66e9d1710006f760a6d985",
     "src/components/games-hero/camera/projectionMath.ts": "2d750decaba0477d0e76ffe9475a07f1c3a4a90411bb773f56fabf656290768e"
   },
   "width": 1912,
@@ -91,7 +91,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 0,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.20167218671739082,
@@ -147,7 +147,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 0,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.20167218671739082,
@@ -203,7 +203,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 0,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.20167218671739082,
@@ -259,7 +259,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 0,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.20167218671739082,
@@ -315,7 +315,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 0,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.1993337583924338,
@@ -371,7 +371,7 @@
       "lensShift": -0.35,
       "focusDistance": 35.329376054960186,
       "backgroundBokeh": 0.2393649501323025,
-      "foregroundBlur": 0,
+      "foregroundBlur": 17.820476287400773,
       "foreground": {
         "position": [
           0.18635051182669377,
@@ -427,7 +427,7 @@
       "lensShift": -0.35,
       "focusDistance": 25.2552751021863,
       "backgroundBokeh": 1.9784245878282145,
-      "foregroundBlur": 0,
+      "foregroundBlur": 16.51618155912884,
       "foreground": {
         "position": [
           0.16055868742998142,
@@ -483,7 +483,7 @@
       "lensShift": -0.35,
       "focusDistance": 14.075338802912563,
       "backgroundBokeh": 5.007123956849175,
-      "foregroundBlur": 0,
+      "foregroundBlur": 14.244657032363119,
       "foreground": {
         "position": [
           0.12653023941194896,
@@ -539,7 +539,7 @@
       "lensShift": -0.35,
       "focusDistance": 6.695279807096189,
       "backgroundBokeh": 8.85650315489518,
-      "foregroundBlur": 0,
+      "foregroundBlur": 11.357622633828617,
       "foreground": {
         "position": [
           0.09170818140878031,
@@ -595,7 +595,7 @@
       "lensShift": -0.35,
       "focusDistance": 2.975734834036124,
       "backgroundBokeh": 13.0576022796662,
-      "foregroundBlur": 0,
+      "foregroundBlur": 8.20679829025035,
       "foreground": {
         "position": [
           0.06277095090325703,
@@ -651,7 +651,7 @@
       "lensShift": -0.35,
       "focusDistance": 1.3528444109721844,
       "backgroundBokeh": 17.1414614288622,
-      "foregroundBlur": 0,
+      "foregroundBlur": 5.143903928353348,
       "foreground": {
         "position": [
           0.04357750538390134,
@@ -707,7 +707,7 @@
       "lensShift": -0.35,
       "focusDistance": 0.6887190614422057,
       "backgroundBokeh": 20.639120700183188,
-      "foregroundBlur": 0,
+      "foregroundBlur": 2.520659474862609,
       "foreground": {
         "position": [
           0.03469315024320124,
@@ -763,7 +763,7 @@
       "lensShift": -0.35,
       "focusDistance": 0.42982283575130836,
       "backgroundBokeh": 23.08162019132913,
-      "foregroundBlur": 0,
+      "foregroundBlur": 0.6887848565031516,
       "foreground": {
         "position": [
           0.03314438546920593,
@@ -1155,7 +1155,7 @@
       "lensShift": -0.35,
       "focusDistance": 0.5815211387598301,
       "backgroundBokeh": 21.515624999999993,
-      "foregroundBlur": 0.6388888888888906,
+      "foregroundBlur": 1.863281250000006,
       "foreground": {
         "position": [
           0.03407020055191162,
@@ -1211,7 +1211,7 @@
       "lensShift": -0.35,
       "focusDistance": 0.8288128716108758,
       "backgroundBokeh": 19.679855346679673,
-      "foregroundBlur": 1.1613633897569475,
+      "foregroundBlur": 3.2401084899902464,
       "foreground": {
         "position": [
           0.034754309526368904,
@@ -1267,7 +1267,7 @@
       "lensShift": -0.35,
       "focusDistance": 1.2882266981784123,
       "backgroundBokeh": 17.39501953124998,
-      "foregroundBlur": 1.8632812500000042,
+      "foregroundBlur": 4.953735351562516,
       "foreground": {
         "position": [
           0.03560576530878131,
@@ -1323,7 +1323,7 @@
       "lensShift": -0.35,
       "focusDistance": 2.132686852699597,
       "backgroundBokeh": 14.783340454101536,
-      "foregroundBlur": 2.740166558159729,
+      "foregroundBlur": 6.912494659423848,
       "foreground": {
         "position": [
           0.03657902090860463,
@@ -1379,7 +1379,7 @@
       "lensShift": -0.35,
       "focusDistance": 3.649657518178952,
       "backgroundBokeh": 11.999999999999972,
-      "foregroundBlur": 3.7777777777777866,
+      "foregroundBlur": 9.000000000000021,
       "foreground": {
         "position": [
           0.0376162470007655,
@@ -1435,7 +1435,7 @@
       "lensShift": -0.35,
       "focusDistance": 6.245642665794694,
       "backgroundBokeh": 9.216659545898462,
-      "foregroundBlur": 4.953735351562483,
+      "foregroundBlur": 11.087505340576154,
       "foreground": {
         "position": [
           0.0386534730929263,
@@ -1491,7 +1491,7 @@
       "lensShift": -0.35,
       "focusDistance": 10.339795021198404,
       "backgroundBokeh": 6.604980468750019,
-      "foregroundBlur": 6.2391493055555385,
+      "foregroundBlur": 13.046264648437486,
       "foreground": {
         "position": [
           0.039626728692749566,
@@ -1547,7 +1547,7 @@
       "lensShift": -0.35,
       "focusDistance": 16.07117897929279,
       "backgroundBokeh": 4.3201446533203285,
-      "foregroundBlur": 7.600246853298593,
+      "foregroundBlur": 14.759891510009753,
       "foreground": {
         "position": [
           0.04047818447516203,
@@ -1603,7 +1603,7 @@
       "lensShift": -0.35,
       "focusDistance": 22.90544420862609,
       "backgroundBokeh": 2.484375000000008,
-      "foregroundBlur": 8.999999999999984,
+      "foregroundBlur": 16.136718749999993,
       "foreground": {
         "position": [
           0.04116229344961931,
@@ -1659,7 +1659,7 @@
       "lensShift": -0.35,
       "focusDistance": 29.517761304203717,
       "backgroundBokeh": 1.1704559326172062,
-      "foregroundBlur": 10.399753146701377,
+      "foregroundBlur": 17.122158050537095,
       "foreground": {
         "position": [
           0.04165193212737029,
@@ -1715,7 +1715,7 @@
       "lensShift": -0.35,
       "focusDistance": 34.348377130350705,
       "backgroundBokeh": 0.385253906250016,
-      "foregroundBlur": 11.760850694444432,
+      "foregroundBlur": 17.71105957031249,
       "foreground": {
         "position": [
           0.041944541688721484,
@@ -1771,7 +1771,7 @@
       "lensShift": -0.35,
       "focusDistance": 36.62172825788064,
       "backgroundBokeh": 0.053237915039035855,
-      "foregroundBlur": 13.046264648437493,
+      "foregroundBlur": 17.960071563720724,
       "foreground": {
         "position": [
           0.04206826915030137,
@@ -1827,7 +1827,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 14.222222222222218,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.042088108532325,
@@ -1883,7 +1883,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 15.259833441840271,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.042088108532325,
@@ -1939,7 +1939,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 16.136718749999993,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.042088108532325,
@@ -1995,7 +1995,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 16.838636610243054,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.042088108532325,
@@ -2051,7 +2051,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 17.36111111111111,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.042088108532325,
@@ -2107,7 +2107,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 17.71105957031251,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.042088108532325,
@@ -2163,7 +2163,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 17.908420138888903,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.042088108532325,
@@ -2219,7 +2219,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 17.98777940538196,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.042088108532325,
@@ -2275,7 +2275,7 @@
       "lensShift": -0.35,
       "focusDistance": 37,
       "backgroundBokeh": 0,
-      "foregroundBlur": 17.999187361111094,
+      "foregroundBlur": 18,
       "foreground": {
         "position": [
           0.042088108532325,
@@ -8455,7 +8455,7 @@
         "lensShift": -0.12,
         "focusDistance": 37,
         "backgroundBokeh": 0,
-        "foregroundBlur": 0,
+        "foregroundBlur": 18,
         "foreground": {
           "position": [
             6.82,

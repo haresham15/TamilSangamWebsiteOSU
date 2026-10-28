@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useReducedMotion } from "framer-motion";
 
 export interface StarBorderProps {
   as?: React.ElementType;
@@ -30,12 +29,11 @@ export function StarBorder({
   thickness = 1,
   hoverOnly = false,
 }: StarBorderProps) {
-  const shouldReduceMotion = useReducedMotion();
   const [isHovered, setIsHovered] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Tag = Component as any;
 
-  const active = (!hoverOnly || isHovered) && !shouldReduceMotion;
+  const active = !hoverOnly || isHovered;
 
   return (
     <Tag

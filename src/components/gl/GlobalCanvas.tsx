@@ -41,12 +41,9 @@ export function GlobalCanvas() {
 
   useEffect(() => {
     const frameId = requestAnimationFrame(() => {
-      setSource(document.getElementById("app-root"));
+      setSource(document.getElementById("app-root") ?? document.body);
     });
-
-    return () => {
-      cancelAnimationFrame(frameId);
-    };
+    return () => cancelAnimationFrame(frameId);
   }, []);
 
   if (!source || tier === "C" || isLiteMode) {

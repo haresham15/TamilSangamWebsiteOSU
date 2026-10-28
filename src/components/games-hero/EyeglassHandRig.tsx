@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, type RefObject } from "react";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { DESIGN_ASPECT, evaluateForegroundRig, LENS_CENTERS, LENS_HEIGHT, LENS_WIDTH } from "./gamesRail";
@@ -10,7 +11,6 @@ const palette = {
   chromeHinge: "#DCE2E6", // 3-barrel polished chrome hinge blocks with screws
   silverPin: "#C9CED3", // Hinge rivets
   arCoating: "#68E8D0", // Emerald-cyan Fresnel AR optical coating glint
-  skyRim: "#FAFBF8", // Sharp white sky reflection highlight
   mask: "#FFFFFF",
 };
 
@@ -38,8 +38,18 @@ function mergeParts(parts: THREE.BufferGeometry[]) {
   return geometry;
 }
 
-export function EyeglassHandRig({ scrollP, hand }: { scrollP: number; hand: THREE.Group; foregroundBlur?: number }) {
-  const rig = useMemo(() => evaluateForegroundRig(scrollP, DESIGN_ASPECT), [scrollP]);
+export function EyeglassHandRig({ progressRef, hand }: { progressRef: RefObject<number>; hand: THREE.Group }) {
+  const group = useRef<THREE.Group>(null);
+  const coating = useRef<THREE.Mesh>(null);
+  useFrame(() => {
+    if (!group.current) return;
+    const progress = progressRef.current;
+    const rig = evaluateForegroundRig(progress, DESIGN_ASPECT);
+    group.current.position.copy(rig.position);
+    group.current.rotation.copy(rig.rotation);
+    group.current.visible = rig.opacity > 0;
+    if (coating.current) coating.current.visible = progress >= 0.58;
+  });
   const resources = useMemo(() => {
     // 1. Sculpted Acetate Frame with variable Z-thickness (5.5 mm at bridge/lugs, tapering to 4.2 mm)
     // 5-segment rounded bevel catching continuous white sky-reflection line
@@ -129,15 +139,6 @@ export function EyeglassHandRig({ scrollP, hand }: { scrollP: number; hand: THRE
       blending: THREE.AdditiveBlending,
     });
 
-    // Continuous white sky-reflection highlight quad along lower-left rim
-    const skyReflection = new THREE.MeshBasicMaterial({
-      color: palette.skyRim,
-      transparent: true,
-      opacity: 0.25,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-    });
-
     // 3-barrel chrome hinge block at x = ±0.068 m with micro screws
     const hingeParts: THREE.BufferGeometry[] = [];
     for (let b = 0; b < 3; b++) {
@@ -156,7 +157,6 @@ export function EyeglassHandRig({ scrollP, hand }: { scrollP: number; hand: THRE
       silver,
       mask,
       glint,
-      skyReflection,
       hingeBlock,
       screw,
       pin,
@@ -167,7 +167,7 @@ export function EyeglassHandRig({ scrollP, hand }: { scrollP: number; hand: THRE
   useEffect(() => () => Object.values(resources).forEach((resource) => (resource as { dispose?: () => void }).dispose?.()), [resources]);
 
   return (
-    <group position={rig.position} rotation={rig.rotation} visible={rig.opacity > 0} name="EyeglassHandRigGroup" dispose={null}>
+    <group ref={group} visible={false} name="EyeglassHandRigGroup" dispose={null}>
       <mesh geometry={resources.frame} material={resources.acetate} name="GlassesFrameAssembly" />
       <primitive object={hand} name="HandAndArmRig" dispose={null} />
       {LENS_CENTERS.map((x, index) => (
@@ -178,13 +178,6 @@ export function EyeglassHandRig({ scrollP, hand }: { scrollP: number; hand: THRE
             geometry={resources.lens}
             material={resources.mask}
             layers={2}
-          />
-          {/* Continuous white sky reflection line on bottom-left lens rim */}
-          <mesh
-            position={[x - 0.012, 0.012, 0.0045]}
-            rotation={[0, 0, -0.55]}
-            geometry={resources.highlight}
-            material={resources.skyReflection}
           />
           {/* 3-barrel chrome hinge block at x = ±0.068 m with screws */}
           <mesh
@@ -205,11 +198,12 @@ export function EyeglassHandRig({ scrollP, hand }: { scrollP: number; hand: THRE
       ))}
       {/* Curved emerald-cyan Fresnel AR optical coating glint across right lens */}
       <mesh
+        ref={coating}
         position={[0.055, -0.011, 0.005]}
         rotation={[0, 0, -0.32]}
         geometry={resources.highlight}
         material={resources.glint}
-        visible={scrollP >= 0.58}
+        visible={false}
       />
     </group>
   );

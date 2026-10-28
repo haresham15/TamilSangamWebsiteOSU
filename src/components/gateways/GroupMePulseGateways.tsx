@@ -55,9 +55,9 @@ export function GroupMePulseGateways({
         {/* Header Strip */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-6 border-current/10">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium tracking-wide uppercase bg-[#B85C38]/10 text-[#B85C38] dark:bg-[#B85C38]/20 dark:text-[#E07A5F]">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#B85C38]">
               <MessageCircle className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>OPEN GATEWAY · POP-UP HANGOUTS</span>
+              <span>Pop-Up Hangouts</span>
             </div>
             <h2
               id="groupme-pulse-heading"
@@ -102,10 +102,7 @@ export function GroupMePulseGateways({
                     >
                       <Icon className="w-5 h-5" aria-hidden="true" />
                     </div>
-                    <span
-                      className="text-[10px] font-mono font-bold tracking-widest px-2 py-0.5 rounded uppercase"
-                      style={{ backgroundColor: `${card.accent}15`, color: card.accent }}
-                    >
+                    <span className="text-[10px] font-mono font-medium tracking-widest text-stone-400 uppercase">
                       {card.badge}
                     </span>
                   </div>

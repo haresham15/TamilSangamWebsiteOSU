@@ -1,4 +1,4 @@
-.runway { position: relative; height: 340dvh; }
+.runway { position: relative; height: 640dvh; }
 .runway[data-static="true"] { height: 100dvh; }
 .stage { position: sticky; top: 0; width: 100%; height: 100dvh; overflow: clip; color: var(--color-khadi-ivory); }
 .frame, .overlays { position: absolute; inset: 0; pointer-events: none; }
@@ -9,6 +9,9 @@
 .intro p + p { margin-top: 12px; }
 .caption { position: absolute; bottom: 5%; left: 5%; right: 5%; pointer-events: none; }
 .caption p { margin-top: 8px; }
+.captionStack { display: grid; }
+.captionBeat { grid-area: 1 / 1; transition: opacity .22s linear, transform .22s ease; }
+.exitWash { position: absolute; inset: 0; z-index: 2; background: var(--color-khadi-ivory); pointer-events: none; }
 .skip { position: absolute; z-index: 5; right: 5%; bottom: max(5%, 96px); display: flex; align-items: center; gap: 16px; min-height: 48px; padding: 12px 22px; border: 1px solid var(--color-antique-gold); border-radius: 999px; color: var(--color-khadi-ivory); background: var(--color-hearth-espresso); font-size: 14px; }
 .skip:focus-visible, .stills button:focus-visible { outline: 3px solid var(--color-antique-gold); outline-offset: 5px; }
 .stills { display: flex; margin-top: 12px; pointer-events: auto; }
@@ -20,7 +23,7 @@
   .poster { object-fit: contain; }
 }
 @media (max-width: 767px) {
-  .runway { height: 260dvh; }
+  .runway { height: 480dvh; }
   .skip { bottom: 96px; right: 6%; }
   .caption { bottom: 160px; left: 6%; }
   .intro { top: 120px; left: 6%; }
@@ -28,6 +31,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .frame[data-ready="true"] > .poster { transition: none; }
+  .captionBeat { transition: none; }
 }
 
 @media (min-aspect-ratio: 13/10) {

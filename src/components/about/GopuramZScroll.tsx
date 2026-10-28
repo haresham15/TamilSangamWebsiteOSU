@@ -18,6 +18,7 @@ import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 import { createCinemaCameraDamper, smootherstep } from "@/lib/cinemaCameraDamper";
 import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
 import { GradeStack } from "@/gl/grade/GradeStack";
+import { PronounceableQuote } from "@/components/ui/PronounceableQuote";
 
 interface TierItem {
   id: string;
@@ -529,15 +530,23 @@ function RingModalCard({
           {locale === "ta" ? tier.titleTa : tier.titleEn}
         </Heading>
 
-        {/* Tamil Calligraphic Inscription */}
+        {/* Tamil Calligraphic Inscription (Click to Pronounce) */}
         {locale !== "ta" && (
-          <p
-            lang="ta"
-            style={{ letterSpacing: 0 }}
-            className="text-lg sm:text-2xl font-medium text-[#E5A93C] font-tamil leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]"
+          <PronounceableQuote
+            tamilText={tier.titleTa}
+            label={`Chapter ${index + 1}: ${tier.titleTa}. Click to hear pronunciation.`}
+            tone="gold"
+            badgePosition="beside"
+            className="inline-block"
           >
-            {tier.titleTa}
-          </p>
+            <p
+              lang="ta"
+              style={{ letterSpacing: 0 }}
+              className="text-lg sm:text-2xl font-medium text-[#E5A93C] font-tamil leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]"
+            >
+              {tier.titleTa}
+            </p>
+          </PronounceableQuote>
         )}
 
         {/* Narrative Description */}

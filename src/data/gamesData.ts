@@ -255,14 +255,14 @@ export const THODARPU_EDITIONS: Record<string, ThodarpuEdition> = {
         nameEn: "STAPLES OF AN OSU TAMIL SANGAM MEETING",
         nameTa: "சங்கக் கூட்டங்களின் முக்கிய அடையாளங்கள்",
         culturalExplanation:
-          "Every Sangam meeting pairs competitive Kahoot & team games with marigold-draped tables of hot biryani and samosas.",
+          "Every Sangam meeting pairs competitive Kahoot & team games with plates of hot biryani, samosas, and cups of chai.",
         descriptionEn:
-          "Every Sangam meeting pairs competitive Kahoot & team games with marigold-draped tables of hot biryani and samosas.",
+          "Every Sangam meeting pairs competitive Kahoot & team games with plates of hot biryani, samosas, and cups of chai.",
         descriptionTa: "வகுப்பறை சந்திப்புகளில் வழங்கப்படும் உணவுகளும் விளையாட்டுகளும்.",
         tiles: [
           { id: "10-1-1", categoryTitle: "STAPLES OF AN OSU TAMIL SANGAM MEETING", termEn: "BIRYANI", termTa: "பிரியாணி", word: "BIRYANI", tamilSubtitle: "பிரியாணி", hint: "Fragrant centerpiece of every Indian gathering" },
           { id: "10-1-2", categoryTitle: "STAPLES OF AN OSU TAMIL SANGAM MEETING", termEn: "SAMOSA", termTa: "சமோசா", word: "SAMOSA", tamilSubtitle: "சமோசா", hint: "Crispy triangular savory snack with spiced potato filling" },
-          { id: "10-1-3", categoryTitle: "STAPLES OF AN OSU TAMIL SANGAM MEETING", termEn: "MARIGOLD", termTa: "சாமந்தி", word: "MARIGOLD", tamilSubtitle: "சாமந்தி", hint: "Golden celebratory flowers adorning the tables" },
+          { id: "10-1-3", categoryTitle: "STAPLES OF AN OSU TAMIL SANGAM MEETING", termEn: "CHAI", termTa: "தேநீர்", word: "CHAI", tamilSubtitle: "தேநீர்", hint: "Steaming spiced tea served alongside hot snacks" },
           { id: "10-1-4", categoryTitle: "STAPLES OF AN OSU TAMIL SANGAM MEETING", termEn: "KAHOOT", termTa: "கஹூட் வினாடி", word: "KAHOOT", tamilSubtitle: "கஹூட் வினாடி", hint: "Fierce campus trivia battle on our phones" },
         ],
       },

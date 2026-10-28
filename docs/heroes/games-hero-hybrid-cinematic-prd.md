@@ -1,6 +1,6 @@
 # Games hero: hybrid cinematic production PRD
 
-Status: implementation in progress; engineering and asset evidence tracked separately from production acceptance.
+Status: revised implementation and engineering verification completed; production art and physical-device acceptance remain open.
 Date: 2026-10-27. Route: `/games`. Approach: Option B, offline background rendering with live foreground hand and eyewear.
 
 ## Latest user revision: fixed camera and smoother playback
@@ -11,9 +11,9 @@ The subsequent implementation request supersedes the portal and synchronization 
 - Make the hand's entrance smooth, then hold the gripping pose without tremor. Retain a restrained final fade. Drive live hand movement from continuous requested progress so holding a nearest background sample does not freeze or step the hand.
 - Keep background-dependent focus, lens treatment, blast light and beat captions tied to the displayed plate's progress. Continuous hand progress and quantized displayed-media progress are intentionally separate; this replaces the earlier requirement that every foreground transform use the sampled plate progress. The shared canonical content rectangle and lens projection contracts still apply.
 - Follow the hero with ordinary document-flow arcade content. Remove the negative-margin/transformed editorial overlay and lens portal handoff. Normal scrolling must reach the games without stealing focus; explicit skip focuses the arcade immediately and scrolls to its actual document position.
-- Deliver a visibly evolving, impactful explosion sequence with original rendered fire/smoke/dust, rather than repeating one blast still under different sample filenames. The current regeneration target is 149 genuine timeline samples; final count, unique hashes, calibration and bytes require post-encode verification. This is not a production-quality approval.
+- Deliver a visibly evolving, impactful explosion sequence with original rendered fire/smoke/dust, rather than repeating one blast still under different sample filenames. Final delivery contains 149 timeline samples, with 126 unique moving hashes and 7,972,676 sequence bytes; calibration and files passed post-encode verification. This is not a production-quality approval.
 - Pause optional requests/draws while hidden, preserve bounded state across visibility changes, and pause the startup deadline before a hidden visit can falsely time out. Offscreen reentry must not reuse closed bitmaps or disposed foreground resources.
-- Current revised startup fallback deadline is 12 seconds for ordinary visits and 30 seconds for exact debug captures, counting visible activation rather than hidden time. Poster and skip remain immediate. This explicitly revises the historical three-second first-pair target; clean first-draw measurements are still required and the longer fallback deadline is not a loading-performance pass.
+- Current revised startup fallback deadline is 12 seconds for ordinary visits and 30 seconds for exact debug captures, counting visible activation rather than hidden time. Poster and skip remain immediate. This explicitly revises the historical three-second first-pair target; one isolated local Iris Xe visit measured first ready at 2.0551 seconds. The longer fallback deadline is not a loading-performance pass or a physical-device guarantee.
 
 Current source/media checks and unresolved art, browser and performance limits are recorded in [implementation evidence](games-hero-hybrid-cinematic-evidence.md). Old portal endpoint assertions and earlier passing v1.1 milestones are historical evidence, not acceptance of this revised behavior. No deployment is authorized.
 
@@ -426,6 +426,6 @@ MP4/WebM seeking is a later alternative if individual-frame transfer proves unsu
 
 ## 14. Deliverables and stop boundary
 
-Implementation would deliver the original Blender scene and reproducible bake settings, verified source licenses, posed hand GLB, optimized background frames and posters, manifest, integrated hero, focused tests, and an evidence report.
+Current implementation delivers an original reproducible Blender scene, source-rights register, posed hand GLB, 149 optimized background frames, eight posters, validated manifest, integrated fixed-camera hero, focused tests and an evidence report. A production gas bake, photoreal art approval and physical-device acceptance are not established by those deliverables.
 
 Implementation has been authorized in a subsequent request. Track completed work and outstanding art, browser and performance gates in [implementation evidence](games-hero-hybrid-cinematic-evidence.md); unchecked acceptance items remain release requirements. No deployment is authorized by implementation work.

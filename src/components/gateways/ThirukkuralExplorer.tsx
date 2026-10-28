@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { BookOpen, RefreshCw, Sparkles, Quote } from "lucide-react";
+import { BookOpen, RefreshCw, Quote } from "lucide-react";
+import { PronounceableQuote } from "@/components/ui/PronounceableQuote";
 
 interface KuralItem {
   number: number;
@@ -124,53 +125,78 @@ export function ThirukkuralExplorer({
       } ${className}`}
     >
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Top Badges */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-4 border-current/10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium tracking-wide uppercase bg-[#E5A93C]/15 text-[#B85C38] dark:bg-[#E5A93C]/20 dark:text-[#E5A93C]">
+        {/* Editorial Header Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-4 border-current/10 text-xs font-mono tracking-wider uppercase">
+          <div className={`flex items-center gap-2 ${isDark ? "text-[#E5A93C]" : "text-[#B85C38]"}`}>
             <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>OPEN GATEWAY · LIVING WISDOM CARD</span>
+            <span>Living Wisdom</span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-stone-500 uppercase">
-            <span>குறள் {current.number} · {current.chapterTa}</span>
+          <div className={isDark ? "text-stone-400" : "text-[#706B64]"}>
+            <span lang="ta">குறள் {current.number} · {current.chapterTa}</span>
           </div>
         </div>
 
         {/* Couplet Monument Box */}
         <div className="relative py-6 px-4 sm:px-8 rounded-xl bg-[radial-gradient(ellipse_at_center,rgba(229,169,60,0.08),transparent_70%)] space-y-6 text-center">
-          <Quote className="w-8 h-8 mx-auto text-[#B85C38]/30" aria-hidden="true" />
+          <Quote
+            className={`w-8 h-8 mx-auto ${isDark ? "text-[#E5A93C]/40" : "text-[#B85C38]/30"}`}
+            aria-hidden="true"
+          />
 
-          {/* 2-line Tamil Couplet */}
-          <div className="space-y-1">
-            <p
-              lang="ta"
-              className="text-xl sm:text-2xl md:text-3xl font-tamil font-normal text-[#2A2825] dark:text-stone-100 tracking-normal leading-relaxed"
-            >
-              {current.line1Ta}
-            </p>
-            <p
-              lang="ta"
-              className="text-xl sm:text-2xl md:text-3xl font-tamil font-normal text-[#2A2825] dark:text-stone-100 tracking-normal leading-relaxed"
-            >
-              {current.line2Ta}
-            </p>
-          </div>
+          {/* 2-line Tamil Couplet (Click to Pronounce with cute button next to it) */}
+          <PronounceableQuote
+            tamilText={`${current.line1Ta} ${current.line2Ta}`}
+            label={`Thirukkural ${current.number}. Click to listen to pronunciation.`}
+            tone={isDark ? "gold" : "light"}
+            badgePosition="corner"
+            className={`p-3 sm:p-4 rounded-xl transition-colors ${
+              isDark ? "hover:bg-white/5" : "hover:bg-black/5"
+            }`}
+          >
+            <div className="space-y-1">
+              <p
+                lang="ta"
+                className={`text-xl sm:text-2xl md:text-3xl font-tamil font-medium tracking-normal leading-relaxed ${
+                  isDark ? "text-stone-100" : "text-[#161210]"
+                }`}
+              >
+                {current.line1Ta}
+              </p>
+              <p
+                lang="ta"
+                className={`text-xl sm:text-2xl md:text-3xl font-tamil font-medium tracking-normal leading-relaxed ${
+                  isDark ? "text-stone-100" : "text-[#161210]"
+                }`}
+              >
+                {current.line2Ta}
+              </p>
+            </div>
+          </PronounceableQuote>
 
           {/* Transliteration */}
-          <p className="text-xs sm:text-sm font-mono italic text-stone-500 max-w-xl mx-auto">
+          <p
+            className={`text-xs sm:text-sm font-mono italic max-w-xl mx-auto ${
+              isDark ? "text-stone-400" : "text-[#57524C]"
+            }`}
+          >
             &ldquo;{current.transliteration}&rdquo;
           </p>
 
           {/* Modern Takeaway */}
           <div
             className={`p-4 rounded-xl border max-w-2xl mx-auto ${
-              isDark ? "bg-[#211E1C] border-white/10" : "bg-[#F9F5EE] border-[#E6DDCE]"
+              isDark ? "bg-[#211E1C] border-white/10" : "bg-[#F4EFE6] border-[#E0D5C3]"
             }`}
           >
             <span className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[#B85C38] mb-1">
               Campus &amp; Life Takeaway (Zero Preachiness):
             </span>
-            <p className="text-sm sm:text-base font-serif font-normal leading-relaxed text-[#2A2825] dark:text-stone-200">
+            <p
+              className={`text-sm sm:text-base font-serif font-normal leading-relaxed ${
+                isDark ? "text-stone-200" : "text-[#2A2825]"
+              }`}
+            >
               {current.collegeTakeaway}
             </p>
           </div>
@@ -178,7 +204,11 @@ export function ThirukkuralExplorer({
 
         {/* Control Footer */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-current/10">
-          <p className="text-xs font-sans text-stone-500 italic text-center sm:text-left">
+          <p
+            className={`text-xs font-sans italic text-center sm:text-left ${
+              isDark ? "text-stone-400" : "text-[#706B64]"
+            }`}
+          >
             Incubating Idea: Collectible Kural meal-ticket cards &amp; bite-sized Tamil cultural moments woven naturally into our biryani nights.
           </p>
 

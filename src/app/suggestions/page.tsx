@@ -28,6 +28,7 @@ import { Magnet } from "@/components/ui/react-bits";
 import { PILLARS_DATA, PillarSlug } from "@/data/pillars";
 import { OsuTamilPlaylistGateway } from "@/components/gateways/OsuTamilPlaylistGateway";
 import { AramPhilanthropyGateway } from "@/components/gateways/AramPhilanthropyGateway";
+import { HeroKolamLoader } from "@/components/ui/HeroKolamLoader";
 
 function SuggestionsSearchParamsSync({
   onCategory,
@@ -78,12 +79,7 @@ const BlueprintScene3D = dynamic(
   () => import("@/components/suggestions/BlueprintScene3D").then((m) => m.BlueprintScene3D),
   {
     ssr: false,
-    loading: () => (
-      <div className="w-full h-full bg-[#120D0B] flex flex-col items-center justify-center text-[#FAF7F2] p-8 text-center">
-        <div className="font-serif text-3xl sm:text-5xl text-[#FAF7F2] font-normal mb-2">The Blueprint Hearth</div>
-        <p lang="ta" className="font-tamil text-base text-[#D4AF37]/80">கருத்துக்களம் · திட்டங்கள்</p>
-      </div>
-    ),
+    loading: () => <HeroKolamLoader route="/suggestions" minHeight="100%" />,
   }
 );
 

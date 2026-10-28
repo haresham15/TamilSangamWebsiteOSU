@@ -60,7 +60,7 @@ export default function GalleryPage() {
   // Extract all photos across albums
   const allPhotos = GALLERY_ALBUMS.flatMap((a) => a.photos);
 
-  const tags = ["all", "picnic", "food", "jathara", "carnival", "dance", "games", "tradition", "friends"];
+  const tags = ["all", "mystery", "halloween", "picnic", "food", "jathara", "carnival", "dance", "games", "tradition", "friends"];
 
   // Filtered photos
   const filteredPhotos = allPhotos.filter((photo) => {

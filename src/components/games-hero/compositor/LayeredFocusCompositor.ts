@@ -9,29 +9,20 @@ export const fullscreenVertex = /* glsl */ `
   }
 `;
 
+export const FOCUS_GAUSSIAN_WEIGHTS = [0.2270270270, 0.1945945946, 0.1216216216, 0.0540540541, 0.0162162162] as const;
+
 export const blurFragment = /* glsl */ `
   uniform sampler2D uSource;
   uniform vec2 uRadius;
-  uniform float uTaps;
   varying vec2 vUv;
 
   void main() {
-    vec4 sum = vec4(0.0);
-    float totalWeight = 0.0;
-    for (int i = 0; i < 32; i++) {
-      if (float(i) >= uTaps) break;
-      float radius = sqrt((float(i) + 0.5) / uTaps);
-      float angle = float(i) * 2.39996323; // Golden angle Vogel disc (137.508 deg)
-      vec2 sampleUv = vUv + vec2(cos(angle), sin(angle)) * radius * uRadius;
-      vec4 sampleColor = texture2D(uSource, clamp(sampleUv, 0.0, 1.0));
-      // Restrained iris edge weighting for the foreground's defocus disc.
-      float irisRing = 1.0 + 0.22 * smoothstep(0.65, 0.98, radius);
-      float weight = irisRing;
-      sum += sampleColor * weight;
-      totalWeight += weight;
-    }
-    // Shared premultiplied alpha: eliminates dark halos around defocused foreground rims
-    gl_FragColor = sum / totalWeight;
+    vec4 sum = texture2D(uSource, vUv) * ${FOCUS_GAUSSIAN_WEIGHTS[0]};
+    ${FOCUS_GAUSSIAN_WEIGHTS.slice(1).map((weight, index) => `sum += (
+      texture2D(uSource, clamp(vUv + uRadius * ${((index + 1) / 4).toFixed(2)}, 0.0, 1.0)) +
+      texture2D(uSource, clamp(vUv - uRadius * ${((index + 1) / 4).toFixed(2)}, 0.0, 1.0))) * ${weight};`).join("\n    ")}
+    // Positive normalized weights preserve premultiplied RGBA without introducing halos.
+    gl_FragColor = sum;
   }
 `;
 
@@ -136,7 +127,6 @@ export function createLayeredFocusTargets(
     uniforms: {
       uSource: { value: foreground.texture },
       uRadius: { value: new THREE.Vector2() },
-      uTaps: { value: 32 },
     },
   });
 

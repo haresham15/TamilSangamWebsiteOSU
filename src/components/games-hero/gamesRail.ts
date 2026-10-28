@@ -58,7 +58,7 @@ export function evaluateCameraRail(p: number, _timeSeconds = 0, aspect = DESIGN_
     position, lookAt, fov: projection.fov, lensShift: projection.lensShift,
     dofFocusDistance: 37 * (0.36 / 37) ** focus,
     backgroundBokeh: 24 * focus,
-    foregroundBlur: 18 * smoother(p, 0.52, 0.64),
+    foregroundBlur: 18 * (1 - focus),
     lensRefractionZoom: 1,
     lensContrastBoost: 0.12 * smoother(p, 0.52, 0.60),
     cameraShake: 0,

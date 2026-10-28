@@ -37,11 +37,22 @@ describe("Tamil Akshara Grapheme Tokenizer & Games Engine (D-11)", () => {
 });
 
 describe("Beach Blast Hero Camera Rail & Kinematics (D-01 to D-10)", () => {
-  it("evaluates Beat 1 (p = 0.10) with sharp distant background and no foreground blur", () => {
+  it("evaluates Beat 1 (p = 0.10) with sharp distant background and an unfocused foreground plane", () => {
     const cam = evaluateCameraRail(0.10);
     expect(cam.dofFocusDistance).toBeCloseTo(37.0);
     expect(cam.backgroundBokeh).toBe(0.0);
-    expect(cam.foregroundBlur).toBe(0.0);
+    expect(cam.foregroundBlur).toBe(18.0);
+  });
+
+  it("brings the soft entering hand into focus before shifting focus back to the beach", () => {
+    expect(evaluateCameraRail(0.30).foregroundBlur).toBeGreaterThan(10);
+    expect(evaluateCameraRail(0.42).foregroundBlur).toBe(0);
+    expect(evaluateCameraRail(0.56).foregroundBlur).toBeCloseTo(9);
+    expect(evaluateCameraRail(0.72).foregroundBlur).toBe(18);
+    for (const p of [0.10, 0.30, 0.42, 0.56, 0.72]) {
+      const rail = evaluateCameraRail(p);
+      expect(rail.foregroundBlur / 18 + rail.backgroundBokeh / 24).toBeCloseTo(1);
+    }
   });
 
   it("evaluates Beat 2 (p = 0.42) with macro foreground sharpness at 0.36m and creamy background bokeh", () => {

@@ -21,20 +21,6 @@ export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
     isMock: true,
   },
   {
-    id: "mock-kollywood-kollai-2026",
-    slug: "kollywood-kollai",
-    titleEn: "Kollywood Kollai",
-    titleTa: "கோலிவுட் கொள்ளை",
-    description:
-      "An immersive autumn convergence weaving Tamil cinema folklore, costumed revelry, street-style night-market sapad, and live acoustic cyphers under midnight Ohio skies.\n\nFree admission for all Buckeyes. Zero dues.",
-    location: "Ohio Union — Performance Hall",
-    allDay: false,
-    start: "2026-10-31T20:00:00-04:00",
-    end: "2026-10-31T23:30:00-04:00",
-    googleLink: "https://calendar.google.com",
-    isMock: true,
-  },
-  {
     id: "mock-streetside-sapad-2026",
     slug: "streetside-sapad",
     titleEn: "Streetside Sapad Night",

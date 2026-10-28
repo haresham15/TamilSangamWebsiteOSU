@@ -19,6 +19,34 @@ const TransitionContext = createContext<TransitionContextValue>({
 
 export const usePageTransition = () => useContext(TransitionContext);
 
+export function getSceneIdForPath(pathname: string): string | null {
+  const clean = pathname.split("?")[0].split("#")[0].replace(/\/+$/, "") || "/";
+  switch (clean) {
+    case "":
+    case "/":
+      return "home-kolam";
+    case "/about":
+      return "about-gopuram";
+    case "/board":
+      return "board-corridor";
+    case "/events":
+      return "events-arena";
+    case "/gallery":
+      return "gallery-fretboard";
+    case "/games":
+      return "games-hero";
+    case "/guide":
+      return "guide-station";
+    case "/join":
+      return "join-morning-gates";
+    case "/suggestions":
+    case "/ideas":
+      return "ideas-blueprint";
+    default:
+      return null;
+  }
+}
+
 export function TransitionProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { tier } = useTierContext();
@@ -42,26 +70,24 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
         return;
       }
 
+      const sceneId = targetSceneId || getSceneIdForPath(href);
       setIsTransitioning(true);
 
       try {
-        // 1) Shutter closes (§5.1)
+        // 1) Kolam veil closes with destination route context
         if (shutterRef.current) {
-          await shutterRef.current.close();
+          await shutterRef.current.close(href);
         }
 
         // 2) Trigger Next.js route change
         router.push(href);
 
-        // 3) Wait for target scene ready with a 1.2s safety cap (§5.1)
-        if (targetSceneId) {
-          await waitForSceneReady(targetSceneId, 1200);
-        } else {
-          // Brief pause for DOM mount
-          await new Promise((r) => setTimeout(r, 150));
-        }
+        // 3) Wait for target scene ready with a 600ms safety cap and minimal 80ms dwell
+        const minDwell = new Promise((r) => setTimeout(r, 80));
+        const sceneReady = sceneId ? waitForSceneReady(sceneId, 600) : Promise.resolve(true);
+        await Promise.all([minDwell, sceneReady]);
 
-        // 4) Shutter opens (§5.1)
+        // 4) Kolam screen EXPANDS OPEN via circular iris to show the ready hero animation!
         if (shutterRef.current) {
           await shutterRef.current.open();
         }

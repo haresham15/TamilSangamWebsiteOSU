@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { ExternalLink, Camera, Sparkles } from "lucide-react";
+import { ExternalLink, Camera } from "lucide-react";
 
 interface VaultAlbum {
   num: string;
@@ -15,6 +15,15 @@ interface VaultAlbum {
 const VAULT_ALBUMS: VaultAlbum[] = [
   {
     num: "01",
+    titleEn: 'TS "Yaar Andha Killer?" Mystery',
+    titleTa: "யார் அந்த கில்லர்? மர்ம இரவு",
+    season: "Fall 2026 · Murder Mystery",
+    location: "Houston Grove Room, Ohio Union",
+    url: "https://photos.app.goo.gl/k2Kg17MX4nriMbnw7",
+    accent: "#E07A5F",
+  },
+  {
+    num: "02",
     titleEn: 'TS "A Berry Cute Picnic"',
     titleTa: "பெர்ரி க்யூட் பிக்னிக்",
     season: "Fall 2025 · Welcome Social",
@@ -23,7 +32,7 @@ const VAULT_ALBUMS: VaultAlbum[] = [
     accent: "#B85C38",
   },
   {
-    num: "02",
+    num: "03",
     titleEn: "TS Streetside Sapad & Game Night",
     titleTa: "தெருவோரச் சாப்பாடு & விளையாட்டு",
     season: "Spring 2026 · General Body",
@@ -32,7 +41,7 @@ const VAULT_ALBUMS: VaultAlbum[] = [
     accent: "#E5A93C",
   },
   {
-    num: "03",
+    num: "04",
     titleEn: "TS x TT: Namma Jathara Carnival",
     titleTa: "நம்ம ஜாதரா வசந்தத் திருவிழா",
     season: "Spring 2026 · Joint Carnival",
@@ -41,7 +50,7 @@ const VAULT_ALBUMS: VaultAlbum[] = [
     accent: "#55CCA2",
   },
   {
-    num: "04",
+    num: "05",
     titleEn: "TS x TT Autumn Gathering",
     titleTa: "இலையுதிர் சங்கமம்",
     season: "Autumn 2025 · Joint Social",
@@ -72,29 +81,28 @@ export function GooglePhotosVaultsStrip({ className = "", variant = "light" }: G
         {/* Header Strip */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-6 border-current/10">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium tracking-wider uppercase bg-[#B85C38]/10 text-[#B85C38] dark:bg-[#B85C38]/20 dark:text-[#E07A5F]">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#B85C38]">
               <Camera className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>புகைப்படப் பெட்டகம் · Google Photos Vaults</span>
+              <span lang="ta">புகைப்படப் பெட்டகம் · Google Photos Vaults</span>
             </div>
             <h2
               id="google-photos-vaults-heading"
               className="text-2xl sm:text-3xl lg:text-4xl font-serif font-normal tracking-tight"
             >
-              All 4 Official Event Photo Vaults
+              All 5 Official Event Photo Vaults
             </h2>
             <p className={`text-sm sm:text-base max-w-2xl font-sans ${isDark ? "text-stone-300" : "text-[#57524C]"}`}>
               Uncompressed, high-resolution original albums direct from our camera rolls. View full-resolution candid shots, download memory reels, or browse every photo taken at our gatherings.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#B85C38]">
-            <Sparkles className="w-4 h-4 text-[#E5A93C]" aria-hidden="true" />
-            <span>4 Complete Archives Live</span>
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-stone-500">
+            <span>5 Archives Live</span>
           </div>
         </div>
 
-        {/* 4-Card Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* 5-Card Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {VAULT_ALBUMS.map((album) => (
             <a
               key={album.num}
@@ -111,11 +119,8 @@ export function GooglePhotosVaultsStrip({ className = "", variant = "light" }: G
               {/* Top Accent Strip */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span
-                    className="text-xs font-mono font-bold px-2 py-0.5 rounded"
-                    style={{ backgroundColor: `${album.accent}18`, color: album.accent }}
-                  >
-                    ALBUM {album.num}
+                  <span className="text-xs font-mono font-semibold tracking-wider text-stone-400 group-hover:text-[#B85C38] transition-colors">
+                    0{album.num}
                   </span>
                   <ExternalLink
                     className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"

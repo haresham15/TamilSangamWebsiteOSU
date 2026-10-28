@@ -23,7 +23,7 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
   const { isSoundEnabled, toggleSound, playClick } = useAudio();
   const { locale } = useLocale();
   const normalizedPath = pathname.replace(/\/+$/, "") || "/";
-  const darkHeroRoutes = ["/", "/events", "/about", "/board", "/gallery", "/guide", "/suggestions", "/join"];
+  const darkHeroRoutes = ["/", "/events", "/about", "/board", "/gallery", "/games", "/guide", "/suggestions", "/join"];
   const isHeroRoute = darkHeroRoutes.includes(normalizedPath);
   const [isInHeroZone, setIsInHeroZone] = useState(() => isHeroRoute);
   const inHeroZoneRef = useRef(isHeroRoute);
@@ -48,7 +48,7 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
         ticking = false;
         const scrollY = window.scrollY;
         const now = performance.now();
-        if (!cachedSheet || now - sheetCheckTime > 2000) {
+        if (!cachedSheet || !cachedSheet.isConnected || now - sheetCheckTime > 1500) {
           cachedSheet = document.querySelector<HTMLElement>("[data-editorial-sheet]");
           sheetCheckTime = now;
         }
@@ -57,7 +57,16 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
         if (cachedSheet) {
           pastHero = cachedSheet.getBoundingClientRect().top <= 80;
         } else {
-          pastHero = scrollY >= 800;
+          const heroEl = document.querySelector<HTMLElement>(
+            "[data-hero-pinned], [data-hero-stage], [data-hero-container], .hero-scroll-stage"
+          );
+          if (heroEl) {
+            pastHero = heroEl.getBoundingClientRect().bottom <= 80;
+          } else {
+            const vh = window.innerHeight || 800;
+            const threshold = pathname === "/" ? vh * 3.8 : vh * 2.0;
+            pastHero = scrollY >= threshold;
+          }
         }
 
         const nextInHero = !pastHero;

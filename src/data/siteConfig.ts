@@ -35,12 +35,13 @@ export const SITE_CONFIG = {
   instagramUrl: "https://www.instagram.com/tamilsangam.osu/",
   constitutionPdfPath: "/docs/constitution-2026-2027.pdf",
 
-  // Official Google Photos Event Vaults (All 4 Albums)
+  // Official Google Photos Event Vaults (All 5 Albums)
   googlePhotosAlbums: {
-    album1: "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7", // Berry Cute Picnic
-    album2: "https://photos.app.goo.gl/PnkceBh19PqytYQ89", // Streetside Sapad
-    album3: "https://photos.app.goo.gl/NBTxg98ppmd9uhWX9", // Namma Jathara Carnival
-    album4: "https://photos.app.goo.gl/QrUrPkvPQqQvz7H29", // TS X TT Event
+    album1: "https://photos.app.goo.gl/k2Kg17MX4nriMbnw7", // Yaar Andha Killer
+    album2: "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7", // Berry Cute Picnic
+    album3: "https://photos.app.goo.gl/PnkceBh19PqytYQ89", // Streetside Sapad
+    album4: "https://photos.app.goo.gl/NBTxg98ppmd9uhWX9", // Namma Jathara Carnival
+    album5: "https://photos.app.goo.gl/QrUrPkvPQqQvz7H29", // TS X TT Event
   },
 
   // Canonical Navigation Structure
@@ -52,6 +53,7 @@ export const SITE_CONFIG = {
     { href: "/gallery", labelKey: "nav.gallery", fallbackEn: "Gallery", fallbackTa: "தொகுப்பு" },
     { href: "/guide", labelKey: "nav.guide", fallbackEn: "Guide & FAQ", fallbackTa: "வழிகாட்டி" },
     { href: "/suggestions", labelKey: "nav.suggestions", fallbackEn: "Ideas", fallbackTa: "கருத்துகள்" },
+    { href: "/games", labelKey: "nav.games", fallbackEn: "Games", fallbackTa: "விளையாட்டு" },
   ] as NavItem[],
   
   joinLink: {

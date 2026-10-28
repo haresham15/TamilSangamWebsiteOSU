@@ -1,159 +1,157 @@
-{"name": "preview-0.72", "p": 0.72, "seconds": 107.76, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "preview-0.93", "p": 0.93, "seconds": 4.03, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "poster-landscape-0", "p": 0.1, "seconds": 6.6, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "poster-portrait-0", "p": 0.1, "seconds": 2.91, "samples": 64, "width": 780, "height": 1688, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "poster-landscape-1", "p": 0.42, "seconds": 4.82, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "poster-portrait-1", "p": 0.42, "seconds": 3.5, "samples": 64, "width": 780, "height": 1688, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "poster-landscape-2", "p": 0.72, "seconds": 6.29, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "poster-portrait-2", "p": 0.72, "seconds": 5.45, "samples": 64, "width": 780, "height": 1688, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "poster-landscape-3", "p": 0.93, "seconds": 4.09, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "poster-portrait-3", "p": 0.93, "seconds": 4.0, "samples": 64, "width": 780, "height": 1688, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0000", "p": 0, "seconds": 3.31, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0001", "p": 0.1, "seconds": 2.66, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0002", "p": 0.2, "seconds": 3.76, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0003", "p": 0.22, "seconds": 2.9, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0004", "p": 0.24, "seconds": 3.02, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0005", "p": 0.26, "seconds": 3.59, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0006", "p": 0.28, "seconds": 2.87, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0007", "p": 0.3, "seconds": 2.88, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0008", "p": 0.32, "seconds": 2.89, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0009", "p": 0.34, "seconds": 2.77, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0010", "p": 0.36, "seconds": 3.22, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0011", "p": 0.38, "seconds": 2.74, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0012", "p": 0.4, "seconds": 3.24, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0013", "p": 0.42, "seconds": 3.22, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0014", "p": 0.44, "seconds": 3.38, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0015", "p": 0.46, "seconds": 3.46, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0016", "p": 0.48, "seconds": 3.82, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0017", "p": 0.5, "seconds": 3.59, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0018", "p": 0.52, "seconds": 2.95, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0019", "p": 0.54, "seconds": 2.82, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0020", "p": 0.545, "seconds": 2.75, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0021", "p": 0.55, "seconds": 3.18, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0022", "p": 0.555, "seconds": 2.97, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0023", "p": 0.56, "seconds": 2.77, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0024", "p": 0.565, "seconds": 2.66, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0025", "p": 0.57, "seconds": 2.56, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0026", "p": 0.575, "seconds": 2.73, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0027", "p": 0.58, "seconds": 2.73, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0028", "p": 0.585, "seconds": 2.62, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0029", "p": 0.59, "seconds": 2.98, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0030", "p": 0.595, "seconds": 2.5, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0031", "p": 0.6, "seconds": 2.5, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0032", "p": 0.605, "seconds": 2.53, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0033", "p": 0.61, "seconds": 3.04, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0034", "p": 0.615, "seconds": 2.42, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0035", "p": 0.62, "seconds": 2.61, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0036", "p": 0.625, "seconds": 2.43, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0037", "p": 0.63, "seconds": 2.41, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0038", "p": 0.635, "seconds": 2.49, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0039", "p": 0.638, "seconds": 2.57, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0040", "p": 0.64, "seconds": 5.04, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0041", "p": 0.6405, "seconds": 3.86, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0042", "p": 0.643, "seconds": 3.77, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0043", "p": 0.6455, "seconds": 3.79, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0044", "p": 0.648, "seconds": 3.87, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0045", "p": 0.6505, "seconds": 3.86, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0046", "p": 0.653, "seconds": 3.86, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0047", "p": 0.6555, "seconds": 4.39, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0048", "p": 0.657, "seconds": 5.57, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0049", "p": 0.658, "seconds": 4.8, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0050", "p": 0.6605, "seconds": 5.48, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0051", "p": 0.663, "seconds": 39.28, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0052", "p": 0.6655, "seconds": 20.52, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0053", "p": 0.668, "seconds": 6.72, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0054", "p": 0.6705, "seconds": 4.84, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0055", "p": 0.673, "seconds": 5.06, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0056", "p": 0.674, "seconds": 5.13, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0057", "p": 0.6755, "seconds": 5.18, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0058", "p": 0.678, "seconds": 5.61, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0059", "p": 0.6805, "seconds": 5.19, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0060", "p": 0.683, "seconds": 4.87, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0061", "p": 0.6855, "seconds": 4.5, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0062", "p": 0.688, "seconds": 4.38, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0063", "p": 0.6905, "seconds": 4.24, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0064", "p": 0.693, "seconds": 4.53, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0065", "p": 0.6955, "seconds": 4.4, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0066", "p": 0.698, "seconds": 4.36, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0067", "p": 0.7005, "seconds": 4.5, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0068", "p": 0.703, "seconds": 4.5, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0069", "p": 0.7055, "seconds": 7.55, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0070", "p": 0.708, "seconds": 6.73, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0071", "p": 0.7105, "seconds": 8.66, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0072", "p": 0.713, "seconds": 6.55, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0073", "p": 0.7155, "seconds": 12.33, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0074", "p": 0.718, "seconds": 13.84, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0075", "p": 0.72, "seconds": 15.05, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0076", "p": 0.7205, "seconds": 8.17, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0077", "p": 0.723, "seconds": 6.26, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0078", "p": 0.7255, "seconds": 6.14, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0079", "p": 0.728, "seconds": 6.2, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0080", "p": 0.7305, "seconds": 5.84, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0081", "p": 0.733, "seconds": 6.12, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0082", "p": 0.7355, "seconds": 6.26, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0083", "p": 0.738, "seconds": 6.08, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0084", "p": 0.7405, "seconds": 6.06, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0085", "p": 0.743, "seconds": 5.97, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0086", "p": 0.7455, "seconds": 5.86, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0087", "p": 0.748, "seconds": 6.72, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0088", "p": 0.7505, "seconds": 6.52, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0089", "p": 0.753, "seconds": 6.25, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0090", "p": 0.7555, "seconds": 6.09, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0091", "p": 0.758, "seconds": 6.29, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0092", "p": 0.7605, "seconds": 6.22, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0093", "p": 0.763, "seconds": 6.16, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0094", "p": 0.7655, "seconds": 6.93, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0095", "p": 0.768, "seconds": 7.2, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0096", "p": 0.7705, "seconds": 11.66, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0097", "p": 0.773, "seconds": 10.79, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0098", "p": 0.7755, "seconds": 9.58, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0099", "p": 0.778, "seconds": 10.65, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0100", "p": 0.7805, "seconds": 13.87, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0101", "p": 0.783, "seconds": 9.8, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0102", "p": 0.7855, "seconds": 5.68, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0103", "p": 0.788, "seconds": 5.55, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0104", "p": 0.7905, "seconds": 5.55, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0105", "p": 0.793, "seconds": 5.2, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0106", "p": 0.7955, "seconds": 5.53, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0107", "p": 0.798, "seconds": 6.24, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0108", "p": 0.8, "seconds": 7.11, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0109", "p": 0.805, "seconds": 6.71, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0110", "p": 0.81, "seconds": 7.21, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0111", "p": 0.815, "seconds": 7.59, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0112", "p": 0.82, "seconds": 7.41, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0113", "p": 0.825, "seconds": 7.59, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0114", "p": 0.83, "seconds": 6.66, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0115", "p": 0.835, "seconds": 6.75, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0116", "p": 0.84, "seconds": 6.4, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0117", "p": 0.845, "seconds": 6.38, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0118", "p": 0.85, "seconds": 5.83, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0119", "p": 0.855, "seconds": 6.3, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0120", "p": 0.86, "seconds": 8.63, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0121", "p": 0.865, "seconds": 5.64, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0122", "p": 0.87, "seconds": 5.83, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0123", "p": 0.875, "seconds": 5.86, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0124", "p": 0.88, "seconds": 5.73, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0125", "p": 0.885, "seconds": 5.46, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0126", "p": 0.89, "seconds": 5.48, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0127", "p": 0.895, "seconds": 7.15, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0128", "p": 0.9, "seconds": 5.72, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0129", "p": 0.905, "seconds": 5.89, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0130", "p": 0.91, "seconds": 5.51, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0131", "p": 0.915, "seconds": 5.47, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0132", "p": 0.92, "seconds": 5.61, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0133", "p": 0.925, "seconds": 6.64, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0134", "p": 0.93, "seconds": 6.12, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0135", "p": 0.935, "seconds": 6.09, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0136", "p": 0.94, "seconds": 5.55, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0137", "p": 0.945, "seconds": 5.3, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0138", "p": 0.95, "seconds": 6.09, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0139", "p": 0.955, "seconds": 4.63, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0140", "p": 0.96, "seconds": 3.71, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0141", "p": 0.965, "seconds": 4.09, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0142", "p": 0.97, "seconds": 4.91, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0143", "p": 0.975, "seconds": 4.79, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0144", "p": 0.98, "seconds": 4.79, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0145", "p": 0.985, "seconds": 5.05, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0146", "p": 0.99, "seconds": 4.99, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0147", "p": 0.995, "seconds": 5.54, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
-{"name": "frame-0148", "p": 1, "seconds": 5.33, "samples": 64, "width": 1912, "height": 800, "engine": "EEVEE offline GPU", "blender": "4.5.3 LTS"}
+{"name":"poster-landscape-0","p":0.1,"seconds":6.6,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"poster-portrait-0","p":0.1,"seconds":2.91,"samples":64,"width":780,"height":1688,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"poster-landscape-1","p":0.42,"seconds":4.82,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"poster-portrait-1","p":0.42,"seconds":3.5,"samples":64,"width":780,"height":1688,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0000","p":0,"seconds":3.31,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0001","p":0.1,"seconds":2.66,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0002","p":0.2,"seconds":3.76,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0003","p":0.22,"seconds":2.9,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0004","p":0.24,"seconds":3.02,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0005","p":0.26,"seconds":3.59,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0006","p":0.28,"seconds":2.87,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0007","p":0.3,"seconds":2.88,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0008","p":0.32,"seconds":2.89,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0009","p":0.34,"seconds":2.77,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0010","p":0.36,"seconds":3.22,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0011","p":0.38,"seconds":2.74,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0012","p":0.4,"seconds":3.24,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0013","p":0.42,"seconds":3.22,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0014","p":0.44,"seconds":3.38,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0015","p":0.46,"seconds":3.46,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0016","p":0.48,"seconds":3.82,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0017","p":0.5,"seconds":3.59,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0018","p":0.52,"seconds":2.95,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0019","p":0.54,"seconds":2.82,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0020","p":0.545,"seconds":2.75,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0021","p":0.55,"seconds":3.18,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0022","p":0.555,"seconds":2.97,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0023","p":0.56,"seconds":2.77,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0024","p":0.565,"seconds":2.66,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0025","p":0.57,"seconds":2.56,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0026","p":0.575,"seconds":2.73,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0027","p":0.58,"seconds":2.73,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0028","p":0.585,"seconds":2.62,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0029","p":0.59,"seconds":2.98,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0030","p":0.595,"seconds":2.5,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0031","p":0.6,"seconds":2.5,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0032","p":0.605,"seconds":2.53,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0033","p":0.61,"seconds":3.04,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0034","p":0.615,"seconds":2.42,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0035","p":0.62,"seconds":2.61,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0036","p":0.625,"seconds":2.43,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0037","p":0.63,"seconds":2.41,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0038","p":0.635,"seconds":2.49,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0039","p":0.638,"seconds":2.57,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0040","p":0.64,"seconds":38.79,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0041","p":0.6405,"seconds":4.28,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0042","p":0.643,"seconds":4.22,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0043","p":0.6455,"seconds":4.13,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0044","p":0.648,"seconds":4.19,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0045","p":0.6505,"seconds":4.12,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0046","p":0.653,"seconds":8.5,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0047","p":0.6555,"seconds":8.25,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0048","p":0.657,"seconds":13.18,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0049","p":0.658,"seconds":9.97,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0050","p":0.6605,"seconds":9.91,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0051","p":0.663,"seconds":9.61,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0052","p":0.6655,"seconds":9.43,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0053","p":0.668,"seconds":10.4,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0054","p":0.6705,"seconds":10.22,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0055","p":0.673,"seconds":9.38,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0056","p":0.674,"seconds":22.29,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0057","p":0.6755,"seconds":15.48,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0058","p":0.678,"seconds":43.81,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0059","p":0.6805,"seconds":6.53,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0060","p":0.683,"seconds":13.24,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0061","p":0.6855,"seconds":17.15,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0062","p":0.688,"seconds":18.57,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0063","p":0.6905,"seconds":11.35,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0064","p":0.693,"seconds":11.87,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0065","p":0.6955,"seconds":13.01,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0066","p":0.698,"seconds":11.33,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0067","p":0.7005,"seconds":11.97,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0068","p":0.703,"seconds":12.55,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0069","p":0.7055,"seconds":12.34,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0070","p":0.708,"seconds":12.08,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0071","p":0.7105,"seconds":12.22,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0072","p":0.713,"seconds":11.91,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0073","p":0.7155,"seconds":11.65,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0074","p":0.718,"seconds":11.16,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0075","p":0.72,"seconds":11.61,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0076","p":0.7205,"seconds":12.76,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0077","p":0.723,"seconds":12.29,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0078","p":0.7255,"seconds":12.13,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0079","p":0.728,"seconds":11.17,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0080","p":0.7305,"seconds":11.97,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0081","p":0.733,"seconds":11.35,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0082","p":0.7355,"seconds":10.52,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0083","p":0.738,"seconds":11.03,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0084","p":0.7405,"seconds":10.9,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0085","p":0.743,"seconds":10.81,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0086","p":0.7455,"seconds":11.52,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0087","p":0.748,"seconds":11.8,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0088","p":0.7505,"seconds":11.23,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0089","p":0.753,"seconds":11.39,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0090","p":0.7555,"seconds":11.58,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0091","p":0.758,"seconds":10.89,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0092","p":0.7605,"seconds":11.54,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0093","p":0.763,"seconds":11.0,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0094","p":0.7655,"seconds":10.89,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0095","p":0.768,"seconds":11.52,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0096","p":0.7705,"seconds":12.91,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0097","p":0.773,"seconds":12.36,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0098","p":0.7755,"seconds":10.99,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0099","p":0.778,"seconds":11.6,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0100","p":0.7805,"seconds":10.65,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0101","p":0.783,"seconds":10.4,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0102","p":0.7855,"seconds":11.31,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0103","p":0.788,"seconds":10.87,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0104","p":0.7905,"seconds":11.04,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0105","p":0.793,"seconds":7147.93,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0106","p":0.7955,"seconds":21.2,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0107","p":0.798,"seconds":5.05,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0108","p":0.8,"seconds":5.08,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0109","p":0.805,"seconds":8.79,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0110","p":0.81,"seconds":9.22,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0111","p":0.815,"seconds":7.43,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0112","p":0.82,"seconds":7.29,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0113","p":0.825,"seconds":6.38,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0114","p":0.83,"seconds":7.53,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0115","p":0.835,"seconds":6.59,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0116","p":0.84,"seconds":5.83,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0117","p":0.845,"seconds":5.22,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0118","p":0.85,"seconds":5.5,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0119","p":0.855,"seconds":5.39,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0120","p":0.86,"seconds":4.97,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0121","p":0.865,"seconds":5.09,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0122","p":0.87,"seconds":4.78,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0123","p":0.875,"seconds":5.18,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0124","p":0.88,"seconds":4.73,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0125","p":0.885,"seconds":4.48,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0126","p":0.89,"seconds":5.18,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0127","p":0.895,"seconds":5.28,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0128","p":0.9,"seconds":4.47,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0129","p":0.905,"seconds":5.08,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0130","p":0.91,"seconds":4.63,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0131","p":0.915,"seconds":4.46,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0132","p":0.92,"seconds":4.51,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0133","p":0.925,"seconds":4.4,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0134","p":0.93,"seconds":4.19,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0135","p":0.935,"seconds":4.51,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0136","p":0.94,"seconds":4.64,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0137","p":0.945,"seconds":4.3,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0138","p":0.95,"seconds":4.23,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0139","p":0.955,"seconds":4.32,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0140","p":0.96,"seconds":4.29,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0141","p":0.965,"seconds":4.21,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0142","p":0.97,"seconds":4.29,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0143","p":0.975,"seconds":4.11,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0144","p":0.98,"seconds":4.35,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0145","p":0.985,"seconds":4.31,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0146","p":0.99,"seconds":4.17,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0147","p":0.995,"seconds":4.17,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"frame-0148","p":1,"seconds":3.96,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"poster-landscape-2","p":0.72,"seconds":18.9,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"poster-portrait-2","p":0.72,"seconds":6.07,"samples":64,"width":780,"height":1688,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"poster-landscape-3","p":0.93,"seconds":4.81,"samples":64,"width":1912,"height":800,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}
+{"name":"poster-portrait-3","p":0.93,"seconds":4.2,"samples":64,"width":780,"height":1688,"engine":"EEVEE offline GPU","blender":"4.5.3 LTS"}

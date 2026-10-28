@@ -19,6 +19,13 @@ export function SceneView({ children, index = 2, visible = true, ...props }: Com
         setIntersecting(isIn);
         return;
       }
+      if (!entry.isIntersecting && entry.target.isConnected) {
+        const r = entry.target.getBoundingClientRect();
+        if (r.width > 0 && r.height > 0 && r.bottom > -200 && r.top < window.innerHeight + 200) {
+          setIntersecting(true);
+          return;
+        }
+      }
       setIntersecting(entry.isIntersecting);
     }, { rootMargin: "200px 0px" });
     observer.observe(element);

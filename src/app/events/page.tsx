@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { getCalendarEvents } from "@/lib/calendar/getEvents";
 import { EventsClientView } from "@/components/events/EventsClientView";
 import { CalendarEventJsonLd } from "@/components/calendar/CalendarEventJsonLd";
+import { HeroKolamLoader } from "@/components/ui/HeroKolamLoader";
 
 export const revalidate = 300;
 
@@ -11,7 +12,7 @@ export default async function EventsPage() {
   return (
     <>
       <CalendarEventJsonLd events={calendarData.events} />
-      <Suspense fallback={null}>
+      <Suspense fallback={<HeroKolamLoader route="/events" />}>
         <EventsClientView initialCalendarData={calendarData} />
       </Suspense>
     </>

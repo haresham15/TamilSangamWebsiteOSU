@@ -25,6 +25,9 @@ import { NextFlagshipGathering } from "@/components/home/NextFlagshipGathering";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { EventJsonLd } from "@/components/seo/JsonLd";
+import { useTamilSpeech } from "@/lib/tamilSpeech";
+import { ThirukkuralAudioButton } from "@/components/ui/PronounceableQuote";
+import { Volume2, VolumeX } from "lucide-react";
 
 export default function HomePage() {
   const { playClick } = useAudio();
@@ -32,6 +35,9 @@ export default function HomePage() {
   const tier = useTier();
   const reducedMotion = useReducedMotion();
   const staticHero = isLiteMode || tier === "C" || !!reducedMotion;
+  const { isSpeaking, toggleSpeak } = useTamilSpeech();
+  const kural81Tamil = "இருந்தோம்பி இல்வாழ்வ தெல்லாம் விருந்தோம்பி வேளாண்மை செய்தற் பொருட்டு.";
+  const isSpeakingKural81 = isSpeaking(kural81Tamil);
   useEffect(() => registerSystem({ order: 60, step: () => {
     if (monolithRef.current) {
       const hidden = staticHero || heroScrollProgress.current < 0.66;
@@ -292,20 +298,42 @@ export default function HomePage() {
             style={{ opacity: 0 }}
           >
             <div className="max-w-2xl mx-auto flex flex-col items-center justify-center">
-              {/* Tier 1: Tamil Inscription (Strictly 2 Lines, Blur 10px -> 0px, y: 35 -> 0, NO shadow) */}
-              <blockquote
-                ref={kuralTamilRef}
-                lang="ta"
-                className="font-noto-serif-tamil text-[clamp(1.15rem,1.65vw,1.55rem)] text-[#FAFAFA] font-medium"
-                style={{ letterSpacing: "0px" }}
-              >
-                <span className="block sm:whitespace-nowrap leading-[1.8] sm:leading-[1.9]">
-                  இருந்தோம்பி இல்வாழ்வ தெல்லாம் விருந்தோம்பி
-                </span>
-                <span className="block sm:whitespace-nowrap mt-3 sm:mt-4 leading-[1.8] sm:leading-[1.9]">
-                  வேளாண்மை செய்தற் பொருட்டு.
-                </span>
-              </blockquote>
+              {/* Tier 1: Tamil Inscription (Interactive: Click quote to hear pronunciation) */}
+              <div className="pointer-events-auto flex flex-col items-center">
+                <blockquote
+                  ref={kuralTamilRef}
+                  lang="ta"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Thirukkural 81: ${kural81Tamil}. ${
+                    isSpeakingKural81
+                      ? "Playing, click to stop pronunciation."
+                      : "Click to hear authentic Tamil pronunciation."
+                  }`}
+                  aria-pressed={isSpeakingKural81}
+                  onClick={() => toggleSpeak(kural81Tamil)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleSpeak(kural81Tamil);
+                    }
+                  }}
+                  title={
+                    isSpeakingKural81
+                      ? "Click to pause pronunciation · ஒலி வடிவத்தை நிறுத்தவும்"
+                      : "Click quote to hear Tamil pronunciation · குறள் 81 ஒலி கேட்க"
+                  }
+                  className="group cursor-pointer font-noto-serif-tamil text-[clamp(1.15rem,1.65vw,1.55rem)] text-[#FAFAFA] font-medium p-3 sm:p-4 rounded-xl transition-all duration-300 hover:bg-white/[0.05] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D]"
+                  style={{ letterSpacing: "0px" }}
+                >
+                  <span className="block sm:whitespace-nowrap leading-[1.8] sm:leading-[1.9]">
+                    இருந்தோம்பி இல்வாழ்வ தெல்லாம் விருந்தோம்பி
+                  </span>
+                  <span className="block sm:whitespace-nowrap mt-3 sm:mt-4 leading-[1.8] sm:leading-[1.9]">
+                    வேளாண்மை செய்தற் பொருட்டு.
+                  </span>
+                </blockquote>
+              </div>
 
               {/* Tier 2: Translation (SplitText word-by-word cascade) */}
               <p
@@ -315,12 +343,19 @@ export default function HomePage() {
                 &ldquo;The entire virtue of establishing a home is to welcome guests with an open heart and extend generosity.&rdquo;
               </p>
 
-              {/* Tier 3: Clean, unboxed monospace line (§MASTER DIRECTIVE) */}
+              {/* Tier 3: Clean, unboxed monospace line with subtle audio button (§MASTER DIRECTIVE) */}
               <div
                 ref={kuralMetaRef}
-                className="mt-5 sm:mt-6 font-space-mono text-[10px] sm:text-[11px] text-[#FFB84D]/85 tracking-[0.22em] uppercase"
+                className="mt-5 sm:mt-6 flex items-center justify-center gap-2.5 font-space-mono text-[10px] sm:text-[11px] text-[#FFB84D]/85 tracking-[0.22em] uppercase pointer-events-auto"
               >
-                THIRUKKURAL 81 · விருந்தோம்பல்
+                <span>THIRUKKURAL 81 · விருந்தோம்பல்</span>
+                <ThirukkuralAudioButton
+                  tamilText={kural81Tamil}
+                  label="குறள் 81 ஒலி வடிவம்"
+                  tone="gold"
+                  size="sm"
+                  className="opacity-75 hover:opacity-100"
+                />
               </div>
             </div>
           </div>
@@ -371,11 +406,11 @@ export default function HomePage() {
                 <h3 className="text-[clamp(1.5rem,2.5vw,2.5rem)] font-display font-medium text-[#161210] leading-tight tracking-tight">
                   Tamil Sangam at Ohio State
                 </h3>
-                <p className="mt-1 text-xs sm:text-sm font-mono text-[#C85A32] tracking-wider uppercase font-semibold">
-                  Inclusive Student Cultural Hub · Open Year-Round · No Language Requirement
+                <p className="mt-1 text-xs sm:text-sm font-mono text-[#C85A32] tracking-wider uppercase font-medium">
+                  Open Year-Round · No Language Requirement
                 </p>
                 <p ref={monolithPrologueRef} className="mt-2.5 text-xs sm:text-[14px] text-[#4A423D] font-body leading-relaxed max-w-2xl">
-                  Established as an inclusive campus hub, Tamil Sangam at The Ohio State University unites Tamil Buckeyes and students of all cultural backgrounds. Guided by our constitution, we cultivate a welcoming home away from home through conversational language workshops, authentic South Indian cuisine, major campus festivals like Pongal and Diwali, and active peer mentorship.
+                  Tamil Sangam at The Ohio State University unites Tamil Buckeyes and students of all backgrounds. Guided by our constitution, we host conversational language workshops, authentic South Indian feasts, campus festivals like Pongal and Diwali, and peer mentorship.
                 </p>
                 <div className="mt-4 flex flex-wrap items-center gap-4 sm:gap-5">
                   <Link

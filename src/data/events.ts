@@ -43,7 +43,7 @@ export const EVENTS: SangamEvent[] = [
     price: "Free Admission & Free Food (Open to all Buckeyes)",
     statusBadgeEn: "Halloween Murder Mystery",
     statusBadgeTa: "ஹாலோவீன் மர்ம இரவு",
-    status: "upcoming",
+    status: "past",
     academicYear: "2026-2027",
     descriptionEn:
       "Tamil Sangam presents Yaar Andha Killer? Step into an evening of Halloween suspense, suspicion, and whodunnit clues at the Houston Grove Room in the Ohio Union! Free food will be provided for all attendees, and the best dressed costume wins a prize. Free and open to all students — no tickets or RSVP required.",
@@ -58,8 +58,10 @@ export const EVENTS: SangamEvent[] = [
       { time: "7:45 PM", activityEn: "Case Solved & Best Dressed Costume Prize Winner", activityTa: "வழக்கு தீர்ப்பு மற்றும் சிறந்த ஆடை பரிசு அறிவிப்பு" },
       { time: "8:15 PM", activityEn: "Group Photos & Wrap-up Hangout", activityTa: "குழு புகைப்படங்கள் & அரட்டை" },
     ],
-    posterImage: "/images/events/yaar-andha-killer.png",
-    hoverImage: "/images/events/yaar-andha-killer.png",
+    posterImage: "/events/yaar-andha-killer/killer-01.jpg",
+    hoverImage: "/events/yaar-andha-killer/killer-02.jpg",
+    albumSlug: "yaar-andha-killer",
+    googlePhotosUrl: "https://photos.app.goo.gl/k2Kg17MX4nriMbnw7",
     tags: ["halloween", "mystery", "free-food", "costume", "games", "social"],
   },
   {

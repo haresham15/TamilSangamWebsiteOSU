@@ -11,6 +11,7 @@ import { SceneRegistrar } from "@/director/wireframe";
 import { heroScrollProgress, heroDirectorState } from "@/engine/heroScrollStore";
 import { governor } from "@/engine/governor";
 import { registerSystem } from "@/engine/masterTick";
+import { useBootStore } from "@/engine/bootStore";
 import { evalCamera, STRAND_COUNT, WREATH_CY, WREATH_R_IN } from "./flowMath";
 import {
   generatePulliLattice,
@@ -845,6 +846,12 @@ export function DigitalKolamHero() {
     () => true,
     () => false
   );
+
+  useEffect(() => {
+    if (mounted) {
+      useBootStore.getState().markReady("home-kolam");
+    }
+  }, [mounted]);
 
   useEffect(() => {
     if (!isWebglEnabled) return;

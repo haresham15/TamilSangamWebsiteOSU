@@ -15,6 +15,7 @@ import { GuestbookField } from "@/components/muttram/GuestbookField";
 import { SITE_CONFIG } from "@/data/siteConfig";
 import { Magnet, StarBorder, SpotlightCard } from "@/components/ui/react-bits";
 import { GroupMePulseGateways } from "@/components/gateways/GroupMePulseGateways";
+import { HeroKolamLoader } from "@/components/ui/HeroKolamLoader";
 import styles from "./join.module.css";
 
 // =========================================================================
@@ -25,9 +26,7 @@ const JoinHeroCanvas = dynamic(
   () => import("@/components/join/JoinHeroCanvas").then((m) => m.JoinHeroCanvas),
   {
     ssr: false,
-    loading: () => (
-      <div className="w-full h-[70dvh] bg-hero-espresso" aria-hidden="true" />
-    ),
+    loading: () => <HeroKolamLoader route="/join" minHeight="70dvh" />,
   }
 );
 
@@ -206,7 +205,6 @@ export default function JoinPage() {
               {incomingPillar && (
                 <div className="p-4 rounded-xl bg-hearth-sand/60 border border-hearth-terracotta/30 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-hearth-terracotta animate-pulse" />
                     <span className="text-hearth-espresso font-medium">
                       Continuing from Pillar: Pre-selected {membershipType === "performer" ? "Dance & Music" : membershipType === "committee" ? "Working Council" : "General Member"} Track
                     </span>

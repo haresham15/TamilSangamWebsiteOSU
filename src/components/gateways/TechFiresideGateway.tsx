@@ -23,14 +23,14 @@ export function TechFiresideGateway({
       } ${className}`}
     >
       <div className="max-w-5xl mx-auto space-y-6">
-        {/* Top Badges */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-4 border-current/10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium tracking-wide uppercase bg-[#B85C38]/10 text-[#B85C38] dark:bg-[#B85C38]/20 dark:text-[#E07A5F]">
+        {/* Editorial Header Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-4 border-current/10 text-xs font-mono tracking-wider uppercase">
+          <div className="flex items-center gap-2 text-[#B85C38]">
             <Network className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>OPEN GATEWAY · ACADEMIC &amp; INDUSTRY BRIDGES</span>
+            <span>Academic &amp; Industry Bridges</span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-stone-500 uppercase">
+          <div className="text-stone-500">
             <span>OSU-Wide · Undergrads + Grads + Faculty</span>
           </div>
         </div>
@@ -55,15 +55,27 @@ export function TechFiresideGateway({
 
             {/* Quick Cohort Indicators */}
             <div className="flex flex-wrap gap-3 pt-1">
-              <span className="inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-md bg-stone-200/50 dark:bg-stone-800 text-stone-700 dark:text-stone-300">
+              <span
+                className={`inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-md ${
+                  isDark ? "bg-stone-800 text-stone-300" : "bg-stone-200/50 text-stone-700"
+                }`}
+              >
                 <GraduationCap className="w-3.5 h-3.5 text-[#B85C38]" />
                 <span>Graduate &amp; PhD Mentorship</span>
               </span>
-              <span className="inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-md bg-stone-200/50 dark:bg-stone-800 text-stone-700 dark:text-stone-300">
+              <span
+                className={`inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-md ${
+                  isDark ? "bg-stone-800 text-stone-300" : "bg-stone-200/50 text-stone-700"
+                }`}
+              >
                 <Building2 className="w-3.5 h-3.5 text-[#E5A93C]" />
                 <span>Faculty Research Spotlight</span>
               </span>
-              <span className="inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-md bg-stone-200/50 dark:bg-stone-800 text-stone-700 dark:text-stone-300">
+              <span
+                className={`inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-md ${
+                  isDark ? "bg-stone-800 text-stone-300" : "bg-stone-200/50 text-stone-700"
+                }`}
+              >
                 <Briefcase className="w-3.5 h-3.5 text-[#55CCA2]" />
                 <span>Columbus &amp; Remote Tech Circles</span>
               </span>

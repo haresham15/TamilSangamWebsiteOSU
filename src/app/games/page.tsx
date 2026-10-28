@@ -5,21 +5,14 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { GamesHub } from "@/components/games/GamesHub";
+import { HeroKolamLoader } from "@/components/ui/HeroKolamLoader";
 import styles from "@/components/games-hero/gamesHero.module.css";
 
 const GamesHeroCanvas = dynamic(
   () => import("@/components/games-hero/GamesHeroCanvas").then((m) => m.GamesHeroCanvas),
   {
     ssr: false,
-    loading: () => (
-      <div className="relative h-dvh bg-hearth-espresso">
-        <picture>
-          <source media="(aspect-ratio < 13/10)" srcSet="/media/games-hybrid/v1/posters/portrait-establishing.webp" />
-          <img src="/media/games-hybrid/v1/posters/establishing.webp" alt="Sunlit beach compound" width={1912} height={800} fetchPriority="high" className="h-full w-full object-contain" />
-        </picture>
-        <a href="#arcade" className="absolute bottom-8 right-6 rounded-full bg-hearth-espresso px-6 py-4 text-khadi-ivory">Skip to Arcade ↓</a>
-      </div>
-    ),
+    loading: () => <HeroKolamLoader route="/games" />,
   }
 );
 

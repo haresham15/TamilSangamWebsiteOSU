@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 
 export interface KolamSectionRuleProps {
   className?: string;
@@ -22,8 +22,6 @@ export function KolamSectionRule({
   tone = "light",
   ornament,
 }: KolamSectionRuleProps) {
-  const reducedMotion = useReducedMotion();
-
   const activeTone = variant || tone;
   const isEspresso = activeTone === "espresso";
   const isSandstone = activeTone === "sandstone";
@@ -48,8 +46,8 @@ export function KolamSectionRule({
     >
       {/* Expanding Hairline Left */}
       <motion.div
-        className={`h-px flex-1 bg-gradient-to-r ${lineColor} origin-right`}
-        initial={reducedMotion ? false : { scaleX: 0 }}
+        className={`h-px flex-1 bg-gradient-to-r ${lineColor} origin-right motion-reduce:transform-none!`}
+        initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true, margin: "-10% 0px" }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -62,8 +60,8 @@ export function KolamSectionRule({
 
       {/* Expanding Hairline Right */}
       <motion.div
-        className={`h-px flex-1 bg-gradient-to-l ${lineColor} origin-left`}
-        initial={reducedMotion ? false : { scaleX: 0 }}
+        className={`h-px flex-1 bg-gradient-to-l ${lineColor} origin-left motion-reduce:transform-none!`}
+        initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true, margin: "-10% 0px" }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}

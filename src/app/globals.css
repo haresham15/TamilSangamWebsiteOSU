@@ -1193,15 +1193,17 @@ body {
    Visually purged while p < 0.62, but fully reachable via keyboard Tab focus,
    top-edge hover (top 72px), scroll-up intent, or skip link.
    ========================================================================= */
-[data-hero-purge="true"] :is(.ask-nanba, #global-sangam-chatbot) {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+[data-hero-purge="true"] :is(.ask-nanba, #global-sangam-chatbot, #global-floating-nav) {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(-16px);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-[data-hero-purge="true"].hero-nav-revealed :is(.ask-nanba, #global-sangam-chatbot) {
-  opacity: 1;
-  pointer-events: auto;
+[data-hero-purge="true"].hero-nav-revealed :is(.ask-nanba, #global-sangam-chatbot, #global-floating-nav) {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateY(0);
 }
 
 /* Ensure all interactive elements have natural, clear pointers */
@@ -1261,3 +1263,13 @@ input, textarea {
     transform: scaleX(1);
   }
 }
+
+@keyframes kolamRotateSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
