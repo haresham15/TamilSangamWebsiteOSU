@@ -128,7 +128,7 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
     gpuTimer?.poll();
     const rig = evaluateForegroundRig(scrollP, DESIGN_ASPECT);
     // A held pose reuses its foreground/mask/blur passes until its plate or optics change.
-    const drawKey = `${plate.index}:${rig.position.toArray()}:${rig.rotation.toArray()}:${rig.opacity}:${scrollP >= 0.58}:${width}:${height}:${gl.getPixelRatio()}`;
+    const drawKey = `${resources.foreground.texture.uuid}:${plate.index}:${rig.position.toArray()}:${rig.rotation.toArray()}:${rig.opacity}:${scrollP >= 0.58}:${width}:${height}:${gl.getPixelRatio()}`;
     if (lastDraw.current === drawKey) return;
     // Fixed-size plates reuse Three's texture storage; only the pixels change.
     if (plateTexture.image !== plate.image) {

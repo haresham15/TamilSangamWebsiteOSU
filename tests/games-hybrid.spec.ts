@@ -62,7 +62,7 @@ test("missing manifest falls back without blocking keyboard skip or arcade", asy
   await page.keyboard.press("Enter");
   await expect(page.locator("#arcade")).toBeFocused();
   await expect(page.getByText("Play Sollu", { exact: true })).toBeVisible();
-  await page.getByText("Play Thodarpu", { exact: true }).click({ force: true });
+  await page.getByText("Play Thodarpu", { exact: true }).click();
   await expect(page.getByRole("button", { name: /^Shuffle/ })).toBeVisible();
 });
 
