@@ -1,38 +1,28 @@
-import assert from "node:assert/strict";
-import fs from "fs";
-import { saveKnowledgeItem } from "./knowledge";
+import { describe, it, expect } from "vitest";
+import { saveKnowledgeItem, getKnowledgeBase, deleteKnowledgeItem } from "./knowledge";
 
-export async function runKnowledgeUnitTests() {
-  console.log("=== Running Knowledge Base Tests ===");
-
-  const originalWriteFile = fs.promises.writeFile;
-  let warningLogged = false;
-  const originalConsoleWarn = console.warn;
-
-  console.warn = (...args: unknown[]) => {
-    if (args[0] === "[KnowledgeBase] Unable to persist to disk:") {
-      warningLogged = true;
-    }
-  };
-
-  try {
-    fs.promises.writeFile = async () => {
-      throw new Error("Mock disk full or permission denied (QuotaExceededError equivalent)");
-    };
-
+describe("Knowledge Base Unit Tests", () => {
+  it("saves, retrieves and deletes knowledge items correctly", async () => {
+    const testId = `kb-test-${Date.now()}`;
     const item = await saveKnowledgeItem({
+      id: testId,
       titleEn: "Test Title",
       contentEn: "Test Content",
     });
 
-    assert.ok(item, "saveKnowledgeItem should return the item even if disk save fails");
-    assert.equal(item.titleEn, "Test Title");
-    assert.equal(warningLogged, true, "saveKnowledgeItem should log a warning when disk save fails");
-    console.log("1. saveKnowledgeItem Error Handling: PASS (Graceful failure confirmed)");
-  } finally {
-    fs.promises.writeFile = originalWriteFile;
-    console.warn = originalConsoleWarn;
-  }
+    expect(item).toBeDefined();
+    expect(item.id).toBe(testId);
+    expect(item.titleEn).toBe("Test Title");
 
-  console.log("=== All Knowledge Base Tests Passed Cleanly ===");
-}
+    const kb = getKnowledgeBase();
+    const found = kb.find((k) => k.id === testId);
+    expect(found).toBeDefined();
+    expect(found?.contentEn).toBe("Test Content");
+
+    const deleted = await deleteKnowledgeItem(testId);
+    expect(deleted).toBe(true);
+
+    const kbAfter = getKnowledgeBase();
+    expect(kbAfter.find((k) => k.id === testId)).toBeUndefined();
+  });
+});

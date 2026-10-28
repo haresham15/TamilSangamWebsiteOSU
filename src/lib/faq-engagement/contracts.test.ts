@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { FAQS } from "@/data/faq";
 import { assertFaqBoardContentFits, rankPopularFaqs } from "./contracts";
 import { LocalFaqEngagementStore } from "./store";
@@ -53,3 +54,12 @@ export function runFaqEngagementUnitTests(): FaqEngagementTestResult[] {
     result("all board editorial copy fits mobile", boardFit),
   ];
 }
+
+describe("FAQ Engagement Contracts", () => {
+  it("passes all contract unit assertions", () => {
+    const results = runFaqEngagementUnitTests();
+    for (const r of results) {
+      expect(r.passed, `${r.test}: ${r.message || ""}`).toBe(true);
+    }
+  });
+});
