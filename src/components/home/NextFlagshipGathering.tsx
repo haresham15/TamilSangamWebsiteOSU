@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useLocale } from "@/context/LocaleContext";
@@ -8,8 +8,6 @@ import { useAudio } from "@/context/AudioContext";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { DitherVeil } from "@/components/ui/DitherVeil";
 import { activeUpcomingEvent, type FlagshipEventConfig } from "@/config/upcomingEvent";
-import { CalendarEvent } from "@/lib/calendar/types";
-import { formatEventDateDisplay, formatEventTimeET } from "@/lib/calendar/parse";
 import { Calendar } from "lucide-react";
 import { Magnet, SpotlightCard } from "@/components/ui/react-bits";
 
@@ -30,45 +28,13 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
   const rotateX = useSpring(tiltX, { stiffness: 130, damping: 20 });
   const rotateY = useSpring(tiltY, { stiffness: 130, damping: 20 });
 
-  // Optional dynamically loaded next event from Google Calendar
-  const [liveEvent, setLiveEvent] = useState<CalendarEvent | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    fetch("/api/events")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (!active || !data || !Array.isArray(data.events)) return;
-        const now = Date.now();
-        // Find first upcoming event
-        const upcoming = data.events.find((e: CalendarEvent) => {
-          const t = new Date(e.start).getTime();
-          return !isNaN(t) && t >= now - 4 * 3600000; // within 4 hours of event start
-        });
-        if (upcoming) {
-          setLiveEvent(upcoming);
-        }
-      })
-      .catch(() => {
-        // Safe fallback to hardcoded activeUpcomingEvent
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  // Compute displayed values: live event if available, otherwise config default
-  const title = liveEvent
-    ? (locale === "ta" && liveEvent.titleTa ? liveEvent.titleTa : liveEvent.titleEn)
-    : config.title;
-  const tamilTitle = liveEvent
-    ? (liveEvent.titleTa || config.tamilTitle)
-    : config.tamilTitle;
-  const description = liveEvent && liveEvent.description ? liveEvent.description : config.description;
-  const displayDate = liveEvent ? formatEventDateDisplay(liveEvent.start).toUpperCase() : config.telemetry.date;
-  const displayTime = liveEvent ? formatEventTimeET(liveEvent.start, liveEvent.end, liveEvent.allDay) : config.telemetry.time;
-  const displayLocation = liveEvent ? liveEvent.location.toUpperCase() : config.telemetry.location;
+  // Compute displayed values directly from curated config
+  const title = config.title;
+  const tamilTitle = config.tamilTitle;
+  const description = config.description;
+  const displayDate = config.telemetry.date;
+  const displayTime = config.telemetry.time;
+  const displayLocation = config.telemetry.location;
 
   // Split location into primary venue name and optional street address / city if detailed
   const { venueName, venueAddress } = useMemo(() => {
@@ -88,12 +54,11 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
     return { venueName: raw, venueAddress: "" };
   }, [displayLocation]);
 
-  const actionHref = liveEvent
-    ? (liveEvent.slug ? `/events/${liveEvent.slug}` : `/events?view=calendar&event=${encodeURIComponent(liveEvent.id)}`)
-    : config.action.href;
-  const icsDownloadHref = liveEvent
-    ? `/api/events/${encodeURIComponent(liveEvent.id)}/ics`
-    : "/calendars/yaar-andha-killer.ics";
+  const actionHref = config.action.href;
+  const icsDownloadHref =
+    config.telemetry.date && !config.telemetry.date.includes("COMING SOON")
+      ? `/calendars/${config.id}.ics`
+      : "";
 
   const aspectClass =
     config.visual.aspectRatio === "square"
@@ -128,10 +93,9 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
                 tiltY.set(((event.clientX - box.left) / box.width - 0.5) * 6);
               }}
               onPointerLeave={() => { tiltX.set(0); tiltY.set(0); }}
-              className={`relative w-full ${aspectClass} border border-hearth-espresso/20 p-5 select-none`}
+              className={`relative w-full ${aspectClass} select-none flex items-center justify-center`}
               style={{ rotateX, rotateY, transformPerspective: 900 }}
             >
-              {["top-0 left-0", "top-0 right-0", "bottom-0 left-0", "bottom-0 right-0"].map((position) => <span key={position} aria-hidden="true" className={`absolute ${position} font-mono text-hearth-terracotta`}>+</span>)}
               <DitherVeil
                 imageSrc={config.visual.silhouetteSrc}
                 veilColor={config.visual.dither.veilColor}
@@ -194,10 +158,12 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
                   TIME
                 </span>
                 <span className="font-serif text-base sm:text-lg text-[#2A2825] tracking-wide sm:text-right">
-                  {displayTime}{" "}
-                  <span className="text-xs font-sans text-[#57524C]">
-                    (DOORS: {config.telemetry.doorsOpen})
-                  </span>
+                  {displayTime}
+                  {config.telemetry.doorsOpen && config.telemetry.doorsOpen !== "COMING SOON" && (
+                    <span className="text-xs font-sans text-[#57524C] ml-2">
+                      (DOORS: {config.telemetry.doorsOpen})
+                    </span>
+                  )}
                 </span>
               </div>
 
@@ -244,15 +210,17 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
                   </span>
                 </Link>
               </Magnet>
-              <a
-                href={icsDownloadHref}
-                download
-                onClick={() => playClick?.()}
-                className="text-xs font-mono uppercase tracking-widest text-[#B85C38] hover:text-[#2A2825] transition-colors duration-200 border-b border-[#B85C38] pb-0.5 inline-flex items-center gap-1.5"
-                title="Add gathering to your calendar (.ics)"
-              >
-                <span>+ Add to Calendar (.ics)</span>
-              </a>
+              {icsDownloadHref && !displayDate.includes("COMING SOON") && (
+                <a
+                  href={icsDownloadHref}
+                  download
+                  onClick={() => playClick?.()}
+                  className="text-xs font-mono uppercase tracking-widest text-[#B85C38] hover:text-[#2A2825] transition-colors duration-200 border-b border-[#B85C38] pb-0.5 inline-flex items-center gap-1.5"
+                  title="Add gathering to your calendar (.ics)"
+                >
+                  <span>+ Add to Calendar (.ics)</span>
+                </a>
+              )}
             </div>
 
             {/* See Full Calendar Link */}

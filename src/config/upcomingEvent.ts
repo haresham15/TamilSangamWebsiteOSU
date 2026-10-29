@@ -13,7 +13,7 @@ export interface FlagshipEventConfig {
     admission: string;
   };
   visual: {
-    silhouetteSrc: string; // Transparent PNG or SVG silhouette (e.g., Jack-o'-lantern)
+    silhouetteSrc: string; // Transparent PNG or SVG silhouette (e.g., Firecracker / Diya)
     altText: string;
     aspectRatio: "square" | "portrait" | "landscape";
     dither: {
@@ -34,27 +34,26 @@ export interface FlagshipEventConfig {
 }
 
 export const activeUpcomingEvent: FlagshipEventConfig = {
-  id: "yaar-andha-killer-2026",
-  seasonKey: "halloween",
-  title: "Yaar Andha Killer?",
-  tamilTitle: "யார் அந்த கில்லர்?",
+  id: "namma-deepavali-2026",
+  seasonKey: "diwali",
+  title: "Namma Deepavali",
+  tamilTitle: "நம்ம தீபாவளி",
   teaserQuote:
-    "Footprints in the hallway. A room full of suspects. Free food, high stakes, and a killer on the loose. Can you crack the case?",
-  description:
-    "Tamil Sangam presents Yaar Andha Killer? Step into an evening of Halloween suspense, suspicion, and whodunnit clues at the Houston Grove Room in the Ohio Union! Free food will be provided for all attendees, and the best dressed costume wins a prize.",
+    "Festival lights, sweet feasts, vibrant melodies, and campus celebration. Namma Deepavali is coming soon.",
+  description: "Details coming soon.",
   telemetry: {
-    date: "OCTOBER 23, 2026",
-    time: "5:30 PM – 8:30 PM ET",
-    location: "OHIO UNION // HOUSTON GROVE ROOM",
-    doorsOpen: "5:15 PM",
-    admission: "FREE FOOD // BEST DRESSED WINS A PRIZE",
+    date: "COMING SOON",
+    time: "COMING SOON",
+    location: "COMING SOON",
+    doorsOpen: "",
+    admission: "COMING SOON",
   },
   visual: {
-    silhouetteSrc: "/images/themes/jack-o-lantern.png",
-    altText: "Carved Jack-o'-lantern thematic silhouette",
+    silhouetteSrc: "/images/themes/firecracker.png",
+    altText: "Deepavali festival firecracker silhouette",
     aspectRatio: "portrait",
     dither: {
-      veilColor: "#B85C38", // Terracotta Autumn
+      veilColor: "#D4AF37", // Warm Festival Gold
       shadowColor: "#1A1715", // Deep Espresso
       matrixSize: 8,
       grainScale: 2.5,
@@ -63,9 +62,9 @@ export const activeUpcomingEvent: FlagshipEventConfig = {
     },
   },
   action: {
-    label: "Explore The Gathering",
-    tamilLabel: "ஆவணம் பார்க்க",
-    href: "/events/yaar-andha-killer",
+    label: "Coming Soon · View Events",
+    tamilLabel: "விரைவில் · நிகழ்வுகள்",
+    href: "/events",
     external: false,
   },
 };

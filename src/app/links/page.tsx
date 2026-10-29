@@ -226,13 +226,13 @@ export default function LinksBioHubPage() {
                   </div>
                   <div className="min-w-0">
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
-                      Upcoming Gathering · RSVP
+                      Next Gathering · Coming Soon
                     </span>
                     <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors truncate">
-                      {activeUpcomingEvent.title}
+                      Events &amp; Festival Schedule
                     </h2>
                     <p className="text-xs text-[#57524C] mt-0.5 truncate">
-                      {activeUpcomingEvent.telemetry.date} · {activeUpcomingEvent.telemetry.location}
+                      Check upcoming celebrations, calendar dates &amp; past photo vaults
                     </p>
                   </div>
                 </div>

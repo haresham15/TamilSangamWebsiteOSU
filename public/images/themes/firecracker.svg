@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800" fill="none">
+  <!-- Glowing Atmospheric Background Sparks / Embers -->
+  <g opacity="0.85">
+    <!-- Starburst Sparks -->
+    <path d="M400 80 L408 140 L468 148 L408 156 L400 216 L392 156 L332 148 L392 140 Z" fill="#FFE082" />
+    <path d="M400 110 L404 140 L434 144 L404 148 L400 178 L396 148 L366 144 L396 140 Z" fill="#FFFFFF" />
+    
+    <!-- Outer Radiant Sparks -->
+    <circle cx="280" cy="120" r="8" fill="#FFD54F" />
+    <circle cx="520" cy="110" r="10" fill="#FFCA28" />
+    <circle cx="210" cy="190" r="12" fill="#FFA726" />
+    <circle cx="590" cy="180" r="9" fill="#FFB74D" />
+    <circle cx="160" cy="280" r="7" fill="#FFD54F" />
+    <circle cx="640" cy="270" r="11" fill="#FFA726" />
+    <circle cx="240" cy="340" r="9" fill="#FFCA28" />
+    <circle cx="560" cy="330" r="8" fill="#FFD54F" />
+
+    <!-- Exploding Spark Rays -->
+    <path d="M400 148 L260 80 M400 148 L540 70 M400 148 L180 180 M400 148 L620 170 M400 148 L140 290 M400 148 L660 280 M400 148 L290 230 M400 148 L510 220" stroke="#FFD54F" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 12" />
+  </g>
+
+  <!-- Twinkling Spark Clusters -->
+  <g fill="#FFF9C4">
+    <polygon points="310,70 314,82 326,86 314,90 310,102 306,90 294,86 306,82" />
+    <polygon points="490,60 494,72 506,76 494,80 490,92 486,80 474,76 486,72" />
+    <polygon points="220,150 223,159 232,162 223,165 220,174 217,165 208,162 217,159" />
+    <polygon points="580,140 583,149 592,152 583,155 580,164 577,155 568,152 577,149" />
+    <polygon points="170,230 173,239 182,242 173,245 170,254 167,245 158,242 167,239" />
+    <polygon points="630,220 633,229 642,232 633,235 630,244 627,235 618,232 627,229" />
+  </g>
+
+  <!-- Burning Fuse (Thiri / Wakar) -->
+  <path d="M400 240 Q410 200 395 175 T400 148" stroke="#FFE082" stroke-width="8" stroke-linecap="round" fill="none" />
+  <path d="M400 240 Q410 200 395 175 T400 148" stroke="#FF6F00" stroke-width="4" stroke-linecap="round" fill="none" />
+  <!-- Sparkling core at fuse tip -->
+  <circle cx="400" cy="148" r="16" fill="#FFF59D" />
+  <circle cx="400" cy="148" r="8" fill="#FFFFFF" />
+
+  <!-- Main Firecracker Body (Deepavali Patasu Rocket / Cylinder) -->
+  <!-- Top Conical Cone Head -->
+  <polygon points="400,220 330,340 470,340" fill="#E65100" stroke="#FFD54F" stroke-width="6" stroke-linejoin="round" />
+  <polygon points="400,220 365,340 435,340" fill="#F57C00" />
+  <polygon points="400,220 385,340 415,340" fill="#FFB74D" />
+
+  <!-- Cone Decorative Golden Rim -->
+  <path d="M328 340 L472 340 L465 355 L335 355 Z" fill="#FFD54F" stroke="#FFA000" stroke-width="2" />
+
+  <!-- Main Cylindrical Body -->
+  <rect x="335" y="355" width="130" height="290" rx="8" fill="#D84315" stroke="#FFD54F" stroke-width="6" />
+
+  <!-- Inner Shading & 3D Volume Gradient Layers -->
+  <rect x="365" y="355" width="70" height="290" fill="#E64A19" />
+  <rect x="385" y="355" width="30" height="290" fill="#FF7043" opacity="0.6" />
+
+  <!-- Decorative Festival Gold Foil Bands (Lakshmi / Deepavali Wrapper Bands) -->
+  <!-- Band 1: Upper Geometric Band -->
+  <g fill="#FFD54F">
+    <rect x="335" y="380" width="130" height="30" fill="#FFC107" stroke="#FFA000" stroke-width="2" />
+    <!-- Chevron / Diamond Pattern -->
+    <polygon points="345,395 352,385 360,395 352,405" fill="#BF360C" />
+    <polygon points="365,395 372,385 380,395 372,405" fill="#BF360C" />
+    <polygon points="385,395 392,385 400,395 392,405" fill="#BF360C" />
+    <polygon points="405,395 412,385 420,395 412,405" fill="#BF360C" />
+    <polygon points="425,395 432,385 440,395 432,405" fill="#BF360C" />
+    <polygon points="445,395 452,385 460,395 452,405" fill="#BF360C" />
+  </g>
+
+  <!-- Band 2: Center Emblem Badge (Diwali Diya Motif) -->
+  <circle cx="400" cy="485" r="38" fill="#FFD54F" stroke="#FF8F00" stroke-width="4" />
+  <circle cx="400" cy="485" r="32" fill="#BF360C" />
+  <!-- Sacred Diya / Flame Silhouette inside Badge -->
+  <path d="M382 495 Q400 505 418 495 Q422 485 400 488 Q378 485 382 495 Z" fill="#FFD54F" />
+  <path d="M400 465 Q408 478 400 488 Q392 478 400 465 Z" fill="#FFF176" />
+  <circle cx="400" cy="478" r="3" fill="#FFFFFF" />
+
+  <!-- Band 3: Lower Kolam / Star Band -->
+  <g fill="#FFD54F">
+    <rect x="335" y="560" width="130" height="30" fill="#FFC107" stroke="#FFA000" stroke-width="2" />
+    <circle cx="350" cy="575" r="6" fill="#BF360C" />
+    <circle cx="370" cy="575" r="6" fill="#BF360C" />
+    <circle cx="390" cy="575" r="6" fill="#BF360C" />
+    <circle cx="410" cy="575" r="6" fill="#BF360C" />
+    <circle cx="430" cy="575" r="6" fill="#BF360C" />
+    <circle cx="450" cy="575" r="6" fill="#BF360C" />
+  </g>
+
+  <!-- Cracker Base / Nozzle Plug -->
+  <rect x="350" y="645" width="100" height="20" rx="4" fill="#5D4037" stroke="#FFD54F" stroke-width="3" />
+
+  <!-- Wooden Launch Stick (Kuchi) -->
+  <rect x="394" y="665" width="12" height="95" rx="3" fill="#8D6E63" stroke="#4E342E" stroke-width="2" />
+
+  <!-- Secondary Companion Firecrackers (Saravedi / Patasu Duo on sides) -->
+  <!-- Left Companion Cracker -->
+  <g transform="translate(-100, 80) rotate(-18 350 450)">
+    <rect x="335" y="420" width="45" height="150" rx="6" fill="#C62828" stroke="#FFD54F" stroke-width="4" />
+    <rect x="335" y="445" width="45" height="15" fill="#FFCA28" />
+    <rect x="335" y="525" width="45" height="15" fill="#FFCA28" />
+    <path d="M357 420 Q350 395 362 380" stroke="#FFE082" stroke-width="4" fill="none" />
+    <circle cx="362" cy="380" r="6" fill="#FFF59D" />
+  </g>
+
+  <!-- Right Companion Cracker -->
+  <g transform="translate(100, 80) rotate(18 450 450)">
+    <rect x="420" y="420" width="45" height="150" rx="6" fill="#C62828" stroke="#FFD54F" stroke-width="4" />
+    <rect x="420" y="445" width="45" height="15" fill="#FFCA28" />
+    <rect x="420" y="525" width="45" height="15" fill="#FFCA28" />
+    <path d="M443 420 Q450 395 438 380" stroke="#FFE082" stroke-width="4" fill="none" />
+    <circle cx="438" cy="380" r="6" fill="#FFF59D" />
+  </g>
+
+  <!-- Bursting Spark Particles around base -->
+  <circle cx="310" cy="620" r="6" fill="#FFD54F" />
+  <circle cx="490" cy="630" r="7" fill="#FFA726" />
+  <circle cx="280" cy="540" r="5" fill="#FFF59D" />
+  <circle cx="520" cy="530" r="6" fill="#FFD54F" />
+</svg>

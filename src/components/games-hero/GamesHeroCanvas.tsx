@@ -3,8 +3,6 @@
 import type { Group } from "three";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SceneView } from "@/components/canvas/SceneView";
-import { useLiteMode } from "@/context/LiteModeContext";
-import { useTier } from "@/components/providers/TierProvider";
 import { useLenis } from "@/components/providers/MotionProvider";
 import { registerSystem } from "@/engine/masterTick";
 import { GamesFocusScene } from "./GamesFocusScene";
@@ -15,12 +13,6 @@ import { HYBRID_MANIFEST_URL, HYBRID_POSTERS, HybridFrameCache, disposeForegroun
 import { useBootStore } from "@/engine/bootStore";
 import styles from "./gamesHero.module.css";
 
-const beats = [
-  { title: "The standoff" },
-  { title: "A closer look" },
-  { title: "Beach blast" },
-  { title: "The Sangam Arcade" },
-];
 const beatAt = (p: number) => p < 0.22 ? 0 : p < 0.52 ? 1 : p < 0.85 ? 2 : 3;
 
 export function GamesHeroCanvas() {
@@ -35,35 +27,30 @@ export function GamesHeroCanvas() {
   const [exited, setExited] = useState(false);
   const [pastHero, setPastHero] = useState(false);
   const cache = useRef<HybridFrameCache | null>(null);
-  const [portrait, setPortrait] = useState(() => window.matchMedia("(aspect-ratio < 13/10)").matches);
-  const [hidden, setHidden] = useState(() => document.hidden);
-  const [restricted, setRestricted] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches || Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData));
+  const [portrait, setPortrait] = useState(() => (typeof window !== "undefined" ? window.matchMedia("(aspect-ratio < 13/10)").matches : false));
+  const [hidden, setHidden] = useState(() => (typeof document !== "undefined" ? document.hidden : false));
   const [drawnIndex, setDrawnIndex] = useState<number | null>(null);
   const heroReady = useRef(false);
   const diagnostics = useRef<GamesRenderDiagnostics | null>(null);
   const onReady = useCallback((index: number) => { heroReady.current = true; setDrawnIndex(index); }, []);
-  const { isLiteMode } = useLiteMode();
-  const tier = useTier();
   const lenis = useLenis();
   const debug = useMemo(() => getDebugScrollProgress(), []);
-  const [coldSkip] = useState(() => window.location.hash === "#arcade");
+  const [coldSkip] = useState(() => (typeof window !== "undefined" ? window.location.hash === "#arcade" : false));
   const [progress, setProgress] = useState(debug ?? 0);
-  const [still, setStill] = useState(0);
   const progressRef = useRef(debug ?? 0);
   const skipping = useRef(false);
   const [inView, setInView] = useState(true);
-  const staticMode = isLiteMode || tier === "C" || coldSkip || portrait || restricted || failed;
-  const active = !staticMode && !exited && inView;
+  const active = !exited && inView;
   const ready = active && loaded && drawnIndex === plate?.index;
   const displayed = hand && plate ? plate.sample.p : 0;
   const visualProgress = exited || pastHero ? 1 : progress;
-  const posterIndex = exited && !staticMode ? 3 : still;
+  const posterIndex = exited ? 3 : beatAt(progress);
 
   useEffect(() => {
-    if ((ready || staticMode) && !useBootStore.getState().isSceneReady("games-hero")) {
+    if (ready && !useBootStore.getState().isSceneReady("games-hero")) {
       useBootStore.getState().markReady("games-hero");
     }
-  }, [ready, staticMode]);
+  }, [ready]);
 
   const skip = useCallback((immediate = false) => {
     const target = document.getElementById("arcade");
@@ -78,21 +65,14 @@ export function GamesHeroCanvas() {
     const finish = () => {
       skipping.current = false;
     };
-    if (lenis && !immediate && !staticMode) {
+    if (lenis && !immediate) {
       lenis.scrollTo(end, { duration: 0.8, force: true, onComplete: finish });
     } else {
       if (lenis) lenis.scrollTo(end, { immediate: true, force: true });
       else window.scrollTo({ top: end, behavior: "instant" });
       finish();
     }
-  }, [lenis, staticMode]);
-
-  useEffect(() => {
-    const page = document.getElementById("games-page");
-    if (!page) return;
-    page.dataset.staticHero = String(staticMode);
-    return () => { delete page.dataset.staticHero; };
-  }, [staticMode]);
+  }, [lenis]);
 
   useEffect(() => {
     const sheet = document.getElementById("arcade");
@@ -118,25 +98,27 @@ export function GamesHeroCanvas() {
     return () => observer.disconnect();
   }, []);
 
+  // Smooth scroll sequence: Continuously updates progress with critically damped inertial decay
   useEffect(() => {
-    if (staticMode || debug !== null) return;
+    if (debug !== null) return;
     return registerSystem({ order: 45, step: (dt) => {
       const element = runway.current;
       if (!element || skipping.current) return;
       const distance = element.offsetHeight - window.innerHeight;
+      if (distance <= 0) return;
       const target = mapGamesScrollProgress(-element.getBoundingClientRect().top / distance);
       setPastHero(target >= 1);
-      const next = progressRef.current + (target - progressRef.current) * (1 - Math.exp(-9 * Math.min(dt, 0.05)));
+      const next = progressRef.current + (target - progressRef.current) * (1 - Math.exp(-12 * Math.min(dt, 0.05)));
       const settled = Math.abs(next - target) < 0.0001 ? target : next;
       if (settled !== progressRef.current) {
         progressRef.current = settled;
         setProgress(settled);
       }
     } });
-  }, [staticMode, debug]);
+  }, [debug]);
 
   useEffect(() => {
-    if (!exited || staticMode || debug !== null) return;
+    if (!exited || debug !== null) return;
     let previousY = window.scrollY;
     const resume = () => {
       const currentY = window.scrollY;
@@ -148,27 +130,20 @@ export function GamesHeroCanvas() {
     };
     window.addEventListener("scroll", resume, { passive: true });
     return () => window.removeEventListener("scroll", resume);
-  }, [exited, staticMode, debug]);
+  }, [exited, debug]);
 
   useEffect(() => {
     const aspect = window.matchMedia("(aspect-ratio < 13/10)");
-    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const connection = (navigator as Navigator & { connection?: EventTarget & { saveData?: boolean } }).connection;
     const preferences = () => {
       setPortrait(aspect.matches);
-      setRestricted(motion.matches || Boolean(connection?.saveData));
     };
     const visibility = () => setHidden(document.hidden);
     const contextLost = () => setFailed(true);
     aspect.addEventListener("change", preferences);
-    motion.addEventListener("change", preferences);
-    connection?.addEventListener("change", preferences);
     document.addEventListener("visibilitychange", visibility);
     window.addEventListener("webglcontextlost", contextLost, true);
     return () => {
       aspect.removeEventListener("change", preferences);
-      motion.removeEventListener("change", preferences);
-      connection?.removeEventListener("change", preferences);
       document.removeEventListener("visibilitychange", visibility);
       window.removeEventListener("webglcontextlost", contextLost, true);
     };
@@ -186,7 +161,7 @@ export function GamesHeroCanvas() {
     const updateDeadline = () => {
       clearTimeout(deadline);
       if (!document.hidden && !heroReady.current) {
-        deadline = setTimeout(() => { if (!heroReady.current) { controller.abort(); fallback(); } }, debug !== null ? 30000 : 12000);
+        deadline = setTimeout(() => { if (!heroReady.current) { controller.abort(); fallback(); } }, debug !== null ? 30000 : 45000);
       }
     };
     document.addEventListener("visibilitychange", updateDeadline);
@@ -208,7 +183,6 @@ export function GamesHeroCanvas() {
         frames = new HybridFrameCache(data.samples, next => {
           if (!live) return;
           setPlate(next);
-          setStill(beatAt(next.sample.p));
         }, fallback);
         cache.current = frames;
         frames.setActive(!document.hidden);
@@ -256,40 +230,23 @@ export function GamesHeroCanvas() {
   </SceneView>, [active, loaded, hand, plate, hidden, onReady]);
 
   return (
-    <section ref={runway} className={styles.runway} data-static={staticMode || debug !== null} aria-label="Beach Blast">
-      <div ref={stage} className={styles.stage} data-hero-canvas="games" data-progress={progress.toFixed(3)} data-requested-progress={progress.toFixed(3)} data-media-progress={displayed.toFixed(3)} data-frame={plate?.index ?? ""} data-asset-revision={manifest?.revision ?? ""} data-media-state={staticMode ? "static" : ready && hand && plate ? "ready" : "loading"}>
+    <section ref={runway} className={styles.runway} aria-label="Beach Blast">
+      <div ref={stage} className={styles.stage} data-hero-canvas="games" data-progress={progress.toFixed(3)} data-requested-progress={progress.toFixed(3)} data-media-progress={displayed.toFixed(3)} data-frame={plate?.index ?? ""} data-asset-revision={manifest?.revision ?? ""} data-media-state={ready && hand && plate ? "ready" : "loading"}>
         <a href="#arcade" className={styles.skip} onClick={(event) => { event.preventDefault(); skip(); }}>
           Skip to Arcade <span aria-hidden="true">↓</span>
         </a>
-        <div ref={frame} className={styles.frame} data-ready={drawnIndex !== null && active && loaded && Boolean(hand && plate)} data-hybrid={!staticMode} role="img" aria-label="A pair of black glasses frames three distant explosions on a sunlit beach before opening into The Sangam Arcade.">
+        <div ref={frame} className={styles.frame} data-ready={drawnIndex !== null && active && loaded && Boolean(hand && plate)} data-hybrid={true} role="img" aria-label="A pair of black glasses frames three distant explosions on a sunlit beach before opening into The Sangam Arcade.">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className={styles.poster} src={manifest ? mediaUrl(manifest.posters[portrait ? "portrait" : "landscape"][posterIndex]) : `/media/games-hybrid/v1/posters/${portrait ? "portrait-" : ""}${HYBRID_POSTERS[posterIndex]}.webp`} alt="" width={1912} height={800} fetchPriority="high" />
           {scene}
         </div>
         <div className={styles.overlays}>
-        <div className={styles.intro} style={{ opacity: staticMode ? 1 : Math.max(0, 1 - visualProgress / 0.08) }}>
-          <p>OSU Tamil Sangam presents</p>
-          <p>Scroll <span aria-hidden="true">·</span> <span lang="ta" className="font-tamil tracking-normal normal-case leading-relaxed">கீழே செல்</span></p>
-        </div>
-        {staticMode && (
-          <div className={styles.caption} aria-live="off">
-            <div className={styles.stills} aria-label="Beach Blast stills">
-              {beats.map((item, index) => (
-                <button
-                  key={item.title}
-                  type="button"
-                  aria-label={`Show ${item.title}`}
-                  aria-pressed={still === index}
-                  onClick={() => setStill(index)}
-                >
-                  {index + 1}
-                </button>
-              ))}
-            </div>
+          <div className={styles.intro} style={{ opacity: Math.max(0, 1 - visualProgress / 0.08) }}>
+            <p>OSU Tamil Sangam presents</p>
+            <p>Scroll <span aria-hidden="true">·</span> <span lang="ta" className="font-tamil tracking-normal normal-case leading-relaxed">கீழே செல்</span></p>
           </div>
-        )}
         </div>
-        <div className={styles.exitWash} aria-hidden="true" style={{ opacity: staticMode || exited ? 0 : getGamesExitOpacity(progress) }} />
+        <div className={styles.exitWash} aria-hidden="true" style={{ opacity: exited ? 0 : getGamesExitOpacity(progress) }} />
       </div>
     </section>
   );
