@@ -25,21 +25,21 @@ const UPCOMING_TIERS_PREVIEW: TicketTierPreview[] = [
     name: "Early Bird Admission",
     nameTa: "முன்பதிவு அனுமதி",
     status: "Drop Pending",
-    description: "Includes catered South Indian dinner, priority check-in & reserved seating.",
+    description: "Catered South Indian dinner, priority check-in & reserved seating.",
   },
   {
     id: "general",
     name: "General Admission",
     nameTa: "பொது அனுமதி",
     status: "Drop Pending",
-    description: "Full entry to cultural performances, food tables, acoustic jams & dance floor.",
+    description: "Full cultural performances, food tables, acoustic jams & dance floor.",
   },
   {
     id: "group-bundle",
     name: "Buckeye Crew Bundle (3+)",
     nameTa: "குழு அனுமதி (3+)",
     status: "Drop Pending",
-    description: "Discounted admission for squads and friend groups of 3 or more Buckeyes.",
+    description: "Discounted admission for squads and friend groups of 3+ Buckeyes.",
   },
 ];
 
@@ -50,92 +50,85 @@ interface LiveBoxOfficeTicketModuleProps {
 
 export function LiveBoxOfficeTicketModule({
   className = "",
-  compact = false,
 }: LiveBoxOfficeTicketModuleProps) {
   const { playClick } = useAudio();
 
   return (
     <div
-      className={`relative w-full rounded-2xl bg-[#1E1916] text-[#FAF6F0] border border-[#D4AF37]/30 shadow-2xl overflow-hidden p-6 sm:p-8 text-left ${className}`}
+      className={`relative w-full rounded-2xl bg-[#1E1916] text-[#FAF6F0] border border-[#D4AF37]/30 shadow-xl overflow-hidden p-4 sm:p-5 text-left ${className}`}
     >
-      {/* Subtle Warm Brass Atmospheric Gradient */}
-      <div className="absolute top-0 right-0 w-72 h-72 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.12),transparent_70%)] pointer-events-none" />
+      {/* Subtle Warm Brass Atmospheric Glow */}
+      <div className="absolute top-0 right-0 w-60 h-60 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.1),transparent_70%)] pointer-events-none" />
 
       {/* Header Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-white/10 text-xs font-mono">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10 text-xs font-mono">
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
-          <span className="text-amber-400 font-bold uppercase tracking-wider">
+          <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+          <span className="text-amber-400 font-bold uppercase tracking-wider text-[11px]">
             Next Ticket Drop · Coming Soon
           </span>
-          <span className="text-white/40">·</span>
-          <span className="text-white/70">Official Box Office</span>
+          <span className="text-white/30 hidden sm:inline">·</span>
+          <span className="text-white/60 text-[11px] hidden sm:inline">Official Box Office</span>
         </div>
-        <div className="flex items-center gap-1.5 text-white/50 text-[11px]">
-          <Clock className="w-3.5 h-3.5 text-amber-400" />
+        <div className="flex items-center gap-1.5 text-white/50 text-[10px]">
+          <Clock className="w-3 h-3 text-amber-400" />
           <span>Event In Planning</span>
         </div>
       </div>
 
-      {/* Event Details Lockup */}
-      <div className="mt-5 space-y-2">
+      {/* Compact Event Title & Context */}
+      <div className="mt-3.5 space-y-1">
         <div className="flex items-center gap-2">
-          <Ticket className="w-4 h-4 text-[#D4AF37]" />
-          <span className="font-mono text-[11px] uppercase tracking-wider text-[#D4AF37] font-semibold">
-            Next Flagship Celebration · The Ohio State University
-          </span>
+          <Ticket className="w-3.5 h-3.5 text-[#D4AF37]" />
+          <h3 className="text-lg sm:text-xl font-serif font-normal text-white">
+            Next Flagship Ticket Drop
+          </h3>
         </div>
-        <h3 className="text-2xl sm:text-3xl font-serif font-normal text-white">
-          Next Flagship Ticket Drop
-        </h3>
-        <p className="text-xs sm:text-sm text-[#E8DEC8]/80 font-sans max-w-2xl leading-relaxed">
-          Our previous gathering has concluded! The executive board is currently planning our next major campus festival and cultural feast. Ticket releases, Early Bird drops, and checkout options will open right here.
+        <p className="text-xs text-[#E8DEC8]/80 font-sans max-w-2xl leading-relaxed">
+          The executive board is planning our next major campus festival and cultural feast. Ticket releases and checkout drops will open right here.
         </p>
       </div>
 
-      {/* Tier Preview Grid */}
-      <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+      {/* Compact Tier Capsules */}
+      <div className="mt-3.5 grid grid-cols-1 sm:grid-cols-3 gap-2">
         {UPCOMING_TIERS_PREVIEW.map((tier) => (
           <div
             key={tier.id}
-            className="p-4 rounded-xl border border-white/10 bg-black/25 flex flex-col justify-between"
+            className="px-3 py-2 rounded-xl border border-white/10 bg-black/30 flex items-center justify-between gap-2.5 hover:border-[#D4AF37]/30 transition-colors"
           >
-            <div>
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-[10px] font-mono uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-amber-400/15 text-amber-300 border border-amber-400/30">
-                  {tier.status}
-                </span>
-                <span className="text-xs font-mono text-white/50">TBA</span>
-              </div>
-              <h4 className="text-sm font-serif font-medium text-white mb-1">
+            <div className="min-w-0">
+              <h4 className="text-xs font-serif font-medium text-white truncate">
                 {tier.name}
               </h4>
-              <p className="text-[11px] font-sans text-white/70 leading-normal">
+              <p className="text-[10px] font-sans text-white/50 truncate">
                 {tier.description}
               </p>
             </div>
+            <span className="shrink-0 text-[9px] font-mono uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-amber-400/15 text-amber-300 border border-amber-400/30">
+              TBA
+            </span>
           </div>
         ))}
       </div>
 
-      {/* Notification Strip & Action Links */}
-      <div className="mt-6 pt-5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-2 text-xs font-sans text-white/80">
-          <Bell className="w-4 h-4 text-[#D4AF37] shrink-0" />
+      {/* Compact Notification Bar & Action Links */}
+      <div className="mt-3.5 pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div className="flex items-center gap-1.5 text-xs font-sans text-white/70">
+          <Bell className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
           <span>Get notified first when ticket drop opens:</span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex items-center gap-2">
           <a
             href={SITE_CONFIG.groupMeUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={playClick}
-            className="inline-flex items-center gap-1.5 py-2 px-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-mono text-xs font-semibold uppercase tracking-wider transition-all border border-white/20 focus-visible:outline-2 focus-visible:outline-white"
+            className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono text-xs font-semibold uppercase tracking-wider transition-all border border-white/20 focus-visible:outline-2 focus-visible:outline-white"
           >
-            <Users className="w-3.5 h-3.5 text-emerald-400" />
+            <Users className="w-3 h-3 text-emerald-400" />
             <span>Join GroupMe</span>
-            <ExternalLink className="w-3 h-3 opacity-60" />
+            <ExternalLink className="w-2.5 h-2.5 opacity-60" />
           </a>
 
           <a
@@ -143,10 +136,10 @@ export function LiveBoxOfficeTicketModule({
             target="_blank"
             rel="noopener noreferrer"
             onClick={playClick}
-            className="inline-flex items-center gap-1.5 py-2 px-3.5 rounded-xl bg-[#C85A32]/40 hover:bg-[#C85A32]/60 text-white font-mono text-xs font-semibold uppercase tracking-wider transition-all border border-[#C85A32]/50 focus-visible:outline-2 focus-visible:outline-white"
+            className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-[#C85A32]/40 hover:bg-[#C85A32]/60 text-white font-mono text-xs font-semibold uppercase tracking-wider transition-all border border-[#C85A32]/50 focus-visible:outline-2 focus-visible:outline-white"
           >
             <span>Instagram Updates</span>
-            <ExternalLink className="w-3 h-3 opacity-60" />
+            <ExternalLink className="w-2.5 h-2.5 opacity-60" />
           </a>
         </div>
       </div>
