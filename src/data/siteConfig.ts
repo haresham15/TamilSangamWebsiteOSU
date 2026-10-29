@@ -33,6 +33,7 @@ export const SITE_CONFIG = {
   privacyEmail: "osutamilsangam+privacy@gmail.com",
   groupMeUrl: "https://web.groupme.com/join_group/83424812/BeBIRg7f",
   instagramUrl: "https://www.instagram.com/tamilsangam.osu/",
+  tiktokUrl: "https://www.tiktok.com/@osutamilsangam",
   constitutionPdfPath: "/docs/constitution-2026-2027.pdf",
 
   // Official Google Photos Event Vaults (All 5 Albums)

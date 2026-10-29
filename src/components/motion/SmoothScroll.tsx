@@ -121,6 +121,16 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
   // Route change handler: reset scroll position, resize Lenis, and refresh ScrollTrigger
   useEffect(() => {
+    const skipReset =
+      typeof window !== "undefined" &&
+      (window.location.hash === "#flagship-gathering" ||
+        window.location.search.includes("skipHero") ||
+        sessionStorage.getItem("ts_skip_hero") === "true");
+
+    if (skipReset) {
+      return;
+    }
+
     if (lenisRef.current) {
       lenisRef.current.scrollTo(0, { immediate: true });
       lenisRef.current.resize();

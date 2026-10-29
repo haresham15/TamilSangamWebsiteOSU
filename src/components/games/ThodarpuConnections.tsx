@@ -462,7 +462,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
               ) : (
                 <>
                   <Copy className="size-4" />
-                  <span>Copy Results for GroupMe 📋</span>
+                  <span>Copy Score for GroupMe/IG 📋</span>
                 </>
               )}
             </button>

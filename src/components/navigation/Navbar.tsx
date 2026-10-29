@@ -177,6 +177,33 @@ export const Navbar: React.FC = () => {
     setIsOpen(false);
   };
 
+  const handleBrandClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    playClick();
+    setIsOpen(false);
+
+    if (typeof window !== "undefined") {
+      try {
+        sessionStorage.setItem("ts_skip_hero", "true");
+      } catch {
+        // Ignore storage exceptions
+      }
+    }
+
+    if (pathname === "/") {
+      e.preventDefault();
+      const target =
+        document.getElementById("flagship-gathering") ||
+        document.querySelector<HTMLElement>("[data-editorial-sheet]");
+      if (target) {
+        if (window.__lenis) {
+          window.__lenis.scrollTo(target, { offset: -20, duration: 1.0 });
+        } else {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    }
+  };
+
   // Spring animations for width morph
   const containerSpring = isOpen
     ? ({ type: "spring", stiffness: 260, damping: 26, mass: 0.9 } as const)
@@ -219,8 +246,8 @@ export const Navbar: React.FC = () => {
           <div className="hidden lg:flex items-center justify-between gap-2 xl:gap-3 px-2">
             {/* Left: Brand Lockup */}
             <Link
-              href="/"
-              onClick={handleLinkClick}
+              href="/#flagship-gathering"
+              onClick={handleBrandClick}
               aria-label="OSU Tamil Sangam Home"
               className="group flex flex-col text-left shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-xs select-none pr-2"
             >
@@ -371,8 +398,8 @@ export const Navbar: React.FC = () => {
             {/* Top Bar inside Pill */}
             <div className="flex items-center justify-between gap-2 px-2 py-0.5">
               <Link
-                href="/"
-                onClick={handleLinkClick}
+                href="/#flagship-gathering"
+                onClick={handleBrandClick}
                 aria-label="OSU Tamil Sangam Home"
                 className="group flex flex-col text-left shrink-0 cursor-pointer select-none"
               >

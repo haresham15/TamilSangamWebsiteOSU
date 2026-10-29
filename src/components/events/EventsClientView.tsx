@@ -25,6 +25,7 @@ import { useTier } from "@/components/providers/TierProvider";
 import { useReducedMotion } from "framer-motion";
 import { Calendar as CalendarIcon, List as ListIcon, Download } from "lucide-react";
 import { EditorialPhotoCarousel } from "./EditorialPhotoCarousel";
+import { LiveBoxOfficeTicketModule } from "./LiveBoxOfficeTicketModule";
 import { GooglePhotosVaultsStrip } from "@/components/gateways/GooglePhotosVaultsStrip";
 import { GroupMePulseGateways } from "@/components/gateways/GroupMePulseGateways";
 
@@ -244,6 +245,11 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
             title={locale === "ta" ? "நிகழ்வுகள் & பண்பாட்டு சந்திப்புகள்" : "The Gatherings River"}
             tamilTitle={locale !== "ta" ? "பஞ்சாங்கம் · நற்கூடல்" : undefined}
           />
+
+          {/* Pinned Live Box Office & Ticket Drop Module */}
+          <div className="max-w-4xl mx-auto mb-12">
+            <LiveBoxOfficeTicketModule />
+          </div>
 
           {/* VIEW TOGGLE: Segmented Control (List | Calendar) */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">

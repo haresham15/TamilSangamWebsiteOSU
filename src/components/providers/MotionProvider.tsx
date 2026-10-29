@@ -85,7 +85,16 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
 
   // Route-change scroll reset, resize, and ScrollTrigger refresh (§4.4)
   useEffect(() => {
+    const skipReset =
+      typeof window !== "undefined" &&
+      (window.location.hash === "#flagship-gathering" ||
+        window.location.search.includes("skipHero") ||
+        sessionStorage.getItem("ts_skip_hero") === "true");
+
     const lenis = lenisRef.current;
+    if (skipReset) {
+      return;
+    }
     if (lenis) {
       lenis.scrollTo(0, { immediate: true, force: true });
     } else {

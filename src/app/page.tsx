@@ -78,6 +78,49 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
+  // Handle direct navigation to content (skipping 420vh hero when navbar brand is clicked)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const isSkip =
+      window.location.hash === "#flagship-gathering" ||
+      window.location.search.includes("skipHero") ||
+      sessionStorage.getItem("ts_skip_hero") === "true";
+
+    if (isSkip) {
+      try {
+        sessionStorage.removeItem("ts_skip_hero");
+      } catch {
+        // Ignore storage exceptions
+      }
+
+      const jumpToContent = () => {
+        const target =
+          document.getElementById("flagship-gathering") ||
+          document.querySelector<HTMLElement>("[data-editorial-sheet]");
+        if (!target) return;
+
+        const lenis = (window as unknown as { __lenis?: { scrollTo: (t: HTMLElement | number, opts?: unknown) => void } }).__lenis;
+        if (lenis) {
+          lenis.scrollTo(target, { immediate: true, force: true });
+        } else {
+          target.scrollIntoView();
+        }
+
+        setHeroScrollProgress(1);
+        document.body.dataset.heroPassed = "true";
+        delete document.body.dataset.heroPurge;
+      };
+
+      jumpToContent();
+      const t1 = setTimeout(jumpToContent, 80);
+      const t2 = setTimeout(jumpToContent, 220);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    }
+  }, []);
+
   // GSAP 3-Act Scroll-Telling Setup (Zero React Re-renders on Scroll)
   useEffect(() => {
     if (staticHero) { setHeroScrollProgress(0); return; }
