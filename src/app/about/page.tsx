@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -208,6 +209,7 @@ export default function AboutPage() {
             tamilTitle={locale !== "ta" ? "வரலாறு · தமிழ் மன்றம்" : undefined}
           />
 
+
           {/* The Hero Quote: Naked Architectural Monument with Warm Amber Halo */}
           <div
             ref={quoteContainerRef}
@@ -336,6 +338,36 @@ export default function AboutPage() {
             secondaryHref="/join"
             secondaryLabel="Sign the Guestbook"
           />
+
+
+          <KolamSectionRule tone="sandstone" />
+
+          {/* Student Guide & FAQ Editorial Callout Section */}
+          <section className="my-16 sm:my-24 text-left">
+            <Link
+              href="/guide"
+              className="group block p-8 sm:p-12 rounded-2xl bg-[#1E1916] text-[#FAF6F0] border border-[#D4AF37]/30 hover:border-[#D4AF37] transition-all duration-300 shadow-xl focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+            >
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="space-y-3 max-w-2xl">
+                  <span className="font-mono text-xs uppercase tracking-widest text-[#E5A93C] font-semibold block">
+                    Freshmen, Transfers &amp; Columbus Living · வழிகாட்டி
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-normal text-[#FAF6F0] group-hover:text-[#E5A93C] transition-colors">
+                    New to OSU or Tamil Sangam? Read the Student Guide &amp; FAQ →
+                  </h3>
+                  <p className="text-sm sm:text-base font-sans text-[#E8DEC8]/80 leading-relaxed">
+                    Essential campus resources: Columbus Indian grocers, authentic dosa spots, bus routes, housing recommendations, membership questions, and club governance.
+                  </p>
+                </div>
+                <div className="shrink-0 flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-[#E5A93C] group-hover:text-white transition-colors">
+                  <span className="hidden sm:inline">Open Student Guide</span>
+                  <span className="text-xl group-hover:translate-x-1.5 transition-transform">→</span>
+                </div>
+              </div>
+            </Link>
+          </section>
+
 
         </div>
       </EditorialSheetHandoff>

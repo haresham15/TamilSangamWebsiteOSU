@@ -48,11 +48,9 @@ export const SITE_CONFIG = {
   navLinks: [
     { href: "/", labelKey: "nav.home", fallbackEn: "Home", fallbackTa: "முகப்பு" },
     { href: "/events", labelKey: "nav.events", fallbackEn: "Events", fallbackTa: "நிகழ்வுகள்" },
+    { href: "/join", labelKey: "nav.join", fallbackEn: "Join", fallbackTa: "இணைவு" },
     { href: "/about", labelKey: "nav.about", fallbackEn: "About", fallbackTa: "அறிமுகம்" },
-    { href: "/board", labelKey: "nav.board", fallbackEn: "Board", fallbackTa: "நிர்வாகம்" },
-    { href: "/gallery", labelKey: "nav.gallery", fallbackEn: "Gallery", fallbackTa: "தொகுப்பு" },
-    { href: "/guide", labelKey: "nav.guide", fallbackEn: "Guide & FAQ", fallbackTa: "வழிகாட்டி" },
-    { href: "/suggestions", labelKey: "nav.suggestions", fallbackEn: "Ideas", fallbackTa: "கருத்துகள்" },
+    { href: "/links", labelKey: "nav.links", fallbackEn: "Links", fallbackTa: "இணைப்புகள்" },
     { href: "/games", labelKey: "nav.games", fallbackEn: "Games", fallbackTa: "விளையாட்டு" },
   ] as NavItem[],
   

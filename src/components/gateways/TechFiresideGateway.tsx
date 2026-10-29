@@ -95,10 +95,10 @@ export function TechFiresideGateway({
                 Are you an OSU faculty member, grad student, or alumnus working in tech, healthcare, law, or research? Join us for an informal chat.
               </p>
               <Link
-                href="/ideas?category=NEW+INITIATIVE&prompt=Tech+and+Career+Fireside+Proposal"
+                href="/join?track=fireside#membership-form"
                 className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-xs font-mono font-semibold uppercase tracking-wider transition-all bg-[#B85C38] text-white hover:bg-[#A04E2F] focus:outline-none focus:ring-2 focus:ring-[#B85C38]"
               >
-                <span>Propose a Fireside Chat</span>
+                <span>Join Fireside &amp; Coffee Chats</span>
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
             </div>

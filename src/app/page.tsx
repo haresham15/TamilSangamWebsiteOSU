@@ -20,7 +20,6 @@ import { soundEngine } from "@/lib/soundEngine";
 import { SANGAM_CIPHER_CHARS } from "@/utils/scrambleTerminal";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
-import { EventsDepthShowcase } from "@/components/home/EventsDepthShowcase";
 import { NextFlagshipGathering } from "@/components/home/NextFlagshipGathering";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
@@ -566,22 +565,63 @@ export default function HomePage() {
 
         <KolamSectionRule tone="sandstone" />
 
+        {/* 1. Quick-Action Command Strip: Immediate visibility into upcoming gathering & actions */}
+        <div className="bg-[#FAF8F5] border-b border-[#161210]/10 py-3.5 px-6">
+          <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#B85C38] animate-pulse" />
+              <span className="font-semibold text-[#2A2825] uppercase tracking-wider">
+                Upcoming Flagship Gathering
+              </span>
+              <span className="hidden sm:inline text-[#8C827A]">·</span>
+              <span className="hidden sm:inline text-[#57524C]">
+                Free Admission · All Buckeyes Welcome
+              </span>
+            </div>
+            <div className="flex items-center gap-4">
+              <Link
+                href="/events"
+                onClick={playClick}
+                className="font-semibold text-[#B85C38] hover:text-[#2A2825] transition-colors border-b border-[#B85C38] pb-0.5"
+              >
+                View Event Schedule →
+              </Link>
+              <span className="text-[#8C827A]">|</span>
+              <Link
+                href="/join"
+                onClick={playClick}
+                className="font-semibold text-[#2A2825] hover:text-[#B85C38] transition-colors"
+              >
+                Sign Guestbook →
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* =========================================================================
-            WHAT'S NEXT: DYNAMIC FLAGSHIP EVENT ENGINE & DITHER-VEIL ART INSTALLATION
+            FEATURED NEXT EVENT: DYNAMIC FLAGSHIP EVENT ENGINE
             ========================================================================= */}
         <NextFlagshipGathering />
 
         <KolamSectionRule tone="light" />
 
-        {/* The Pillars: Airy Vertical Sections (Zero Rigid Borders) */}
+        {/* 2. The 3 Core Pillars: Clean 3-Column Layout */}
         <SilkHoverPillars />
 
-        <KolamSectionRule tone="espresso" />
+        <KolamSectionRule tone="sandstone" />
 
-        {/* =========================================================================
-            MOMENTS ON THE OLENTANGY: REACT BITS DEPTH CAROUSEL & EVENT CHRONICLE
-            ========================================================================= */}
-        <EventsDepthShowcase />
+        {/* 3. Direct Join / Involvement CTA: Streamlined Entry to /join and /links */}
+        <OrganicRouteGateway
+          eyebrow="Student Fellowship & Social Hub"
+          tamilEyebrow="இணைவு"
+          title="A Warm Hearth on the Banks of the Olentangy"
+          tamilTitle="ஓலண்டாஞ்சி நதிக்கரையில் ஒரு பாசமிகு திண்ணை"
+          description="Whether you crave authentic home-cooked flavors, want to dance, or simply want to find friendly faces on campus, our community is 100% free with zero dues."
+          primaryHref="/join"
+          primaryLabel="Sign the Free Guestbook"
+          secondaryHref="/links"
+          secondaryLabel="Open Bio Links & Socials"
+        />
 
         <KolamSectionRule tone="light" />
 
@@ -616,23 +656,6 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-
-        <KolamSectionRule tone="sandstone" />
-
-        {/* =========================================================================
-            INVITING GATEWAY: STEP INTO THE GATHERINGS (Organic Screen-Spanning Route)
-            ========================================================================= */}
-        <OrganicRouteGateway
-          eyebrow="Join Our Next Gathering"
-          tamilEyebrow="அடுத்த வாசல்"
-          title="A Warm Hearth on the Banks of the Olentangy"
-          tamilTitle="ஓலண்டாஞ்சி நதிக்கரையில் ஒரு பாசமிகு திண்ணை"
-          description="Whether you crave authentic home-cooked flavors, want to dance, or simply want to find friendly faces on campus, there is always a seat for you."
-          primaryHref="/events"
-          primaryLabel="See All Gatherings"
-          secondaryHref="/join"
-          secondaryLabel="Sign the Guestbook"
-        />
       </EditorialSheetHandoff>
     </div>
   );

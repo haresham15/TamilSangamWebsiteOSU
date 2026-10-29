@@ -10,10 +10,8 @@ export interface NavRoute {
 export const NAV_ROUTES: NavRoute[] = [
   { href: "/", en: "Home", ta: "முகப்பு" },
   { href: "/events", en: "Events", ta: "நிகழ்வுகள்" },
+  { href: "/join", en: "Join", ta: "இணைவு" },
   { href: "/about", en: "About", ta: "அறிமுகம்" },
-  { href: "/board", en: "Board", ta: "அவை" },
-  { href: "/gallery", en: "Gallery", ta: "நினைவுகள்" },
-  { href: "/guide", en: "Guide & FAQ", ta: "வழிகாட்டி" },
-  { href: "/suggestions", en: "Ideas", ta: "கருத்து" },
+  { href: "/links", en: "Links", ta: "இணைப்புகள்" },
   { href: "/games", en: "Games", ta: "விளையாட்டு", isNew: true, badge: true },
 ];

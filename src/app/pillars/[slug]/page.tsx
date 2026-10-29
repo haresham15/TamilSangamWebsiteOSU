@@ -1,6 +1,6 @@
 // src/app/pillars/[slug]/page.tsx
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { PILLARS_DATA, ALL_PILLARS, PillarSlug } from "@/data/pillars";
 import { PillarDetailView } from "@/components/pillars/PillarDetailView";
 import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
@@ -11,9 +11,9 @@ interface PillarPageProps {
 }
 
 export async function generateStaticParams() {
-  return ALL_PILLARS.map((pillar) => ({
-    slug: pillar.slug,
-  }));
+  const legacySlugs = ["aatam", "paatam", "kondatam", "santhippum", "katral"];
+  const all = [...ALL_PILLARS.map((p) => p.slug), ...legacySlugs];
+  return all.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PillarPageProps): Promise<Metadata> {
@@ -27,8 +27,8 @@ export async function generateMetadata({ params }: PillarPageProps): Promise<Met
   }
 
   const title = `${pillar.titleEn} (${pillar.titleTa}) · Pillar ${pillar.number} | OSU Tamil Sangam`;
-  const description = `${pillar.heroTagline}. ${pillar.manifestoLead.slice(0, 160)}... Join the founding student initiatives at Ohio State University.`;
-  const canonical = constructCanonical(`/pillars/${slug}`);
+  const description = `${pillar.heroTagline}. ${pillar.manifestoLead.slice(0, 160)}... Join student initiatives at Ohio State University.`;
+  const canonical = constructCanonical(`/pillars/${pillar.slug}`);
 
   return {
     title: {
@@ -39,12 +39,12 @@ export async function generateMetadata({ params }: PillarPageProps): Promise<Met
       pillar.titleEn,
       pillar.titleTa,
       pillar.categoryLabel,
-      "The Five Pillars",
+      "The Three Pillars",
       "OSU Tamil Sangam Pillars",
       "Tamil student initiatives OSU",
       "Ohio State University Tamil culture",
     ],
-    alternates: constructAlternates(`/pillars/${slug}`),
+    alternates: constructAlternates(`/pillars/${pillar.slug}`),
     openGraph: {
       title,
       description,
@@ -72,6 +72,15 @@ export async function generateMetadata({ params }: PillarPageProps): Promise<Met
 
 export default async function PillarPage({ params }: PillarPageProps) {
   const { slug } = await params;
+
+  // Seamlessly redirect legacy 5-pillar slugs to the 3 consolidated pillars
+  if (["aatam", "paatam", "katral"].includes(slug)) {
+    redirect("/pillars/culture-arts");
+  }
+  if (["kondatam", "santhippum"].includes(slug)) {
+    redirect("/pillars/community-brotherhood");
+  }
+
   const pillar = PILLARS_DATA[slug as PillarSlug];
 
   if (!pillar) {
@@ -80,7 +89,7 @@ export default async function PillarPage({ params }: PillarPageProps) {
 
   const breadcrumbItems = [
     { name: "Home", url: "/" },
-    { name: "The Five Pillars", url: "/#five-pillars" },
+    { name: "The Three Pillars", url: "/#three-pillars" },
     { name: `${pillar.titleEn} (${pillar.titleTa})`, url: `/pillars/${pillar.slug}` },
   ];
 

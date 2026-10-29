@@ -2,133 +2,112 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { EVENTS } from "@/data/events";
 import { 
-  MessageSquare, 
-  Mail, 
-  Check, 
-  ChevronRight,
   Calendar,
   Users,
-  Camera,
+  Compass,
+  MessageSquare,
+  Mail,
+  Check,
+  ChevronRight,
+  ArrowRight,
   Sparkles,
-  Globe
+  ArrowLeft
 } from "lucide-react";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
+import { SITE_CONFIG } from "@/data/siteConfig";
+import { activeUpcomingEvent } from "@/config/upcomingEvent";
 
 const InstagramIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
   </svg>
 );
 
-export default function BioHubPage() {
+export default function LinksBioHubPage() {
   const [copiedItem, setCopiedItem] = useState<string | null>(null);
-  const nextEvent = EVENTS[0];
 
   const handleCopy = (key: string, text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedItem(key);
-    setTimeout(() => setCopiedItem(null), 2000);
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedItem(key);
+      setTimeout(() => setCopiedItem(null), 2000);
+    }
   };
 
-  const bioLinks = [
-    {
-      id: "event",
-      title: `${nextEvent.titleEn} RSVP & Schedule`,
-      subtitle: `${nextEvent.location} · Free student admission`,
-      href: `/events/${nextEvent.slug}`,
-      icon: Calendar,
-      isFeatured: true,
-    },
-    {
-      id: "groupme",
-      index: "02",
-      title: "Official Student GroupMe",
-      subtitle: "General announcements, festival updates & rideshares",
-      href: "https://groupme.com/join_group/osutamilsangam",
-      icon: MessageSquare,
-      external: true,
-      badge: "Active",
-    },
-    {
-      id: "performer",
-      index: "03",
-      title: "Performer & Committee Auditions",
-      subtitle: "Dance (Aatam), Music (Paatam), Emcee & Stage Crew",
-      href: "/join#performer",
-      icon: Users,
-    },
-    {
-      id: "photos",
-      index: "04",
-      title: "Photo & Celebration Archives",
-      subtitle: "High-resolution campus event photo vaults",
-      href: "/gallery",
-      icon: Camera,
-    },
-    {
-      id: "culture",
-      index: "05",
-      title: "Interactive Culture Lab",
-      subtitle: "Kolam canvas, Solkattu rhythm pads & games",
-      href: "/culture-lab",
-      icon: Sparkles,
-    },
-    {
-      id: "website",
-      index: "06",
-      title: "OSU Tamil Sangam Homepage",
-      subtitle: "Official website, festivals, and campus leadership",
-      href: "/",
-      icon: Globe,
-    },
-  ];
-
   return (
-    <div className="relative min-h-screen bg-[#FAF9F6] text-[#2A2825] flex flex-col items-center justify-between py-14 px-4 select-none font-sans overflow-hidden">
+    <div className="relative min-h-screen bg-[#FAF9F6] text-[#2A2825] flex flex-col justify-between py-12 px-4 font-sans select-none overflow-x-hidden">
       {/* Structural Watermark */}
       <WatermarkGlyph text="இணைப்பு" position="center" theme="light" opacity={0.03} />
 
-      {/* Container restricted to mobile width for sleek bio-link feel */}
-      <div className="relative z-10 w-full max-w-md mx-auto text-center">
-        {/* Distilled Profile Avatar */}
-        <div className="relative w-20 h-20 mx-auto mb-4 border-b border-[#E5DDD0] flex items-center justify-center">
-          <span className="text-4xl font-serif font-bold text-[#B85C38]">
+      {/* Top Persistent Return Bar */}
+      <div className="w-full max-w-md mx-auto mb-6 flex items-center justify-between text-xs font-mono">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-[#57524C] hover:text-[#B85C38] transition-colors py-1 focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to OSU Tamil Sangam</span>
+        </Link>
+        <span className="text-[#8C827A] uppercase tracking-wider">Bio Hub</span>
+      </div>
+
+      {/* Centered Editorial Column */}
+      <main className="relative z-10 w-full max-w-md mx-auto flex-1 flex flex-col items-center text-center">
+        {/* Prominent 'Explore Full Website' Top Banner */}
+        <Link
+          href="/"
+          className="group w-full mb-8 p-3.5 rounded-lg bg-[#2A2825] text-[#FAF7F2] hover:bg-[#161210] transition-all flex items-center justify-between shadow-sm focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+        >
+          <div className="flex items-center gap-2.5 text-left pl-1">
+            <span className="w-2 h-2 rounded-full bg-[#E5A93C] animate-pulse" />
+            <span className="text-xs font-mono font-semibold tracking-wider uppercase">
+              Explore Full Website
+            </span>
+          </div>
+          <div className="flex items-center gap-1 text-xs font-mono text-[#E5A93C] group-hover:translate-x-1 transition-transform">
+            <span>Enter Main Site</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </div>
+        </Link>
+
+        {/* Club Crest / Avatar */}
+        <div className="relative w-20 h-20 mb-4 rounded-full border border-[#E5DDD0] bg-[#F4EFE6] flex items-center justify-center shadow-[0_2px_8px_rgba(42,40,37,0.04)]">
+          <span className="text-4xl font-serif font-bold text-[#B85C38]" lang="ta">
             ஐ
           </span>
         </div>
 
         {/* Club Handle & Tagline */}
         <h1 className="text-2xl sm:text-3xl font-serif font-normal text-[#2A2825] mb-1">
-          OSU Tamil Sangam
+          {SITE_CONFIG.brandNameEn}
         </h1>
         <p className="text-xs text-[#B85C38] font-mono uppercase tracking-widest mb-2 font-semibold">
           @tamilsangam.osu · The Ohio State University
         </p>
-        <p className="text-xs text-[#57524C] mb-6 max-w-xs mx-auto leading-relaxed font-sans">
-          Start the Aatam, Paatam, and Kondatam! · ஆட்டம் · பாட்டம் · கொண்டாட்டம்
+        <p className="text-xs text-[#57524C] mb-6 max-w-xs leading-relaxed">
+          Open student hearth · ஆட்டம் · பாட்டம் · கொண்டாட்டம் · Columbus, OH
         </p>
 
-        {/* Quick Social Links: Borderless Minimal Text/Icon Actions */}
-        <div className="flex items-center justify-center gap-6 mb-10 pb-6 border-b border-[#E5DDD0]">
+        {/* Quick Social Actions Row */}
+        <div className="w-full flex items-center justify-center gap-6 mb-8 pb-6 border-b border-[#E5DDD0]">
           <a
-            href="https://www.instagram.com/tamilsangam.osu/"
+            href={SITE_CONFIG.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-sans font-medium text-[#57524C] hover:text-[#B85C38] transition-colors"
+            className="flex items-center gap-1.5 text-xs font-medium text-[#57524C] hover:text-[#B85C38] transition-colors"
             aria-label="Instagram profile"
           >
             <InstagramIcon className="w-4 h-4" />
             <span>Instagram</span>
           </a>
           <a
-            href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
+            href={SITE_CONFIG.groupMeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-sans font-medium text-[#57524C] hover:text-[#B85C38] transition-colors"
+            className="flex items-center gap-1.5 text-xs font-medium text-[#57524C] hover:text-[#B85C38] transition-colors"
             aria-label="GroupMe chat"
           >
             <MessageSquare className="w-4 h-4" />
@@ -136,8 +115,8 @@ export default function BioHubPage() {
           </a>
           <button
             type="button"
-            onClick={() => handleCopy("email", "president.osutamilsangam@gmail.com")}
-            className="flex items-center gap-1.5 text-xs font-sans font-medium text-[#57524C] hover:text-[#B85C38] transition-colors cursor-pointer"
+            onClick={() => handleCopy("email", SITE_CONFIG.contactEmail)}
+            className="flex items-center gap-1.5 text-xs font-medium text-[#57524C] hover:text-[#B85C38] transition-colors cursor-pointer"
             aria-label="Copy Contact Email"
           >
             {copiedItem === "email" ? (
@@ -154,55 +133,149 @@ export default function BioHubPage() {
           </button>
         </div>
 
-        {/* Distilled Action Links: Borderless Rows Separated by 1px Hairlines */}
-        <div className="space-y-0 text-left">
-          {bioLinks.map((link) => {
-            const IconComponent = link.icon;
-            const content = (
-              <div
-                className="group relative w-full py-4 border-b border-[#E5DDD0] transition-all flex items-center justify-between cursor-pointer"
-              >
-                <div className="flex items-center gap-4 min-w-0 pr-2">
-                  <span className="text-xs font-mono text-[#8C827A] group-hover:text-[#B85C38] transition-colors">
-                    {link.index || "01"}
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors truncate">
-                      {link.title}
-                    </p>
-                    <p className="text-xs text-[#8C827A] truncate mt-0.5 font-sans">
-                      {link.subtitle}
-                    </p>
-                  </div>
+        {/* Interactive Link Stack */}
+        <div className="w-full space-y-3 text-left">
+          {/* 1. Next Upcoming Event / RSVP */}
+          <Link
+            href="/events"
+            className="group block p-4 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#B85C38]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3 min-w-0">
+                <div className="p-2 rounded-lg bg-[#FAF4ED] text-[#B85C38] group-hover:bg-[#B85C38] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <Calendar className="w-4 h-4" />
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#8C827A] group-hover:text-[#B85C38] group-hover:translate-x-1 transition-all shrink-0" />
+                <div className="min-w-0">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
+                    Upcoming Gathering · RSVP
+                  </span>
+                  <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors truncate">
+                    {activeUpcomingEvent.title}
+                  </h2>
+                  <p className="text-xs text-[#57524C] mt-0.5 truncate">
+                    {activeUpcomingEvent.telemetry.date} · {activeUpcomingEvent.telemetry.location}
+                  </p>
+                </div>
               </div>
-            );
+              <ChevronRight className="w-4 h-4 text-[#8C827A] group-hover:text-[#B85C38] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+            </div>
+          </Link>
 
-            return link.external ? (
-              <a
-                key={link.id}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block focus-visible:outline-none"
-              >
-                {content}
-              </a>
-            ) : (
-              <Link key={link.id} href={link.href} className="block focus-visible:outline-none">
-                {content}
-              </Link>
-            );
-          })}
+          {/* 2. Join the Sangam / Membership & Fireside Coffee Chats */}
+          <Link
+            href="/join"
+            className="group block p-4 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#B85C38]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3 min-w-0">
+                <div className="p-2 rounded-lg bg-[#FAF4ED] text-[#B85C38] group-hover:bg-[#B85C38] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <Users className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
+                    Join the Family · Free
+                  </span>
+                  <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors truncate">
+                    Membership &amp; Fireside Coffee Chats
+                  </h2>
+                  <p className="text-xs text-[#57524C] mt-0.5 truncate">
+                    Sign our guestbook, performer signups &amp; tech mentorship
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-[#8C827A] group-hover:text-[#B85C38] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+            </div>
+          </Link>
+
+          {/* 3. Official Student GroupMe */}
+          <a
+            href={SITE_CONFIG.groupMeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group block p-4 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#B85C38]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3 min-w-0">
+                <div className="p-2 rounded-lg bg-[#FAF4ED] text-[#B85C38] group-hover:bg-[#B85C38] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <MessageSquare className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
+                    Community Chat
+                  </span>
+                  <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors truncate">
+                    Official Student GroupMe
+                  </h2>
+                  <p className="text-xs text-[#57524C] mt-0.5 truncate">
+                    Event announcements, festival updates &amp; campus rideshares
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-[#8C827A] group-hover:text-[#B85C38] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+            </div>
+          </a>
+
+          {/* 4. New Student Guide & FAQ */}
+          <Link
+            href="/guide"
+            className="group block p-4 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#B85C38]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3 min-w-0">
+                <div className="p-2 rounded-lg bg-[#FAF4ED] text-[#B85C38] group-hover:bg-[#B85C38] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <Compass className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
+                    Freshmen &amp; Transfer Guide
+                  </span>
+                  <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors truncate">
+                    Student Guide &amp; FAQ
+                  </h2>
+                  <p className="text-xs text-[#57524C] mt-0.5 truncate">
+                    Columbus grocers, dining, housing &amp; club constitution
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-[#8C827A] group-hover:text-[#B85C38] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+            </div>
+          </Link>
+
+          {/* 5. Games & Cultural Lab */}
+          <Link
+            href="/games"
+            className="group block p-4 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#B85C38]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3 min-w-0">
+                <div className="p-2 rounded-lg bg-[#FAF4ED] text-[#B85C38] group-hover:bg-[#B85C38] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
+                    Interactive Lab
+                  </span>
+                  <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors truncate">
+                    Kolam, Solkattu &amp; Word Games
+                  </h2>
+                  <p className="text-xs text-[#57524C] mt-0.5 truncate">
+                    Play daily campus word games and trace digital kolams
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-[#8C827A] group-hover:text-[#B85C38] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+            </div>
+          </Link>
         </div>
-      </div>
+      </main>
 
       {/* Footer Branding */}
-      <div className="mt-12 text-center text-xs font-sans text-[#57524C] space-y-1">
-        <p className="text-[#2A2825] font-medium">The Ohio State University Tamil Sangam</p>
-        <p className="text-[11px] text-[#57524C]/80">Project Aintinai (ஐந்திணை) · Distilled Bio Hub</p>
-      </div>
+      <footer className="mt-12 text-center text-xs text-[#57524C] space-y-1">
+        <p className="font-medium text-[#2A2825]">{SITE_CONFIG.universityAffiliationEn}</p>
+        <p className="text-[11px] text-[#8C827A]">
+          {SITE_CONFIG.officialNameTa} · Project Aintinai (ஐந்திணை)
+        </p>
+      </footer>
     </div>
   );
 }

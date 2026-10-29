@@ -473,7 +473,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
             <Link href="/events" className="hover:text-[#E5A93C] transition-colors">{t("nav.events")}</Link>
             <Link href="/about" className="hover:text-[#E5A93C] transition-colors">{t("nav.about")}</Link>
             <Link href="/board" className="hover:text-[#E5A93C] font-semibold transition-colors">{t("nav.board")}</Link>
-            <Link href="/gallery" className="hover:text-[#E5A93C] transition-colors">{t("nav.gallery")}</Link>
+            <Link href="/links" className="hover:text-[#E5A93C] transition-colors">{locale === "ta" ? "இணைப்புகள்" : "Links"}</Link>
             <Link href="/guide" className="hover:text-[#E5A93C] transition-colors">{locale === "ta" ? "வழிகாட்டி & கேள்வி-பதில்" : "Guide & FAQ"}</Link>
             <Link href="/suggestions" className="hover:text-[#E5A93C] transition-colors">{locale === "ta" ? "கருத்துகள்" : "Ideas"}</Link>
             <Link href="/games" className="hover:text-[#E5A93C] transition-colors inline-flex items-center gap-1.5">

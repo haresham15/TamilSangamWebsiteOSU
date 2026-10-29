@@ -24,6 +24,7 @@ import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
 import { useReducedMotion } from "framer-motion";
 import { Calendar as CalendarIcon, List as ListIcon, Download } from "lucide-react";
+import { EditorialPhotoCarousel } from "./EditorialPhotoCarousel";
 import { GooglePhotosVaultsStrip } from "@/components/gateways/GooglePhotosVaultsStrip";
 import { GroupMePulseGateways } from "@/components/gateways/GroupMePulseGateways";
 
@@ -389,8 +390,11 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
             </div>
           )}
 
-          {/* Quick-Access Strip to all 4 official Google Photos albums */}
-          <div className="mt-16 sm:mt-24">
+          {/* Signature Editorial Photo Carousel & Lightbox Archive */}
+          <EditorialPhotoCarousel />
+
+          {/* Quick-Access Strip to all 5 official Google Photos albums */}
+          <div className="mt-8 sm:mt-12">
             <GooglePhotosVaultsStrip variant="light" />
           </div>
 
@@ -462,17 +466,17 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
 
           <KolamSectionRule tone="sandstone" />
 
-          {/* Gateway Section to The Canvas Gallery */}
+          {/* Gateway Section to Join / Links */}
           <OrganicRouteGateway
-            eyebrow="35mm Memories"
-            tamilEyebrow="நிழற்படம்"
-            title="Step Into The Canvas Gallery"
-            tamilTitle="நினைவுகள் மற்றும் கல்லூரி புகைப்படத் தொகுப்பு"
-            description="Explore candid photographs from our South Oval picnics, rehearsal stages, and late-night library study breaks."
-            primaryHref="/gallery"
-            primaryLabel="View Photo Canvas"
-            secondaryHref="/join"
-            secondaryLabel="Sign the Guestbook"
+            eyebrow="Student Fellowship"
+            tamilEyebrow="இணைவு"
+            title="Step Into the Warm Courtyard"
+            tamilTitle="பாசமிகு திண்ணையில் இணையுங்கள்"
+            description="100% Free · Zero Dues · Open to every Ohio State student and friend regardless of language. Pull up a chair and become part of our campus community."
+            primaryHref="/join"
+            primaryLabel="Sign the Guestbook"
+            secondaryHref="/links"
+            secondaryLabel="Explore Social Links"
           />
         </div>
       </EditorialSheetHandoff>

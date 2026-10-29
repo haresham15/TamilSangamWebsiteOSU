@@ -4,6 +4,7 @@ Spec: PRD — Games Page v1.1 · The Sangam Arcade & Beach Blast Sequence (/game
 Plan details: docs/superpowers/plans/2026-10-26-games-v1-1.md
 
 ## Milestones
+
 - [x] Milestone 1: Validated Games Data, Tamil Grapheme Splitter, Dictionary & Data Gate (`src/lib/tamilGraphemes.ts`, `src/data/solluDictionary.ts`, `src/data/gamesData.ts`, `scripts/verify-games-data.mjs`)
 - [x] Milestone 2: Lens-Shifted Projection Math & Parity / Registration Scripts (`src/components/games-hero/camera/projectionMath.ts`, `scripts/verify-frame-parity.mjs`, `scripts/verify-lens-registration.mjs`, `src/components/games-hero/gamesRail.ts`)
 - [x] Milestone 3: Calibrated J1 Coastal Compound Scene & Shaders (`src/components/games-hero/BeachCompoundScene.tsx`)
@@ -69,3 +70,7 @@ User explicitly authorized the previously reported shared hydration and frame-pa
 2. Make initial canvas/reduced-motion markup deterministic; stop offscreen editorial-background updates that invalidate style during Games playback.
 3. Compare isolated native-scroll composite timing on the same Iris Xe machine and protocol; investigate remaining hero-local bottlenecks from evidence.
 4. Verify focused tests, shared/static/reduced/mobile/browser navigation, typecheck, affected lint and production build. Keep measured limitations explicit; no commit or deployment.
+
+sort the pages out evently and sort the photos out in a better way.
+
+incorporate the link tree.

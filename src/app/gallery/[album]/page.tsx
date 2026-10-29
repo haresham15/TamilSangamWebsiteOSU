@@ -79,7 +79,7 @@ export default function EventInfoAndGalleryPage() {
         {/* Top Breadcrumb Bar */}
         <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 mb-8 pb-4 border-b border-[#2A2825]/10">
           <Link
-            href="/gallery"
+            href="/events"
             onClick={playClick}
             className="inline-flex items-center gap-2 text-xs font-sans text-[#B85C38] font-semibold hover:text-[#2A2825] transition-colors"
           >
@@ -310,7 +310,7 @@ export default function EventInfoAndGalleryPage() {
                 </a>
 
                 <Link
-                  href="/gallery"
+                  href="/events"
                   onClick={playClick}
                   className="inline-flex items-center gap-2 px-5 py-3.5 bg-white border border-[#2A2825]/15 text-[#2A2825] hover:bg-[#FAF9F6] font-sans font-medium text-xs uppercase tracking-wider rounded-full shadow-sm transition-all"
                 >
@@ -334,7 +334,7 @@ export default function EventInfoAndGalleryPage() {
               </h3>
             </div>
             <Link
-              href="/gallery"
+              href="/events"
               onClick={playClick}
               className="text-xs font-sans font-medium text-[#B85C38] hover:underline uppercase tracking-wider"
             >

@@ -15,6 +15,7 @@ import { GuestbookField } from "@/components/muttram/GuestbookField";
 import { SITE_CONFIG } from "@/data/siteConfig";
 import { Magnet, StarBorder, SpotlightCard } from "@/components/ui/react-bits";
 import { GroupMePulseGateways } from "@/components/gateways/GroupMePulseGateways";
+import { TechFiresideGateway } from "@/components/gateways/TechFiresideGateway";
 import { HeroKolamLoader } from "@/components/ui/HeroKolamLoader";
 import styles from "./join.module.css";
 
@@ -34,7 +35,7 @@ function JoinSearchParamsSync({
   onSelectTrack,
   onPillar,
 }: {
-  onSelectTrack: (track: "general" | "performer" | "committee") => void;
+  onSelectTrack: (track: "general" | "performer" | "committee" | "fireside") => void;
   onPillar: (pillar: string) => void;
 }) {
   const searchParams = useSearchParams();
@@ -48,6 +49,8 @@ function JoinSearchParamsSync({
         onSelectTrack("performer");
       } else if (track === "council" || track === "committee") {
         onSelectTrack("committee");
+      } else if (track === "fireside" || track === "mentorship" || track === "coffee") {
+        onSelectTrack("fireside");
       } else if (track === "general") {
         onSelectTrack("general");
       }
@@ -72,7 +75,7 @@ export default function JoinPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [major, setMajor] = useState("");
-  const [membershipType, setMembershipType] = useState<"general" | "performer" | "committee">("general");
+  const [membershipType, setMembershipType] = useState<"general" | "performer" | "committee" | "fireside">("general");
   const [buckeyeRole, setBuckeyeRole] = useState("Undergraduate");
   const [monthlyDispatchOptIn, setMonthlyDispatchOptIn] = useState(true);
   const [notes, setNotes] = useState("");
@@ -93,14 +96,14 @@ export default function JoinPage() {
       const m = win?.__pendingGuestbookMajor || (document.getElementById("guestbook-major") as HTMLInputElement | null)?.value;
       if (m) setMajor((prev) => prev || m);
       if (win?.__pendingMembershipType) {
-        setMembershipType(win.__pendingMembershipType as "general" | "performer" | "committee");
+        setMembershipType(win.__pendingMembershipType as "general" | "performer" | "committee" | "fireside");
       }
     };
     syncState();
     window.addEventListener("guestbook-input-sync", syncState);
     const onMembership = (e: Event) => {
       const t = (e as CustomEvent).detail;
-      if (t) setMembershipType(t as "general" | "performer" | "committee");
+      if (t) setMembershipType(t as "general" | "performer" | "committee" | "fireside");
     };
     window.addEventListener("membership-type-select", onMembership);
     return () => {
@@ -206,7 +209,7 @@ export default function JoinPage() {
                 <div className="p-4 rounded-xl bg-hearth-sand/60 border border-hearth-terracotta/30 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
                   <div className="flex items-center gap-2">
                     <span className="text-hearth-espresso font-medium">
-                      Continuing from Pillar: Pre-selected {membershipType === "performer" ? "Dance & Music" : membershipType === "committee" ? "Working Council" : "General Member"} Track
+                      Continuing from Pillar: Pre-selected {membershipType === "performer" ? "Dance & Music" : membershipType === "committee" ? "Working Council" : membershipType === "fireside" ? "Fireside & Mentorship" : "General Member"} Track
                     </span>
                   </div>
                   <Link href={`/pillars/${incomingPillar}`} className="text-hearth-terracotta hover:underline">
@@ -310,6 +313,7 @@ export default function JoinPage() {
                     { id: "general", label: "General Member", desc: "Attend feasts, lawn picnics, and campus socials" },
                     { id: "performer", label: "Dance & Music", desc: "Kuthu & Gaana dance circles, acoustic music jams" },
                     { id: "committee", label: "Working Council", desc: "Festival organizing, media trailers, and catering" },
+                    { id: "fireside", label: "Fireside Coffee Chats & Mentorship", desc: "Research navigation, tech firesides, and informal coffee chats with grad mentors" },
                   ].map((type) => {
                     const isSelected = membershipType === type.id;
                     return (
@@ -459,7 +463,7 @@ export default function JoinPage() {
                 <dt>Name</dt><dd className={styles.passName}>{name.trim() || "Your name"}</dd>
                 <dt>Email</dt><dd>{email.trim() || "Not entered"}</dd>
                 <dt>Major / Program</dt><dd>{major.trim() || "Not entered (optional)"}</dd>
-                <dt>Participation</dt><dd>{membershipType === "general" ? "General Member" : membershipType === "performer" ? "Dance & Music" : "Working Council"}</dd>
+                <dt>Participation</dt><dd>{membershipType === "general" ? "General Member" : membershipType === "performer" ? "Dance & Music" : membershipType === "committee" ? "Working Council" : "Fireside & Mentorship"}</dd>
               </dl>
               <p className={styles.passFoot}>{submitted ? "Your membership request has been saved." : "Preview only. Sign the guestbook to submit your membership request."}</p>
             </aside>
@@ -473,6 +477,11 @@ export default function JoinPage() {
           {/* Open Community Gateway: Live GroupMe Pulse & Hangouts */}
           <div className="mt-12 sm:mt-16">
             <GroupMePulseGateways variant="light" />
+          </div>
+
+          {/* Academic & Industry Bridges: Tech & Career Firesides */}
+          <div className="mt-12 sm:mt-16">
+            <TechFiresideGateway variant="light" />
           </div>
 
           {/* Open Hearth Guarantee Notice (Unboxed, 1px Grounding Line) */}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
+import Link from "next/link";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { FAQS, FaqItem } from "@/data/faq";
@@ -12,7 +13,7 @@ import { audioLayer } from "@/utils/audioLayer";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, ArrowLeft } from "lucide-react";
 import styles from "./guide.module.css";
 
 export interface GuideClientProps {
@@ -92,6 +93,18 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
         
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
           
+          {/* Top Breadcrumb: Bidirectional Link to About */}
+          <div className="mb-6">
+            <Link
+              href="/about"
+              onClick={playClick}
+              className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[#B85C38] hover:text-[#2A2825] transition-colors py-1.5 px-3.5 rounded-lg bg-[#F2EAE0] hover:bg-[#EAE0D2] focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>← Back to About</span>
+            </Link>
+          </div>
+
           {/* Centered Airy Header */}
           <CourtyardHeader
             align="left"
