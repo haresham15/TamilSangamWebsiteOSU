@@ -278,8 +278,9 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
 
                         {/* Pro-Tip Box */}
                         <div className="p-3 rounded-xl bg-[#25173B]/60 border border-[rgba(125,96,166,0.25)] mb-5 text-xs font-sans text-[#F4F0FA]/90">
-                          <span className="font-semibold text-[#A6F0CF] block mb-0.5">
-                            💡 Sangam Insider Tip:
+                          <span className="font-semibold text-[#A6F0CF] inline-flex items-center gap-1.5 mb-0.5">
+                            <Sparkles className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                            <span>Sangam Insider Tip:</span>
                           </span>
                           <p>{locale === "ta" ? spot.recommendationTa : spot.recommendationEn}</p>
                         </div>

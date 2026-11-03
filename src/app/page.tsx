@@ -35,7 +35,6 @@ import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { EventJsonLd } from "@/components/seo/JsonLd";
 import { useTamilSpeech } from "@/lib/tamilSpeech";
 import { ThirukkuralAudioButton } from "@/components/ui/PronounceableQuote";
-import { Volume2, VolumeX } from "lucide-react";
 
 export default function HomePage() {
   const { playClick } = useAudio();
@@ -317,7 +316,7 @@ export default function HomePage() {
       {/* Accessible Skip Link (PRD §7.11) */}
       <a
         href={staticHero ? "#flagship-gathering" : "#monolith"}
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#A6F0CF] focus:text-black focus:font-space-mono focus:text-xs focus:font-bold focus:outline-none"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#A6F0CF] focus:text-[#140C20] focus:font-space-mono focus:text-xs focus:font-bold focus:outline-none"
       >
         SKIP TO CONTENT &rarr;
       </a>

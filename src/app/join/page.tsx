@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { audioLayer } from "@/utils/audioLayer";
-import { Loader2, Sparkles, ArrowDown } from "lucide-react";
+import { Loader2, Sparkles, Music2, Code2, Coffee, CalendarHeart } from "lucide-react";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
@@ -170,25 +170,25 @@ export default function JoinPage() {
       id: "performer" as const,
       label: "I want to Dance/Perform",
       tagline: "Kuthu & Gaana troupes, acoustic music jams",
-      icon: "💃",
+      icon: Music2,
     },
     {
       id: "committee" as const,
       label: "I want to build Media/Tech",
       tagline: "Trailers, site engineering, council leadership",
-      icon: "🛠️",
+      icon: Code2,
     },
     {
       id: "fireside" as const,
       label: "Book a Fireside Coffee Chat",
       tagline: "1-on-1 chats with upperclassmen & alumni mentors",
-      icon: "☕",
+      icon: Coffee,
     },
     {
       id: "general" as const,
       label: "Just come to Events",
       tagline: "Feasts, lawn picnics, Kollywood movie nights",
-      icon: "🎉",
+      icon: CalendarHeart,
     },
   ];
 
@@ -262,7 +262,7 @@ export default function JoinPage() {
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2 mb-2">
-                      <span className="text-2xl">{opt.icon}</span>
+                      <div className={`p-2 rounded-lg transition-colors ${isSelected ? "bg-[#A6F0CF]/20 text-[#A6F0CF]" : "bg-white/5 text-[#C4B7D7] group-hover:text-[#A6F0CF]"}`}><opt.icon className="w-5 h-5" /></div>
                       {isSelected && (
                         <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-white/10 px-2 py-0.5 rounded-full">
                           Active Track
@@ -474,7 +474,7 @@ export default function JoinPage() {
                           }`}
                         >
                           <div className="flex items-center gap-2 mb-1">
-                            <span>{opt.icon}</span>
+                            <opt.icon className={`w-4 h-4 ${isSelected ? "text-[#A6F0CF]" : "text-[#C4B7D7]"}`} />
                             <span
                               className={`text-base font-serif font-medium ${
                                 isSelected

@@ -360,7 +360,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
                 {/* Cultural Hint Popover Badge */}
                 {showHints && tile.hint && (
                   <span className="absolute -top-1.5 -right-1.5 bg-[#A6F0CF] text-[#140C20] text-[9px] px-1.5 py-0.5 rounded-full font-mono font-bold shadow-xs">
-                    💡 {tile.hint}
+                    <span className="inline-flex items-center gap-1"><Lightbulb className="w-2.5 h-2.5 shrink-0" />{tile.hint}</span>
                   </span>
                 )}
               </motion.button>

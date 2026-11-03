@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ComponentProps, useEffect, useId, useRef, useState } from "react";
+import React, { ComponentProps, useEffect, useId, useState } from "react";
 import { View } from "@react-three/drei";
 import { SceneRegistrar } from "@/director/wireframe";
 import { governor } from "@/engine/governor";

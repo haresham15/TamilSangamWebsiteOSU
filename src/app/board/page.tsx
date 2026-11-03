@@ -8,7 +8,6 @@ import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS, BoardMember } from "@/data/board";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import {
-  Crown,
   Mail,
   Sparkles,
   ChevronLeft,

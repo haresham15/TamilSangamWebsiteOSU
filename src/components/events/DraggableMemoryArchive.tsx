@@ -251,13 +251,13 @@ export function DraggableMemoryArchive() {
               top: `${item.initialY}%`,
               zIndex: index + 1,
             }}
-            className="absolute w-56 sm:w-64 bg-[#FAF6EE] p-3 pb-5 border border-black/30 shadow-[0_12px_24px_rgba(0,0,0,0.35)] cursor-grab active:cursor-grabbing transform-gpu transition-shadow"
+            className="absolute w-56 sm:w-64 bg-[#FAF6EE] p-3 pb-5 border border-[#25173B]/20 shadow-[0_12px_24px_rgba(0,0,0,0.35)] cursor-grab active:cursor-grabbing transform-gpu transition-shadow"
           >
             {/* Top Tape Strip */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-14 h-4 bg-amber-100/75 border border-amber-300/40 rotate-1 shadow-sm pointer-events-none" />
 
             {/* Polaroid Photo Box */}
-            <div className="relative w-full h-44 sm:h-52 bg-black/80 border border-black/10 overflow-hidden mb-3">
+            <div className="relative w-full h-44 sm:h-52 bg-[#140C20] border border-[rgba(125,96,166,0.2)] overflow-hidden mb-3">
               <Image
                 src={item.imageUrl}
                 alt={`${item.titleEn} — OSU Tamil Sangam campus memories at The Ohio State University`}
@@ -266,7 +266,7 @@ export function DraggableMemoryArchive() {
                 className="object-cover pointer-events-none select-none"
                 draggable={false}
               />
-              <div className="absolute bottom-1 right-1.5 px-1.5 py-0.5 bg-black/75 text-[8px] font-mono text-[#A6F0CF] tracking-wider uppercase pointer-events-none">
+              <div className="absolute bottom-1 right-1.5 px-1.5 py-0.5 bg-[#140C20]/85 text-[8px] font-mono text-[#A6F0CF] tracking-wider uppercase pointer-events-none">
                 {item.date}
               </div>
             </div>
