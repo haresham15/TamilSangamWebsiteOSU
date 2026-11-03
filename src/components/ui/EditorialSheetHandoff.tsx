@@ -34,8 +34,8 @@ export function EditorialSheetHandoff({
   overlapHero = true,
 }: EditorialSheetHandoffProps) {
   const overlapStyles = overlapHero
-    ? "-mt-[10vh] md:-mt-[12vh] rounded-t-[28px] shadow-[0_-24px_60px_rgba(18,13,11,0.45)] border-t border-[#A6F0CF]/35"
-    : "mt-0 border-t border-[rgba(125,96,166,0.25)]";
+    ? "-mt-[10vh] md:-mt-[12vh] rounded-t-[28px] shadow-[0_-8px_36px_rgba(166,240,207,0.14),0_-24px_60px_rgba(18,13,11,0.55)] border-t border-[#A6F0CF]/50"
+    : "mt-0 border-t border-[#A6F0CF]/35 shadow-[0_-4px_24px_rgba(166,240,207,0.08)]";
 
   return (
     <section

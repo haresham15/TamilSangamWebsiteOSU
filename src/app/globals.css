@@ -635,45 +635,62 @@ body {
 
 /* Tiled wallpaper removed per Playbook Prompt 2 item 4: script is used as structure, never wallpaper with broken tracking */
 
+/* Ambient Mint Background Atmosphere Utilities */
+.bg-mint-aurora {
+  background-image: 
+    radial-gradient(ellipse 800px 500px at 15% 10%, rgba(166, 240, 207, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 900px 600px at 85% 70%, rgba(166, 240, 207, 0.09) 0%, transparent 65%),
+    radial-gradient(ellipse 600px 400px at 50% 95%, rgba(79, 214, 224, 0.08) 0%, transparent 60%);
+}
+
+.bg-mint-radial {
+  background-image: radial-gradient(ellipse at center, rgba(166, 240, 207, 0.14) 0%, transparent 70%);
+}
+
+.border-mint-glow {
+  border-color: rgba(166, 240, 207, 0.45);
+  box-shadow: 0 0 20px rgba(166, 240, 207, 0.15);
+}
+
 /* Official Logo Mint 3D Drop-Shadow Utilities */
 .logo-mint-shadow {
-  box-shadow: 4px 4px 0px #55CCA2;
+  box-shadow: 4px 4px 0px #A6F0CF;
 }
 
 .logo-mint-shadow-lg {
-  box-shadow: 6px 6px 0px #55CCA2, 0 12px 28px -6px oklch(0.38 0.22 305 / 0.25);
+  box-shadow: 6px 6px 0px #A6F0CF, 0 12px 28px -6px oklch(0.38 0.22 305 / 0.25);
 }
 
 .logo-mint-text-shadow {
-  text-shadow: 3px 3px 0px #55CCA2;
+  text-shadow: 3px 3px 0px #A6F0CF;
 }
 
 /* Signature Official Logo Extrusion Typography (TAMIL SANGAM style) */
 .text-logo-extrusion {
   color: #F4F0FA;
   text-shadow:
-    2px 2px 0px #55CCA2,
-    4px 4px 0px #55CCA2,
-    6px 6px 0px #55CCA2,
+    2px 2px 0px #A6F0CF,
+    4px 4px 0px #A6F0CF,
+    6px 6px 0px #A6F0CF,
     0 12px 24px rgba(70, 34, 112, 0.35);
 }
 
 .text-logo-extrusion-dark {
   color: #250d38;
   text-shadow:
-    2px 2px 0px #55CCA2,
-    4px 4px 0px #55CCA2;
+    2px 2px 0px #A6F0CF,
+    4px 4px 0px #A6F0CF;
 }
 
 .text-logo-extrusion-sm {
   color: #F4F0FA;
   text-shadow:
-    1.5px 1.5px 0px #55CCA2,
-    3px 3px 0px #55CCA2;
+    1.5px 1.5px 0px #A6F0CF,
+    3px 3px 0px #A6F0CF;
 }
 
 .text-logo-extrusion-purple {
-  color: #55CCA2;
+  color: #A6F0CF;
   text-shadow:
     2px 2px 0px #462270,
     4px 4px 0px #462270;
@@ -760,17 +777,17 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   border: 1px solid #4c2472;
-  border-left: 3px solid #55CCA2;
+  border-left: 3px solid #A6F0CF;
   background: #ffffff;
   color: #250d38;
   box-shadow: 2px 2px 0px #4c2472;
 }
 
 .box-badge-dark {
-  border-color: #55CCA2;
-  border-left: 3px solid #55CCA2;
+  border-color: #A6F0CF;
+  border-left: 3px solid #A6F0CF;
   background: #250d38;
-  color: #55CCA2;
+  color: #A6F0CF;
   box-shadow: 2px 2px 0px rgba(85, 204, 162, 0.4);
 }
 
@@ -805,15 +822,15 @@ body {
 }
 
 .box-tab-item:focus-visible {
-  outline: 2px solid #55CCA2;
+  outline: 2px solid #A6F0CF;
   outline-offset: 2px;
 }
 
 .box-tab-item-active {
   background: #250d38;
-  color: #55CCA2;
-  border-color: #55CCA2;
-  box-shadow: 1px 1px 0px #55CCA2;
+  color: #A6F0CF;
+  border-color: #A6F0CF;
+  box-shadow: 1px 1px 0px #A6F0CF;
 }
 
 .box-tab-item:hover:not(.box-tab-item-active) {
@@ -840,8 +857,8 @@ body {
 }
 
 .glass-glow-card:hover {
-  border-color: #55CCA2;
-  box-shadow: 6px 6px 0px #55CCA2;
+  border-color: #A6F0CF;
+  box-shadow: 6px 6px 0px #A6F0CF;
   transform: translate3d(-2px, -2px, 0);
 }
 
@@ -855,7 +872,7 @@ body {
   color: #ffffff;
   font-weight: 700;
   border-radius: 0px;
-  box-shadow: 3px 3px 0px #55CCA2, 6px 6px 0px #250d38;
+  box-shadow: 3px 3px 0px #A6F0CF, 6px 6px 0px #250d38;
   border: 2px solid #250d38;
   transform: translate3d(0, 0, 0);
   will-change: transform, box-shadow, background-color;
@@ -866,13 +883,13 @@ body {
 
 .btn-sangam:hover {
   background-color: #6e2dae;
-  border-color: #55CCA2;
-  box-shadow: 4px 4px 0px #55CCA2, 7px 7px 0px #250d38;
+  border-color: #A6F0CF;
+  box-shadow: 4px 4px 0px #A6F0CF, 7px 7px 0px #250d38;
 }
 
 .btn-sangam:active {
   transform: translate3d(2px, 2px, 0);
-  box-shadow: 1px 1px 0px #55CCA2, 2px 2px 0px #250d38;
+  box-shadow: 1px 1px 0px #A6F0CF, 2px 2px 0px #250d38;
 }
 
 .btn-sangam-mint {
@@ -880,7 +897,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #55CCA2;
+  background-color: #A6F0CF;
   color: #240e36;
   font-weight: 700;
   border-radius: 0px;
@@ -912,7 +929,7 @@ body {
   color: #250d38;
   font-weight: 700;
   border-radius: 0px;
-  box-shadow: 3px 3px 0px #4c2472, 6px 6px 0px #55CCA2;
+  box-shadow: 3px 3px 0px #4c2472, 6px 6px 0px #A6F0CF;
   border: 2px solid #250d38;
   transform: translate3d(0, 0, 0);
   will-change: transform, box-shadow, background-color;
@@ -923,13 +940,13 @@ body {
 
 .btn-sangam-white:hover {
   background-color: #fdfafd;
-  border-color: #55CCA2;
-  box-shadow: 4px 4px 0px #4c2472, 7px 7px 0px #55CCA2;
+  border-color: #A6F0CF;
+  box-shadow: 4px 4px 0px #4c2472, 7px 7px 0px #A6F0CF;
 }
 
 .btn-sangam-white:active {
   transform: translate3d(2px, 2px, 0);
-  box-shadow: 1px 1px 0px #4c2472, 2px 2px 0px #55CCA2;
+  box-shadow: 1px 1px 0px #4c2472, 2px 2px 0px #A6F0CF;
 }
 
 /* Authentic Filter Coffee Steam Vapor Animation */
@@ -1144,7 +1161,7 @@ body {
 
 /* 3. Gold Foil & Brushed Brass Buttons (Directive #3) */
 .btn-gold-foil {
-  background: linear-gradient(135deg, #A6F0CF 0%, #7AE7B5 60%, #55CCA2 100%);
+  background: linear-gradient(135deg, #A6F0CF 0%, #7AE7B5 60%, #A6F0CF 100%);
   color: #140C20;
   font-weight: 700;
   border: 1px solid rgba(166, 240, 207, 0.8);

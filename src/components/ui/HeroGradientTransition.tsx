@@ -25,68 +25,68 @@ const GRADIENT_CONFIGS: Record<
     lineAccent?: string;
   }
 > = {
-  // 1. Home: Deep Cosmic Plum (#10061a) -> Royal Sangam Purple (#250d38) -> Warm Ivory (#fffdfa)
+  // 1. Home: Deep Cosmic Plum -> Royal Violet -> Luminous Mint Horizon
   home: {
     gradientClass:
       "bg-gradient-to-b from-[#10061a] via-[#250d38] via-60% to-[#140C20]",
     ambientGlow:
-      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(85,204,162,0.18) 0%, rgba(76,36,114,0.3) 45%, transparent 80%)",
+      "radial-gradient(ellipse 75% 55% at 50% 0%, rgba(166,240,207,0.28) 0%, rgba(79,214,224,0.14) 35%, rgba(76,36,114,0.3) 65%, transparent 85%)",
   },
 
-  // 2. About: Dravidian Temple Night (#120a1f) -> Chola Bronze & Plum (#250d38) -> Warm Ivory (#fffdfa)
+  // 2. About: Dravidian Temple Night -> Chola Bronze & Plum -> Mint Horizon
   about: {
     gradientClass:
       "bg-gradient-to-b from-[#120a1f] via-[#250d38] via-55% to-[#140C20]",
     ambientGlow:
-      "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(166,240,207,0.15) 0%, rgba(37,13,56,0.35) 50%, transparent 85%)",
+      "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(166,240,207,0.28) 0%, rgba(79,214,224,0.14) 35%, rgba(37,13,56,0.35) 65%, transparent 85%)",
   },
 
-  // 3. Events: Sodium-Vapor Amber Concert Night (#0c0a08) -> Terracotta Dusk (#3e1c10) -> Pure White (#ffffff)
+  // 3. Events: Sodium-Vapor Amber Concert Night -> Mint Horizon
   events: {
     gradientClass:
       "bg-gradient-to-b from-[#140C20] via-[#25173B] via-40% via-[#352254] via-65% via-[#452C6D] via-88% to-[#140C20]",
     ambientGlow:
-      "radial-gradient(ellipse 75% 55% at 50% 0%, rgba(79,214,224,0.25) 0%, rgba(37,23,59,0.3) 45%, transparent 80%)",
+      "radial-gradient(ellipse 75% 55% at 50% 0%, rgba(166,240,207,0.28) 0%, rgba(79,214,224,0.18) 35%, rgba(37,23,59,0.3) 65%, transparent 85%)",
   },
 
-  // 4. Gallery: ECR Acoustic Sunset (#1F0A05) -> Warm Terracotta (#541d10) -> Warm Cream (#fbf9f5)
+  // 4. Gallery: ECR Acoustic Sunset -> Chromatic Pink & Mint
   gallery: {
     gradientClass:
       "bg-gradient-to-b from-[#140C20] via-[#25173B] via-45% via-[#352254] via-72% via-[#452C6D] via-90% to-[#140C20]",
     ambientGlow:
-      "radial-gradient(ellipse 75% 55% at 50% 0%, rgba(242,107,181,0.22) 0%, rgba(37,23,59,0.35) 50%, transparent 80%)",
+      "radial-gradient(ellipse 75% 55% at 50% 0%, rgba(166,240,207,0.26) 0%, rgba(242,107,181,0.18) 35%, rgba(37,23,59,0.35) 65%, transparent 85%)",
   },
 
-  // 5. Board: Mandapam Torchlit Stone (#120A06) -> Molten Gold / Bronze Halo -> Warm Sandstone Ledger (#F7F0E4)
+  // 5. Board: Mandapam Stone -> Mint Horizon Halo
   board: {
     gradientClass:
       "bg-gradient-to-b from-[#140C20] via-[#25173B] via-35% via-[#352254] via-65% via-[#452C6D] via-88% to-[#140C20]",
     ambientGlow:
-      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(166,240,207,0.15) 0%, rgba(37,23,59,0.3) 50%, transparent 80%)",
+      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(166,240,207,0.28) 0%, rgba(79,214,224,0.15) 35%, rgba(37,23,59,0.3) 65%, transparent 85%)",
   },
 
-  // 6. Guide: Southern Railway Mechanical Station (#0c0907) -> Amber Tungsten Lamp Spill -> Platform Console (#FAF6EE)
+  // 6. Guide: Southern Railway Mechanical Station -> Mint Horizon
   guide: {
     gradientClass:
       "bg-gradient-to-b from-[#140C20] via-[#25173B] via-35% via-[#352254] via-65% via-[#452C6D] via-88% to-[#140C20]",
     ambientGlow:
-      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(79,214,224,0.22) 0%, rgba(37,23,59,0.4) 50%, transparent 80%)",
+      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(166,240,207,0.28) 0%, rgba(79,214,224,0.18) 35%, rgba(37,23,59,0.4) 65%, transparent 85%)",
   },
 
-  // 7. Suggestions: 3D Kaththi War Room Blueprint (#0F050A) -> Bruised Plum (#150914) -> Amber Shimmer
+  // 7. Suggestions: 3D Drafting Table -> Mint Horizon
   suggestions: {
     gradientClass:
       "bg-gradient-to-b from-[#140C20] via-[#25173B] to-[#140C20]",
     ambientGlow:
-      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(79,214,224,0.18) 0%, rgba(37,23,59,0.25) 50%, transparent 80%)",
+      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(166,240,207,0.26) 0%, rgba(79,214,224,0.16) 35%, rgba(37,23,59,0.25) 65%, transparent 85%)",
   },
 
-  // 8. Join: Night Sky (#140C20) -> Royal Violet -> Deep Violet (#140C20)
+  // 8. Join: Night Sky -> Mint Horizon Aura
   join: {
     gradientClass:
       "bg-gradient-to-b from-[#140C20] via-[#250d38] via-40% via-[#352254] via-75% to-[#140C20]",
     ambientGlow:
-      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(166,240,207,0.20) 0%, rgba(37,23,59,0.15) 50%, transparent 80%)",
+      "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(166,240,207,0.32) 0%, rgba(79,214,224,0.15) 35%, rgba(37,23,59,0.15) 65%, transparent 85%)",
   },
 };
 

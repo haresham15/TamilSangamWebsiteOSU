@@ -423,13 +423,14 @@ export default function HomePage() {
           >
             {/* Left Column (4 Cols - The Anchor, §PRD 9.1) */}
             <div className="lg:col-span-4 relative p-6 pt-16 sm:p-8 sm:pt-20 lg:p-8 lg:pt-20 xl:p-12 xl:pt-24 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[rgba(125,96,166,0.25)] overflow-hidden">
-              {/* Absolute Massive Tamil Numeral Watermark: 3% opacity positioned bottom-left clipped */}
+              {/* Absolute Massive Tamil Numeral Watermark: glowing mint accent */}
               <div
                 aria-hidden="true"
-                className="absolute -bottom-10 -left-6 text-[clamp(14rem,32vw,36rem)] font-noto-serif-tamil font-bold text-[#F4F0FA] opacity-[0.04] select-none pointer-events-none leading-none"
+                className="absolute -bottom-10 -left-6 text-[clamp(14rem,32vw,36rem)] font-noto-serif-tamil font-bold text-[#A6F0CF] opacity-[0.09] select-none pointer-events-none leading-none drop-shadow-[0_0_35px_rgba(166,240,207,0.25)]"
               >
                 ௦௧
               </div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(166,240,207,0.08),transparent_65%)] pointer-events-none" aria-hidden="true" />
 
               {/* Top Anchor Header */}
               <div className="relative z-10 space-y-3">
@@ -613,7 +614,8 @@ export default function HomePage() {
       <EditorialSheetHandoff id="flagship-gathering" badge="CAMPUS HEARTH" sublabel="COLUMBUS, OH" overlapHero={false}>
 
         {/* Puranaanuru 192 Sunlit Wisdom Banner */}
-        <div className="bg-[#25173B] py-6 px-6 text-center select-none">
+        <div className="relative bg-[#25173B] border-y border-[#A6F0CF]/25 py-6 px-6 text-center select-none overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.25)]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(166,240,207,0.12),transparent_70%)]" aria-hidden="true" />
           <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 font-sans text-xs text-[#C4B7D7]">
             <span lang="ta" style={{ letterSpacing: 0 }} className="text-base font-serif font-bold text-[#A6F0CF]">
               யாதும் ஊரே யாவரும் கேளிர்
@@ -632,7 +634,7 @@ export default function HomePage() {
         <KolamSectionRule tone="sandstone" />
 
         {/* 1. Quick-Action Command Strip: Immediate visibility into upcoming gathering & actions */}
-        <div className="bg-[#140C20] border-b border-[rgba(125,96,166,0.25)] py-3.5 px-6">
+        <div className="relative bg-[#140C20] border-b border-[#A6F0CF]/30 py-3.5 px-6 bg-[radial-gradient(ellipse_at_top,rgba(166,240,207,0.06),transparent_80%)]">
           <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-pulse" />

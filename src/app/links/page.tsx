@@ -105,8 +105,14 @@ export default function LinksBioHubPage() {
 
   return (
     <div className="relative min-h-screen bg-[#140C20] text-[#F4F0FA] flex flex-col justify-between py-10 px-4 font-sans select-none overflow-x-hidden">
+      {/* Ambient Mint Radiant Blooms */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_600px_400px_at_15%_10%,rgba(166,240,207,0.12),transparent_60%),radial-gradient(ellipse_700px_450px_at_85%_65%,rgba(166,240,207,0.09),transparent_65%),radial-gradient(ellipse_500px_350px_at_50%_90%,rgba(79,214,224,0.08),transparent_60%)]"
+        aria-hidden="true"
+      />
+
       {/* Structural Watermark */}
-      <WatermarkGlyph text="இணைப்பு" position="center" theme="light" opacity={0.03} />
+      <WatermarkGlyph text="இணைப்பு" position="center" theme="mint" opacity={0.07} />
 
       {/* Top Persistent Return Bar */}
       <header className="w-full max-w-md mx-auto mb-6 flex items-center justify-between text-xs font-mono">

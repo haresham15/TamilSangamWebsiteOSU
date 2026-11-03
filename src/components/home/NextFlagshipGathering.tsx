@@ -80,8 +80,14 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
         description="Our calendar brings together authentic food, live performance, and fellowship beneath Columbus skies. Open to every Buckeye regardless of language or background."
       />
 
+      {/* Ambient Mint Radiant Bloom */}
+      <div
+        className="pointer-events-none absolute top-1/2 left-1/3 -translate-y-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-[radial-gradient(ellipse_at_center,rgba(166,240,207,0.11),transparent_70%)]"
+        aria-hidden="true"
+      />
+
       {/* 12-Column Asymmetric Grid: Dithered Installation (5 cols) + Editorial Dossier (7 cols) inside Recessed Archival Well */}
-      <div className="relative w-full rounded-sm bg-[#25173B]/60 p-6 sm:p-10 lg:p-12 border border-[rgba(125,96,166,0.25)] shadow-[inset_0_2px_12px_rgba(0,0,0,0.2)] grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-x-16 items-stretch">
+      <div className="relative w-full rounded-xl bg-[#25173B]/70 p-6 sm:p-10 lg:p-12 border border-[#A6F0CF]/35 shadow-[0_16px_48px_rgba(0,0,0,0.35),inset_0_2px_12px_rgba(0,0,0,0.2)] grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-x-16 items-stretch">
         {/* COLS 1–5: THE DITHERED INSTALLATION */}
         <div className="lg:col-span-5 relative w-full flex flex-col justify-center">
           <SpotlightCard className="w-full bg-transparent border-0 p-0">

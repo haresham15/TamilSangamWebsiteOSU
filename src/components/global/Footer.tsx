@@ -140,7 +140,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
   const isHomePage = pathname === "/";
 
   return (
-    <footer className="relative bg-[#140C20] border-t border-[rgba(125,96,166,0.25)] overflow-hidden text-[#F4F0FA]">
+    <footer className="relative bg-[#140C20] border-t border-[#A6F0CF]/30 overflow-hidden text-[#F4F0FA] shadow-[0_-8px_36px_rgba(166,240,207,0.06)]">
+      {/* Ambient Mint Background Blooms */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_900px_450px_at_15%_100%,rgba(166,240,207,0.10),transparent_70%),radial-gradient(ellipse_700px_400px_at_85%_0%,rgba(79,214,224,0.07),transparent_70%)]"
+        aria-hidden="true"
+      />
       {/* ========================================================================= */}
       {/* 1. TOP ROLLING CREDITS MARQUEE (Home Page End-Credits Only)                */}
       {/* ========================================================================= */}

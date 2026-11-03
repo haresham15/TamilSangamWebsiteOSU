@@ -88,9 +88,9 @@ export function SilkHoverPillars() {
       {/* Fallback anchor target for backwards compatibility */}
       <span id="five-pillars" className="sr-only" aria-hidden="true" />
 
-      {/* Ambient brass corner accents */}
-      <div className="absolute top-0 left-0 w-32 h-32 bg-[radial-gradient(circle_at_top_left,rgba(166,240,207,0.08),transparent_70%)] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-32 h-32 bg-[radial-gradient(circle_at_bottom_right,rgba(242,107,181,0.08),transparent_70%)] pointer-events-none" />
+      {/* Ambient mint & chromatic background glows */}
+      <div className="absolute -top-24 left-1/4 w-[700px] h-[400px] bg-[radial-gradient(ellipse_at_center,rgba(166,240,207,0.12),transparent_70%)] pointer-events-none" />
+      <div className="absolute -bottom-24 right-1/4 w-[700px] h-[400px] bg-[radial-gradient(ellipse_at_center,rgba(79,214,224,0.09),transparent_70%)] pointer-events-none" />
 
       <div className="max-w-[1600px] mx-auto px-6 sm:px-12 relative z-10">
         {/* Courtyard Section Header in Espresso Tone */}
@@ -119,12 +119,12 @@ export function SilkHoverPillars() {
                   soundEngine.playPillarHover(idx);
                 }}
                 onMouseLeave={() => setHoveredPillar(null)}
-                className="group relative flex flex-col justify-between p-8 sm:p-10 rounded-xl bg-[#1F1A17] border border-[#A6F0CF]/35 hover:border-[#A6F0CF]/35 hover:bg-[#26201C] transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.25)] focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+                className="group relative flex flex-col justify-between p-8 sm:p-10 rounded-xl bg-[#25173B] border border-[#A6F0CF]/35 hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_12px_40px_rgba(166,240,207,0.12)] transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.25)] focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
               >
                 {/* Top Lockup: Numeral & Icon */}
                 <div>
                   <div className="flex items-center justify-between pb-6 border-b border-[rgba(125,96,166,0.25)] mb-6">
-                    <span className="font-serif text-3xl sm:text-4xl text-[#A6F0CF] font-light group-hover:text-[#F39C12] transition-colors">
+                    <span className="font-serif text-3xl sm:text-4xl text-[#A6F0CF] font-light group-hover:text-[#A6F0CF] transition-colors">
                       {locale === "ta" ? pillar.numTa : pillar.num}
                     </span>
                     <span
@@ -137,7 +137,7 @@ export function SilkHoverPillars() {
 
                   {/* Title & Tamil subtitle */}
                   <div className="space-y-1 mb-4">
-                    <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA] group-hover:text-[#F39C12] transition-colors">
+                    <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors">
                       {pillar.nameEn}
                     </h3>
                     <p lang="ta" className="text-sm font-serif text-[#A6F0CF]/80">

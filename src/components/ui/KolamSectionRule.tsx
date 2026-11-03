@@ -27,16 +27,16 @@ export function KolamSectionRule({
   const isSandstone = activeTone === "sandstone";
 
   const lineColor = isEspresso
-    ? "from-transparent via-[#A6F0CF]/35 to-transparent"
+    ? "from-transparent via-[#A6F0CF]/45 to-transparent"
     : isSandstone
-    ? "from-transparent via-[#F26BB5]/30 to-transparent"
-    : "from-transparent via-[rgba(125,96,166,0.25)] to-transparent";
+    ? "from-transparent via-[#A6F0CF]/40 to-transparent"
+    : "from-transparent via-[#A6F0CF]/35 to-transparent";
 
   const ornamentColor = isEspresso
-    ? "text-[#A6F0CF]"
+    ? "text-[#A6F0CF] drop-shadow-[0_0_10px_rgba(166,240,207,0.55)]"
     : isSandstone
-    ? "text-[#A6F0CF]"
-    : "text-[#A6F0CF]/80";
+    ? "text-[#A6F0CF] drop-shadow-[0_0_10px_rgba(166,240,207,0.55)]"
+    : "text-[#A6F0CF] drop-shadow-[0_0_8px_rgba(166,240,207,0.45)]";
 
   return (
     <div
