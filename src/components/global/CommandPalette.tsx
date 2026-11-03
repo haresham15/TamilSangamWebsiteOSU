@@ -51,7 +51,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       { id: "p-events", category: "Page", title: "Events / நிகழ்வுகள்", subtitle: "Upcoming festivals & Ticket drops", href: "/events", icon: <Calendar className="w-4 h-4 text-[#f59e0b]" /> },
       { id: "p-about", category: "Page", title: "About / எங்களைப் பற்றி", subtitle: "Mission, Constitution, History & FAQ", href: "/about", icon: <Sparkles className="w-4 h-4 text-[#55CCA2]" /> },
       { id: "p-board", category: "Page", title: "Board / குழு", subtitle: "Executive leadership & committee chairs", href: "/board", icon: <Users className="w-4 h-4 text-[#a855f7]" /> },
-      { id: "p-games", category: "Page", title: "The Sangam Arcade / விளையாட்டு", subtitle: "Monthly Tamil Wordle (Sollu) & Connections (Thodarpu)", href: "/games", icon: <Gamepad2 className="w-4 h-4 text-[#D4AF37]" /> },
+      { id: "p-games", category: "Page", title: "The Sangam Arcade / விளையாட்டு", subtitle: "Monthly Tamil Wordle (Sollu) & Connections (Thodarpu)", href: "/games", icon: <Gamepad2 className="w-4 h-4 text-[#A6F0CF]" /> },
       { id: "p-sollu", category: "Page", title: "Sollu / சொல்லு", subtitle: "Monthly Tamil Wordle · Tanglish & தமிழ் Akshara puzzle", href: "/games?game=sollu", icon: <Gamepad2 className="w-4 h-4 text-[#2E6F4E]" /> },
       { id: "p-thodarpu", category: "Page", title: "Thodarpu / தொடர்பு", subtitle: "Monthly Tamil Connections · 16 Cultural Tiles puzzle", href: "/games?game=thodarpu", icon: <Gamepad2 className="w-4 h-4 text-[#B24A25]" /> },
       { id: "p-nanba", category: "Page", title: "Ask Nanba / நண்பா (AI Guide)", subtitle: "Chat with Nanba or search verified club knowledge", href: "/guide", icon: <NanbaAvatar size={16} className="w-4 h-4 shrink-0" /> },

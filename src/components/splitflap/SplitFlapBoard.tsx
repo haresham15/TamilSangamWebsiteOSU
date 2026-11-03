@@ -598,13 +598,13 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
   const backplateGeo = useMemo(() => new THREE.BoxGeometry(boardWidth, boardHeight, 0.08), [boardWidth, boardHeight]);
   const backplateMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#0c0a09", roughness: 0.9, metalness: 0.4 }), []);
   const bezelGeo = useMemo(() => new THREE.BoxGeometry(boardWidth + 0.35, boardHeight + 0.35, 0.05), [boardWidth, boardHeight]);
-  const bezelMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#1a1614", roughness: 0.8, metalness: 0.7 }), []);
+  const bezelMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#140C20", roughness: 0.8, metalness: 0.7 }), []);
   const headerPlateGeo = useMemo(() => new THREE.BoxGeometry(boardWidth, 0.75, 0.04), [boardWidth]);
   const headerPlateMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#211a14", roughness: 0.7, metalness: 0.5 }), []);
   const trimGeo = useMemo(() => new THREE.BoxGeometry(boardWidth - 0.2, 0.6, 0.01), [boardWidth]);
   const trimMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#3d2c18", roughness: 0.4, metalness: 0.85 }), []);
   const ledGeo = useMemo(() => new THREE.CylinderGeometry(0.06, 0.06, 0.04, 16), []);
-  const ledAmberMat = useMemo(() => new THREE.MeshBasicMaterial({ color: "#FFB84D" }), []);
+  const ledAmberMat = useMemo(() => new THREE.MeshBasicMaterial({ color: "#A6F0CF" }), []);
   const ledGreenMat = useMemo(() => new THREE.MeshBasicMaterial({ color: "#4ade80" }), []);
   const railGeo = useMemo(() => new THREE.BoxGeometry(BOARD_COLS * STEP_X + 0.1, 0.01, 0.004), []);
   const railMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#1f1813", roughness: 0.8, metalness: 0.6 }), []);

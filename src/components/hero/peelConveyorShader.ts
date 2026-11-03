@@ -30,7 +30,7 @@ export function createPeelConveyorMaterial(
   zBias: number
 ): { material: THREE.MeshStandardMaterial; wireMaterial: THREE.MeshBasicMaterial; uniforms: ConveyorShaderUniforms } {
   const customMaterial = new THREE.MeshStandardMaterial({
-    color: "#FFB84D",
+    color: "#A6F0CF",
     metalness: 0.55,
     roughness: 0.22,
     emissive: "#FF9E1B",

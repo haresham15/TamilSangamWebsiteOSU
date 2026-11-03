@@ -84,7 +84,7 @@ export function CinemaLightbox({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed inset-0 z-[100] flex flex-col justify-between bg-[#120D0B]/95 backdrop-blur-md text-[#FAF7F2] select-none p-4 sm:p-6 lg:p-8"
+          className="fixed inset-0 z-[100] flex flex-col justify-between bg-[#140C20]/95 backdrop-blur-md text-[#F4F0FA] select-none p-4 sm:p-6 lg:p-8"
           onClick={(e) => {
             if (e.target === e.currentTarget) onClose();
           }}
@@ -92,7 +92,7 @@ export function CinemaLightbox({
           {/* Top Control Bar */}
           <header className="w-full flex items-center justify-between z-20 shrink-0">
             <div className="flex items-center gap-3">
-              <span className="font-mono text-xs uppercase tracking-widest text-[#B85C38] font-bold">
+              <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] font-bold">
                 Plate {plateLabel}
               </span>
               <span className="text-white/20">/</span>
@@ -105,7 +105,7 @@ export function CinemaLightbox({
               type="button"
               onClick={onClose}
               aria-label="Close lightbox (ESC)"
-              className="group flex items-center gap-2 px-3.5 py-2 min-w-[48px] min-h-[48px] rounded-full border border-white/15 bg-white/5 hover:bg-white/10 hover:border-[#B85C38] text-white/80 hover:text-white transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38]"
+              className="group flex items-center gap-2 px-3.5 py-2 min-w-[48px] min-h-[48px] rounded-full border border-white/15 bg-white/5 hover:bg-white/10 hover:border-[#A6F0CF] text-white/80 hover:text-white transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0]"
             >
               <span className="text-[10px] font-mono uppercase tracking-widest text-white/50 group-hover:text-white/90">
                 ESC
@@ -122,7 +122,7 @@ export function CinemaLightbox({
                 type="button"
                 onClick={handlePrev}
                 aria-label="Previous photograph (Left Arrow)"
-                className="absolute left-2 sm:left-4 z-20 w-11 h-11 rounded-full bg-black/40 hover:bg-[#B85C38] border border-white/15 text-white flex items-center justify-center transition-all cursor-pointer backdrop-blur-sm"
+                className="absolute left-2 sm:left-4 z-20 w-11 h-11 rounded-full bg-black/40 hover:bg-[#A6F0CF] border border-white/15 text-white flex items-center justify-center transition-all cursor-pointer backdrop-blur-sm"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
@@ -160,7 +160,7 @@ export function CinemaLightbox({
                 type="button"
                 onClick={handleNext}
                 aria-label="Next photograph (Right Arrow)"
-                className="absolute right-2 sm:right-4 z-20 w-11 h-11 rounded-full bg-black/40 hover:bg-[#B85C38] border border-white/15 text-white flex items-center justify-center transition-all cursor-pointer backdrop-blur-sm"
+                className="absolute right-2 sm:right-4 z-20 w-11 h-11 rounded-full bg-black/40 hover:bg-[#A6F0CF] border border-white/15 text-white flex items-center justify-center transition-all cursor-pointer backdrop-blur-sm"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -172,12 +172,12 @@ export function CinemaLightbox({
             <div className="space-y-1">
               <div className="flex flex-wrap items-baseline gap-3">
                 {currentPhoto.titleEn && (
-                  <h3 className="font-serif text-lg sm:text-xl text-[#FAF7F2]">
+                  <h3 className="font-serif text-lg sm:text-xl text-[#F4F0FA]">
                     {currentPhoto.titleEn}
                   </h3>
                 )}
                 {currentPhoto.titleTa && (
-                  <span lang="ta" className="font-tamil text-sm text-[#D4AF37]/90">
+                  <span lang="ta" className="font-tamil text-sm text-[#A6F0CF]/90">
                     {currentPhoto.titleTa}
                   </span>
                 )}

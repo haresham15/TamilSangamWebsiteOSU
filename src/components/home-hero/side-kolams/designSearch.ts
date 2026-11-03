@@ -249,9 +249,9 @@ export function buildContactSheetSvg(topCandidates: EvaluatedCandidate[]): strin
 
   svg.push(`<defs>`);
   svg.push(`  <style>`);
-  svg.push(`    .title { fill: #FFB84D; font-size: 24px; font-weight: bold; }`);
+  svg.push(`    .title { fill: #A6F0CF; font-size: 24px; font-weight: bold; }`);
   svg.push(`    .subtitle { fill: #DDD6FE; font-size: 13px; }`);
-  svg.push(`    .card-title { fill: #FFB84D; font-size: 14px; font-weight: bold; }`);
+  svg.push(`    .card-title { fill: #A6F0CF; font-size: 14px; font-weight: bold; }`);
   svg.push(`    .card-meta { fill: #A78BFA; font-size: 11px; }`);
   svg.push(`    .card-box { fill: #0e0717; stroke: #3b1d66; stroke-width: 1.5; rx: 8; }`);
   svg.push(`  </style>`);

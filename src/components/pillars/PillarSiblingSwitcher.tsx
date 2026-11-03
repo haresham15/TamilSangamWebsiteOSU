@@ -15,21 +15,21 @@ export function PillarSiblingSwitcher({ currentSlug }: PillarSiblingSwitcherProp
   return (
     <nav
       aria-label="Pillar Navigation Strip"
-      className="w-full bg-[#161210] border-t border-[#FAF6F0]/10 py-10 px-4 sm:px-6 lg:px-8 text-[#FAF6F0]"
+      className="w-full bg-[#140C20] border-t border-[rgba(125,96,166,0.25)] py-10 px-4 sm:px-6 lg:px-8 text-[#F4F0FA]"
     >
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Top return link & strip label */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#FAF6F0]/10 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[rgba(125,96,166,0.25)] pb-4">
           <Link
             href="/#five-pillars"
-            className="inline-flex items-center gap-2 text-xs font-mono text-[#D4AF37] hover:text-[#FAF6F0] transition-colors group"
+            className="inline-flex items-center gap-2 text-xs font-mono text-[#A6F0CF] hover:text-[#F4F0FA] transition-colors group"
           >
             <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
             <span>Return to The Five Pillars Overview (Home)</span>
           </Link>
 
-          <div className="flex items-center gap-2 text-[11px] font-mono text-[#FAF6F0]/60">
-            <Compass className="w-3.5 h-3.5 text-[#C85A32]" />
+          <div className="flex items-center gap-2 text-[11px] font-mono text-[#C4B7D7]">
+            <Compass className="w-3.5 h-3.5 text-[#A6F0CF]" />
             <span>THE LIVING ARCHITECTURAL PILLARS · 01–05</span>
           </div>
         </div>
@@ -48,39 +48,39 @@ export function PillarSiblingSwitcher({ currentSlug }: PillarSiblingSwitcherProp
                 }}
                 className={`group relative p-4 rounded-xl border transition-all duration-300 flex flex-col justify-between ${
                   isActive
-                    ? "bg-[#FAF6F0]/10 border-[#D4AF37]/80 ring-1 ring-[#D4AF37]/50 shadow-lg"
-                    : "bg-[#1E1916]/80 border-[#FAF6F0]/10 hover:border-[#FAF6F0]/30 hover:bg-[#25201C]"
+                    ? "bg-[#140C20]/10 border-[#A6F0CF]/35 ring-1 ring-[#A6F0CF]/50 shadow-lg"
+                    : "bg-[#140C20]/80 border-[rgba(125,96,166,0.25)] hover:border-[rgba(125,96,166,0.25)] hover:bg-[#25173B]"
                 }`}
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span
                       className={`font-serif text-sm font-semibold ${
-                        isActive ? "text-[#D4AF37]" : "text-[#FAF6F0]/60 group-hover:text-[#FAF6F0]"
+                        isActive ? "text-[#A6F0CF]" : "text-[#C4B7D7] group-hover:text-[#F4F0FA]"
                       }`}
                     >
                       {pillar.number}
                     </span>
                     {isActive ? (
-                      <span className="text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40">
+                      <span className="text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#A6F0CF]/20 text-[#A6F0CF] border border-[#A6F0CF]/35">
                         Current
                       </span>
                     ) : (
-                      <ChevronRight className="w-3.5 h-3.5 text-[#FAF6F0]/30 group-hover:text-[#FAF6F0] transition-transform group-hover:translate-x-0.5" />
+                      <ChevronRight className="w-3.5 h-3.5 text-[#C4B7D7] group-hover:text-[#F4F0FA] transition-transform group-hover:translate-x-0.5" />
                     )}
                   </div>
 
                   <div>
                     <h5
                       className={`font-serif text-base font-medium leading-snug ${
-                        isActive ? "text-[#FAF6F0]" : "text-[#FAF6F0]/80 group-hover:text-[#FAF6F0]"
+                        isActive ? "text-[#F4F0FA]" : "text-[#C4B7D7] group-hover:text-[#F4F0FA]"
                       }`}
                     >
                       {pillar.titleEn}
                     </h5>
                     <p
                       lang="ta"
-                      className="font-serif text-xs text-[#FAF6F0]/60 tracking-normal"
+                      className="font-serif text-xs text-[#C4B7D7] tracking-normal"
                       style={{ letterSpacing: 0 }}
                     >
                       {pillar.titleTa}
@@ -88,7 +88,7 @@ export function PillarSiblingSwitcher({ currentSlug }: PillarSiblingSwitcherProp
                   </div>
                 </div>
 
-                <div className="pt-3 mt-3 border-t border-[#FAF6F0]/5 text-[10px] font-mono text-[#FAF6F0]/50 truncate">
+                <div className="pt-3 mt-3 border-t border-[rgba(125,96,166,0.25)] text-[10px] font-mono text-[#C4B7D7] truncate">
                   {pillar.categoryLabel}
                 </div>
               </Link>

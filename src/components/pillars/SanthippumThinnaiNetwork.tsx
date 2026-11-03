@@ -77,7 +77,7 @@ export function SanthippumThinnaiNetwork() {
       {/* =========================================================================
           THE ARCHITECTURAL CONCEPT OF THE THINNAI
           ========================================================================= */}
-      <div className="p-8 sm:p-12 rounded-3xl bg-[#161210] border border-[#55CCA2]/30 text-[#FAF6F0] space-y-8 shadow-2xl relative overflow-hidden">
+      <div className="p-8 sm:p-12 rounded-3xl bg-[#140C20] border border-[#55CCA2]/30 text-[#F4F0FA] space-y-8 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[radial-gradient(circle_at_top_right,rgba(85,204,162,0.12),transparent_70%)] pointer-events-none" />
 
         <div className="space-y-4 max-w-3xl">
@@ -85,10 +85,10 @@ export function SanthippumThinnaiNetwork() {
             <span className="w-2 h-2 rounded-full bg-[#55CCA2] animate-ping" />
             <span>The Architectural Ethos · திண்ணை மரபு</span>
           </div>
-          <h3 className="font-serif text-3xl sm:text-5xl text-[#FAF6F0] font-normal leading-tight">
+          <h3 className="font-serif text-3xl sm:text-5xl text-[#F4F0FA] font-normal leading-tight">
             The Porch That Never Locks Its Door
           </h3>
-          <p className="font-sans text-sm sm:text-base text-[#FAF6F0]/80 leading-relaxed">
+          <p className="font-sans text-sm sm:text-base text-[#C4B7D7] leading-relaxed">
             In classic Tamil domestic architecture, the <strong className="text-[#55CCA2]">Thinnai (திண்ணை)</strong> is an elevated covered veranda protruding from the front of the house toward the street. It was designed with deep moral intent: so that anyone passing by—a tired traveler, a neighbor in need of water, or a student walking home in the rain—could sit, find shelter, and be treated with sacred hospitality (*Virundhombal*).
           </p>
         </div>
@@ -97,19 +97,19 @@ export function SanthippumThinnaiNetwork() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-[#55CCA2]/20 text-xs font-mono">
           <div className="p-4 rounded-xl bg-white/[0.03] border border-[#55CCA2]/20 space-y-1">
             <span className="text-[#55CCA2] font-bold block">01 · ZERO DUES ENTRY</span>
-            <p className="text-[11px] text-[#FAF6F0]/70 font-sans">
+            <p className="text-[11px] text-[#C4B7D7] font-sans">
               No financial barrier, no membership dues, no exclusionary screening. The porch is unconditionally free for all.
             </p>
           </div>
           <div className="p-4 rounded-xl bg-white/[0.03] border border-[#55CCA2]/20 space-y-1">
             <span className="text-[#55CCA2] font-bold block">02 · ALL DIASPORA WELCOME</span>
-            <p className="text-[11px] text-[#FAF6F0]/70 font-sans">
+            <p className="text-[11px] text-[#C4B7D7] font-sans">
               Tamil speakers, friends from across South Asia, and Buckeyes of all cultural backgrounds belong here equally.
             </p>
           </div>
           <div className="p-4 rounded-xl bg-white/[0.03] border border-[#55CCA2]/20 space-y-1">
             <span className="text-[#55CCA2] font-bold block">03 · RECIPROCAL KINSHIP</span>
-            <p className="text-[11px] text-[#FAF6F0]/70 font-sans">
+            <p className="text-[11px] text-[#C4B7D7] font-sans">
               Mentorship flows naturally: as upperclassmen graduate, underclassmen step up to guide the next incoming class.
             </p>
           </div>
@@ -121,10 +121,10 @@ export function SanthippumThinnaiNetwork() {
           ========================================================================= */}
       <div className="space-y-6 pt-2">
         <div className="space-y-2">
-          <h4 className="font-serif text-3xl sm:text-4xl text-[#161210] font-normal leading-tight">
+          <h4 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal leading-tight">
             The Three Kinship Branches
           </h4>
-          <p className="font-sans text-sm sm:text-base text-[#57524C] max-w-2xl">
+          <p className="font-sans text-sm sm:text-base text-[#C4B7D7] max-w-2xl">
             Explore how we build continuous peer support into campus life, and volunteer to lead a mentorship or fellowship initiative.
           </p>
         </div>
@@ -142,8 +142,8 @@ export function SanthippumThinnaiNetwork() {
                 radius={360}
                 className={`p-6 sm:p-8 rounded-2xl border transition-all duration-300 flex flex-col justify-between ${
                   isSelected
-                    ? "bg-[#FAF7F2] border-[#55CCA2] shadow-xl shadow-[#55CCA2]/10"
-                    : "bg-[#FAF8F5] border-[#161210]/10 hover:border-[#55CCA2]/40"
+                    ? "bg-[#140C20] border-[#55CCA2] shadow-xl shadow-[#55CCA2]/10"
+                    : "bg-[#140C20] border-[rgba(125,96,166,0.25)] hover:border-[#55CCA2]/40"
                 }`}
                 onClick={() => {
                   setActiveBranch(branch.id);
@@ -156,10 +156,10 @@ export function SanthippumThinnaiNetwork() {
                   </div>
 
                   <div className="space-y-1">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#8C827A] font-semibold block">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#C4B7D7] font-semibold block">
                       {branch.role}
                     </span>
-                    <h5 className="font-serif text-2xl text-[#161210] font-normal">
+                    <h5 className="font-serif text-2xl text-[#F4F0FA] font-normal">
                       {branch.titleEn}
                     </h5>
                     <p lang="ta" className="font-tamil text-sm text-[#2A7B5E] font-medium leading-relaxed">
@@ -168,13 +168,13 @@ export function SanthippumThinnaiNetwork() {
                   </div>
 
                   {/* Focus Areas List */}
-                  <div className="space-y-2 pt-2 border-t border-[#161210]/10">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#8C827A] block">
+                  <div className="space-y-2 pt-2 border-t border-[rgba(125,96,166,0.25)]">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#C4B7D7] block">
                       Key Fellowship Initiatives:
                     </span>
                     <ul className="space-y-1.5">
                       {branch.focusAreas.map((area, i) => (
-                        <li key={i} className="text-xs font-sans text-[#57524C] flex items-start gap-2">
+                        <li key={i} className="text-xs font-sans text-[#C4B7D7] flex items-start gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#55CCA2] shrink-0 mt-1.5" />
                           <span>{area}</span>
                         </li>
@@ -183,21 +183,21 @@ export function SanthippumThinnaiNetwork() {
                   </div>
 
                   {/* Blueprint Goal */}
-                  <div className="p-3.5 rounded-xl bg-[#F4EFE6]/70 border border-[#161210]/5 space-y-1">
-                    <span className="text-[10px] font-mono uppercase tracking-widest font-bold text-[#161210] block">
+                  <div className="p-3.5 rounded-xl bg-[#25173B]/70 border border-[rgba(125,96,166,0.25)] space-y-1">
+                    <span className="text-[10px] font-mono uppercase tracking-widest font-bold text-[#F4F0FA] block">
                       Living Blueprint Vision:
                     </span>
-                    <p className="text-xs font-sans text-[#57524C] leading-relaxed">
+                    <p className="text-xs font-sans text-[#C4B7D7] leading-relaxed">
                       {branch.blueprintGoal}
                     </p>
                   </div>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-[#161210]/10">
+                <div className="pt-6 mt-6 border-t border-[rgba(125,96,166,0.25)]">
                   <Link
                     href={`/ideas?category=NEW+INITIATIVE&pillar=santhippum&prompt=${encodeURIComponent(branch.prompt)}`}
                     onClick={() => audioLayer.playTapeClack()}
-                    className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider font-semibold text-[#2A7B5E] hover:text-[#161210] transition-colors"
+                    className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider font-semibold text-[#2A7B5E] hover:text-[#F4F0FA] transition-colors"
                   >
                     <span>Volunteer or Propose</span>
                     <ArrowRight className="w-3.5 h-3.5" />

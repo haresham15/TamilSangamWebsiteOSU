@@ -129,24 +129,24 @@ export async function submitSuggestion(
 
     // 3. Dispatch brutalist notification email to official executive board contact address
     const emailHtml = `
-      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 2px solid #1A1614; background-color: #FAF9F6; box-shadow: 4px 4px 0px #1A1614;">
-        <div style="background-color: #1A1614; color: #FAF9F6; padding: 12px 16px; margin: -24px -24px 20px -24px;">
-          <span style="font-family: monospace; font-size: 10px; letter-spacing: 2px; color: #D99B26; text-transform: uppercase;">THE IDEAS HEARTH · INTERNAL OFFICER ALERT</span>
-          <h2 style="margin: 4px 0 0 0; font-size: 18px; color: #FAF9F6; font-family: Georgia, serif;">New Community Proposal Pinned</h2>
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 2px solid #352254; background-color: #140C20; box-shadow: 4px 4px 0px #25173B;">
+        <div style="background-color: #25173B; color: #F4F0FA; padding: 12px 16px; margin: -24px -24px 20px -24px;">
+          <span style="font-family: monospace; font-size: 10px; letter-spacing: 2px; color: #A6F0CF; text-transform: uppercase;">THE IDEAS HEARTH · INTERNAL OFFICER ALERT</span>
+          <h2 style="margin: 4px 0 0 0; font-size: 18px; color: #F4F0FA; font-family: Georgia, serif;">New Community Proposal Pinned</h2>
         </div>
-        <p style="font-size: 14px; color: #57524C;">A visitor submitted a new proposal via the <strong>/suggestions</strong> blueprint matrix:</p>
+        <p style="font-size: 14px; color: #C4B7D7;">A visitor submitted a new proposal via the <strong>/suggestions</strong> blueprint matrix:</p>
         
-        <div style="background-color: #F4EFEA; border: 2px solid #1A1614; padding: 16px; margin: 16px 0;">
-          <p style="margin: 0 0 8px 0; font-size: 12px; font-family: monospace; text-transform: uppercase; color: #C85A32; font-weight: bold;">
+        <div style="background-color: #1A1028; border: 2px solid #352254; padding: 16px; margin: 16px 0;">
+          <p style="margin: 0 0 8px 0; font-size: 12px; font-family: monospace; text-transform: uppercase; color: #F26BB5; font-weight: bold;">
             [CATEGORY]: <span>${sanitizedCategory}</span>
           </p>
-          <p style="margin: 0 0 8px 0; font-size: 12px; font-family: monospace; text-transform: uppercase; color: #57524C;">
+          <p style="margin: 0 0 8px 0; font-size: 12px; font-family: monospace; text-transform: uppercase; color: #C4B7D7;">
             [FROM]: <strong>${escapeHtml(name || "Anonymous")}</strong> ${verifiedEmail ? `&lt;${escapeHtml(verifiedEmail)}&gt;` : "(No email provided)"}
           </p>
-          <p style="margin: 12px 0 0 0; font-size: 14px; color: #1A1614; line-height: 1.6; white-space: pre-wrap; font-family: Georgia, serif;">${escapeHtml(message)}</p>
+          <p style="margin: 12px 0 0 0; font-size: 14px; color: #F4F0FA; line-height: 1.6; white-space: pre-wrap; font-family: Georgia, serif;">${escapeHtml(message)}</p>
         </div>
 
-        <p style="font-family: monospace; font-size: 11px; color: #78716C; margin-top: 24px; border-top: 1px solid #E5DDD0; padding-top: 12px;">
+        <p style="font-family: monospace; font-size: 11px; color: #78716C; margin-top: 24px; border-top: 1px solid rgba(125, 96, 166, 0.25); padding-top: 12px;">
           Submitted at: ${newRecord.submittedAt}<br/>
           OSU Tamil Sangam · Presiding: President Meenakshi Varadarajan
         </p>

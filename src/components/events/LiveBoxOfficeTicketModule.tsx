@@ -55,10 +55,10 @@ export function LiveBoxOfficeTicketModule({
 
   return (
     <div
-      className={`relative w-full rounded-2xl bg-[#1E1916] text-[#FAF6F0] border border-[#D4AF37]/30 shadow-xl overflow-hidden p-4 sm:p-5 text-left ${className}`}
+      className={`relative w-full rounded-2xl bg-[#140C20] text-[#F4F0FA] border border-[#A6F0CF]/35 shadow-xl overflow-hidden p-4 sm:p-5 text-left ${className}`}
     >
       {/* Subtle Warm Brass Atmospheric Glow */}
-      <div className="absolute top-0 right-0 w-60 h-60 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.1),transparent_70%)] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-60 h-60 bg-[radial-gradient(circle_at_top_right,rgba(166,240,207,0.1),transparent_70%)] pointer-events-none" />
 
       {/* Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10 text-xs font-mono">
@@ -79,12 +79,12 @@ export function LiveBoxOfficeTicketModule({
       {/* Compact Event Title & Context */}
       <div className="mt-3.5 space-y-1">
         <div className="flex items-center gap-2">
-          <Ticket className="w-3.5 h-3.5 text-[#D4AF37]" />
+          <Ticket className="w-3.5 h-3.5 text-[#A6F0CF]" />
           <h3 className="text-lg sm:text-xl font-serif font-normal text-white">
             Next Flagship Ticket Drop
           </h3>
         </div>
-        <p className="text-xs text-[#E8DEC8]/80 font-sans max-w-2xl leading-relaxed">
+        <p className="text-xs text-[#C4B7D7] font-sans max-w-2xl leading-relaxed">
           The executive board is planning our next major campus festival and cultural feast. Ticket releases and checkout drops will open right here.
         </p>
       </div>
@@ -94,7 +94,7 @@ export function LiveBoxOfficeTicketModule({
         {UPCOMING_TIERS_PREVIEW.map((tier) => (
           <div
             key={tier.id}
-            className="px-3 py-2 rounded-xl border border-white/10 bg-black/30 flex items-center justify-between gap-2.5 hover:border-[#D4AF37]/30 transition-colors"
+            className="px-3 py-2 rounded-xl border border-white/10 bg-black/30 flex items-center justify-between gap-2.5 hover:border-[#A6F0CF]/35 transition-colors"
           >
             <div className="min-w-0">
               <h4 className="text-xs font-serif font-medium text-white truncate">
@@ -114,7 +114,7 @@ export function LiveBoxOfficeTicketModule({
       {/* Compact Notification Bar & Action Links */}
       <div className="mt-3.5 pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <div className="flex items-center gap-1.5 text-xs font-sans text-white/70">
-          <Bell className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+          <Bell className="w-3.5 h-3.5 text-[#A6F0CF] shrink-0" />
           <span>Get notified first when ticket drop opens:</span>
         </div>
 
@@ -136,7 +136,7 @@ export function LiveBoxOfficeTicketModule({
             target="_blank"
             rel="noopener noreferrer"
             onClick={playClick}
-            className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-[#C85A32]/40 hover:bg-[#C85A32]/60 text-white font-mono text-xs font-semibold uppercase tracking-wider transition-all border border-[#C85A32]/50 focus-visible:outline-2 focus-visible:outline-white"
+            className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-[#F26BB5]/40 hover:bg-[#7AE7B5]/60 text-white font-mono text-xs font-semibold uppercase tracking-wider transition-all border border-[#A6F0CF]/35 focus-visible:outline-2 focus-visible:outline-white"
           >
             <span>Instagram Updates</span>
             <ExternalLink className="w-2.5 h-2.5 opacity-60" />

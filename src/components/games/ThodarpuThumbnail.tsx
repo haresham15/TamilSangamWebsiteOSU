@@ -10,7 +10,7 @@ export function ThodarpuThumbnail() {
       color: "from-[#C8952B] to-[#996D18]",
       border: "border-[#E8B94F]/60",
       accent: "#E8B94F",
-      textColor: "text-[#161210]",
+      textColor: "text-[#F4F0FA]",
       tiles: [
         { en: "Veena", ta: "வீணை" },
         { en: "Ragam", ta: "ராகம்" },
@@ -59,13 +59,13 @@ export function ThodarpuThumbnail() {
   return (
     <div
       aria-hidden="true"
-      className="relative w-full h-56 sm:h-64 rounded-xl overflow-hidden bg-radial from-[#241E1B] via-[#1A1513] to-[#120F0E] p-4 flex flex-col justify-center items-center select-none border border-[#D4AF37]/20 shadow-inner group-hover:border-[#D4AF37]/50 transition-colors duration-300"
+      className="relative w-full h-56 sm:h-64 rounded-xl overflow-hidden bg-radial from-[#241E1B] via-[#1A1513] to-[#120F0E] p-4 flex flex-col justify-center items-center select-none border border-[#A6F0CF]/35 shadow-inner group-hover:border-[#A6F0CF]/35 transition-colors duration-300"
     >
       {/* Background Subtle Geometric Tile Lattice */}
       <div
         className="absolute inset-0 opacity-[0.05] pointer-events-none"
         style={{
-          backgroundImage: `linear-gradient(45deg, #D4AF37 25%, transparent 25%), linear-gradient(-45deg, #D4AF37 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #D4AF37 75%), linear-gradient(-45deg, transparent 75%, #D4AF37 75%)`,
+          backgroundImage: `linear-gradient(45deg, #4FD6E0 25%, transparent 25%), linear-gradient(-45deg, #4FD6E0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #4FD6E0 75%), linear-gradient(-45deg, transparent 75%, #4FD6E0 75%)`,
           backgroundSize: "16px 16px",
           backgroundPosition: "0 0, 0 8px, 8px -8px, -8px 0px",
         }}
@@ -97,7 +97,7 @@ export function ThodarpuThumbnail() {
 
                 {/* Cultural Interconnection Dot */}
                 <div
-                  className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full border border-[#161210] group-hover:scale-125 transition-transform"
+                  className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full border border-[rgba(125,96,166,0.25)] group-hover:scale-125 transition-transform"
                   style={{ backgroundColor: cat.accent }}
                 />
               </motion.div>
@@ -107,12 +107,12 @@ export function ThodarpuThumbnail() {
       </div>
 
       {/* Bottom Editorial Caption Stamp */}
-      <div className="absolute bottom-2.5 left-4 right-4 flex items-center justify-between text-[10px] font-mono tracking-widest uppercase text-[#FAF6F0]/45">
+      <div className="absolute bottom-2.5 left-4 right-4 flex items-center justify-between text-[10px] font-mono tracking-widest uppercase text-[#C4B7D7]">
         <span className="flex items-center gap-1.5">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#E8B94F]" />
           4×4 CONNECTIONS MATRIX
         </span>
-        <span className="text-[#D4AF37]/75">16 TILES · 4 GROUPS</span>
+        <span className="text-[#A6F0CF]/75">16 TILES · 4 GROUPS</span>
       </div>
     </div>
   );

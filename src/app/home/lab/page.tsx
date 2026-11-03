@@ -209,7 +209,7 @@ export default function HomeLabPage() {
 
           <ambientLight intensity={0.6} color="#FFE8B5" />
           <directionalLight position={[5, 8, 5]} intensity={2.5} color="#FFF8E7" />
-          <pointLight position={[0, cam.camY, 4]} intensity={3.0} color="#FFB84D" />
+          <pointLight position={[0, cam.camY, 4]} intensity={3.0} color="#A6F0CF" />
 
           {/* Stationary Grounded Dot Lattice */}
           {showDots && (
@@ -276,12 +276,12 @@ export default function HomeLabPage() {
 
         {/* Viewport Overlay HUD */}
         <div className="absolute top-4 left-4 p-4 bg-black/85 border border-white/10 backdrop-blur-md space-y-2 pointer-events-none">
-          <div className="text-[#FFB84D] font-bold tracking-wider">
+          <div className="text-[#A6F0CF] font-bold tracking-wider">
             PEEL & FLOW ENGINE // §PRD LAB (HOME HERO)
           </div>
           <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-[11px] text-white/80">
             <div>
-              SCROLL <span className="text-[#FFB84D] font-bold">p = {p.toFixed(3)}</span>
+              SCROLL <span className="text-[#A6F0CF] font-bold">p = {p.toFixed(3)}</span>
             </div>
             <div>
               CAMERA Y: <span className="text-white font-mono">{cam.camY.toFixed(2)}</span>
@@ -304,7 +304,7 @@ export default function HomeLabPage() {
         <div className="absolute bottom-4 left-4">
           <Link
             href="/"
-            className="px-3 py-1.5 bg-[#FFB84D] text-black font-bold uppercase tracking-wider hover:bg-white transition-colors text-[11px]"
+            className="px-3 py-1.5 bg-[#A6F0CF] text-black font-bold uppercase tracking-wider hover:bg-white transition-colors text-[11px]"
           >
             ← Return to Live Homepage
           </Link>
@@ -314,7 +314,7 @@ export default function HomeLabPage() {
       {/* Control Panel Sidebar */}
       <div className="w-88 h-full overflow-y-auto border-l border-white/10 bg-[#0a0503] p-5 space-y-6">
         <div>
-          <h2 className="text-[#FFB84D] font-bold text-sm tracking-widest uppercase mb-1">
+          <h2 className="text-[#A6F0CF] font-bold text-sm tracking-widest uppercase mb-1">
             Timeline Controller
           </h2>
           <p className="text-white/50 text-[10px]">
@@ -326,7 +326,7 @@ export default function HomeLabPage() {
         <div className="space-y-2 bg-white/5 p-3 border border-white/10">
           <div className="flex justify-between">
             <span className="text-white/80 font-bold">Progress (p)</span>
-            <span className="text-[#FFB84D] font-bold text-sm">{p.toFixed(3)}</span>
+            <span className="text-[#A6F0CF] font-bold text-sm">{p.toFixed(3)}</span>
           </div>
           <input
             type="range"
@@ -335,7 +335,7 @@ export default function HomeLabPage() {
             step="0.002"
             value={p}
             onChange={(e) => setP(parseFloat(e.target.value))}
-            className="w-full accent-[#FFB84D]"
+            className="w-full accent-[#A6F0CF]"
           />
           <div className="flex justify-between text-[9px] text-white/40">
             <span>P0 (0.00)</span>
@@ -348,49 +348,49 @@ export default function HomeLabPage() {
 
         {/* Approval Frame Presets (§PRD 12.3) */}
         <div className="space-y-2">
-          <div className="text-[#FFB84D] font-bold uppercase tracking-wider text-[10px]">
+          <div className="text-[#A6F0CF] font-bold uppercase tracking-wider text-[10px]">
             Approval Frames (§PRD 12.3)
           </div>
           <div className="grid grid-cols-2 gap-1.5 text-[10px]">
             <button
               onClick={() => setP(0.0)}
-              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#A6F0CF] text-left"
             >
               P0: p=0.00 (Rest)
             </button>
             <button
               onClick={() => setP(0.06)}
-              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#A6F0CF] text-left"
             >
               P1: p=0.06 (Notch)
             </button>
             <button
               onClick={() => setP(0.15)}
-              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#A6F0CF] text-left"
             >
               P2: p=0.15 (Peel)
             </button>
             <button
               onClick={() => setP(0.28)}
-              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#A6F0CF] text-left"
             >
               P3: p=0.28 (Stream)
             </button>
             <button
               onClick={() => setP(0.40)}
-              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#A6F0CF] text-left"
             >
               P4: p=0.40 (Cross)
             </button>
             <button
               onClick={() => setP(0.52)}
-              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left"
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#A6F0CF] text-left"
             >
               P5: p=0.52 (Settle)
             </button>
             <button
               onClick={() => setP(0.60)}
-              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#FFB84D] text-left col-span-2 text-center font-bold text-[#FFB84D]"
+              className="p-1.5 bg-white/5 border border-white/10 hover:border-[#A6F0CF] text-left col-span-2 text-center font-bold text-[#A6F0CF]"
             >
               P6: p=0.60 (Wreath Formed)
             </button>
@@ -406,7 +406,7 @@ export default function HomeLabPage() {
                 type="checkbox"
                 checked={followCamera}
                 onChange={(e) => setFollowCamera(e.target.checked)}
-                className="accent-[#FFB84D]"
+                className="accent-[#A6F0CF]"
               />
               <span>Follow Truck Camera (p-glide)</span>
             </label>
@@ -415,7 +415,7 @@ export default function HomeLabPage() {
                 type="checkbox"
                 checked={showWeave}
                 onChange={(e) => setShowWeave(e.target.checked)}
-                className="accent-[#FFB84D]"
+                className="accent-[#A6F0CF]"
               />
               <span>Show Kolam Weave (Gold Strands)</span>
             </label>
@@ -424,7 +424,7 @@ export default function HomeLabPage() {
                 type="checkbox"
                 checked={showLanes}
                 onChange={(e) => setShowLanes(e.target.checked)}
-                className="accent-[#FFB84D]"
+                className="accent-[#A6F0CF]"
               />
               <span>Show Wreath Lanes (Green/Cyan)</span>
             </label>
@@ -433,7 +433,7 @@ export default function HomeLabPage() {
                 type="checkbox"
                 checked={showDots}
                 onChange={(e) => setShowDots(e.target.checked)}
-                className="accent-[#FFB84D]"
+                className="accent-[#A6F0CF]"
               />
               <span>Show Pulli Lattice Dots</span>
             </label>
@@ -442,21 +442,21 @@ export default function HomeLabPage() {
 
         {/* Per-Strand Conveyor Feed Telemetry */}
         <div className="space-y-2 pt-2 border-t border-white/10">
-          <div className="text-[#FFB84D] font-bold uppercase text-[10px]">
+          <div className="text-[#A6F0CF] font-bold uppercase text-[10px]">
             Strand Conveyors (Seam &rarr; Flank)
           </div>
           <div className="space-y-1.5">
             {strandsData.map((s) => (
               <div key={`tele-${s.index}`} className="p-2 bg-white/5 border border-white/10 space-y-1">
                 <div className="flex justify-between text-[10px]">
-                  <span className="font-bold text-[#FFB84D]">
+                  <span className="font-bold text-[#A6F0CF]">
                     Strand #{s.index} ({s.index === 0 ? "Seam" : s.index === 6 ? "Flank" : `Rank ${s.rank.toFixed(2)}`})
                   </span>
                   <span className="text-white/60">L = {s.L.toFixed(2)}</span>
                 </div>
                 <div className="w-full bg-black h-1.5 rounded-none overflow-hidden">
                   <div
-                    className="bg-[#FFB84D] h-full"
+                    className="bg-[#A6F0CF] h-full"
                     style={{ width: `${s.normalizedX * 100}%` }}
                   />
                 </div>

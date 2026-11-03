@@ -11,8 +11,8 @@ interface VaultGatewayProps {
 /**
  * ReactBits Magnetic Vault Door Gateway (§Phase 3).
  * Full-width naked typography gateway to the 300+ photo archive.
- * Zero cards, zero drop-shadows, pure typography on Warm Ivory (#FAF9F6).
- * Magnetic proximity wrapper attracts the title toward the cursor and shifts color to Terracotta Earth (#B85C38).
+ * Zero cards, zero drop-shadows, pure typography on Royal Violet (#140C20).
+ * Magnetic proximity wrapper attracts the title toward the cursor and shifts color to Mint Accent (#A6F0CF).
  */
 export function VaultGateway({
   googlePhotosUrl = "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7",
@@ -93,10 +93,10 @@ export function VaultGateway({
   }, [mouseX, mouseY]);
 
   return (
-    <footer className="w-full mt-32 mb-28 border-t border-[#2A2825]/10 pt-20 pb-12 text-center select-none">
+    <footer className="w-full mt-32 mb-28 border-t border-[rgba(125,96,166,0.25)] pt-20 pb-12 text-center select-none">
       <div ref={containerRef} className="max-w-4xl mx-auto px-6 inline-flex flex-col items-center">
         {/* Subtext: Small, Sans-Serif, Tracking-Widest */}
-        <p className="text-[11px] sm:text-xs font-sans font-semibold uppercase tracking-[0.28em] text-[#57524C] mb-4">
+        <p className="text-[11px] sm:text-xs font-sans font-semibold uppercase tracking-[0.28em] text-[#C4B7D7] mb-4">
           EXPLORE THE RAW ARCHIVE ({totalPhotosCount}+ FULL-RESOLUTION PHOTOGRAPHS)
         </p>
 
@@ -110,11 +110,11 @@ export function VaultGateway({
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Open full event photo album in Google Photos"
-            className="group block focus-visible:outline-2 focus-visible:outline-[#B85C38] focus-visible:outline-offset-8"
+            className="group block focus-visible:outline-2 focus-visible:outline-[#4FD6E0] focus-visible:outline-offset-8"
           >
             <h2
               className={`text-4xl sm:text-6xl md:text-7xl font-serif tracking-tight transition-colors duration-500 ease-out ${
-                isHovered ? "text-[#B85C38]" : "text-[#2A2825]"
+                isHovered ? "text-[#A6F0CF]" : "text-[#F4F0FA]"
               }`}
             >
               Open the Google Photos Vault{" "}
@@ -126,7 +126,7 @@ export function VaultGateway({
         </motion.div>
 
         {/* Colophon Footnote */}
-        <p className="mt-8 text-xs font-mono text-[#57524C]/60 tracking-wider">
+        <p className="mt-8 text-xs font-mono text-[#C4B7D7]/60 tracking-wider">
           CURATED MUTTRAM ARCHIVE · COLUMBUS, OH
         </p>
       </div>

@@ -944,7 +944,7 @@ function WallBulkheadLamp({
       {/* Glowing Amber Glass Diffuser */}
       <mesh position={[0, 0, 0.08]}>
         <cylinderGeometry args={[0.09, 0.09, 0.28, 16]} />
-        <meshBasicMaterial color="#FFB84D" />
+        <meshBasicMaterial color="#A6F0CF" />
       </mesh>
       {/* Protective Wire Cage Rings */}
       <mesh position={[0, 0, 0.08]}>
@@ -1336,7 +1336,7 @@ function IndustrialPendantLamp({
       {/* Glowing Tungsten Bulb */}
       <mesh position={[0, -0.08, 0]}>
         <sphereGeometry args={[0.12, 16, 16]} />
-        <meshBasicMaterial color="#FFB84D" />
+        <meshBasicMaterial color="#A6F0CF" />
       </mesh>
       <pointLight color="#FFA834" intensity={1.8} distance={6.5} decay={2.0} position={[0, -0.2, 0]} />
     </group>

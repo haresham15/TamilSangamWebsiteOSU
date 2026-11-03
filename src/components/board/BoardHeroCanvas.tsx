@@ -284,7 +284,7 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
                 <directionalLight
                   position={[0, 8, 10]}
                   intensity={1.2}
-                  color="#FFE8C2"
+                  color="#A6F0CF"
                   castShadow
                   shadow-mapSize-width={512}
                   shadow-mapSize-height={512}
@@ -353,8 +353,8 @@ function BoardDiagnostics() {
   const fps = useBoardHeroStore((s) => s.fps);
 
   return (
-  <div className="absolute top-24 left-6 z-30 p-3 rounded-none bg-[#140b06]/92 border border-[#D4AF37]/40 backdrop-blur-md font-mono text-[11px] text-[#fef3c7] shadow-[4px_4px_0px_#250d38] flex flex-col gap-1.5 pointer-events-none">
-    <div className="flex items-center gap-2 pb-1 border-b border-[#3d2714] text-[#D4AF37] font-bold">
+  <div className="absolute top-24 left-6 z-30 p-3 rounded-none bg-[#140b06]/92 border border-[#A6F0CF]/35 backdrop-blur-md font-mono text-[11px] text-[#fef3c7] shadow-[4px_4px_0px_#250d38] flex flex-col gap-1.5 pointer-events-none">
+    <div className="flex items-center gap-2 pb-1 border-b border-[#3d2714] text-[#A6F0CF] font-bold">
       <Terminal className="w-3.5 h-3.5" />
       <span>CHOLA DARBAR CINEMATIC CRANE HUD</span>
     </div>

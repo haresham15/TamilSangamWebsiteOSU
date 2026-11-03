@@ -73,7 +73,7 @@ export function buildGuestbookDiscordEmbed(data: GuestbookSubmission) {
       {
         title: "🏛️ NEW GUESTBOOK ENTRY — SANGAM HEARTH",
         description: `A new student has signed the digital guestbook and joined **OSU Tamil Sangam**!`,
-        color: 0xc85a32, // Terracotta #C85A32
+        color: 0xa6f0cf, // Official Logo Mint #A6F0CF
         author: {
           name: "OSU Tamil Sangam · Executive Desk",
           icon_url: "https://osutamilsangam.org/logo.svg",
@@ -133,7 +133,7 @@ export function buildSuggestionDiscordEmbed(data: SuggestionSubmission) {
       {
         title: `💡 NEW PROPOSAL PINNED — [${data.category.toUpperCase()}]`,
         description: `A new idea was pinned to the digital blueprint at **/suggestions**!`,
-        color: 0xd99b26, // Turmeric Gold #D99B26
+        color: 0x4fd6e0, // Official Logo Cyan #4FD6E0
         author: {
           name: "OSU Tamil Sangam · Blueprint Engine",
           icon_url: "https://osutamilsangam.org/logo.svg",

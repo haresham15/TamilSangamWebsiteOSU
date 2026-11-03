@@ -39,7 +39,7 @@ export default function GamesPage() {
         id="games-hub-sheet"
         badge="THE SANGAM ARCADE"
         sublabel="MONTHLY TAMIL GAMES"
-        className="text-hearth-espresso"
+        className="text-[#F4F0FA]"
         overlapHero={false}
       >
         <GamesHub />

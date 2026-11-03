@@ -120,19 +120,19 @@ export function ThirukkuralExplorer({
       aria-labelledby="thirukkural-explorer-heading"
       className={`relative w-full overflow-hidden rounded-2xl p-6 sm:p-8 md:p-10 border transition-all ${
         isDark
-          ? "bg-[#181615] border-white/10 text-white"
-          : "bg-[#FFFDF9] border-[#E8DFC8] text-[#2A2825] shadow-sm"
+          ? "bg-[#140C20] border-white/10 text-white"
+          : "bg-[#25173B] border-[rgba(125,96,166,0.25)] text-[#F4F0FA] shadow-md"
       } ${className}`}
     >
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Editorial Header Bar */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-4 border-current/10 text-xs font-mono tracking-wider uppercase">
-          <div className={`flex items-center gap-2 ${isDark ? "text-[#E5A93C]" : "text-[#B85C38]"}`}>
+          <div className={`flex items-center gap-2 ${isDark ? "text-[#A6F0CF]" : "text-[#A6F0CF]"}`}>
             <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Living Wisdom</span>
           </div>
 
-          <div className={isDark ? "text-stone-400" : "text-[#706B64]"}>
+          <div className={isDark ? "text-stone-400" : "text-[#C4B7D7]"}>
             <span lang="ta">குறள் {current.number} · {current.chapterTa}</span>
           </div>
         </div>
@@ -140,7 +140,7 @@ export function ThirukkuralExplorer({
         {/* Couplet Monument Box */}
         <div className="relative py-6 px-4 sm:px-8 rounded-xl bg-[radial-gradient(ellipse_at_center,rgba(229,169,60,0.08),transparent_70%)] space-y-6 text-center">
           <Quote
-            className={`w-8 h-8 mx-auto ${isDark ? "text-[#E5A93C]/40" : "text-[#B85C38]/30"}`}
+            className={`w-8 h-8 mx-auto ${isDark ? "text-[#A6F0CF]/40" : "text-[#A6F0CF]/30"}`}
             aria-hidden="true"
           />
 
@@ -158,7 +158,7 @@ export function ThirukkuralExplorer({
               <p
                 lang="ta"
                 className={`text-xl sm:text-2xl md:text-3xl font-tamil font-medium tracking-normal leading-relaxed ${
-                  isDark ? "text-stone-100" : "text-[#161210]"
+                  isDark ? "text-stone-100" : "text-[#F4F0FA]"
                 }`}
               >
                 {current.line1Ta}
@@ -166,7 +166,7 @@ export function ThirukkuralExplorer({
               <p
                 lang="ta"
                 className={`text-xl sm:text-2xl md:text-3xl font-tamil font-medium tracking-normal leading-relaxed ${
-                  isDark ? "text-stone-100" : "text-[#161210]"
+                  isDark ? "text-stone-100" : "text-[#F4F0FA]"
                 }`}
               >
                 {current.line2Ta}
@@ -177,7 +177,7 @@ export function ThirukkuralExplorer({
           {/* Transliteration */}
           <p
             className={`text-xs sm:text-sm font-mono italic max-w-xl mx-auto ${
-              isDark ? "text-stone-400" : "text-[#57524C]"
+              isDark ? "text-stone-400" : "text-[#C4B7D7]"
             }`}
           >
             &ldquo;{current.transliteration}&rdquo;
@@ -186,15 +186,15 @@ export function ThirukkuralExplorer({
           {/* Modern Takeaway */}
           <div
             className={`p-4 rounded-xl border max-w-2xl mx-auto ${
-              isDark ? "bg-[#211E1C] border-white/10" : "bg-[#F4EFE6] border-[#E0D5C3]"
+              isDark ? "bg-[#1A1028] border-white/10" : "bg-[#25173B] border-[#E0D5C3]"
             }`}
           >
-            <span className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[#B85C38] mb-1">
+            <span className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[#A6F0CF] mb-1">
               Campus &amp; Life Takeaway (Zero Preachiness):
             </span>
             <p
               className={`text-sm sm:text-base font-serif font-normal leading-relaxed ${
-                isDark ? "text-stone-200" : "text-[#2A2825]"
+                isDark ? "text-stone-200" : "text-[#F4F0FA]"
               }`}
             >
               {current.collegeTakeaway}
@@ -206,7 +206,7 @@ export function ThirukkuralExplorer({
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-current/10">
           <p
             className={`text-xs font-sans italic text-center sm:text-left ${
-              isDark ? "text-stone-400" : "text-[#706B64]"
+              isDark ? "text-stone-400" : "text-[#C4B7D7]"
             }`}
           >
             Incubating Idea: Collectible Kural meal-ticket cards &amp; bite-sized Tamil cultural moments woven naturally into our biryani nights.
@@ -215,7 +215,7 @@ export function ThirukkuralExplorer({
           <button
             type="button"
             onClick={handleNext}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-mono text-xs font-semibold uppercase tracking-wider transition-all bg-[#B85C38] text-white hover:bg-[#A04E2F] active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#B85C38]"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-mono text-xs font-semibold uppercase tracking-wider transition-all bg-[#A6F0CF] text-[#140C20] hover:bg-[#A04E2F] active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#4FD6E0]"
           >
             <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Draw Another Kural ↻</span>

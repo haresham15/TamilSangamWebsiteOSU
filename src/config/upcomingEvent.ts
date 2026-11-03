@@ -53,7 +53,7 @@ export const activeUpcomingEvent: FlagshipEventConfig = {
     altText: "Deepavali festival firecracker silhouette",
     aspectRatio: "portrait",
     dither: {
-      veilColor: "#D4AF37", // Warm Festival Gold
+      veilColor: "#A6F0CF", // Warm Festival Gold
       shadowColor: "#1A1715", // Deep Espresso
       matrixSize: 8,
       grainScale: 2.5,

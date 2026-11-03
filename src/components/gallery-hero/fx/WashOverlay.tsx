@@ -11,7 +11,7 @@ interface WashOverlayProps {
  *
  * Implements the cinematic solar whiteout dissolve and vault hand-off:
  * - Begins at p = 0.88, reaches full solar peak at p = 0.96, and settles into solid #FFFDF8 at p >= 0.99.
- * - Anamorphic horizontal solar streak with mint (#55CCA2) and solar gold (#FFB84D) accents.
+ * - Anamorphic horizontal solar streak with mint (#55CCA2) and cyan-teal (#4FD6E0) accents.
  * - Seamlessly dissolves 3D WebGL fretboard highway into the DOM gallery vault.
  * - Fully reversible: scrolling backward unwinds the wash cleanly with zero visual artifacts.
  */
@@ -49,7 +49,7 @@ export function WashOverlay({ progress }: WashOverlayProps) {
         }}
       />
 
-      {/* 2. Anamorphic Horizontal Solar Streak (Mint #55CCA2 + Solar Gold #FFB84D) */}
+      {/* 2. Anamorphic Horizontal Solar Streak (Mint #55CCA2 + Cyan #4FD6E0) */}
       <div
         className="absolute top-[55%] left-0 right-0 h-[3px] -translate-y-1/2 blur-[1.5px] transition-transform duration-75 origin-center"
         style={{

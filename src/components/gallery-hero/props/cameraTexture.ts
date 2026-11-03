@@ -98,7 +98,7 @@ export function getLcdScreenTexture(): THREE.CanvasTexture {
     ctx.setLineDash([]); // Reset dash
 
     // Center autofocus bracket [   ]
-    ctx.strokeStyle = "rgba(255, 184, 77, 0.65)"; // Amber #FFB84D
+    ctx.strokeStyle = "rgba(79, 214, 224, 0.65)"; // Cyan #4FD6E0
     ctx.lineWidth = 2;
     // Left bracket
     ctx.beginPath();

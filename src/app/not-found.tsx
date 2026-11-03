@@ -50,7 +50,7 @@ export default function NotFound() {
             <Link
               href="/"
               onClick={playClick}
-              className="ticket-chamfer-tl-br p-3.5 border-2 border-[#250d38] bg-[#faf8f5] hover:bg-emerald-50 hover:border-[#55CCA2] transition-colors flex items-center justify-between group text-left hover:glow-halogen-mint"
+              className="ticket-chamfer-tl-br p-3.5 border-2 border-[#250d38] bg-[#140C20] hover:bg-emerald-50 hover:border-[#55CCA2] transition-colors flex items-center justify-between group text-left hover:glow-halogen-mint"
             >
               <div className="flex items-center gap-2.5">
                 <Home className="w-4 h-4 text-[#250d38] group-hover:text-[#55CCA2] transition-colors" />
@@ -67,7 +67,7 @@ export default function NotFound() {
             <Link
               href="/events"
               onClick={playClick}
-              className="ticket-chamfer-tl-br p-3.5 border-2 border-[#250d38] bg-[#faf8f5] hover:bg-emerald-50 hover:border-[#55CCA2] transition-colors flex items-center justify-between group text-left hover:glow-halogen-mint"
+              className="ticket-chamfer-tl-br p-3.5 border-2 border-[#250d38] bg-[#140C20] hover:bg-emerald-50 hover:border-[#55CCA2] transition-colors flex items-center justify-between group text-left hover:glow-halogen-mint"
             >
               <div className="flex items-center gap-2.5">
                 <Calendar className="w-4 h-4 text-[#250d38] group-hover:text-[#55CCA2] transition-colors" />
@@ -84,7 +84,7 @@ export default function NotFound() {
             <Link
               href="/guide"
               onClick={playClick}
-              className="ticket-chamfer-tl-br p-3.5 border-2 border-[#250d38] bg-[#faf8f5] hover:bg-emerald-50 hover:border-[#55CCA2] transition-colors flex items-center justify-between group text-left hover:glow-halogen-mint"
+              className="ticket-chamfer-tl-br p-3.5 border-2 border-[#250d38] bg-[#140C20] hover:bg-emerald-50 hover:border-[#55CCA2] transition-colors flex items-center justify-between group text-left hover:glow-halogen-mint"
             >
               <div className="flex items-center gap-2.5">
                 <BookOpen className="w-4 h-4 text-[#250d38] group-hover:text-[#55CCA2] transition-colors" />

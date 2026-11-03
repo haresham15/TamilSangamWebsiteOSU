@@ -99,7 +99,7 @@ export function MorningVolumetrics({ gateProgressRef }: MorningVolumetricsProps)
         </bufferGeometry>
         <pointsMaterial
           size={0.045}
-          color="#FFD074"
+          color="#4FD6E0"
           transparent
           opacity={0.65}
           blending={THREE.AdditiveBlending}

@@ -39,7 +39,7 @@ export function LandmarkGizmos() {
       {/* Fret 12 Octave Marker (Era 3 Boundary, p = 0.667) */}
       <mesh position={[0, 0.16, -s12]}>
         <boxGeometry args={[7.4, 0.04, 0.08]} />
-        <meshBasicMaterial color="#FFB84D" />
+        <meshBasicMaterial color="#A6F0CF" />
       </mesh>
 
       {/* Fret 24 Journey End Marker (p = 1.000) */}

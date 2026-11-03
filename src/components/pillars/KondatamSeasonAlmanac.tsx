@@ -33,7 +33,7 @@ const SEASONS: SeasonGathering[] = [
     flagshipEvent: "South Oval Berry Picnic & Kollywood Kollai",
     icon: Leaf,
     tone: "Terracotta & Russet Leaves",
-    accentHex: "#C85A32",
+    accentHex: "#F26BB5",
     culinaryTraditions: ["Fresh Berries & Mint Lemonade", "Samosa Chat Counters", "South Indian Savory Mixture"],
     activities: ["Giant Lawn Uno Tournaments", "Acoustic Sing-alongs", "Halloween Cinema Costume Night"],
     blueprintVision:
@@ -49,7 +49,7 @@ const SEASONS: SeasonGathering[] = [
     flagshipEvent: "Diwali Sparkler Evening & Winter Banquet",
     icon: Flame,
     tone: "Warm Gold & Candlelight Amber",
-    accentHex: "#D4AF37",
+    accentHex: "#A6F0CF",
     culinaryTraditions: ["Warm Gulab Jamun", "Mysore Pak & Murukku", "Indian Chai & Spiced Refreshments"],
     activities: ["Outdoor Cold-Night Sparkler Circles", "Traditional Silk Attire Showcase", "Semester Finals Relief Hangouts"],
     blueprintVision:
@@ -65,7 +65,7 @@ const SEASONS: SeasonGathering[] = [
     flagshipEvent: "Streetside Sapad & Pongal Gathering",
     icon: Utensils,
     tone: "Turmeric Gold & Clay Terracotta",
-    accentHex: "#E5A93C",
+    accentHex: "#A6F0CF",
     culinaryTraditions: ["Sweet Sakkarai Pongal with Cashews", "Crispy Medu Vadai", "Hot South Indian Festive Meals"],
     activities: ["Live Kolam Floor Art Competitions", "Traditional Sugarcane Cracking", "Folk Parai Drumming & Village Roots"],
     blueprintVision:
@@ -98,20 +98,20 @@ export function KondatamSeasonAlmanac() {
   return (
     <div className="w-full space-y-10">
       <div className="space-y-3 max-w-2xl">
-        <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#E5A93C]">
-          <span className="w-2 h-2 rounded-full bg-[#E5A93C] animate-pulse" />
+        <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#A6F0CF]">
+          <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-pulse" />
           <span>The Buckeye Almanac · பருவகாலத் திருவிழாக்கள்</span>
         </div>
-        <h3 className="font-serif text-3xl sm:text-4xl text-[#161210] font-normal leading-tight">
+        <h3 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal leading-tight">
           Four Seasons of Celebration on Columbus Turf
         </h3>
-        <p className="font-sans text-sm sm:text-base text-[#57524C] leading-relaxed">
+        <p className="font-sans text-sm sm:text-base text-[#C4B7D7] leading-relaxed">
           Select a season to view how we translate Tamil seasonal harvest rites and cultural galas to Ohio State, and discover how you can co-design our upcoming celebrations.
         </p>
       </div>
 
       {/* Season Segmented Tab Bar */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 border-b border-[#161210]/15 pb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 border-b border-[rgba(125,96,166,0.25)] pb-4">
         {SEASONS.map((season) => {
           const isSelected = selectedSeason === season.id;
           const Icon = season.icon;
@@ -124,23 +124,23 @@ export function KondatamSeasonAlmanac() {
               }}
               className={`p-4 rounded-xl text-left transition-all duration-300 border cursor-pointer ${
                 isSelected
-                  ? "bg-[#FAF7F2] border-[#E5A93C] shadow-md shadow-[#E5A93C]/10"
-                  : "bg-[#FAF8F5] border-transparent hover:border-[#161210]/10"
+                  ? "bg-[#140C20] border-[#A6F0CF] shadow-md shadow-[#A6F0CF]/15"
+                  : "bg-[#140C20] border-transparent hover:border-[rgba(125,96,166,0.25)]"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-mono tracking-widest uppercase text-[#8C827A]">
+                <span className="text-[10px] font-mono tracking-widest uppercase text-[#C4B7D7]">
                   {season.monthRange}
                 </span>
                 <Icon
                   className="w-4 h-4"
-                  style={{ color: isSelected ? season.accentHex : "#8C827A" }}
+                  style={{ color: isSelected ? season.accentHex : "#C4B7D7" }}
                 />
               </div>
-              <span className="font-serif text-lg font-medium text-[#161210] block">
+              <span className="font-serif text-lg font-medium text-[#F4F0FA] block">
                 {season.seasonEn}
               </span>
-              <span lang="ta" className="font-tamil text-xs text-[#B85C38] block mt-0.5">
+              <span lang="ta" className="font-tamil text-xs text-[#A6F0CF] block mt-0.5">
                 {season.seasonTa}
               </span>
             </button>
@@ -150,22 +150,22 @@ export function KondatamSeasonAlmanac() {
 
       {/* Expanded Season Dossier Card */}
       <SpotlightCard
-        spotlightColor="rgba(229, 169, 60, 0.14)"
-        goldColor="rgba(200, 90, 50, 0.08)"
+        spotlightColor="rgba(166, 240, 207, 0.14)"
+        goldColor="rgba(242, 107, 181, 0.1)"
         radius={420}
-        className="p-8 sm:p-12 rounded-3xl bg-[#FAF8F5] border border-[#161210]/15 shadow-xl space-y-8"
+        className="p-8 sm:p-12 rounded-3xl bg-[#140C20] border border-[rgba(125,96,166,0.25)] shadow-xl space-y-8"
       >
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-[#161210]/10 pb-6">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-[rgba(125,96,166,0.25)] pb-6">
           <div className="space-y-1">
             <div className="flex items-center gap-3">
-              <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider bg-[#F2EAE0] text-[#161210]">
+              <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider bg-[#25173B] text-[#F4F0FA]">
                 {activeSeason.tamilMonth}
               </span>
-              <span className="text-xs font-mono text-[#8C827A] uppercase tracking-widest">
+              <span className="text-xs font-mono text-[#C4B7D7] uppercase tracking-widest">
                 {activeSeason.monthRange}
               </span>
             </div>
-            <h4 className="font-serif text-3xl sm:text-4xl text-[#161210] font-normal pt-1">
+            <h4 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal pt-1">
               {activeSeason.flagshipEvent}
             </h4>
           </div>
@@ -173,7 +173,7 @@ export function KondatamSeasonAlmanac() {
           <Link
             href={`/ideas?category=EVENT+IDEA&pillar=kondatam&prompt=${encodeURIComponent(activeSeason.prompt)}`}
             onClick={() => audioLayer.playTapeClack()}
-            className="px-6 py-3 bg-[#E5A93C] text-[#1E1B18] font-sans text-xs font-semibold uppercase tracking-wider rounded-full hover:bg-[#B85C38] hover:text-[#FAF9F6] transition-all flex items-center gap-2 w-fit shadow-md cursor-pointer"
+            className="px-6 py-3 bg-[#A6F0CF] text-[#140C20] font-sans text-xs font-semibold uppercase tracking-wider rounded-full hover:bg-[#7AE7B5] hover:text-[#140C20] transition-all flex items-center gap-2 w-fit shadow-md cursor-pointer"
           >
             <span>Pitch an Idea for this Season</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -183,15 +183,15 @@ export function KondatamSeasonAlmanac() {
         {/* 2-Column Culinary & Activities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Culinary Highlights */}
-          <div className="space-y-4 p-6 rounded-2xl bg-[#FAF7F2] border border-[#161210]/5">
-            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#B85C38]">
+          <div className="space-y-4 p-6 rounded-2xl bg-[#140C20] border border-[rgba(125,96,166,0.25)]">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#A6F0CF]">
               <Utensils className="w-4 h-4" />
               <span>Seasonal Culinary Traditions</span>
             </div>
             <ul className="space-y-2.5">
               {activeSeason.culinaryTraditions.map((item, i) => (
-                <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm font-sans text-[#57524C]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#B85C38] shrink-0 mt-2" />
+                <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm font-sans text-[#C4B7D7]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] shrink-0 mt-2" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -199,15 +199,15 @@ export function KondatamSeasonAlmanac() {
           </div>
 
           {/* Activities & Cultural Rites */}
-          <div className="space-y-4 p-6 rounded-2xl bg-[#FAF7F2] border border-[#161210]/5">
-            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#D4AF37]">
+          <div className="space-y-4 p-6 rounded-2xl bg-[#140C20] border border-[rgba(125,96,166,0.25)]">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#A6F0CF]">
               <Sparkles className="w-4 h-4" />
               <span>Celebration Elements & Rites</span>
             </div>
             <ul className="space-y-2.5">
               {activeSeason.activities.map((item, i) => (
-                <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm font-sans text-[#57524C]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shrink-0 mt-2" />
+                <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm font-sans text-[#C4B7D7]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] shrink-0 mt-2" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -216,11 +216,11 @@ export function KondatamSeasonAlmanac() {
         </div>
 
         {/* Vision Narrative */}
-        <div className="p-6 rounded-2xl bg-[#F4EFE6]/70 border border-[#161210]/5 space-y-2">
-          <span className="text-[11px] font-mono uppercase tracking-widest font-bold text-[#161210] block">
+        <div className="p-6 rounded-2xl bg-[#25173B]/70 border border-[rgba(125,96,166,0.25)] space-y-2">
+          <span className="text-[11px] font-mono uppercase tracking-widest font-bold text-[#F4F0FA] block">
             The Living Blueprint Vision:
           </span>
-          <p className="font-sans text-sm text-[#57524C] leading-relaxed">
+          <p className="font-sans text-sm text-[#C4B7D7] leading-relaxed">
             {activeSeason.blueprintVision}
           </p>
         </div>

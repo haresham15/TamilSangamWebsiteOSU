@@ -556,7 +556,7 @@ function HallRafters() {
         </mesh>
         <mesh position={[0, 0, 0.07]}>
           <planeGeometry args={[8.2, 1.2]} />
-          <meshBasicMaterial color="#FFB84D" transparent opacity={0.18} />
+          <meshBasicMaterial color="#A6F0CF" transparent opacity={0.18} />
         </mesh>
       </group>
 
@@ -570,7 +570,7 @@ function HallRafters() {
         >
           <planeGeometry args={[5.0, 16]} />
           <meshBasicMaterial
-            color="#FFB84D"
+            color="#A6F0CF"
             transparent
             opacity={0.016}
             blending={THREE.AdditiveBlending}

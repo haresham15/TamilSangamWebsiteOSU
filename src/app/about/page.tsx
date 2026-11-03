@@ -190,13 +190,13 @@ export default function AboutPage() {
 
       {/* =========================================================================
           THE ORGANIC JOURNEY: CENTRAL RIVER TIMELINE ON WARM IVORY
-          Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
+          Royal Violet (#140C20), Raised Surface (#25173B), Off-White (#F4F0FA)
           Glides up over the bronze rings stage (p = 0.84 -> 1.00)
           ========================================================================= */}
       <EditorialSheetHandoff
         badge="THE SANGAM EPIC"
         sublabel="MISSION & ROOTS"
-        className="text-hearth-espresso"
+        className="text-[#F4F0FA]"
       >
         
         <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
@@ -213,11 +213,11 @@ export default function AboutPage() {
           {/* The Hero Quote: Naked Architectural Monument with Warm Amber Halo */}
           <div
             ref={quoteContainerRef}
-            className="relative my-24 sm:my-36 text-center space-y-8 max-w-4xl mx-auto py-12 px-6 rounded-2xl bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08),rgba(200,90,50,0.03)_50%,transparent_75%)]"
+            className="relative my-24 sm:my-36 text-center space-y-8 max-w-4xl mx-auto py-12 px-6 rounded-2xl bg-[radial-gradient(circle_at_center,rgba(166,240,207,0.08),rgba(242,107,181,0.04)_50%,transparent_75%)]"
           >
             <span
               ref={tagRef}
-              className="font-sans text-xs uppercase tracking-widest text-[#B85C38] font-semibold block will-change-[transform,opacity]"
+              className="font-sans text-xs uppercase tracking-widest text-[#A6F0CF] font-semibold block will-change-[transform,opacity]"
             >
               புறநானூறு 192 · கணியன் பூங்குன்றனார்
             </span>
@@ -225,15 +225,15 @@ export default function AboutPage() {
               ref={watermarkRef}
               aria-hidden="true"
               lang="ta"
-              className="pointer-events-none absolute inset-x-0 top-1/3 font-tamil text-8xl text-[#B85C38]/[0.035] whitespace-nowrap tracking-normal will-change-transform"
+              className="pointer-events-none absolute inset-x-0 top-1/3 font-tamil text-8xl text-[#A6F0CF]/[0.035] whitespace-nowrap tracking-normal will-change-transform"
             >
               யாதும் ஊரே யாவரும் கேளிர்
             </span>
             <blockquote
               ref={quoteRef}
-              className="text-3xl sm:text-5xl lg:text-6xl font-serif font-light text-[#2A2825] leading-snug tracking-tight will-change-[transform,opacity]"
+              className="text-3xl sm:text-5xl lg:text-6xl font-serif font-light text-[#F4F0FA] leading-snug tracking-tight will-change-[transform,opacity]"
             >
-              &ldquo;<strong className="font-medium text-[#B85C38]">To Us All Towns Are Home, Everyone Our Kin.</strong> Born from the deep longing for home-cooked flavors, authentic kinship, and the resonant cadence of <strong className="font-medium text-[#E5A93C]">Sangam verses</strong> beneath Midwest skies.&rdquo;
+              &ldquo;<strong className="font-medium text-[#A6F0CF]">To Us All Towns Are Home, Everyone Our Kin.</strong> Born from the deep longing for home-cooked flavors, authentic kinship, and the resonant cadence of <strong className="font-medium text-[#A6F0CF]">Sangam verses</strong> beneath Midwest skies.&rdquo;
             </blockquote>
             <div ref={tamilRef} className="will-change-[transform,opacity]">
               <PronounceableQuote
@@ -243,7 +243,7 @@ export default function AboutPage() {
                 badgePosition="beside"
                 className="inline-block mx-auto px-4 py-2"
               >
-                <p className="font-tamil text-xl sm:text-2xl text-[#B85C38]" lang="ta">
+                <p className="font-tamil text-xl sm:text-2xl text-[#A6F0CF]" lang="ta">
                   யாதும் ஊரே யாவரும் கேளிர் — கணியன் பூங்குன்றனார்
                 </p>
               </PronounceableQuote>
@@ -253,15 +253,15 @@ export default function AboutPage() {
           <KolamSectionRule tone="sandstone" />
 
           {/* Centered Snaking Timeline: The Flowing River (Stepped Warm Sandstone Chapter) */}
-          <div className="my-24 sm:my-36 -mx-6 sm:-mx-10 px-6 sm:px-10 py-24 bg-[#F2EAE0] border-y border-[#161210]/10 shadow-[inset_0_2px_12px_rgba(22,18,16,0.03)] space-y-8">
+          <div className="my-24 sm:my-36 -mx-6 sm:-mx-10 px-6 sm:px-10 py-24 bg-[#25173B] border-y border-[rgba(125,96,166,0.25)] shadow-[inset_0_2px_12px_rgba(0,0,0,0.2)] space-y-8">
             <div className="text-center space-y-2">
-              <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
+              <span className="font-sans text-xs font-semibold text-[#A6F0CF] tracking-widest uppercase block">
                 வரலாற்றுப் பாதை · Historical Path
               </span>
-              <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#2A2825]">
+              <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#F4F0FA]">
                 Our Journey on the Olentangy
               </h2>
-              <p className="text-base text-[#57524C] font-sans max-w-xl mx-auto">
+              <p className="text-base text-[#C4B7D7] font-sans max-w-xl mx-auto">
                 Snaking from informal campus chai circles to a chartered, democratic student organization hosting flagship festivals.
               </p>
             </div>
@@ -286,19 +286,19 @@ export default function AboutPage() {
           {/* Campus & Regional Alliances: Staggered Text-Only Typographic List (No Beige Cards) */}
           <div className="mt-28 sm:mt-40 space-y-12">
             <div className="text-center space-y-2">
-              <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
+              <span className="font-sans text-xs font-semibold text-[#A6F0CF] tracking-widest uppercase block">
                 Campus & Community Alliances · கூட்டணிகள்
               </span>
-              <h3 className="text-3xl sm:text-4xl font-serif font-normal text-[#2A2825]">
+              <h3 className="text-3xl sm:text-4xl font-serif font-normal text-[#F4F0FA]">
                 Rooted in Columbus & Buckeye Life
               </h3>
-              <p className="text-base text-[#57524C] font-sans max-w-xl mx-auto">
+              <p className="text-base text-[#C4B7D7] font-sans max-w-xl mx-auto">
                 Collaborating with campus cultural organizations, local catering kitchens, and regional families.
               </p>
             </div>
 
             {/* Staggered Text-Only Typographic List (Zero Beige Boxes, 1px Grounding Lines) */}
-            <div className="border-t border-[#E5DDD0] divide-y divide-[#E5DDD0] text-left">
+            <div className="border-t border-[rgba(125,96,166,0.25)] divide-y divide-[rgba(125,96,166,0.25)] text-left">
               {partners.map((partner, idx) => (
                 <div
                   key={partner.name}
@@ -307,15 +307,15 @@ export default function AboutPage() {
                   }`}
                 >
                   <div className="md:col-span-4 space-y-1">
-                    <span className="font-sans text-xs text-[#B85C38] uppercase tracking-widest font-semibold block">
+                    <span className="font-sans text-xs text-[#A6F0CF] uppercase tracking-widest font-semibold block">
                       {partner.type}
                     </span>
-                    <h4 className="text-2xl sm:text-3xl font-serif text-[#2A2825]">
+                    <h4 className="text-2xl sm:text-3xl font-serif text-[#F4F0FA]">
                       {partner.name}
                     </h4>
                   </div>
                   <div className="md:col-span-8">
-                    <p className="text-base font-sans text-[#57524C] leading-relaxed">
+                    <p className="text-base font-sans text-[#C4B7D7] leading-relaxed">
                       {partner.collaboration}
                     </p>
                   </div>
@@ -346,21 +346,21 @@ export default function AboutPage() {
           <section className="my-16 sm:my-24 text-left">
             <Link
               href="/guide"
-              className="group block p-8 sm:p-12 rounded-2xl bg-[#1E1916] text-[#FAF6F0] border border-[#D4AF37]/30 hover:border-[#D4AF37] transition-all duration-300 shadow-xl focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+              className="group block p-8 sm:p-12 rounded-2xl bg-[#140C20] text-[#F4F0FA] border border-[#A6F0CF]/35 hover:border-[#A6F0CF] transition-all duration-300 shadow-xl focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="space-y-3 max-w-2xl">
-                  <span className="font-mono text-xs uppercase tracking-widest text-[#E5A93C] font-semibold block">
+                  <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] font-semibold block">
                     Freshmen, Transfers &amp; Columbus Living · வழிகாட்டி
                   </span>
-                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-normal text-[#FAF6F0] group-hover:text-[#E5A93C] transition-colors">
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors">
                     New to OSU or Tamil Sangam? Read the Student Guide &amp; FAQ →
                   </h3>
-                  <p className="text-sm sm:text-base font-sans text-[#E8DEC8]/80 leading-relaxed">
+                  <p className="text-sm sm:text-base font-sans text-[#C4B7D7] leading-relaxed">
                     Essential campus resources: Columbus Indian grocers, authentic dosa spots, bus routes, housing recommendations, membership questions, and club governance.
                   </p>
                 </div>
-                <div className="shrink-0 flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-[#E5A93C] group-hover:text-white transition-colors">
+                <div className="shrink-0 flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-[#A6F0CF] group-hover:text-white transition-colors">
                   <span className="hidden sm:inline">Open Student Guide</span>
                   <span className="text-xl group-hover:translate-x-1.5 transition-transform">→</span>
                 </div>

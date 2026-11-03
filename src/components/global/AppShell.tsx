@@ -37,7 +37,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   return (
     <div className="relative min-h-screen flex flex-col justify-between overflow-x-clip">
       {/* Kolam Gold Click Spark Particles Overlay */}
-      <ClickSpark sparkColor="#D4AF37" sparkCount={8} sparkRadius={18} duration={420} />
+      <ClickSpark sparkColor="#A6F0CF" sparkCount={8} sparkRadius={18} duration={420} />
 
       {/* 1. Global Floating Nav: Pure routing only */}
       {!isLinksPage && <FloatingNav />}

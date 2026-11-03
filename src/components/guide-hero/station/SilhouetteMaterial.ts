@@ -26,7 +26,7 @@ export function createSilhouetteMaterial({ sdfA, sdfB, fog = false, kind = "woma
         uRimStrength: { value: 0.65 },
         uIsMan: { value: kind === "man" ? 1.0 : 0.0 },
         uInk: { value: new THREE.Color(0.024, 0.038, 0.062) }, // Deep blue-black (#060A10)
-        uRim: { value: new THREE.Color(1.0, 0.72, 0.30) }, // Warm amber (#FFB84D)
+        uRim: { value: new THREE.Color(0.65, 0.94, 0.81) }, // Mint (#A6F0CF)
       },
     ]),
     vertexShader: `
@@ -73,12 +73,12 @@ export function createSilhouetteMaterial({ sdfA, sdfB, fog = false, kind = "woma
           // Screen-space gradient of the SDF field d
           vec2 grad = normalize(vec2(dFdx(d), dFdy(d)) + vec2(1e-5));
 
-          // Right/Front Edge Facing the Window (grad.x < 0.0): Warm Golden-Amber (#FFB84D)
+          // Right/Front Edge Facing the Window (grad.x < 0.0): Mint (#A6F0CF)
           float frontEdge = smoothstep(-0.25, 0.85, -grad.x);
           // Left/Top Edge Facing Platform Lamps (grad.x > 0.0 || grad.y > 0.0): Cool Blue-Hour Rim (#68A8E8)
           float backEdge = smoothstep(-0.25, 0.85, grad.x + grad.y * 0.45);
 
-          vec3 warmRimCol = vec3(1.0, 0.72, 0.30); // #FFB84D
+          vec3 warmRimCol = vec3(0.65, 0.94, 0.81); // #A6F0CF
           vec3 coolRimCol = vec3(0.41, 0.66, 0.91); // #68A8E8
 
           float warmHalo = halo * frontEdge * 0.85;
@@ -87,7 +87,7 @@ export function createSilhouetteMaterial({ sdfA, sdfB, fog = false, kind = "woma
           col = inkCol * body + warmRimCol * warmHalo + coolRimCol * coolHalo;
           alpha = max(body, (warmHalo + coolHalo));
         } else {
-          // Seated Woman inside window: Warm golden-amber halo (#FFB84D) along silhouette
+          // Seated Woman inside window: Mint halo (#A6F0CF) along silhouette
           vec3 warmRimCol = vec3(1.0, 0.74, 0.34);
           col = inkCol * body + warmRimCol * halo * uRimStrength;
           alpha = max(body, halo * uRimStrength);

@@ -19,22 +19,22 @@ export default async function Image() {
           flexDirection: "column",
           justifyContent: "space-between",
           alignItems: "flex-start",
-          backgroundColor: "#161210",
+          backgroundColor: "#140C20",
           backgroundImage:
-            "radial-gradient(circle at 85% 15%, rgba(212, 175, 55, 0.18), transparent 50%), radial-gradient(circle at 15% 85%, rgba(200, 90, 50, 0.14), transparent 45%)",
+            "radial-gradient(circle at 85% 15%, rgba(166, 240, 207, 0.18), transparent 50%), radial-gradient(circle at 15% 85%, rgba(242, 107, 181, 0.14), transparent 45%)",
           padding: "64px 72px",
           position: "relative",
-          border: "12px solid #241D1A",
+          border: "12px solid #25173B",
           boxSizing: "border-box",
           fontFamily: "serif",
         }}
       >
-        {/* Subtle Inner Antique Gold Inset Border */}
+        {/* Subtle Inner Mint Inset Border */}
         <div
           style={{
             position: "absolute",
             inset: 20,
-            border: "1px solid rgba(212, 175, 55, 0.3)",
+            border: "1px solid rgba(166, 240, 207, 0.3)",
             pointerEvents: "none",
           }}
         />
@@ -61,12 +61,12 @@ export default async function Image() {
                 width: 10,
                 height: 10,
                 borderRadius: "50%",
-                backgroundColor: "#D4AF37",
+                backgroundColor: "#A6F0CF",
               }}
             />
             <span
               style={{
-                color: "#D4AF37",
+                color: "#A6F0CF",
                 fontSize: 18,
                 letterSpacing: "0.22em",
                 textTransform: "uppercase",
@@ -81,8 +81,8 @@ export default async function Image() {
           <div
             style={{
               padding: "6px 14px",
-              border: "1px solid rgba(212, 175, 55, 0.4)",
-              color: "#FAF7F2",
+              border: "1px solid rgba(166, 240, 207, 0.4)",
+              color: "#F4F0FA",
               fontSize: 14,
               fontFamily: "monospace",
               letterSpacing: "0.15em",
@@ -93,7 +93,7 @@ export default async function Image() {
           </div>
         </div>
 
-        {/* Center Headline Block */}
+        {/* Center Headline Block with Official Emblem Extrusion & Chromatic Ghost Shadows */}
         <div
           style={{
             display: "flex",
@@ -105,7 +105,7 @@ export default async function Image() {
         >
           <span
             style={{
-              color: "#C85A32",
+              color: "#F26BB5",
               fontSize: 20,
               fontFamily: "monospace",
               letterSpacing: "0.25em",
@@ -120,10 +120,11 @@ export default async function Image() {
               fontSize: 78,
               lineHeight: 1.05,
               fontWeight: 700,
-              color: "#FAF7F2",
+              color: "#F4F0FA",
               margin: 0,
               letterSpacing: "-0.02em",
-              textShadow: "0 4px 20px rgba(0,0,0,0.5)",
+              textShadow:
+                "-2px -2px 0px rgba(242, 107, 181, 0.65), 2px 2px 0px rgba(79, 214, 224, 0.65), 0 8px 24px rgba(0,0,0,0.6)",
             }}
           >
             OSU TAMIL SANGAM
@@ -131,7 +132,7 @@ export default async function Image() {
           <p
             style={{
               fontSize: 32,
-              color: "#E5A93C",
+              color: "#A6F0CF",
               margin: 0,
               fontWeight: 500,
             }}
@@ -148,7 +149,7 @@ export default async function Image() {
             justifyContent: "space-between",
             alignItems: "flex-end",
             width: "100%",
-            borderTop: "1px solid rgba(250, 247, 242, 0.15)",
+            borderTop: "1px solid rgba(125, 96, 166, 0.35)",
             paddingTop: 24,
           }}
         >
@@ -161,7 +162,7 @@ export default async function Image() {
           >
             <span
               style={{
-                color: "#FAF7F2",
+                color: "#F4F0FA",
                 fontSize: 22,
                 fontStyle: "italic",
               }}
@@ -170,7 +171,7 @@ export default async function Image() {
             </span>
             <span
               style={{
-                color: "#C85A32",
+                color: "#4FD6E0",
                 fontSize: 15,
                 fontFamily: "monospace",
                 letterSpacing: "0.18em",
@@ -186,7 +187,7 @@ export default async function Image() {
               display: "flex",
               alignItems: "center",
               gap: 8,
-              color: "rgba(250, 247, 242, 0.7)",
+              color: "#C4B7D7",
               fontSize: 16,
               fontFamily: "monospace",
             }}

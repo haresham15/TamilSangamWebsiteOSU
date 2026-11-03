@@ -48,9 +48,9 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
           />
           <defs>
             <linearGradient id="river-gradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#E5A93C" stopOpacity="0.4" />
-              <stop offset="50%" stopColor="#B85C38" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#E5A93C" stopOpacity="0.4" />
+              <stop offset="0%" stopColor="#4FD6E0" stopOpacity="0.4" />
+              <stop offset="50%" stopColor="#F26BB5" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#A6F0CF" stopOpacity="0.4" />
             </linearGradient>
           </defs>
         </svg>
@@ -69,8 +69,8 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
               } gap-8 md:gap-16`}
             >
               {/* Stepping Stone River Node (Center on md+, left on mobile) */}
-              <div className="absolute left-6 md:left-1/2 top-4 -translate-x-1/2 flex items-center justify-center w-7 h-7 rounded-full bg-[#FAF9F6] border-2 border-[#B85C38] shadow-md shadow-stone-900/10 z-10">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#E5A93C]" />
+              <div className="absolute left-6 md:left-1/2 top-4 -translate-x-1/2 flex items-center justify-center w-7 h-7 rounded-full bg-[#140C20] border-2 border-[#A6F0CF] shadow-md shadow-stone-900/10 z-10">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#A6F0CF]" />
               </div>
 
               {/* Content Block (Unbound by boxes) */}
@@ -81,24 +81,24 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
               >
                 {/* Year Typography */}
                 <div className="mb-2">
-                  <span className="text-5xl sm:text-7xl font-serif font-light text-[#B85C38] tracking-tight block">
+                  <span className="text-5xl sm:text-7xl font-serif font-light text-[#A6F0CF] tracking-tight block">
                     {item.year}
                   </span>
                   <span
                     lang="ta"
-                    className="font-tamil text-sm text-[#E5A93C] font-medium tracking-wide block"
+                    className="font-tamil text-sm text-[#A6F0CF] font-medium tracking-wide block"
                   >
                     {item.titleTa}
                   </span>
                 </div>
 
                 {/* Milestone Title */}
-                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#2A2825] leading-snug mb-3">
+                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA] leading-snug mb-3">
                   {item.titleEn}
                 </h3>
 
                 {/* Story Description */}
-                <p className="font-sans text-base sm:text-lg text-[#57524C] leading-relaxed">
+                <p className="font-sans text-base sm:text-lg text-[#C4B7D7] leading-relaxed">
                   {locale === "ta" ? item.descriptionTa : item.descriptionEn}
                 </p>
               </div>

@@ -216,7 +216,7 @@ export default function JoinPage() {
         id="membership-form"
         badge="STUDENT FELLOWSHIP"
         sublabel="GUESTBOOK REGISTRATION"
-        className="text-hearth-espresso"
+        className="text-[#F4F0FA]"
       >
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-20 sm:py-28">
           
@@ -232,17 +232,17 @@ export default function JoinPage() {
               "FIND YOUR FIT" INTERACTIVE ROUTER
               4-Button Quick-Selector Routing Instantly to Form Tracks
               ========================================================================= */}
-          <div className="my-10 bg-[#FAF8F5] border border-[#161210]/10 rounded-2xl p-6 sm:p-8 shadow-[0_8px_30px_rgba(22,18,16,0.03)]">
+          <div className="my-10 bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-2xl p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
               <div>
-                <span className="font-mono text-xs uppercase tracking-widest text-hearth-terracotta font-semibold block">
+                <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] font-semibold block">
                   Find Your Fit · உங்கள் பாதை
                 </span>
-                <h2 className="text-xl sm:text-2xl font-serif font-bold text-hearth-espresso mt-0.5">
+                <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#F4F0FA] mt-0.5">
                   How would you like to plug into Tamil Sangam?
                 </h2>
               </div>
-              <span className="font-mono text-xs text-hearth-espresso/60 hidden sm:inline-block">
+              <span className="font-mono text-xs text-[#F4F0FA]/60 hidden sm:inline-block">
                 Click any track to focus the form ↓
               </span>
             </div>
@@ -257,8 +257,8 @@ export default function JoinPage() {
                     onClick={() => handleSelectTrack(opt.id)}
                     className={`text-left p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between min-h-[110px] group ${
                       isSelected
-                        ? "bg-[#161210] text-[#FAF6F0] border-[#161210] shadow-md -translate-y-0.5"
-                        : "bg-[#F2EAE0]/70 hover:bg-[#F2EAE0] text-hearth-espresso border-[#161210]/10 hover:border-hearth-terracotta/40"
+                        ? "bg-[#140C20] text-[#F4F0FA] border-[rgba(125,96,166,0.25)] shadow-md -translate-y-0.5"
+                        : "bg-[#25173B]/70 hover:bg-[#25173B] text-[#F4F0FA] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/40"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2 mb-2">
@@ -270,10 +270,10 @@ export default function JoinPage() {
                       )}
                     </div>
                     <div>
-                      <h3 className={`font-serif text-base font-semibold leading-snug ${isSelected ? "text-[#FAF6F0]" : "text-hearth-espresso group-hover:text-hearth-terracotta transition-colors"}`}>
+                      <h3 className={`font-serif text-base font-semibold leading-snug ${isSelected ? "text-[#F4F0FA]" : "text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors"}`}>
                         {opt.label}
                       </h3>
-                      <p className={`text-[11px] font-sans mt-1 leading-normal ${isSelected ? "text-[#FAF6F0]/80" : "text-hearth-espresso/70"}`}>
+                      <p className={`text-[11px] font-sans mt-1 leading-normal ${isSelected ? "text-[#C4B7D7]" : "text-[#F4F0FA]/70"}`}>
                         {opt.tagline}
                       </p>
                     </div>
@@ -295,12 +295,12 @@ export default function JoinPage() {
               <form
                 id="membership-form-inputs"
                 onSubmit={handleSubmit}
-                className={`${styles.form} space-y-12 bg-[#FAF8F5] border border-[#161210]/10 shadow-[0_12px_40px_rgba(22,18,16,0.04)] rounded-2xl p-6 sm:p-10`}
+                className={`${styles.form} space-y-12 bg-[#140C20] border border-[rgba(125,96,166,0.25)] shadow-[0_12px_40px_rgba(0,0,0,0.3)] rounded-2xl p-6 sm:p-10`}
               >
                 {incomingPillar && (
-                  <div className="p-4 rounded-xl bg-hearth-sand/60 border border-hearth-terracotta/30 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                  <div className="p-4 rounded-xl bg-[#25173B]/60 border border-[#A6F0CF]/30 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
                     <div className="flex items-center gap-2">
-                      <span className="text-hearth-espresso font-medium">
+                      <span className="text-[#F4F0FA] font-medium">
                         Continuing from Pillar: Pre-selected{" "}
                         {membershipType === "performer"
                           ? "Dance & Music"
@@ -314,7 +314,7 @@ export default function JoinPage() {
                     </div>
                     <Link
                       href={`/pillars/${incomingPillar}`}
-                      className="text-hearth-terracotta hover:underline"
+                      className="text-[#A6F0CF] hover:underline"
                     >
                       View {incomingPillar.toUpperCase()} Pillar ↗
                     </Link>
@@ -322,12 +322,12 @@ export default function JoinPage() {
                 )}
 
                 {/* Selected Track Ribbon */}
-                <div className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-hearth-sand/40 border border-[#161210]/10">
+                <div className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-[#25173B]/40 border border-[rgba(125,96,166,0.25)]">
                   <div className="flex items-center gap-2 text-xs font-sans">
-                    <Sparkles className="size-4 text-hearth-terracotta shrink-0" />
-                    <span className="text-hearth-espresso">
+                    <Sparkles className="size-4 text-[#A6F0CF] shrink-0" />
+                    <span className="text-[#F4F0FA]">
                       Selected track:{" "}
-                      <strong className="text-hearth-terracotta font-semibold">
+                      <strong className="text-[#A6F0CF] font-semibold">
                         {fitOptions.find((o) => o.id === membershipType)?.label}
                       </strong>
                     </span>
@@ -338,7 +338,7 @@ export default function JoinPage() {
                       e.preventDefault();
                       window.scrollTo({ top: 400, behavior: "smooth" });
                     }}
-                    className="text-[11px] font-mono text-hearth-espresso/70 hover:text-hearth-terracotta underline"
+                    className="text-[11px] font-mono text-[#F4F0FA]/70 hover:text-[#A6F0CF] underline"
                   >
                     Change Track ↑
                   </a>
@@ -380,10 +380,10 @@ export default function JoinPage() {
                 {/* Prompt: Buckeye Role Selector (OSU-Wide Community) */}
                 <div className="space-y-4">
                   <div>
-                    <span className="text-xl sm:text-2xl font-serif font-normal text-hearth-espresso block">
+                    <span className="text-xl sm:text-2xl font-serif font-normal text-[#F4F0FA] block">
                       What is your role at Ohio State?
                     </span>
-                    <span className="text-sm font-sans text-hearth-espresso/80 block mt-1">
+                    <span className="text-sm font-sans text-[#F4F0FA]/80 block mt-1">
                       Tamil Sangam is an OSU-wide community uniting undergraduates, graduate researchers, faculty, and alumni.
                     </span>
                   </div>
@@ -423,20 +423,20 @@ export default function JoinPage() {
                           }}
                           className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
                             isSelected
-                              ? "border-hearth-terracotta bg-hearth-sand/50 shadow-sm"
-                              : "border-hearth-espresso/20 hover:border-hearth-espresso/40 bg-transparent"
+                              ? "border-[#A6F0CF] bg-[#25173B]/50 shadow-sm"
+                              : "border-[rgba(125,96,166,0.25)] hover:border-[rgba(125,96,166,0.4)] bg-transparent"
                           }`}
                         >
                           <span
                             className={`text-base font-serif font-medium block ${
                               isSelected
-                                ? "text-hearth-terracotta font-semibold"
-                                : "text-hearth-espresso"
+                                ? "text-[#A6F0CF] font-semibold"
+                                : "text-[#F4F0FA]"
                             }`}
                           >
                             {role.label}
                           </span>
-                          <p className="text-xs font-sans text-hearth-espresso/70 mt-0.5">
+                          <p className="text-xs font-sans text-[#F4F0FA]/70 mt-0.5">
                             {role.desc}
                           </p>
                         </button>
@@ -448,10 +448,10 @@ export default function JoinPage() {
                 {/* Prompt 04: "Find Your Fit" Track Selector Inside Form */}
                 <div className="space-y-4">
                   <div>
-                    <span className="text-xl sm:text-2xl font-serif font-normal text-hearth-espresso block">
+                    <span className="text-xl sm:text-2xl font-serif font-normal text-[#F4F0FA] block">
                       Involvement Track
                     </span>
-                    <span className="text-sm font-sans text-hearth-espresso/80 block mt-1">
+                    <span className="text-sm font-sans text-[#F4F0FA]/80 block mt-1">
                       Choose your primary focus (you can always participate in multiple tracks).
                     </span>
                   </div>
@@ -469,8 +469,8 @@ export default function JoinPage() {
                           }}
                           className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
                             isSelected
-                              ? "border-hearth-terracotta bg-hearth-sand/60 shadow-sm"
-                              : "border-hearth-espresso/20 hover:border-hearth-espresso/40 bg-transparent"
+                              ? "border-[#A6F0CF] bg-[#25173B]/60 shadow-sm"
+                              : "border-[rgba(125,96,166,0.25)] hover:border-[rgba(125,96,166,0.4)] bg-transparent"
                           }`}
                         >
                           <div className="flex items-center gap-2 mb-1">
@@ -478,14 +478,14 @@ export default function JoinPage() {
                             <span
                               className={`text-base font-serif font-medium ${
                                 isSelected
-                                  ? "text-hearth-terracotta font-semibold"
-                                  : "text-hearth-espresso"
+                                  ? "text-[#A6F0CF] font-semibold"
+                                  : "text-[#F4F0FA]"
                               }`}
                             >
                               {opt.label}
                             </span>
                           </div>
-                          <p className="text-xs font-sans text-hearth-espresso/70">
+                          <p className="text-xs font-sans text-[#F4F0FA]/70">
                             {opt.tagline}
                           </p>
                         </button>
@@ -507,16 +507,16 @@ export default function JoinPage() {
                 />
 
                 {/* Monthly Sangam Dispatch Opt-In Checkbox */}
-                <div className="p-4 rounded-xl border border-hearth-espresso/20 bg-hearth-sand/20 space-y-2">
+                <div className="p-4 rounded-xl border border-[rgba(125,96,166,0.25)] bg-[#25173B]/20 space-y-2">
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={monthlyDispatchOptIn}
                       onChange={(e) => setMonthlyDispatchOptIn(e.target.checked)}
-                      className="mt-1 w-4 h-4 rounded border-hearth-espresso/30 text-hearth-terracotta focus:ring-hearth-terracotta"
+                      className="mt-1 w-4 h-4 rounded border-[rgba(125,96,166,0.35)] text-[#A6F0CF] focus:ring-[#A6F0CF]"
                     />
-                    <div className="text-xs font-sans text-hearth-espresso/90">
-                      <span className="font-semibold block text-sm text-hearth-espresso">
+                    <div className="text-xs font-sans text-[#F4F0FA]/90">
+                      <span className="font-semibold block text-sm text-[#F4F0FA]">
                         Send me the Monthly Sangam Dispatch
                       </span>
                       <span className="leading-relaxed block mt-0.5">
@@ -537,12 +537,12 @@ export default function JoinPage() {
                 )}
 
                 {/* Submit Action */}
-                <div className="pt-8 border-t border-hearth-espresso/20 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div className="pt-8 border-t border-[rgba(125,96,166,0.25)] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                   <Magnet magnetStrength={2} maxOffset={8}>
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="font-serif text-2xl sm:text-3xl font-normal text-hearth-terracotta hover:text-antique-gold border-b-2 border-hearth-terracotta hover:border-antique-gold pb-1 transition-colors self-start cursor-pointer disabled:opacity-50"
+                      className="font-serif text-2xl sm:text-3xl font-normal text-[#A6F0CF] hover:text-[#4FD6E0] border-b-2 border-[#A6F0CF] hover:border-[#4FD6E0] pb-1 transition-colors self-start cursor-pointer disabled:opacity-50"
                     >
                       {isSubmitting ? (
                         <span className="flex items-center gap-2 text-lg">
@@ -555,7 +555,7 @@ export default function JoinPage() {
                     </button>
                   </Magnet>
 
-                  <p className="text-xs font-sans text-hearth-espresso/80">
+                  <p className="text-xs font-sans text-[#F4F0FA]/80">
                     The Ohio State University · Recognized Student Organization · 100% Free
                   </p>
                 </div>
@@ -563,19 +563,19 @@ export default function JoinPage() {
             ) : (
               /* Warm Celebration Confirmation (Unboxed) */
               <div className="text-center space-y-6 py-16 max-w-xl mx-auto select-none animate-in fade-in duration-500">
-                <span className="font-sans text-xs uppercase tracking-widest text-hearth-terracotta font-semibold block">
+                <span className="font-sans text-xs uppercase tracking-widest text-[#A6F0CF] font-semibold block">
                   Guestbook Signed Successfully
                 </span>
 
-                <h2 className="text-3xl sm:text-5xl font-serif text-hearth-espresso">
+                <h2 className="text-3xl sm:text-5xl font-serif text-[#F4F0FA]">
                   Welcome to the Family, {name}!
                 </h2>
 
-                <p className="font-tamil text-xl text-hearth-terracotta" lang="ta">
+                <p className="font-tamil text-xl text-[#A6F0CF]" lang="ta">
                   வணக்கம் மற்றும் மனமார்ந்த நல்வரவு!
                 </p>
 
-                <p className="text-base sm:text-lg text-hearth-espresso/80 font-sans leading-relaxed">
+                <p className="text-base sm:text-lg text-[#F4F0FA]/80 font-sans leading-relaxed">
                   You are officially plugged into the Tamil Sangam hearth at Ohio State as a{" "}
                   <strong>{fitOptions.find((o) => o.id === membershipType)?.label}</strong>. We will send you updates on upcoming Oval picnics, rehearsal calls, and banquet feasts.
                 </p>
@@ -586,14 +586,14 @@ export default function JoinPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={playClick}
-                    className="font-semibold text-hearth-terracotta border-b-2 border-hearth-terracotta pb-1 hover:text-antique-gold hover:border-antique-gold transition-colors"
+                    className="font-semibold text-[#A6F0CF] border-b-2 border-[#A6F0CF] pb-1 hover:text-[#4FD6E0] hover:border-[#4FD6E0] transition-colors"
                   >
                     Join the Student GroupMe ↗
                   </a>
                   <Link
                     href="/events"
                     onClick={playClick}
-                    className="font-medium text-hearth-espresso/80 hover:text-hearth-espresso border-b border-hearth-espresso/20 pb-1 hover:border-hearth-espresso transition-colors"
+                    className="font-medium text-[#F4F0FA]/80 hover:text-[#F4F0FA] border-b border-[rgba(125,96,166,0.25)] pb-1 hover:border-[#A6F0CF] transition-colors"
                   >
                     Explore Upcoming Events →
                   </Link>
@@ -601,7 +601,7 @@ export default function JoinPage() {
               </div>
             )}
 
-            <StarBorder className="w-full" color="#D4AF37" trailColor="#C85A32">
+            <StarBorder className="w-full" color="#A6F0CF" trailColor="#F26BB5">
               <aside
                 className={styles.pass}
                 aria-label="Live membership pass"
@@ -652,8 +652,8 @@ export default function JoinPage() {
           </div>
 
           {/* Open Hearth Guarantee Notice (Unboxed, 1px Grounding Line) */}
-          <div className="mt-16 border-t border-hearth-espresso/20 pt-12 text-center space-y-2 max-w-lg mx-auto">
-            <p className="text-sm font-sans text-hearth-espresso/80 leading-relaxed">
+          <div className="mt-16 border-t border-[rgba(125,96,166,0.25)] pt-12 text-center space-y-2 max-w-lg mx-auto">
+            <p className="text-sm font-sans text-[#F4F0FA]/80 leading-relaxed">
               Membership in Tamil Sangam is completely open and free to all Buckeyes, undergraduate or graduate, of any major, language, or heritage.
             </p>
           </div>

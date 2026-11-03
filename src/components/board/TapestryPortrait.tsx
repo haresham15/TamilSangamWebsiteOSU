@@ -65,7 +65,7 @@ function createTapestryTexture(member: BoardMember): THREE.CanvasTexture {
   // Corner Dravidian temple motifs
   const drawCornerKalasam = (cx: number, cy: number) => {
     ctx.save();
-    ctx.fillStyle = "#D4AF37";
+    ctx.fillStyle = "#A6F0CF";
     ctx.beginPath();
     ctx.arc(cx, cy, 10, 0, Math.PI * 2);
     ctx.fill();
@@ -81,7 +81,7 @@ function createTapestryTexture(member: BoardMember): THREE.CanvasTexture {
 
   // 3. Top Header: Chola Dynasty Crest
   ctx.textAlign = "center";
-  ctx.fillStyle = "#D4AF37";
+  ctx.fillStyle = "#A6F0CF";
   ctx.font = "bold 20px 'Courier New', monospace";
   ctx.fillText("சோழர் அவை · Executive Committee", width / 2, 75);
 
@@ -100,7 +100,7 @@ function createTapestryTexture(member: BoardMember): THREE.CanvasTexture {
   ctx.arc(photoCenterX, photoCenterY, photoRadius + 6, 0, Math.PI * 2);
   ctx.fillStyle = "#1e060a";
   ctx.fill();
-  ctx.strokeStyle = "#D4AF37";
+  ctx.strokeStyle = "#A6F0CF";
   ctx.lineWidth = 5;
   ctx.stroke();
 
@@ -121,7 +121,7 @@ function createTapestryTexture(member: BoardMember): THREE.CanvasTexture {
   ctx.fill();
 
   // Royal Chola Tiger Crest Silhouette inside medallion
-  ctx.fillStyle = "#D4AF37";
+  ctx.fillStyle = "#A6F0CF";
   ctx.font = "bold 88px sans-serif";
   ctx.textBaseline = "middle";
   ctx.fillText("🐅", photoCenterX, photoCenterY - 10);
@@ -179,12 +179,12 @@ function createTapestryTexture(member: BoardMember): THREE.CanvasTexture {
   }
 
   // Quote / Chola Motto
-  ctx.fillStyle = "#D4AF37";
+  ctx.fillStyle = "#A6F0CF";
   ctx.font = "italic 13px 'Mukta Malar', serif";
   ctx.fillText(`“${member.quote}”`, width / 2, 760);
 
   // Hanging tassel fringe at bottom
-  ctx.strokeStyle = "#D4AF37";
+  ctx.strokeStyle = "#A6F0CF";
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(borderWidth, height - borderWidth - 20);
@@ -317,12 +317,12 @@ export function TapestryPortrait({
       {/* Left Finial */}
       <mesh position={[-0.72, 1.08, 0]}>
         <sphereGeometry args={[0.045, 12, 12]} />
-        <meshStandardMaterial color="#D4AF37" roughness={0.3} metalness={0.9} />
+        <meshStandardMaterial color="#A6F0CF" roughness={0.3} metalness={0.9} />
       </mesh>
       {/* Right Finial */}
       <mesh position={[0.72, 1.08, 0]}>
         <sphereGeometry args={[0.045, 12, 12]} />
-        <meshStandardMaterial color="#D4AF37" roughness={0.3} metalness={0.9} />
+        <meshStandardMaterial color="#A6F0CF" roughness={0.3} metalness={0.9} />
       </mesh>
 
       {/* Hanging Support Cords */}

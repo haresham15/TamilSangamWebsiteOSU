@@ -46,7 +46,7 @@ export function MinimalPlatform() {
 
   const deckMaterial = useMemo(() => {
     const mat = new THREE.MeshPhysicalMaterial({
-      color: "#161210",
+      color: "#140C20",
       roughness: cinematic ? 0.28 : 0.32,
       metalness: cinematic ? 0.88 : 0.82,
       clearcoat: cinematic ? 0.95 : 0.8,
@@ -109,7 +109,7 @@ export function MinimalPlatform() {
       <mesh position={[0, 0.06, 0]} receiveShadow castShadow>
         <cylinderGeometry args={[3.8, 4.1, 0.12, 48]} />
         <meshPhysicalMaterial
-          color="#14110F"
+          color="#140C20"
           roughness={cinematic ? 0.62 : 0.55}
           metalness={0.25}
           clearcoat={0.3}
@@ -123,7 +123,7 @@ export function MinimalPlatform() {
       <mesh position={[0, 0.14, 0]} receiveShadow castShadow>
         <cylinderGeometry args={[3.6, 3.65, 0.05, 48]} />
         <meshPhysicalMaterial
-          color="#D4AF37"
+          color="#A6F0CF"
           emissive="#2A1808"
           emissiveIntensity={cinematic ? 0.22 : 0.18}
           metalness={cinematic ? 0.95 : 0.92}
@@ -148,7 +148,7 @@ export function MinimalPlatform() {
         <mesh position={[0, 0.012, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <ringGeometry args={[3.2, 3.28, 64]} />
           <meshPhysicalMaterial
-            color="#D4AF37"
+            color="#A6F0CF"
             emissive="#3D2005"
             emissiveIntensity={0.35}
             metalness={0.95}
@@ -160,8 +160,8 @@ export function MinimalPlatform() {
         <mesh position={[0, 0.012, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <ringGeometry args={[2.3, 2.36, 64]} />
           <meshPhysicalMaterial
-            color="#D4AF37"
-            emissive="#D4AF37"
+            color="#A6F0CF"
+            emissive="#A6F0CF"
             emissiveIntensity={0.45}
             metalness={0.9}
             roughness={0.2}
@@ -173,8 +173,8 @@ export function MinimalPlatform() {
           <mesh position={[0, 0.014, 0]} rotation={[-Math.PI / 2, 0, 0]}>
             <ringGeometry args={[1.35, 1.4, 48]} />
             <meshPhysicalMaterial
-              color="#D4AF37"
-              emissive="#FFB84D"
+              color="#A6F0CF"
+              emissive="#A6F0CF"
               emissiveIntensity={0.6}
               metalness={0.95}
               roughness={0.15}
@@ -183,8 +183,8 @@ export function MinimalPlatform() {
           <mesh position={[0, 0.014, 0]} rotation={[-Math.PI / 2, 0, 0]}>
             <ringGeometry args={[0.7, 0.74, 32]} />
             <meshPhysicalMaterial
-              color="#D4AF37"
-              emissive="#FFB84D"
+              color="#A6F0CF"
+              emissive="#A6F0CF"
               emissiveIntensity={0.5}
               metalness={0.95}
               roughness={0.15}
@@ -202,7 +202,7 @@ export function MinimalPlatform() {
               rotation={[0, -rad, 0]}
             >
               <boxGeometry args={[0.24, 0.005, 0.03]} />
-              <meshBasicMaterial color="#D4AF37" toneMapped={false} />
+              <meshBasicMaterial color="#A6F0CF" toneMapped={false} />
             </mesh>
           );
         })}

@@ -93,16 +93,16 @@ export function GamesHub() {
   };
 
   return (
-    <section id="games-hub" className="w-full bg-[#FAF6F0] text-[#161210] py-12 sm:py-20 px-4 sm:px-8 border-t border-[#D4AF37]/30 outline-hidden">
+    <section id="games-hub" className="w-full bg-[#140C20] text-[#F4F0FA] py-12 sm:py-20 px-4 sm:px-8 border-t border-[#A6F0CF]/35 outline-hidden">
       <div className="max-w-5xl mx-auto">
         {/* ---------------------------------------------------------------- */}
         {/* 1. CLEAN EDITORIAL MASTHEAD (DECLUTTERED)                         */}
         {/* ---------------------------------------------------------------- */}
-        <header className="border-b-2 border-[#161210] pb-6 mb-10 select-none">
+        <header className="border-b-2 border-[rgba(125,96,166,0.25)] pb-6 mb-10 select-none">
           {/* Top Line: Date & Minimal Actions */}
-          <div className="flex items-center justify-between gap-4 pb-4 border-b border-[#161210]/15 text-xs font-mono uppercase tracking-widest text-[#161210]/70">
+          <div className="flex items-center justify-between gap-4 pb-4 border-b border-[rgba(125,96,166,0.25)] text-xs font-mono uppercase tracking-widest text-[#F4F0FA]/70">
             <div className="flex items-center gap-2">
-              <Calendar className="size-3.5 text-[#C85A32]" />
+              <Calendar className="size-3.5 text-[#A6F0CF]" />
               <span className="font-bold">
                 {currentEditionMeta.monthEn} {currentEditionMeta.year} ·{" "}
                 <span lang="ta" className="font-tamil font-semibold">
@@ -115,15 +115,15 @@ export function GamesHub() {
             <div className="flex items-center gap-5 text-xs font-sans">
               <button
                 onClick={() => setIsHelpOpen(true)}
-                className="flex items-center gap-1.5 text-[#161210]/75 hover:text-[#C85A32] font-semibold transition-colors"
+                className="flex items-center gap-1.5 text-[#F4F0FA]/75 hover:text-[#A6F0CF] font-semibold transition-colors"
               >
-                <HelpCircle className="size-3.5 text-[#C85A32]" />
+                <HelpCircle className="size-3.5 text-[#A6F0CF]" />
                 <span>Rules · வழிகாட்டி</span>
               </button>
 
               <button
                 onClick={handleShareHub}
-                className="flex items-center gap-1.5 text-[#161210]/75 hover:text-[#C85A32] font-semibold transition-colors"
+                className="flex items-center gap-1.5 text-[#F4F0FA]/75 hover:text-[#A6F0CF] font-semibold transition-colors"
               >
                 {copiedHub ? <Check className="size-3.5 text-emerald-600" /> : <Share2 className="size-3.5" />}
                 <span>{copiedHub ? "Copied Link!" : "Share · பகிர்"}</span>
@@ -133,16 +133,16 @@ export function GamesHub() {
 
           {/* Central Newspaper Masthead Title */}
           <div className="pt-6 text-center">
-            <h2 className="font-serif text-4xl sm:text-6xl font-normal text-[#161210] tracking-tight mb-2">
+            <h2 className="font-serif text-4xl sm:text-6xl font-normal text-[#F4F0FA] tracking-tight mb-2">
               The Sangam Arcade
             </h2>
             <p
               lang="ta"
-              className="font-tamil text-xl sm:text-2xl text-[#C85A32] font-medium tracking-wide mb-3"
+              className="font-tamil text-xl sm:text-2xl text-[#A6F0CF] font-medium tracking-wide mb-3"
             >
               களஞ்சியம் · தமிழ்ச் சங்கப் புதிர்கள்
             </p>
-            <p className="font-sans text-xs sm:text-sm text-[#161210]/75 max-w-xl mx-auto leading-relaxed">
+            <p className="font-sans text-xs sm:text-sm text-[#F4F0FA]/75 max-w-xl mx-auto leading-relaxed">
               New York Times-grade monthly cultural puzzles rooted in Tamil heritage, cinema, and campus life.
             </p>
           </div>
@@ -162,23 +162,23 @@ export function GamesHub() {
                 whileHover={{ y: -6 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 onClick={() => selectGame("sollu")}
-                className="cursor-pointer group relative bg-[#F5EFEB] rounded-2xl border-2 border-[#161210]/15 hover:border-[#D4AF37] p-6 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300"
+                className="cursor-pointer group relative bg-[#140C20] rounded-2xl border-2 border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] p-6 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300"
               >
                 {/* Editorial Header */}
                 <div>
-                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#161210]/10">
-                    <span className="font-mono text-xs uppercase tracking-wider text-[#C85A32]">
+                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[rgba(125,96,166,0.25)]">
+                    <span className="font-mono text-xs uppercase tracking-wider text-[#A6F0CF]">
                       The Cultural Wordle
                     </span>
-                    <span className="font-mono text-[11px] text-[#161210]/55 uppercase tracking-wider">
+                    <span className="font-mono text-[11px] text-[#F4F0FA]/55 uppercase tracking-wider">
                       Daily &amp; Monthly
                     </span>
                   </div>
 
-                  <h3 className="font-serif text-3xl sm:text-4xl text-[#161210] font-normal tracking-tight mb-2">
-                    Sollu · <span lang="ta" className="font-tamil font-semibold text-[#C85A32]">சொல்லு</span>
+                  <h3 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal tracking-tight mb-2">
+                    Sollu · <span lang="ta" className="font-tamil font-semibold text-[#A6F0CF]">சொல்லு</span>
                   </h3>
-                  <p className="font-sans text-xs sm:text-sm text-[#161210]/75 leading-relaxed mb-4">
+                  <p className="font-sans text-xs sm:text-sm text-[#F4F0FA]/75 leading-relaxed mb-4">
                     Guess the secret 5-letter cultural word in 6 attempts. Featuring Tanglish cinema and classical Tamil Akshara editions.
                   </p>
                 </div>
@@ -189,12 +189,12 @@ export function GamesHub() {
                 </div>
 
                 {/* Editorial Action Footer */}
-                <div className="mt-6 pt-4 border-t border-[#161210]/10 flex items-center justify-between text-sm font-sans font-medium text-[#161210]">
-                  <span className="flex items-center gap-1.5 group-hover:text-[#C85A32] transition-colors">
+                <div className="mt-6 pt-4 border-t border-[rgba(125,96,166,0.25)] flex items-center justify-between text-sm font-sans font-medium text-[#F4F0FA]">
+                  <span className="flex items-center gap-1.5 group-hover:text-[#A6F0CF] transition-colors">
                     <span>Play Sollu</span>
-                    <span lang="ta" className="font-tamil text-xs text-[#C85A32]">(சொல்லு)</span>
+                    <span lang="ta" className="font-tamil text-xs text-[#A6F0CF]">(சொல்லு)</span>
                   </span>
-                  <span className="flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#C85A32] group-hover:translate-x-1 transition-transform">
+                  <span className="flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#A6F0CF] group-hover:translate-x-1 transition-transform">
                     <span>Start Game</span>
                     <ArrowRight className="size-3.5" aria-hidden="true" />
                   </span>
@@ -206,23 +206,23 @@ export function GamesHub() {
                 whileHover={{ y: -6 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 onClick={() => selectGame("thodarpu")}
-                className="cursor-pointer group relative bg-[#F5EFEB] rounded-2xl border-2 border-[#161210]/15 hover:border-[#D4AF37] p-6 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300"
+                className="cursor-pointer group relative bg-[#140C20] rounded-2xl border-2 border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] p-6 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300"
               >
                 {/* Editorial Header */}
                 <div>
-                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#161210]/10">
-                    <span className="font-mono text-xs uppercase tracking-wider text-[#3B4978]">
+                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[rgba(125,96,166,0.25)]">
+                    <span className="font-mono text-xs uppercase tracking-wider text-[#4FD6E0]">
                       Cultural Connections
                     </span>
-                    <span className="font-mono text-[11px] text-[#161210]/55 uppercase tracking-wider">
+                    <span className="font-mono text-[11px] text-[#F4F0FA]/55 uppercase tracking-wider">
                       Monthly Edition
                     </span>
                   </div>
 
-                  <h3 className="font-serif text-3xl sm:text-4xl text-[#161210] font-normal tracking-tight mb-2">
-                    Thodarpu · <span lang="ta" className="font-tamil font-semibold text-[#3B4978]">தொடர்பு</span>
+                  <h3 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal tracking-tight mb-2">
+                    Thodarpu · <span lang="ta" className="font-tamil font-semibold text-[#4FD6E0]">தொடர்பு</span>
                   </h3>
-                  <p className="font-sans text-xs sm:text-sm text-[#161210]/75 leading-relaxed mb-4">
+                  <p className="font-sans text-xs sm:text-sm text-[#F4F0FA]/75 leading-relaxed mb-4">
                     Find four groups of four culturally connected items across cinema lore, Carnatic ragas, and traditions.
                   </p>
                 </div>
@@ -233,12 +233,12 @@ export function GamesHub() {
                 </div>
 
                 {/* Editorial Action Footer */}
-                <div className="mt-6 pt-4 border-t border-[#161210]/10 flex items-center justify-between text-sm font-sans font-medium text-[#161210]">
-                  <span className="flex items-center gap-1.5 group-hover:text-[#3B4978] transition-colors">
+                <div className="mt-6 pt-4 border-t border-[rgba(125,96,166,0.25)] flex items-center justify-between text-sm font-sans font-medium text-[#F4F0FA]">
+                  <span className="flex items-center gap-1.5 group-hover:text-[#4FD6E0] transition-colors">
                     <span>Play Thodarpu</span>
-                    <span lang="ta" className="font-tamil text-xs text-[#3B4978]">(தொடர்பு)</span>
+                    <span lang="ta" className="font-tamil text-xs text-[#4FD6E0]">(தொடர்பு)</span>
                   </span>
-                  <span className="flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#3B4978] group-hover:translate-x-1 transition-transform">
+                  <span className="flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#4FD6E0] group-hover:translate-x-1 transition-transform">
                     <span>Start Game</span>
                     <ArrowRight className="size-3.5" aria-hidden="true" />
                   </span>
@@ -252,23 +252,23 @@ export function GamesHub() {
           /* ============================================================== */
           <div className="w-full">
             {/* Elegant Back Navigation Bar */}
-            <div className="flex items-center justify-between pb-6 mb-8 border-b border-[#161210]/15 select-none">
+            <div className="flex items-center justify-between pb-6 mb-8 border-b border-[rgba(125,96,166,0.25)] select-none">
               <button
                 onClick={() => selectGame(null)}
-                className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#161210]/75 hover:text-[#C85A32] transition-colors py-2 px-3.5 rounded-lg hover:bg-[#F2EAE0] border border-transparent hover:border-[#161210]/15"
+                className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#F4F0FA]/75 hover:text-[#A6F0CF] transition-colors py-2 px-3.5 rounded-lg hover:bg-[#25173B] border border-transparent hover:border-[rgba(125,96,166,0.25)]"
               >
                 <ArrowLeft className="size-4" />
                 <span>All Games · அனைத்து புதிர்கள்</span>
               </button>
 
               <div className="flex items-center gap-4 text-xs font-mono">
-                <span className="font-bold text-[#161210]">
+                <span className="font-bold text-[#F4F0FA]">
                   {activeGame === "sollu" ? "01 Sollu (சொல்லு)" : "02 Thodarpu (தொடர்பு)"}
                 </span>
-                <span className="text-[#161210]/30 hidden sm:inline">|</span>
+                <span className="text-[#F4F0FA]/30 hidden sm:inline">|</span>
                 <button
                   onClick={() => selectGame(activeGame === "sollu" ? "thodarpu" : "sollu")}
-                  className="hidden sm:inline-flex items-center gap-1 text-[#161210]/65 hover:text-[#C85A32] font-semibold transition-colors"
+                  className="hidden sm:inline-flex items-center gap-1 text-[#F4F0FA]/65 hover:text-[#A6F0CF] font-semibold transition-colors"
                 >
                   <span>Switch to {activeGame === "sollu" ? "02 Thodarpu" : "01 Sollu"}</span>
                   <ArrowRight className="size-3" />
@@ -277,7 +277,7 @@ export function GamesHub() {
             </div>
 
             {/* Active Game Component Canvas */}
-            <div className="w-full bg-[#FAF6F0] min-h-[520px] flex items-center justify-center">
+            <div className="w-full bg-[#140C20] min-h-[520px] flex items-center justify-center">
               {isUnlocked ? (
                 activeGame === "sollu" ? (
                   <SolluWordle
@@ -294,25 +294,25 @@ export function GamesHub() {
                 )
               ) : (
                 /* Locked Edition Teaser */
-                <div className="w-full max-w-md mx-auto p-8 bg-[#F2EAE0] rounded-2xl border-2 border-[#D4AF37]/50 shadow-xl text-center">
-                  <div className="size-14 mx-auto mb-4 rounded-full bg-[#161210] text-[#D4AF37] flex items-center justify-center shadow-md">
+                <div className="w-full max-w-md mx-auto p-8 bg-[#25173B] rounded-2xl border-2 border-[#A6F0CF]/35 shadow-xl text-center">
+                  <div className="size-14 mx-auto mb-4 rounded-full bg-[#140C20] text-[#A6F0CF] flex items-center justify-center shadow-md">
                     <Lock className="size-7" />
                   </div>
 
-                  <span className="font-mono text-xs uppercase tracking-widest text-[#C85A32] font-bold block mb-1">
+                  <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] font-bold block mb-1">
                     LOCKED EDITION · எதிர்காலப் புதிர்
                   </span>
 
-                  <h3 className="font-serif text-2xl font-bold text-[#161210] mb-2">
+                  <h3 className="font-serif text-2xl font-bold text-[#F4F0FA] mb-2">
                     {currentEditionMeta.monthEn} {currentEditionMeta.year} Edition
                   </h3>
 
-                  <p lang="ta" className="font-tamil text-base text-[#161210]/80 mb-4 font-semibold">
+                  <p lang="ta" className="font-tamil text-base text-[#F4F0FA]/80 mb-4 font-semibold">
                     {currentEditionMeta.monthTa} மாதம்
                   </p>
 
-                  <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-[#FAF6F0] rounded-xl border border-[#161210]/15 mb-6 text-sm font-mono text-[#161210]">
-                    <Clock className="size-4 text-[#D4AF37]" />
+                  <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-[#140C20] rounded-xl border border-[rgba(125,96,166,0.25)] mb-6 text-sm font-mono text-[#F4F0FA]">
+                    <Clock className="size-4 text-[#A6F0CF]" />
                     <span>
                       Unlocks in {countdown.days}d {countdown.hours}h
                     </span>
@@ -320,7 +320,7 @@ export function GamesHub() {
 
                   <button
                     onClick={() => setSelectedEdition("2026-10")}
-                    className="w-full py-3 px-4 bg-[#161210] hover:bg-[#C85A32] text-[#FAF6F0] rounded-xl font-bold text-xs tracking-wider uppercase transition-colors shadow-md"
+                    className="w-full py-3 px-4 bg-[#140C20] hover:bg-[#A6F0CF] hover:text-[#140C20] text-[#F4F0FA] rounded-xl font-bold text-xs tracking-wider uppercase transition-colors shadow-md"
                   >
                     Play October Launch Edition
                   </button>
@@ -335,26 +335,26 @@ export function GamesHub() {
         {/* ---------------------------------------------------------------- */}
         <AnimatePresence>
           {isHelpOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#161210]/80 backdrop-blur-xs">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#140C20]/80 backdrop-blur-xs">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-[#FAF6F0] border-2 border-[#161210] text-[#161210] max-w-lg w-full rounded-2xl p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto"
+                className="bg-[#140C20] border-2 border-[rgba(125,96,166,0.25)] text-[#F4F0FA] max-w-lg w-full rounded-2xl p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto"
               >
                 <button
                   onClick={() => setIsHelpOpen(false)}
-                  className="absolute top-5 right-5 text-[#161210]/50 hover:text-[#161210] transition-colors"
+                  className="absolute top-5 right-5 text-[#F4F0FA]/50 hover:text-[#F4F0FA] transition-colors"
                 >
                   <X className="size-5" />
                 </button>
 
                 <h3 className="font-serif text-2xl font-bold mb-1">How to Play The Sangam Arcade</h3>
-                <p className="font-tamil text-sm text-[#C85A32] font-semibold mb-6">விதிமுறைகள் மற்றும் வழிகாட்டி</p>
+                <p className="font-tamil text-sm text-[#A6F0CF] font-semibold mb-6">விதிமுறைகள் மற்றும் வழிகாட்டி</p>
 
-                <div className="space-y-6 text-xs sm:text-sm font-sans leading-relaxed text-[#161210]/85">
-                  <div className="border-b border-[#161210]/15 pb-4">
-                    <h4 className="font-bold text-sm text-[#161210] mb-2">
+                <div className="space-y-6 text-xs sm:text-sm font-sans leading-relaxed text-[#F4F0FA]/85">
+                  <div className="border-b border-[rgba(125,96,166,0.25)] pb-4">
+                    <h4 className="font-bold text-sm text-[#F4F0FA] mb-2">
                       01 Sollu (சொல்லு) · The Cultural Wordle
                     </h4>
                     <p className="mb-2">
@@ -368,7 +368,7 @@ export function GamesHub() {
                   </div>
 
                   <div>
-                    <h4 className="font-bold text-sm text-[#161210] mb-2">
+                    <h4 className="font-bold text-sm text-[#F4F0FA] mb-2">
                       02 Thodarpu (தொடர்பு) · Cultural Connections
                     </h4>
                     <p className="mb-2">
@@ -382,10 +382,10 @@ export function GamesHub() {
                   </div>
                 </div>
 
-                <div className="mt-8 pt-4 border-t border-[#161210]/15 flex justify-end">
+                <div className="mt-8 pt-4 border-t border-[rgba(125,96,166,0.25)] flex justify-end">
                   <button
                     onClick={() => setIsHelpOpen(false)}
-                    className="px-6 py-2.5 bg-[#161210] hover:bg-[#C85A32] text-[#FAF6F0] rounded-xl text-xs font-bold font-mono transition-colors shadow-md"
+                    className="px-6 py-2.5 bg-[#140C20] hover:bg-[#A6F0CF] hover:text-[#140C20] text-[#F4F0FA] rounded-xl text-xs font-bold font-mono transition-colors shadow-md"
                   >
                     Got It · தொடங்குக
                   </button>

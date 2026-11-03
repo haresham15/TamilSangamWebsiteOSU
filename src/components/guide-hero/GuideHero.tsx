@@ -168,7 +168,7 @@ export function GuideHero({
             ref={ctaRef}
             type="button"
             onClick={handleSkipToBoard}
-            className="pointer-events-auto min-h-12 px-5 py-2.5 rounded-full bg-[#0A0F14]/85 text-[#f1e9d2] border border-[#f1e9d2]/20 backdrop-blur-md text-xs uppercase tracking-widest hover:border-[#FFB84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB84D] transition-transform will-change-[transform,opacity]"
+            className="pointer-events-auto min-h-12 px-5 py-2.5 rounded-full bg-[#0A0F14]/85 text-[#f1e9d2] border border-[#f1e9d2]/20 backdrop-blur-md text-xs uppercase tracking-widest hover:border-[#A6F0CF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] transition-transform will-change-[transform,opacity]"
           >
             Skip to Board ↓
           </button>

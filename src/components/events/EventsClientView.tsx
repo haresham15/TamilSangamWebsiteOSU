@@ -183,7 +183,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
         {!staticHero && <EventsGen3Canvas progressRef={eventsProgress} />}
         <div
           ref={heroOverlayRef}
-          className="absolute inset-0 z-10 flex flex-col justify-end px-6 pb-20 text-paper pointer-events-none transition-transform will-change-[transform,opacity]"
+          className="absolute inset-0 z-10 flex flex-col justify-end px-6 pb-20 text-[#F4F0FA] pointer-events-none transition-transform will-change-[transform,opacity]"
         >
           <h1 className="font-display text-5xl sm:text-8xl">
             {locale === "ta" ? "நிகழ்வுகள்" : "Together, in celebration."}
@@ -195,21 +195,21 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
 
       {/* =========================================================================
           THE FLOWING RIVER & LIVE CALENDAR
-          Warm Ivory (#FAF9F6), Sunbaked Sand (#F4EFE6), Charcoal Espresso (#2A2825)
+          Royal Violet (#140C20), Raised Surface (#25173B), Off-White (#F4F0FA)
           Glides up as an architectural paper sheet (p = 0.84 -> 1.00)
           ========================================================================= */}
       <EditorialSheetHandoff
         id="gatherings-river"
         badge="CAMPUS GATHERINGS"
         sublabel="ALMANAC 2026–2027"
-        className="text-hearth-espresso"
+        className="text-[#F4F0FA]"
       >
         {/* Floating Tactile Photo Following Mouse Cursor (List View Only) */}
         {currentView === "list" && (
           <div
             ref={cursorRef}
             aria-hidden="true"
-            className="fixed top-0 left-0 pointer-events-none z-50 w-72 sm:w-96 h-52 sm:h-64 overflow-hidden rounded-2xl shadow-2xl shadow-stone-900/25 bg-white border border-[#2A2825]/10"
+            className="fixed top-0 left-0 pointer-events-none z-50 w-72 sm:w-96 h-52 sm:h-64 overflow-hidden rounded-2xl shadow-2xl shadow-stone-900/25 bg-white border border-[rgba(125,96,166,0.25)]"
             style={{ willChange: "transform, opacity" }}
           >
             {hoveredEvent && (
@@ -223,8 +223,8 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent" />
                 <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs font-sans text-white">
-                  <span className="font-serif font-medium truncate text-[#FAF9F6]">{hoveredEvent.titleEn}</span>
-                  <span className="text-[#E5A93C] shrink-0 ml-2 font-medium">{hoveredEvent.academicYear}</span>
+                  <span className="font-serif font-medium truncate text-[#F4F0FA]">{hoveredEvent.titleEn}</span>
+                  <span className="text-[#A6F0CF] shrink-0 ml-2 font-medium">{hoveredEvent.academicYear}</span>
                 </div>
               </div>
             )}
@@ -235,7 +235,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
           {/* Central Vertical Golden-Terracotta Hairline extending from stage centerpiece */}
           <div aria-hidden="true" className="w-full flex justify-center -mt-8 mb-6">
-            <div className="w-px h-12 bg-gradient-to-b from-[#D4AF37] via-[#B85C38] to-transparent" />
+            <div className="w-px h-12 bg-gradient-to-b from-[#A6F0CF] via-[#F26BB5] to-transparent" />
           </div>
 
           {/* Centered Airy Header */}
@@ -256,7 +256,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
             <div
               role="radiogroup"
               aria-label="Event display view mode"
-              className="inline-flex items-center p-1.5 rounded-full bg-[#F4EFE6] border border-[#2A2825]/15 shadow-inner"
+              className="inline-flex items-center p-1.5 rounded-full bg-[#25173B] border border-[rgba(125,96,166,0.25)] shadow-inner"
             >
               <button
                 type="button"
@@ -265,8 +265,8 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
                 onClick={() => setViewMode("list")}
                 className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-sans font-semibold transition-all cursor-pointer min-h-[44px] ${
                   currentView === "list"
-                    ? "bg-[#FAF9F6] text-[#2A2825] shadow-sm border border-[#2A2825]/10"
-                    : "text-[#57524C] hover:text-[#2A2825]"
+                    ? "bg-[#140C20] text-[#F4F0FA] shadow-sm border border-[rgba(125,96,166,0.25)]"
+                    : "text-[#C4B7D7] hover:text-[#F4F0FA]"
                 }`}
               >
                 <ListIcon className="w-3.5 h-3.5" />
@@ -280,11 +280,11 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
                 onClick={() => setViewMode("calendar")}
                 className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-sans font-semibold transition-all cursor-pointer min-h-[44px] ${
                   currentView === "calendar"
-                    ? "bg-[#FAF9F6] text-[#2A2825] shadow-sm border border-[#2A2825]/10"
-                    : "text-[#57524C] hover:text-[#2A2825]"
+                    ? "bg-[#140C20] text-[#F4F0FA] shadow-sm border border-[rgba(125,96,166,0.25)]"
+                    : "text-[#C4B7D7] hover:text-[#F4F0FA]"
                 }`}
               >
-                <CalendarIcon className="w-3.5 h-3.5 text-[#B85C38]" />
+                <CalendarIcon className="w-3.5 h-3.5 text-[#A6F0CF]" />
                 <span>{locale === "ta" ? "நாட்காட்டி" : "Calendar"}</span>
               </button>
             </div>
@@ -311,8 +311,8 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
                   }}
                   className={`font-sans text-xs tracking-widest uppercase font-semibold transition-colors duration-200 cursor-pointer min-h-12 pb-1 ${
                     isSelected
-                      ? "text-[#B85C38] border-b-2 border-[#B85C38]"
-                      : "text-[#57524C] hover:text-[#2A2825] border-b-2 border-transparent"
+                      ? "text-[#A6F0CF] border-b-2 border-[#A6F0CF]"
+                      : "text-[#C4B7D7] hover:text-[#F4F0FA] border-b-2 border-transparent"
                   }`}
                 >
                   {yr === "all" ? "All Gatherings" : yr}
@@ -323,7 +323,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
               href="/calendars/almanac.ics"
               download="gatherings-almanac.ics"
               onClick={() => playClick()}
-              className="font-mono text-xs tracking-widest uppercase text-[#B85C38] hover:text-[#2A2825] transition-colors duration-200 min-h-12 pb-1 inline-flex items-center gap-1.5 border-b-2 border-transparent hover:border-[#B85C38]"
+              className="font-mono text-xs tracking-widest uppercase text-[#A6F0CF] hover:text-[#F4F0FA] transition-colors duration-200 min-h-12 pb-1 inline-flex items-center gap-1.5 border-b-2 border-transparent hover:border-[#A6F0CF]"
               title="Download all Gatherings River events to your calendar"
             >
               <Download className="w-3.5 h-3.5" />
@@ -342,8 +342,8 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
             />
           ) : (
             /* Flowing Open List of Events: 1px Razor-Thin Grounding Lines, Naked Typography */
-            <div ref={riverRef} className="relative border-t border-hearth-espresso/20">
-              <svg aria-hidden="true" viewBox="0 0 100 1000" preserveAspectRatio="none" className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-24 -translate-x-1/2 text-hearth-terracotta/50 lg:block" fill="none">
+            <div ref={riverRef} className="relative border-t border-[rgba(125,96,166,0.25)]">
+              <svg aria-hidden="true" viewBox="0 0 100 1000" preserveAspectRatio="none" className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-24 -translate-x-1/2 text-[#A6F0CF]/50 lg:block" fill="none">
                 <path ref={pathRef} d="M50 0 C-15 120 115 210 50 330 S-15 540 50 660 S115 880 50 1000" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" pathLength="1" strokeDasharray="1" />
               </svg>
               {filteredEvents.map((evt, index) => {
@@ -358,35 +358,35 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
                       if (!reducedMotion && matchMedia("(pointer: fine)").matches) setHoveredEvent(evt);
                     }}
                     onMouseLeave={() => setHoveredEvent(null)}
-                    className={`group block relative py-14 sm:py-20 border-b border-hearth-espresso/20 lg:w-5/12 ${index % 2 ? "lg:ml-auto" : ""} focus-visible:outline-2 focus-visible:outline-hearth-terracotta`}
+                    className={`group block relative py-14 sm:py-20 border-b border-[rgba(125,96,166,0.25)] lg:w-5/12 ${index % 2 ? "lg:ml-auto" : ""} focus-visible:outline-2 focus-visible:outline-[#4FD6E0]`}
                   >
                     {/* Floating Date Lockup */}
                     <div className="flex flex-wrap items-center gap-2 mb-4">
-                      <span className="font-sans text-xs sm:text-sm font-semibold text-[#B85C38] uppercase tracking-widest">
+                      <span className="font-sans text-xs sm:text-sm font-semibold text-[#A6F0CF] uppercase tracking-widest">
                         {evt.date}
                       </span>
                       <span className="text-stone-300">·</span>
-                      <span className="font-sans text-xs sm:text-sm text-[#57524C]">
+                      <span className="font-sans text-xs sm:text-sm text-[#C4B7D7]">
                         {evt.time}
                       </span>
                     </div>
 
                     {/* Centered Massive Serif Event Title */}
-                    <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors leading-[1.15] tracking-tight max-w-3xl mx-auto">
+                    <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors leading-[1.15] tracking-tight max-w-3xl mx-auto">
                       {locale === "ta" ? evt.titleTa : evt.titleEn}
                     </h2>
 
                     {/* Tamil Subscript Date */}
-                    <p className="mt-2 font-tamil text-sm sm:text-base text-[#E5A93C] font-medium" lang="ta">
+                    <p className="mt-2 font-tamil text-sm sm:text-base text-[#A6F0CF] font-medium" lang="ta">
                       {evt.tamilDate}
                     </p>
 
                     {/* Narrative Description & Location */}
-                    <p className="mt-5 text-base sm:text-lg text-[#57524C] font-sans leading-relaxed max-w-2xl mx-auto line-clamp-2 group-hover:text-[#2A2825] transition-colors">
+                    <p className="mt-5 text-base sm:text-lg text-[#C4B7D7] font-sans leading-relaxed max-w-2xl mx-auto line-clamp-2 group-hover:text-[#F4F0FA] transition-colors">
                       {locale === "ta" ? evt.descriptionTa : evt.descriptionEn}
                     </p>
 
-                    <div className="mt-8 inline-flex items-center gap-2 text-xs font-sans font-semibold text-[#B85C38] group-hover:text-[#E5A93C] tracking-wider uppercase border-b border-[#B85C38] pb-0.5">
+                    <div className="mt-8 inline-flex items-center gap-2 text-xs font-sans font-semibold text-[#A6F0CF] group-hover:text-[#A6F0CF] tracking-wider uppercase border-b border-[#A6F0CF] pb-0.5">
                       <span>Open event dossier</span>
                       <Magnetic className="inline-flex"><span aria-hidden="true" className="magnetic-inner inline-block p-3">→</span></Magnetic>
                     </div>
@@ -414,56 +414,56 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
           </div>
 
           {/* Annual Recurring Traditions (Warm Chola Sandstone Band with Recessed Specimen Cards) */}
-          <div className="mt-20 sm:mt-32 -mx-6 sm:-mx-12 px-6 sm:px-12 py-20 bg-[#F2EAE0] border-y border-[#161210]/10 space-y-12 shadow-[inset_0_2px_12px_rgba(22,18,16,0.03)]">
+          <div className="mt-20 sm:mt-32 -mx-6 sm:-mx-12 px-6 sm:px-12 py-20 bg-[#25173B] border-y border-[rgba(125,96,166,0.25)] space-y-12 shadow-[inset_0_2px_12px_rgba(0,0,0,0.2)]">
             <div className="text-center space-y-2">
-              <span className="font-sans text-xs font-semibold text-[#B85C38] tracking-widest uppercase block">
+              <span className="font-sans text-xs font-semibold text-[#A6F0CF] tracking-widest uppercase block">
                 Recurring Cycles · ஆண்டு சுழற்சி
               </span>
-              <h3 className="text-3xl sm:text-4xl font-serif font-normal text-[#2A2825]">
+              <h3 className="text-3xl sm:text-4xl font-serif font-normal text-[#F4F0FA]">
                 Annual Campus Traditions
               </h3>
-              <p className="text-base text-[#57524C] font-sans max-w-xl mx-auto">
+              <p className="text-base text-[#C4B7D7] font-sans max-w-xl mx-auto">
                 Signature gatherings uniting generations of Buckeyes through harvests, sparklers, and feast tables.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-5xl mx-auto">
-              <div className="p-8 bg-[#FAF6F0] rounded-sm border border-[#161210]/10 shadow-[0_4px_20px_rgba(22,18,16,0.04)] space-y-3">
-                <span className="font-sans text-xs text-[#B85C38] uppercase tracking-widest font-semibold block">
+              <div className="p-8 bg-[#140C20] rounded-sm border border-[rgba(125,96,166,0.25)] shadow-[0_4px_20px_rgba(0,0,0,0.25)] space-y-3">
+                <span className="font-sans text-xs text-[#A6F0CF] uppercase tracking-widest font-semibold block">
                   Early Autumn · South Oval
                 </span>
-                <h4 className="text-2xl font-serif text-[#2A2825]">Welcome Lawn Picnic & Social</h4>
-                <p className="text-sm font-sans text-[#57524C] leading-relaxed">
+                <h4 className="text-2xl font-serif text-[#F4F0FA]">Welcome Lawn Picnic & Social</h4>
+                <p className="text-sm font-sans text-[#C4B7D7] leading-relaxed">
                   Casual welcome mixer out on the South Oval grass with samosas, Indian snacks, cold drinks, Kahoot trivia, and connecting freshmen with mentors.
                 </p>
               </div>
 
-              <div className="p-8 bg-[#FAF6F0] rounded-sm border border-[#161210]/10 shadow-[0_4px_20px_rgba(22,18,16,0.04)] space-y-3">
-                <span className="font-sans text-xs text-[#E5A93C] uppercase tracking-widest font-semibold block">
+              <div className="p-8 bg-[#140C20] rounded-sm border border-[rgba(125,96,166,0.25)] shadow-[0_4px_20px_rgba(0,0,0,0.25)] space-y-3">
+                <span className="font-sans text-xs text-[#A6F0CF] uppercase tracking-widest font-semibold block">
                   Late Autumn · Ohio Union
                 </span>
-                <h4 className="text-2xl font-serif text-[#2A2825]">Diwali Sparkler Night & Festive Feast</h4>
-                <p className="text-sm font-sans text-[#57524C] leading-relaxed">
+                <h4 className="text-2xl font-serif text-[#F4F0FA]">Diwali Sparkler Night & Festive Feast</h4>
+                <p className="text-sm font-sans text-[#C4B7D7] leading-relaxed">
                   Our signature autumn festival featuring authentic catered South Indian dinner, live student acoustic film jams, and sparklers on the plaza.
                 </p>
               </div>
 
-              <div className="p-8 bg-[#FAF6F0] rounded-sm border border-[#161210]/10 shadow-[0_4px_20px_rgba(22,18,16,0.04)] space-y-3">
-                <span className="font-sans text-xs text-[#B85C38] uppercase tracking-widest font-semibold block">
+              <div className="p-8 bg-[#140C20] rounded-sm border border-[rgba(125,96,166,0.25)] shadow-[0_4px_20px_rgba(0,0,0,0.25)] space-y-3">
+                <span className="font-sans text-xs text-[#A6F0CF] uppercase tracking-widest font-semibold block">
                   Mid Winter · Campus Plaza
                 </span>
-                <h4 className="text-2xl font-serif text-[#2A2825]">Pongal Harvest Gathering (தைப்பொங்கல்)</h4>
-                <p className="text-sm font-sans text-[#57524C] leading-relaxed">
+                <h4 className="text-2xl font-serif text-[#F4F0FA]">Pongal Harvest Gathering (தைப்பொங்கல்)</h4>
+                <p className="text-sm font-sans text-[#C4B7D7] leading-relaxed">
                   Traditional sweet pongal celebration, festive kolam sidewalk chalk competitions, and cultural games honoring the harvest season.
                 </p>
               </div>
 
-              <div className="p-8 bg-[#FAF6F0] rounded-sm border border-[#161210]/10 shadow-[0_4px_20px_rgba(22,18,16,0.04)] space-y-3">
-                <span className="font-sans text-xs text-[#E5A93C] uppercase tracking-widest font-semibold block">
+              <div className="p-8 bg-[#140C20] rounded-sm border border-[rgba(125,96,166,0.25)] shadow-[0_4px_20px_rgba(0,0,0,0.25)] space-y-3">
+                <span className="font-sans text-xs text-[#A6F0CF] uppercase tracking-widest font-semibold block">
                   Mid Spring · Recreation Grounds
                 </span>
-                <h4 className="text-2xl font-serif text-[#2A2825]">Namma Jathara Spring Carnival</h4>
-                <p className="text-sm font-sans text-[#57524C] leading-relaxed">
+                <h4 className="text-2xl font-serif text-[#F4F0FA]">Namma Jathara Spring Carnival</h4>
+                <p className="text-sm font-sans text-[#C4B7D7] leading-relaxed">
                   Joint collegiate carnival co-hosted with Telugu Tamasha, uniting 200+ students for Indian snacks, hot biryani, outdoor carnival games, and open dance circle.
                 </p>
               </div>

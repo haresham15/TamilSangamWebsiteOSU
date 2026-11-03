@@ -249,7 +249,7 @@ export function SangamLogo3D({ progressRef }: SangamLogo3DProps = {}) {
       <pointLight
         position={[0, 4.4, -4.6]}
         intensity={30}
-        color="#FFE8C2"
+        color="#A6F0CF"
         distance={16}
         decay={1.2}
       />

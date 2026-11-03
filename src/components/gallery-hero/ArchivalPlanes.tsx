@@ -12,7 +12,7 @@ import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
  * LAYER 4: 8 FLOATING 35MM KODACHROME MEMORY FRAMES (SYMPATHETICALLY LINKED)
  * 
  * - 8 real, unique OSU Tamil Sangam photographs in Z-space (z = +1.5m to -11.0m)
- * - Kodachrome 35mm slide mounts (#14100E casing, gold edge trim #D4AF37/40, index markings)
+ * - Kodachrome 35mm slide mounts with mint edge trim
  * - Flanking corridor leaving center viewport clear for title typography at p = 0.00
  * - Sympathetic resonance: Frame k linked to string k % 6 tilts ±4° and blooms backlight on pluck
  */
@@ -80,7 +80,7 @@ export function ArchivalPlanes() {
         ctx.strokeRect(31, 31, 450, 322);
 
         // Film index text markings
-        ctx.fillStyle = "#FAF6F0";
+        ctx.fillStyle = "#F4F0FA";
         ctx.font = "bold 13px monospace";
         ctx.fillText(photo.code, 36, 22);
 
@@ -189,7 +189,7 @@ export function ArchivalPlanes() {
                 ref={(mat) => {
                   if (mat) haloMatsRef.current[idx] = mat;
                 }}
-                color="#FFB84D"
+                color="#A6F0CF"
                 transparent={true}
                 opacity={0.22}
                 blending={THREE.AdditiveBlending}

@@ -120,7 +120,7 @@ export function SplitFlapLiteHero({ onSearchFocus }: SplitFlapLiteHeroProps) {
             {onSearchFocus && (
               <button
                 onClick={onSearchFocus}
-                className="text-xs text-[#d4af37] hover:underline uppercase tracking-wider"
+                className="text-xs text-[#A6F0CF] hover:underline uppercase tracking-wider"
               >
                 [ SEARCH FAQ ]
               </button>

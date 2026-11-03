@@ -139,7 +139,7 @@ export function createKajiyaKayStringMaterial(isWound: boolean, naturalHz: numbe
 export const AnamorphicStreakShader = {
   uniforms: {
     uOpacity: { value: 0.0 },
-    uColorGold: { value: new THREE.Color("#FFB84D") },
+    uColorGold: { value: new THREE.Color("#A6F0CF") },
     uColorTeal: { value: new THREE.Color("#55B8B0") },
   },
   vertexShader: `

@@ -107,7 +107,7 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
             cy="60"
             r="53"
             fill="none"
-            stroke="#D4AF37"
+            stroke="#A6F0CF"
             strokeWidth="0.75"
             strokeDasharray="3 5"
             opacity="0.32"
@@ -128,7 +128,7 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
               cx={p.x}
               cy={p.y}
               r={p.r}
-              fill={p.center ? "#FFE8A3" : "#D4AF37"}
+              fill={p.center ? "#4FD6E0" : "#A6F0CF"}
               opacity={p.center ? 1 : 0.85}
             />
           ))}
@@ -147,7 +147,7 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
               C 42 40, 44 16, 60 16 Z
             "
             fill="none"
-            stroke="#D4AF37"
+            stroke="#A6F0CF"
             strokeWidth="1.8"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -172,10 +172,10 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
 
       {/* Clean, minimalist typography */}
       <div className="mt-2.5 flex flex-col items-center">
-        <span className="font-serif text-sm tracking-wider text-[#FAF7F2]/90">
+        <span className="font-serif text-sm tracking-wider text-[#C4B7D7]">
           {english}
         </span>
-        <span lang="ta" className="font-tamil text-xs text-[#D4AF37]/80 mt-0.5">
+        <span lang="ta" className="font-tamil text-xs text-[#A6F0CF]/80 mt-0.5">
           {tamil}
         </span>
       </div>
@@ -185,7 +185,7 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
   if (fullScreen) {
     return (
       <div
-        className={`fixed inset-0 z-[9990] flex items-center justify-center bg-[#140F0D] text-[#FAF7F2] overflow-hidden ${className}`}
+        className={`fixed inset-0 z-[9990] flex items-center justify-center bg-[#140C20] text-[#F4F0FA] overflow-hidden ${className}`}
         aria-live="polite"
         aria-busy="true"
       >
@@ -196,7 +196,7 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
 
   return (
     <div
-      className={`w-full h-full flex items-center justify-center bg-[#140F0D] text-[#FAF7F2] min-h-[220px] ${className}`}
+      className={`w-full h-full flex items-center justify-center bg-[#140C20] text-[#F4F0FA] min-h-[220px] ${className}`}
       aria-live="polite"
       aria-busy="true"
     >

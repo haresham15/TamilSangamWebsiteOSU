@@ -17,7 +17,7 @@ export function createTicketMaterial(): {
 } {
   const uniforms: DissolveUniforms = {
     uDissolve: { value: 1.0 },
-    uEdgeColor: { value: new THREE.Color("#FFB84D") },
+    uEdgeColor: { value: new THREE.Color("#A6F0CF") },
     uEdgeWidth: { value: 0.09 },
     uNoiseScale: { value: 1.8 },
   };
@@ -43,7 +43,7 @@ export function createTicketMaterial(): {
  * - Subdivided curved plane (32x16 segments) with perforated scalloped edge
  * - Procedural aged parchment CanvasTexture with invented Sangam Junction branding
  * - Dynamic wind flutter reacting to scroll velocity
- * - Procedural 3D noise dissolve with amber edge burn (#FFB84D)
+ * - Procedural 3D noise dissolve with mint edge burn (#A6F0CF)
  */
 export function Ticket() {
   const heroRefs = getSharedHeroRefs();

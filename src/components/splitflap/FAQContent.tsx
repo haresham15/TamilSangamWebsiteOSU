@@ -124,7 +124,7 @@ export function FAQContent({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by topic, keyword, or Tamil term (e.g., tickets, membership, தீபாவளி)..."
-              className="w-full pl-12 pr-4 py-3.5 rounded-none bg-[#110d0a] border border-[#2b2017] text-[#f5eedf] placeholder-[#6e5d4d] text-sm focus:outline-none focus:border-[#d4af37] font-mono transition-all"
+              className="w-full pl-12 pr-4 py-3.5 rounded-none bg-[#110d0a] border border-[#2b2017] text-[#f5eedf] placeholder-[#6e5d4d] text-sm focus:outline-none focus:border-[#A6F0CF] font-mono transition-all"
             />
             {search && (
               <button
@@ -149,7 +149,7 @@ export function FAQContent({
                   aria-label={`Filter by category: ${cat}`}
                   className={`px-3.5 py-1.5 rounded-none text-xs font-mono tracking-wider whitespace-nowrap transition-all border ${
                     isActive
-                      ? "bg-[#d4af37] text-[#0d0a08] font-bold border-[#d4af37] shadow-[2px_2px_0px_#250d38]"
+                      ? "bg-[#A6F0CF] text-[#0d0a08] font-bold border-[#A6F0CF] shadow-[2px_2px_0px_#250d38]"
                       : "bg-[#140f0c] text-[#a89985] hover:text-[#fdfaf5] hover:bg-[#1f1712] border-[#261d15]"
                   }`}
                 >
@@ -172,7 +172,7 @@ export function FAQContent({
                   setSearch("");
                   setSelectedCategory("All");
                 }}
-                className="mt-3 text-xs text-[#d4af37] hover:underline"
+                className="mt-3 text-xs text-[#A6F0CF] hover:underline"
               >
                 Reset filters
               </button>
@@ -214,7 +214,7 @@ export function FAQContent({
                     <div className="mt-1 flex items-center justify-center w-8 h-8 rounded-none bg-[#1a140f] border border-[#2e2116] text-[#c59b27] shrink-0">
                       <ChevronDown
                         className={`w-4 h-4 transition-transform duration-300 ${
-                          isExpanded ? "rotate-180 text-[#d4af37]" : ""
+                          isExpanded ? "rotate-180 text-[#A6F0CF]" : ""
                         }`}
                       />
                     </div>
@@ -246,7 +246,7 @@ export function FAQContent({
                             e.stopPropagation();
                             if (onSelectFaq) onSelectFaq(faq);
                           }}
-                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-none bg-[#211810] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono tracking-wider text-[#d4af37] transition-all hover:border-[#d4af37] shadow-[2px_2px_0px_#250d38]"
+                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-none bg-[#211810] hover:bg-[#2e2116] border border-[#4a3826] text-xs font-mono tracking-wider text-[#A6F0CF] transition-all hover:border-[#A6F0CF] shadow-[2px_2px_0px_#250d38]"
                         >
                           <Sparkles className="w-3.5 h-3.5" />
                           <span>SEND TO FLAP BOARD</span>

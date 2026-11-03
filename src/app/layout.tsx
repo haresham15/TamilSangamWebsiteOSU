@@ -148,7 +148,7 @@ const spaceMono = Space_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#161210",
+  themeColor: "#140C20",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,

@@ -70,25 +70,25 @@ export const SubscribePopover: React.FC<SubscribePopoverProps> = ({
           playClick();
           setIsOpen(!isOpen);
         }}
-        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAF9F6] hover:bg-[#F4EFE6] text-[#2A2825] border border-[#2A2825]/20 hover:border-[#B85C38] text-xs font-sans font-medium transition-all shadow-sm cursor-pointer min-h-[44px]"
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#140C20] hover:bg-[#25173B] text-[#F4F0FA] border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] text-xs font-sans font-medium transition-all shadow-sm cursor-pointer min-h-[44px]"
       >
-        <CalendarPlus className="w-4 h-4 text-[#B85C38]" />
+        <CalendarPlus className="w-4 h-4 text-[#A6F0CF]" />
         <span>
           {locale === "ta"
             ? "நாட்காட்டியைப் பின்தொடர்"
             : "Subscribe to the Sangam calendar"}
         </span>
-        <ChevronDown className={`w-3.5 h-3.5 text-[#57524C] transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-3.5 h-3.5 text-[#C4B7D7] transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {/* Popover Card */}
       {isOpen && (
-        <div className="absolute right-0 sm:right-auto sm:left-0 mt-2 w-80 bg-[#FAF9F6] border border-[#2A2825]/15 rounded-2xl shadow-xl z-50 p-4 text-left space-y-3 animate-in fade-in zoom-in-95 duration-150">
-          <div className="border-b border-[#2A2825]/10 pb-2">
-            <h4 className="font-serif text-sm font-semibold text-[#2A2825]">
+        <div className="absolute right-0 sm:right-auto sm:left-0 mt-2 w-80 bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-2xl shadow-xl z-50 p-4 text-left space-y-3 animate-in fade-in zoom-in-95 duration-150">
+          <div className="border-b border-[rgba(125,96,166,0.25)] pb-2">
+            <h4 className="font-serif text-sm font-semibold text-[#F4F0FA]">
               {locale === "ta" ? "நேரலை நாட்காட்டி சந்தா" : "Live Calendar Sync"}
             </h4>
-            <p className="text-[11px] font-sans text-[#57524C] mt-0.5 leading-snug">
+            <p className="text-[11px] font-sans text-[#C4B7D7] mt-0.5 leading-snug">
               {locale === "ta"
                 ? "ஒருமுறை இணைந்தால் அனைத்து புதிய நிகழ்வுகளும் உங்கள் நாட்காட்டியில் தானாக வந்து சேரும்."
                 : "Subscribe once and all new events and updates sync directly to your personal phone or laptop calendar."}
@@ -105,7 +105,7 @@ export const SubscribePopover: React.FC<SubscribePopoverProps> = ({
                 playWoodClick();
                 setIsOpen(false);
               }}
-              className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#F4EFE6] text-[#2A2825] transition-colors group text-xs font-sans"
+              className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#25173B] text-[#F4F0FA] transition-colors group text-xs font-sans"
             >
               <div className="flex items-center gap-2.5">
                 <div className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200/60 flex items-center justify-center text-blue-600 font-semibold text-xs">
@@ -113,10 +113,10 @@ export const SubscribePopover: React.FC<SubscribePopoverProps> = ({
                 </div>
                 <div>
                   <span className="font-medium block">Google Calendar</span>
-                  <span className="text-[10px] text-[#57524C]">One-tap web add</span>
+                  <span className="text-[10px] text-[#C4B7D7]">One-tap web add</span>
                 </div>
               </div>
-              <ExternalLink className="w-3.5 h-3.5 text-[#57524C] group-hover:text-[#B85C38]" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#C4B7D7] group-hover:text-[#A6F0CF]" />
             </a>
 
             {/* 2. Apple / Outlook (webcal) */}
@@ -126,28 +126,28 @@ export const SubscribePopover: React.FC<SubscribePopoverProps> = ({
                 playWoodClick();
                 setIsOpen(false);
               }}
-              className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#F4EFE6] text-[#2A2825] transition-colors group text-xs font-sans"
+              className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#25173B] text-[#F4F0FA] transition-colors group text-xs font-sans"
             >
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-[#2A2825]">
+                <div className="w-7 h-7 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-[#F4F0FA]">
                   <Calendar className="w-3.5 h-3.5" />
                 </div>
                 <div>
                   <span className="font-medium block">Apple & Outlook</span>
-                  <span className="text-[10px] text-[#57524C]">Direct webcal protocol</span>
+                  <span className="text-[10px] text-[#C4B7D7]">Direct webcal protocol</span>
                 </div>
               </div>
-              <ExternalLink className="w-3.5 h-3.5 text-[#57524C] group-hover:text-[#B85C38]" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#C4B7D7] group-hover:text-[#A6F0CF]" />
             </a>
 
             {/* 3. Copy Link */}
             <button
               type="button"
               onClick={handleCopyLink}
-              className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-[#F4EFE6] text-[#2A2825] transition-colors group text-xs font-sans cursor-pointer"
+              className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-[#25173B] text-[#F4F0FA] transition-colors group text-xs font-sans cursor-pointer"
             >
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-[#FAF9F6] border border-[#2A2825]/20 flex items-center justify-center text-[#B85C38]">
+                <div className="w-7 h-7 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.25)] flex items-center justify-center text-[#A6F0CF]">
                   {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                 </div>
                 <div>
@@ -160,7 +160,7 @@ export const SubscribePopover: React.FC<SubscribePopoverProps> = ({
                       ? "iCal இணைப்பை நகலெடு"
                       : "Copy iCal Link"}
                   </span>
-                  <span className="text-[10px] text-[#57524C]">Standard RFC 5545 feed</span>
+                  <span className="text-[10px] text-[#C4B7D7]">Standard RFC 5545 feed</span>
                 </div>
               </div>
               {copied && <span className="text-[10px] font-mono text-emerald-600 font-semibold">COPIED</span>}

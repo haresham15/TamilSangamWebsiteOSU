@@ -83,14 +83,14 @@ export function AatamMovementStudio() {
     <div className="w-full space-y-10">
       {/* Studio Eyebrow & Description */}
       <div className="space-y-3 max-w-2xl">
-        <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#C85A32]">
-          <span className="w-2 h-2 rounded-full bg-[#C85A32] animate-pulse" />
+        <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#A6F0CF]">
+          <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-pulse" />
           <span>Interactive Choreography Studio · நடனக் களங்கள்</span>
         </div>
-        <h3 className="font-serif text-3xl sm:text-4xl text-[#161210] font-normal leading-tight">
+        <h3 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal leading-tight">
           The Three Movement Archetypes
         </h3>
-        <p className="font-sans text-sm sm:text-base text-[#57524C] leading-relaxed">
+        <p className="font-sans text-sm sm:text-base text-[#C4B7D7] leading-relaxed">
           Hover or tap any movement form to explore its rhythm profile, performance context, and how you can lead or participate in it for upcoming campus events.
         </p>
       </div>
@@ -109,25 +109,25 @@ export function AatamMovementStudio() {
               className="h-full"
             >
               <SpotlightCard
-                spotlightColor="rgba(200, 90, 50, 0.16)"
-                goldColor="rgba(212, 175, 55, 0.12)"
+                spotlightColor="rgba(166, 240, 207, 0.16)"
+                goldColor="rgba(242, 107, 181, 0.12)"
                 radius={360}
                 className={`h-full cursor-pointer transition-all duration-300 rounded-2xl p-6 sm:p-8 flex flex-col justify-between border ${
                   isSelected
-                    ? "bg-[#FAF7F2] border-[#C85A32] shadow-xl shadow-[#C85A32]/10"
-                    : "bg-[#FAF8F5] border-[#161210]/10 hover:border-[#C85A32]/40 shadow-sm"
+                    ? "bg-[#140C20] border-[#A6F0CF] shadow-xl shadow-[#F26BB5]/15"
+                    : "bg-[#140C20] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 shadow-sm"
                 }`}
                 onClick={() => handleCardClick(movement.id)}
               >
                 <div className="space-y-6">
                   {/* Top Badge & Metric */}
-                  <div className="flex items-center justify-between gap-4 border-b border-[#161210]/10 pb-4">
-                    <span className="text-[11px] font-mono tracking-widest uppercase font-semibold text-[#C85A32]">
+                  <div className="flex items-center justify-between gap-4 border-b border-[rgba(125,96,166,0.25)] pb-4">
+                    <span className="text-[11px] font-mono tracking-widest uppercase font-semibold text-[#A6F0CF]">
                       {movement.bpm}
                     </span>
                     <span
                       lang="ta"
-                      className="text-xs font-tamil text-[#8C827A] font-medium"
+                      className="text-xs font-tamil text-[#C4B7D7] font-medium"
                       style={{ letterSpacing: 0 }}
                     >
                       {movement.tagTa}
@@ -136,58 +136,58 @@ export function AatamMovementStudio() {
 
                   {/* Icon & Title */}
                   <div className="space-y-2">
-                    <div className="w-10 h-10 rounded-full bg-[#C85A32]/10 flex items-center justify-center text-[#C85A32] mb-3">
+                    <div className="w-10 h-10 rounded-full bg-[#F26BB5]/10 flex items-center justify-center text-[#A6F0CF] mb-3">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <h4 className="font-serif text-2xl text-[#161210] font-normal leading-snug">
+                    <h4 className="font-serif text-2xl text-[#F4F0FA] font-normal leading-snug">
                       {movement.titleEn}
                     </h4>
-                    <p lang="ta" className="font-tamil text-base text-[#C85A32] font-medium leading-relaxed">
+                    <p lang="ta" className="font-tamil text-base text-[#A6F0CF] font-medium leading-relaxed">
                       {movement.titleTa}
                     </p>
                   </div>
 
                   {/* Rhythm Sonic Bar */}
-                  <div className="p-3 rounded-lg bg-[#F2EAE0]/60 border border-[#161210]/5 space-y-1">
-                    <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-[#8C827A]">
+                  <div className="p-3 rounded-lg bg-[#25173B]/60 border border-[rgba(125,96,166,0.25)] space-y-1">
+                    <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-[#C4B7D7]">
                       <span>Sonic Texture</span>
                       {isSelected && (
-                        <span className="flex items-center gap-1 text-[#C85A32]">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#C85A32] animate-ping" />
+                        <span className="flex items-center gap-1 text-[#A6F0CF]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] animate-ping" />
                           <span>Active Beat</span>
                         </span>
                       )}
                     </div>
-                    <p className="text-xs font-mono font-medium text-[#161210]">
+                    <p className="text-xs font-mono font-medium text-[#F4F0FA]">
                       {movement.rhythmNote}
                     </p>
                   </div>
 
                   {/* Description */}
-                  <p className="font-sans text-xs sm:text-sm text-[#57524C] leading-relaxed">
+                  <p className="font-sans text-xs sm:text-sm text-[#C4B7D7] leading-relaxed">
                     {movement.description}
                   </p>
 
                   {/* Living Blueprint Integration Box */}
-                  <div className="pt-4 border-t border-[#161210]/10 space-y-1.5">
-                    <span className="text-[10px] font-mono uppercase tracking-widest font-bold text-[#161210] block">
+                  <div className="pt-4 border-t border-[rgba(125,96,166,0.25)] space-y-1.5">
+                    <span className="text-[10px] font-mono uppercase tracking-widest font-bold text-[#F4F0FA] block">
                       Campus Blueprint 2026–2027:
                     </span>
-                    <p className="text-xs font-sans text-[#57524C] leading-relaxed">
+                    <p className="text-xs font-sans text-[#C4B7D7] leading-relaxed">
                       {movement.upcomingIntegration}
                     </p>
                   </div>
                 </div>
 
                 {/* Bottom Pitch Link */}
-                <div className="pt-6 mt-6 border-t border-[#161210]/10">
+                <div className="pt-6 mt-6 border-t border-[rgba(125,96,166,0.25)]">
                   <Link
                     href={`/ideas?category=EVENT+IDEA&pillar=aatam&prompt=${encodeURIComponent(movement.prompt)}`}
                     onClick={(e) => {
                       e.stopPropagation();
                       audioLayer.playTapeClack();
                     }}
-                    className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider font-semibold text-[#C85A32] hover:text-[#9A3C1E] transition-colors"
+                    className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider font-semibold text-[#A6F0CF] hover:text-[#9A3C1E] transition-colors"
                   >
                     <span>Pitch This Movement</span>
                     <ArrowRight className="w-3.5 h-3.5" />

@@ -116,8 +116,8 @@ export function EditorialBackgroundCanvas({
   }, [reducedMotion, isLiteMode]);
 
   const isEspresso = variant === "espresso";
-  const hairlineColor = isEspresso ? "rgba(250, 246, 240, 0.06)" : "rgba(22, 18, 16, 0.045)";
-  const dotColor = isEspresso ? "rgba(212, 175, 55, 0.09)" : "rgba(200, 90, 50, 0.085)";
+  const hairlineColor = isEspresso ? "rgba(125, 96, 166, 0.15)" : "rgba(125, 96, 166, 0.15)";
+  const dotColor = isEspresso ? "rgba(166, 240, 207, 0.12)" : "rgba(166, 240, 207, 0.12)";
 
   return (
     <div
@@ -133,12 +133,12 @@ export function EditorialBackgroundCanvas({
         className="absolute inset-0 transition-opacity duration-700"
         style={{
           background: isEspresso
-            ? `radial-gradient(650px circle at var(--mouse-x, 50%) var(--mouse-y, 30%), rgba(212, 175, 55, 0.085), rgba(200, 90, 50, 0.035) 45%, transparent 75%),
-               radial-gradient(900px ellipse at 85% 15%, rgba(212, 175, 55, 0.06), transparent 70%),
-               radial-gradient(900px ellipse at 15% 85%, rgba(200, 90, 50, 0.05), transparent 70%)`
-            : `radial-gradient(650px circle at var(--mouse-x, 50%) var(--mouse-y, 30%), rgba(212, 175, 55, 0.065), rgba(200, 90, 50, 0.03) 45%, transparent 75%),
-               radial-gradient(900px ellipse at 85% 15%, rgba(255, 184, 77, 0.045), transparent 70%),
-               radial-gradient(900px ellipse at 15% 85%, rgba(200, 90, 50, 0.04), transparent 70%)`,
+            ? `radial-gradient(650px circle at var(--mouse-x, 50%) var(--mouse-y, 30%), rgba(166, 240, 207, 0.08), rgba(242, 107, 181, 0.04) 45%, transparent 75%),
+               radial-gradient(900px ellipse at 85% 15%, rgba(166, 240, 207, 0.05), transparent 70%),
+               radial-gradient(900px ellipse at 15% 85%, rgba(125, 96, 166, 0.06), transparent 70%)`
+            : `radial-gradient(650px circle at var(--mouse-x, 50%) var(--mouse-y, 30%), rgba(166, 240, 207, 0.06), rgba(242, 107, 181, 0.03) 45%, transparent 75%),
+               radial-gradient(900px ellipse at 85% 15%, rgba(79, 214, 224, 0.04), transparent 70%),
+               radial-gradient(900px ellipse at 15% 85%, rgba(125, 96, 166, 0.05), transparent 70%)`,
         }}
       />
 
@@ -195,7 +195,7 @@ export function EditorialBackgroundCanvas({
             lang="ta"
             className="absolute top-[14%] right-[5%] font-serif font-light text-[18rem] md:text-[24rem] leading-none select-none pointer-events-none opacity-[0.045] text-transparent"
             style={{
-              WebkitTextStroke: isEspresso ? "1.5px rgba(212, 175, 55, 0.4)" : "1.5px rgba(200, 90, 50, 0.45)",
+              WebkitTextStroke: isEspresso ? "1.5px rgba(166, 240, 207, 0.3)" : "1.5px rgba(166, 240, 207, 0.3)",
             }}
           >
             அ
@@ -216,7 +216,7 @@ export function EditorialBackgroundCanvas({
             lang="ta"
             className="absolute top-[48%] left-[4%] font-serif font-light text-[18rem] md:text-[24rem] leading-none select-none pointer-events-none opacity-[0.045] text-transparent"
             style={{
-              WebkitTextStroke: isEspresso ? "1.5px rgba(212, 175, 55, 0.4)" : "1.5px rgba(200, 90, 50, 0.45)",
+              WebkitTextStroke: isEspresso ? "1.5px rgba(166, 240, 207, 0.3)" : "1.5px rgba(166, 240, 207, 0.3)",
             }}
           >
             ழ
@@ -237,7 +237,7 @@ export function EditorialBackgroundCanvas({
             lang="ta"
             className="absolute top-[82%] right-[5%] font-serif font-light text-[18rem] md:text-[24rem] leading-none select-none pointer-events-none opacity-[0.04] text-transparent"
             style={{
-              WebkitTextStroke: isEspresso ? "1.5px rgba(212, 175, 55, 0.4)" : "1.5px rgba(200, 90, 50, 0.45)",
+              WebkitTextStroke: isEspresso ? "1.5px rgba(166, 240, 207, 0.3)" : "1.5px rgba(166, 240, 207, 0.3)",
             }}
           >
             ம்
@@ -267,7 +267,7 @@ function SikkuKolamSvg() {
   return (
     <svg
       viewBox="0 0 560 560"
-      className="w-full h-full text-[#C85A32]"
+      className="w-full h-full text-[#A6F0CF]"
       fill="none"
       stroke="currentColor"
       strokeWidth="0.85"

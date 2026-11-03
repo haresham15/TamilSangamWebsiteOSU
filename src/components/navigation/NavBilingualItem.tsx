@@ -52,14 +52,14 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
             ? `${locale === "ta" ? route.ta : route.en}, new puzzles available`
             : undefined
         }
-        className={`relative flex flex-col items-center justify-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-full px-2.5 py-1 transition-all duration-200 ${
+        className={`relative flex flex-col items-center justify-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] rounded-full px-2.5 py-1 transition-all duration-200 ${
           isActive
             ? isDarkHero
               ? "bg-white/[0.12] border border-white/10 shadow-xs"
-              : "bg-[#EFECE6] border border-[#E0D7C9] shadow-xs"
+              : "bg-[#25173B] border border-[rgba(125,96,166,0.25)] shadow-xs"
             : isDarkHero
             ? "hover:bg-white/[0.08]"
-            : "hover:bg-[#2A2825]/[0.05]"
+            : "hover:bg-[#25173B]/[0.05]"
         }`}
       >
         {/* Primary Navigation Text */}
@@ -67,11 +67,11 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
           className={`font-sans text-[12px] xl:text-[13px] leading-tight tracking-tight whitespace-nowrap transition-colors duration-200 inline-flex items-center gap-1.5 ${
             isDarkHero
               ? isActive
-                ? "font-semibold text-[#FAF9F6]"
-                : "font-medium text-[#FAF9F6]/85 group-hover:text-white"
+                ? "font-semibold text-[#F4F0FA]"
+                : "font-medium text-[#C4B7D7] group-hover:text-white"
               : isActive
-              ? "font-semibold text-[#181716]"
-              : "font-medium text-[#2C2A29] group-hover:text-[#161210]"
+              ? "font-semibold text-[#F4F0FA]"
+              : "font-medium text-[#F4F0FA] group-hover:text-[#F4F0FA]"
           }`}
         >
           {locale === "ta" ? route.ta : route.en}
@@ -81,13 +81,13 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
             <span
               className={`inline-flex items-center gap-1 font-mono text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full transition-all ${
                 isDarkHero
-                  ? "bg-[#D4AF37]/25 text-[#F5DE88] border border-[#D4AF37]/60 shadow-[0_0_8px_rgba(212,175,55,0.4)]"
-                  : "bg-[#B85C38]/12 text-[#B85C38] border border-[#B85C38]/30 shadow-[0_0_6px_rgba(184,92,56,0.2)]"
+                  ? "bg-[#A6F0CF]/25 text-[#A6F0CF] border border-[#A6F0CF]/35 shadow-[0_0_8px_rgba(166,240,207,0.4)]"
+                  : "bg-[#F26BB5]/12 text-[#A6F0CF] border border-[#A6F0CF]/35 shadow-[0_0_6px_rgba(242,107,181,0.25)]"
               }`}
             >
               <span
                 className={`size-1 rounded-full ${
-                  isDarkHero ? "bg-[#F5DE88]" : "bg-[#B85C38]"
+                  isDarkHero ? "bg-[#F5DE88]" : "bg-[#A6F0CF]"
                 } animate-pulse`}
                 aria-hidden="true"
               />
@@ -97,7 +97,7 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
             route.badge &&
             gamesUnsolved && (
               <span
-                className="size-[5px] rounded-full bg-[#D4AF37] ring-1 ring-[#161210] shadow-[0_0_4px_#D4AF37] animate-pulse"
+                className="size-[5px] rounded-full bg-[#A6F0CF] ring-1 ring-[#140C20] shadow-[0_0_4px_#A6F0CF] animate-pulse"
                 aria-hidden="true"
               />
             )
@@ -111,11 +111,11 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
           className={`font-tamil text-[9px] xl:text-[9.5px] leading-none mt-0.5 whitespace-nowrap transition-all duration-200 pointer-events-none ${
             isDarkHero
               ? isActive
-                ? "text-[#E5A93C] font-semibold opacity-100"
-                : "text-[#E5A93C]/75 font-medium opacity-75"
+                ? "text-[#A6F0CF] font-semibold opacity-100"
+                : "text-[#A6F0CF]/75 font-medium opacity-75"
               : isActive
-              ? "text-[#8C4A27] font-semibold opacity-100"
-              : "text-[#B8866B] font-medium opacity-80"
+              ? "text-[#A6F0CF] font-semibold opacity-100"
+              : "text-[#A6F0CF] font-medium opacity-80"
           }`}
         >
           {locale === "ta" ? route.en : route.ta}

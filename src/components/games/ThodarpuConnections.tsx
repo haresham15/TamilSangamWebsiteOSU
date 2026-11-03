@@ -21,28 +21,28 @@ interface ThodarpuConnectionsProps {
 const TIER_COLORS = {
   1: {
     bg: "bg-[#E8B94F]",
-    text: "text-[#161210]",
-    border: "border-[#D4AF37]",
+    text: "text-[#F4F0FA]",
+    border: "border-[#A6F0CF]",
     label: "Straightforward · எளிது",
     emoji: "🟨",
   },
   2: {
     bg: "bg-[#3D7A5A]",
-    text: "text-[#FAF6F0]",
+    text: "text-[#F4F0FA]",
     border: "border-[#2E6F4E]",
     label: "Medium · நடுத்தரம்",
     emoji: "🟩",
   },
   3: {
     bg: "bg-[#B24A25]", // Semman Dark (5.00:1 contrast, D-13 resolved)
-    text: "text-[#FAF6F0]",
+    text: "text-[#F4F0FA]",
     border: "border-[#8E3416]",
     label: "Challenging · கடினம்",
     emoji: "🟧",
   },
   4: {
     bg: "bg-[#3B4978]",
-    text: "text-[#FAF6F0]",
+    text: "text-[#F4F0FA]",
     border: "border-[#2C375D]",
     label: "Tricky / Wordplay · நுட்பம்",
     emoji: "🟦",
@@ -275,7 +275,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center select-none">
       {/* Category Instruction */}
-      <p className="text-xs sm:text-sm font-sans text-[#161210]/75 text-center mb-4">
+      <p className="text-xs sm:text-sm font-sans text-[#F4F0FA]/75 text-center mb-4">
         Create 4 groups of 4 culturally connected tiles · 4 பொருத்தமான தொகுதிகளை உருவாக்கவும்
       </p>
 
@@ -287,7 +287,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
-              className="bg-[#161210] text-[#FAF6F0] px-4 py-1.5 rounded-full text-xs font-semibold shadow-lg border border-[#D4AF37]/50"
+              className="bg-[#140C20] text-[#F4F0FA] px-4 py-1.5 rounded-full text-xs font-semibold shadow-lg border border-[#A6F0CF]/35"
             >
               {toastMessage}
             </motion.div>
@@ -341,8 +341,8 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
                 onClick={() => toggleSelect(tile.id)}
                 className={`aspect-4/3 rounded-xl p-2.5 flex flex-col items-center justify-center text-center transition-all duration-150 relative ${
                   isSelected
-                    ? "bg-[#161210] text-[#FAF6F0] shadow-md scale-[1.02]"
-                    : "bg-[#F2EAE0] hover:bg-[#EBE0D2] text-[#161210] border border-[#161210]/15"
+                    ? "bg-[#140C20] text-[#F4F0FA] shadow-md scale-[1.02]"
+                    : "bg-[#25173B] hover:bg-[#EBE0D2] text-[#F4F0FA] border border-[rgba(125,96,166,0.25)]"
                 }`}
               >
                 <span className="font-bold text-xs sm:text-sm tracking-wide leading-snug">
@@ -351,7 +351,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
                 <span
                   lang="ta"
                   className={`font-tamil text-[10px] mt-0.5 leading-tight ${
-                    isSelected ? "text-[#FAF6F0]/75" : "text-[#161210]/60"
+                    isSelected ? "text-[#C4B7D7]" : "text-[#F4F0FA]/60"
                   }`}
                 >
                   {tile.termTa}
@@ -359,7 +359,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
 
                 {/* Cultural Hint Popover Badge */}
                 {showHints && tile.hint && (
-                  <span className="absolute -top-1.5 -right-1.5 bg-[#D4AF37] text-[#161210] text-[9px] px-1.5 py-0.5 rounded-full font-mono font-bold shadow-xs">
+                  <span className="absolute -top-1.5 -right-1.5 bg-[#A6F0CF] text-[#140C20] text-[9px] px-1.5 py-0.5 rounded-full font-mono font-bold shadow-xs">
                     💡 {tile.hint}
                   </span>
                 )}
@@ -372,7 +372,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
       {/* Mistake Dots Ledger */}
       {!isGameOver && (
         <div className="flex items-center gap-2 mb-6">
-          <span className="text-xs font-mono text-[#161210]/70 font-medium">
+          <span className="text-xs font-mono text-[#F4F0FA]/70 font-medium">
             Mistakes remaining · வாய்ப்புகள்:
           </span>
           <div className="flex gap-1.5">
@@ -380,7 +380,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
               <span
                 key={idx}
                 className={`text-sm transition-opacity duration-200 ${
-                  idx < mistakesRemaining ? "text-[#C85A32] opacity-100" : "text-[#161210]/20 opacity-40"
+                  idx < mistakesRemaining ? "text-[#A6F0CF] opacity-100" : "text-[#F4F0FA]/20 opacity-40"
                 }`}
               >
                 ❖
@@ -395,7 +395,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
         <div className="flex flex-wrap items-center justify-center gap-2.5">
           <button
             onClick={handleShuffle}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-[#161210]/20 bg-[#FAF6F0] hover:bg-[#F2EAE0] text-xs font-semibold text-[#161210] transition-colors"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-[rgba(125,96,166,0.25)] bg-[#140C20] hover:bg-[#25173B] text-xs font-semibold text-[#F4F0FA] transition-colors"
           >
             <Shuffle className="size-3.5" />
             <span>Shuffle · கலைத்துப் போடு</span>
@@ -404,7 +404,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
           <button
             onClick={handleDeselectAll}
             disabled={selectedIds.length === 0}
-            className="px-4 py-2.5 rounded-xl border border-[#161210]/20 bg-[#FAF6F0] hover:bg-[#F2EAE0] disabled:opacity-40 text-xs font-semibold text-[#161210] transition-colors"
+            className="px-4 py-2.5 rounded-xl border border-[rgba(125,96,166,0.25)] bg-[#140C20] hover:bg-[#25173B] disabled:opacity-40 text-xs font-semibold text-[#F4F0FA] transition-colors"
           >
             Deselect All · நீக்கு
           </button>
@@ -413,8 +413,8 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
             onClick={() => setShowHints(!showHints)}
             className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl border text-xs font-semibold transition-colors ${
               showHints
-                ? "bg-[#D4AF37] text-[#161210] border-[#D4AF37]"
-                : "bg-[#FAF6F0] text-[#161210]/80 border-[#161210]/20 hover:bg-[#F2EAE0]"
+                ? "bg-[#A6F0CF] text-[#140C20] border-[#A6F0CF]"
+                : "bg-[#140C20] text-[#F4F0FA]/80 border-[rgba(125,96,166,0.25)] hover:bg-[#25173B]"
             }`}
           >
             <Lightbulb className="size-3.5" />
@@ -424,7 +424,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
           <button
             onClick={handleSubmit}
             disabled={selectedIds.length !== 4}
-            className="px-6 py-2.5 rounded-xl bg-[#161210] hover:bg-[#C85A32] disabled:opacity-40 text-[#FAF6F0] text-xs font-bold transition-colors shadow-xs"
+            className="px-6 py-2.5 rounded-xl bg-[#140C20] hover:bg-[#A6F0CF] hover:text-[#140C20] disabled:opacity-40 text-[#F4F0FA] text-xs font-bold transition-colors shadow-xs"
           >
             Submit · சரிபார்
           </button>
@@ -434,25 +434,25 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full flex flex-col items-center bg-[#F2EAE0] p-6 rounded-2xl border border-[#D4AF37]/50 shadow-xl"
+          className="w-full flex flex-col items-center bg-[#25173B] p-6 rounded-2xl border border-[#A6F0CF]/35 shadow-xl"
         >
           <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="size-5 text-[#D4AF37]" />
-            <h3 className="font-serif font-bold text-xl text-[#161210]">
+            <Sparkles className="size-5 text-[#A6F0CF]" />
+            <h3 className="font-serif font-bold text-xl text-[#F4F0FA]">
               {solvedCategories.length === 4 && mistakesRemaining > 0
                 ? "Round Complete · வெற்றி!"
                 : "Edition Finished · நிறைவு"}
             </h3>
           </div>
 
-          <p className="text-xs font-sans text-[#161210]/75 text-center mb-4">
+          <p className="text-xs font-sans text-[#F4F0FA]/75 text-center mb-4">
             {edition.monthEn} {edition.year} Edition · {guessHistory.length} guesses used
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3">
             <button
               onClick={copyShareResults}
-              className="flex items-center gap-2 bg-[#161210] hover:bg-[#C85A32] text-[#FAF6F0] px-5 py-2.5 rounded-full text-xs font-semibold transition-colors shadow-md"
+              className="flex items-center gap-2 bg-[#140C20] hover:bg-[#A6F0CF] text-[#140C20] px-5 py-2.5 rounded-full text-xs font-semibold transition-colors shadow-md"
             >
               {copiedShare ? (
                 <>
@@ -471,7 +471,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
               href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-mono text-[#161210]/80 hover:text-[#C85A32] underline underline-offset-4 px-2 py-1 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-mono text-[#F4F0FA]/80 hover:text-[#A6F0CF] underline underline-offset-4 px-2 py-1 transition-colors"
             >
               Post in OSU TS GroupMe ↗
             </a>
@@ -489,7 +489,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
                 setMistakesRemaining(4);
                 setGuessHistory([]);
               }}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-mono text-[#161210]/70 hover:text-[#161210]"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-mono text-[#F4F0FA]/70 hover:text-[#F4F0FA]"
             >
               <RotateCcw className="size-3.5" />
               <span>Play Again</span>

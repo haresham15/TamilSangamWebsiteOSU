@@ -45,11 +45,11 @@ export function ThirukkuralAudioButton({
   // Subtle, curated OKLCH-aligned tone variants
   const toneClasses = {
     gold: speaking
-      ? "bg-[#E5A93C]/25 text-[#FFD166] border-[#E5A93C]/80 shadow-[0_0_12px_rgba(229,169,60,0.35)] ring-1 ring-[#E5A93C]/50"
-      : "bg-[#E5A93C]/10 text-[#E5A93C]/85 border-[#E5A93C]/25 hover:bg-[#E5A93C]/20 hover:border-[#E5A93C]/50 hover:text-[#FFD166] shadow-sm",
+      ? "bg-[#A6F0CF]/25 text-[#A6F0CF] border-[#A6F0CF]/35 shadow-[0_0_12px_rgba(166,240,207,0.35)] ring-1 ring-[#A6F0CF]/50"
+      : "bg-[#A6F0CF]/10 text-[#A6F0CF]/85 border-[#A6F0CF]/35 hover:bg-[#A6F0CF]/20 hover:border-[#A6F0CF]/35 hover:text-[#A6F0CF] shadow-sm",
     light: speaking
-      ? "bg-[#B85C38]/25 text-[#B85C38] border-[#B85C38]/80 shadow-[0_0_10px_rgba(184,92,56,0.3)] ring-1 ring-[#B85C38]/50"
-      : "bg-[#B85C38]/10 text-[#B85C38]/85 border-[#B85C38]/25 hover:bg-[#B85C38]/20 hover:border-[#B85C38]/45 hover:text-[#944426] shadow-sm",
+      ? "bg-[#F26BB5]/25 text-[#A6F0CF] border-[#A6F0CF]/35 shadow-[0_0_10px_rgba(242,107,181,0.3)] ring-1 ring-[#F26BB5]/50"
+      : "bg-[#F26BB5]/10 text-[#A6F0CF]/85 border-[#A6F0CF]/35 hover:bg-[#7AE7B5]/20 hover:border-[#A6F0CF]/35 hover:text-[#944426] shadow-sm",
     dark: speaking
       ? "bg-amber-400/25 text-amber-300 border-amber-400/70 shadow-[0_0_12px_rgba(245,158,11,0.35)] ring-1 ring-amber-400/50"
       : "bg-white/[0.08] text-stone-200 border-white/20 hover:bg-white/[0.16] hover:border-white/40 hover:text-white shadow-sm",
@@ -163,7 +163,7 @@ export function PronounceableQuote({
   const speakingRingClasses = speaking
     ? tone === "dark"
       ? "ring-1.5 ring-amber-400/60 shadow-[0_0_18px_rgba(245,158,11,0.2)]"
-      : "ring-1.5 ring-[#B85C38]/60 shadow-[0_0_16px_rgba(184,92,56,0.18)]"
+      : "ring-1.5 ring-[#F26BB5]/60 shadow-[0_0_16px_rgba(242,107,181,0.25)]"
     : "hover:ring-1 hover:ring-current/15";
 
   return (

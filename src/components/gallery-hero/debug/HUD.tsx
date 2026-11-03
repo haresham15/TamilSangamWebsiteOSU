@@ -70,9 +70,9 @@ export function DebugHUD() {
   return (
     <aside
       aria-label="Fretboard Highway Developer Telemetry"
-      className="fixed top-24 right-4 z-50 bg-[#0F0814]/90 border border-[#FFB84D]/50 text-[#F5E6C8] font-mono text-xs p-4 rounded-none shadow-[4px_4px_0px_#4c2472] w-84 space-y-3 pointer-events-auto backdrop-blur-md"
+      className="fixed top-24 right-4 z-50 bg-[#0F0814]/90 border border-[#A6F0CF]/50 text-[#F5E6C8] font-mono text-xs p-4 rounded-none shadow-[4px_4px_0px_#4c2472] w-84 space-y-3 pointer-events-auto backdrop-blur-md"
     >
-      <div className="flex items-center justify-between border-b border-[#FFB84D]/30 pb-1.5 text-[11px] font-bold text-[#FFB84D]">
+      <div className="flex items-center justify-between border-b border-[#A6F0CF]/30 pb-1.5 text-[11px] font-bold text-[#A6F0CF]">
         <span>FRETBOARD HIGHWAY · TELEMETRY</span>
         <span className="px-1.5 py-0.5 bg-[#4c2472] text-[#55CCA2] text-[10px]">
           ERA {currentEra}
@@ -89,7 +89,7 @@ export function DebugHUD() {
         <div className="text-right">{cameraS.toFixed(2)} su</div>
 
         <div className="text-stone-400">Current Fret:</div>
-        <div className="text-right font-bold text-[#FFB84D]">
+        <div className="text-right font-bold text-[#A6F0CF]">
           {currentFret > 0 ? `Fret ${currentFret}` : "Nut (s = 0)"}
         </div>
 
@@ -100,7 +100,7 @@ export function DebugHUD() {
       </div>
 
       {/* String Energy Meters (§3.3, §3.4) */}
-      <div className="space-y-1 pt-1.5 border-t border-[#FFB84D]/20">
+      <div className="space-y-1 pt-1.5 border-t border-[#A6F0CF]/20">
         <div className="flex justify-between text-[10px] text-stone-400 font-bold">
           <span>6-STRING KINETIC ENERGY</span>
           <span className="text-[#00FF66]">CPU/GPU SYNCD</span>
@@ -144,7 +144,7 @@ export function DebugHUD() {
       )}
 
       {/* Interactive Telemetry Scrubber Slider */}
-      <div className="space-y-1 pt-1 border-t border-[#FFB84D]/20">
+      <div className="space-y-1 pt-1 border-t border-[#A6F0CF]/20">
         <div className="flex justify-between text-[10px] text-stone-400">
           <label htmlFor="debug-progress-slider">Scrub Position</label>
           <span>p = {progress.toFixed(3)}</span>
@@ -160,30 +160,30 @@ export function DebugHUD() {
             const val = parseFloat(e.target.value);
             setHeroProgress(val);
           }}
-          className="w-full h-1.5 bg-stone-800 rounded-none appearance-none cursor-pointer accent-[#FFB84D]"
+          className="w-full h-1.5 bg-stone-800 rounded-none appearance-none cursor-pointer accent-[#A6F0CF]"
         />
         <div className="flex justify-between text-[9px] text-stone-500 font-mono">
           <button
             onClick={() => setHeroProgress(0)}
-            className="hover:text-[#FFB84D]"
+            className="hover:text-[#A6F0CF]"
           >
             0% (Nut)
           </button>
           <button
             onClick={() => setHeroProgress(0.334)}
-            className="hover:text-[#FFB84D]"
+            className="hover:text-[#A6F0CF]"
           >
             33% (Fret 5)
           </button>
           <button
             onClick={() => setHeroProgress(0.667)}
-            className="hover:text-[#FFB84D]"
+            className="hover:text-[#A6F0CF]"
           >
             67% (Fret 12)
           </button>
           <button
             onClick={() => setHeroProgress(1.0)}
-            className="hover:text-[#FFB84D]"
+            className="hover:text-[#A6F0CF]"
           >
             100% (Fret 24)
           </button>

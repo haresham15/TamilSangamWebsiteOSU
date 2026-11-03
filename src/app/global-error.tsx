@@ -37,7 +37,7 @@ export default function GlobalError({
             </button>
             <Link
               href="/"
-              style={{ padding: "10px 18px", background: "#faf8f5", color: "#250d38", border: "2px solid #250d38", textDecoration: "none", fontWeight: "bold", fontSize: "12px", textTransform: "uppercase", display: "inline-block" }}
+              style={{ padding: "10px 18px", background: "#140C20", color: "#A6F0CF", border: "2px solid #A6F0CF", textDecoration: "none", fontWeight: "bold", fontSize: "12px", textTransform: "uppercase", display: "inline-block" }}
             >
               Go to Home
             </Link>

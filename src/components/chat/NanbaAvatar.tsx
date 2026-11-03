@@ -32,8 +32,8 @@ export function NanbaAvatar({
       <defs>
         <linearGradient id="nanbaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#FFD666" />
-          <stop offset="50%" stopColor="#E5A93C" />
-          <stop offset="100%" stopColor="#C85A32" />
+          <stop offset="50%" stopColor="#4FD6E0" />
+          <stop offset="100%" stopColor="#F26BB5" />
         </linearGradient>
         <radialGradient id="nanbaBlush" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#FF6B4A" stopOpacity="0.6" />
@@ -42,7 +42,7 @@ export function NanbaAvatar({
       </defs>
 
       {/* Ambient Golden Halo */}
-      <circle cx="16" cy="17" r="14" fill="#E5A93C" fillOpacity="0.18" />
+      <circle cx="16" cy="17" r="14" fill="#4FD6E0" fillOpacity="0.18" />
 
       {/* Cute Flame / Sprout Crest */}
       <path
@@ -68,16 +68,16 @@ export function NanbaAvatar({
         width="21.6"
         height="17.6"
         rx="8.8"
-        fill="#161210"
+        fill="#140C20"
       />
 
       {/* Cute Expressive Twinkling Eyes */}
-      <ellipse cx="11.2" cy="18" rx="2.1" ry="2.7" fill="#FAF7F2" />
-      <circle cx="11.9" cy="17.3" r="1" fill="#161210" />
+      <ellipse cx="11.2" cy="18" rx="2.1" ry="2.7" fill="#F4F0FA" />
+      <circle cx="11.9" cy="17.3" r="1" fill="#140C20" />
       <circle cx="10.5" cy="19.1" r="0.55" fill="#FFE599" />
 
-      <ellipse cx="20.8" cy="18" rx="2.1" ry="2.7" fill="#FAF7F2" />
-      <circle cx="21.5" cy="17.3" r="1" fill="#161210" />
+      <ellipse cx="20.8" cy="18" rx="2.1" ry="2.7" fill="#F4F0FA" />
+      <circle cx="21.5" cy="17.3" r="1" fill="#140C20" />
       <circle cx="20.1" cy="19.1" r="0.55" fill="#FFE599" />
 
       {/* Rose Blush Cheeks */}
@@ -87,13 +87,13 @@ export function NanbaAvatar({
       {/* Sweet Happy Smile */}
       <path
         d="M13.8 21.8 C14.6 23.4 17.4 23.4 18.2 21.8"
-        stroke="#E5A93C"
+        stroke="#4FD6E0"
         strokeWidth="1.4"
         strokeLinecap="round"
       />
 
       {/* Golden Tilak Spark Dot */}
-      <circle cx="16" cy="13.2" r="1" fill="#FFB84D" />
+      <circle cx="16" cy="13.2" r="1" fill="#A6F0CF" />
     </svg>
   );
 }

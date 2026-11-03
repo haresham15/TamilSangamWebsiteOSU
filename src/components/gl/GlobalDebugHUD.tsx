@@ -96,7 +96,7 @@ export function GlobalDebugHUD() {
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-stone-800 pb-1.5 mb-2">
-        <span className="font-bold text-[#FFB84D] tracking-wide text-xs">
+        <span className="font-bold text-[#A6F0CF] tracking-wide text-xs">
           ONE CANVAS · CLOCK HUD
         </span>
         <span className="text-[10px] px-1.5 py-0.5 rounded bg-stone-800 text-stone-300 font-semibold">
@@ -123,7 +123,7 @@ export function GlobalDebugHUD() {
       <div className="border-t border-stone-800/80 pt-1.5 space-y-1 text-[10px]">
         <div className="flex justify-between">
           <span className="text-stone-400">Draw Calls:</span>
-          <span className="text-[#FFB84D] font-medium">{glInfo.calls}</span>
+          <span className="text-[#A6F0CF] font-medium">{glInfo.calls}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-stone-400">Triangles:</span>

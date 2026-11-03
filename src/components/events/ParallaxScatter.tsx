@@ -25,7 +25,7 @@ const PRINT_PROFILES = [
 
 /**
  * ReactBits Parallax Scatter component.
- * Sunlit magazine spread on Warm Ivory (#FAF9F6) with 0px border-radius,
+ * Magazine spread on Royal Violet (#140C20) with 0px border-radius,
  * zero shadows, zero card frames, and differential parallax column drift.
  */
 export function ParallaxScatter({ photos, eventTitle }: ParallaxScatterProps) {
@@ -85,8 +85,8 @@ export function ParallaxScatter({ photos, eventTitle }: ParallaxScatterProps) {
         </div>
 
         {/* Minimal Colophon Caption */}
-        <figcaption className="mt-2 flex items-baseline justify-end text-[11px] font-mono tracking-widest text-hearth-espresso/75 uppercase">
-          <span className="text-[10px] text-hearth-terracotta opacity-0 group-hover:opacity-100 transition-opacity">
+        <figcaption className="mt-2 flex items-baseline justify-end text-[11px] font-mono tracking-widest text-[#F4F0FA]/75 uppercase">
+          <span className="text-[10px] text-[#A6F0CF] opacity-0 group-hover:opacity-100 transition-opacity">
             INSPECT ↗
           </span>
         </figcaption>

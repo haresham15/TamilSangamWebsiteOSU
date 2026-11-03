@@ -38,7 +38,7 @@ const sunBloomShader = {
       float mote2 = sin(centeredUv.y * 32.0 - uTime * 1.2) * cos(centeredUv.x * 28.0 + uTime * 1.1);
       float motes = smoothstep(0.75, 1.0, mote1 * mote2) * 0.25;
 
-      // Palette: Warm Amber (#E8A856) -> Warm Morning Ivory (#FFF8EB) -> Warm Parchment (#FAF7F2)
+      // Palette: Mint Accent (#A6F0CF) -> Royal Violet (#250D40) -> Deep Violet (#140C20)
       vec3 amber = vec3(0.91, 0.66, 0.34);
       vec3 ivory = vec3(1.0, 0.97, 0.92);
       vec3 parchment = vec3(0.98, 0.97, 0.95);
@@ -123,7 +123,7 @@ export function WhiteoutFinale({ scrollProgressRef, gateProgressRef }: WhiteoutF
         <planeGeometry args={[4, 4]} />
         <meshBasicMaterial
           ref={cameraMatRef}
-          color="#FAF7F2"
+          color="#F4F0FA"
           transparent
           opacity={0}
           depthTest={false}

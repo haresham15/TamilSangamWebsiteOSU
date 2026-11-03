@@ -177,7 +177,7 @@ export function NleTimelineLightbox({
             </span>
           </div>
           <span className="text-white/20 hidden md:inline">|</span>
-          <span className="text-[#FFB84D]/75 text-[10px] hidden md:inline">
+          <span className="text-[#A6F0CF]/75 text-[10px] hidden md:inline">
             LAT 40.0067° N · LON 83.0305° W [COLUMBUS, OH]
           </span>
         </div>
@@ -238,7 +238,7 @@ export function NleTimelineLightbox({
 
         {/* Corner Telemetry: Bottom-Left Metadata Badge */}
         <div className="absolute bottom-4 left-4 max-w-lg bg-black/85 backdrop-blur-md p-3 sm:p-4 border border-white/15 text-left pointer-events-auto">
-          <div className="text-[9px] text-[#FFB84D] tracking-widest uppercase mb-1">
+          <div className="text-[9px] text-[#A6F0CF] tracking-widest uppercase mb-1">
             CAM REEL 01 · {photo.eventDate} · SHOT BY {photo.photographer}
           </div>
           <h3 className="text-base sm:text-xl font-bold font-display text-white tracking-tight leading-snug">
@@ -296,7 +296,7 @@ export function NleTimelineLightbox({
         {/* Timeline Header Strip */}
         <div className="flex items-center justify-between text-[10px] text-white/40 pb-1.5 tracking-wider">
           <div className="flex items-center gap-2">
-            <span className="text-[#FFB84D] font-bold">TRACK V1</span>
+            <span className="text-[#A6F0CF] font-bold">TRACK V1</span>
             <span>TIMELINE SCRUBBER (CLICK & DRAG TO SCRUB)</span>
           </div>
           <div className="flex items-center gap-3">

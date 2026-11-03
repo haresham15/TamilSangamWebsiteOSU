@@ -46,13 +46,13 @@ function getEventPillarColor(event: CalendarEvent): { bg: string; text: string; 
     return { bg: "bg-emerald-50", text: "text-emerald-800", dot: "bg-emerald-500" };
   }
   if (combined.includes("paatam") || combined.includes("music") || combined.includes("jam") || combined.includes("acoustic") || combined.includes("sing")) {
-    return { bg: "bg-amber-50", text: "text-amber-900", dot: "bg-[#E5A93C]" };
+    return { bg: "bg-amber-50", text: "text-amber-900", dot: "bg-[#A6F0CF]" };
   }
   if (combined.includes("kondatam") || combined.includes("sapad") || combined.includes("food") || combined.includes("feast") || combined.includes("pongal") || combined.includes("diwali") || combined.includes("picnic") || combined.includes("carnival")) {
-    return { bg: "bg-orange-50", text: "text-[#B85C38]", dot: "bg-[#B85C38]" };
+    return { bg: "bg-orange-50", text: "text-[#A6F0CF]", dot: "bg-[#A6F0CF]" };
   }
 
-  return { bg: "bg-[#FAF9F6]", text: "text-[#2A2825]", dot: "bg-[#B85C38]" };
+  return { bg: "bg-[#140C20]", text: "text-[#F4F0FA]", dot: "bg-[#A6F0CF]" };
 }
 
 export const MonthGrid: React.FC<MonthGridProps> = ({
@@ -131,17 +131,17 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
   const [dayPopover, setDayPopover] = useState<{ dayKey: string; events: CalendarEvent[] } | null>(null);
 
   return (
-    <div className="w-full bg-[#FAF9F6] border border-[#2A2825]/15 rounded-3xl p-6 sm:p-8 shadow-sm text-left">
+    <div className="w-full bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-3xl p-6 sm:p-8 shadow-sm text-left">
       {/* Month Navigation Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-5 border-b border-[#2A2825]/10">
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-5 border-b border-[rgba(125,96,166,0.25)]">
         <div className="flex items-center gap-3">
-          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#2A2825]">
+          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#F4F0FA]">
             {format(selectedMonth, "MMMM yyyy")}
           </h3>
           <button
             type="button"
             onClick={handleToday}
-            className="px-3 py-1 text-xs font-mono font-medium rounded-full border border-[#2A2825]/20 hover:border-[#B85C38] text-[#57524C] hover:text-[#2A2825] transition-colors cursor-pointer"
+            className="px-3 py-1 text-xs font-mono font-medium rounded-full border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] text-[#C4B7D7] hover:text-[#F4F0FA] transition-colors cursor-pointer"
           >
             {locale === "ta" ? "இன்று" : "Today"}
           </button>
@@ -152,7 +152,7 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
             type="button"
             onClick={handlePrevMonth}
             aria-label="Previous month"
-            className="w-9 h-9 rounded-full border border-[#2A2825]/20 hover:border-[#B85C38] text-[#2A2825] flex items-center justify-center transition-colors cursor-pointer"
+            className="w-9 h-9 rounded-full border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] text-[#F4F0FA] flex items-center justify-center transition-colors cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -160,7 +160,7 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
             type="button"
             onClick={handleNextMonth}
             aria-label="Next month"
-            className="w-9 h-9 rounded-full border border-[#2A2825]/20 hover:border-[#B85C38] text-[#2A2825] flex items-center justify-center transition-colors cursor-pointer"
+            className="w-9 h-9 rounded-full border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] text-[#F4F0FA] flex items-center justify-center transition-colors cursor-pointer"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -168,7 +168,7 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
       </div>
 
       {/* 7-Column Weekday Headers */}
-      <div className="grid grid-cols-7 gap-px mb-2 text-center text-xs font-mono uppercase tracking-wider text-[#57524C] font-semibold">
+      <div className="grid grid-cols-7 gap-px mb-2 text-center text-xs font-mono uppercase tracking-wider text-[#C4B7D7] font-semibold">
         {WEEKDAYS.map((day) => (
           <div key={day.en} className="py-2">
             <span>{locale === "ta" ? day.ta : day.en}</span>
@@ -177,7 +177,7 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
       </div>
 
       {/* 7-Column Month Grid */}
-      <div className="grid grid-cols-7 gap-px bg-[#2A2825]/10 rounded-2xl overflow-hidden border border-[#2A2825]/10">
+      <div className="grid grid-cols-7 gap-px bg-[#25173B]/10 rounded-2xl overflow-hidden border border-[rgba(125,96,166,0.25)]">
         {daysInGrid.map((day, _idx) => {
           // Format in local string matching YYYY-MM-DD
           const year = day.getFullYear();
@@ -201,25 +201,25 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
                   }
                 }
               }}
-              className={`min-h-[110px] sm:min-h-[125px] p-2 sm:p-2.5 flex flex-col justify-between transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] focus-visible:z-10 ${
-                isCurrentMonth ? "bg-[#FAF9F6]" : "bg-[#F4EFE6]/50 text-[#57524C]/40"
-              } ${isToday ? "ring-2 ring-inset ring-[#B85C38] bg-orange-50/20" : ""}`}
+              className={`min-h-[110px] sm:min-h-[125px] p-2 sm:p-2.5 flex flex-col justify-between transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] focus-visible:z-10 ${
+                isCurrentMonth ? "bg-[#140C20]" : "bg-[#25173B]/50 text-[#C4B7D7]/40"
+              } ${isToday ? "ring-2 ring-inset ring-[#F26BB5] bg-[#352254]/40" : ""}`}
             >
               {/* Day Header: Date number & Today dot */}
               <div className="flex items-center justify-between">
                 <span
                   className={`text-xs sm:text-sm font-mono font-medium ${
                     isToday
-                      ? "w-6 h-6 rounded-full bg-[#B85C38] text-white flex items-center justify-center font-bold"
+                      ? "w-6 h-6 rounded-full bg-[#A6F0CF] text-[#140C20] flex items-center justify-center font-bold"
                       : isCurrentMonth
-                      ? "text-[#2A2825]"
-                      : "text-[#57524C]/50"
+                      ? "text-[#F4F0FA]"
+                      : "text-[#C4B7D7]/50"
                   }`}
                 >
                   {day.getDate()}
                 </span>
                 {isToday && (
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#B85C38] font-bold hidden sm:inline">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold hidden sm:inline">
                     TODAY
                   </span>
                 )}
@@ -237,7 +237,7 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
                         audioLayer.playTapeClack();
                         onSelectEvent(evt);
                       }}
-                      className={`w-full text-left p-1.5 rounded-lg border border-[#2A2825]/10 ${colors.bg} hover:border-[#B85C38] transition-all group cursor-pointer shadow-xs`}
+                      className={`w-full text-left p-1.5 rounded-lg border border-[rgba(125,96,166,0.25)] ${colors.bg} hover:border-[#A6F0CF] transition-all group cursor-pointer shadow-xs`}
                       title={`${evt.titleEn} (${formatEventTimeET(evt.start, evt.end, evt.allDay)})`}
                     >
                       <div className="flex items-center gap-1.5">
@@ -247,7 +247,7 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
                         </span>
                       </div>
                       {!evt.allDay && (
-                        <span className="text-[9px] font-mono text-[#57524C]/80 block truncate pl-3">
+                        <span className="text-[9px] font-mono text-[#C4B7D7]/80 block truncate pl-3">
                           {formatEventTimeET(evt.start, undefined, false)}
                         </span>
                       )}
@@ -263,7 +263,7 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
                       playClick();
                       setDayPopover({ dayKey, events: dayEvents });
                     }}
-                    className="text-[10px] font-mono text-[#B85C38] hover:text-[#2A2825] font-semibold text-left pl-1 cursor-pointer transition-colors"
+                    className="text-[10px] font-mono text-[#A6F0CF] hover:text-[#F4F0FA] font-semibold text-left pl-1 cursor-pointer transition-colors"
                   >
                     +{dayEvents.length - 2} more
                   </button>
@@ -277,15 +277,15 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
       {/* Day Popover when > 2 events */}
       {dayPopover && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-          <div className="bg-[#FAF9F6] border border-[#2A2825]/20 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-left space-y-4">
-            <div className="flex items-center justify-between border-b border-[#2A2825]/10 pb-3">
-              <h4 className="font-serif text-lg font-bold text-[#2A2825]">
+          <div className="bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-2xl p-6 max-w-sm w-full shadow-2xl text-left space-y-4">
+            <div className="flex items-center justify-between border-b border-[rgba(125,96,166,0.25)] pb-3">
+              <h4 className="font-serif text-lg font-bold text-[#F4F0FA]">
                 Events on {dayPopover.dayKey}
               </h4>
               <button
                 type="button"
                 onClick={() => setDayPopover(null)}
-                className="text-xs font-mono text-[#57524C] hover:text-[#2A2825]"
+                className="text-xs font-mono text-[#C4B7D7] hover:text-[#F4F0FA]"
               >
                 Close ✕
               </button>
@@ -299,12 +299,12 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
                     setDayPopover(null);
                     onSelectEvent(evt);
                   }}
-                  className="w-full text-left p-3 rounded-xl bg-[#F4EFE6] hover:bg-[#E5DDD0] transition-colors cursor-pointer"
+                  className="w-full text-left p-3 rounded-xl bg-[#25173B] hover:bg-[#352254] transition-colors cursor-pointer"
                 >
-                  <p className="font-serif text-sm font-semibold text-[#2A2825]">
+                  <p className="font-serif text-sm font-semibold text-[#F4F0FA]">
                     {locale === "ta" && evt.titleTa ? evt.titleTa : evt.titleEn}
                   </p>
-                  <p className="text-xs font-mono text-[#57524C] mt-1">
+                  <p className="text-xs font-mono text-[#C4B7D7] mt-1">
                     {formatEventTimeET(evt.start, evt.end, evt.allDay)} · {evt.location}
                   </p>
                 </button>

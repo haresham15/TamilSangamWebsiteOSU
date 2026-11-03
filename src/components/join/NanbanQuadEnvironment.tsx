@@ -101,13 +101,13 @@ export function NanbanQuadEnvironment() {
     });
 
     const lanternGlass = new THREE.MeshBasicMaterial({
-      color: "#FFB84D",
+      color: "#A6F0CF",
       transparent: true,
       opacity: 0.85,
     });
 
     const windowGlow = new THREE.MeshBasicMaterial({
-      color: "#FFB84D",
+      color: "#A6F0CF",
       transparent: true,
       opacity: 0.42,
     });
@@ -175,7 +175,7 @@ export function NanbanQuadEnvironment() {
         {/* Warm Sodium Glow Light */}
         <pointLight
           position={[0, 0.28, 0]}
-          color="#FFB84D"
+          color="#A6F0CF"
           intensity={35}
           distance={10}
           decay={2}
@@ -184,7 +184,7 @@ export function NanbanQuadEnvironment() {
         <mesh position={[0, 0.28, 0]}>
           <sphereGeometry args={[0.42, 16, 16]} />
           <meshBasicMaterial
-            color="#FFB84D"
+            color="#A6F0CF"
             transparent
             opacity={0.16}
             blending={THREE.AdditiveBlending}
@@ -206,7 +206,7 @@ export function NanbanQuadEnvironment() {
         </mesh>
         <pointLight
           position={[0, 0.28, 0]}
-          color="#FFB84D"
+          color="#A6F0CF"
           intensity={35}
           distance={10}
           decay={2}
@@ -214,7 +214,7 @@ export function NanbanQuadEnvironment() {
         <mesh position={[0, 0.28, 0]}>
           <sphereGeometry args={[0.42, 16, 16]} />
           <meshBasicMaterial
-            color="#FFB84D"
+            color="#A6F0CF"
             transparent
             opacity={0.16}
             blending={THREE.AdditiveBlending}
@@ -386,7 +386,7 @@ export function NanbanQuadEnvironment() {
         <mesh position={[0, 3.9, 0]} material={materials.iron}>
           <coneGeometry args={[0.22, 0.22, 6]} />
         </mesh>
-        <pointLight position={[0, 3.65, 0]} color="#FFB84D" intensity={22} distance={8} decay={2} />
+        <pointLight position={[0, 3.65, 0]} color="#A6F0CF" intensity={22} distance={8} decay={2} />
       </group>
 
       <group position={[3.8, 0, -23.0]} name="AvenueLampRight">
@@ -399,7 +399,7 @@ export function NanbanQuadEnvironment() {
         <mesh position={[0, 3.9, 0]} material={materials.iron}>
           <coneGeometry args={[0.22, 0.22, 6]} />
         </mesh>
-        <pointLight position={[0, 3.65, 0]} color="#FFB84D" intensity={22} distance={8} decay={2} />
+        <pointLight position={[0, 3.65, 0]} color="#A6F0CF" intensity={22} distance={8} decay={2} />
       </group>
 
       {/* ================================================================= */}

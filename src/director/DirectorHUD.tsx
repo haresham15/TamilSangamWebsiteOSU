@@ -261,7 +261,7 @@ export function DirectorHUD() {
                 <span
                   className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold ${
                     (heroScrubActive ? heroScrubProgress : heroScrollProgress.current) < 0.16
-                      ? "bg-amber-500/20 text-[#FFB84D] border border-[#FFB84D]/40"
+                      ? "bg-amber-500/20 text-[#A6F0CF] border border-[#A6F0CF]/40"
                       : (heroScrubActive ? heroScrubProgress : heroScrollProgress.current) <= 0.64
                       ? "bg-emerald-500/20 text-[#55CCA2] border border-[#55CCA2]/40"
                       : "bg-purple-500/20 text-[#A78BFA] border border-[#A78BFA]/40"

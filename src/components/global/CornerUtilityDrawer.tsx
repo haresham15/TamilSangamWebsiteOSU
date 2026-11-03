@@ -67,11 +67,11 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
             exit={{ opacity: 0, y: 12, scale: 0.95 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             data-lenis-prevent
-            className="mb-3 w-72 max-h-[min(80dvh,500px)] overflow-y-auto overscroll-contain bg-[#FAF9F6]/95 backdrop-blur-md border border-[#2A2825]/15 shadow-[0_12px_36px_rgba(42,40,37,0.12)] p-3 text-[#2A2825] font-sans"
+            className="mb-3 w-72 max-h-[min(80dvh,500px)] overflow-y-auto overscroll-contain bg-[#140C20]/95 backdrop-blur-md border border-[rgba(125,96,166,0.25)] shadow-[0_12px_36px_rgba(0,0,0,0.4)] p-3 text-[#F4F0FA] font-sans"
           >
             {/* Header */}
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#2A2825]/10">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-[#57524C] font-semibold">
+            <div className="flex items-center justify-between pb-2 mb-2 border-b border-[rgba(125,96,166,0.25)]">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-[#C4B7D7] font-semibold">
                 {locale === "ta" ? "கருவிகள் & சூழல்" : "Sangam Utilities"}
               </span>
               <button
@@ -81,7 +81,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                   setIsTinaiSubmenuOpen(false);
                 }}
                 aria-label="Close utility drawer"
-                className="w-5 h-5 flex items-center justify-center text-[#57524C] hover:text-[#2A2825] transition-colors"
+                className="w-5 h-5 flex items-center justify-center text-[#C4B7D7] hover:text-[#F4F0FA] transition-colors"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -98,13 +98,13 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                       onOpenSearch();
                       setIsOpen(false);
                     }}
-                    className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#F4EFE6] transition-colors text-left"
+                    className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#25173B] transition-colors text-left"
                   >
                     <span className="flex items-center gap-2">
-                      <Search className="w-3.5 h-3.5 text-[#B85C38]" />
+                      <Search className="w-3.5 h-3.5 text-[#A6F0CF]" />
                       <span className="font-medium">{t("control.search")}</span>
                     </span>
-                    <kbd className="text-[10px] font-mono px-1.5 py-0.5 bg-[#2A2825]/5 border border-[#2A2825]/10 text-[#57524C]">
+                    <kbd className="text-[10px] font-mono px-1.5 py-0.5 bg-[#25173B]/5 border border-[rgba(125,96,166,0.25)] text-[#C4B7D7]">
                       ⌘K
                     </kbd>
                   </button>
@@ -116,15 +116,15 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                     playClick();
                     toggleLocale();
                   }}
-                  className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#F4EFE6] transition-colors text-left"
+                  className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#25173B] transition-colors text-left"
                 >
                   <span className="flex items-center gap-2">
-                    <Globe className="w-3.5 h-3.5 text-[#B85C38]" />
+                    <Globe className="w-3.5 h-3.5 text-[#A6F0CF]" />
                     <span className="font-medium">
                       {locale === "en" ? "தமிழ் பதிப்பு" : "English Version"}
                     </span>
                   </span>
-                  <span className="text-[11px] font-mono font-bold text-[#B85C38]">
+                  <span className="text-[11px] font-mono font-bold text-[#A6F0CF]">
                     {locale === "en" ? "TA" : "EN"}
                   </span>
                 </button>
@@ -134,13 +134,13 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                   onClick={() => {
                     toggleSound();
                   }}
-                  className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#F4EFE6] transition-colors text-left"
+                  className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#25173B] transition-colors text-left"
                 >
                   <span className="flex items-center gap-2">
                     {isSoundEnabled ? (
-                      <Volume2 className="w-3.5 h-3.5 text-[#B85C38]" />
+                      <Volume2 className="w-3.5 h-3.5 text-[#A6F0CF]" />
                     ) : (
-                      <VolumeX className="w-3.5 h-3.5 text-[#57524C]" />
+                      <VolumeX className="w-3.5 h-3.5 text-[#C4B7D7]" />
                     )}
                     <span className="font-medium">
                       {isSoundEnabled ? "Interactive Audio (On)" : "Interactive Audio (Muted)"}
@@ -148,7 +148,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                   </span>
                   <span
                     className={`w-2 h-2 rounded-full ${
-                      isSoundEnabled ? "bg-[#B85C38]" : "bg-[#2A2825]/20"
+                      isSoundEnabled ? "bg-[#A6F0CF]" : "bg-[#25173B]/20"
                     }`}
                   />
                 </button>
@@ -159,7 +159,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                     playClick();
                     setIsTinaiSubmenuOpen(true);
                   }}
-                  className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#F4EFE6] transition-colors text-left"
+                  className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#25173B] transition-colors text-left"
                 >
                   <span className="flex items-center gap-2">
                     <span
@@ -170,7 +170,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                       {locale === "ta" ? meta.nameTa : meta.nameEn}
                     </span>
                   </span>
-                  <ChevronRight className="w-3.5 h-3.5 text-[#57524C]" />
+                  <ChevronRight className="w-3.5 h-3.5 text-[#C4B7D7]" />
                 </button>
               </div>
             ) : (
@@ -181,7 +181,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                     playClick();
                     setIsTinaiSubmenuOpen(false);
                   }}
-                  className="w-full text-left text-[11px] font-mono text-[#57524C] hover:text-[#2A2825] pb-1.5 mb-1 border-b border-[#2A2825]/10 flex items-center gap-1"
+                  className="w-full text-left text-[11px] font-mono text-[#C4B7D7] hover:text-[#F4F0FA] pb-1.5 mb-1 border-b border-[rgba(125,96,166,0.25)] flex items-center gap-1"
                 >
                   <span>←</span>
                   <span>{locale === "ta" ? "பின்செல்" : "Back to Utilities"}</span>
@@ -195,7 +195,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                       key={key}
                       onClick={() => handleTinaiSelect(key)}
                       className={`w-full flex items-center justify-between px-2.5 py-1.5 transition-colors text-left ${
-                        isSelected ? "bg-[#F4EFE6] font-semibold text-[#2A2825]" : "hover:bg-[#F4EFE6]/60 text-[#57524C]"
+                        isSelected ? "bg-[#25173B] font-semibold text-[#F4F0FA]" : "hover:bg-[#25173B]/60 text-[#C4B7D7]"
                       }`}
                     >
                       <span className="flex items-center gap-2">
@@ -205,7 +205,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                         />
                         <span>{locale === "ta" ? tMeta.nameTa : tMeta.nameEn}</span>
                       </span>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-[#B85C38]" />}
+                      {isSelected && <Check className="w-3.5 h-3.5 text-[#A6F0CF]" />}
                     </button>
                   );
                 })}
@@ -217,7 +217,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                       resetToLiveTime();
                       setIsTinaiSubmenuOpen(false);
                     }}
-                    className="w-full mt-2 pt-2 border-t border-[#2A2825]/10 text-center text-[10px] font-mono text-[#B85C38] hover:underline"
+                    className="w-full mt-2 pt-2 border-t border-[rgba(125,96,166,0.25)] text-center text-[10px] font-mono text-[#A6F0CF] hover:underline"
                   >
                     {locale === "ta" ? "நேரடி நேரத்திற்கு மீட்டமை" : "Reset to Live Clock"}
                   </button>
@@ -236,7 +236,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
         }}
         aria-label="Toggle Sangam Utilities Drawer"
         aria-expanded={isOpen}
-        className="group relative flex items-center justify-center w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-[#FAF9F6] border border-[#2A2825]/20 shadow-[0_4px_16px_rgba(42,40,37,0.12)] text-[#2A2825] hover:text-[#B85C38] hover:border-[#B85C38]/40 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+        className="group relative flex items-center justify-center w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-[#140C20] border border-[rgba(125,96,166,0.25)] shadow-[0_4px_16px_rgba(0,0,0,0.35)] text-[#F4F0FA] hover:text-[#A6F0CF] hover:border-[#A6F0CF]/35 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
       >
         <SlidersHorizontal className="w-4 h-4 transition-transform group-hover:rotate-45" />
         {/* Active tint dot */}

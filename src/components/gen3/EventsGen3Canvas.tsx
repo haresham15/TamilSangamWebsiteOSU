@@ -120,7 +120,7 @@ function EventsConcertScene({ bespokeEnv, progressRef }: { bespokeEnv: THREE.Tex
           {/* Amber rim spotlight for concert performer drama */}
           <spotLight
             position={[0, 4.5, -2.5]}
-            color="#FFB366"
+            color="#4FD6E0"
             intensity={35}
             angle={0.45}
             penumbra={0.6}

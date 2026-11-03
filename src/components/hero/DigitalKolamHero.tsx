@@ -159,7 +159,7 @@ function _smootherstep(x: number): number {
  */
 function _createSymmetricKolamMaterial() {
   const customMaterial = new THREE.MeshStandardMaterial({
-    color: "#FFB84D",
+    color: "#A6F0CF",
     metalness: 0.55,
     roughness: 0.22,
     emissive: "#FF9E1B",
@@ -552,7 +552,7 @@ function ScrollExpandIntroOverlay() {
         className="absolute top-0 left-0 right-0 pt-20 sm:pt-24 text-center transition-opacity"
         style={{ willChange: "opacity, transform" }}
       >
-        <span className="block font-space-mono text-[9px] sm:text-xs tracking-[0.26em] text-[#FFB84D]/90 uppercase">
+        <span className="block font-space-mono text-[9px] sm:text-xs tracking-[0.26em] text-[#A6F0CF]/90 uppercase">
           THE OHIO STATE UNIVERSITY
         </span>
         <h1 className="font-anek-tamil text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] mt-1 sm:mt-1.5">
@@ -567,7 +567,7 @@ function ScrollExpandIntroOverlay() {
         className="absolute bottom-16 sm:bottom-8 left-0 right-0 text-center px-4 transition-opacity"
         style={{ willChange: "opacity, transform" }}
       >
-        <p className="font-space-mono text-[11px] sm:text-xs tracking-[0.22em] text-[#FFB84D]/85 uppercase">
+        <p className="font-space-mono text-[11px] sm:text-xs tracking-[0.22em] text-[#A6F0CF]/85 uppercase">
           SCROLL TO ENTER · கீழே உருட்டவும் &darr;
         </p>
       </div>
@@ -653,7 +653,7 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
   return (
     <group ref={groupRef} position={[0, 0, 0.05]}>
       {/* Living gold specular light sweeping across stem & loop bevels */}
-      <pointLight ref={specularLightRef} color="#FFD074" intensity={4.2} distance={6} />
+      <pointLight ref={specularLightRef} color="#A6F0CF" intensity={4.2} distance={6} />
       <Center>
         <Text3D
           font={muktaFont as unknown as Parameters<typeof Text3D>[0]["font"]}
@@ -673,7 +673,7 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
           {isCinematic ? (
             <meshPhysicalMaterial
               ref={materialRef}
-              color="#F4EFE6"
+              color="#25173B"
               metalness={0.94}
               roughness={0.14}
               roughnessMap={roughMap || undefined}
@@ -686,7 +686,7 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
           ) : (
             <meshPhysicalMaterial
               ref={materialRef}
-              color="#F4EFE6"
+              color="#25173B"
               metalness={0.96}
               roughness={0.12}
               clearcoat={1.0}
@@ -761,7 +761,7 @@ function PulliGridNodes({ isMobile }: { isMobile: boolean }) {
     <instancedMesh ref={meshRef} args={[undefined, undefined, dots.length]}>
       <sphereGeometry args={[0.024, 12, 12]} />
       <meshPhysicalMaterial
-        color="#D4AF37"
+        color="#A6F0CF"
         emissive="#FFA01C"
         emissiveIntensity={0.25}
         metalness={0.92}
@@ -815,7 +815,7 @@ function DustMotes({ isMobile, tier }: { isMobile: boolean; tier: string }) {
       </bufferGeometry>
       <pointsMaterial
         size={0.035}
-        color="#FFD074"
+        color="#4FD6E0"
         transparent
         opacity={0.45}
         blending={THREE.AdditiveBlending}
@@ -890,7 +890,7 @@ export function DigitalKolamHero() {
                 <Lightformer
                   form="rect"
                   intensity={3.2}
-                  color="#FFF8EB"
+                  color="#F4F0FA"
                   position={[-4, 3, 5]}
                   scale={[8, 5, 1]}
                   target={[0, 0, 0]}
@@ -899,7 +899,7 @@ export function DigitalKolamHero() {
                 <Lightformer
                   form="rect"
                   intensity={4.6}
-                  color="#C85A32"
+                  color="#F26BB5"
                   position={[5.5, 1.5, -1.5]}
                   scale={[6, 8, 1]}
                   target={[0, 0, 0]}
@@ -908,7 +908,7 @@ export function DigitalKolamHero() {
                 <Lightformer
                   form="ring"
                   intensity={2.0}
-                  color="#D4AF37"
+                  color="#A6F0CF"
                   scale={10}
                   position={[0, 7, 0]}
                   target={[0, 0, 0]}
@@ -945,7 +945,7 @@ export function DigitalKolamHero() {
               <directionalLight position={[-4, 3, 3]} intensity={1.6} color="#FFE8B5" />
               <ambientLight intensity={0.7} color="#2A1808" />
               <pointLight position={[0, 0, 4.0]} intensity={4.0} color="#FFF5DE" distance={16} />
-              <pointLight position={[0, -2, 2.0]} intensity={2.5} color="#FFB84D" distance={12} />
+              <pointLight position={[0, -2, 2.0]} intensity={2.5} color="#A6F0CF" distance={12} />
 
               {/* Detail 2: Brass Pulli Grid Registration Nodes */}
               <PulliGridNodes isMobile={isMobile} />
@@ -960,7 +960,7 @@ export function DigitalKolamHero() {
                 <Lightformer
                   form="rect"
                   intensity={3.5}
-                  color="#FFF8EB"
+                  color="#F4F0FA"
                   position={[-5, 3, 5]}
                   scale={[8, 5, 1]}
                   target={[0, 0, 0]}
@@ -968,7 +968,7 @@ export function DigitalKolamHero() {
                 <Lightformer
                   form="rect"
                   intensity={4.8}
-                  color="#C85A32"
+                  color="#F26BB5"
                   position={[6, 2, -2]}
                   scale={[6, 8, 1]}
                   target={[0, 0, 0]}
@@ -976,7 +976,7 @@ export function DigitalKolamHero() {
                 <Lightformer
                   form="ring"
                   intensity={2.4}
-                  color="#D4AF37"
+                  color="#A6F0CF"
                   scale={10}
                   position={[0, 8, 0]}
                   target={[0, 0, 0]}
@@ -994,7 +994,7 @@ export function DigitalKolamHero() {
               <directionalLight position={[5, 8, 5]} intensity={3.0} color="#FFF8E7" castShadow />
               <directionalLight position={[-5, 4, 4]} intensity={1.8} color="#FFE8B5" />
               <pointLight position={[0, 0, 4.0]} intensity={4.5} color="#FFF5DE" distance={16} />
-              <pointLight position={[0, -2, 2.0]} intensity={3.0} color="#FFB84D" distance={12} />
+              <pointLight position={[0, -2, 2.0]} intensity={3.0} color="#A6F0CF" distance={12} />
             </>
           )}
 
@@ -1050,7 +1050,7 @@ function StaticKolamFallback({ isMobile: _isMobile }: { isMobile: boolean }) {
         className="absolute z-10 flex items-center justify-center transition-transform"
         style={{ transform: `scale(${letterScale})` }}
       >
-        <span className="font-noto-serif-tamil text-7xl sm:text-9xl font-bold bg-gradient-to-br from-[#FFE599] via-[#FFB84D] to-[#92400e] bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(255,184,77,0.4)]">
+        <span className="font-noto-serif-tamil text-7xl sm:text-9xl font-bold bg-gradient-to-br from-[#A6F0CF] via-[#4FD6E0] to-[#F26BB5] bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(166,240,207,0.4)]">
           அ
         </span>
       </div>
@@ -1082,7 +1082,7 @@ function StaticKolamFallback({ isMobile: _isMobile }: { isMobile: boolean }) {
         <circle cx="0" cy="0" r="170" fill="url(#voidVignette)" />
 
         {/* Pulli Dots Lattice */}
-        <g fill="#FFB84D" opacity="0.45">
+        <g fill="#A6F0CF" opacity="0.45">
           {dots.map((d, i) => (
             <circle key={i} cx={d.x} cy={d.y} r="2.5" />
           ))}

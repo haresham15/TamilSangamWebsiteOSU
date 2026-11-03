@@ -185,12 +185,12 @@ export function CulturalGlossaryTerm({
       role="button"
       aria-haspopup="dialog"
       aria-expanded={isOpen}
-      className={`group/term relative inline-block cursor-help border-b border-dashed border-[#D4AF37]/80 hover:border-[#FFB84D] hover:text-[#FFB84D] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FFB84D] transition-colors ${className}`}
+      className={`group/term relative inline-block cursor-help border-b border-dashed border-[#A6F0CF]/35 hover:border-[#A6F0CF] hover:text-[#A6F0CF] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#4FD6E0] transition-colors ${className}`}
     >
       <span className="font-semibold">{children || data.term}</span>
 
       {/* Diegetic Amber Indicator Dot */}
-      <span className="inline-block w-1 h-1 rounded-full bg-[#FFB84D] ml-0.5 align-top opacity-70 group-hover/term:opacity-100 group-hover/term:scale-125 transition-all" />
+      <span className="inline-block w-1 h-1 rounded-full bg-[#A6F0CF] ml-0.5 align-top opacity-70 group-hover/term:opacity-100 group-hover/term:scale-125 transition-all" />
 
       {/* Floating Glassmorphic Cultural Discovery Card */}
       <AnimatePresence>
@@ -207,25 +207,25 @@ export function CulturalGlossaryTerm({
           >
             {/* Top Pointer Caret when position is bottom */}
             {position === "bottom" && (
-              <span className="block w-3 h-3 bg-[#1c1008] border-l border-t border-[#D4AF37]/50 rotate-45 mx-auto -mb-1.5 shadow-md relative z-10" />
+              <span className="block w-3 h-3 bg-[#1c1008] border-l border-t border-[#A6F0CF]/35 rotate-45 mx-auto -mb-1.5 shadow-md relative z-10" />
             )}
 
-            <span className="block p-4 rounded-xl bg-[#1c1008]/96 backdrop-blur-xl border border-[#D4AF37]/50 shadow-[0_12px_36px_rgba(0,0,0,0.85),0_0_30px_rgba(255,184,77,0.2)] text-[#faf5ed] font-body relative overflow-hidden">
+            <span className="block p-4 rounded-xl bg-[#1c1008]/96 backdrop-blur-xl border border-[#A6F0CF]/35 shadow-[0_12px_36px_rgba(0,0,0,0.85),0_0_30px_rgba(255,184,77,0.2)] text-[#faf5ed] font-body relative overflow-hidden">
               {/* Subtle Kuthuvilakku Amber Glow Spill */}
-              <span className="absolute -top-12 -right-12 w-28 h-28 rounded-full bg-[#FFB84D]/15 blur-2xl pointer-events-none" />
+              <span className="absolute -top-12 -right-12 w-28 h-28 rounded-full bg-[#A6F0CF]/15 blur-2xl pointer-events-none" />
 
               {/* Header: Term, Tamil Script, & Category */}
-              <span className="flex items-start justify-between gap-2 border-b border-[#D4AF37]/20 pb-2.5 mb-2.5">
+              <span className="flex items-start justify-between gap-2 border-b border-[#A6F0CF]/35 pb-2.5 mb-2.5">
                 <span>
                   <span className="block text-base font-bold font-display text-white leading-tight">
                     {data.term}
                   </span>
-                  <span className="block text-xs font-tamil font-semibold text-[#FFB84D] mt-0.5">
+                  <span className="block text-xs font-tamil font-semibold text-[#A6F0CF] mt-0.5">
                     {data.tamil} · <span className="font-mono text-[11px] text-amber-200/80">{data.phonetic}</span>
                   </span>
                 </span>
 
-                <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase tracking-wider bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#FFD700] shrink-0">
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase tracking-wider bg-[#A6F0CF]/20 border border-[#A6F0CF]/35 text-[#FFD700] shrink-0">
                   {data.category}
                 </span>
               </span>
@@ -240,15 +240,15 @@ export function CulturalGlossaryTerm({
               </span>
 
               {/* Cultural Significance Footer */}
-              <span className="flex items-center gap-1.5 text-[10px] text-amber-300/90 font-mono border-t border-[#D4AF37]/20 pt-2">
-                <Sparkles className="w-3 h-3 text-[#FFB84D] shrink-0" />
+              <span className="flex items-center gap-1.5 text-[10px] text-amber-300/90 font-mono border-t border-[#A6F0CF]/35 pt-2">
+                <Sparkles className="w-3 h-3 text-[#A6F0CF] shrink-0" />
                 <span className="line-clamp-2">{data.significance}</span>
               </span>
             </span>
 
             {/* Downward Pointer Caret with Filigree Tint */}
             {position === "top" && (
-              <span className="block w-3 h-3 bg-[#1c1008] border-r border-b border-[#D4AF37]/50 rotate-45 mx-auto -mt-1.5 shadow-md relative z-10" />
+              <span className="block w-3 h-3 bg-[#1c1008] border-r border-b border-[#A6F0CF]/35 rotate-45 mx-auto -mt-1.5 shadow-md relative z-10" />
             )}
           </motion.span>
         )}

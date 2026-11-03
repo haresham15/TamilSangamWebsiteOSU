@@ -140,7 +140,7 @@ const sharedCenterDotGeo = new THREE.SphereGeometry(0.28, 32, 24);
 import { createHeroKineticsTracker } from "@/lib/heroKinetics";
 
 const sharedRingMat = new THREE.MeshPhysicalMaterial({
-  color: "#D4AF37",
+  color: "#A6F0CF",
   metalness: 0.92,
   roughness: 0.22,
   clearcoat: 0.6,
@@ -194,11 +194,11 @@ const sharedCoreMat = new THREE.MeshPhysicalMaterial({
   metalness: 0.94,
   roughness: 0.15,
   clearcoat: 1.0,
-  emissive: new THREE.Color("#D4AF37"),
+  emissive: new THREE.Color("#A6F0CF"),
   emissiveIntensity: 0.45,
 });
 
-const CURSOR_LIGHT_COLOR = "#FFB366";
+const CURSOR_LIGHT_COLOR = "#4FD6E0";
 
 const STAGE_RANGES = [
   { start: 0.00, end: 0.16 },
@@ -245,7 +245,7 @@ function useCinematicBronzeMaterials(isCinematic: boolean) {
     }
 
     const ringMat = new THREE.MeshPhysicalMaterial({
-      color: "#D4AF37",
+      color: "#A6F0CF",
       metalness: 0.94,
       roughness: 0.18,
       roughnessMap: textures.noiseRoughness,
@@ -339,7 +339,7 @@ function useCinematicBronzeMaterials(isCinematic: boolean) {
       roughness: 0.12,
       clearcoat: 1.0,
       clearcoatRoughness: 0.08,
-      emissive: new THREE.Color("#D4AF37"),
+      emissive: new THREE.Color("#A6F0CF"),
       emissiveIntensity: 0.55,
     });
 
@@ -430,7 +430,7 @@ function BronzeRing({
         material={coreMat}
         scale={[scale, scale, scale]}
       />
-      <pointLight ref={coreLightRef} color="#FFB366" intensity={6} distance={4} decay={2} />
+      <pointLight ref={coreLightRef} color="#4FD6E0" intensity={6} distance={4} decay={2} />
       {/* Flowing 8-Petal Sikku Kolam 3D Knot with silky-smooth bends */}
       <mesh
         geometry={sharedKolamGeo}
@@ -516,14 +516,14 @@ function RingModalCard({
       {/* Floating Organic Titles: Seamlessly Integrated into the 3D Scene */}
       <div className="max-w-xl text-left select-none space-y-3 pointer-events-auto">
         {/* Understated Category Subtitle */}
-        <span className="font-mono text-xs uppercase tracking-widest text-[#D4AF37]/75 block drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+        <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF]/75 block drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
           {locale === "ta" ? tier.subtitleTa : tier.subtitleEn}
         </span>
 
         {/* Primary Title */}
         <Heading
           lang={locale === "ta" ? "ta" : "en"}
-          className={`text-3xl sm:text-4xl lg:text-5xl text-[#FAF7F2] font-normal leading-[1.12] tracking-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.95)] ${
+          className={`text-3xl sm:text-4xl lg:text-5xl text-[#F4F0FA] font-normal leading-[1.12] tracking-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.95)] ${
             locale === "ta" ? "font-tamil leading-relaxed" : "font-serif"
           }`}
         >
@@ -542,7 +542,7 @@ function RingModalCard({
             <p
               lang="ta"
               style={{ letterSpacing: 0 }}
-              className="text-lg sm:text-2xl font-medium text-[#E5A93C] font-tamil leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]"
+              className="text-lg sm:text-2xl font-medium text-[#A6F0CF] font-tamil leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]"
             >
               {tier.titleTa}
             </p>
@@ -552,7 +552,7 @@ function RingModalCard({
         {/* Narrative Description */}
         <p
           lang={locale === "ta" ? "ta" : "en"}
-          className={`text-sm sm:text-base text-[#FAF7F2]/80 leading-relaxed font-sans max-w-lg pt-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] ${
+          className={`text-sm sm:text-base text-[#C4B7D7] leading-relaxed font-sans max-w-lg pt-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] ${
             locale === "ta" ? "font-tamil" : ""
           }`}
         >
@@ -832,14 +832,14 @@ export function GopuramZScroll() {
         <div className="relative z-10 flex min-h-dvh flex-col justify-center gap-8 px-6 py-32 sm:px-16 max-w-4xl">
           {TIERS.map((tierItem, idx) => (
             <div key={tierItem.id} className="space-y-2 border-b border-paper/10 pb-6 last:border-b-0">
-              <span className="font-mono text-xs uppercase tracking-widest text-antique-gold block">
+              <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] block">
                 {`// CHAPTER 0${idx + 1} · ${locale === "ta" ? tierItem.subtitleTa : tierItem.subtitleEn}`}
               </span>
-              <h2 lang={locale === "ta" ? "ta" : "en"} className={`text-2xl sm:text-4xl text-paper ${locale === "ta" ? "font-tamil leading-relaxed" : "font-display"}`}>
+              <h2 lang={locale === "ta" ? "ta" : "en"} className={`text-2xl sm:text-4xl text-[#F4F0FA] ${locale === "ta" ? "font-tamil leading-relaxed" : "font-display"}`}>
                 {locale === "ta" ? tierItem.titleTa : tierItem.titleEn}
               </h2>
-              <p lang="ta" className="font-tamil text-lg leading-relaxed text-turmeric-gold">{tierItem.titleTa}</p>
-              <p lang={locale === "ta" ? "ta" : "en"} className="text-base text-paper/80 leading-relaxed">{locale === "ta" ? tierItem.descTa : tierItem.descEn}</p>
+              <p lang="ta" className="font-tamil text-lg leading-relaxed text-[#A6F0CF]">{tierItem.titleTa}</p>
+              <p lang={locale === "ta" ? "ta" : "en"} className="text-base text-[#C4B7D7] leading-relaxed">{locale === "ta" ? tierItem.descTa : tierItem.descEn}</p>
             </div>
           ))}
         </div>
@@ -869,9 +869,9 @@ function GopuramCanvasContent({
     <>
       <SceneRegistrar />
       <GopuramWarmup />
-      <color attach="background" args={["#14110F"]} />
+      <color attach="background" args={["#140C20"]} />
       <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={50} near={0.05} far={150} />
-      <fog attach="fog" args={["#14110F", 10, 95]} />
+      <fog attach="fog" args={["#140C20", 10, 95]} />
 
       <SangamStudioEnvironment />
 
@@ -897,13 +897,13 @@ function GopuramCanvasContent({
           {/* Warm Under-Mandapa Bounce Fill */}
           <directionalLight position={[0, -12, 0]} intensity={0.65} color="#D47B37" />
           {/* Sanctum Accent Rim Light */}
-          <pointLight position={[0, 0, -50]} intensity={12} distance={80} decay={2} color="#E5A93C" />
+          <pointLight position={[0, 0, -50]} intensity={12} distance={80} decay={2} color="#A6F0CF" />
         </>
       ) : (
         <>
-          <directionalLight position={[10, 20, 10]} intensity={2.2} color="#FFF8EB" />
+          <directionalLight position={[10, 20, 10]} intensity={2.2} color="#F4F0FA" />
           <ambientLight intensity={1.2} color="#3A2618" />
-          <directionalLight position={[-10, 5, -10]} intensity={0.8} color="#D4AF37" />
+          <directionalLight position={[-10, 5, -10]} intensity={0.8} color="#A6F0CF" />
         </>
       )}
 

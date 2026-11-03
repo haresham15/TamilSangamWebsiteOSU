@@ -126,7 +126,7 @@ export function EmblemFinale({ scrollProgress, onFinaleTriggered }: EmblemFinale
       <mesh ref={ringMeshRef} position={[0, 0.3, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.3, 0.08, 16, 48]} />
         <meshStandardMaterial
-          color="#D4AF37"
+          color="#A6F0CF"
           emissive="#523B0F"
           emissiveIntensity={0.35}
           roughness={0.22}
@@ -138,7 +138,7 @@ export function EmblemFinale({ scrollProgress, onFinaleTriggered }: EmblemFinale
       <mesh ref={emblemMeshRef} position={[0, 0.3, 0.02]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[1.22, 1.22, 0.04, 32]} />
         <meshStandardMaterial
-          color="#D4AF37"
+          color="#A6F0CF"
           emissive="#523B0F"
           emissiveIntensity={0.25}
           roughness={0.26}
@@ -150,7 +150,7 @@ export function EmblemFinale({ scrollProgress, onFinaleTriggered }: EmblemFinale
       <mesh position={[0, 0.3, -0.2]}>
         <planeGeometry args={[4.2, 4.2]} />
         <meshBasicMaterial
-          color="#FFF8EB"
+          color="#F4F0FA"
           transparent={true}
           opacity={0.35}
           blending={THREE.AdditiveBlending}

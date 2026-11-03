@@ -306,13 +306,13 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
   return (
     <div className="w-full max-w-xl mx-auto flex flex-col items-center">
       {/* Mode Switcher Segmented Control */}
-      <div className="flex items-center gap-1.5 mb-6 p-1 bg-[#F2EAE0] rounded-xl border border-[#161210]/15">
+      <div className="flex items-center gap-1.5 mb-6 p-1 bg-[#25173B] rounded-xl border border-[rgba(125,96,166,0.25)]">
         <button
           onClick={() => handleModeChange("tanglish")}
           className={`px-4 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${
             mode === "tanglish"
-              ? "bg-[#161210] text-[#FAF6F0] shadow-xs"
-              : "text-[#161210]/70 hover:text-[#161210]"
+              ? "bg-[#140C20] text-[#F4F0FA] shadow-xs"
+              : "text-[#F4F0FA]/70 hover:text-[#F4F0FA]"
           }`}
         >
           Tanglish & Cultural (5 Letters)
@@ -321,8 +321,8 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
           onClick={() => handleModeChange("tamil")}
           className={`px-4 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${
             mode === "tamil"
-              ? "bg-[#161210] text-[#FAF6F0] shadow-xs"
-              : "text-[#161210]/70 hover:text-[#161210]"
+              ? "bg-[#140C20] text-[#F4F0FA] shadow-xs"
+              : "text-[#F4F0FA]/70 hover:text-[#F4F0FA]"
           }`}
         >
           <span lang="ta" className="font-tamil">
@@ -340,7 +340,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
-              className="bg-[#C85A32] text-[#FAF6F0] px-3 py-1 rounded-md text-xs font-medium shadow-md"
+              className="bg-[#A6F0CF] text-[#140C20] px-3 py-1 rounded-md text-xs font-medium shadow-md"
             >
               {errorMessage}
             </motion.div>
@@ -372,15 +372,15 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
                 const char = rowTokens[colIdx] || "";
                 const status: TileStatus = isSubmitted ? statuses[colIdx] : "empty";
 
-                let bgClass = "bg-[#FAF6F0] border-2 border-[#161210]/20 text-[#161210]";
+                let bgClass = "bg-[#140C20] border-2 border-[rgba(125,96,166,0.25)] text-[#F4F0FA]";
                 if (status === "correct") {
-                  bgClass = "bg-[#2E6F4E] border-2 border-[#2E6F4E] text-[#FAF6F0]";
+                  bgClass = "bg-[#2D8A68] border-2 border-[#2D8A68] text-[#F4F0FA]";
                 } else if (status === "present") {
-                  bgClass = "bg-[#D49B27] border-2 border-[#D49B27] text-[#161210]";
+                  bgClass = "bg-[#D49B27] border-2 border-[#D49B27] text-[#F4F0FA]";
                 } else if (status === "absent") {
-                  bgClass = "bg-[#3A332E] border-2 border-[#3A332E] text-[#FAF6F0]/80";
+                  bgClass = "bg-[#25173B] border-2 border-[rgba(125,96,166,0.35)] text-[#C4B7D7]";
                 } else if (char) {
-                  bgClass = "bg-[#FAF6F0] border-2 border-[#161210]/70 text-[#161210] scale-[1.04]";
+                  bgClass = "bg-[#140C20] border-2 border-[rgba(125,96,166,0.25)] text-[#F4F0FA] scale-[1.04]";
                 }
 
                 return (
@@ -417,34 +417,34 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
-            className="w-full bg-[#F2EAE0] border-2 border-[#D4AF37]/50 rounded-2xl p-6 mb-8 shadow-xl"
+            className="w-full bg-[#25173B] border-2 border-[#A6F0CF]/35 rounded-2xl p-6 mb-8 shadow-xl"
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="font-mono text-xs uppercase tracking-widest text-[#C85A32] font-bold">
+              <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] font-bold">
                 {gameStatus === "won" ? "SOLVED · அருமை!" : "REVEALED · விடை"}
               </span>
-              <span className="text-xs font-mono text-[#161210]/60">
+              <span className="text-xs font-mono text-[#F4F0FA]/60">
                 {edition.monthEn} {edition.year}
               </span>
             </div>
 
             <div className="flex items-baseline gap-3 mb-2">
-              <h3 className="text-2xl font-serif text-[#161210] font-bold">
+              <h3 className="text-2xl font-serif text-[#F4F0FA] font-bold">
                 {edition.tanglishWord}
               </h3>
-              <span lang="ta" className="text-2xl font-tamil text-[#C85A32] font-semibold">
+              <span lang="ta" className="text-2xl font-tamil text-[#A6F0CF] font-semibold">
                 {edition.tamilWord}
               </span>
             </div>
 
-            <p className="text-sm text-[#161210]/85 mb-4 leading-relaxed font-sans">
+            <p className="text-sm text-[#F4F0FA]/85 mb-4 leading-relaxed font-sans">
               {edition.culturalContext}
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-[#161210]/15">
+            <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-[rgba(125,96,166,0.25)]">
               <button
                 onClick={copyShareGrid}
-                className="flex items-center gap-2 bg-[#161210] hover:bg-[#C85A32] text-[#FAF6F0] px-4 py-2.5 rounded-full text-xs font-semibold transition-colors shadow-md"
+                className="flex items-center gap-2 bg-[#140C20] hover:bg-[#A6F0CF] text-[#140C20] px-4 py-2.5 rounded-full text-xs font-semibold transition-colors shadow-md"
               >
                 {copiedShare ? (
                   <>
@@ -463,7 +463,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
                 href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-mono text-[#161210]/80 hover:text-[#C85A32] underline underline-offset-4 px-2 py-1 transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-mono text-[#F4F0FA]/80 hover:text-[#A6F0CF] underline underline-offset-4 px-2 py-1 transition-colors"
               >
                 Post in OSU TS GroupMe ↗
               </a>
@@ -474,7 +474,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
                   setCurrentGuess("");
                   setGameStatus("playing");
                 }}
-                className="flex items-center gap-1.5 text-xs font-mono text-[#161210]/70 hover:text-[#161210] px-3 py-2"
+                className="flex items-center gap-1.5 text-xs font-mono text-[#F4F0FA]/70 hover:text-[#F4F0FA] px-3 py-2"
               >
                 <RotateCcw className="size-3.5" />
                 <span>Play Again</span>
@@ -493,13 +493,13 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
                 const isAction = key === "ENTER" || key === "⌫";
                 const status = keyboardLetterStatuses[key];
 
-                let bgClass = "bg-[#E6DCCE] hover:bg-[#DDD2C2] text-[#161210]";
+                let bgClass = "bg-[#E6DCCE] hover:bg-[#DDD2C2] text-[#F4F0FA]";
                 if (status === "correct") {
-                  bgClass = "bg-[#2E6F4E] text-[#FAF6F0]";
+                  bgClass = "bg-[#2D8A68] text-[#F4F0FA]";
                 } else if (status === "present") {
-                  bgClass = "bg-[#D49B27] text-[#161210]";
+                  bgClass = "bg-[#D49B27] text-[#F4F0FA]";
                 } else if (status === "absent") {
-                  bgClass = "bg-[#3A332E]/70 text-[#FAF6F0]/60";
+                  bgClass = "bg-[#25173B]/80 text-[#C4B7D7]";
                 }
 
                 return (
@@ -523,17 +523,17 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
         </div>
       ) : (
         /* Tamil Akshara On-Screen Keyboard */
-        <div className="w-full bg-[#F2EAE0] p-4 rounded-xl border border-[#161210]/15 select-none">
-          <p className="text-xs font-mono text-[#161210]/60 text-center mb-3">
+        <div className="w-full bg-[#25173B] p-4 rounded-xl border border-[rgba(125,96,166,0.25)] select-none">
+          <p className="text-xs font-mono text-[#F4F0FA]/60 text-center mb-3">
             Click syllables to build word · எழுத்துக்களைத் தேர்ந்தெடுக்கவும்:
           </p>
           <div className="flex flex-wrap justify-center gap-2 mb-3">
             {edition.aksharaKeyboard.map((akshara: string) => {
               const status = keyboardLetterStatuses[akshara];
-              let bgClass = "bg-[#FAF6F0] hover:bg-[#EBE2D5] text-[#161210] border border-[#161210]/20";
-              if (status === "correct") bgClass = "bg-[#2E6F4E] text-[#FAF6F0]";
-              else if (status === "present") bgClass = "bg-[#D49B27] text-[#161210]";
-              else if (status === "absent") bgClass = "bg-[#3A332E]/70 text-[#FAF6F0]/60";
+              let bgClass = "bg-[#140C20] hover:bg-[#EBE2D5] text-[#F4F0FA] border border-[rgba(125,96,166,0.25)]";
+              if (status === "correct") bgClass = "bg-[#2D8A68] text-[#F4F0FA]";
+              else if (status === "present") bgClass = "bg-[#D49B27] text-[#F4F0FA]";
+              else if (status === "absent") bgClass = "bg-[#25173B]/80 text-[#C4B7D7]";
 
               return (
                 <button
@@ -551,13 +551,13 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
           <div className="flex justify-center gap-3">
             <button
               onClick={handleBackspace}
-              className="px-5 py-2.5 rounded-lg bg-[#E6DCCE] hover:bg-[#DDD2C2] text-[#161210] font-mono text-xs font-bold active:scale-95"
+              className="px-5 py-2.5 rounded-lg bg-[#E6DCCE] hover:bg-[#DDD2C2] text-[#F4F0FA] font-mono text-xs font-bold active:scale-95"
             >
               ⌫ நீக்கு (BACK)
             </button>
             <button
               onClick={handleSubmit}
-              className="px-6 py-2.5 rounded-lg bg-[#161210] hover:bg-[#C85A32] text-[#FAF6F0] font-mono text-xs font-bold active:scale-95 shadow-sm"
+              className="px-6 py-2.5 rounded-lg bg-[#140C20] hover:bg-[#A6F0CF] text-[#140C20] font-mono text-xs font-bold active:scale-95 shadow-sm"
             >
               சரிபார் (SUBMIT) ↵
             </button>

@@ -99,7 +99,7 @@ const KolamRosetteAbaloneShader = {
   uniforms: {
     uTime: { value: 0.0 },
     uReverie: { value: 0.0 },
-    uBrassGold: { value: new THREE.Color("#D4AF37") },
+    uBrassGold: { value: new THREE.Color("#A6F0CF") },
     uSoundholeCenter: { value: new THREE.Vector2(0, 0) },
   },
   vertexShader: `
@@ -145,7 +145,7 @@ const KolamRosetteAbaloneShader = {
       float viewAngle = dot(N, V);
       float pearlPhase = viewAngle * 2.2 + r * 3.5 + sin(theta * 4.0) * 0.25;
 
-      // Optical thin-film interference: Aqua-Teal #64D8CB, Rose-Gold #F4A28C, Warm Ivory #FFF8EB
+      // Optical thin-film interference: Aqua-Teal #64D8CB, Rose-Gold #F4A28C, Off-White #F4F0FA
       vec3 pearl = 0.5 + 0.5 * cos(6.28318 * (pearlPhase + vec3(0.0, 0.33, 0.67)));
       pearl = mix(vec3(0.98, 0.95, 0.90), pearl, 0.45);
 
@@ -484,7 +484,7 @@ export function AcousticSoundboard() {
               {/* Domed Brass Body */}
               <mesh geometry={pinGeo} castShadow>
                 <meshStandardMaterial
-                  color="#D4AF37"
+                  color="#A6F0CF"
                   metalness={0.92}
                   roughness={0.18}
                   {...(isCinematic ? { clearcoat: 0.85, clearcoatRoughness: 0.18 } : {})}

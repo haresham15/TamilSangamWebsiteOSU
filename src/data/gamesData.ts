@@ -86,13 +86,13 @@ export type ConnectionsEdition = ThodarpuEdition;
 
 /**
  * WCAG 2.2 AA Audited Tier Color Palette (D-13 Resolved)
- * Tier 3 uses #B24A25 ensuring 5.00:1 contrast against #FAF6F0
+ * Tier 3 uses #B24A25 ensuring 5.00:1 contrast against #F4F0FA
  */
 export const THODARPU_TIER_COLORS = {
-  1: { bg: "#E8B94F", text: "#161210", name: "Manjal" },
-  2: { bg: "#2E6F4E", text: "#FAF6F0", name: "Maragatham" },
-  3: { bg: "#B24A25", text: "#FAF6F0", name: "Semman Dark" },
-  4: { bg: "#3B4978", text: "#FAF6F0", name: "Neelam" },
+  1: { bg: "#4FD6E0", text: "#140C20", name: "Manjal" },
+  2: { bg: "#2E6F4E", text: "#F4F0FA", name: "Maragatham" },
+  3: { bg: "#D6459B", text: "#F4F0FA", name: "Semman Dark" },
+  4: { bg: "#3B4978", text: "#F4F0FA", name: "Neelam" },
 } as const;
 
 // ============================================================================

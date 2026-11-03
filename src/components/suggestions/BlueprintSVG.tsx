@@ -86,7 +86,7 @@ export function BlueprintSVG({
             height="24"
             patternUnits="userSpaceOnUse"
           >
-            <circle cx="12" cy="12" r="1.2" fill="#FFB84D" fillOpacity="0.25" />
+            <circle cx="12" cy="12" r="1.2" fill="#A6F0CF" fillOpacity="0.25" />
             <path
               d="M12 4L20 12L12 20L4 12Z"
               stroke="#8B5A2B"
@@ -112,9 +112,9 @@ export function BlueprintSVG({
 
           {/* Golden Zari Dimension Line Gradient */}
           <linearGradient id="zari-gold" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#FFB84D" stopOpacity="0.4" />
+            <stop offset="0%" stopColor="#A6F0CF" stopOpacity="0.4" />
             <stop offset="50%" stopColor="#FFD066" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#FFB84D" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#A6F0CF" stopOpacity="0.4" />
           </linearGradient>
         </defs>
 
@@ -379,7 +379,7 @@ export function BlueprintSVG({
                 cx={pin.x}
                 cy={pin.y}
                 r="12"
-                stroke="#FFB84D"
+                stroke="#A6F0CF"
                 strokeWidth="1.2"
                 strokeDasharray="2 2"
               />
@@ -388,7 +388,7 @@ export function BlueprintSVG({
                 cx={pin.x}
                 cy={pin.y}
                 r="5"
-                fill={isActive ? "#FFB84D" : "#8B5A2B"}
+                fill={isActive ? "#A6F0CF" : "#352254"}
               />
 
               {/* Pin Tag Label */}
@@ -398,7 +398,7 @@ export function BlueprintSVG({
                 width="135"
                 height="22"
                 fill="#150914"
-                stroke="#FFB84D"
+                stroke="#A6F0CF"
                 strokeWidth="1"
                 rx="2"
               />
@@ -427,7 +427,7 @@ export function BlueprintSVG({
             transform: "translate(-50%, -125%)",
           }}
         >
-          <div className="relative p-4 bg-[#150914]/95 border-2 border-[#FFB84D] shadow-[6px_6px_0px_#8B5A2B] backdrop-blur-md rounded-lg text-white">
+          <div className="relative p-4 bg-[#140C20]/95 border-2 border-[#4FD6E0] shadow-[6px_6px_0px_#352254] backdrop-blur-md rounded-lg text-white">
             <button
               onClick={() => setActivePin(null)}
               className="absolute top-2 right-2 text-amber-200/60 hover:text-white"
@@ -436,7 +436,7 @@ export function BlueprintSVG({
               <X className="w-3.5 h-3.5" />
             </button>
 
-            <div className="flex items-center gap-1.5 text-[#FFB84D] text-[10px] font-mono font-bold uppercase tracking-wider mb-1.5">
+            <div className="flex items-center gap-1.5 text-[#A6F0CF] text-[10px] font-mono font-bold uppercase tracking-wider mb-1.5">
               <Lightbulb className="w-3.5 h-3.5" />
               <span>{locale === "ta" ? activePin.labelTa : activePin.labelEn}</span>
             </div>
@@ -452,13 +452,13 @@ export function BlueprintSVG({
                 const formEl = document.getElementById("suggestion-form-box");
                 if (formEl) formEl.scrollIntoView({ behavior: "smooth" });
               }}
-              className="w-full text-center py-1.5 px-3 bg-[#FFB84D] hover:bg-[#ffc978] text-[#150914] text-[11px] font-mono font-bold uppercase tracking-wider transition-colors"
+              className="w-full text-center py-1.5 px-3 bg-[#A6F0CF] hover:bg-[#ffc978] text-[#150914] text-[11px] font-mono font-bold uppercase tracking-wider transition-colors"
             >
               {locale === "ta" ? "யோசனையை எழுத" : "Suggest for this area →"}
             </button>
 
             {/* Circular Roundel Lens Accent Dot at bottom */}
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#150914] border-b-2 border-r-2 border-[#FFB84D] rotate-45" />
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#140C20] border-b-2 border-r-2 border-[#4FD6E0] rotate-45" />
           </div>
         </div>
       )}

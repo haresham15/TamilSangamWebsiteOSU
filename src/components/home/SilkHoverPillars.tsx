@@ -38,7 +38,7 @@ const THREE_PILLARS: PillarItem[] = [
     descTa:
       "உரையாடல் தமிழ், அக்யூஸ்டிக் கல்லூரிப் பாடல்கள், திரைப்பட இசை மற்றும் மேடை நடனங்கள்.",
     href: "/pillars/culture-arts",
-    accent: "#C85A32",
+    accent: "#F26BB5",
     icon: Sparkles,
   },
   {
@@ -54,7 +54,7 @@ const THREE_PILLARS: PillarItem[] = [
     descTa:
       "ஓவல் புல்வெளி பிக்னிக், விளையாட்டு இரவுகள், சுவையான பிரியாணி விருந்து மற்றும் மாறாத நட்பு.",
     href: "/pillars/community-brotherhood",
-    accent: "#D4AF37",
+    accent: "#A6F0CF",
     icon: HeartHandshake,
   },
   {
@@ -83,14 +83,14 @@ export function SilkHoverPillars() {
   return (
     <section
       id="three-pillars"
-      className="scroll-mt-24 relative w-full bg-[#161210] text-[#FAF6F0] py-20 sm:py-28 overflow-hidden select-none border-y border-[#D4AF37]/20 shadow-[inset_0_20px_50px_rgba(0,0,0,0.5)]"
+      className="scroll-mt-24 relative w-full bg-[#140C20] text-[#F4F0FA] py-20 sm:py-28 overflow-hidden select-none border-y border-[#A6F0CF]/35 shadow-[inset_0_20px_50px_rgba(0,0,0,0.5)]"
     >
       {/* Fallback anchor target for backwards compatibility */}
       <span id="five-pillars" className="sr-only" aria-hidden="true" />
 
       {/* Ambient brass corner accents */}
-      <div className="absolute top-0 left-0 w-32 h-32 bg-[radial-gradient(circle_at_top_left,rgba(212,175,55,0.08),transparent_70%)] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-32 h-32 bg-[radial-gradient(circle_at_bottom_right,rgba(200,90,50,0.08),transparent_70%)] pointer-events-none" />
+      <div className="absolute top-0 left-0 w-32 h-32 bg-[radial-gradient(circle_at_top_left,rgba(166,240,207,0.08),transparent_70%)] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-32 h-32 bg-[radial-gradient(circle_at_bottom_right,rgba(242,107,181,0.08),transparent_70%)] pointer-events-none" />
 
       <div className="max-w-[1600px] mx-auto px-6 sm:px-12 relative z-10">
         {/* Courtyard Section Header in Espresso Tone */}
@@ -119,12 +119,12 @@ export function SilkHoverPillars() {
                   soundEngine.playPillarHover(idx);
                 }}
                 onMouseLeave={() => setHoveredPillar(null)}
-                className="group relative flex flex-col justify-between p-8 sm:p-10 rounded-xl bg-[#1F1A17] border border-[#D4AF37]/20 hover:border-[#D4AF37]/60 hover:bg-[#26201C] transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.25)] focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+                className="group relative flex flex-col justify-between p-8 sm:p-10 rounded-xl bg-[#1F1A17] border border-[#A6F0CF]/35 hover:border-[#A6F0CF]/35 hover:bg-[#26201C] transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.25)] focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
               >
                 {/* Top Lockup: Numeral & Icon */}
                 <div>
-                  <div className="flex items-center justify-between pb-6 border-b border-[#FAF6F0]/10 mb-6">
-                    <span className="font-serif text-3xl sm:text-4xl text-[#D4AF37] font-light group-hover:text-[#F39C12] transition-colors">
+                  <div className="flex items-center justify-between pb-6 border-b border-[rgba(125,96,166,0.25)] mb-6">
+                    <span className="font-serif text-3xl sm:text-4xl text-[#A6F0CF] font-light group-hover:text-[#F39C12] transition-colors">
                       {locale === "ta" ? pillar.numTa : pillar.num}
                     </span>
                     <span
@@ -137,25 +137,25 @@ export function SilkHoverPillars() {
 
                   {/* Title & Tamil subtitle */}
                   <div className="space-y-1 mb-4">
-                    <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#FAF6F0] group-hover:text-[#F39C12] transition-colors">
+                    <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA] group-hover:text-[#F39C12] transition-colors">
                       {pillar.nameEn}
                     </h3>
-                    <p lang="ta" className="text-sm font-serif text-[#D4AF37]/80">
+                    <p lang="ta" className="text-sm font-serif text-[#A6F0CF]/80">
                       {pillar.nameTa}
                     </p>
-                    <span className="font-sans text-[11px] tracking-widest uppercase font-semibold text-[#FAF6F0]/60 block pt-1">
+                    <span className="font-sans text-[11px] tracking-widest uppercase font-semibold text-[#C4B7D7] block pt-1">
                       {locale === "ta" ? pillar.subtitleTa : pillar.subtitleEn}
                     </span>
                   </div>
 
                   {/* Body description */}
-                  <p className="text-sm font-sans text-[#E8DEC8]/80 leading-relaxed group-hover:text-[#FAF6F0] transition-colors">
+                  <p className="text-sm font-sans text-[#C4B7D7] leading-relaxed group-hover:text-[#F4F0FA] transition-colors">
                     {locale === "ta" ? pillar.descTa : pillar.descEn}
                   </p>
                 </div>
 
                 {/* Bottom Action Footer */}
-                <div className="pt-8 mt-6 border-t border-[#FAF6F0]/10 flex items-center justify-between text-xs font-mono text-[#D4AF37]/80 group-hover:text-[#FAF6F0] transition-colors">
+                <div className="pt-8 mt-6 border-t border-[rgba(125,96,166,0.25)] flex items-center justify-between text-xs font-mono text-[#A6F0CF]/80 group-hover:text-[#F4F0FA] transition-colors">
                   <span className="uppercase tracking-wider">Explore Pillar</span>
                   <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </div>

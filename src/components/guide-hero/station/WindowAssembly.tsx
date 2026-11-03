@@ -12,7 +12,7 @@ function createVignetteBackdropTexture() {
   const pixels = new Uint8Array(width * height * 4);
 
   // HDR core [2.8, 1.85, 0.65] (represented in sRGB canvas)
-  const core = new THREE.Color("#FFB84D");
+  const core = new THREE.Color("#A6F0CF");
   const amber = new THREE.Color("#FF8A2A");
   const edge = new THREE.Color("#3A1608");
 

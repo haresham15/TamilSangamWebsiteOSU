@@ -18,14 +18,14 @@ export function TechFiresideGateway({
       aria-labelledby="fireside-gateway-heading"
       className={`relative w-full overflow-hidden rounded-2xl p-6 sm:p-8 md:p-10 border transition-all ${
         isDark
-          ? "bg-[#181615] border-white/10 text-white"
-          : "bg-[#F7F4EE] border-[#E8DFC8] text-[#2A2825]"
+          ? "bg-[#140C20] border-white/10 text-white"
+          : "bg-[#25173B] border-[rgba(125,96,166,0.25)] text-[#F4F0FA]"
       } ${className}`}
     >
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Editorial Header Bar */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-4 border-current/10 text-xs font-mono tracking-wider uppercase">
-          <div className="flex items-center gap-2 text-[#B85C38]">
+          <div className="flex items-center gap-2 text-[#A6F0CF]">
             <Network className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Academic &amp; Industry Bridges</span>
           </div>
@@ -45,11 +45,11 @@ export function TechFiresideGateway({
               Tamil Nadu x Ohio State Tech &amp; Career Firesides
             </h2>
 
-            <p lang="ta" className="text-sm sm:text-base font-tamil text-[#B85C38] tracking-normal">
+            <p lang="ta" className="text-sm sm:text-base font-tamil text-[#A6F0CF] tracking-normal">
               தொழில்நுட்பம் மற்றும் ஆய்வு வழிகாட்டல் கலந்துரையாடல்
             </p>
 
-            <p className={`text-sm sm:text-base leading-relaxed font-sans ${isDark ? "text-stone-300" : "text-[#57524C]"}`}>
+            <p className={`text-sm sm:text-base leading-relaxed font-sans ${isDark ? "text-stone-300" : "text-[#C4B7D7]"}`}>
               Connecting undergraduate Buckeyes with Tamil graduate researchers, PhD candidates, medical fellows, OSU faculty, and Columbus tech professionals. We are incubating casual evening firesides and coffee chats exploring research paths, career navigations, and bridges between Ohio State and Tamil Nadu&apos;s thriving tech ecosystem.
             </p>
 
@@ -60,7 +60,7 @@ export function TechFiresideGateway({
                   isDark ? "bg-stone-800 text-stone-300" : "bg-stone-200/50 text-stone-700"
                 }`}
               >
-                <GraduationCap className="w-3.5 h-3.5 text-[#B85C38]" />
+                <GraduationCap className="w-3.5 h-3.5 text-[#A6F0CF]" />
                 <span>Graduate &amp; PhD Mentorship</span>
               </span>
               <span
@@ -68,7 +68,7 @@ export function TechFiresideGateway({
                   isDark ? "bg-stone-800 text-stone-300" : "bg-stone-200/50 text-stone-700"
                 }`}
               >
-                <Building2 className="w-3.5 h-3.5 text-[#E5A93C]" />
+                <Building2 className="w-3.5 h-3.5 text-[#A6F0CF]" />
                 <span>Faculty Research Spotlight</span>
               </span>
               <span
@@ -85,10 +85,10 @@ export function TechFiresideGateway({
           <div className="lg:col-span-4 flex flex-col gap-3">
             <div
               className={`p-5 rounded-xl border space-y-3 ${
-                isDark ? "bg-[#211E1C] border-white/10" : "bg-white border-[#E6DDCE]"
+                isDark ? "bg-[#1A1028] border-white/10" : "bg-[#1A1028] border-[rgba(125,96,166,0.25)]"
               }`}
             >
-              <span className="text-xs font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
                 Lead a Fireside / Propose a Topic
               </span>
               <p className="text-xs text-stone-500 leading-relaxed">
@@ -96,7 +96,7 @@ export function TechFiresideGateway({
               </p>
               <Link
                 href="/join?track=fireside#membership-form"
-                className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-xs font-mono font-semibold uppercase tracking-wider transition-all bg-[#B85C38] text-white hover:bg-[#A04E2F] focus:outline-none focus:ring-2 focus:ring-[#B85C38]"
+                className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-xs font-mono font-semibold uppercase tracking-wider transition-all bg-[#A6F0CF] text-[#140C20] hover:bg-[#A04E2F] focus:outline-none focus:ring-2 focus:ring-[#4FD6E0]"
               >
                 <span>Join Fireside &amp; Coffee Chats</span>
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />

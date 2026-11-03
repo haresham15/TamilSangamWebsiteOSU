@@ -188,7 +188,7 @@ export const Shutter = forwardRef<ShutterHandle, ShutterProps>(function Shutter(
       role="status"
       aria-live="polite"
       aria-label="Loading page hero animation"
-      className="fixed inset-0 z-[9990] pointer-events-none select-none overflow-hidden bg-[#140F0D] flex items-center justify-center will-change-transform"
+      className="fixed inset-0 z-[9990] pointer-events-none select-none overflow-hidden bg-[#140C20] flex items-center justify-center will-change-transform"
       style={maskStyle}
     >
       {/* Background Ambient Warm Vignette */}
@@ -196,14 +196,14 @@ export const Shutter = forwardRef<ShutterHandle, ShutterProps>(function Shutter(
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle at center, rgba(42,26,18,0.45) 0%, rgba(20,15,13,0.92) 75%, #140F0D 100%)",
+            "radial-gradient(circle at center, rgba(37,23,59,0.45) 0%, rgba(20,12,32,0.92) 75%, #140C20 100%)",
         }}
       />
 
       {/* Expanding Iris Golden Edge Ring */}
       <div
         ref={portalRingRef}
-        className="absolute rounded-full pointer-events-none border border-[#D4AF37]/70 shadow-[0_0_35px_rgba(212,175,55,0.45),inset_0_0_20px_rgba(85,204,162,0.3)] will-change-transform"
+        className="absolute rounded-full pointer-events-none border border-[#A6F0CF]/35 shadow-[0_0_35px_rgba(166,240,207,0.45),inset_0_0_20px_rgba(85,204,162,0.3)] will-change-transform"
         style={{
           left: "50%",
           top: "50%",

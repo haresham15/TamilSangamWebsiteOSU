@@ -52,7 +52,7 @@ export const DepthCarousel: React.FC<DepthCarouselProps> = ({
   cardWidth = 320,
   cardHeight = 420,
   radius = 20,
-  tint = "#2A2825",
+  tint = "#140C20",
   depth = 220,
   spread = 90,
   tilt = 22,
@@ -490,12 +490,12 @@ export const DepthCarousel: React.FC<DepthCarouselProps> = ({
             {/* In-Card Title Teaser */}
             <div className="absolute bottom-4 left-4 right-4 z-10 text-left pointer-events-none">
               {item.badge && (
-                <span className="block text-[10px] font-mono font-semibold uppercase tracking-widest text-[#E5A93C] mb-1">
+                <span className="block text-[10px] font-mono font-semibold uppercase tracking-widest text-[#A6F0CF] mb-1">
                   {item.badge}
                 </span>
               )}
               {item.title && (
-                <h4 className="text-sm sm:text-base font-serif font-bold text-[#FAF9F6] line-clamp-1 drop-shadow-sm">
+                <h4 className="text-sm sm:text-base font-serif font-bold text-[#F4F0FA] line-clamp-1 drop-shadow-sm">
                   {item.title}
                 </h4>
               )}

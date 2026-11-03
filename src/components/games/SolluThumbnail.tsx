@@ -8,20 +8,20 @@ export function SolluThumbnail() {
   return (
     <div
       aria-hidden="true"
-      className="relative w-full h-56 sm:h-64 rounded-xl overflow-hidden bg-radial from-[#241E1B] via-[#1A1513] to-[#120F0E] p-4 flex flex-col justify-center items-center select-none border border-[#D4AF37]/20 shadow-inner group-hover:border-[#D4AF37]/50 transition-colors duration-300"
+      className="relative w-full h-56 sm:h-64 rounded-xl overflow-hidden bg-radial from-[#241E1B] via-[#1A1513] to-[#120F0E] p-4 flex flex-col justify-center items-center select-none border border-[#A6F0CF]/35 shadow-inner group-hover:border-[#A6F0CF]/35 transition-colors duration-300"
     >
       {/* Background Architectural Grid Pattern */}
       <div
         className="absolute inset-0 opacity-[0.06] pointer-events-none"
         style={{
-          backgroundImage: `radial-gradient(#D4AF37 1px, transparent 1px), radial-gradient(#C85A32 1px, transparent 1px)`,
+          backgroundImage: `radial-gradient(#4FD6E0 1px, transparent 1px), radial-gradient(#F26BB5 1px, transparent 1px)`,
           backgroundSize: "20px 20px",
           backgroundPosition: "0 0, 10px 10px",
         }}
       />
 
       {/* Ambient Warm Studio Lighting */}
-      <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-48 h-24 bg-[#D4AF37]/15 rounded-full blur-2xl pointer-events-none" />
+      <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-48 h-24 bg-[#A6F0CF]/15 rounded-full blur-2xl pointer-events-none" />
 
       {/* 3D Angled Letterpress Tray */}
       <div className="relative z-10 w-full max-w-[340px] flex flex-col gap-2.5 [perspective:900px]">
@@ -43,11 +43,11 @@ export function SolluThumbnail() {
               <span className="font-tamil text-base sm:text-lg font-bold text-[#FFF5E6] drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)] leading-none">
                 {item.ta}
               </span>
-              <span className="font-mono text-[8px] font-semibold text-[#D4AF37] tracking-wider mt-0.5 opacity-90">
+              <span className="font-mono text-[8px] font-semibold text-[#A6F0CF] tracking-wider mt-0.5 opacity-90">
                 {item.sub}
               </span>
               {/* Corner Gold Brass Accent */}
-              <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-[#D4AF37] opacity-60" />
+              <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-[#A6F0CF] opacity-60" />
             </motion.div>
           ))}
         </div>
@@ -73,8 +73,8 @@ export function SolluThumbnail() {
                   isCorrect
                     ? "bg-linear-to-b from-[#347A55] to-[#20583B] border-[#52B788]/60 text-[#FFF5E6] shadow-[0_3px_8px_rgba(0,0,0,0.4)]"
                     : isPresent
-                    ? "bg-linear-to-b from-[#C8952B] to-[#996D18] border-[#E8B94F]/70 text-[#161210] font-extrabold shadow-[0_3px_8px_rgba(0,0,0,0.4)]"
-                    : "bg-[#251F1C] border-[#161210] text-[#FAF6F0]/40 shadow-inner"
+                    ? "bg-linear-to-b from-[#C8952B] to-[#996D18] border-[#E8B94F]/70 text-[#F4F0FA] font-extrabold shadow-[0_3px_8px_rgba(0,0,0,0.4)]"
+                    : "bg-[#25173B] border-[rgba(125,96,166,0.25)] text-[#C4B7D7] shadow-inner"
                 }`}
               >
                 <span className="font-sans text-sm sm:text-base font-bold leading-none">
@@ -90,21 +90,21 @@ export function SolluThumbnail() {
           {[0, 1, 2, 3, 4].map((slot) => (
             <div
               key={slot}
-              className="aspect-square rounded-lg border border-dashed border-[#D4AF37]/30 bg-[#161210]/40 flex items-center justify-center"
+              className="aspect-square rounded-lg border border-dashed border-[#A6F0CF]/35 bg-[#140C20]/40 flex items-center justify-center"
             >
-              <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]/30" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF]/30" />
             </div>
           ))}
         </div>
       </div>
 
       {/* Bottom Editorial Caption Stamp */}
-      <div className="absolute bottom-2.5 left-4 right-4 flex items-center justify-between text-[10px] font-mono tracking-widest uppercase text-[#FAF6F0]/45">
+      <div className="absolute bottom-2.5 left-4 right-4 flex items-center justify-between text-[10px] font-mono tracking-widest uppercase text-[#C4B7D7]">
         <span className="flex items-center gap-1.5">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#52B788]" />
           WORDLE MATRIX
         </span>
-        <span className="text-[#D4AF37]/75">6 ATTEMPTS</span>
+        <span className="text-[#A6F0CF]/75">6 ATTEMPTS</span>
       </div>
     </div>
   );

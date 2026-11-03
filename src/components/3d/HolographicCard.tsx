@@ -128,7 +128,7 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
           >
             {/* Top Header & Role */}
             <div className="flex items-center justify-between z-10">
-              <span className="text-xs font-mono uppercase tracking-wider text-[#D4AF37] font-bold">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#A6F0CF] font-bold">
                 {member.roleEn}
               </span>
               <span className="text-xs text-[#a89078] font-mono">{member.term}</span>
@@ -153,7 +153,7 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
                 <p className="text-2xl font-bold text-[#faf5ed] tracking-wide font-display drop-shadow-md">
                   {member.nameTa}
                 </p>
-                <p className="text-xs text-[#D4AF37] font-mono">{member.roleTa}</p>
+                <p className="text-xs text-[#A6F0CF] font-mono">{member.roleTa}</p>
               </div>
             </div>
 
@@ -166,9 +166,9 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
               <button
                 type="button"
                 onClick={handleFlip}
-                className="flex items-center gap-1 text-[11px] text-[#e0b968] font-mono hover:text-[#faf5ed] px-2.5 py-1 bg-[#24140b] border border-[#6b4a32] hover:border-[#D4AF37] rounded transition-colors"
+                className="flex items-center gap-1 text-[11px] text-[#e0b968] font-mono hover:text-[#faf5ed] px-2.5 py-1 bg-[#24140b] border border-[#6b4a32] hover:border-[#A6F0CF] rounded transition-colors"
               >
-                <RotateCw className="w-3 h-3 text-[#D4AF37]" />
+                <RotateCw className="w-3 h-3 text-[#A6F0CF]" />
                 <span>FLIP</span>
               </button>
             </div>
@@ -187,8 +187,8 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
             {/* Back Header */}
             <div className="flex items-center justify-between border-b border-[#3d2714] pb-3">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
-                <span className="text-xs font-mono uppercase tracking-widest text-[#D4AF37]">
+                <ShieldCheck className="w-4 h-4 text-[#A6F0CF]" />
+                <span className="text-xs font-mono uppercase tracking-widest text-[#A6F0CF]">
                   Leadership Portfolio
                 </span>
               </div>
@@ -198,7 +198,7 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
                 className="w-7 h-7 flex items-center justify-center border border-[#6b4a32] bg-[#24140b] hover:bg-[#3d2714] text-[#e0b968] rounded transition-colors"
                 aria-label="Flip Card"
               >
-                <RotateCw className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <RotateCw className="w-3.5 h-3.5 text-[#A6F0CF]" />
               </button>
             </div>
 
@@ -211,7 +211,7 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
                 <p className="text-sm font-semibold text-[#faf5ed]">
                   {member.committeeEn}
                 </p>
-                <p className="text-xs text-[#D4AF37] font-mono mt-0.5">
+                <p className="text-xs text-[#A6F0CF] font-mono mt-0.5">
                   {member.committeeTa}
                 </p>
               </div>
@@ -236,7 +236,7 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({ member, onExpa
                 onClick={(e) => e.stopPropagation()}
                 className="flex items-center gap-1.5 text-[#e0b968] hover:text-[#faf5ed] transition-colors"
               >
-                <Mail className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <Mail className="w-3.5 h-3.5 text-[#A6F0CF]" />
                 <span>{member.email}</span>
               </a>
               <span className="text-[#a89078]">{member.term}</span>

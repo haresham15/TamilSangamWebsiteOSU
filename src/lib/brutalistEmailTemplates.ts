@@ -2,10 +2,10 @@
  * Brutalist HTML Email Templates — OSU Tamil Sangam
  *
  * Implements the editorial Muttram aesthetic:
- * - Surfaces: Warm Ivory (#FAF9F6), Warm Sand (#F4EFEA), Espresso (#1A1614)
- * - Accents: Terracotta (#C85A32), Turmeric (#D99B26)
+ * - Surfaces: Warm Ivory (#F4F0FA), Warm Sand (#25173B), Espresso (#140C20)
+ * - Accents: Terracotta (#F26BB5), Turmeric (#A6F0CF)
  * - Typography: Cormorant Garamond / Marcellus serif, Outfit sans, Fragment Mono monospace, Mukta Malar Tamil
- * - Structure: High-contrast 2px solid #1A1614 borders, brutalist offset shadows, zero generic corporate gradients
+ * - Structure: High-contrast 2px solid #140C20 borders, brutalist offset shadows, zero generic corporate gradients
  *
  * Covers all 3 active community submission flows:
  * 1. "Sign Our Guestbook" (/join)
@@ -61,28 +61,28 @@ export function generateGuestbookConfirmationHtml(params: {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vanakkam! Your Place at the Sangam Hearth Is Confirmed</title>
   <style>
-    body { margin: 0; padding: 0; background-color: #F5F2EB; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1A1614; -webkit-font-smoothing: antialiased; }
+    body { margin: 0; padding: 0; background-color: #140C20; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #F4F0FA; -webkit-font-smoothing: antialiased; }
     table { border-collapse: collapse; }
-    .main-wrap { width: 100%; max-width: 600px; margin: 32px auto; background-color: #FAF9F6; border: 2px solid #1A1614; box-shadow: 6px 6px 0px #1A1614; }
-    .masthead { background-color: #1A1614; color: #FAF9F6; padding: 18px 24px; text-align: left; }
-    .masthead-sub { font-family: 'Courier New', Courier, monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #D99B26; margin: 0 0 4px 0; font-weight: bold; }
-    .masthead-title { font-family: 'Georgia', serif; font-size: 20px; font-weight: normal; margin: 0; letter-spacing: 0.5px; color: #FAF9F6; }
+    .main-wrap { width: 100%; max-width: 600px; margin: 32px auto; background-color: #25173B; border: 2px solid #352254; box-shadow: 6px 6px 0px #140C20; }
+    .masthead { background-color: #140C20; color: #F4F0FA; padding: 18px 24px; text-align: left; }
+    .masthead-sub { font-family: 'Courier New', Courier, monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #A6F0CF; margin: 0 0 4px 0; font-weight: bold; }
+    .masthead-title { font-family: 'Georgia', serif; font-size: 20px; font-weight: normal; margin: 0; letter-spacing: 0.5px; color: #F4F0FA; }
     .content { padding: 36px 32px; }
-    .tamil-salutation { font-family: 'Mukta Malar', 'Georgia', serif; font-size: 32px; font-weight: bold; color: #C85A32; margin: 0 0 6px 0; line-height: 1.2; }
-    .en-salutation { font-family: 'Georgia', serif; font-size: 24px; font-weight: normal; color: #1A1614; margin: 0 0 16px 0; }
-    .deck { font-size: 15px; line-height: 1.6; color: #57524C; margin: 0 0 28px 0; }
-    .dossier-card { background-color: #F4EFEA; border: 2px solid #1A1614; padding: 22px; margin: 0 0 28px 0; box-shadow: 3px 3px 0px #1A1614; }
-    .dossier-header { font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #C85A32; font-weight: bold; margin-bottom: 14px; border-bottom: 1px dashed #1A1614; padding-bottom: 8px; }
+    .tamil-salutation { font-family: 'Mukta Malar', 'Georgia', serif; font-size: 32px; font-weight: bold; color: #A6F0CF; margin: 0 0 6px 0; line-height: 1.2; }
+    .en-salutation { font-family: 'Georgia', serif; font-size: 24px; font-weight: normal; color: #F4F0FA; margin: 0 0 16px 0; }
+    .deck { font-size: 15px; line-height: 1.6; color: #C4B7D7; margin: 0 0 28px 0; }
+    .dossier-card { background-color: #1A1028; border: 2px solid #352254; padding: 22px; margin: 0 0 28px 0; box-shadow: 3px 3px 0px #140C20; }
+    .dossier-header { font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #A6F0CF; font-weight: bold; margin-bottom: 14px; border-bottom: 1px dashed rgba(166, 240, 207, 0.35); padding-bottom: 8px; }
     .dossier-row { margin-bottom: 10px; font-size: 14px; line-height: 1.4; }
-    .dossier-label { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #57524C; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px; }
-    .dossier-val { font-size: 15px; font-weight: bold; color: #1A1614; }
-    .tag-track { display: inline-block; background-color: #1A1614; color: #FAF9F6; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; padding: 4px 10px; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+    .dossier-label { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #C4B7D7; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px; }
+    .dossier-val { font-size: 15px; font-weight: bold; color: #F4F0FA; }
+    .tag-track { display: inline-block; background-color: #140C20; color: #F4F0FA; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; padding: 4px 10px; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
     .cta-container { text-align: center; margin: 32px 0 24px 0; }
-    .btn-brutalist { display: inline-block; background-color: #C85A32; color: #FAF9F6 !important; text-decoration: none; font-family: 'Courier New', Courier, monospace; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; padding: 14px 28px; border: 2px solid #1A1614; box-shadow: 4px 4px 0px #1A1614; transition: all 0.2s ease; }
-    .signoff-box { border-top: 1px solid #E5DDD0; padding-top: 24px; margin-top: 28px; }
-    .signoff-name { font-family: 'Georgia', serif; font-size: 16px; font-weight: bold; color: #1A1614; margin: 0 0 2px 0; }
-    .signoff-title { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #57524C; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
-    .footer { background-color: #EFECE6; border-top: 2px solid #1A1614; padding: 22px 32px; font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 1.5; color: #57524C; }
+    .btn-brutalist { display: inline-block; background-color: #A6F0CF; color: #F4F0FA !important; text-decoration: none; font-family: 'Courier New', Courier, monospace; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; padding: 14px 28px; border: 2px solid #352254; box-shadow: 4px 4px 0px #140C20; transition: all 0.2s ease; }
+    .signoff-box { border-top: 1px solid rgba(125, 96, 166, 0.25); padding-top: 24px; margin-top: 28px; }
+    .signoff-name { font-family: 'Georgia', serif; font-size: 16px; font-weight: bold; color: #F4F0FA; margin: 0 0 2px 0; }
+    .signoff-title { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #C4B7D7; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+    .footer { background-color: #1A1028; border-top: 2px solid #352254; padding: 22px 32px; font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 1.5; color: #C4B7D7; }
   </style>
 </head>
 <body>
@@ -125,13 +125,13 @@ export function generateGuestbookConfirmationHtml(params: {
           <div class="dossier-row" style="margin-top: 14px;">
             <span class="dossier-label">[PARTICIPATION_TRACK]</span>
             <div class="tag-track">${escapeHtml(track.name)}</div>
-            <p style="font-size: 13px; color: #57524C; margin: 6px 0 0 0; line-height: 1.5;">${escapeHtml(track.desc)}</p>
+            <p style="font-size: 13px; color: #C4B7D7; margin: 6px 0 0 0; line-height: 1.5;">${escapeHtml(track.desc)}</p>
           </div>
 
           ${notes?.trim() ? `
           <div class="dossier-row" style="margin-top: 14px;">
             <span class="dossier-label">[YOUR_NOTES_TO_THE_BOARD]</span>
-            <span style="font-size: 13px; font-style: italic; color: #1A1614; display: block; margin-top: 4px; padding: 8px 12px; background: #FAF9F6; border-left: 3px solid #C85A32;">
+            <span style="font-size: 13px; font-style: italic; color: #F4F0FA; display: block; margin-top: 4px; padding: 8px 12px; background: #25173B; border-left: 3px solid #F26BB5;">
               "${escapeHtml(notes.trim())}"
             </span>
           </div>
@@ -139,11 +139,11 @@ export function generateGuestbookConfirmationHtml(params: {
         </div>
 
         <!-- Next Steps Instruction -->
-        <div style="margin: 24px 0; padding: 16px 20px; border-left: 4px solid #D99B26; background-color: #FDFBF7;">
+        <div style="margin: 24px 0; padding: 16px 20px; border-left: 4px solid #A6F0CF; background-color: #25173B; color: #F4F0FA;">
           <strong style="font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #B37D1D; display: block; margin-bottom: 6px;">
             NEXT STEPS FOR YOUR TRACK:
           </strong>
-          <span style="font-size: 14px; color: #1A1614; line-height: 1.5;">
+          <span style="font-size: 14px; color: #F4F0FA; line-height: 1.5;">
             ${escapeHtml(track.nextStep)}
           </span>
         </div>
@@ -153,7 +153,7 @@ export function generateGuestbookConfirmationHtml(params: {
           <a href="${GROUPME_URL}" class="btn-brutalist" target="_blank">
             JOIN OFFICIAL STUDENT GROUPME →
           </a>
-          <p style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #57524C; margin-top: 10px;">
+          <p style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #C4B7D7; margin-top: 10px;">
             Daily date drops, rideshares, South Oval picnics & food alerts.
           </p>
         </div>
@@ -162,7 +162,7 @@ export function generateGuestbookConfirmationHtml(params: {
         <div class="signoff-box">
           <div class="signoff-name">Meenakshi Varadarajan</div>
           <div class="signoff-title">President, The Ohio State University Tamil Sangam</div>
-          <div style="font-size: 12px; color: #57524C; margin-top: 4px;">
+          <div style="font-size: 12px; color: #C4B7D7; margin-top: 4px;">
             On behalf of the 2026 Executive Council & Subcommittee
           </div>
         </div>
@@ -230,21 +230,21 @@ export function generateIdeasHearthConfirmationHtml(params: {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Proposal Pinned to the Hearth · OSU Tamil Sangam</title>
   <style>
-    body { margin: 0; padding: 0; background-color: #F5F2EB; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1A1614; }
-    .main-wrap { width: 100%; max-width: 600px; margin: 32px auto; background-color: #FAF9F6; border: 2px solid #1A1614; box-shadow: 6px 6px 0px #1A1614; }
-    .masthead { background-color: #1A1614; color: #FAF9F6; padding: 18px 24px; }
-    .masthead-sub { font-family: 'Courier New', Courier, monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #D99B26; margin: 0 0 4px 0; font-weight: bold; }
-    .masthead-title { font-family: 'Georgia', serif; font-size: 20px; font-weight: normal; margin: 0; color: #FAF9F6; }
+    body { margin: 0; padding: 0; background-color: #140C20; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #F4F0FA; }
+    .main-wrap { width: 100%; max-width: 600px; margin: 32px auto; background-color: #25173B; border: 2px solid #352254; box-shadow: 6px 6px 0px #140C20; }
+    .masthead { background-color: #140C20; color: #F4F0FA; padding: 18px 24px; }
+    .masthead-sub { font-family: 'Courier New', Courier, monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #A6F0CF; margin: 0 0 4px 0; font-weight: bold; }
+    .masthead-title { font-family: 'Georgia', serif; font-size: 20px; font-weight: normal; margin: 0; color: #F4F0FA; }
     .content { padding: 36px 32px; }
-    .tamil-title { font-family: 'Mukta Malar', 'Georgia', serif; font-size: 28px; font-weight: bold; color: #D99B26; margin: 0 0 6px 0; line-height: 1.2; }
-    .en-title { font-family: 'Georgia', serif; font-size: 22px; font-weight: normal; color: #1A1614; margin: 0 0 16px 0; }
-    .deck { font-size: 15px; line-height: 1.6; color: #57524C; margin: 0 0 24px 0; }
-    .receipt-box { background-color: #F4EFEA; border: 2px solid #1A1614; padding: 22px; margin: 0 0 28px 0; box-shadow: 3px 3px 0px #1A1614; }
-    .receipt-id { font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #D99B26; font-weight: bold; border-bottom: 1px dashed #1A1614; padding-bottom: 8px; margin-bottom: 14px; }
-    .receipt-category { display: inline-block; background-color: #D99B26; color: #1A1614; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; padding: 4px 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-    .receipt-body { font-family: 'Georgia', serif; font-size: 15px; color: #1A1614; line-height: 1.6; white-space: pre-wrap; background: #FAF9F6; padding: 14px 18px; border-left: 3px solid #1A1614; }
-    .board-note { background-color: #FAF4EB; border-left: 4px solid #C85A32; padding: 14px 18px; margin: 24px 0; font-size: 13px; line-height: 1.5; color: #1A1614; }
-    .footer { background-color: #EFECE6; border-top: 2px solid #1A1614; padding: 22px 32px; font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 1.5; color: #57524C; }
+    .tamil-title { font-family: 'Mukta Malar', 'Georgia', serif; font-size: 28px; font-weight: bold; color: #A6F0CF; margin: 0 0 6px 0; line-height: 1.2; }
+    .en-title { font-family: 'Georgia', serif; font-size: 22px; font-weight: normal; color: #F4F0FA; margin: 0 0 16px 0; }
+    .deck { font-size: 15px; line-height: 1.6; color: #C4B7D7; margin: 0 0 24px 0; }
+    .receipt-box { background-color: #1A1028; border: 2px solid #352254; padding: 22px; margin: 0 0 28px 0; box-shadow: 3px 3px 0px #140C20; }
+    .receipt-id { font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #A6F0CF; font-weight: bold; border-bottom: 1px dashed rgba(166, 240, 207, 0.35); padding-bottom: 8px; margin-bottom: 14px; }
+    .receipt-category { display: inline-block; background-color: #A6F0CF; color: #F4F0FA; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; padding: 4px 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .receipt-body { font-family: 'Georgia', serif; font-size: 15px; color: #F4F0FA; line-height: 1.6; white-space: pre-wrap; background: #25173B; padding: 14px 18px; border-left: 3px solid #A6F0CF; }
+    .board-note { background-color: #25173B; border-left: 4px solid #F26BB5; color: #F4F0FA; padding: 14px 18px; margin: 24px 0; font-size: 13px; line-height: 1.5; color: #F4F0FA; }
+    .footer { background-color: #1A1028; border-top: 2px solid #352254; padding: 22px 32px; font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 1.5; color: #C4B7D7; }
   </style>
 </head>
 <body>
@@ -266,30 +266,30 @@ export function generateIdeasHearthConfirmationHtml(params: {
         <div class="receipt-box">
           <div class="receipt-id">BLUEPRINT DISPATCH · ${escapeHtml(recordId)}</div>
           <div class="receipt-category">${escapeHtml(category)}</div>
-          <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #57524C; margin-bottom: 10px;">
+          <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #C4B7D7; margin-bottom: 10px;">
             PINNED BY: ${escapeHtml(author)} ${email ? `&lt;${escapeHtml(email)}&gt;` : ""}
           </div>
           <div class="receipt-body">"${escapeHtml(message)}"</div>
         </div>
 
         <div class="board-note">
-          <strong style="font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #C85A32; display: block; margin-bottom: 4px;">
+          <strong style="font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #A6F0CF; display: block; margin-bottom: 4px;">
             EXECUTIVE REVIEW PROTOCOL:
           </strong>
           President Meenakshi Varadarajan and the executive board review all community submissions every Sunday during weekly agenda planning. Selected projects are assigned to our student working council for implementation.
         </div>
 
         <div style="text-align: center; margin: 28px 0 16px 0;">
-          <a href="${GROUPME_URL}" style="display: inline-block; background-color: #1A1614; color: #FAF9F6; text-decoration: none; font-family: 'Courier New', Courier, monospace; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; padding: 12px 24px; border: 2px solid #1A1614; box-shadow: 4px 4px 0px #C85A32;" target="_blank">
+          <a href="${GROUPME_URL}" style="display: inline-block; background-color: #140C20; color: #F4F0FA; text-decoration: none; font-family: 'Courier New', Courier, monospace; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; padding: 12px 24px; border: 2px solid #352254; box-shadow: 4px 4px 0px #A6F0CF;" target="_blank">
             JOIN STUDENT GROUPME FOR AGENDA DROPS →
           </a>
         </div>
 
-        <div style="border-top: 1px solid #E5DDD0; padding-top: 20px; margin-top: 28px;">
-          <div style="font-family: 'Georgia', serif; font-size: 15px; font-weight: bold; color: #1A1614;">
+        <div style="border-top: 1px solid rgba(125, 96, 166, 0.25); padding-top: 20px; margin-top: 28px;">
+          <div style="font-family: 'Georgia', serif; font-size: 15px; font-weight: bold; color: #F4F0FA;">
             Meenakshi Varadarajan
           </div>
-          <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #57524C; text-transform: uppercase;">
+          <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #C4B7D7; text-transform: uppercase;">
             President, The Ohio State University Tamil Sangam
           </div>
         </div>
@@ -349,16 +349,16 @@ export function generateStayInSangamConfirmationHtml(params: {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vanakkam! You're in the Sangam Loop</title>
   <style>
-    body { margin: 0; padding: 0; background-color: #F5F2EB; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1A1614; }
-    .main-wrap { width: 100%; max-width: 600px; margin: 32px auto; background-color: #FAF9F6; border: 2px solid #1A1614; box-shadow: 6px 6px 0px #1A1614; }
-    .masthead { background-color: #1A1614; color: #FAF9F6; padding: 18px 24px; }
-    .masthead-sub { font-family: 'Courier New', Courier, monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #D99B26; margin: 0 0 4px 0; font-weight: bold; }
-    .masthead-title { font-family: 'Georgia', serif; font-size: 20px; font-weight: normal; margin: 0; color: #FAF9F6; }
+    body { margin: 0; padding: 0; background-color: #140C20; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #F4F0FA; }
+    .main-wrap { width: 100%; max-width: 600px; margin: 32px auto; background-color: #25173B; border: 2px solid #352254; box-shadow: 6px 6px 0px #140C20; }
+    .masthead { background-color: #140C20; color: #F4F0FA; padding: 18px 24px; }
+    .masthead-sub { font-family: 'Courier New', Courier, monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #A6F0CF; margin: 0 0 4px 0; font-weight: bold; }
+    .masthead-title { font-family: 'Georgia', serif; font-size: 20px; font-weight: normal; margin: 0; color: #F4F0FA; }
     .content { padding: 36px 32px; }
-    .tamil-title { font-family: 'Mukta Malar', 'Georgia', serif; font-size: 30px; font-weight: bold; color: #C85A32; margin: 0 0 6px 0; }
-    .banner-event { background-color: #C85A32; color: #FAF9F6; padding: 12px 18px; font-family: 'Courier New', Courier, monospace; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin: 20px 0; border: 2px solid #1A1614; }
-    .box-interests { background-color: #F4EFEA; border: 2px solid #1A1614; padding: 18px 22px; margin: 22px 0; }
-    .footer { background-color: #EFECE6; border-top: 2px solid #1A1614; padding: 22px 32px; font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 1.5; color: #57524C; }
+    .tamil-title { font-family: 'Mukta Malar', 'Georgia', serif; font-size: 30px; font-weight: bold; color: #A6F0CF; margin: 0 0 6px 0; }
+    .banner-event { background-color: #A6F0CF; color: #F4F0FA; padding: 12px 18px; font-family: 'Courier New', Courier, monospace; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin: 20px 0; border: 2px solid #352254; }
+    .box-interests { background-color: #1A1028; border: 2px solid #352254; padding: 18px 22px; margin: 22px 0; }
+    .footer { background-color: #1A1028; border-top: 2px solid #352254; padding: 22px 32px; font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 1.5; color: #C4B7D7; }
   </style>
 </head>
 <body>
@@ -373,11 +373,11 @@ export function generateStayInSangamConfirmationHtml(params: {
         <div class="tamil-title">வணக்கம்!</div>
         <h2 style="font-family: 'Georgia', serif; font-size: 24px; font-weight: normal; margin: 0 0 14px 0;">${escapeHtml(greeting)}</h2>
 
-        <div style="display: inline-block; background: #FAF9F6; border: 1px solid #1A1614; padding: 4px 10px; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; margin-bottom: 18px;">
+        <div style="display: inline-block; background: #25173B; border: 1px solid #352254; padding: 4px 10px; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; margin-bottom: 18px;">
           ${isBuckeye ? "🔴 VERIFIED BUCKEYE STATUS" : "⚪ COMMUNITY MEMBER"}
         </div>
 
-        <p style="font-size: 15px; line-height: 1.6; color: #57524C;">
+        <p style="font-size: 15px; line-height: 1.6; color: #C4B7D7;">
           You are now plugged directly into our dispatch network. You will receive priority notice on campus feasts, cultural showcases, ticket releases, and casual student kickbacks.
         </p>
 
@@ -387,25 +387,25 @@ export function generateStayInSangamConfirmationHtml(params: {
         </div>
 
         <div class="box-interests">
-          <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #C85A32; font-weight: bold; margin-bottom: 10px;">
+          <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #A6F0CF; font-weight: bold; margin-bottom: 10px;">
             SUBSCRIBED TOPICS:
           </div>
-          <ul style="margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.8; color: #1A1614; list-style-type: none;">
+          <ul style="margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.8; color: #F4F0FA; list-style-type: none;">
             ${interestsList}
           </ul>
         </div>
 
         <div style="text-align: center; margin: 32px 0 20px 0;">
-          <a href="${GROUPME_URL}" style="display: inline-block; background-color: #C85A32; color: #FAF9F6; text-decoration: none; font-family: 'Courier New', Courier, monospace; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; padding: 14px 28px; border: 2px solid #1A1614; box-shadow: 4px 4px 0px #1A1614;" target="_blank">
+          <a href="${GROUPME_URL}" style="display: inline-block; background-color: #A6F0CF; color: #F4F0FA; text-decoration: none; font-family: 'Courier New', Courier, monospace; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; padding: 14px 28px; border: 2px solid #352254; box-shadow: 4px 4px 0px #140C20;" target="_blank">
             JOIN OFFICIAL STUDENT GROUPME →
           </a>
         </div>
 
-        <div style="border-top: 1px solid #E5DDD0; padding-top: 20px; margin-top: 28px;">
-          <div style="font-family: 'Georgia', serif; font-size: 15px; font-weight: bold; color: #1A1614;">
+        <div style="border-top: 1px solid rgba(125, 96, 166, 0.25); padding-top: 20px; margin-top: 28px;">
+          <div style="font-family: 'Georgia', serif; font-size: 15px; font-weight: bold; color: #F4F0FA;">
             OSU Tamil Sangam Executive Board
           </div>
-          <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #57524C;">
+          <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #C4B7D7;">
             Columbus, Ohio · The Ohio State University
           </div>
         </div>

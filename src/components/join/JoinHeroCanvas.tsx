@@ -173,7 +173,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
           }
 
           // Dissolve dark radial vignette overlay during threshold pass (p = 0.65 -> 0.85)
-          // to eliminate any brown smudge under the navbar or over the incoming #FAF7F2 sheet
+          // to eliminate any brown smudge under the navbar or over the incoming #140C20 sheet
           if (vignetteRef.current) {
             const vigFade = Math.max(0, Math.min(1, (p - 0.65) / 0.20));
             vignetteRef.current.style.opacity = String(1 - vigFade);
@@ -242,10 +242,10 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
             id="hero-skip-link"
             href="#membership-form"
             onClick={handleSkipToForm}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#161210]/85 text-[#FAF7F2] border border-[#D4AF37]/40 backdrop-blur-md rounded-full text-xs font-mono tracking-wider hover:border-[#C85A32] hover:bg-[#1E1815] transition-all will-change-[transform,opacity] cursor-pointer shrink-0 min-h-[44px] shadow-lg"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#140C20]/85 text-[#F4F0FA] border border-[#A6F0CF]/35 backdrop-blur-md rounded-full text-xs font-mono tracking-wider hover:border-[#A6F0CF] hover:bg-[#140C20] transition-all will-change-[transform,opacity] cursor-pointer shrink-0 min-h-[44px] shadow-lg"
           >
             <span>{locale === "ta" ? "இப்போதே இணையுங்கள் ↓" : "Skip to Guestbook ↓"}</span>
-            <span className="text-[10px] text-[#D4AF37] font-body hidden md:inline">
+            <span className="text-[10px] text-[#A6F0CF] font-body hidden md:inline">
               {locale === "ta" ? "(படிவம்)" : "(Form)"}
             </span>
           </a>

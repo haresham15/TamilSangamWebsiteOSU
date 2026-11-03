@@ -17,7 +17,7 @@ import { heroState } from "./state";
  *    - Procedural 35mm film grain hash to guarantee zero color banding on OLED/HDR displays.
  * 2. Out-of-Focus 35mm Cinema Bokeh Field (90 Orbs):
  *    - Custom ShaderMaterial with authentic camera aperture bokeh disc + optical spherical aberration ring.
- *    - 60% Warm Tungsten Amber (#FFB84D), 25% Sunset Coral (#E86F52), 15% Anamorphic Cyan-Teal (#55B8B0).
+ *    - 60% Radiant Mint (#A6F0CF), 25% Sunset Coral (#E86F52), 15% Anamorphic Cyan-Teal (#55B8B0).
  *    - Sinusoidal lateral & vertical drift with sympathetic Easter Egg reverie shimmer.
  */
 
@@ -190,7 +190,7 @@ export function SunsetSkyDome() {
     };
 
     // Color swatches: 60% Amber, 25% Coral, 15% Teal
-    const amber = new THREE.Color("#FFB84D");
+    const amber = new THREE.Color("#A6F0CF");
     const coral = new THREE.Color("#E86F52");
     const teal = new THREE.Color("#55B8B0");
 

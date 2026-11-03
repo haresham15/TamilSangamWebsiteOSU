@@ -40,12 +40,12 @@ export const GuestbookField = forwardRef<HTMLInputElement & HTMLTextAreaElement,
     return (
       <div className={`space-y-3 ${className}`}>
         <label htmlFor={id} className="block space-y-1">
-          <span className="text-xl sm:text-2xl font-serif font-normal text-[#2A2825] block">
+          <span className="text-xl sm:text-2xl font-serif font-normal text-[#F4F0FA] block">
             {label}
-            {required && <span className="text-[#B85C38] ml-1.5">*</span>}
+            {required && <span className="text-[#A6F0CF] ml-1.5">*</span>}
           </span>
           {sublabel && (
-            <span className="text-sm font-sans text-[#57524C] block leading-relaxed">
+            <span className="text-sm font-sans text-[#C4B7D7] block leading-relaxed">
               {sublabel}
             </span>
           )}
@@ -61,7 +61,7 @@ export const GuestbookField = forwardRef<HTMLInputElement & HTMLTextAreaElement,
               onChange={onChange}
               onKeyDown={onKeyDown}
               placeholder={placeholder}
-              className="w-full bg-transparent border-b-2 border-[#2A2825]/15 focus:border-[#B85C38] py-3 text-lg sm:text-xl font-sans text-[#2A2825] placeholder:text-[#2A2825]/30 focus:outline-none transition-colors duration-200 resize-none leading-relaxed"
+              className="w-full bg-transparent border-b-2 border-[rgba(125,96,166,0.25)] focus:border-[#A6F0CF] py-3 text-lg sm:text-xl font-sans text-[#F4F0FA] placeholder:text-[#F4F0FA]/30 focus:outline-none transition-colors duration-200 resize-none leading-relaxed"
             />
           ) : (
             <input
@@ -72,12 +72,12 @@ export const GuestbookField = forwardRef<HTMLInputElement & HTMLTextAreaElement,
               onChange={onChange}
               onKeyDown={onKeyDown}
               placeholder={placeholder}
-              className="w-full bg-transparent border-b-2 border-[#2A2825]/15 focus:border-[#B85C38] py-3 text-xl sm:text-2xl font-sans text-[#2A2825] placeholder:text-[#2A2825]/30 focus:outline-none transition-colors duration-200"
+              className="w-full bg-transparent border-b-2 border-[rgba(125,96,166,0.25)] focus:border-[#A6F0CF] py-3 text-xl sm:text-2xl font-sans text-[#F4F0FA] placeholder:text-[#F4F0FA]/30 focus:outline-none transition-colors duration-200"
             />
           )}
 
           {error && (
-            <p className="mt-2 text-sm font-sans text-[#B85C38] font-medium animate-fadeIn">
+            <p className="mt-2 text-sm font-sans text-[#A6F0CF] font-medium animate-fadeIn">
               {error}
             </p>
           )}

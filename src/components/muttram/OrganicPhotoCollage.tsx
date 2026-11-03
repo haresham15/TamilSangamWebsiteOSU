@@ -36,7 +36,7 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
           >
             <Link href={photos[0].href} onClick={onPhotoClick} className="block group">
               {/* Sharp physical corner photo (No rounded corners, no bounding card) */}
-              <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F4EFE6] shadow-xl shadow-stone-900/10 border border-stone-300/40">
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#25173B] shadow-xl shadow-stone-900/10 border border-stone-300/40">
                 <Image
                   src={photos[0].imageSrc}
                   alt={photos[0].alt}
@@ -49,7 +49,7 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
               {/* Captions sitting naked directly on global background */}
               <div className="pt-5 space-y-1.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-sans font-semibold text-[#B85C38] tracking-widest uppercase block">
+                  <span className="text-xs font-sans font-semibold text-[#A6F0CF] tracking-widest uppercase block">
                     {photos[0].subtitle}
                   </span>
                   <span className="text-stone-400">·</span>
@@ -57,10 +57,10 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
                     {photos[0].tag}
                   </span>
                 </div>
-                <h3 className="text-2xl font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors leading-snug">
+                <h3 className="text-2xl font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors leading-snug">
                   {photos[0].title}
                 </h3>
-                <p className="font-sans text-sm text-[#57524C] leading-relaxed">
+                <p className="font-sans text-sm text-[#C4B7D7] leading-relaxed">
                   {photos[0].description}
                 </p>
               </div>
@@ -77,7 +77,7 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
           >
             <Link href={photos[1].href} onClick={onPhotoClick} className="block group">
               {/* Sharp physical corner photo */}
-              <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#F4EFE6] shadow-2xl shadow-stone-900/15 border border-stone-300/40">
+              <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#25173B] shadow-2xl shadow-stone-900/15 border border-stone-300/40">
                 <Image
                   src={photos[1].imageSrc}
                   alt={photos[1].alt}
@@ -90,7 +90,7 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
               {/* Naked Captions on Global Background */}
               <div className="pt-5 space-y-1.5 max-w-xl">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-sans font-semibold text-[#E5A93C] tracking-widest uppercase block">
+                  <span className="text-xs font-sans font-semibold text-[#A6F0CF] tracking-widest uppercase block">
                     {photos[1].subtitle}
                   </span>
                   <span className="text-stone-400">·</span>
@@ -98,10 +98,10 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
                     {photos[1].tag}
                   </span>
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#2A2825] group-hover:text-[#E5A93C] transition-colors leading-snug">
+                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors leading-snug">
                   {photos[1].title}
                 </h3>
-                <p className="font-sans text-sm sm:text-base text-[#57524C] leading-relaxed">
+                <p className="font-sans text-sm sm:text-base text-[#C4B7D7] leading-relaxed">
                   {photos[1].description}
                 </p>
               </div>
@@ -118,7 +118,7 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
           >
             <Link href={photos[2].href} onClick={onPhotoClick} className="block group sm:grid sm:grid-cols-12 gap-8 items-start">
               {/* Sharp physical print */}
-              <div className="sm:col-span-6 relative aspect-[4/3] w-full overflow-hidden bg-[#F4EFE6] shadow-xl shadow-stone-900/10 border border-stone-300/40">
+              <div className="sm:col-span-6 relative aspect-[4/3] w-full overflow-hidden bg-[#25173B] shadow-xl shadow-stone-900/10 border border-stone-300/40">
                 <Image
                   src={photos[2].imageSrc}
                   alt={photos[2].alt}
@@ -131,7 +131,7 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
               {/* Naked Captions */}
               <div className="sm:col-span-6 pt-4 sm:pt-2 space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-sans font-semibold text-[#B85C38] tracking-widest uppercase block">
+                  <span className="text-xs font-sans font-semibold text-[#A6F0CF] tracking-widest uppercase block">
                     {photos[2].subtitle}
                   </span>
                   <span className="text-stone-400">·</span>
@@ -139,10 +139,10 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
                     {photos[2].tag}
                   </span>
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors leading-snug">
+                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors leading-snug">
                   {photos[2].title}
                 </h3>
-                <p className="font-sans text-sm sm:text-base text-[#57524C] leading-relaxed">
+                <p className="font-sans text-sm sm:text-base text-[#C4B7D7] leading-relaxed">
                   {photos[2].description}
                 </p>
               </div>

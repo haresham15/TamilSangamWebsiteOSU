@@ -103,7 +103,7 @@ export default function LinksBioHubPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#FAF9F6] text-[#2A2825] flex flex-col justify-between py-12 px-4 font-sans select-none overflow-x-hidden">
+    <div className="relative min-h-screen bg-[#140C20] text-[#F4F0FA] flex flex-col justify-between py-12 px-4 font-sans select-none overflow-x-hidden">
       {/* Structural Watermark */}
       <WatermarkGlyph text="இணைப்பு" position="center" theme="light" opacity={0.03} />
 
@@ -111,12 +111,12 @@ export default function LinksBioHubPage() {
       <div className="w-full max-w-md mx-auto mb-6 flex items-center justify-between text-xs font-mono">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-[#57524C] hover:text-[#B85C38] transition-colors py-1 focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+          className="inline-flex items-center gap-1.5 text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors py-1 focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to OSU Tamil Sangam</span>
         </Link>
-        <span className="text-[#8C827A] uppercase tracking-wider">Bio Hub</span>
+        <span className="text-[#C4B7D7] uppercase tracking-wider">Bio Hub</span>
       </div>
 
       {/* Centered Editorial Column */}
@@ -124,45 +124,45 @@ export default function LinksBioHubPage() {
         {/* Prominent 'Explore Full Website' Top Banner */}
         <Link
           href="/"
-          className="group w-full mb-8 p-3.5 rounded-lg bg-[#2A2825] text-[#FAF7F2] hover:bg-[#161210] transition-all flex items-center justify-between shadow-sm focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+          className="group w-full mb-8 p-3.5 rounded-lg bg-[#25173B] text-[#F4F0FA] hover:bg-[#140C20] transition-all flex items-center justify-between shadow-sm focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
         >
           <div className="flex items-center gap-2.5 text-left pl-1">
-            <span className="w-2 h-2 rounded-full bg-[#E5A93C] animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-pulse" />
             <span className="text-xs font-mono font-semibold tracking-wider uppercase">
               Explore Full Website
             </span>
           </div>
-          <div className="flex items-center gap-1 text-xs font-mono text-[#E5A93C] group-hover:translate-x-1 transition-transform">
+          <div className="flex items-center gap-1 text-xs font-mono text-[#A6F0CF] group-hover:translate-x-1 transition-transform">
             <span>Enter Main Site</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </div>
         </Link>
 
         {/* Club Crest / Avatar */}
-        <div className="relative w-20 h-20 mb-4 rounded-full border border-[#E5DDD0] bg-[#F4EFE6] flex items-center justify-center shadow-[0_2px_8px_rgba(42,40,37,0.04)]">
-          <span className="text-4xl font-serif font-bold text-[#B85C38]" lang="ta">
+        <div className="relative w-20 h-20 mb-4 rounded-full border border-[rgba(125,96,166,0.25)] bg-[#25173B] flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
+          <span className="text-4xl font-serif font-bold text-[#A6F0CF]" lang="ta">
             ஐ
           </span>
         </div>
 
         {/* Club Handle & Tagline */}
-        <h1 className="text-2xl sm:text-3xl font-serif font-normal text-[#2A2825] mb-1">
+        <h1 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA] mb-1">
           {SITE_CONFIG.brandNameEn}
         </h1>
-        <p className="text-xs text-[#B85C38] font-mono uppercase tracking-widest mb-2 font-semibold">
+        <p className="text-xs text-[#A6F0CF] font-mono uppercase tracking-widest mb-2 font-semibold">
           @tamilsangam.osu · The Ohio State University
         </p>
-        <p className="text-xs text-[#57524C] mb-6 max-w-xs leading-relaxed">
+        <p className="text-xs text-[#C4B7D7] mb-6 max-w-xs leading-relaxed">
           Open student hearth · ஆட்டம் · பாட்டம் · கொண்டாட்டம் · Columbus, OH
         </p>
 
         {/* Quick Social Actions Row */}
-        <div className="w-full flex items-center justify-center gap-5 sm:gap-6 mb-8 pb-6 border-b border-[#E5DDD0]">
+        <div className="w-full flex items-center justify-center gap-5 sm:gap-6 mb-8 pb-6 border-b border-[rgba(125,96,166,0.25)]">
           <a
             href={SITE_CONFIG.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-medium text-[#57524C] hover:text-[#B85C38] transition-colors"
+            className="flex items-center gap-1.5 text-xs font-medium text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors"
             aria-label="Instagram profile"
           >
             <InstagramIcon className="w-4 h-4" />
@@ -172,7 +172,7 @@ export default function LinksBioHubPage() {
             href={SITE_CONFIG.tiktokUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-medium text-[#57524C] hover:text-[#B85C38] transition-colors"
+            className="flex items-center gap-1.5 text-xs font-medium text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors"
             aria-label="TikTok profile"
           >
             <TikTokIcon className="w-3.5 h-3.5" />
@@ -182,7 +182,7 @@ export default function LinksBioHubPage() {
             href={SITE_CONFIG.groupMeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-medium text-[#57524C] hover:text-[#B85C38] transition-colors"
+            className="flex items-center gap-1.5 text-xs font-medium text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors"
             aria-label="GroupMe chat"
           >
             <MessageSquare className="w-4 h-4" />
@@ -191,13 +191,13 @@ export default function LinksBioHubPage() {
           <button
             type="button"
             onClick={() => handleCopy("email", SITE_CONFIG.contactEmail)}
-            className="flex items-center gap-1.5 text-xs font-medium text-[#57524C] hover:text-[#B85C38] transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 text-xs font-medium text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors cursor-pointer"
             aria-label="Copy Contact Email"
           >
             {copiedItem === "email" ? (
               <>
-                <Check className="w-4 h-4 text-[#B85C38]" />
-                <span className="text-[#B85C38]">Copied</span>
+                <Check className="w-4 h-4 text-[#A6F0CF]" />
+                <span className="text-[#A6F0CF]">Copied</span>
               </>
             ) : (
               <>
@@ -217,90 +217,90 @@ export default function LinksBioHubPage() {
             {/* 1. Next Upcoming Event / RSVP */}
             <Link
               href="/events"
-              className="group block p-4 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#B85C38]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#FAF4ED] text-[#B85C38] group-hover:bg-[#B85C38] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <div className="p-2 rounded-lg bg-[#25173B] text-[#A6F0CF] group-hover:bg-[#A6F0CF] group-hover:text-white transition-colors shrink-0 mt-0.5">
                     <Calendar className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
                       Next Gathering · Coming Soon
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors truncate">
+                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
                       Events &amp; Festival Schedule
                     </h2>
-                    <p className="text-xs text-[#57524C] mt-0.5 truncate">
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
                       Check upcoming celebrations, calendar dates &amp; past photo vaults
                     </p>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#8C827A] group-hover:text-[#B85C38] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
               </div>
             </Link>
 
             {/* 2. Join the Sangam / Membership & Fireside Coffee Chats */}
             <Link
               href="/join"
-              className="group block p-4 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#B85C38]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#FAF4ED] text-[#B85C38] group-hover:bg-[#B85C38] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <div className="p-2 rounded-lg bg-[#25173B] text-[#A6F0CF] group-hover:bg-[#A6F0CF] group-hover:text-white transition-colors shrink-0 mt-0.5">
                     <Users className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
                       Join the Family · Free
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors truncate">
+                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
                       Membership &amp; Fireside Coffee Chats
                     </h2>
-                    <p className="text-xs text-[#57524C] mt-0.5 truncate">
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
                       Sign our guestbook, performer signups &amp; tech mentorship
                     </p>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#8C827A] group-hover:text-[#B85C38] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
               </div>
             </Link>
           </div>
 
           {/* Section: Photos Archive Button with Expandable Previous Events Menu */}
           <div className="pt-2">
-            <div className="rounded-xl bg-white border border-[#E5DDD0] overflow-hidden transition-all shadow-xs hover:border-[#B85C38]/50">
+            <div className="rounded-xl bg-white border border-[rgba(125,96,166,0.25)] overflow-hidden transition-all shadow-xs hover:border-[#A6F0CF]/35">
               <button
                 type="button"
                 onClick={() => setIsPhotosMenuOpen((prev) => !prev)}
                 aria-expanded={isPhotosMenuOpen}
                 aria-controls="photos-menu-content"
-                className="w-full p-4 flex items-start justify-between gap-3 text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+                className="w-full p-4 flex items-start justify-between gap-3 text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
               >
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#FAF4ED] text-[#B85C38] shrink-0 mt-0.5">
+                  <div className="p-2 rounded-lg bg-[#25173B] text-[#A6F0CF] shrink-0 mt-0.5">
                     <Camera className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
                         Photo Archive
                       </span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#F4EFE6] text-[#57524C]">
+                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#25173B] text-[#C4B7D7]">
                         {PREVIOUS_EVENT_ALBUMS.length} Albums
                       </span>
                     </div>
-                    <h2 className="text-base font-serif font-normal text-[#2A2825]">
+                    <h2 className="text-base font-serif font-normal text-[#F4F0FA]">
                       Previous Events Photo Vaults
                     </h2>
-                    <p className="text-xs text-[#57524C] mt-0.5">
+                    <p className="text-xs text-[#C4B7D7] mt-0.5">
                       {isPhotosMenuOpen ? "Tap to close album list" : "Tap to open all previous event photo links"}
                     </p>
                   </div>
                 </div>
-                <div className="p-1 rounded-full text-[#8C827A] shrink-0 mt-1">
+                <div className="p-1 rounded-full text-[#C4B7D7] shrink-0 mt-1">
                   <motion.div animate={{ rotate: isPhotosMenuOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                    <ChevronDown className="w-4 h-4 text-[#B85C38]" />
+                    <ChevronDown className="w-4 h-4 text-[#A6F0CF]" />
                   </motion.div>
                 </div>
               </button>
@@ -314,10 +314,10 @@ export default function LinksBioHubPage() {
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="overflow-hidden border-t border-[#E5DDD0] bg-[#FAF8F5]"
+                    className="overflow-hidden border-t border-[rgba(125,96,166,0.25)] bg-[#140C20]"
                   >
                     <div className="p-3.5 space-y-2">
-                      <p className="text-[11px] font-mono text-[#8C827A] px-1 uppercase tracking-wider font-semibold">
+                      <p className="text-[11px] font-mono text-[#C4B7D7] px-1 uppercase tracking-wider font-semibold">
                         Official Google Photos Albums:
                       </p>
                       {PREVIOUS_EVENT_ALBUMS.map((album) => (
@@ -326,23 +326,23 @@ export default function LinksBioHubPage() {
                           href={album.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/album block p-3 rounded-lg bg-white border border-[#E5DDD0] hover:border-[#B85C38]/60 hover:bg-[#FAF6F0] transition-all"
+                          className="group/album block p-3 rounded-lg bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:bg-[#140C20] transition-all"
                         >
                           <div className="flex items-center justify-between gap-3">
                             <div className="min-w-0">
                               <div className="flex items-center gap-2">
-                                <span className="text-[10px] font-mono text-[#B85C38] font-bold">
+                                <span className="text-[10px] font-mono text-[#A6F0CF] font-bold">
                                   {album.num}
                                 </span>
-                                <h3 className="text-xs font-serif font-medium text-[#2A2825] group-hover/album:text-[#B85C38] transition-colors truncate">
+                                <h3 className="text-xs font-serif font-medium text-[#F4F0FA] group-hover/album:text-[#A6F0CF] transition-colors truncate">
                                   {album.title}
                                 </h3>
                               </div>
-                              <p className="text-[11px] text-[#57524C] mt-0.5 truncate font-sans">
+                              <p className="text-[11px] text-[#C4B7D7] mt-0.5 truncate font-sans">
                                 {album.season} · {album.location}
                               </p>
                             </div>
-                            <div className="flex items-center gap-1 text-[11px] font-mono text-[#B85C38] shrink-0">
+                            <div className="flex items-center gap-1 text-[11px] font-mono text-[#A6F0CF] shrink-0">
                               <span className="hidden sm:inline">Photos</span>
                               <ExternalLink className="w-3.5 h-3.5" />
                             </div>
@@ -353,13 +353,13 @@ export default function LinksBioHubPage() {
                       {/* Link to Events Page Living Photo Carousel */}
                       <Link
                         href="/events"
-                        className="w-full mt-2 py-2 px-3 rounded-lg bg-[#F2EAE0] hover:bg-[#EAE0D2] text-[#2A2825] flex items-center justify-between text-xs font-mono font-medium transition-colors"
+                        className="w-full mt-2 py-2 px-3 rounded-lg bg-[#25173B] hover:bg-[#25173B] text-[#F4F0FA] flex items-center justify-between text-xs font-mono font-medium transition-colors"
                       >
                         <div className="flex items-center gap-2">
-                          <Images className="w-3.5 h-3.5 text-[#B85C38]" />
+                          <Images className="w-3.5 h-3.5 text-[#A6F0CF]" />
                           <span>View Interactive Carousel on Events Page</span>
                         </div>
-                        <ArrowRight className="w-3.5 h-3.5 text-[#B85C38]" />
+                        <ArrowRight className="w-3.5 h-3.5 text-[#A6F0CF]" />
                       </Link>
                     </div>
                   </motion.div>
@@ -370,7 +370,7 @@ export default function LinksBioHubPage() {
 
           {/* Section: Social Communities */}
           <div className="pt-2 space-y-2.5">
-            <span className="text-[10px] font-mono text-[#8C827A] uppercase tracking-wider block px-1 font-semibold">
+            <span className="text-[10px] font-mono text-[#C4B7D7] uppercase tracking-wider block px-1 font-semibold">
               Official Social Channels
             </span>
 
@@ -379,7 +379,7 @@ export default function LinksBioHubPage() {
               href={SITE_CONFIG.tiktokUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group block p-4 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#000000]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#000000]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
@@ -390,15 +390,15 @@ export default function LinksBioHubPage() {
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#111111] font-bold block">
                       TikTok · @osutamilsangam
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#111111] transition-colors truncate">
+                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#111111] transition-colors truncate">
                       Official TikTok
                     </h2>
-                    <p className="text-xs text-[#57524C] mt-0.5 truncate">
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
                       Event highlights, POV campus reels &amp; dance clips
                     </p>
                   </div>
                 </div>
-                <ExternalLink className="w-4 h-4 text-[#8C827A] group-hover:text-[#111111] transition-all shrink-0 mt-1" />
+                <ExternalLink className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#111111] transition-all shrink-0 mt-1" />
               </div>
             </a>
 
@@ -407,7 +407,7 @@ export default function LinksBioHubPage() {
               href={SITE_CONFIG.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group block p-4 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#E1306C]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#E1306C]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
@@ -418,15 +418,15 @@ export default function LinksBioHubPage() {
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#E1306C] font-bold block">
                       Instagram · @tamilsangam.osu
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#E1306C] transition-colors truncate">
+                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#E1306C] transition-colors truncate">
                       Official Instagram
                     </h2>
-                    <p className="text-xs text-[#57524C] mt-0.5 truncate">
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
                       Stories, live announcements &amp; community photo drops
                     </p>
                   </div>
                 </div>
-                <ExternalLink className="w-4 h-4 text-[#8C827A] group-hover:text-[#E1306C] transition-all shrink-0 mt-1" />
+                <ExternalLink className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#E1306C] transition-all shrink-0 mt-1" />
               </div>
             </a>
 
@@ -435,7 +435,7 @@ export default function LinksBioHubPage() {
               href={SITE_CONFIG.groupMeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group block p-4 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#00AFF0]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#00AFF0]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
@@ -446,74 +446,74 @@ export default function LinksBioHubPage() {
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#00AFF0] font-bold block">
                       Community Chat · GroupMe
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#00AFF0] transition-colors truncate">
+                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#00AFF0] transition-colors truncate">
                       Official Student GroupMe
                     </h2>
-                    <p className="text-xs text-[#57524C] mt-0.5 truncate">
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
                       120+ Buckeyes · rideshares, meetups &amp; general chat
                     </p>
                   </div>
                 </div>
-                <ExternalLink className="w-4 h-4 text-[#8C827A] group-hover:text-[#00AFF0] transition-all shrink-0 mt-1" />
+                <ExternalLink className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#00AFF0] transition-all shrink-0 mt-1" />
               </div>
             </a>
           </div>
 
           {/* Section: Campus Exploration */}
           <div className="pt-2 space-y-2.5">
-            <span className="text-[10px] font-mono text-[#8C827A] uppercase tracking-wider block px-1 font-semibold">
+            <span className="text-[10px] font-mono text-[#C4B7D7] uppercase tracking-wider block px-1 font-semibold">
               Explore &amp; Discover
             </span>
 
             {/* New Student Guide & FAQ */}
             <Link
               href="/guide"
-              className="group block p-4 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#B85C38]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#FAF4ED] text-[#B85C38] group-hover:bg-[#B85C38] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <div className="p-2 rounded-lg bg-[#25173B] text-[#A6F0CF] group-hover:bg-[#A6F0CF] group-hover:text-white transition-colors shrink-0 mt-0.5">
                     <Compass className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
                       Freshmen &amp; Transfer Guide
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors truncate">
+                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
                       Student Guide &amp; FAQ
                     </h2>
-                    <p className="text-xs text-[#57524C] mt-0.5 truncate">
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
                       Columbus grocers, dining, housing &amp; club constitution
                     </p>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#8C827A] group-hover:text-[#B85C38] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
               </div>
             </Link>
 
             {/* Games & Cultural Lab */}
             <Link
               href="/games"
-              className="group block p-4 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#B85C38]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B85C38]"
+              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#FAF4ED] text-[#B85C38] group-hover:bg-[#B85C38] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <div className="p-2 rounded-lg bg-[#25173B] text-[#A6F0CF] group-hover:bg-[#A6F0CF] group-hover:text-white transition-colors shrink-0 mt-0.5">
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#B85C38] font-bold block">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
                       Interactive Lab
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#2A2825] group-hover:text-[#B85C38] transition-colors truncate">
+                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
                       Kolam, Solkattu &amp; Word Games
                     </h2>
-                    <p className="text-xs text-[#57524C] mt-0.5 truncate">
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
                       Play daily campus word games and trace digital kolams
                     </p>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#8C827A] group-hover:text-[#B85C38] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
               </div>
             </Link>
           </div>
@@ -521,9 +521,9 @@ export default function LinksBioHubPage() {
       </main>
 
       {/* Footer Branding */}
-      <footer className="mt-12 text-center text-xs text-[#57524C] space-y-1">
-        <p className="font-medium text-[#2A2825]">{SITE_CONFIG.universityAffiliationEn}</p>
-        <p className="text-[11px] text-[#8C827A]">
+      <footer className="mt-12 text-center text-xs text-[#C4B7D7] space-y-1">
+        <p className="font-medium text-[#F4F0FA]">{SITE_CONFIG.universityAffiliationEn}</p>
+        <p className="text-[11px] text-[#C4B7D7]">
           {SITE_CONFIG.officialNameTa} · Project Aintinai (ஐந்திணை)
         </p>
       </footer>

@@ -36,25 +36,45 @@ html {
 html.sangam-fallback #guide-station-hero section { min-height: 100dvh !important; }
 
 @theme {
-  /* Official Tamil Sangam Logo Color System (Perceptually Uniform OKLCH) */
-  --color-sangam-purple: oklch(0.38 0.22 305);       /* Deep Royal Purple from official logo base (#4c2472) */
-  --color-sangam-purple-light: oklch(0.48 0.24 300); /* Radiant Electric Violet (#6e2dae) */
-  --color-sangam-purple-dark: oklch(0.24 0.14 305);  /* Deep Plum Ink for text readability (#250d38) */
-  --color-sangam-mint: oklch(0.78 0.16 168);         /* Signature Mint Teal from 3D drop shadow (#55CCA2) */
-  --color-sangam-mint-dark: oklch(0.52 0.17 168);    /* Deep Accessible Mint Teal (#16835f) */
-  --color-sangam-mint-light: oklch(0.92 0.06 168);   /* Ice Mint Glow (#ccfbf1) */
-  --color-sangam-lilac: oklch(0.86 0.09 300);        /* Soft Lilac from repeating Tamil watermark (#e9d5ff) */
-  --color-sangam-cream: oklch(0.98 0.015 85);        /* Warm Ivory from TAMIL SANGAM lettering (#fffdf9) */
-  --color-sangam-gold: oklch(0.82 0.18 85);          /* Festive Turmeric Sun Gold (#f59e0b) */
-  --color-sangam-coral: oklch(0.62 0.22 25);         /* Kumkumam Celebration Coral (#f43f5e) */
+  /* Logo-Derived Core Token Architecture (Single Source of Truth) */
+  --color-bg: #140C20;
+  --color-bg-subtle: #1A1028;
+  --color-surface: #25173B;
+  --color-surface-2: #352254;
+  --color-surface-3: #452C6D;
+  --color-ink: #F4F0FA;
+  --color-ink-muted: #C4B7D7;
+  --color-ink-subtle: #9B8EB3;
+  --color-accent: #A6F0CF;
+  --color-accent-hover: #7AE7B5;
+  --color-accent-dark: #2D8A68;
+  --color-accent-2: #F26BB5;
+  --color-accent-2-soft: #F8A8D5;
+  --color-accent-3: #4FD6E0;
+  --color-accent-3-soft: #8FE7EE;
+  --color-line: rgba(125, 96, 166, 0.25);
+  --color-line-strong: rgba(166, 240, 207, 0.35);
 
-  /* Legacy aliases for backward compatibility */
-  --color-terracotta: oklch(0.38 0.22 305);
-  --color-temple-bronze: oklch(0.78 0.16 168);
-  --color-rich-charcoal: oklch(0.24 0.14 305);
-  --color-mayil-teal: oklch(0.78 0.16 168);
-  --color-kumkumam-crimson: oklch(0.62 0.22 25);
-  --color-sandhanam-silk: oklch(0.98 0.015 85);
+  /* Official Tamil Sangam Logo Color System (OKLCH Mapped) */
+  --color-sangam-purple: #6B4E94;
+  --color-sangam-purple-light: #7D60A6;
+  --color-sangam-purple-dark: #140C20;
+  --color-sangam-mint: #A6F0CF;
+  --color-sangam-mint-dark: #2D8A68;
+  --color-sangam-mint-light: #C7F7E1;
+  --color-sangam-lilac: #C4B7D7;
+  --color-sangam-cream: #F4F0FA;
+  --color-sangam-gold: #A6F0CF;  /* Remapped to logo mint hero accent */
+  --color-sangam-coral: #F26BB5; /* Remapped to logo chromatic pink */
+  --color-sangam-cyan: #4FD6E0;  /* Logo chromatic cyan */
+
+  /* Legacy aliases for backward compatibility mapped to logo tokens */
+  --color-terracotta: #352254;
+  --color-temple-bronze: #A6F0CF;
+  --color-rich-charcoal: #140C20;
+  --color-mayil-teal: #4FD6E0;
+  --color-kumkumam-crimson: #F26BB5;
+  --color-sandhanam-silk: #F4F0FA;
 
   /* Systemic Typography Scale - Restored to Clean Sangam Aesthetics (Marcellus, Prata, Cormorant & Outfit) */
   --font-display: var(--font-marcellus), var(--font-prata), var(--font-cormorant), serif;
@@ -73,78 +93,114 @@ html.sangam-fallback #guide-station-hero section { min-height: 100dvh !important
   --text-body:    clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   --text-mark:    clamp(8rem, 5rem + 22vw, 26rem);        /* decorative watermark only: aria-hidden */
 
-  /* Semantic Mappings for Bright, Colorful & Welcoming Experience */
-  --color-action-primary: var(--color-sangam-purple);
-  --color-action-hover: var(--color-sangam-purple-light);
-  --color-surface-base: oklch(0.975 0.015 300);
-  --color-surface-elevated: #ffffff;
-  --color-surface-sunken: oklch(0.95 0.025 300);
-  --color-surface-overlay: oklch(0.99 0.008 300 / 0.92);
-  --color-border-subtle: oklch(0.38 0.22 305 / 0.12);
-  --color-border-strong: oklch(0.38 0.22 305 / 0.25);
-  --color-text-primary: oklch(0.20 0.10 305);
-  --color-text-secondary: oklch(0.36 0.09 305);
-  --color-text-muted: oklch(0.55 0.06 305);
+  /* Semantic Mappings for Logo-Derived Theme */
+  --color-action-primary: #A6F0CF;
+  --color-action-hover: #7AE7B5;
+  --color-surface-base: #140C20;
+  --color-surface-elevated: #25173B;
+  --color-surface-sunken: #1A1028;
+  --color-surface-overlay: rgba(37, 23, 59, 0.92);
+  --color-border-subtle: rgba(125, 96, 166, 0.25);
+  --color-border-strong: rgba(166, 240, 207, 0.35);
+  --color-text-primary: #F4F0FA;
+  --color-text-secondary: #C4B7D7;
+  --color-text-muted: #9B8EB3;
 
-  /* Guide Hero v3 pre-dawn station semantic tokens */
-  --color-station-fog: oklch(0.12 0.02 250);
-  --color-station-haze: oklch(0.22 0.05 245);
-  --color-station-haze-bright: oklch(0.34 0.06 245);
-  --color-station-coach: oklch(0.22 0.03 245);
-  --color-station-coach-edge: oklch(0.46 0.05 245);
-  --color-station-coach-band: oklch(0.84 0.03 85);
-  --color-station-platform: oklch(0.24 0.02 250);
-  --color-station-practical: oklch(0.82 0.16 73);
-  --color-station-rim: oklch(0.68 0.08 240);
+  /* Guide Hero tokens mapped to logo palette */
+  --color-station-fog: #140C20;
+  --color-station-haze: #25173B;
+  --color-station-haze-bright: #352254;
+  --color-station-coach: #1A1028;
+  --color-station-coach-edge: #452C6D;
+  --color-station-coach-band: #C4B7D7;
+  --color-station-platform: #140C20;
+  --color-station-practical: #A6F0CF;
+  --color-station-rim: #4FD6E0;
 
-  /* Hero-to-Content DTCG Semantic Transitions (Sunlit Muttram Courtyard) */
-  --color-surface-hero-join: #FAF9F6;
-  --color-surface-hero-board: #FAF9F6;
-  --color-surface-hero-events: #FAF9F6;
-  --color-surface-hero-gallery: #FAF9F6;
-  --color-surface-hero-guide: #FAF9F6;
-  --color-surface-hero-about: #FAF9F6;
+  /* Hero-to-Content DTCG Transitions (Logo Violet & Mint Ground) */
+  --color-surface-hero-join: #140C20;
+  --color-surface-hero-board: #140C20;
+  --color-surface-hero-events: #140C20;
+  --color-surface-hero-gallery: #140C20;
+  --color-surface-hero-guide: #140C20;
+  --color-surface-hero-about: #140C20;
 
-  /* Muttram Courtyard Sunlit Color Palette */
-  --color-warm-ivory: #FAF9F6;
-  --color-sunbaked-sand: #F4EFE6;
-  --color-charcoal-espresso: #2A2825;
-  --color-espresso-muted: #57524C;
-  --color-turmeric-gold: #E5A93C;
-  --color-turmeric-gold-hover: #D6972B;
-  --color-terracotta-earth: #B85C38;
-  --color-terracotta-earth-hover: #A04A27;
+  /* Courtyard & Brown/Tan Replacements -> Logo Palette */
+  --color-warm-ivory: #F4F0FA;
+  --color-sunbaked-sand: #25173B;
+  --color-charcoal-espresso: #140C20;
+  --color-espresso-muted: #9B8EB3;
+  --color-turmeric-gold: #A6F0CF;
+  --color-turmeric-gold-hover: #7AE7B5;
+  --color-terracotta-earth: #352254;
+  --color-terracotta-earth-hover: #452C6D;
 
-  /* Muttram Semantic Aliases */
-  --color-surface-courtyard: #FAF9F6;
-  --color-surface-sand: #F4EFE6;
-  --color-text-courtyard: #2A2825;
-  --color-text-courtyard-muted: #6B655D;
+  --color-surface-courtyard: #140C20;
+  --color-surface-sand: #1A1028;
+  --color-text-courtyard: #F4F0FA;
+  --color-text-courtyard-muted: #C4B7D7;
 
-  /* Hero Stage & Hearth Palettes */
-  --color-paper: #FAF7F2;
-  --color-hero-indigo: #14110F;
-  --color-hero-espresso: #120D0B;
-  --color-hearth-espresso: #161210;
-  --color-hearth-terracotta: #C85A32;
-  --color-antique-gold: #D4AF37;
-  --color-warm-amber: #FFB366;
+  --color-paper: #140C20;
+  --color-hero-indigo: #140C20;
+  --color-hero-espresso: #140C20;
+  --color-hearth-espresso: #F4F0FA;
+  --color-hearth-terracotta: #A6F0CF;
+  --color-hearth-sand: #25173B;
+  --color-antique-gold: #A6F0CF;
+  --color-warm-amber: #4FD6E0;
 
-  /* Living Chola Monograph 5-Tier OKLCH Archival Surface Palette */
-  --color-khadi-ivory: oklch(0.975 0.012 85);       /* #FAF6F0 - Primary sunlit cotton-rag paper */
-  --color-chola-sandstone: oklch(0.935 0.018 75);   /* #F2EAE0 - Secondary warm stepped limestone surface */
-  --color-palm-parchment: oklch(0.895 0.028 80);    /* #E8DEC8 - Recessed archival mat-board / specimen well */
-  --color-espresso-interlude: oklch(0.18 0.015 50); /* #161210 - Deep warm obsidian/espresso contrast */
-  --color-sandstone-pedestal: oklch(0.92 0.02 75);  /* #EFE6DA - Tactile recessed pedestal well */
+  --color-khadi-ivory: #140C20;
+  --color-chola-sandstone: #1A1028;
+  --color-palm-parchment: #25173B;
+  --color-espresso-interlude: #140C20;
+  --color-sandstone-pedestal: #25173B;
 }
 
 :root {
-  --bg-khadi-ivory: #FAF6F0;
-  --bg-chola-sandstone: #F2EAE0;
-  --bg-palm-parchment: #E8DEC8;
-  --bg-terracotta-tint: radial-gradient(120% 100% at 50% 0%, #F7EDE2 0%, #EFE4D6 100%);
-  --bg-espresso-interlude: #161210;
-  --bg-sandstone-pedestal: #EFE6DA;
+  --bg: #140C20;
+  --bg-subtle: #1A1028;
+  --surface: #25173B;
+  --surface-2: #352254;
+  --surface-3: #452C6D;
+  --ink: #F4F0FA;
+  --ink-muted: #C4B7D7;
+  --ink-subtle: #9B8EB3;
+  --accent: #A6F0CF;
+  --accent-hover: #7AE7B5;
+  --accent-dark: #2D8A68;
+  --accent-2: #F26BB5;
+  --accent-2-soft: #F8A8D5;
+  --accent-3: #4FD6E0;
+  --accent-3-soft: #8FE7EE;
+  --line: rgba(125, 96, 166, 0.25);
+  --line-strong: rgba(166, 240, 207, 0.35);
+
+  --bg-khadi-ivory: #140C20;
+  --bg-chola-sandstone: #1A1028;
+  --bg-palm-parchment: #25173B;
+  --bg-terracotta-tint: radial-gradient(120% 100% at 50% 0%, #25173B 0%, #140C20 100%);
+  --bg-espresso-interlude: #140C20;
+  --bg-sandstone-pedestal: #25173B;
+
+  --bg-base: var(--bg);
+  --surface-raised: var(--surface);
+  --surface-sunken: var(--bg-subtle);
+  --surface-overlay: rgba(37, 23, 59, 0.92);
+  --border-subtle: var(--line);
+  --border-strong: var(--line-strong);
+  --border-mint: rgba(166, 240, 207, 0.5);
+
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-muted);
+  --text-muted: var(--ink-subtle);
+
+  --button-primary-bg: var(--accent);
+  --button-primary-hover: var(--accent-hover);
+  --accent-tint: var(--accent);
+  --accent-mint: var(--accent);
+  --accent-glow: rgba(166, 240, 207, 0.35);
+  --accent-gradient: linear-gradient(135deg, #6B4E94 0%, #A6F0CF 100%);
+  --sky-gradient: linear-gradient(180deg, #140C20 0%, #1A1028 60%, #25173B 100%);
 }
 
 /* Explicit Typography Utilities for Tailwind v4 */
@@ -491,7 +547,36 @@ html.sangam-fallback #guide-station-hero section { min-height: 100dvh !important
 
 /* Base Body Styles & Typography */
 html {
-  color-scheme: light;
+  color-scheme: dark;
+}
+
+::selection {
+  background-color: var(--surface-3, #452C6D);
+  color: var(--accent, #A6F0CF);
+}
+
+* {
+  caret-color: var(--accent, #A6F0CF);
+}
+
+/* Chromatic Aberration Typography Utilities */
+.text-chromatic {
+  color: var(--accent, #A6F0CF);
+  text-shadow:
+    -2px -2px 0px rgba(242, 107, 181, 0.65),
+     2px  2px 0px rgba(79, 214, 224, 0.65);
+}
+
+.text-chromatic-white {
+  color: var(--ink, #F4F0FA);
+  text-shadow:
+    -2px -2px 0px rgba(242, 107, 181, 0.65),
+     2px  2px 0px rgba(79, 214, 224, 0.65);
+}
+
+/* Subtle Violet-on-Violet Tamil Script Pattern */
+.bg-tamil-tonal-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='42' viewBox='0 0 120 42'%3E%3Ctext x='6' y='16' font-family='sans-serif' font-size='16' font-weight='700' fill='%237D60A6' opacity='0.08'%3Eதமிழ்%3C/text%3E%3Ctext x='66' y='16' font-family='sans-serif' font-size='16' font-weight='700' fill='%237D60A6' opacity='0.08'%3Eதமிழ்%3C/text%3E%3Ctext x='36' y='37' font-family='sans-serif' font-size='16' font-weight='700' fill='%237D60A6' opacity='0.08'%3Eதமிழ்%3C/text%3E%3Ctext x='96' y='37' font-family='sans-serif' font-size='16' font-weight='700' fill='%237D60A6' opacity='0.08'%3Eதமிழ்%3C/text%3E%3C/svg%3E");
 }
 
 /* Official Lenis Smooth Scrolling Styles */
@@ -530,7 +615,7 @@ body {
 
 /* Accessible High-Contrast Focus Indicators (WCAG 2.1 AA) */
 :focus-visible {
-  outline: 2px solid var(--sangam-mint, #55CCA2);
+  outline: 2px solid var(--accent-3, #4FD6E0);
   outline-offset: 2px;
 }
 
@@ -565,7 +650,7 @@ body {
 
 /* Signature Official Logo Extrusion Typography (TAMIL SANGAM style) */
 .text-logo-extrusion {
-  color: #fffdf9;
+  color: #F4F0FA;
   text-shadow:
     2px 2px 0px #55CCA2,
     4px 4px 0px #55CCA2,
@@ -581,7 +666,7 @@ body {
 }
 
 .text-logo-extrusion-sm {
-  color: #fffdf9;
+  color: #F4F0FA;
   text-shadow:
     1.5px 1.5px 0px #55CCA2,
     3px 3px 0px #55CCA2;
@@ -613,10 +698,11 @@ body {
 
 /* Distinctive Architectural Box Structures & Masonry Framing */
 .box-architectural {
-  background: #ffffff;
-  border: 2px solid #250d38;
+  background: var(--surface, #25173B);
+  color: var(--ink, #F4F0FA);
+  border: 2px solid var(--surface-2, #352254);
   border-radius: 0px;
-  box-shadow: 4px 4px 0px #4c2472;
+  box-shadow: 4px 4px 0px #140C20;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   will-change: transform, box-shadow;
@@ -626,34 +712,37 @@ body {
 }
 
 .box-architectural:hover {
-  border-color: #55CCA2;
-  box-shadow: 6px 6px 0px #55CCA2, 0 12px 24px -6px rgba(37, 13, 56, 0.15);
+  border-color: var(--accent, #A6F0CF);
+  box-shadow: 6px 6px 0px var(--accent, #A6F0CF), 0 12px 24px -6px rgba(20, 12, 32, 0.5);
   transform: translate3d(-2px, -2px, 0);
 }
 
 .box-architectural-dark {
-  background: #250d38;
-  color: #ffffff;
-  border: 2px solid #55CCA2;
+  background: #140C20;
+  color: #F4F0FA;
+  border: 2px solid var(--accent, #A6F0CF);
   border-radius: 0px;
-  box-shadow: 4px 4px 0px #55CCA2;
+  box-shadow: 4px 4px 0px var(--accent, #A6F0CF);
 }
 
-/* Stepped Pedestal Box (Temple Jagati style) */
+/* Stepped Pedestal Box */
 .box-stepped {
   position: relative;
-  background: #ffffff;
-  border: 2px solid #4c2472;
+  background: var(--surface, #25173B);
+  color: var(--ink, #F4F0FA);
+  border: 2px solid var(--surface-2, #352254);
   border-radius: 2px;
-  box-shadow: 3px 3px 0px #55CCA2, 6px 6px 0px #250d38;
+  box-shadow: 3px 3px 0px var(--accent, #A6F0CF), 6px 6px 0px #140C20;
 }
 
 /* Ticket Stub Box with Perforated Edge & Notches */
 .box-ticket {
   position: relative;
-  border: 2px solid #4c2472;
+  background: var(--surface, #25173B);
+  color: var(--ink, #F4F0FA);
+  border: 2px solid var(--surface-2, #352254);
   border-radius: 0px;
-  box-shadow: 4px 4px 0px #55CCA2;
+  box-shadow: 4px 4px 0px var(--accent, #A6F0CF);
   transition-property: transform, box-shadow, border-color;
   transition-duration: 200ms;
   transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
@@ -921,14 +1010,14 @@ body {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-base);
+  background: var(--bg, #140C20);
 }
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.38 0.22 305 / 0.25);
+  background: var(--surface-3, #452C6D);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-tint);
+  background: var(--accent, #A6F0CF);
 }
 
 /* ========================================================================= */
@@ -1055,23 +1144,23 @@ body {
 
 /* 3. Gold Foil & Brushed Brass Buttons (Directive #3) */
 .btn-gold-foil {
-  background: linear-gradient(135deg, #FFE8A3 0%, #FFB84D 40%, #D4AF37 75%, #A88424 100%);
-  color: #160826;
+  background: linear-gradient(135deg, #A6F0CF 0%, #7AE7B5 60%, #55CCA2 100%);
+  color: #140C20;
   font-weight: 700;
-  border: 1px solid rgba(255, 235, 170, 0.7);
-  box-shadow: 0 2px 12px rgba(212, 175, 55, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(166, 240, 207, 0.8);
+  box-shadow: 0 2px 12px rgba(85, 204, 162, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.65);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-gold-foil:hover {
-  background: linear-gradient(135deg, #FFF0BD 0%, #FFC366 40%, #E2BE46 75%, #BA932E 100%);
-  box-shadow: 0 0 35px rgba(255, 184, 77, 0.45), 0 4px 18px rgba(212, 175, 55, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.85);
+  background: linear-gradient(135deg, #C7F7E1 0%, #A6F0CF 60%, #7AE7B5 100%);
+  box-shadow: 0 0 35px rgba(85, 204, 162, 0.5), 0 4px 18px rgba(85, 204, 162, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.85);
   transform: translateY(-1px);
 }
 
 .btn-gold-foil:active {
   transform: translateY(0px) scale(0.99);
-  box-shadow: 0 1px 6px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 1px 6px rgba(85, 204, 162, 0.4);
 }
 
 /* ========================================================================= */
@@ -1121,7 +1210,7 @@ body {
 }
 
 .title-amber-gradient {
-  background: linear-gradient(180deg, #FFE8A3 0%, #FFB84D 50%, #D4881A 100%);
+  background: linear-gradient(180deg, #FFFFFF 0%, #A6F0CF 60%, #7AE7B5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1216,9 +1305,9 @@ input, textarea {
 
 
 /* Shared cinematic runway; DOM overlays sit above the persistent canvas. */
-.hero-scroll-stage { position: relative; background: var(--color-hero-indigo); }
-.hero-scroll-stage[data-tone=espresso] { background: var(--color-hero-espresso); }
-.hero-stage-melt { position: absolute; inset: 0; z-index: 15; pointer-events: none; opacity: 0; background: linear-gradient(to bottom, transparent 65%, var(--color-paper) 100%); }
+.hero-scroll-stage { position: relative; background: var(--color-bg); }
+.hero-scroll-stage[data-tone=espresso] { background: var(--color-bg); }
+.hero-stage-melt { position: absolute; inset: 0; z-index: 15; pointer-events: none; opacity: 0; background: linear-gradient(to bottom, transparent 65%, var(--color-bg) 100%); }
 
 /* Directional Underline Physics (§AWWWARDS Luxury Polish) */
 .link-editorial-underline {
@@ -1250,7 +1339,7 @@ input, textarea {
 .hairline-scroll-rule {
   width: 100%;
   height: 1px;
-  background-color: rgba(22, 18, 16, 0.12);
+  background-color: rgba(125, 96, 166, 0.25);
   transform-origin: left;
   animation: hairlineDraw 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

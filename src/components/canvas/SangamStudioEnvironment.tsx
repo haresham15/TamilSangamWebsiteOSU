@@ -10,7 +10,7 @@ export function SangamStudioEnvironment() {
       <Lightformer
         form="rect"
         intensity={3.5}
-        color="#FFF8EB"
+        color="#F4F0FA"
         scale={[8, 5, 1]}
         position={[-5, 3, 5]}
         target={[0, 0, 0]}
@@ -19,7 +19,7 @@ export function SangamStudioEnvironment() {
       <Lightformer
         form="rect"
         intensity={4.8}
-        color="#C85A32"
+        color="#F26BB5"
         scale={[6, 8, 1]}
         position={[6, 2, -2]}
         target={[0, 0, 0]}
@@ -28,7 +28,7 @@ export function SangamStudioEnvironment() {
       <Lightformer
         form="ring"
         intensity={2.4}
-        color="#D4AF37"
+        color="#A6F0CF"
         scale={10}
         position={[0, 8, 0]}
         target={[0, 0, 0]}

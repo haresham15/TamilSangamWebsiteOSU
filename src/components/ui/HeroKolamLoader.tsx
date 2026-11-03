@@ -24,7 +24,7 @@ export function HeroKolamLoader({
   return (
     <div
       data-hero-loader="true"
-      className={`relative w-full flex items-center justify-center bg-[#140F0D] text-[#FAF7F2] select-none overflow-hidden ${className}`}
+      className={`relative w-full flex items-center justify-center bg-[#140C20] text-[#F4F0FA] select-none overflow-hidden ${className}`}
       style={{ minHeight }}
       aria-label="Loading cultural stage"
     >
@@ -33,7 +33,7 @@ export function HeroKolamLoader({
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 50%, rgba(37, 24, 18, 0.4) 0%, #140F0D 85%)",
+            "radial-gradient(ellipse at 50% 50%, rgba(37, 23, 59, 0.4) 0%, #140C20 85%)",
         }}
       />
 

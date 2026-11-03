@@ -42,18 +42,19 @@ export function applyHeritageGrade(r, g, b) {
   let gGraded = sCurve(g);
   let bGraded = sCurve(b);
 
-  // 3. Warm Golden Highlight Tint (amber/gold radiance in upper-mids & highlights)
-  // Glows especially on bright particles, reflections, and brass elements
+  // 3. Mint Highlight Tint (crisp radiant seafoam mint glow in upper-mids & highlights)
+  // Aligns directly with official Tamil Sangam logo wordmark (#A6F0CF)
   const highlightWeight = Math.pow(clamp(luma, 0, 1), 1.6);
-  rGraded += 0.14 * highlightWeight;
-  gGraded += 0.07 * highlightWeight;
-  bGraded -= 0.08 * highlightWeight;
+  rGraded -= 0.04 * highlightWeight;
+  gGraded += 0.12 * highlightWeight;
+  bGraded += 0.08 * highlightWeight;
 
-  // 4. Temple Velvet Shadows (Madurai plum / temple stone indigo tint in deep shadows)
+  // 4. Temple Velvet Violet Shadows (Official logo royal violet & deep plum tone in shadows)
+  // Aligns directly with official Tamil Sangam logo field (#3E2C5E / #250D40)
   const shadowWeight = Math.pow(1.0 - clamp(luma, 0, 1), 2.2);
-  rGraded += 0.05 * shadowWeight;
-  gGraded -= 0.02 * shadowWeight;
-  bGraded += 0.07 * shadowWeight;
+  rGraded += 0.08 * shadowWeight;
+  gGraded -= 0.04 * shadowWeight;
+  bGraded += 0.14 * shadowWeight;
 
   // 5. Jewel-Tone Saturation Boost
   // Enrich warm golds, reds, and peacock greens while preserving neutrals

@@ -209,21 +209,11 @@ export const Navbar: React.FC = () => {
     ? ({ type: "spring", stiffness: 260, damping: 26, mass: 0.9 } as const)
     : ({ type: "spring", stiffness: 320, damping: 30, mass: 0.8 } as const);
 
-  // Nav visibility: Strictly hidden during cinematic hero animations.
-  // Appears automatically once user scrolls past the hero into courtyard content.
-  const isNavVisible = !isInHeroZone;
-
   return (
     <LayoutGroup id="muttram-navbar-expandable">
       <header
         id="global-floating-nav"
-        aria-hidden={!isNavVisible}
-        inert={!isNavVisible ? true : undefined}
-        className={`fixed top-2.5 sm:top-3.5 left-0 right-0 z-50 px-3 sm:px-6 pointer-events-none flex justify-center items-center transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          isNavVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-8 pointer-events-none"
-        }`}
+        className="fixed top-2.5 sm:top-3.5 left-0 right-0 z-50 px-3 sm:px-6 pointer-events-none flex justify-center items-center transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
       >
         <motion.div
           ref={navRef}
@@ -233,11 +223,11 @@ export const Navbar: React.FC = () => {
           className={`pointer-events-auto relative border transition-colors duration-300 ${
             isOpen
               ? isDarkHero
-                ? "w-full max-w-6xl bg-[#161210]/95 border-[#D4AF37]/30 text-[#FAF7F2] shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl"
-                : "w-full max-w-6xl bg-[#FAF7F2]/95 border-[#E6DFD3] text-[#2A2825] shadow-[0_12px_36px_-10px_rgba(30,25,20,0.12)] backdrop-blur-xl"
+                ? "w-full max-w-6xl bg-[#140C20]/95 border-[#A6F0CF]/35 text-[#F4F0FA] shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl"
+                : "w-full max-w-6xl bg-[#140C20]/95 border-[rgba(125,96,166,0.25)] text-[#F4F0FA] shadow-[0_12px_36px_-10px_rgba(0,0,0,0.4)] backdrop-blur-xl"
               : isDarkHero
-              ? "w-auto max-w-[440px] bg-[#161210]/85 border-[#D4AF37]/25 text-[#FAF7F2] shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
-              : "w-auto max-w-[440px] bg-[#FAF7F2]/92 border-[#E6DFD3] text-[#2A2825] shadow-[0_8px_30px_rgba(42,40,37,0.08),0_1px_2px_rgba(42,40,37,0.04)] backdrop-blur-md"
+              ? "w-auto max-w-[440px] bg-[#140C20]/85 border-[#A6F0CF]/35 text-[#F4F0FA] shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
+              : "w-auto max-w-[440px] bg-[#140C20]/92 border-[rgba(125,96,166,0.25)] text-[#F4F0FA] shadow-[0_8px_30px_rgba(0,0,0,0.35),0_1px_2px_rgba(0,0,0,0.2)] backdrop-blur-md"
           } p-1.5 sm:p-2`}
         >
           {/* ======================================================================= */}
@@ -249,13 +239,13 @@ export const Navbar: React.FC = () => {
               href="/#flagship-gathering"
               onClick={handleBrandClick}
               aria-label="OSU Tamil Sangam Home"
-              className="group flex flex-col text-left shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-xs select-none pr-2"
+              className="group flex flex-col text-left shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] rounded-xs select-none pr-2"
             >
               <span
                 className={`font-serif font-bold text-sm sm:text-base tracking-tight transition-colors leading-tight ${
                   isDarkHero
-                    ? "text-[#FAF9F6] group-hover:text-[#E5A93C]"
-                    : "text-[#2A2825] group-hover:text-[#B85C38]"
+                    ? "text-[#F4F0FA] group-hover:text-[#A6F0CF]"
+                    : "text-[#F4F0FA] group-hover:text-[#A6F0CF]"
                 }`}
               >
                 {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"}
@@ -265,8 +255,8 @@ export const Navbar: React.FC = () => {
                 style={{ letterSpacing: 0 }}
                 className={`font-tamil text-[9px] transition-opacity mt-0.5 leading-none font-medium ${
                   isDarkHero
-                    ? "text-[#E5A93C]/80 group-hover:text-[#E5A93C]"
-                    : "text-[#57524C] opacity-65 group-hover:opacity-100"
+                    ? "text-[#A6F0CF]/80 group-hover:text-[#A6F0CF]"
+                    : "text-[#C4B7D7] opacity-65 group-hover:opacity-100"
                 }`}
               >
                 {locale === "ta" ? "The Ohio State University" : "ஒஹியோ மாநிலப் பல்கலைக்கழகம்"}
@@ -284,8 +274,8 @@ export const Navbar: React.FC = () => {
                   transition={{ duration: 0.2 }}
                   className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-sans transition-all select-none ${
                     isDarkHero
-                      ? "bg-white/10 border border-white/15 text-[#FAF7F2]"
-                      : "bg-[#EFECE6] border border-[#E0D7C9] text-[#2C2A29]"
+                      ? "bg-white/10 border border-white/15 text-[#F4F0FA]"
+                      : "bg-[#25173B] border border-[rgba(125,96,166,0.25)] text-[#F4F0FA]"
                   }`}
                 >
                   <span className="font-medium">
@@ -294,10 +284,10 @@ export const Navbar: React.FC = () => {
                   <span
                     className={`size-1.5 rounded-full ${
                       activeRoute.isNew
-                        ? "bg-[#D4AF37] shadow-[0_0_6px_#D4AF37] animate-pulse"
+                        ? "bg-[#A6F0CF] shadow-[0_0_6px_#A6F0CF] animate-pulse"
                         : isDarkHero
-                        ? "bg-[#E5A93C]"
-                        : "bg-[#B85C38]"
+                        ? "bg-[#A6F0CF]"
+                        : "bg-[#A6F0CF]"
                     }`}
                     aria-hidden="true"
                   />
@@ -305,7 +295,7 @@ export const Navbar: React.FC = () => {
                     lang="ta"
                     style={{ letterSpacing: 0 }}
                     className={`font-tamil text-[10px] opacity-80 ${
-                      isDarkHero ? "text-[#E5A93C]" : "text-[#8C4A27]"
+                      isDarkHero ? "text-[#A6F0CF]" : "text-[#A6F0CF]"
                     }`}
                   >
                     {locale === "ta" ? activeRoute.en : activeRoute.ta}
@@ -362,16 +352,16 @@ export const Navbar: React.FC = () => {
                         href="/join"
                         onClick={handleLinkClick}
                         tabIndex={isOpen ? 0 : -1}
-                        className={`group inline-flex items-center gap-1 font-sans text-xs font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B85C38] rounded-full py-1 px-3 ${
+                        className={`group inline-flex items-center gap-1 font-sans text-xs font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] rounded-full py-1 px-3 ${
                           isDarkHero
-                            ? "text-[#FAF9F6] hover:text-[#E5A93C] bg-white/5 hover:bg-white/10"
-                            : "text-[#2A2825] hover:text-[#B85C38] bg-[#EFECE6]/80 hover:bg-[#EAE5DC]"
+                            ? "text-[#F4F0FA] hover:text-[#A6F0CF] bg-white/5 hover:bg-white/10"
+                            : "text-[#F4F0FA] hover:text-[#A6F0CF] bg-[#25173B]/80 hover:bg-[#25173B]"
                         }`}
                       >
                         <span>{locale === "ta" ? "இணைந்திருங்கள்" : "Join the Hearth"}</span>
                         <span
                           className={`text-xs transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${
-                            isDarkHero ? "text-[#E5A93C]" : "text-[#B85C38]"
+                            isDarkHero ? "text-[#A6F0CF]" : "text-[#A6F0CF]"
                           }`}
                         >
                           ↗
@@ -405,7 +395,7 @@ export const Navbar: React.FC = () => {
               >
                 <span
                   className={`font-serif font-bold text-sm tracking-tight transition-colors leading-tight ${
-                    isDarkHero ? "text-[#FAF9F6]" : "text-[#2A2825]"
+                    isDarkHero ? "text-[#F4F0FA]" : "text-[#F4F0FA]"
                   }`}
                 >
                   {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"}
@@ -414,7 +404,7 @@ export const Navbar: React.FC = () => {
                   lang="ta"
                   style={{ letterSpacing: 0 }}
                   className={`font-tamil text-[8.5px] leading-none mt-0.5 font-medium ${
-                    isDarkHero ? "text-[#E5A93C]/80" : "text-[#57524C] opacity-75"
+                    isDarkHero ? "text-[#A6F0CF]/80" : "text-[#C4B7D7] opacity-75"
                   }`}
                 >
                   {locale === "ta" ? "The Ohio State University" : "ஒஹியோ மாநிலப் பல்கலைக்கழகம்"}
@@ -426,8 +416,8 @@ export const Navbar: React.FC = () => {
                 <div
                   className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-sans ${
                     isDarkHero
-                      ? "bg-white/10 text-[#FAF7F2]"
-                      : "bg-[#EFECE6] text-[#2C2A29]"
+                      ? "bg-white/10 text-[#F4F0FA]"
+                      : "bg-[#25173B] text-[#F4F0FA]"
                   }`}
                 >
                   <span className="font-medium truncate max-w-[90px]">
@@ -436,10 +426,10 @@ export const Navbar: React.FC = () => {
                   <span
                     className={`size-1.5 rounded-full ${
                       activeRoute.isNew
-                        ? "bg-[#D4AF37] animate-pulse"
+                        ? "bg-[#A6F0CF] animate-pulse"
                         : isDarkHero
-                        ? "bg-[#E5A93C]"
-                        : "bg-[#B85C38]"
+                        ? "bg-[#A6F0CF]"
+                        : "bg-[#A6F0CF]"
                     }`}
                     aria-hidden="true"
                   />
@@ -481,29 +471,29 @@ export const Navbar: React.FC = () => {
                             className={`flex flex-col p-2.5 rounded-xl border transition-colors ${
                               isActive
                                 ? isDarkHero
-                                  ? "bg-white/15 border-[#D4AF37]/40 text-[#FAF7F2]"
-                                  : "bg-[#EFECE6] border-[#D8CEBE] text-[#181716]"
+                                  ? "bg-white/15 border-[#A6F0CF]/35 text-[#F4F0FA]"
+                                  : "bg-[#25173B] border-[rgba(125,96,166,0.25)] text-[#F4F0FA]"
                                 : isDarkHero
-                                ? "bg-white/5 border-white/5 text-[#FAF7F2]/80 hover:bg-white/10"
-                                : "bg-white/60 border-black/5 text-[#2C2A29] hover:bg-white"
+                                ? "bg-white/5 border-white/5 text-[#C4B7D7] hover:bg-white/10"
+                                : "bg-white/60 border-black/5 text-[#F4F0FA] hover:bg-white"
                             }`}
                           >
                             <span className="font-sans text-xs font-semibold inline-flex items-center gap-1.5">
                               {locale === "ta" ? route.ta : route.en}
                               {route.isNew && (
-                                <span className="font-mono text-[7px] font-bold uppercase tracking-wider px-1 py-[0.5px] rounded-full bg-[#B85C38]/15 text-[#B85C38] border border-[#B85C38]/30">
+                                <span className="font-mono text-[7px] font-bold uppercase tracking-wider px-1 py-[0.5px] rounded-full bg-[#F26BB5]/15 text-[#A6F0CF] border border-[#A6F0CF]/35">
                                   NEW
                                 </span>
                               )}
                               {route.badge && !route.isNew && gamesUnsolved && (
-                                <span className="size-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
+                                <span className="size-1.5 rounded-full bg-[#A6F0CF] animate-pulse" />
                               )}
                             </span>
                             <span
                               lang="ta"
                               style={{ letterSpacing: 0 }}
                               className={`font-tamil text-[9px] mt-0.5 ${
-                                isDarkHero ? "text-[#E5A93C]" : "text-[#B85C38]"
+                                isDarkHero ? "text-[#A6F0CF]" : "text-[#A6F0CF]"
                               }`}
                             >
                               {locale === "ta" ? route.en : route.ta}
@@ -519,7 +509,7 @@ export const Navbar: React.FC = () => {
                     <Link
                       href="/join"
                       onClick={handleLinkClick}
-                      className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#B85C38] text-[#FAF9F6] font-sans font-semibold text-xs hover:bg-[#A04A27] transition-colors shadow-xs"
+                      className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#A6F0CF] text-[#140C20] font-sans font-semibold text-xs hover:bg-[#7AE7B5] transition-colors shadow-xs"
                     >
                       <span>{locale === "ta" ? "இணைந்திருங்கள்" : "Join the Hearth"}</span>
                       <span>↗</span>

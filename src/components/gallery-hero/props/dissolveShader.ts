@@ -6,7 +6,7 @@ import * as THREE from "three";
  * Implements procedural 3D Simplex noise dissolve on MeshStandardMaterial:
  * - Uniforms:
  *   - uDissolve: float (0.0 = fully solid, 1.0 = completely dissolved)
- *   - uEdgeColor: vec3 (amber #FFB84D for Era 1, solar gold #F59E0B for Era 2)
+ *   - uEdgeColor: vec3 (mint #A6F0CF for Era 1, solar gold #F59E0B for Era 2)
  *   - uEdgeWidth: float (default 0.08)
  * - Emissive fiery/glowing burn edge: smoothstep(uDissolve, uDissolve + uEdgeWidth, n)
  */

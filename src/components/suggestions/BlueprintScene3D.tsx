@@ -77,7 +77,7 @@ function createBlueprintGroundTexture(): THREE.CanvasTexture | null {
   }
   ctx.stroke();
 
-  // 4. Kolam Pulli Dot Matrix & Dimension Crosses in Blazing Amber/Gold (#FFB84D)
+  // 4. Kolam Pulli Dot Matrix & Dimension Crosses in Mint & Cyan (#A6F0CF, #4FD6E0)
   ctx.fillStyle = "rgba(255, 184, 77, 0.65)";
   for (let x = majorStep; x < 2048; x += majorStep) {
     for (let y = majorStep; y < 2048; y += majorStep) {
@@ -178,7 +178,7 @@ const StadiumLineShader = {
     varying float vIsGhost;
 
     void main() {
-      // Crisp architectural gold base (#D4AF37)
+      // Crisp architectural cyan base (#4FD6E0)
       vec3 color = vec3(0.83, 0.69, 0.22);
 
       // Element-specific architectural coloration
@@ -187,7 +187,7 @@ const StadiumLineShader = {
       } else if (vTag > 3.5 && vTag < 4.5) {
         color = uColorRotunda;
       } else if (vTag > 4.5) {
-        color = vec3(1.0, 0.72, 0.30);
+        color = vec3(0.65, 0.94, 0.81);
       } else if (vTag > 1.5 && vTag < 2.5) {
         color = mix(color, vec3(1.0, 0.82, 0.4), 0.45);
       }
@@ -240,7 +240,7 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: React.Mu
         uMaxHeight: { value: maxHeight },
         uTime: { value: 0 },
         uCinematic: { value: isCinematic ? 1.0 : 0.0 },
-        uColorBase: { value: new THREE.Color("#FFB84D") }, // Blazing cinematic amber/gold (#FFB84D)
+        uColorBase: { value: new THREE.Color("#A6F0CF") }, // Blazing cinematic mint (#A6F0CF)
         uColorGlow: { value: new THREE.Color("#FFA01C") }, // Deep amber construction glow
         uColorField: { value: new THREE.Color("#E59838") }, // Warm copper/amber turf lines
         uColorRotunda: { value: new THREE.Color("#FFD066") }, // Radiating Rotunda gold
@@ -294,7 +294,7 @@ function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: React.Mu
       <mesh ref={laserRingRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.1, -1.2]}>
         <ringGeometry args={[5.2, 5.8, 48]} />
         <meshBasicMaterial
-          color="#FFB84D"
+          color="#A6F0CF"
           transparent
           opacity={0.65}
           side={THREE.DoubleSide}
@@ -459,7 +459,7 @@ function StadiumCalloutPins({
             <mesh position={[0, 0.8, 0]}>
               <cylinderGeometry args={[0.02, 0.06, 1.6, 12]} />
               <meshBasicMaterial
-                color={isHovered ? "#FFE5B4" : "#FFB84D"}
+                color={isHovered ? "#A6F0CF" : "#4FD6E0"}
                 transparent
                 opacity={isHovered ? 0.85 : 0.45}
               />
@@ -469,8 +469,8 @@ function StadiumCalloutPins({
             <mesh position={[0, 1.6, 0]}>
               <sphereGeometry args={[isHovered ? 0.22 : 0.16, 16, 16]} />
               <meshStandardMaterial
-                color={isHovered ? "#FFE5B4" : "#FFB84D"}
-                emissive={isHovered ? "#FFB84D" : "#FFA01C"}
+                color={isHovered ? "#A6F0CF" : "#4FD6E0"}
+                emissive={isHovered ? "#A6F0CF" : "#4FD6E0"}
                 emissiveIntensity={isHovered ? 1.6 : 0.9}
                 roughness={0.2}
               />
@@ -480,7 +480,7 @@ function StadiumCalloutPins({
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
               <ringGeometry args={[0.25, 0.35, 24]} />
               <meshBasicMaterial
-                color={isHovered ? "#FFE5B4" : "#FFB84D"}
+                color={isHovered ? "#A6F0CF" : "#4FD6E0"}
                 transparent
                 opacity={0.65}
               />
@@ -533,7 +533,7 @@ function NewlyDroppedPin({ pin }: { pin: EphemeralPin }) {
       <mesh position={[0, 1.0, 0]} rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[0.18, 0.5, 16]} />
         <meshStandardMaterial
-          color="#FFB84D"
+          color="#A6F0CF"
           emissive="#FFA01C"
           emissiveIntensity={1.5}
         />
@@ -542,17 +542,17 @@ function NewlyDroppedPin({ pin }: { pin: EphemeralPin }) {
         <sphereGeometry args={[0.2, 16, 16]} />
         <meshStandardMaterial
           color="#FFE5B4"
-          emissive="#FFB84D"
+          emissive="#4FD6E0"
           emissiveIntensity={1.3}
         />
       </mesh>
 
-      <pointLight color="#FFB84D" intensity={3.0} distance={5} position={[0, 1.2, 0]} />
+      <pointLight color="#A6F0CF" intensity={3.0} distance={5} position={[0, 1.2, 0]} />
 
       {/* Ripple ring on ground */}
       <mesh ref={ringRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -6.0 + 0.02, 0]}>
         <ringGeometry args={[0.35, 0.5, 32]} />
-        <meshBasicMaterial color="#FFB84D" transparent opacity={0.8} />
+        <meshBasicMaterial color="#A6F0CF" transparent opacity={0.8} />
       </mesh>
     </group>
   );
@@ -1091,7 +1091,7 @@ function ArchitectScaleRuler() {
       {/* Color-coded center measurement groove stripe (Amber/Gold) */}
       <mesh castShadow position={[0, 0.08, 0]}>
         <boxGeometry args={[0.025, 0.015, 3.9]} />
-        <meshBasicMaterial color="#FFB84D" />
+        <meshBasicMaterial color="#A6F0CF" />
       </mesh>
     </group>
   );
@@ -1315,7 +1315,7 @@ function BlueprintSceneContent({
       <directionalLight
         position={[20, 25, 15]}
         intensity={1.8}
-        color="#FFE6B8"
+        color="#A6F0CF"
         castShadow={isCinematic}
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
