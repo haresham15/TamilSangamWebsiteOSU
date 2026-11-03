@@ -59,10 +59,12 @@ export const Navbar: React.FC = () => {
   // Track active route
   const getActiveRoute = useCallback((): NavRoute => {
     if (pathname === "/") return NAV_ROUTES[0];
-    const matched = NAV_ROUTES.find(
-      (r) => r.href !== "/" && (pathname === r.href || pathname.startsWith(`${r.href}/`))
-    );
-    return matched || NAV_ROUTES[0];
+    const exact = NAV_ROUTES.find((r) => r.href !== "/" && pathname === r.href);
+    if (exact) return exact;
+    const prefixMatched = [...NAV_ROUTES]
+      .filter((r) => r.href !== "/" && pathname.startsWith(`${r.href}/`))
+      .sort((a, b) => b.href.length - a.href.length)[0];
+    return prefixMatched || NAV_ROUTES[0];
   }, [pathname]);
 
   const activeRoute = getActiveRoute();
@@ -263,44 +265,58 @@ export const Navbar: React.FC = () => {
               </span>
             </Link>
 
-            {/* Center Context Pill: Visible ONLY when Collapsed (State A) */}
+            {/* Center Context Pill + Quick NEXT Event Chip: Visible ONLY when Collapsed (State A) */}
             <AnimatePresence mode="wait">
               {!isOpen && (
-                <motion.div
-                  key="collapsed-active-pill"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.2 }}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-sans transition-all select-none ${
-                    isDarkHero
-                      ? "bg-white/10 border border-white/15 text-[#F4F0FA]"
-                      : "bg-[#25173B] border border-[rgba(125,96,166,0.25)] text-[#F4F0FA]"
-                  }`}
-                >
-                  <span className="font-medium">
-                    {locale === "ta" ? activeRoute.ta : activeRoute.en}
-                  </span>
-                  <span
-                    className={`size-1.5 rounded-full ${
-                      activeRoute.isNew
-                        ? "bg-[#A6F0CF] shadow-[0_0_6px_#A6F0CF] animate-pulse"
-                        : isDarkHero
-                        ? "bg-[#A6F0CF]"
-                        : "bg-[#A6F0CF]"
-                    }`}
-                    aria-hidden="true"
-                  />
-                  <span
-                    lang="ta"
-                    style={{ letterSpacing: 0 }}
-                    className={`font-tamil text-[10px] opacity-80 ${
-                      isDarkHero ? "text-[#A6F0CF]" : "text-[#A6F0CF]"
+                <div className="flex items-center gap-2">
+                  <motion.div
+                    key="collapsed-active-pill"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-sans transition-all select-none ${
+                      isDarkHero
+                        ? "bg-white/10 border border-white/15 text-[#F4F0FA]"
+                        : "bg-[#25173B] border border-[rgba(125,96,166,0.25)] text-[#F4F0FA]"
                     }`}
                   >
-                    {locale === "ta" ? activeRoute.en : activeRoute.ta}
-                  </span>
-                </motion.div>
+                    <span className="font-medium">
+                      {locale === "ta" ? activeRoute.ta : activeRoute.en}
+                    </span>
+                    <span
+                      className={`size-1.5 rounded-full ${
+                        activeRoute.isNew || activeRoute.isNextEvent
+                          ? "bg-[#A6F0CF] shadow-[0_0_6px_#A6F0CF] animate-pulse"
+                          : isDarkHero
+                          ? "bg-[#A6F0CF]"
+                          : "bg-[#A6F0CF]"
+                      }`}
+                      aria-hidden="true"
+                    />
+                    <span
+                      lang="ta"
+                      style={{ letterSpacing: 0 }}
+                      className={`font-tamil text-[10px] opacity-80 ${
+                        isDarkHero ? "text-[#A6F0CF]" : "text-[#A6F0CF]"
+                      }`}
+                    >
+                      {locale === "ta" ? activeRoute.en : activeRoute.ta}
+                    </span>
+                  </motion.div>
+
+                  {/* Dedicated Quick-Access NEXT Event Chip */}
+                  <Link
+                    href="/events/namma-deepavali-2026"
+                    onClick={handleLinkClick}
+                    className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold tracking-wider uppercase bg-[#A6F0CF] text-[#140C20] hover:bg-[#7AE7B5] shadow-[0_0_14px_rgba(166,240,207,0.4)] transition-all hover:scale-105 select-none shrink-0"
+                    title="Next Upcoming Event: Namma Deepavali"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#140C20] animate-pulse" />
+                    <span>NEXT EVENT</span>
+                    <span className="text-[10px]">↗</span>
+                  </Link>
+                </div>
               )}
             </AnimatePresence>
 
@@ -411,28 +427,39 @@ export const Navbar: React.FC = () => {
                 </span>
               </Link>
 
-              {/* Center Active Pill on Mobile */}
+              {/* Center Active Pill + NEXT chip on Mobile */}
               {!isOpen && (
-                <div
-                  className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-sans ${
-                    isDarkHero
-                      ? "bg-white/10 text-[#F4F0FA]"
-                      : "bg-[#25173B] text-[#F4F0FA]"
-                  }`}
-                >
-                  <span className="font-medium truncate max-w-[90px]">
-                    {locale === "ta" ? activeRoute.ta : activeRoute.en}
-                  </span>
-                  <span
-                    className={`size-1.5 rounded-full ${
-                      activeRoute.isNew
-                        ? "bg-[#A6F0CF] animate-pulse"
-                        : isDarkHero
-                        ? "bg-[#A6F0CF]"
-                        : "bg-[#A6F0CF]"
+                <div className="flex items-center gap-1.5">
+                  <div
+                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-sans ${
+                      isDarkHero
+                        ? "bg-white/10 text-[#F4F0FA]"
+                        : "bg-[#25173B] text-[#F4F0FA]"
                     }`}
-                    aria-hidden="true"
-                  />
+                  >
+                    <span className="font-medium truncate max-w-[75px]">
+                      {locale === "ta" ? activeRoute.ta : activeRoute.en}
+                    </span>
+                    <span
+                      className={`size-1.5 rounded-full ${
+                        activeRoute.isNew || activeRoute.isNextEvent
+                          ? "bg-[#A6F0CF] animate-pulse"
+                          : isDarkHero
+                          ? "bg-[#A6F0CF]"
+                          : "bg-[#A6F0CF]"
+                      }`}
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <Link
+                    href="/events/namma-deepavali-2026"
+                    onClick={handleLinkClick}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-[#A6F0CF] text-[#140C20] shadow-xs"
+                    title="Next Event"
+                  >
+                    <span className="w-1 h-1 rounded-full bg-[#140C20] animate-pulse" />
+                    <span>NEXT</span>
+                  </Link>
                 </div>
               )}
 
@@ -480,11 +507,15 @@ export const Navbar: React.FC = () => {
                           >
                             <span className="font-sans text-xs font-semibold inline-flex items-center gap-1.5">
                               {locale === "ta" ? route.ta : route.en}
-                              {route.isNew && (
+                              {route.isNextEvent ? (
+                                <span className="font-mono text-[7px] font-bold uppercase tracking-wider px-1 py-[0.5px] rounded-full bg-[#A6F0CF]/20 text-[#A6F0CF] border border-[#A6F0CF]/50 shadow-[0_0_8px_rgba(166,240,207,0.4)]">
+                                  NEXT
+                                </span>
+                              ) : route.isNew ? (
                                 <span className="font-mono text-[7px] font-bold uppercase tracking-wider px-1 py-[0.5px] rounded-full bg-[#F26BB5]/15 text-[#A6F0CF] border border-[#A6F0CF]/35">
                                   NEW
                                 </span>
-                              )}
+                              ) : null}
                               {route.badge && !route.isNew && gamesUnsolved && (
                                 <span className="size-1.5 rounded-full bg-[#A6F0CF] animate-pulse" />
                               )}

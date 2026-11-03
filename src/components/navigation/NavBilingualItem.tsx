@@ -76,8 +76,18 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
         >
           {locale === "ta" ? route.ta : route.en}
 
-          {/* New Addition Tag */}
-          {route.isNew ? (
+          {/* Route Tags */}
+          {route.isNextEvent ? (
+            <span
+              className="inline-flex items-center gap-1 font-mono text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full transition-all bg-[#A6F0CF]/20 text-[#A6F0CF] border border-[#A6F0CF]/50 shadow-[0_0_8px_rgba(166,240,207,0.4)]"
+            >
+              <span
+                className="size-1 rounded-full bg-[#A6F0CF] animate-ping"
+                aria-hidden="true"
+              />
+              <span>{locale === "ta" ? "அடுத்தது" : "NEXT"}</span>
+            </span>
+          ) : route.isNew ? (
             <span
               className={`inline-flex items-center gap-1 font-mono text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full transition-all ${
                 isDarkHero

@@ -97,7 +97,7 @@ END:VCALENDAR`;
       <EditorialBackgroundCanvas />
       <main className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-32 pb-16">
         {/* Navigation Breadcrumb (Minimal Typographic Link, No Pills) */}
-        <nav aria-label="Breadcrumb" className="mb-14">
+        <nav aria-label="Breadcrumb" className="mb-14 flex items-center justify-between flex-wrap gap-4">
           <Link
             href="/events"
             onClick={playClick}
@@ -106,6 +106,16 @@ END:VCALENDAR`;
             <ArrowLeft className="w-3.5 h-3.5 text-[#A6F0CF]" />
             <span>RETURN TO GATHERINGS REGISTER</span>
           </Link>
+          {event.status === "upcoming" && (
+            <Link
+              href="/#flagship-gathering"
+              onClick={playClick}
+              className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.15em] text-[#F4F0FA] bg-[#25173B] border border-[#A6F0CF]/40 hover:border-[#A6F0CF] px-3.5 py-1.5 rounded-full hover:text-[#A6F0CF] transition-all shadow-[0_0_12px_rgba(166,240,207,0.2)]"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] animate-pulse" />
+              <span>HOME FLAGSHIP SHOWCASE ↗</span>
+            </Link>
+          )}
         </nav>
 
         {/* ============================================================ */}

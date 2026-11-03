@@ -62,9 +62,9 @@ export const activeUpcomingEvent: FlagshipEventConfig = {
     },
   },
   action: {
-    label: "Coming Soon · View Events",
-    tamilLabel: "விரைவில் · நிகழ்வுகள்",
-    href: "/events",
+    label: "Explore Event Dossier",
+    tamilLabel: "நிகழ்வு விவரங்கள்",
+    href: "/events/namma-deepavali-2026",
     external: false,
   },
 };

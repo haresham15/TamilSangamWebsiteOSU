@@ -30,6 +30,38 @@ export interface SangamEvent {
 
 export const EVENTS: SangamEvent[] = [
   {
+    slug: "namma-deepavali-2026",
+    titleEn: "Namma Deepavali",
+    titleTa: "நம்ம தீபாவளி",
+    taglineEn: "Festival lights, sweet feasts, vibrant melodies, and campus celebration. Namma Deepavali is coming soon.",
+    taglineTa: "தீப ஒளி, இனிப்புகள், இசை, மற்றும் கல்லூரித் தோழமையுடன் கொண்டாடும் தீபாவளித் திருநாள்.",
+    date: "COMING SOON · Fall 2026",
+    time: "Evening · Details Coming Soon",
+    tamilDate: "ஐப்பசி 2026 · விசுவாவசு ஆண்டு",
+    location: "Ohio Union (Archie Griffin Ballroom)",
+    venueAddress: "1739 N High St, Columbus, OH 43210",
+    price: "Subsidized student-tier tickets / Free admission options",
+    statusBadgeEn: "Next Flagship Gathering · Coming Soon",
+    statusBadgeTa: "அடுத்த முக்கிய நிகழ்வு · விரைவில்",
+    status: "upcoming",
+    academicYear: "2026-2027",
+    descriptionEn:
+      "Tamil Sangam presents Namma Deepavali — our upcoming annual flagship festival celebration at The Ohio State University! Experience an evening of festival lights, authentic South Indian sweets, cultural music performances, sparkler fellowship, and campus feasts in the Archie Griffin Ballroom. Open to all students, faculty, alumni, and Buckeyes of all backgrounds. Complete ticketing tiers and RSVP schedules will be announced soon.",
+    descriptionTa:
+      "ஓஹியோ ஸ்டேட் பல்கலைக்கழகத்தில் நமது தமிழ் சங்கம் பெருமையுடன் வழங்கும் 'நம்ம தீபாவளி' விழா! இனிப்புகள், மேடை கலை நிகழ்ச்சிகள், மற்றும் தீப ஒளியுடன் கூடிய மாணவர் சங்கமம். அனைத்து நண்பர்களுக்கும் அனுமதி உண்டு.",
+    dressCodeEn: "Festive Traditional (Veshti, Saree, Kurta) or Smart Casual",
+    dressCodeTa: "பாரம்பரிய ஆடைகள் அல்லது விருப்ப உடை",
+    schedule: [
+      { time: "TBA", activityEn: "Doors Open & Welcome Sweet Distribution", activityTa: "அரங்கம் திறப்பு மற்றும் தீபாவளி இனிப்பு வழங்கல்" },
+      { time: "TBA", activityEn: "Diwali Diya Lighting Ceremony", activityTa: "தீபம் ஏற்றுதல் விழா" },
+      { time: "TBA", activityEn: "Live Acoustic Jam, Gaana & Dance Performances", activityTa: "இசை மற்றும் நடன நிகழ்ச்சிகள்" },
+      { time: "TBA", activityEn: "Festive Banquet Feast & Sparkler Fellowship", activityTa: "சுவையான இரவு விருந்து & கொண்டாட்டம்" },
+    ],
+    posterImage: "/images/themes/firecracker.png",
+    hoverImage: "/emblem.svg",
+    tags: ["deepavali", "diwali", "flagship", "festival", "sweets", "music", "upcoming", "cultural"],
+  },
+  {
     slug: "yaar-andha-killer",
     titleEn: "Yaar Andha Killer?",
     titleTa: "யார் அந்த கில்லர்? (ஹாலோவீன் மர்ம இரவு)",
