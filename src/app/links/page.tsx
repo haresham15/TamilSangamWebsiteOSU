@@ -17,12 +17,13 @@ import {
   ArrowLeft,
   Camera,
   ExternalLink,
-  Images
+  Images,
+  Lightbulb,
+  Award,
+  FileText
 } from "lucide-react";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 import { SITE_CONFIG } from "@/data/siteConfig";
-import { activeUpcomingEvent } from "@/config/upcomingEvent";
-import { LiveBoxOfficeTicketModule } from "@/components/events/LiveBoxOfficeTicketModule";
 
 const InstagramIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -52,7 +53,7 @@ const PREVIOUS_EVENT_ALBUMS: PreviousEventAlbum[] = [
     id: "yaar-andha-killer",
     num: "01",
     title: 'TS "Yaar Andha Killer?" Mystery',
-    season: "Fall 2026 · Murder Mystery",
+    season: "Fall 2026 · Murder Mystery Night",
     location: "Houston Grove Room, Ohio Union",
     url: SITE_CONFIG.googlePhotosAlbums.album1,
   },
@@ -60,7 +61,7 @@ const PREVIOUS_EVENT_ALBUMS: PreviousEventAlbum[] = [
     id: "berry-cute-picnic",
     num: "02",
     title: 'TS "A Berry Cute Picnic"',
-    season: "Fall 2025 · Welcome Social",
+    season: "Fall 2025 · Welcome Kickback",
     location: "South Oval Lawn",
     url: SITE_CONFIG.googlePhotosAlbums.album2,
   },
@@ -68,7 +69,7 @@ const PREVIOUS_EVENT_ALBUMS: PreviousEventAlbum[] = [
     id: "streetside-sapad",
     num: "03",
     title: "TS Streetside Sapad & Game Night",
-    season: "Spring 2026 · General Body",
+    season: "Spring 2026 · General Body Gathering",
     location: "Campus Hall / Ohio Union",
     url: SITE_CONFIG.googlePhotosAlbums.album3,
   },
@@ -84,7 +85,7 @@ const PREVIOUS_EVENT_ALBUMS: PreviousEventAlbum[] = [
     id: "autumn-gathering",
     num: "05",
     title: "TS x TT Autumn Gathering",
-    season: "Fall 2025 · Joint Social",
+    season: "Fall 2025 · Inter-Club Fellowship",
     location: "Ohio State Campus Spaces",
     url: SITE_CONFIG.googlePhotosAlbums.album5,
   },
@@ -103,43 +104,45 @@ export default function LinksBioHubPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#140C20] text-[#F4F0FA] flex flex-col justify-between py-12 px-4 font-sans select-none overflow-x-hidden">
+    <div className="relative min-h-screen bg-[#140C20] text-[#F4F0FA] flex flex-col justify-between py-10 px-4 font-sans select-none overflow-x-hidden">
       {/* Structural Watermark */}
       <WatermarkGlyph text="இணைப்பு" position="center" theme="light" opacity={0.03} />
 
       {/* Top Persistent Return Bar */}
-      <div className="w-full max-w-md mx-auto mb-6 flex items-center justify-between text-xs font-mono">
+      <header className="w-full max-w-md mx-auto mb-6 flex items-center justify-between text-xs font-mono">
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors py-1 focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to OSU Tamil Sangam</span>
+          <span>Back to Main Website</span>
         </Link>
-        <span className="text-[#C4B7D7] uppercase tracking-wider">Bio Hub</span>
-      </div>
+        <span className="text-[#A6F0CF] bg-[#A6F0CF]/10 border border-[#A6F0CF]/20 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-semibold">
+          Bio Hub
+        </span>
+      </header>
 
       {/* Centered Editorial Column */}
       <main className="relative z-10 w-full max-w-md mx-auto flex-1 flex flex-col items-center text-center">
         {/* Prominent 'Explore Full Website' Top Banner */}
         <Link
           href="/"
-          className="group w-full mb-8 p-3.5 rounded-lg bg-[#25173B] text-[#F4F0FA] hover:bg-[#140C20] transition-all flex items-center justify-between shadow-sm focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+          className="group w-full mb-8 p-3.5 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] transition-all flex items-center justify-between shadow-md focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
         >
           <div className="flex items-center gap-2.5 text-left pl-1">
-            <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-pulse" />
-            <span className="text-xs font-mono font-semibold tracking-wider uppercase">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#A6F0CF] animate-pulse" />
+            <span className="text-xs font-mono font-bold tracking-wider uppercase text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors">
               Explore Full Website
             </span>
           </div>
-          <div className="flex items-center gap-1 text-xs font-mono text-[#A6F0CF] group-hover:translate-x-1 transition-transform">
-            <span>Enter Main Site</span>
+          <div className="flex items-center gap-1.5 text-xs font-mono text-[#A6F0CF] font-semibold group-hover:translate-x-1 transition-transform">
+            <span>Enter Site</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </div>
         </Link>
 
         {/* Club Crest / Avatar */}
-        <div className="relative w-20 h-20 mb-4 rounded-full border border-[rgba(125,96,166,0.25)] bg-[#25173B] flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
+        <div className="relative w-20 h-20 mb-4 rounded-full border-2 border-[#A6F0CF]/40 bg-[#25173B] flex items-center justify-center shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
           <span className="text-4xl font-serif font-bold text-[#A6F0CF]" lang="ta">
             ஐ
           </span>
@@ -149,15 +152,15 @@ export default function LinksBioHubPage() {
         <h1 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA] mb-1">
           {SITE_CONFIG.brandNameEn}
         </h1>
-        <p className="text-xs text-[#A6F0CF] font-mono uppercase tracking-widest mb-2 font-semibold">
+        <p className="text-xs text-[#A6F0CF] font-mono uppercase tracking-widest mb-2 font-bold">
           @tamilsangam.osu · The Ohio State University
         </p>
-        <p className="text-xs text-[#C4B7D7] mb-6 max-w-xs leading-relaxed">
+        <p className="text-xs text-[#C4B7D7] mb-6 max-w-xs leading-relaxed font-sans">
           Open student hearth · ஆட்டம் · பாட்டம் · கொண்டாட்டம் · Columbus, OH
         </p>
 
         {/* Quick Social Actions Row */}
-        <div className="w-full flex items-center justify-center gap-5 sm:gap-6 mb-8 pb-6 border-b border-[rgba(125,96,166,0.25)]">
+        <div className="w-full flex items-center justify-center gap-5 sm:gap-6 mb-8 pb-6 border-b border-[rgba(125,96,166,0.3)]">
           <a
             href={SITE_CONFIG.instagramUrl}
             target="_blank"
@@ -165,7 +168,7 @@ export default function LinksBioHubPage() {
             className="flex items-center gap-1.5 text-xs font-medium text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors"
             aria-label="Instagram profile"
           >
-            <InstagramIcon className="w-4 h-4" />
+            <InstagramIcon className="w-4 h-4 text-[#F26BB5]" />
             <span>Instagram</span>
           </a>
           <a
@@ -175,7 +178,7 @@ export default function LinksBioHubPage() {
             className="flex items-center gap-1.5 text-xs font-medium text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors"
             aria-label="TikTok profile"
           >
-            <TikTokIcon className="w-3.5 h-3.5" />
+            <TikTokIcon className="w-3.5 h-3.5 text-[#4FD6E0]" />
             <span>TikTok</span>
           </a>
           <a
@@ -185,7 +188,7 @@ export default function LinksBioHubPage() {
             className="flex items-center gap-1.5 text-xs font-medium text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors"
             aria-label="GroupMe chat"
           >
-            <MessageSquare className="w-4 h-4" />
+            <MessageSquare className="w-4 h-4 text-[#A6F0CF]" />
             <span>GroupMe</span>
           </a>
           <button
@@ -197,11 +200,11 @@ export default function LinksBioHubPage() {
             {copiedItem === "email" ? (
               <>
                 <Check className="w-4 h-4 text-[#A6F0CF]" />
-                <span className="text-[#A6F0CF]">Copied</span>
+                <span className="text-[#A6F0CF] font-bold">Copied</span>
               </>
             ) : (
               <>
-                <Mail className="w-4 h-4" />
+                <Mail className="w-4 h-4 text-[#C4B7D7]" />
                 <span>Email</span>
               </>
             )}
@@ -210,66 +213,70 @@ export default function LinksBioHubPage() {
 
         {/* Interactive Link Stack */}
         <div className="w-full space-y-3.5 text-left">
-          {/* Pinned Live Box Office & Ticket Drop Module */}
-          <LiveBoxOfficeTicketModule className="mb-4" />
-          {/* Section: Priority Actions */}
+          
+          {/* Section: Core Gatherings & Community */}
           <div className="space-y-2.5">
-            {/* 1. Next Upcoming Event / RSVP */}
+            {/* 1. Next Upcoming Event / Schedule */}
             <Link
               href="/events"
-              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(166,240,207,0.06)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#25173B] text-[#A6F0CF] group-hover:bg-[#A6F0CF] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#A6F0CF] group-hover:border-[#A6F0CF]/60 transition-colors shrink-0 mt-0.5">
                     <Calendar className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
-                      Next Gathering · Coming Soon
+                      Events &amp; Calendar · All Welcome
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
-                      Events &amp; Festival Schedule
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
+                      Event Schedule &amp; Gatherings
                     </h2>
-                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
-                      Check upcoming celebrations, calendar dates &amp; past photo vaults
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+                      Celebrations, festivals, dates, and campus event dossiers
                     </p>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
               </div>
             </Link>
 
-            {/* 2. Join the Sangam / Membership & Fireside Coffee Chats */}
+            {/* 2. Join the Sangam / Membership */}
             <Link
               href="/join"
-              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(166,240,207,0.06)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#25173B] text-[#A6F0CF] group-hover:bg-[#A6F0CF] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#F26BB5] group-hover:border-[#F26BB5]/60 transition-colors shrink-0 mt-0.5">
                     <Users className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
-                      Join the Family · Free
-                    </span>
-                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
-                      Membership &amp; Fireside Coffee Chats
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#F26BB5] font-bold block">
+                        Join the Family
+                      </span>
+                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#A6F0CF]/15 text-[#A6F0CF] font-bold">
+                        100% Free · $0 Dues
+                      </span>
+                    </div>
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#F26BB5] transition-colors truncate">
+                      Membership &amp; Community Guestbook
                     </h2>
-                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
-                      Sign our guestbook, performer signups &amp; tech mentorship
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+                      Sign the guestbook, performer signups &amp; freshman mentorship
                     </p>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#F26BB5] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
               </div>
             </Link>
           </div>
 
           {/* Section: Photos Archive Button with Expandable Previous Events Menu */}
           <div className="pt-2">
-            <div className="rounded-xl bg-white border border-[rgba(125,96,166,0.25)] overflow-hidden transition-all shadow-xs hover:border-[#A6F0CF]/35">
+            <div className="rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] overflow-hidden transition-all shadow-md hover:border-[#A6F0CF]/60">
               <button
                 type="button"
                 onClick={() => setIsPhotosMenuOpen((prev) => !prev)}
@@ -278,23 +285,23 @@ export default function LinksBioHubPage() {
                 className="w-full p-4 flex items-start justify-between gap-3 text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
               >
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#25173B] text-[#A6F0CF] shrink-0 mt-0.5">
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#4FD6E0] shrink-0 mt-0.5">
                     <Camera className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#4FD6E0] font-bold block">
                         Photo Archive
                       </span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#25173B] text-[#C4B7D7]">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#140C20] text-[#A6F0CF] border border-[#A6F0CF]/30 font-semibold">
                         {PREVIOUS_EVENT_ALBUMS.length} Albums
                       </span>
                     </div>
-                    <h2 className="text-base font-serif font-normal text-[#F4F0FA]">
-                      Previous Events Photo Vaults
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA]">
+                      Previous Event Photo Vaults
                     </h2>
-                    <p className="text-xs text-[#C4B7D7] mt-0.5">
-                      {isPhotosMenuOpen ? "Tap to close album list" : "Tap to open all previous event photo links"}
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 font-sans">
+                      {isPhotosMenuOpen ? "Tap to close album list" : "Tap to open all high-resolution Google Photos links"}
                     </p>
                   </div>
                 </div>
@@ -314,10 +321,10 @@ export default function LinksBioHubPage() {
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="overflow-hidden border-t border-[rgba(125,96,166,0.25)] bg-[#140C20]"
+                    className="overflow-hidden border-t border-[rgba(125,96,166,0.3)] bg-[#1c112e]"
                   >
                     <div className="p-3.5 space-y-2">
-                      <p className="text-[11px] font-mono text-[#C4B7D7] px-1 uppercase tracking-wider font-semibold">
+                      <p className="text-[11px] font-mono text-[#A6F0CF] px-1 uppercase tracking-wider font-bold">
                         Official Google Photos Albums:
                       </p>
                       {PREVIOUS_EVENT_ALBUMS.map((album) => (
@@ -326,7 +333,7 @@ export default function LinksBioHubPage() {
                           href={album.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/album block p-3 rounded-lg bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:bg-[#140C20] transition-all"
+                          className="group/album block p-3 rounded-lg bg-[#25173B] border border-[rgba(125,96,166,0.3)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] transition-all"
                         >
                           <div className="flex items-center justify-between gap-3">
                             <div className="min-w-0">
@@ -342,22 +349,22 @@ export default function LinksBioHubPage() {
                                 {album.season} · {album.location}
                               </p>
                             </div>
-                            <div className="flex items-center gap-1 text-[11px] font-mono text-[#A6F0CF] shrink-0">
-                              <span className="hidden sm:inline">Photos</span>
+                            <div className="flex items-center gap-1 text-[11px] font-mono text-[#A6F0CF] shrink-0 font-medium">
+                              <span className="hidden sm:inline">Open</span>
                               <ExternalLink className="w-3.5 h-3.5" />
                             </div>
                           </div>
                         </a>
                       ))}
 
-                      {/* Link to Events Page Living Photo Carousel */}
+                      {/* Link to Website Living Photo Gallery */}
                       <Link
-                        href="/events"
-                        className="w-full mt-2 py-2 px-3 rounded-lg bg-[#25173B] hover:bg-[#25173B] text-[#F4F0FA] flex items-center justify-between text-xs font-mono font-medium transition-colors"
+                        href="/gallery"
+                        className="w-full mt-2 py-2.5 px-3 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.3)] hover:border-[#A6F0CF]/60 text-[#F4F0FA] flex items-center justify-between text-xs font-mono font-medium transition-colors"
                       >
                         <div className="flex items-center gap-2">
-                          <Images className="w-3.5 h-3.5 text-[#A6F0CF]" />
-                          <span>View Interactive Carousel on Events Page</span>
+                          <Images className="w-4 h-4 text-[#A6F0CF]" />
+                          <span>View 35mm Campus Gallery on Website</span>
                         </div>
                         <ArrowRight className="w-3.5 h-3.5 text-[#A6F0CF]" />
                       </Link>
@@ -368,37 +375,37 @@ export default function LinksBioHubPage() {
             </div>
           </div>
 
-          {/* Section: Social Communities */}
+          {/* Section: Community Channels */}
           <div className="pt-2 space-y-2.5">
-            <span className="text-[10px] font-mono text-[#C4B7D7] uppercase tracking-wider block px-1 font-semibold">
-              Official Social Channels
+            <span className="text-[10px] font-mono text-[#A6F0CF] uppercase tracking-wider block px-1 font-bold">
+              Official Community &amp; Chats
             </span>
 
-            {/* TikTok Section */}
+            {/* GroupMe Section */}
             <a
-              href={SITE_CONFIG.tiktokUrl}
+              href={SITE_CONFIG.groupMeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#000000]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#00AFF0]/70 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(0,175,240,0.08)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#F0F0F0] text-[#111111] group-hover:bg-[#111111] group-hover:text-white transition-colors shrink-0 mt-0.5">
-                    <TikTokIcon className="w-4 h-4" />
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[#00AFF0]/40 text-[#00AFF0] group-hover:border-[#00AFF0] transition-colors shrink-0 mt-0.5">
+                    <MessageSquare className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#111111] font-bold block">
-                      TikTok · @osutamilsangam
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#00AFF0] font-bold block">
+                      Student Chat · GroupMe
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#111111] transition-colors truncate">
-                      Official TikTok
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#00AFF0] transition-colors truncate">
+                      Official Student GroupMe
                     </h2>
-                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
-                      Event highlights, POV campus reels &amp; dance clips
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+                      120+ Buckeyes · rideshares, meetups, food spots &amp; active chat
                     </p>
                   </div>
                 </div>
-                <ExternalLink className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#111111] transition-all shrink-0 mt-1" />
+                <ExternalLink className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#00AFF0] transition-all shrink-0 mt-2" />
               </div>
             </a>
 
@@ -407,116 +414,197 @@ export default function LinksBioHubPage() {
               href={SITE_CONFIG.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#E1306C]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#E1306C]/70 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(225,48,108,0.08)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#FAF0F3] text-[#E1306C] group-hover:bg-[#E1306C] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[#E1306C]/40 text-[#E1306C] group-hover:border-[#E1306C] transition-colors shrink-0 mt-0.5">
                     <InstagramIcon className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#E1306C] font-bold block">
                       Instagram · @tamilsangam.osu
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#E1306C] transition-colors truncate">
-                      Official Instagram
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#E1306C] transition-colors truncate">
+                      Official Instagram Page
                     </h2>
-                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
-                      Stories, live announcements &amp; community photo drops
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+                      Stories, live event announcements &amp; photo reels
                     </p>
                   </div>
                 </div>
-                <ExternalLink className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#E1306C] transition-all shrink-0 mt-1" />
+                <ExternalLink className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#E1306C] transition-all shrink-0 mt-2" />
               </div>
             </a>
 
-            {/* GroupMe Section */}
+            {/* TikTok Section */}
             <a
-              href={SITE_CONFIG.groupMeUrl}
+              href={SITE_CONFIG.tiktokUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#00AFF0]/60 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#4FD6E0]/70 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(79,214,224,0.08)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#F0F8FA] text-[#00AFF0] group-hover:bg-[#00AFF0] group-hover:text-white transition-colors shrink-0 mt-0.5">
-                    <MessageSquare className="w-4 h-4" />
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[#4FD6E0]/40 text-[#4FD6E0] group-hover:border-[#4FD6E0] transition-colors shrink-0 mt-0.5">
+                    <TikTokIcon className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#00AFF0] font-bold block">
-                      Community Chat · GroupMe
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#4FD6E0] font-bold block">
+                      TikTok · @osutamilsangam
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#00AFF0] transition-colors truncate">
-                      Official Student GroupMe
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#4FD6E0] transition-colors truncate">
+                      Official TikTok Channel
                     </h2>
-                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
-                      120+ Buckeyes · rideshares, meetups &amp; general chat
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+                      Campus POV clips, dance routines &amp; event highlights
                     </p>
                   </div>
                 </div>
-                <ExternalLink className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#00AFF0] transition-all shrink-0 mt-1" />
+                <ExternalLink className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#4FD6E0] transition-all shrink-0 mt-2" />
               </div>
             </a>
           </div>
 
-          {/* Section: Campus Exploration */}
+          {/* Section: Campus Exploration & Student Resources */}
           <div className="pt-2 space-y-2.5">
-            <span className="text-[10px] font-mono text-[#C4B7D7] uppercase tracking-wider block px-1 font-semibold">
-              Explore &amp; Discover
+            <span className="text-[10px] font-mono text-[#A6F0CF] uppercase tracking-wider block px-1 font-bold">
+              Student Resources &amp; Discovery
             </span>
 
             {/* New Student Guide & FAQ */}
             <Link
               href="/guide"
-              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(166,240,207,0.06)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#25173B] text-[#A6F0CF] group-hover:bg-[#A6F0CF] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#A6F0CF] group-hover:border-[#A6F0CF]/60 transition-colors shrink-0 mt-0.5">
                     <Compass className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
-                      Freshmen &amp; Transfer Guide
+                      Freshmen &amp; Transfer Handbook
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
-                      Student Guide &amp; FAQ
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
+                      Student Survival Guide &amp; FAQ
                     </h2>
-                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
-                      Columbus grocers, dining, housing &amp; club constitution
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+                      Columbus South Asian dining, grocery markets, transit &amp; housing
                     </p>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
+              </div>
+            </Link>
+
+            {/* Executive Board Leadership */}
+            <Link
+              href="/board"
+              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(166,240,207,0.06)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3 min-w-0">
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#A6F0CF] group-hover:border-[#A6F0CF]/60 transition-colors shrink-0 mt-0.5">
+                    <Award className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
+                      2026–2027 Leadership
+                    </span>
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
+                      Executive Board Officers
+                    </h2>
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+                      Meet the team leading Tamil Sangam at Ohio State
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
+              </div>
+            </Link>
+
+            {/* Ideas Hearth */}
+            <Link
+              href="/ideas"
+              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(166,240,207,0.06)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3 min-w-0">
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#F26BB5] group-hover:border-[#F26BB5]/60 transition-colors shrink-0 mt-0.5">
+                    <Lightbulb className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#F26BB5] font-bold block">
+                      Propose Events &amp; Feedback
+                    </span>
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#F26BB5] transition-colors truncate">
+                      The Ideas Hearth
+                    </h2>
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+                      Submit anonymous suggestions, workshop ideas &amp; event requests
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#F26BB5] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
               </div>
             </Link>
 
             {/* Games & Cultural Lab */}
             <Link
               href="/games"
-              className="group block p-4 rounded-xl bg-white border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#4FD6E0]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(79,214,224,0.06)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-[#25173B] text-[#A6F0CF] group-hover:bg-[#A6F0CF] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#4FD6E0] group-hover:border-[#4FD6E0]/60 transition-colors shrink-0 mt-0.5">
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
-                      Interactive Lab
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#4FD6E0] font-bold block">
+                      Interactive Cultural Lab
                     </span>
-                    <h2 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
-                      Kolam, Solkattu &amp; Word Games
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#4FD6E0] transition-colors truncate">
+                      Wordle, Connections &amp; Kolam
                     </h2>
-                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate">
-                      Play daily campus word games and trace digital kolams
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+                      Play daily Tamil-English word puzzles (Sollu) and pattern games
                     </p>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#4FD6E0] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
               </div>
             </Link>
+
+            {/* Constitution Document */}
+            <a
+              href={SITE_CONFIG.constitutionPdfPath}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(166,240,207,0.06)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3 min-w-0">
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#C4B7D7] group-hover:border-[#A6F0CF]/60 group-hover:text-[#A6F0CF] transition-colors shrink-0 mt-0.5">
+                    <FileText className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#C4B7D7] font-bold block">
+                      Official Governance
+                    </span>
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
+                      Constitution (2026–2027)
+                    </h2>
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+                      Official student organization bylaws registered at Ohio State
+                    </p>
+                  </div>
+                </div>
+                <ExternalLink className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] transition-all shrink-0 mt-2" />
+              </div>
+            </a>
           </div>
+
         </div>
       </main>
 
