@@ -203,7 +203,7 @@ export default function JoinPage() {
       <div
         id="nanban-gates-hero"
         data-hero-container="true"
-        className="w-full relative z-10 bg-transparent"
+        className="w-full min-h-[70dvh] relative z-10 bg-transparent"
       >
         <JoinHeroCanvas />
       </div>

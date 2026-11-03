@@ -6,7 +6,16 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useAudio } from "@/context/AudioContext";
-import { DigitalKolamHero } from "@/components/hero/DigitalKolamHero";
+import dynamic from "next/dynamic";
+import { HeroKolamLoader } from "@/components/ui/HeroKolamLoader";
+
+const DigitalKolamHero = dynamic(
+  () => import("@/components/hero/DigitalKolamHero").then((mod) => mod.DigitalKolamHero),
+  {
+    ssr: false,
+    loading: () => <HeroKolamLoader route="/" minHeight="100dvh" />,
+  }
+);
 import { SilkHoverPillars } from "@/components/home/SilkHoverPillars";
 import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
 import { setHeroScrollProgress, heroScrollProgress } from "@/engine/heroScrollStore";
@@ -445,14 +454,14 @@ export default function HomePage() {
                 <span className="font-space-mono text-[10px] text-[#A6F0CF] tracking-widest uppercase block mb-1.5 font-semibold">
                   COMMUNITY CHARTER · OHIO STATE
                 </span>
-                <h3 className="text-[clamp(1.5rem,2.5vw,2.5rem)] font-display font-medium text-[#F4F0FA] leading-tight tracking-tight">
+                <h1 className="text-[clamp(1.5rem,2.5vw,2.5rem)] font-display font-medium text-[#F4F0FA] leading-tight tracking-tight">
                   Tamil Sangam at Ohio State
-                </h3>
+                </h1>
                 <p className="mt-1 text-xs sm:text-sm font-mono text-[#A6F0CF] tracking-wider uppercase font-medium">
                   Open Year-Round · No Language Requirement
                 </p>
                 <p ref={monolithPrologueRef} className="mt-2.5 text-xs sm:text-[14px] text-[#C4B7D7] font-body leading-relaxed max-w-2xl">
-                  Tamil Sangam at The Ohio State University unites Tamil Buckeyes and students of all backgrounds. Guided by our constitution, we host conversational language workshops, authentic South Indian feasts, campus festivals like Pongal and Diwali, and peer mentorship.
+                  OSU Tamil Sangam is the official collegiate student organization celebrating Tamil heritage, language, and community at The Ohio State University in Columbus, Ohio. Founded in 2021 as a registered student organization, we welcome all students with 100% free membership, zero dues, authentic cultural feasts, collegiate dance, and semester gatherings.
                 </p>
                 <div className="mt-4 flex flex-wrap items-center gap-4 sm:gap-5">
                   <Link
@@ -467,14 +476,28 @@ export default function HomePage() {
                     onClick={playClick}
                     className="font-mono text-xs uppercase tracking-wider text-[#F4F0FA] hover:text-[#A6F0CF] border-b border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] pb-0.5 transition-colors"
                   >
-                    See What&apos;s Coming Up ↗
+                    Campus Events ↗
                   </Link>
                   <Link
                     href="/about"
                     onClick={playClick}
                     className="font-mono text-xs uppercase tracking-wider text-[#C4B7D7] hover:text-[#A6F0CF] border-b border-transparent hover:border-[#A6F0CF] pb-0.5 transition-colors"
                   >
-                    Read Constitution ↗
+                    About Us ↗
+                  </Link>
+                  <Link
+                    href="/board"
+                    onClick={playClick}
+                    className="font-mono text-xs uppercase tracking-wider text-[#C4B7D7] hover:text-[#A6F0CF] border-b border-transparent hover:border-[#A6F0CF] pb-0.5 transition-colors"
+                  >
+                    Executive Board ↗
+                  </Link>
+                  <Link
+                    href="/gallery"
+                    onClick={playClick}
+                    className="font-mono text-xs uppercase tracking-wider text-[#C4B7D7] hover:text-[#A6F0CF] border-b border-transparent hover:border-[#A6F0CF] pb-0.5 transition-colors"
+                  >
+                    Photo Archive ↗
                   </Link>
                 </div>
               </div>

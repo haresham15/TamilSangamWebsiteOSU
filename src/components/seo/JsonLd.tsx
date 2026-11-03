@@ -3,6 +3,7 @@ import { SITE_URL, SEO_ENTITY } from "@/lib/seo";
 import { FAQS } from "@/data/faq";
 import { EVENTS, SangamEvent } from "@/data/events";
 import { CURRENT_BOARD, BoardMember } from "@/data/board";
+import { GALLERY_ALBUMS, GalleryAlbum } from "@/data/gallery";
 
 /**
  * XSS-Safe JSON-LD Serializer.
@@ -35,7 +36,7 @@ export function RootGraphJsonLd() {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "EducationalOrganization",
+        "@type": ["Organization", "EducationalOrganization"],
         "@id": `${SITE_URL}/#organization`,
         name: SEO_ENTITY.name,
         legalName: SEO_ENTITY.legalName,
@@ -45,6 +46,13 @@ export function RootGraphJsonLd() {
         image: `${SITE_URL}/emblem.svg`,
         description:
           "Official Tamil cultural student organization at The Ohio State University in Columbus, Ohio. 100% free membership, Kollywood galas, Pongal banquets, and collegiate community.",
+        email: SEO_ENTITY.contactEmail,
+        contactPoint: {
+          "@type": "ContactPoint",
+          email: SEO_ENTITY.contactEmail,
+          contactType: "student organization inquiry",
+          availableLanguage: ["English", "Tamil"],
+        },
         parentOrganization: {
           "@type": "CollegeOrUniversity",
           name: SEO_ENTITY.parentOrganization.name,
@@ -414,6 +422,36 @@ export function JoinPageJsonLd() {
       },
     },
     inLanguage: ["en-US", "ta-IN"],
+  };
+
+  return <JsonLd data={jsonLd} />;
+}
+
+/**
+ * ImageGallery Schema for /gallery/[album] photo archives
+ */
+export function ImageGalleryJsonLd({ album }: { album: GalleryAlbum }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "@id": `${SITE_URL}/gallery/${album.slug}#gallery`,
+    name: `${album.titleEn} | Campus Photo Archive`,
+    alternateName: album.titleTa,
+    description: album.descriptionEn,
+    url: `${SITE_URL}/gallery/${album.slug}`,
+    datePublished: album.eventDate,
+    organizer: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    image: album.photos.map((photo) => ({
+      "@type": "ImageObject",
+      name: photo.titleEn,
+      caption: photo.captionEn,
+      contentUrl: photo.imageUrl.startsWith("http")
+        ? photo.imageUrl
+        : `${SITE_URL}${photo.imageUrl}`,
+      datePublished: photo.eventDate,
+    })),
   };
 
   return <JsonLd data={jsonLd} />;

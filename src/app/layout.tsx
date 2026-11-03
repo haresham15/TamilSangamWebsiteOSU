@@ -31,12 +31,13 @@ import { ViewfinderCursor } from "@/components/ui/ViewfinderCursor";
 const muktaMalar = Mukta_Malar({
   variable: "--font-mukta-malar",
   subsets: ["latin", "tamil"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "600"],
   display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
+  preload: false,
   subsets: ["latin"],
   display: "swap",
 });
@@ -44,7 +45,7 @@ const jetbrainsMono = JetBrains_Mono({
 const syne = Syne({
   variable: "--font-syne",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "600"],
   display: "swap",
   preload: false,
 });
@@ -52,6 +53,7 @@ const syne = Syne({
 // Cultural Tamil & Indic Display Typefaces (replaces cold futuristic fonts)
 const anekTamil = Anek_Tamil({
   variable: "--font-anek-tamil",
+  preload: false,
   subsets: ["latin", "tamil"],
   weight: ["500", "600", "700", "800"],
   display: "swap",
@@ -75,6 +77,7 @@ const marcellus = Marcellus({
 
 const prata = Prata({
   variable: "--font-prata",
+  preload: false,
   subsets: ["latin"],
   weight: "400",
   display: "swap",
@@ -82,6 +85,7 @@ const prata = Prata({
 
 const cormorant = Cormorant({
   variable: "--font-cormorant",
+  preload: false,
   subsets: ["latin"],
   weight: ["400", "600", "700"],
   style: ["normal", "italic"],
@@ -135,6 +139,7 @@ const majorMono = Major_Mono_Display({
 
 const notoSerifTamil = Noto_Serif_Tamil({
   variable: "--font-noto-serif-tamil",
+  preload: false,
   subsets: ["tamil"],
   weight: ["400", "700"],
   display: "swap",
@@ -142,6 +147,7 @@ const notoSerifTamil = Noto_Serif_Tamil({
 
 const spaceMono = Space_Mono({
   variable: "--font-space-mono",
+  preload: false,
   subsets: ["latin"],
   weight: ["400", "700"],
   display: "swap",

@@ -1,0 +1,783 @@
+{
+  "entity": {
+    "officialName": "Tamil Sangam at The Ohio State University",
+    "brandName": "OSU Tamil Sangam",
+    "acronym": "OSU TS",
+    "shortName": "Tamil Sangam",
+    "tamilName": "ஒஹையோ மாநிலப் பல்கலைக்கழகத் தமிழ்ச் சங்கம்",
+    "tamilNameAlt": "ஓஹியோ பல்கலைக்கழக தமிழ் சங்கம்",
+    "alternativeNames": [
+      "Tamil Sangam at OSU",
+      "Ohio State Tamil Sangam",
+      "Tamil Sangam Ohio State University",
+      "Tamil Sangam at The Ohio State University",
+      "OSU Tamil Sangam",
+      "Tamil Student Association OSU",
+      "ஒஹையோ மாநிலப் பல்கலைக்கழகத் தமிழ்ச் சங்கம்",
+      "ஓஹியோ பல்கலைக்கழக தமிழ் சங்கம்",
+      "OSU TS",
+      "TS"
+    ],
+    "entityType": "EducationalOrganization / Collegiate Student Organization",
+    "chapterStatus": "Registered Student Organization (RSO) under Ohio State University Student Activities and Council on Student Affairs (CSA). Not an official university entity.",
+    "informalFoundingYear": 2021,
+    "officialRegistrationYear": 2024,
+    "academicYear": "2026–2027",
+    "membershipMetrics": {
+      "metricEn": "120+ Buckeyes & Growing Community",
+      "metricTa": "120+ உறுப்பினர்கள் & வளரும் நட்பு"
+    },
+    "membershipDues": {
+      "amount": 0,
+      "currency": "USD",
+      "description": "100% Free with zero mandatory dues or sign-up fees. Open to all students, majors, and backgrounds regardless of Tamil language proficiency."
+    }
+  },
+  "parentOrganization": {
+    "name": "The Ohio State University",
+    "campus": "Columbus, OH",
+    "url": "https://www.osu.edu",
+    "wikidataId": "Q309331",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Ohio_State_University",
+    "affiliationEn": "The Ohio State University · Columbus, OH",
+    "affiliationTa": "தி ஓஹியோ ஸ்டேட் பல்கலைக்கழகம் · கொலம்பஸ், ஓஹியோ",
+    "address": {
+      "streetAddress": "1739 N High St, Ohio Union",
+      "addressLocality": "Columbus",
+      "addressRegion": "OH",
+      "postalCode": "43210",
+      "addressCountry": "US"
+    },
+    "geoCoordinates": {
+      "latitude": 40.0067,
+      "longitude": -83.0305
+    }
+  },
+  "missionAndEthos": {
+    "summary": "OSU Tamil Sangam is the official student-led cultural organization serving students, scholars, and alumni at The Ohio State University. Founded informally in 2021 and officially registered with Ohio State Student Activities, Tamil Sangam is dedicated to cultivating a welcoming, inclusive home away from home on the banks of the Olentangy River in Columbus, Ohio.",
+    "foundingPhilosophies": [
+      {
+        "source": "Purananuru 192 (Kaniyan Poongundranar)",
+        "verseTamil": "யாதும் ஊரே யாவரும் கேளிர்",
+        "verseEnglish": "To us all towns are home, everyone our kin",
+        "principle": "Unconditional hospitality, global fellowship, and warmth for every individual."
+      },
+      {
+        "source": "Thirukkural 81 (Thiruvalluvar — விருந்தோம்பல் / Hospitality)",
+        "verseTamil": "இருந்தோம்பி இல்வாழ்வ தெல்லாம் விருந்தோம்பி வேளாண்மை செய்தற் பொருட்டு.",
+        "verseEnglish": "The entire virtue of establishing a home is to welcome guests with an open heart and extend generosity.",
+        "principle": "Every gathering begins with shared meals, open doors, and generous welcome."
+      }
+    ],
+    "clubPurposes": [
+      {
+        "id": "purpose-community",
+        "titleEn": "Welcoming Campus Hub",
+        "titleTa": "மாணவர் பண்பாட்டு மையம்",
+        "descriptionEn": "Serves as an inclusive, open, and friendly cultural hub for Tamil Buckeyes and students of all linguistic and cultural backgrounds, creating a warm home away from home.",
+        "descriptionTa": "தமிழ் மாணவர்கள் மற்றும் அனைத்து கலாச்சார பின்புலம் கொண்ட மாணவர்களையும் ஒன்றிணைத்து, ஓஹியோ பல்கலைக்கழகத்தில் ஒரு குடும்ப உணர்வை உருவாக்குதல்."
+      },
+      {
+        "id": "purpose-learning",
+        "titleEn": "Language & Heritage Learning (கற்றல்)",
+        "titleTa": "மொழி & பாரம்பரியக் கற்றல்",
+        "descriptionEn": "Hosts conversational Tamil workshops, pronunciation circles, diaspora history discussions, and Sangam literature explorations accessible to all experience levels.",
+        "descriptionTa": "அனைத்து நிலை மாணவர்களுக்கும் எளிய உரையாடல் தமிழ் பயிற்சி, வரலாற்று கலந்துரையாடல் மற்றும் சங்க இலக்கிய வாசிப்பு பட்டறைகள் நடத்துதல்."
+      },
+      {
+        "id": "purpose-fellowship",
+        "titleEn": "Food, Music & Performing Arts",
+        "titleTa": "உணவு, இசை & கலைகள்",
+        "descriptionEn": "Celebrates authentic South Indian cuisine, cinematic and acoustic student jam sessions, folk arts, and collegiate dance circles.",
+        "descriptionTa": "தென் இந்திய உணவு விருந்துகள், திரைப்பட மற்றும் செவ்வியல் இசை மாலைகள், மற்றும் நடனக் கலைகள் மூலம் மாணவர் ஆற்றலை வெளிக்கொணருதல்."
+      },
+      {
+        "id": "purpose-festivals",
+        "titleEn": "Cultural Festivals & Gatherings",
+        "titleTa": "வளாகப் பெருவிழாக்கள்",
+        "descriptionEn": "Brings the Ohio State campus together for major cultural moments including Diwali, Pongal harvest festivities, and collaborative spring carnivals.",
+        "descriptionTa": "தீபாவளி, பொங்கல் அறுவடைத் திருநாள், மற்றும் பிற மாணவர் அமைப்புகளுடன் இணைந்த வசந்த காலக் கொண்டாட்டங்களை நடத்துதல்."
+      },
+      {
+        "id": "purpose-philanthropy",
+        "titleEn": "Peer Mentorship & Civic Action",
+        "titleTa": "மாணவர் வழிகாட்டல் & சமூக சேவை",
+        "descriptionEn": "Fosters peer guidance for incoming freshmen, study circles, community volunteering with Columbus food partners, and cultural philanthropy.",
+        "descriptionTa": "புதிய மாணவர்களுக்கான வழிகாட்டல், படிப்பு வட்டங்கள், மற்றும் கொலம்பஸ் உள்ளூர் தொண்டு அமைப்புகளுடன் இணைந்து சமூக சேவை ஆற்றுதல்."
+      }
+    ],
+    "governanceAndSafetyPolicies": {
+      "membershipPolicy": "Membership is open year-round to all interested individuals. At least 90% of voting members must be current OSU students.",
+      "votingQualification": "To obtain voting rights, present official ideas, or qualify for Executive Board shadowing, members must attend at least two meetings and two events per academic semester.",
+      "communityPolicy": "Non-student community members are warmly welcomed to attend meetings, celebrations, and workshops, but do not hold voting or creative privileges.",
+      "safetyAndNonDiscrimination": "OSU Tamil Sangam adheres strictly to university non-discrimination guidelines and University Policy 1.15 regarding sexual misconduct. Unconditional zero-tolerance policy against discrimination, harassment, assault, and retaliation."
+    }
+  },
+  "contactInfo": {
+    "officialEmail": "osutamilsangam@gmail.com",
+    "privacyEmail": "osutamilsangam+privacy@gmail.com",
+    "socialHandles": {
+      "instagram": {
+        "handle": "@tamilsangam.osu",
+        "url": "https://www.instagram.com/tamilsangam.osu/"
+      },
+      "groupMe": {
+        "handle": "OSU Tamil Sangam Student Community",
+        "url": "https://web.groupme.com/join_group/83424812/BeBIRg7f"
+      },
+      "tikTok": {
+        "handle": "@osutamilsangam",
+        "url": "https://www.tiktok.com/@osutamilsangam"
+      },
+      "github": {
+        "repo": "haresham15/TamilSangamWebsiteOSU",
+        "url": "https://github.com/haresham15/TamilSangamWebsiteOSU"
+      },
+      "linktreeBioHub": {
+        "url": "https://tamil-sangam-website-osu.vercel.app/links"
+      },
+      "osuStudentActivities": {
+        "url": "https://activities.osu.edu/involvement/student_organizations/find_a_student_org/?i=Tamil+Sangam"
+      }
+    },
+    "meetingAndEventLocations": [
+      {
+        "name": "Ohio Union (Houston Grove Room & Archie Griffin Ballroom)",
+        "address": "1739 N High St, Columbus, OH 43210",
+        "usage": "General body meetings, murder mystery nights, festive banquets, and annual collaborative Diwali celebrations"
+      },
+      {
+        "name": "South Oval Lawn",
+        "address": "South Oval, Columbus, OH 43210",
+        "usage": "Fall welcome kickbacks, lawn picnics, outdoor games, Kahoot trivia, and chai mixers"
+      },
+      {
+        "name": "Recreation and Physical Activity Center (RPAC) Plaza & Multipurpose Rooms",
+        "address": "337 Annie and John Glenn Ave, Columbus, OH 43210",
+        "usage": "Collaborative spring carnivals (Namma Jathara), dance rehearsals (Aatam Tuesdays & Thursdays 7-9 PM)"
+      },
+      {
+        "name": "Hughes Hall Practice Suites",
+        "address": "1899 College Rd N, Columbus, OH 43210",
+        "usage": "Music rehearsals and unplugged acoustic jam sessions (Paatam Sundays 3-6 PM)"
+      },
+      {
+        "name": "Thompson Library",
+        "address": "1858 Neil Ave, Columbus, OH 43210",
+        "usage": "Late-night semester study hours and chai study sessions"
+      }
+    ]
+  },
+  "boardMembers": {
+    "term": "2026–2027",
+    "executiveBoard": [
+      {
+        "id": "president",
+        "nameEn": "Meenakshi Varadarajan",
+        "nameTa": "மீனாட்சி வரதராஜன்",
+        "roleEn": "President",
+        "roleTa": "தலைவர்",
+        "committeeEn": "Executive Leadership & University Relations",
+        "committeeTa": "முதன்மை நிர்வாகம் & பல்கலைக்கழகத் தொடர்பு",
+        "term": "2026-2027",
+        "major": null,
+        "bioEn": "Presides over general body meetings, steers strategic organizational vision, ensures strict compliance with Ohio State student organization policies, and acts as chief liaison with campus leadership.",
+        "bioTa": "சங்கத்தின் பொதுக்குழு மற்றும் நிர்வாகக் கூட்டங்களை வழிநடத்தி, ஓஹியோ பல்கலைக்கழக விதிகளுக்கு உட்பட்டு சங்கத்தின் இலக்குகளை முன்னெடுக்கும் முதன்மைத் தலைவர்.",
+        "photoUrl": "/emblem.svg",
+        "email": "osutamilsangam@gmail.com",
+        "instagram": "@tamilsangam.osu",
+        "responsibilitiesEn": [
+          "Presides over all executive board and general assembly meetings",
+          "Serves as chief liaison with Ohio State Student Life, university administrators, and faculty advisors",
+          "Oversees long-range strategic planning, constitutional governance, and community advocacy"
+        ],
+        "quote": "யாதும் ஊரே யாவரும் கேளீர் (To us all towns are home, everyone our kin)."
+      },
+      {
+        "id": "vice-president",
+        "nameEn": "Shrinidhi Nagappan",
+        "nameTa": "ஸ்ரீநிதி நாகப்பன்",
+        "roleEn": "Vice President",
+        "roleTa": "துணைத் தலைவர்",
+        "committeeEn": "Internal Operations & Inter-Club Alliances",
+        "committeeTa": "உள்நாட்டு நிர்வாகம் & அமைப்புகளின் கூட்டணி",
+        "term": "2026-2027",
+        "major": null,
+        "bioEn": "Coordinates internal committee synergies, chairs operational review sessions, oversees executive shadowing programs, and directs cross-cultural campus collaborations.",
+        "bioTa": "துணைக்குழுக்களின் செயல்பாடுகளை ஒருங்கிணைத்து, மாணவர் வழிகாட்டல் திட்டங்களை முன்னெடுத்து, உள்நாட்டு நிர்வாகத்தை வழிநடத்துபவர்.",
+        "photoUrl": "/emblem.svg",
+        "email": "osutamilsangam@gmail.com",
+        "instagram": "@tamilsangam.osu",
+        "responsibilitiesEn": [
+          "Directs day-to-day operations and coordinates committee workflows",
+          "Oversees executive shadowing programs and voting member attendance tracking",
+          "Fosters alliances with university multicultural organizations and community partners"
+        ],
+        "quote": "ஒற்றுமையே வலிமை (In unity lies our strength)."
+      },
+      {
+        "id": "design-lead",
+        "nameEn": "Sadhana Sunder",
+        "nameTa": "சாதனா சுந்தர்",
+        "roleEn": "Design Lead",
+        "roleTa": "வடிவமைப்புத் தலைவர்",
+        "committeeEn": "Visual Arts, Typography & Brand Design",
+        "committeeTa": "காட்சிக் கலை, அச்சுக்கலை & பிராண்ட் வடிவமைப்பு",
+        "term": "2026-2027",
+        "major": null,
+        "bioEn": "Curates the visual aesthetic, cultural motifs, typography systems, and print assets across all Ohio State Tamil Sangam channels and signature publications.",
+        "bioTa": "சங்கத்தின் போஸ்டர்கள், அச்சுக்கலை, மற்றும் காட்சி அடையாளங்களை பாரம்பரியம் மற்றும் நவீன நேர்த்தியுடன் வடிவமைக்கும் கலைப் பொறுப்பாளர்.",
+        "photoUrl": "/emblem.svg",
+        "email": "osutamilsangam@gmail.com",
+        "instagram": "@tamilsangam.osu",
+        "responsibilitiesEn": [
+          "Sets the visual direction, typography scales, and brand identity across all media",
+          "Designs festival stage backdrops, programs, badges, and authentic merchandise",
+          "Collaborates with digital engineering to align interface aesthetics with cultural roots"
+        ],
+        "quote": "கண்ணால் காண்பதும் கவிதையாகும் (Art is poetry made visible)."
+      },
+      {
+        "id": "creative-director",
+        "nameEn": "Srinivas Sankaranarayanan",
+        "nameTa": "ஸ்ரீனிவாஸ் சங்கரநாராயணன்",
+        "roleEn": "Creative Director",
+        "roleTa": "படைப்பாற்றல் இயக்குனர்",
+        "committeeEn": "Performing Arts, Culture & Productions",
+        "committeeTa": "கலை நிகழ்ச்சிகள், ஆட்டம் & பாட்டம்",
+        "term": "2026-2027",
+        "major": null,
+        "bioEn": "Directs creative thematic concepts, live theatrical stage sequences, musical fusion sets, and cultural showcases for major festival seasons.",
+        "bioTa": "பொங்கல், தீபாவளி பெருவிழாக்களுக்கான மேடை நிகழ்ச்சிகள், கருப்பொருள்கள், மற்றும் இசை-நடன ஒருங்கிணைப்பை வழிநடத்துபவர்.",
+        "photoUrl": "/emblem.svg",
+        "email": "osutamilsangam@gmail.com",
+        "instagram": "@tamilsangam.osu",
+        "responsibilitiesEn": [
+          "Shapes the overarching creative narrative and production themes for campus festivals",
+          "Directs dance auditions, live band rehearsals, and dramatic presentations",
+          "Coordinates stage lighting, acoustic cues, and performer scheduling"
+        ],
+        "quote": "ஆட்டம் பாட்டம் கொண்டாட்டம் (Dance, song, and joyous celebration)."
+      },
+      {
+        "id": "treasurer",
+        "nameEn": "Anirudh Kamalakannan",
+        "nameTa": "அனிருத் கமலக்கண்ணன்",
+        "roleEn": "Treasurer",
+        "roleTa": "பொருளாளர்",
+        "committeeEn": "Finance, University Grants & Ticketing",
+        "committeeTa": "நிதி, பல்கலைக்கழக மானியங்கள் & நுழைவுச்சீட்டு",
+        "term": "2026-2027",
+        "major": null,
+        "bioEn": "Manages fiscal assets, university student organization operating funds, Ohio Union programming grants, audit reporting, and festival ticketing portals.",
+        "bioTa": "சங்கத்தின் நிதி நிலை, பல்கலைக்கழக மானிய விண்ணப்பங்கள், செலவுக் கணக்குகள் மற்றும் நுழைவுச்சீட்டு வருவாயை நிர்வகிக்கும் நிதிப் பொறுப்பாளர்.",
+        "photoUrl": "/emblem.svg",
+        "email": "osutamilsangam@gmail.com",
+        "instagram": "@tamilsangam.osu",
+        "responsibilitiesEn": [
+          "Prepares and audits the annual operating budget in compliance with OSU guidelines",
+          "Secures programming grants from the Ohio Union Council and Student Life",
+          "Oversees festival ticketing gateways, vendor disbursements, and financial transparency"
+        ],
+        "quote": "முயற்சி திருவினையாக்கும் (Dedicated effort yields abundance)."
+      },
+      {
+        "id": "social-media-manager",
+        "nameEn": "Raghav Iyer",
+        "nameTa": "ராகவ் ஐயர்",
+        "roleEn": "Social Media Manager",
+        "roleTa": "சமூக ஊடக மேலாளர்",
+        "committeeEn": "Digital Reach, Content & Social Channels",
+        "committeeTa": "டிஜிட்டல் ஊடகம் & சமூக வலைதளங்கள்",
+        "term": "2026-2027",
+        "major": null,
+        "bioEn": "Spearheads digital engagement, video reels, interactive social campaigns, and audience communication across Instagram, TikTok, and collegiate networks.",
+        "bioTa": "சங்கத்தின் இன்ஸ்டாகிராம், டிக்டாக் மற்றும் சமூக வலைதளப் பதிவுகள் மூலம் மாணவர்களுடன் உடனடி தொடர்பை உருவாக்கும் சமூக ஊடக மேலாளர்.",
+        "photoUrl": "/emblem.svg",
+        "email": "osutamilsangam@gmail.com",
+        "instagram": "@tamilsangam.osu",
+        "responsibilitiesEn": [
+          "Creates dynamic video reels, live event coverage, and interactive story polls",
+          "Grows social reach across incoming freshmen, transfer students, and alumni",
+          "Manages message inquiries, live broadcast feeds, and digital campaign schedules"
+        ],
+        "quote": "தொடர்பில் மலரும் நட்பு (Connection fosters community)."
+      },
+      {
+        "id": "marketing-program-manager",
+        "nameEn": "Ashwinameera Selvakumar",
+        "nameTa": "அஸ்வினமீரா செல்வகுமார்",
+        "roleEn": "Marketing & Program Manager",
+        "roleTa": "சந்தைப்படுத்தல் & திட்ட மேலாளர்",
+        "committeeEn": "Event Programming, Campus Outreach & Campaigns",
+        "committeeTa": "நிகழ்வு திட்டமிடல் & வளாகப் பிரச்சாரம்",
+        "term": "2026-2027",
+        "major": null,
+        "bioEn": "Architects comprehensive promotional campaigns, coordinates multi-channel calendar schedules, and aligns club activities with collegiate academic milestones.",
+        "bioTa": "வளாகம் முழுவதும் நிகழ்வுகளைப் பிரபலப்படுத்தி, கல்விப் பருவத்திற்கு ஏற்ப சங்கத்தின் திட்டங்களை வடிவமைக்கும் சந்தைப்படுத்தல் தலைவர்.",
+        "photoUrl": "/emblem.svg",
+        "email": "osutamilsangam@gmail.com",
+        "instagram": "@tamilsangam.osu",
+        "responsibilitiesEn": [
+          "Coordinates promotional blitzes across dorms, campus libraries, and dining halls",
+          "Maintains the master programming calendar and event timeline roadmaps",
+          "Conducts attendee satisfaction surveys and post-event impact evaluations"
+        ],
+        "quote": "திட்டமிடுதலே வெற்றியின் முதல் படி (Structured planning is the foundation of triumph)."
+      },
+      {
+        "id": "event-coordinator",
+        "nameEn": "Jerachand Senthilkumar",
+        "nameTa": "ஜெரச்சந்த் செந்தில்குமார்",
+        "roleEn": "Event Coordinator",
+        "roleTa": "நிகழ்வு ஒருங்கிணைப்பாளர்",
+        "committeeEn": "Venue Operations, Banquet Catering & Guest Relations",
+        "committeeTa": "அரங்க மேலாண்மை, விருந்தோம்பல் & உணவு ஏற்பாடுகள்",
+        "term": "2026-2027",
+        "major": null,
+        "bioEn": "Leads physical venue logistics, university room reservations, authentic South Indian catering contracts, and day-of-event stage choreography.",
+        "bioTa": "ஓஹியோ யூனியன் அரங்க முன்பதிவுகள், சுவையான உணவு ஏற்பாடுகள், மற்றும் விழா நாள் களப் பணிகளை முன்னெடுப்பவர்.",
+        "photoUrl": "/emblem.svg",
+        "email": "osutamilsangam@gmail.com",
+        "instagram": "@tamilsangam.osu",
+        "responsibilitiesEn": [
+          "Secures Ohio Union, Hagerty Hall, and RPAC venue reservations and permits",
+          "Manages catering contracts for hot biryani, samosas, refreshments, and festive meals",
+          "Orchestrates check-in desks, crowd navigation, and safety protocol enforcement"
+        ],
+        "quote": "விருந்தோம்பல் தமிழரின் பண்பு (Hospitality is the soul of Tamil culture)."
+      },
+      {
+        "id": "outreach-coordinator",
+        "nameEn": "Monaasri Gopinath",
+        "nameTa": "மோனாஸ்ரீ கோபிநாத்",
+        "roleEn": "Outreach Coordinator",
+        "roleTa": "சமூகத் தொடர்பு ஒருங்கிணைப்பாளர்",
+        "committeeEn": "Community Engagement, Philanthropy & Student Welfare",
+        "committeeTa": "சமூக நலம், அறப்பணிகள் & மாணவர் வழிகாட்டல்",
+        "term": "2026-2027",
+        "major": null,
+        "bioEn": "Cultivates community partnerships, welcomes incoming students, spearheads philanthropic fundraisers, and fosters a supportive, inclusive campus climate.",
+        "bioTa": "புதிய மாணவர்களுக்கான வழிகாட்டல், உள்ளூர் சமூக அமைப்புகளுடனான நல்லுறவு, மற்றும் சமூக நல நிதி திரட்டும் பணிகளை வழிநடத்துபவர்.",
+        "photoUrl": "/emblem.svg",
+        "email": "osutamilsangam@gmail.com",
+        "instagram": "@tamilsangam.osu",
+        "responsibilitiesEn": [
+          "Leads freshman and graduate student welcoming mixers and campus mentorship",
+          "Organizes charity drives and relief fundraisers for regional and global causes",
+          "Coordinates community member engagement under constitutional guidelines"
+        ],
+        "quote": "அன்பே சிவம் (Love is the highest divinity)."
+      }
+    ],
+    "subcommittees": [
+      {
+        "id": "sub-1",
+        "nameEn": "Akshaya Hariharan",
+        "nameTa": "அக்ஷயா ஹரிஹரன்",
+        "areaEn": "Cultural & Dance Operations",
+        "areaTa": "கலாச்சார & நடன ஒருங்கிணைப்பு"
+      },
+      {
+        "id": "sub-2",
+        "nameEn": "Haresh Murugesan",
+        "nameTa": "ஹரேஷ் முருகேசன்",
+        "areaEn": "Web Architecture & Digital Systems",
+        "areaTa": "மென்பொருள் & டிஜிட்டல் வடிவமைப்பு"
+      },
+      {
+        "id": "sub-3",
+        "nameEn": "Adharsh Lakshmi Kanthan",
+        "nameTa": "ஆதர்ஷ் லக்ஷ்மி காந்தன்",
+        "areaEn": "Event Logistics & Production",
+        "areaTa": "நிகழ்வு ஏற்பாடுகள் & மேடை மேலாண்மை"
+      },
+      {
+        "id": "sub-4",
+        "nameEn": "Pradnya Kannan",
+        "nameTa": "பிரக்ஞா கண்ணன்",
+        "areaEn": "Creative Media & Visual Identity",
+        "areaTa": "படைப்பாற்றல் ஊடகம் & காட்சி வடிவம்"
+      },
+      {
+        "id": "sub-5",
+        "nameEn": "Amrithaa Ashok Kumar",
+        "nameTa": "அம்ரிதா அசோக் குமார்",
+        "areaEn": "Community Relations & Welcoming",
+        "areaTa": "சமூகத் தொடர்பு & வரவேற்பு"
+      },
+      {
+        "id": "sub-6",
+        "nameEn": "Sai Lavanya Premkumar",
+        "nameTa": "சாய் லாவண்யா பிரேம்குமார்",
+        "areaEn": "Finance & Ticketing Support",
+        "areaTa": "நிதி & நுழைவுச்சீட்டு ஒருங்கிணைப்பு"
+      },
+      {
+        "id": "sub-7",
+        "nameEn": "Akaash Balaji",
+        "nameTa": "ஆகாஷ் பாலாஜி",
+        "areaEn": "Stage Engineering & Sound",
+        "areaTa": "ஒலி, ஒளி & மேடை தொழில்நுட்பம்"
+      },
+      {
+        "id": "sub-8",
+        "nameEn": "Amana Shannon",
+        "nameTa": "அமனா ஷானன்",
+        "areaEn": "Philanthropy & Campus Partnerships",
+        "areaTa": "அறப்பணிகள் & வளாகக் கூட்டணிகள்"
+      },
+      {
+        "id": "sub-9",
+        "nameEn": "Subhiksha Arulselvam",
+        "nameTa": "சுபிக்ஷா அருள்செல்வம்",
+        "areaEn": "Educational Workshops & Tamil Literacy",
+        "areaTa": "கல்விப் பட்டறைகள் & தமிழ் பயிலகம்"
+      }
+    ]
+  },
+  "flagshipEventsAndTraditions": {
+    "upcomingFlagship": {
+      "id": "namma-deepavali-2026",
+      "seasonKey": "diwali",
+      "titleEn": "Namma Deepavali",
+      "titleTa": "நம்ம தீபாவளி",
+      "status": "upcoming",
+      "teaserQuote": "Festival lights, sweet feasts, vibrant melodies, and campus celebration. Namma Deepavali is coming soon.",
+      "description": "Details coming soon.",
+      "telemetry": {
+        "date": "COMING SOON",
+        "time": "COMING SOON",
+        "location": "Ohio Union (Archie Griffin Ballroom), 1739 N High St, Columbus, OH 43210",
+        "doorsOpen": null,
+        "admission": "Subsidized student-tier tickets / Free admission options"
+      },
+      "silhouetteSrc": "/images/themes/firecracker.png"
+    },
+    "catalog": [
+      {
+        "slug": "yaar-andha-killer",
+        "titleEn": "Yaar Andha Killer?",
+        "titleTa": "யார் அந்த கில்லர்? (ஹாலோவீன் மர்ம இரவு)",
+        "taglineEn": "A Halloween murder mystery night with free food, suspense, and costume prizes.",
+        "taglineTa": "திகில், புதிர்கள், சுவையான உணவு, மற்றும் பரிசுப் போட்டிகளுடன் கூடிய மர்ம இரவு.",
+        "date": "October 23, 2026",
+        "time": "5:30 PM - 8:30 PM ET",
+        "tamilDate": "ஐப்பசி 6, விசுவாவசு ஆண்டு",
+        "location": "Houston Grove Room, Ohio Union",
+        "venueAddress": "1739 N High St, Columbus, OH 43210",
+        "price": "Free Admission & Free Food (Open to all Buckeyes)",
+        "statusBadgeEn": "Halloween Murder Mystery",
+        "status": "past",
+        "academicYear": "2026-2027",
+        "descriptionEn": "Tamil Sangam presents Yaar Andha Killer? Step into an evening of Halloween suspense, suspicion, and whodunnit clues at the Houston Grove Room in the Ohio Union! Free food will be provided for all attendees, and the best dressed costume wins a prize. Free and open to all students — no tickets or RSVP required.",
+        "descriptionTa": "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் வழங்கும் 'யார் அந்த கில்லர்?' ஹாலோவீன் மர்ம மற்றும் புதிர் இரவு. சுவையான இலவச உணவு மற்றும் சிறந்த ஆடை அணிந்தவர்களுக்கான சிறப்பு பரிசுகள் உண்டு! அனைத்து மாணவர்களுக்கும் அனுமதி முற்றிலும் இலவசம்.",
+        "dressCodeEn": "Halloween Costumes / Mystery Attire (Best Dressed Wins a Prize!)",
+        "schedule": [
+          { "time": "5:15 PM", "activityEn": "Doors Open & Welcome Gathering" },
+          { "time": "5:30 PM", "activityEn": "Free Food Dinner Served & Suspect Introductions" },
+          { "time": "6:15 PM", "activityEn": "The Murder Mystery Whodunnit Game Begins" },
+          { "time": "7:45 PM", "activityEn": "Case Solved & Best Dressed Costume Prize Winner" },
+          { "time": "8:15 PM", "activityEn": "Group Photos & Wrap-up Hangout" }
+        ],
+        "posterImage": "/events/yaar-andha-killer/killer-01.jpg",
+        "googlePhotosUrl": "https://photos.app.goo.gl/k2Kg17MX4nriMbnw7",
+        "tags": ["halloween", "mystery", "free-food", "costume", "games", "social"]
+      },
+      {
+        "slug": "berry-cute-picnic",
+        "titleEn": "A Berry Cute Picnic",
+        "titleTa": "பெர்ரி க்யூட் பிக்னிக் (இலையுதிர் சங்கமம்)",
+        "taglineEn": "Lawn games, competitive Kahoot trivia, hot biryani, samosas, and South Oval hangouts.",
+        "taglineTa": "ஓவல் புல்வெளியில் விளையாட்டுகள், கஹூட் வினாடி-வினா, மற்றும் புதிய நட்பு.",
+        "date": "September 18, 2025",
+        "time": "3:30 PM - 6:30 PM EST",
+        "tamilDate": "புரட்டாசி 2, விசுவாவசு ஆண்டு",
+        "location": "South Oval, The Ohio State University",
+        "venueAddress": "South Oval, Columbus, OH 43210",
+        "price": "Free Admission (Open to all students)",
+        "statusBadgeEn": "Fall Welcome Kickback",
+        "status": "past",
+        "academicYear": "2025-2026",
+        "descriptionEn": "Our fall semester welcome kickoff out on the South Oval grass: students gathering on blankets for competitive Kahoot trivia, icebreakers, and small-group lawn games, followed by lining up at our marigold-draped tables for hot biryani, samosas, Indian snacks, and cold canned drinks with friends.",
+        "descriptionTa": "புதிய மற்றும் மூத்த மாணவர்களை ஒன்றிணைக்கும் இலையுதிர்கால புல்வெளி பிக்னிக்: கஹூட் வினாடி-வினா, குழு விளையாட்டுக்கள், மற்றும் சுவையான பிரியாணி, சமோசா, குளிர்பானங்களுடன் கூடிய நட்பு சங்கமம்.",
+        "dressCodeEn": "Casual outdoor attire / cozy picnic wear",
+        "schedule": [
+          { "time": "3:30 PM", "activityEn": "Doors Open, Music & Team Check-In" },
+          { "time": "4:15 PM", "activityEn": "Kahoot Trivia, Musical Chairs & Small-Group Team Games" },
+          { "time": "5:30 PM", "activityEn": "Hot Biryani, Indian Snacks, Drinks & Open Hangout" }
+        ],
+        "posterImage": "/events/berry-cute-picnic/picnic-01.jpg",
+        "googlePhotosUrl": "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7",
+        "tags": ["picnic", "oval", "free-food", "social", "casual", "games", "biryani"]
+      },
+      {
+        "slug": "streetside-sapad",
+        "titleEn": "Streetside Sapad & Game Night",
+        "titleTa": "தெருவோரச் சாப்பாடு & விளையாட்டு இரவு",
+        "taglineEn": "Competitive Kahoot trivia, musical chairs, hot biryani, samosas, and cold drinks.",
+        "taglineTa": "கஹூட் வினாடி-வினா, இசை நாற்காலி, சுவையான பிரியாணி மற்றும் சிற்றுண்டி மாலை.",
+        "date": "February 24, 2026",
+        "time": "6:30 PM - 9:00 PM EST",
+        "tamilDate": "மாசி 12, விசுவாவசு ஆண்டு",
+        "location": "Campus Hall / Ohio Union",
+        "venueAddress": "1739 N High St, Columbus, OH 43210",
+        "price": "Free Admission (Student RSVP)",
+        "statusBadgeEn": "Signature Food & Game Night",
+        "status": "past",
+        "academicYear": "2025-2026",
+        "descriptionEn": "Our signature General Body Meeting in campus halls: high-energy team trivia showdowns, musical chairs, and interactive challenges where students split into groups and pass the mic, followed by lining up at marigold-draped tables for plates of hot biryani, samosas, Indian snacks, and cold sodas.",
+        "descriptionTa": "வளாக அரங்கில் நடைபெற்ற பொதுக் குழு சந்திப்பு: கஹூட் வினாடி-வினா, இசை நாற்காலி, சுவாரஸ்யமான குழு போட்டிகள், மற்றும் மலர்களால் அலங்கரிக்கப்பட்ட மேசையில் சுடச்சுட பரிமாறப்பட்ட பிரியாணி, சமோசா, சிற்றுண்டிகள்.",
+        "dressCodeEn": "Casual everyday campus wear",
+        "schedule": [
+          { "time": "6:30 PM", "activityEn": "Doors Open, Music & Team Check-In" },
+          { "time": "7:15 PM", "activityEn": "Kahoot Trivia, Musical Chairs & Small-Group Team Games" },
+          { "time": "8:00 PM", "activityEn": "Hot Biryani, Indian Snacks, Drinks & Open Hangout" }
+        ],
+        "posterImage": "/events/streetside-sapad/picnic-01.jpg",
+        "googlePhotosUrl": "https://photos.app.goo.gl/PnkceBh19PqytYQ89",
+        "tags": ["food", "sapad", "biryani", "games", "trivia", "social", "casual"]
+      },
+      {
+        "slug": "namma-jathara",
+        "titleEn": "Namma Jathara Carnival (with Telugu Tamasha)",
+        "titleTa": "நம்ம ஜாதரா (பண்பாட்டு சங்கமம்)",
+        "taglineEn": "Outdoor games, team challenges, music, hot biryani, and campus fun with Telugu Tamasha.",
+        "taglineTa": "விளையாட்டுகள், இசை, மற்றும் நண்பர்களின் உற்சாகத் திருவிழா.",
+        "date": "March 26, 2026",
+        "time": "4:00 PM - 8:00 PM EST",
+        "tamilDate": "பங்குனி 12, விசுவாவசு ஆண்டு",
+        "location": "RPAC Plaza / South Oval, OSU Campus",
+        "venueAddress": "337 Annie and John Glenn Ave, Columbus, OH 43210",
+        "price": "Free Admission (Open to all)",
+        "statusBadgeEn": "Inter-Club Carnival",
+        "status": "past",
+        "academicYear": "2025-2026",
+        "descriptionEn": "A collaborative spring carnival co-hosted with Telugu Tamasha at OSU featuring games, team challenges, and an open dance circle on the plaza, followed by plates of hot biryani, Indian snacks, and cold drinks.",
+        "descriptionTa": "ஓஹியோ ஸ்டேட் தமிழ் சங்கமும் தெலுங்கு தமாஷா அமைப்பும் இணைந்து நடத்திய 'நம்ம ஜாதரா' வசந்தகால திருவிழா: விளையாட்டுகள், நடன வட்டம், மற்றும் சுவையான பிரியாணி, சிற்றுண்டிகளுடன் கூடிய கொண்டாட்டம்.",
+        "dressCodeEn": "Casual or Colorful Festive Wear",
+        "schedule": [
+          { "time": "4:00 PM", "activityEn": "Doors Open, Music & Team Check-In" },
+          { "time": "5:00 PM", "activityEn": "Kahoot Trivia, Musical Chairs & Small-Group Team Games" },
+          { "time": "6:30 PM", "activityEn": "Hot Biryani, Indian Snacks, Drinks & Open Hangout" }
+        ],
+        "posterImage": "/events/namma-jathara/picnic-01.jpg",
+        "googlePhotosUrl": "https://photos.app.goo.gl/NBTxg98ppmd9uhWX9",
+        "tags": ["carnival", "games", "collab", "outdoor", "free", "social", "biryani"]
+      },
+      {
+        "slug": "ts-x-tt-event",
+        "titleEn": "TS x TT Autumn Gathering",
+        "titleTa": "தமிழ் சங்கமும் தெலுங்கு தமாஷாவும் இணைந்த பெருவிழா",
+        "taglineEn": "Inter-club games, high-energy trivia, musical chairs, hot biryani, and campus fellowship.",
+        "taglineTa": "இரு அமைப்புகள் இணைந்து நடத்திய கல்லூரி விளையாட்டு, கஹூட் மற்றும் நட்புச் சங்கமம்.",
+        "date": "November 16, 2025",
+        "time": "5:00 PM - 8:30 PM EST",
+        "tamilDate": "கார்த்திகை 1, விசுவாவசு ஆண்டு",
+        "location": "Campus Hall / Ohio Union, OSU",
+        "venueAddress": "1739 N High St, Columbus, OH 43210",
+        "price": "Free Admission & Food (Open to all)",
+        "statusBadgeEn": "Inter-Club Meeting",
+        "status": "past",
+        "academicYear": "2025-2026",
+        "descriptionEn": "A collaborative campus meeting co-hosted with Telugu Tamasha at Ohio State. Students gathered in campus halls for competitive Kahoot rounds, musical chairs, and mic challenges, then lined up at marigold-draped tables for hot biryani, snacks, and open conversations.",
+        "descriptionTa": "தெலுங்கு தமாஷா அமைப்போடு இணைந்து நடத்திய கூட்டுச் சந்திப்பு. கஹூட் வினாடி வினா, இசை நாற்காலி மற்றும் குழு விளையாட்டுகளுடன், சுவையான பிரியாணி மற்றும் சிற்றுண்டிகளுடன் இனிதே நடந்த மாலை.",
+        "dressCodeEn": "Casual everyday campus wear",
+        "schedule": [
+          { "time": "5:00 PM", "activityEn": "Doors Open, Music & Team Check-In" },
+          { "time": "5:45 PM", "activityEn": "Kahoot Trivia, Musical Chairs & Small-Group Team Games" },
+          { "time": "7:15 PM", "activityEn": "Hot Biryani, Indian Snacks, Drinks & Open Hangout" }
+        ],
+        "posterImage": "/events/berry-cute-picnic/picnic-01.jpg",
+        "googlePhotosUrl": "https://photos.app.goo.gl/QrUrPkvPQqQvz7H29",
+        "tags": ["gathering", "games", "collab", "trivia", "biryani", "free-food", "social"]
+      }
+    ]
+  },
+  "initiativesAndPillars": {
+    "architecturalPillars": [
+      {
+        "slug": "culture-arts",
+        "number": "01",
+        "numberTa": "௧",
+        "titleEn": "Culture & Arts",
+        "titleTa": "கலை & பண்பாடு",
+        "heroTagline": "The Living Arts: Classical Roots, Acoustic Jam Circles & Folk Kuthu",
+        "heroTaglineTa": "வாழும் கலைகள்: செம்மொழி மரபு, கல்லூரிப் பாடல்கள் மற்றும் நாட்டுப்புற நடனம்",
+        "manifestoLead": "Art, music, and language are our collective heartbeat on Columbus soil. From conversational Tamil workshops and Sangam literary explorations to acoustic Ilaiyaraaja/Rahman jam sessions and energetic South Indian street Kuthu, Culture & Arts welcomes every Buckeye—regardless of language fluency or dance experience—to celebrate our rich living heritage.",
+        "manifestoLeadTa": "கலை, இசை மற்றும் மொழி ஆகியவை கொலம்பஸ் மண்ணில் நமது கூட்டுத் துடிப்பு. எளிய உரையாடல் தமிழ், சங்க இலக்கிய அறிமுகம், அக்யூஸ்டிக் திரைப்பட இசை, மற்றும் கல்லூரி மேடை நடனங்கள் என எந்த முன் அனுபவமும் இன்றி அனைத்து மாணவர்களையும் இத்தூண் அன்போடு அழைக்கிறது.",
+        "accentColor": "#F26BB5"
+      },
+      {
+        "slug": "community-brotherhood",
+        "number": "02",
+        "numberTa": "௨",
+        "titleEn": "Community & Brotherhood",
+        "titleTa": "தோழமை & சமூகம்",
+        "heroTagline": "The Campus Hearth: Sapad Tables, South Oval Lawn Picnics & Kinship",
+        "heroTaglineTa": "திண்ணை நட்பு: சுவையான சாப்பாடு, புல்வெளி பிக்னிக் மற்றும் மாறாத தோழமை",
+        "manifestoLead": "A welcoming porch on campus for every student. Whether you grew up in Tamil Nadu, across the diaspora, or are discovering Tamil culture for the very first time, our community is united through shared meals, festive celebrations like Pongal and Diwali, Kahoot trivia nights, and enduring friendships.",
+        "manifestoLeadTa": "ஓஹியோ பல்கலைக்கழகத்தில் அனைத்து மாணவர்களையும் அன்போடு ஒன்றிணைக்கும் குடும்பம். தென்னிந்திய சுவையான சாப்பாடு, ஓவல் புல்வெளி பிக்னிக், விளையாட்டு இரவுகள், மற்றும் புதிய மாணவர்களை வரவேற்கும் வழிகாட்டல் ஆகியவற்றின் மூலம் தோழமை மலர்கிறது.",
+        "accentColor": "#A6F0CF"
+      },
+      {
+        "slug": "impact-innovation",
+        "number": "03",
+        "numberTa": "௩",
+        "titleEn": "Impact & Innovation",
+        "titleTa": "முன்னேற்றம் & தலைமை",
+        "heroTagline": "Building Bridges: Tech Firesides, Research Mentorship & Aram Service",
+        "heroTaglineTa": "பாலங்கள் அமைத்தல்: தொழில்நுட்பக் கலந்துரையாடல் மற்றும் அறப்பணி",
+        "manifestoLead": "Connecting undergraduate Buckeyes with Tamil graduate researchers, PhD candidates, medical fellows, OSU faculty, and Columbus tech professionals. Through informal coffee chats, leadership opportunities, and philanthropy initiatives (Aram), we foster meaningful career growth and social impact.",
+        "manifestoLeadTa": "இளங்கலை மாணவர்களுக்கும், பட்டதாரி ஆய்வாளர்கள், பேராசிரியர்கள், மற்றும் தொழில்நுட்ப வல்லுநர்களுக்கும் இடையிலான பாலமாக இத்தூண் செயல்படுகிறது. வழிகாட்டல், தொழில்முறை உரையாடல்கள் மற்றும் சமுதாய அறப்பணிகளை முன்னெடுக்கிறது.",
+        "accentColor": "#55CCA2"
+      }
+    ],
+    "fiveTraditionalPillars": [
+      {
+        "id": "aatam",
+        "nameTa": "ஆட்டம்",
+        "nameEn": "Aatam (Dance & Movement)",
+        "taglineEn": "From intricate classical Bharatanatyam mudras to thunderous street Kuthu.",
+        "descriptionEn": "Aatam is our flagship performing arts collective. We field multiple choreographic teams each semester spanning classical Bharatanatyam, energetic Tamil cinematic routines, semi-classical fusion, and raw folk dances like Oyilattam and Karagattam. Auditions are open to dancers of all levels.",
+        "rehearsalSchedule": "Tuesdays & Thursdays, 7:00 PM - 9:00 PM at RPAC Multipurpose Rooms",
+        "whoCanJoin": "All OSU students, undergraduate and graduate, no prior formal dance training required!",
+        "accentColor": "#d6452f"
+      },
+      {
+        "id": "paatam",
+        "nameTa": "பாட்டம்",
+        "nameEn": "Paatam (Music & Harmony / Song)",
+        "taglineEn": "Vocal harmonies, ancient percussion, Carnatic ragas, and modern acoustic tracks.",
+        "descriptionEn": "Paatam unites vocalists, instrumentalists (veena, violin, flute, keyboard, guitar), and percussionists (mridangam, thavil, parai, cajon). We produce live acoustic unplugged sets, festival concert medleys, and original recordings celebrating classical Tamil poetry.",
+        "rehearsalSchedule": "Sundays, 3:00 PM - 6:00 PM at Hughes Hall Practice Suites",
+        "whoCanJoin": "Singers and instrumentalists of all genres and cultural backgrounds.",
+        "accentColor": "#0b7a75"
+      },
+      {
+        "id": "kondatam",
+        "nameTa": "கொண்டாட்டம்",
+        "nameEn": "Kondatam (Festivities & Celebrations)",
+        "taglineEn": "The lifeblood of campus life — games, food, mentorship, and lifelong bonds.",
+        "descriptionEn": "Kondatam encompasses our cultural celebrations, social mixers, freshman mentorship network, community service food packaging with Mid-Ohio Food Collective, and semester study nights with fresh chai and samosas.",
+        "rehearsalSchedule": "Bi-weekly general body meetings & weekend social excursions",
+        "whoCanJoin": "Every Buckeye who loves good food, great community, and cultural warmth.",
+        "accentColor": "#f2b705"
+      },
+      {
+        "id": "santhippum",
+        "nameTa": "சந்திப்பும்",
+        "nameEn": "Santhippum (Fellowship & Socials)",
+        "taglineEn": "Casual hangouts, chai socials, and study sessions.",
+        "descriptionEn": "South Oval lawn picnics, board game nights, chai meetups, and late-night study hours at Thompson Library.",
+        "rehearsalSchedule": "Weekly informal meetups and exam study circles",
+        "whoCanJoin": "Open to all students across all colleges and majors.",
+        "accentColor": "#A6F0CF"
+      },
+      {
+        "id": "katral",
+        "nameTa": "கற்றல்",
+        "nameEn": "Katral (Learning & Heritage)",
+        "taglineEn": "Conversational workshops and literary explorations.",
+        "descriptionEn": "Bi-weekly conversational Tamil workshops, pronunciation guides, script reading sessions, and historical discussions on Sangam poetry.",
+        "rehearsalSchedule": "Bi-weekly evening workshops in Ohio Union meeting rooms",
+        "whoCanJoin": "Beginners with zero Tamil experience to fluent speakers.",
+        "accentColor": "#55CCA2"
+      }
+    ],
+    "folkAndClassicalArtForms": [
+      {
+        "id": "bharatanatyam",
+        "nameEn": "Bharatanatyam",
+        "nameTa": "பரதநாட்டியம்",
+        "category": "Classical",
+        "origin": "Temples of Tamil Nadu (over 2,000 years old)"
+      },
+      {
+        "id": "parai-attam",
+        "nameEn": "Parai Attam",
+        "nameTa": "பறை ஆட்டம்",
+        "category": "Percussion",
+        "origin": "Ancient Sangam Tamil Nadu (herald and liberation instrument)"
+      },
+      {
+        "id": "oyilattam",
+        "nameEn": "Oyilattam",
+        "nameTa": "ஒயிலாட்டம்",
+        "category": "Folk",
+        "origin": "Kongu Nadu & Southern Tamil Nadu (Madurai, Tirunelveli)"
+      },
+      {
+        "id": "karagattam",
+        "nameEn": "Karagattam",
+        "nameTa": "கரகாட்டம்",
+        "category": "Folk",
+        "origin": "Rural Tamil Nadu festivals (praying for rain and harvest)"
+      },
+      {
+        "id": "kolattam",
+        "nameEn": "Kolattam",
+        "nameTa": "கோலாட்டம்",
+        "category": "Folk",
+        "origin": "Harvest and village celebrations across Tamil regions"
+      },
+      {
+        "id": "kuthu",
+        "nameEn": "Dappankuthu / Gaana",
+        "nameTa": "டப்பாங்குத்து / கானா",
+        "category": "Celebratory",
+        "origin": "Streets and festivals of Tamil Nadu"
+      }
+    ]
+  },
+  "officialAssets": {
+    "brandIdentity": {
+      "emblemSvg": "/emblem.svg",
+      "logoSvg": "/logo.svg",
+      "legacyLogoJpg": "/assets/ts-logo.jpg",
+      "faviconSvg": "/icon.svg",
+      "appleIconSvg": "/apple-icon.svg",
+      "manifest": "/manifest.webmanifest",
+      "openGraphImage": "https://tamil-sangam-website-osu.vercel.app/opengraph-image",
+      "twitterImage": "https://tamil-sangam-website-osu.vercel.app/twitter-image",
+      "nanbaSvg": "/nanba.svg",
+      "coinFaceSvg": "/coin-face.svg"
+    },
+    "heroPostersAndImagery": {
+      "eventSilhouetteHero": "/events/silhouette-hero.png",
+      "crowdAtlasNear": "/events/crowd-atlas-near.png",
+      "crowdAtlasMid": "/events/crowd-atlas-mid.png",
+      "crowdAtlasFar": "/events/crowd-atlas-far.png",
+      "activeSilhouette": "/images/themes/firecracker.png",
+      "gamesHybridPosters": {
+        "establishing": "/media/games-hybrid/v1/posters/establishing.webp",
+        "closeup": "/media/games-hybrid/v1/posters/closeup.webp",
+        "blast": "/media/games-hybrid/v1/posters/blast.webp",
+        "exit": "/media/games-hybrid/v1/posters/exit.webp",
+        "portraitEstablishing": "/media/games-hybrid/v1/posters/portrait-establishing.webp",
+        "portraitCloseup": "/media/games-hybrid/v1/posters/portrait-closeup.webp",
+        "portraitBlast": "/media/games-hybrid/v1/posters/portrait-blast.webp",
+        "portraitExit": "/media/games-hybrid/v1/posters/portrait-exit.webp"
+      },
+      "games3DModel": "/models/games/hand-grip.glb",
+      "performer3DModel": "/models/performer.glb"
+    },
+    "eventPosters": {
+      "yaarAndhaKiller": "/events/yaar-andha-killer/killer-01.jpg",
+      "berryCutePicnic": "/events/berry-cute-picnic/picnic-01.jpg",
+      "streetsideSapad": "/events/streetside-sapad/picnic-01.jpg",
+      "nammaJathara": "/events/namma-jathara/picnic-01.jpg",
+      "tsXtT": "/events/berry-cute-picnic/picnic-01.jpg"
+    },
+    "officialGooglePhotosVaults": {
+      "album1": "https://photos.app.goo.gl/k2Kg17MX4nriMbnw7",
+      "album2": "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7",
+      "album3": "https://photos.app.goo.gl/PnkceBh19PqytYQ89",
+      "album4": "https://photos.app.goo.gl/NBTxg98ppmd9uhWX9",
+      "album5": "https://photos.app.goo.gl/QrUrPkvPQqQvz7H29"
+    },
+    "officialDocuments": {
+      "constitutionPdf": "/docs/constitution-2026-2027.pdf"
+    }
+  }
+}

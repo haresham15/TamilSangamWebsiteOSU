@@ -6,6 +6,7 @@ import type { Metadata } from "next";
  */
 
 export const SITE_URL = (
+  process.env.SITE_URL ||
   process.env.NEXT_PUBLIC_SITE_URL ||
   (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "") ||
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
@@ -79,92 +80,93 @@ export function constructAlternates(path: string = "") {
   const canonical = constructCanonical(path);
   return {
     canonical,
-    languages: {
-      "en-US": canonical,
-      "ta-IN": canonical,
-      "x-default": canonical,
-    },
   };
 }
 
 export const ROUTE_METADATA = {
   home: {
-    title: "OSU Tamil Sangam | Official Tamil Student Organization at The Ohio State University",
+    title: "OSU Tamil Sangam | Tamil Student Organization at Ohio State",
     description:
-      "Official Tamil cultural student organization at The Ohio State University (Columbus, OH). 100% free membership, Kollywood galas, Pongal feasts & community.",
+      "Official Tamil student organization at The Ohio State University (Columbus, OH). Free membership, cultural events, Pongal feasts, and community.",
     path: "/",
   },
   events: {
-    title: "Campus Events & Festivals | OSU Tamil Sangam at Ohio State",
+    title: "Tamil Events at Ohio State | OSU Tamil Sangam",
     description:
-      "Upcoming and archived gatherings at Ohio State: Kollywood Kollai, Diwali, Pongal banquets, Namma Jathara Carnival, and South Oval picnics in Columbus, OH.",
+      "Discover Tamil events in Columbus: Diwali, Pongal feasts, movie nights, South Oval picnics, and cultural celebrations at The Ohio State University.",
     path: "/events",
   },
   about: {
-    title: "About Us & Heritage (யாதும் ஊரே யாவரும் கேளிர்) | OSU Tamil Sangam",
+    title: "About OSU Tamil Sangam | Mission & Heritage",
     description:
-      "Mission, history, and Five Pillars of Tamil Sangam at The Ohio State University — an open cultural home for all students on the banks of the Olentangy River.",
+      "Discover OSU Tamil Sangam: our student-led mission, history since 2021, and cultural heritage on the banks of the Olentangy River in Columbus, Ohio.",
     path: "/about",
   },
   board: {
-    title: "Executive Board & Student Leadership | OSU Tamil Sangam",
+    title: "Executive Board & Leadership | OSU Tamil Sangam",
     description:
-      "Meet the elected student executive board and coordinators leading OSU Tamil Sangam across The Ohio State University campus in Columbus, Ohio.",
+      "Meet the elected student executive board leading OSU Tamil Sangam at The Ohio State University in Columbus, Ohio.",
     path: "/board",
   },
   gallery: {
-    title: "Photo Gallery & 35mm Campus Archive | OSU Tamil Sangam",
+    title: "Campus Photo Gallery & Archive | OSU Tamil Sangam",
     description:
-      "Browse 35mm candid photos, cultural performances, biryani feasts, and South Oval memories from Tamil Sangam at The Ohio State University.",
+      "Browse 35mm photos, cultural performances, Pongal banquets, and campus memories from Tamil Sangam at The Ohio State University.",
     path: "/gallery",
   },
   games: {
-    title: "The Sangam Arcade · களஞ்சியம் | Monthly Tamil Wordle & Connections | OSU Tamil Sangam",
+    title: "Sangam Arcade: Tamil Wordle & Games | OSU TS",
     description:
-      "Play monthly Tamil games: Sollu (Tamil & Tanglish Wordle with grapheme clusters) and Thodarpu (Tamil Connections) with streak tracking and spoiler-free share cards.",
+      "Play monthly Tamil games: Sollu (Tamil/Tanglish Wordle) and Thodarpu (Tamil Connections) with streak tracking and share cards.",
     path: "/games",
   },
   guide: {
-    title: "Student Guide & Frequently Asked Questions | OSU Tamil Sangam",
+    title: "OSU Tamil Student Guide & FAQs | OSU Tamil Sangam",
     description:
-      "Everything you need to know: 100% free zero-dues membership, open to all majors & languages at Ohio State, Columbus Tamil dining, CABS transit, and FAQs.",
+      "Student guide to OSU Tamil Sangam: free membership, Columbus Tamil dining, CABS campus transit routes, meeting locations, and FAQs.",
     path: "/guide",
   },
   ideas: {
-    title: "The Ideas Hearth — Propose a Campus Event | OSU Tamil Sangam",
+    title: "Propose Campus Events & Ideas | OSU Tamil Sangam",
     description:
       "Submit event proposals, music jam ideas, Tamil workshops, and campus collaborations directly to the OSU Tamil Sangam Executive Board.",
     path: "/ideas",
   },
   suggestions: {
-    title: "The Ideas Hearth — Propose a Campus Event | OSU Tamil Sangam",
+    title: "Propose Campus Events & Ideas | OSU Tamil Sangam",
     description:
       "Submit event proposals, music jam ideas, Tamil workshops, and campus collaborations directly to the OSU Tamil Sangam Executive Board.",
     path: "/suggestions",
   },
   join: {
-    title: "Join OSU Tamil Sangam | Free Membership Guestbook at Ohio State",
+    title: "Join OSU Tamil Club | Free Membership Sign-Up",
     description:
-      "Join Tamil Sangam at The Ohio State University. 100% free, zero dues, open to every Buckeye student regardless of language. Sign our guestbook today.",
+      "Join Tamil Sangam at The Ohio State University. 100% free membership, zero dues, open to all students regardless of background or language fluency.",
     path: "/join",
   },
   initiatives: {
-    title: "The Five Pillars: Aatam, Paatam, Kondatam & Initiatives | OSU Tamil Sangam",
+    title: "The Five Pillars & Initiatives | OSU Tamil Sangam",
     description:
       "Explore the core pillars of OSU Tamil Sangam: Aatam (Dance), Paatam (Music), and Kondatam (Celebration) at The Ohio State University in Columbus, OH.",
     path: "/initiatives",
   },
   links: {
-    title: "Official Bio Links & Social Channels | OSU Tamil Sangam",
+    title: "Official Links & Social Channels | OSU Tamil Sangam",
     description:
       "Official quick-links for OSU Tamil Sangam: student GroupMe, Instagram, event tickets, calendar subscription, and campus feedback forms.",
     path: "/links",
   },
   privacy: {
-    title: "Privacy & Anonymous FAQ Telemetry | OSU Tamil Sangam",
+    title: "Privacy & Telemetry Policy | OSU Tamil Sangam",
     description:
       "Privacy disclosure explaining anonymous aggregate FAQ engagement metrics and zero-tracker privacy commitments at OSU Tamil Sangam.",
     path: "/privacy",
+  },
+  faq: {
+    title: "Frequently Asked Questions | OSU Tamil Sangam",
+    description:
+      "Find answers to common questions about membership, events, dues, language prerequisites, and getting involved with OSU Tamil Sangam.",
+    path: "/faq",
   },
 } as const;
 

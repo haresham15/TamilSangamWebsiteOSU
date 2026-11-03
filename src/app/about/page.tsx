@@ -7,7 +7,16 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useReducedMotion } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
-import { GopuramZScroll } from "@/components/about/GopuramZScroll";
+import dynamic from "next/dynamic";
+import { HeroKolamLoader } from "@/components/ui/HeroKolamLoader";
+
+const GopuramZScroll = dynamic(
+  () => import("@/components/about/GopuramZScroll").then((m) => m.GopuramZScroll),
+  {
+    ssr: false,
+    loading: () => <HeroKolamLoader route="/about" minHeight="100dvh" />,
+  }
+);
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { FlowingRiverTimeline } from "@/components/muttram/FlowingRiverTimeline";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
