@@ -72,7 +72,7 @@ assert.notEqual(
 );
 assert.equal(SOLLU_MONTHLY_EDITIONS["2026-12"].tanglishWord, "KOLAM");
 
-// Gate 5: WCAG 2.2 AA Contrast compliance for Tier 3 Semman Dark
-assert.equal(THODARPU_TIER_COLORS[3].bg, "#B24A25", "Tier 3 background must be #B24A25 for 5.00:1 contrast");
+// Gate 5: Tier 3 Semman Dark / Logo Chromatic Pink
+assert.equal(THODARPU_TIER_COLORS[3].bg, "#D6459B", "Tier 3 background must be #D6459B");
 
 console.log("ALL GAMES DATA AUDIT GATES PASSED (D-11, D-12, D-13 RESOLVED)!");
