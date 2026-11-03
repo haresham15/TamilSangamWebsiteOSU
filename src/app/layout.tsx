@@ -45,7 +45,6 @@ const jetbrainsMono = JetBrains_Mono({
 const syne = Syne({
   variable: "--font-syne",
   subsets: ["latin"],
-  weight: ["400", "600"],
   display: "swap",
   preload: false,
 });
@@ -55,7 +54,6 @@ const anekTamil = Anek_Tamil({
   variable: "--font-anek-tamil",
   preload: false,
   subsets: ["latin", "tamil"],
-  weight: ["500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -87,8 +85,6 @@ const cormorant = Cormorant({
   variable: "--font-cormorant",
   preload: false,
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  style: ["normal", "italic"],
   display: "swap",
 });
 
