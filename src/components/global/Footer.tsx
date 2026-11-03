@@ -193,12 +193,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
           <div className="lg:col-span-7 flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-4 mb-4">
-                <div className="relative w-12 h-12 border border-[#A6F0CF]/35 p-2 shrink-0 flex items-center justify-center">
+                <div className="relative w-12 h-12 shrink-0 flex items-center justify-center">
                   <Image
                     src="/emblem.svg"
                     alt="OSU Tamil Sangam Official Logo"
                     fill
-                    className="object-contain p-1"
+                    className="object-contain"
                   />
                 </div>
                 <div>
