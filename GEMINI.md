@@ -81,5 +81,9 @@ This file sets project-specific runtime behavior for the Antigravity agent in `T
 - **Act First, Answer Second**: Invert passive conversational bias. When presented with a task, automatically query docs via `context7`, explore requirements via `superpowers:brainstorming` / `mattpocock:grilling`, or inspect bugs via `systematic-debugging` before producing textual responses.
 - **Remote MCP Directives**:
   - **Context7**: Unconditionally use `context7` (`resolve-library-id` $\rightarrow$ `query-docs`) for all library, SDK, and framework syntax inquiries.
+  - **Brave Search**: Unconditionally use `brave-search` (`brave_web_search`) for real-time web discovery and news.
+  - **Tavily**: Unconditionally use `tavily` (`tavily_search`, `tavily_extract`) for deep web research, structured answer synthesis, and clean markdown extraction.
+  - **Firecrawl**: Unconditionally use `firecrawl` (`firecrawl-scrape`, `firecrawl-crawl`, `firecrawl-extract`) for full-site crawling and dynamic single-page app scraping.
+  - **Addy Osmani Skills**: Unconditionally bind `spec-driven-development`, `browser-testing-with-devtools`, `performance-optimization`, and `code-simplification` during feature implementation and review.
   - **Composio**: Unconditionally use `composio` (`COMPOSIO_SEARCH_TOOLS` $\rightarrow$ `COMPOSIO_MULTI_EXECUTE_TOOL`) for third-party workspace and SaaS tool actions.
   - **Chrome DevTools**: Unconditionally inspect computed styles and runtime console logs via `chrome-devtools-mcp` after editing frontend views.
