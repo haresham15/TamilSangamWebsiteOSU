@@ -35,10 +35,23 @@ export const compositeFragment = /* glsl */ `
   uniform float uLensPop;
   uniform vec2 uTexel;
   uniform float uFxaa;
+  uniform float uAspect;
+  uniform float uTextureAspect;
+  uniform float uBgCenterX;
   varying vec2 vUv;
 
   vec3 compositeAt(vec2 uv) {
-    vec3 background = texture2D(uBackground, uv).rgb;
+    vec2 bgUv = uv;
+    if (uTextureAspect > 0.0 && uAspect > 0.0) {
+      if (uAspect < uTextureAspect) {
+        float scaleX = uAspect / uTextureAspect;
+        bgUv.x = clamp((uv.x - 0.5) * scaleX + uBgCenterX, 0.0, 1.0);
+      } else {
+        float scaleY = uTextureAspect / uAspect;
+        bgUv.y = clamp((uv.y - 0.5) * scaleY + 0.5, 0.0, 1.0);
+      }
+    }
+    vec3 background = texture2D(uBackground, bgUv).rgb;
     vec4 foreground = texture2D(uForeground, uv);
     // Render targets contain scene-linear premultiplied foreground; grade straight color once.
     foreground.rgb = foreground.a > 0.00001
@@ -145,6 +158,9 @@ export function createLayeredFocusTargets(
       uLensPop: { value: 0 },
       uTexel: { value: new THREE.Vector2(1, 1) },
       uFxaa: { value: foreground.samples > 0 ? 0 : 1 },
+      uAspect: { value: 2.39 },
+      uTextureAspect: { value: 2.39 },
+      uBgCenterX: { value: 0.5 },
     },
   });
 

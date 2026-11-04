@@ -11,7 +11,7 @@
 .captionStack { display: grid; }
 .captionBeat { grid-area: 1 / 1; transition: opacity .22s linear, transform .22s ease; }
 .exitWash { position: absolute; inset: 0; z-index: 2; background: var(--color-bg); pointer-events: none; }
-.skip { position: absolute; z-index: 5; right: 5%; bottom: max(5%, 96px); display: flex; align-items: center; gap: 16px; min-height: 48px; padding: 12px 22px; border: 1px solid var(--color-accent); border-radius: 999px; color: var(--color-ink); background: var(--color-surface); font-size: 14px; }
+.skip { position: absolute; z-index: 5; right: 5%; bottom: max(5%, 96px); display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 10px 20px; border: 1px solid var(--color-accent); border-radius: 8px; color: var(--color-ink); background: var(--color-surface); font-size: 13px; font-weight: 500; backdrop-filter: blur(8px); transition: background-color 0.2s, transform 0.2s; }
 .skip:focus-visible { outline: 3px solid var(--color-accent-3); outline-offset: 5px; }
 .sheet { position: relative; z-index: 20; }
 @media (min-aspect-ratio: 13/10) {
@@ -19,8 +19,8 @@
   .poster { object-fit: contain; }
 }
 @media (max-width: 767px) {
-  .runway { height: 480dvh; }
-  .skip { bottom: 96px; right: 6%; }
+  .runway { height: 440dvh; }
+  .skip { bottom: 84px; right: 5%; padding: 8px 16px; font-size: 12px; min-height: 40px; }
   .caption { bottom: 160px; left: 6%; }
   .intro { top: 120px; left: 6%; }
 }

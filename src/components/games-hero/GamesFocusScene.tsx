@@ -126,7 +126,10 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
     if (width <= 0 || height <= 0) return;
     visibleDraw.current = true;
     gpuTimer?.poll();
-    const rig = evaluateForegroundRig(scrollP, DESIGN_ASPECT);
+    const viewAspect = height > 0 ? width / height : DESIGN_ASPECT;
+    const isPortrait = viewAspect < 1.3;
+    const optics = heroProjection(viewAspect);
+    const rig = evaluateForegroundRig(scrollP, viewAspect);
     // A held pose reuses its foreground/mask/blur passes until its plate or optics change.
     const drawKey = `${resources.foreground.texture.uuid}:${plate.index}:${rig.position.toArray()}:${rig.rotation.toArray()}:${rig.opacity}:${scrollP >= 0.58}:${width}:${height}:${gl.getPixelRatio()}`;
     if (lastDraw.current === drawKey) return;
@@ -135,14 +138,14 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
       plateTexture.image = plate.image;
       plateTexture.needsUpdate = true;
     }
-    const viewAspect = DESIGN_ASPECT;
+
     const rail = evaluateCameraRail(plate.sample.p, 0, viewAspect);
     const foregroundOpacity = rig.opacity;
-    const foregroundProjection = heroProjection(viewAspect);
+
     const r = resources;
-    r.foregroundCamera.position.set(foregroundProjection.cameraX, 1.65, 6);
+    r.foregroundCamera.position.set(optics.cameraX, 1.65, 6);
     r.foregroundCamera.rotation.set(0, 0, 0);
-    r.foregroundCamera.fov = foregroundProjection.fov;
+    r.foregroundCamera.fov = optics.fovDeg;
     for (const camera of [r.foregroundCamera]) {
       camera.aspect = viewAspect;
       camera.updateProjectionMatrix();
@@ -238,6 +241,9 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
       if (uniforms.uLensPop) uniforms.uLensPop.value = THREE.MathUtils.smoothstep(plate.sample.p, 0.52, 0.64);
       if (uniforms.uTexel) uniforms.uTexel.value.set(1 / targetWidth, 1 / targetHeight);
       if (uniforms.toneMappingExposure) uniforms.toneMappingExposure.value = gl.toneMappingExposure;
+      if (uniforms.uAspect) uniforms.uAspect.value = viewAspect;
+      if (uniforms.uTextureAspect) uniforms.uTextureAspect.value = DESIGN_ASPECT;
+      if (uniforms.uBgCenterX) uniforms.uBgCenterX.value = isPortrait ? 0.70 : 0.5;
       if (diagnostics) {
         if (!diagnostics.memory.foregroundGeometryBufferBytes) measureForegroundMemory();
         const targets = [r.foreground, r.mask, r.foregroundBlur, r.maskBlur];

@@ -224,19 +224,18 @@ export default function LinksBioHubPage() {
           {/* Section: Core Gatherings & Community */}
           <div className="space-y-2.5">
             {/* FEATURED: Diwali 2026 Sign-Up Form (TS × MS × KS) */}
-            <div className="relative p-0.5 rounded-2xl bg-gradient-to-r from-[#A6F0CF]/60 via-[#4FD6E0]/60 to-[#F26BB5]/60 shadow-[0_4px_24px_rgba(166,240,207,0.18)]">
-              <div className="p-4 rounded-[14px] bg-[#1d122d] border border-[#A6F0CF]/40">
-                <div className="flex items-start justify-between gap-3 mb-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-ping" />
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#A6F0CF] font-bold">
-                      UPCOMING EVENT · DIWALI 2026
-                    </span>
-                  </div>
-                  <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#A6F0CF] text-[#140C20] font-bold">
-                    SIGN-UPS OPEN
+            <div className="relative rounded-xl border border-[#A6F0CF]/50 bg-[#1d122d] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_24px_rgba(166,240,207,0.12)] p-4 sm:p-5">
+              <div className="flex items-start justify-between gap-3 mb-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-ping" />
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#A6F0CF] font-bold">
+                    UPCOMING EVENT · DIWALI 2026
                   </span>
                 </div>
+                <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded-xs bg-[#A6F0CF] text-[#140C20] font-bold">
+                  SIGN-UPS OPEN
+                </span>
+              </div>
 
                 <div className="mb-2">
                   <h2 className="text-lg font-serif font-bold text-[#F4F0FA] leading-tight">
@@ -280,7 +279,6 @@ export default function LinksBioHubPage() {
                   </Link>
                 </div>
               </div>
-            </div>
 
             {/* Dance Performance Sign-Ups */}
             <Link
@@ -297,7 +295,7 @@ export default function LinksBioHubPage() {
                       <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
                         Stage Sign-Ups · ஆடல் அரங்கம்
                       </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#A6F0CF]/15 text-[#A6F0CF] font-bold">
+                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-xs bg-[#A6F0CF]/15 text-[#A6F0CF] font-bold">
                         Form Live Now
                       </span>
                     </div>
@@ -354,7 +352,7 @@ export default function LinksBioHubPage() {
                       <span className="text-[10px] font-mono uppercase tracking-wider text-[#F26BB5] font-bold block">
                         Join the Family
                       </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#A6F0CF]/15 text-[#A6F0CF] font-bold">
+                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-xs bg-[#A6F0CF]/15 text-[#A6F0CF] font-bold">
                         100% Free · $0 Dues
                       </span>
                     </div>

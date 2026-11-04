@@ -313,6 +313,27 @@ export default function HomePage() {
       {/* Flagship Event Schema for Search Engine Rich Snippets */}
       <EventJsonLd />
 
+      {/* Semantic SSR Knowledge Entity for AI Bots & Search Engine Crawlers */}
+      <header className="sr-only">
+        <h1>OSU Tamil Sangam · Official Tamil Cultural Student Organization at The Ohio State University</h1>
+        <p>
+          Welcome to OSU Tamil Sangam (ஒஹையோ மாநிலப் பல்கலைக்கழகத் தமிழ்ச் சங்கம்), the official student-led cultural organization serving students, scholars, and alumni at The Ohio State University in Columbus, Ohio.
+          Founded in 2021 as a registered student organization with Ohio State Student Activities, Tamil Sangam is dedicated to cultivating an inclusive, welcoming home away from home.
+          Membership is 100% free with zero dues, no language requirement, and open to all Buckeyes regardless of background.
+          Flagship events include Namma Deepavali, Pongal harvest feasts, South Oval picnics, collegiate dance, and Tamil language workshops.
+        </p>
+        <nav aria-label="Core Campus Portals">
+          <Link href="/events">Tamil Events at Ohio State</Link>
+          <Link href="/join">Join OSU Tamil Sangam (Free Membership)</Link>
+          <Link href="/about">About Our Mission & Heritage</Link>
+          <Link href="/board">Student Executive Board</Link>
+          <Link href="/gallery">Campus Photo Gallery & Archives</Link>
+          <Link href="/games">Sangam Arcade · Tamil Wordle & Games</Link>
+          <Link href="/guide">Student Life & Columbus Dining Guide</Link>
+          <Link href="/links">Official Links & GroupMe</Link>
+        </nav>
+      </header>
+
       {/* Accessible Skip Link (PRD §7.11) */}
       <a
         href={staticHero ? "#flagship-gathering" : "#monolith"}

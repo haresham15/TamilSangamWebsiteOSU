@@ -41,10 +41,11 @@ function mergeParts(parts: THREE.BufferGeometry[]) {
 export function EyeglassHandRig({ progressRef, hand }: { progressRef: RefObject<number>; hand: THREE.Group }) {
   const group = useRef<THREE.Group>(null);
   const coating = useRef<THREE.Mesh>(null);
-  useFrame(() => {
+  useFrame((state) => {
     if (!group.current) return;
     const progress = progressRef.current;
-    const rig = evaluateForegroundRig(progress, DESIGN_ASPECT);
+    const aspect = state.size.height > 0 ? state.size.width / state.size.height : DESIGN_ASPECT;
+    const rig = evaluateForegroundRig(progress, aspect);
     group.current.position.copy(rig.position);
     group.current.rotation.copy(rig.rotation);
     group.current.visible = rig.opacity > 0;

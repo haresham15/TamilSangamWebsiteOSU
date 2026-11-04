@@ -91,8 +91,8 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
       aria-label="Quick tools dock"
       className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none pointer-events-auto transition-all duration-300"
     >
-      <StarBorder className="rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.35)]" color="#A6F0CF" trailColor="#F26BB5" thickness={1}>
-        <div className="bg-[#140C20] text-[#F4F0FA] border border-[rgba(125,96,166,0.25)] backdrop-blur-md rounded-full h-10 px-3.5 sm:px-4 flex items-center gap-2.5 sm:gap-3 transition-all duration-200">
+      <StarBorder className="rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.35)]" color="#A6F0CF" trailColor="#4FD6E0" thickness={1}>
+        <div className="bg-[#140C20] text-[#F4F0FA] border border-[rgba(125,96,166,0.25)] backdrop-blur-md rounded-xl h-10 px-3 sm:px-4 flex items-center gap-2.5 sm:gap-3 transition-all duration-200">
         {/* 1. Ask Nanba Trigger */}
         <button
           type="button"
@@ -102,7 +102,7 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
           }}
           aria-label="Ask Nanba - OSU Tamil Sangam AI Assistant"
           aria-expanded={isChatOpen}
-          className="group flex items-center gap-2 text-xs font-mono font-medium tracking-wide text-[#F4F0FA] hover:text-[#A6F0CF] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#4FD6E0] rounded-full py-1 pr-1"
+          className="group flex items-center gap-2 text-xs font-mono font-medium tracking-wide text-[#F4F0FA] hover:text-[#A6F0CF] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#4FD6E0] rounded-md py-1 pr-1"
         >
           <NanbaAvatar size={18} className="w-[18px] h-[18px] shrink-0 transition-transform duration-200 group-hover:scale-115" />
           <span className="text-[11px] sm:text-xs">

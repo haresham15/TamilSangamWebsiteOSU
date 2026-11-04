@@ -36,6 +36,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       images: [`${SITE_URL}/emblem.svg`],
     },
     {
+      url: `${SITE_URL}/gallery`,
+      lastModified: baseDate,
+      changeFrequency: "weekly",
+      priority: 0.9,
+      images: [`${SITE_URL}/emblem.svg`],
+    },
+    {
       url: `${SITE_URL}/guide`,
       lastModified: baseDate,
       changeFrequency: "weekly",

@@ -70,7 +70,7 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
   return (
     <section
       id="flagship-gathering"
-      className={`relative w-full py-24 sm:py-32 px-6 sm:px-12 max-w-[1600px] mx-auto ${className}`.trim()}
+      className={`relative w-full py-16 sm:py-24 lg:py-32 px-4 sm:px-8 lg:px-12 max-w-[1600px] mx-auto ${className}`.trim()}
     >
       {/* Architectural Courtyard Section Header */}
       <CourtyardHeader
@@ -87,7 +87,7 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
       />
 
       {/* 12-Column Asymmetric Grid: Dithered Installation (5 cols) + Editorial Dossier (7 cols) inside Recessed Archival Well */}
-      <div className="relative w-full rounded-xl bg-[#25173B]/70 p-6 sm:p-10 lg:p-12 border border-[#A6F0CF]/35 shadow-[0_16px_48px_rgba(0,0,0,0.35),inset_0_2px_12px_rgba(0,0,0,0.2)] grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-x-16 items-stretch">
+      <div className="relative w-full rounded-xl bg-[#25173B]/70 p-5 sm:p-8 lg:p-12 border border-[#A6F0CF]/35 shadow-[0_16px_48px_rgba(0,0,0,0.35),inset_0_2px_12px_rgba(0,0,0,0.2)] grid grid-cols-1 lg:grid-cols-12 gap-y-10 lg:gap-x-16 items-stretch">
         {/* COLS 1–5: THE DITHERED INSTALLATION */}
         <div className="lg:col-span-5 relative w-full flex flex-col justify-center">
           <SpotlightCard className="w-full bg-transparent border-0 p-0">
@@ -149,7 +149,7 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
             </p>
 
             {/* Telemetry Ledger */}
-            <div className="pt-2 border-t border-stone-300/40 divide-y divide-stone-300/40">
+            <div className="pt-2 border-t border-[rgba(125,96,166,0.25)] divide-y divide-[rgba(125,96,166,0.2)]">
               <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 sm:gap-6">
                 <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] font-medium shrink-0">
                   DATE
@@ -224,7 +224,7 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
                     target={config.signUpAction.external ? "_blank" : undefined}
                     rel={config.signUpAction.external ? "noopener noreferrer" : undefined}
                     onClick={() => playClick?.()}
-                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[#A6F0CF] text-[#140C20] hover:bg-[#C4B7D7] transition-all shadow-[0_0_16px_rgba(166,240,207,0.3)] hover:shadow-[0_0_24px_rgba(166,240,207,0.5)] cursor-pointer"
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider bg-[#A6F0CF] text-[#140C20] hover:bg-[#7AE7B5] transition-all shadow-[0_0_14px_rgba(166,240,207,0.3)] hover:shadow-[0_0_20px_rgba(166,240,207,0.5)] cursor-pointer"
                   >
                     <Sparkles className="w-3.5 h-3.5 text-[#140C20]" />
                     <span>{config.signUpAction.label}</span>

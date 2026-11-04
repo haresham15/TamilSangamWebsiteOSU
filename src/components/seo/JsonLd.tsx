@@ -101,6 +101,19 @@ export function RootGraphJsonLd() {
           "query-input": "required name=search_term_string",
         },
       },
+      {
+        "@type": "FAQPage",
+        "@id": `${SITE_URL}/#faq`,
+        mainEntity: FAQS.slice(0, 8).map((faq) => ({
+          "@type": "Question",
+          name: faq.questionEn,
+          alternateName: faq.questionTa,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.answerEn,
+          },
+        })),
+      },
     ],
   };
 
