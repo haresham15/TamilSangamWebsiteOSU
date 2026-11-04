@@ -223,7 +223,97 @@ export default function LinksBioHubPage() {
           
           {/* Section: Core Gatherings & Community */}
           <div className="space-y-2.5">
-            {/* 1. Next Upcoming Event / Schedule */}
+            {/* FEATURED: Diwali 2026 Sign-Up Form (TS × MS × KS) */}
+            <div className="relative p-0.5 rounded-2xl bg-gradient-to-r from-[#A6F0CF]/60 via-[#4FD6E0]/60 to-[#F26BB5]/60 shadow-[0_4px_24px_rgba(166,240,207,0.18)]">
+              <div className="p-4 rounded-[14px] bg-[#1d122d] border border-[#A6F0CF]/40">
+                <div className="flex items-start justify-between gap-3 mb-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-ping" />
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#A6F0CF] font-bold">
+                      UPCOMING EVENT · DIWALI 2026
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#A6F0CF] text-[#140C20] font-bold">
+                    SIGN-UPS OPEN
+                  </span>
+                </div>
+
+                <div className="mb-2">
+                  <h2 className="text-lg font-serif font-bold text-[#F4F0FA] leading-tight">
+                    Diwali 2026: TS × MS × KS
+                  </h2>
+                  <p className="font-tamil text-xs text-[#A6F0CF] mt-0.5" lang="ta">
+                    நம்ம தீபாவளி · நிகழ்ச்சி &amp; நடனப் பதிவு
+                  </p>
+                  <p className="text-xs text-[#C4B7D7] mt-1.5 leading-relaxed font-sans">
+                    Tamil Sangam, Kannada Sangam, and Mallu Society are hosting Diwali on Nov 15th! Sign up for dance performances, cultural acts, or attend.
+                  </p>
+                </div>
+
+                {/* Direct Action Buttons */}
+                <div className="pt-2 flex flex-wrap items-center gap-2">
+                  <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#A6F0CF] text-[#140C20] hover:bg-[#C4B7D7] transition-all text-xs font-mono font-bold uppercase tracking-wider shadow-sm"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-[#140C20]" />
+                    <span>Open Sign-Up Form</span>
+                    <ExternalLink className="w-3 h-3 text-[#140C20]" />
+                  </a>
+
+                  <Link
+                    href="/dance"
+                    className="inline-flex items-center gap-1 px-3 py-2.5 rounded-xl bg-[#25173B] border border-[#A6F0CF]/30 text-[#A6F0CF] hover:border-[#A6F0CF] transition-colors text-xs font-mono font-semibold"
+                  >
+                    <Music2 className="w-3.5 h-3.5" />
+                    <span>Dance Hub</span>
+                  </Link>
+
+                  <Link
+                    href="/events/namma-deepavali-2026"
+                    className="inline-flex items-center gap-1 px-3 py-2.5 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.4)] text-[#F4F0FA]/80 hover:text-[#F4F0FA] hover:border-[#A6F0CF]/40 transition-colors text-xs font-mono"
+                  >
+                    <span>Dossier</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Dance Performance Sign-Ups */}
+            <Link
+              href="/dance"
+              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(166,240,207,0.06)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3 min-w-0">
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#A6F0CF] group-hover:border-[#A6F0CF]/60 transition-colors shrink-0 mt-0.5">
+                    <Music2 className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
+                        Stage Sign-Ups · ஆடல் அரங்கம்
+                      </span>
+                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#A6F0CF]/15 text-[#A6F0CF] font-bold">
+                        Form Live Now
+                      </span>
+                    </div>
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
+                      Dance Performance Registration
+                    </h2>
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+                      Diwali 2026 dance troupes · Kuthu, Gaana, and cinematic fusion
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
+              </div>
+            </Link>
+
+            {/* Event Schedule & Gatherings */}
             <Link
               href="/events"
               className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(166,240,207,0.06)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
@@ -242,37 +332,6 @@ export default function LinksBioHubPage() {
                     </h2>
                     <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
                       Celebrations, festivals, dates, and campus event dossiers
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
-              </div>
-            </Link>
-
-            {/* Dance Performance Sign-Ups */}
-            <Link
-              href="/dance"
-              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(166,240,207,0.06)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#A6F0CF] group-hover:border-[#A6F0CF]/60 transition-colors shrink-0 mt-0.5">
-                    <Music2 className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
-                        Stage Sign-Ups · ஆடல் அரங்கம்
-                      </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#A6F0CF]/15 text-[#A6F0CF] font-bold">
-                        Form Opening
-                      </span>
-                    </div>
-                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
-                      Dance Performance Registration
-                    </h2>
-                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
-                      Kuthu, Gaana, cinematic fusion, and solo/group stage routines
                     </p>
                   </div>
                 </div>

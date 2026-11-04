@@ -245,13 +245,13 @@ END:VCALENDAR`;
               </button>
 
               <a
-                href="https://linktr.ee/osutamilsangam"
+                href={event.interestFormUrl || event.ticketUrl || "https://linktr.ee/osutamilsangam"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-[#F4F0FA]/75 hover:text-[#A6F0CF] transition-colors"
               >
                 <ArrowUpRight className="w-3.5 h-3.5 text-[#A6F0CF]" />
-                <span>OFFICIAL TICKETING / RSVP</span>
+                <span>{(event.interestFormUrl || event.ticketUrl) ? "SIGN UP / PERFORMANCE FORM ↗" : "OFFICIAL TICKETING / RSVP"}</span>
               </a>
 
               {event.status === "upcoming" && (
@@ -267,6 +267,42 @@ END:VCALENDAR`;
             </div>
           </div>
         </section>
+
+        {/* ============================================================ */}
+        {/* LIVE GOOGLE FORM SIGN-UP EMBED (For Namma Deepavali)        */}
+        {/* ============================================================ */}
+        {event.slug === "namma-deepavali-2026" && (
+          <section aria-label="Event Registration and Performance Sign-Up" className="mb-20">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-5 border-b border-[rgba(125,96,166,0.25)] pb-3">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#A6F0CF] animate-ping" />
+                <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-[#A6F0CF] font-semibold">
+                  OFFICIAL SIGN-UP &amp; REGISTRATION FORM · படிவம்
+                </h2>
+              </div>
+              <a
+                href={event.interestFormUrl || "https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-mono text-[#A6F0CF] hover:underline inline-flex items-center gap-1.5"
+              >
+                <span>Open in Tab</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            <div className="w-full rounded-2xl bg-[#140C20] border-2 border-[#A6F0CF]/30 overflow-hidden shadow-[0_16px_48px_rgba(0,0,0,0.5)]">
+              <iframe
+                src="https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform?embedded=true"
+                title="Diwali 2026 - TS X MS X KS Sign-Up & Performance Registration"
+                className="w-full min-h-[640px] sm:min-h-[780px] border-0"
+                loading="lazy"
+              >
+                Loading registration form...
+              </iframe>
+            </div>
+          </section>
+        )}
 
         {/* ============================================================ */}
         {/* EDITORIAL PHOTO SPREAD (Recessed Archival Mat-Board Well)   */}

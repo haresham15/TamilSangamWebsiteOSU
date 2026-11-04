@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { EditorialBackgroundCanvas } from "@/components/ui/EditorialBackgroundCanvas";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
-import { DancePerformanceSpace } from "@/components/dance/DancePerformanceSpace";
+import { DancePerformanceSpace, DEFAULT_DIWALI_FORM_EMBED_URL } from "@/components/dance/DancePerformanceSpace";
 import { SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -61,7 +61,7 @@ export default function DancePage() {
 
       {/* Main Performance Registration Space */}
       <div className="relative z-10">
-        <DancePerformanceSpace />
+        <DancePerformanceSpace googleFormEmbedUrl={DEFAULT_DIWALI_FORM_EMBED_URL} />
       </div>
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
@@ -70,3 +70,4 @@ export default function DancePage() {
     </main>
   );
 }
+

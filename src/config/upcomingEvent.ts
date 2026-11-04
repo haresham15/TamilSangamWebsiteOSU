@@ -31,22 +31,29 @@ export interface FlagshipEventConfig {
     href: string;
     external: boolean;
   };
+  signUpAction?: {
+    label: string;
+    tamilLabel: string;
+    href: string;
+    external: boolean;
+  };
 }
 
 export const activeUpcomingEvent: FlagshipEventConfig = {
   id: "namma-deepavali-2026",
   seasonKey: "diwali",
-  title: "Namma Deepavali",
+  title: "Namma Deepavali (TS × MS × KS)",
   tamilTitle: "நம்ம தீபாவளி",
   teaserQuote:
-    "Festival lights, sweet feasts, vibrant melodies, and campus celebration. Namma Deepavali is coming soon.",
-  description: "Details coming soon.",
+    "Festival lights, sweet feasts, vibrant melodies, and campus celebration. Diwali 2026 with Tamil Sangam, Kannada Sangam, and Mallu Society is coming soon.",
+  description:
+    "Tamil Sangam, Kannada Sangam, and Mallu Society are hosting Diwali 2026 on November 15th! Sign up now for dance performances, cultural acts, and celebration.",
   telemetry: {
-    date: "COMING SOON",
-    time: "COMING SOON",
-    location: "COMING SOON",
+    date: "November 15, 2026",
+    time: "Evening · Details Coming Soon",
+    location: "Ohio Union (Archie Griffin Ballroom)",
     doorsOpen: "",
-    admission: "COMING SOON",
+    admission: "Subsidized / Free Admission Tiers",
   },
   visual: {
     silhouetteSrc: "/images/themes/firecracker.png",
@@ -66,5 +73,11 @@ export const activeUpcomingEvent: FlagshipEventConfig = {
     tamilLabel: "நிகழ்வு விவரங்கள்",
     href: "/events/namma-deepavali-2026",
     external: false,
+  },
+  signUpAction: {
+    label: "Sign-Up / Performance Form",
+    tamilLabel: "நிகழ்வு பதிவு",
+    href: "https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform",
+    external: true,
   },
 };

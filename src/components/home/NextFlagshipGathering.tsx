@@ -8,7 +8,7 @@ import { useAudio } from "@/context/AudioContext";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { DitherVeil } from "@/components/ui/DitherVeil";
 import { activeUpcomingEvent, type FlagshipEventConfig } from "@/config/upcomingEvent";
-import { Calendar } from "lucide-react";
+import { Calendar, Sparkles } from "lucide-react";
 import { Magnet, SpotlightCard } from "@/components/ui/react-bits";
 
 export interface NextFlagshipGatheringProps {
@@ -201,21 +201,37 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
           {/* Magnetic Call to Action: Link Aligned to Canvas Bottom */}
           <div className="pt-4 border-t border-stone-300/40 sm:border-t-0 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <Magnet padding={40} magnetStrength={2.0} maxOffset={10}>
-                <Link
-                  className="group inline-flex items-center gap-3 text-xl sm:text-2xl font-serif text-[#F4F0FA] hover:text-[#A6F0CF] transition-colors cursor-pointer"
-                  href={actionHref}
-                  onClick={() => playClick?.()}
-                >
-                  <span>{config.action.label}</span>
-                  <span className="text-sm font-sans opacity-50">
-                    ({config.action.tamilLabel})
-                  </span>
-                  <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                    ↗
-                  </span>
-                </Link>
-              </Magnet>
+              <div className="flex flex-wrap items-center gap-4">
+                <Magnet padding={40} magnetStrength={2.0} maxOffset={10}>
+                  <Link
+                    className="group inline-flex items-center gap-3 text-xl sm:text-2xl font-serif text-[#F4F0FA] hover:text-[#A6F0CF] transition-colors cursor-pointer"
+                    href={actionHref}
+                    onClick={() => playClick?.()}
+                  >
+                    <span>{config.action.label}</span>
+                    <span className="text-sm font-sans opacity-50">
+                      ({config.action.tamilLabel})
+                    </span>
+                    <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                      ↗
+                    </span>
+                  </Link>
+                </Magnet>
+
+                {config.signUpAction && (
+                  <a
+                    href={config.signUpAction.href}
+                    target={config.signUpAction.external ? "_blank" : undefined}
+                    rel={config.signUpAction.external ? "noopener noreferrer" : undefined}
+                    onClick={() => playClick?.()}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[#A6F0CF] text-[#140C20] hover:bg-[#C4B7D7] transition-all shadow-[0_0_16px_rgba(166,240,207,0.3)] hover:shadow-[0_0_24px_rgba(166,240,207,0.5)] cursor-pointer"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-[#140C20]" />
+                    <span>{config.signUpAction.label}</span>
+                    <span>↗</span>
+                  </a>
+                )}
+              </div>
               {icsDownloadHref && !displayDate.includes("COMING SOON") && (
                 <a
                   href={icsDownloadHref}

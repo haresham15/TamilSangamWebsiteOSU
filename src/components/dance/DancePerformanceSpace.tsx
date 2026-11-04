@@ -32,11 +32,20 @@ interface DancePerformanceSpaceProps {
   googleFormEmbedHtml?: string;
 }
 
+export const DEFAULT_DIWALI_FORM_EMBED_URL = 
+  "https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform?embedded=true";
+export const DEFAULT_DIWALI_FORM_DIRECT_URL = 
+  "https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform";
+
 export function DancePerformanceSpace({
-  googleFormEmbedUrl,
+  googleFormEmbedUrl = DEFAULT_DIWALI_FORM_EMBED_URL,
   googleFormEmbedHtml,
 }: DancePerformanceSpaceProps) {
   const [copiedContact, setCopiedContact] = useState(false);
+
+  const openTabUrl = googleFormEmbedUrl
+    ? googleFormEmbedUrl.replace(/[?&]embedded=true/, "")
+    : DEFAULT_DIWALI_FORM_DIRECT_URL;
 
   const handleCopyEmail = () => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -99,7 +108,7 @@ export function DancePerformanceSpace({
         </p>
 
         <p className="mt-4 text-sm sm:text-base text-[#C4B7D7] font-sans max-w-3xl leading-relaxed">
-          Take the stage with OSU Tamil Sangam! We are organizing collegiate dance troupes for our upcoming campus showcases, festive galas, and community festivals at The Ohio State University. Whether you have danced for years or want to try Kuthu for the very first time, all students and friends are welcome — zero dues, zero audition fees, and 100% good energy.
+          Take the stage with OSU Tamil Sangam, Kannada Sangam, and Mallu Society for Diwali 2026 on November 15th! We are organizing collegiate dance troupes and stage showcases at The Ohio State University. Whether you have danced for years or want to try Kuthu for the very first time, all students and friends are welcome — zero dues, zero audition fees, and 100% good energy.
         </p>
       </div>
 
@@ -151,7 +160,7 @@ export function DancePerformanceSpace({
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#A6F0CF] animate-ping" />
             <span className="font-bold uppercase tracking-wider text-[#F4F0FA]">
-              Official Performance Registration Form
+              Diwali 2026: TS × MS × KS — Official Sign-Up &amp; Performance Form
             </span>
           </div>
 
@@ -159,32 +168,32 @@ export function DancePerformanceSpace({
             <span className="text-[11px] text-[#A6F0CF] bg-[#A6F0CF]/10 border border-[#A6F0CF]/20 px-2 py-0.5 rounded-md font-semibold">
               Live Embed Frame
             </span>
-            {googleFormEmbedUrl && (
-              <a
-                href={googleFormEmbedUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[#F4F0FA] hover:text-[#A6F0CF] transition-colors"
-              >
-                <span>Open in Tab</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            )}
+            <a
+              href={openTabUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-[#F4F0FA] hover:text-[#A6F0CF] transition-colors"
+            >
+              <span>Open in New Tab</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
           </div>
         </div>
 
         {/* Dynamic Slot: Real Embed IF available, otherwise Designed Placeholder Frame */}
-        <div className="w-full min-h-[560px] sm:min-h-[680px] flex flex-col items-center justify-center p-6 sm:p-10 text-center relative">
+        <div className={`w-full flex flex-col items-center justify-center relative ${
+          googleFormEmbedHtml || googleFormEmbedUrl ? "p-0 min-h-[640px] sm:min-h-[820px]" : "p-6 sm:p-10 min-h-[560px] sm:min-h-[680px] text-center"
+        }`}>
           {googleFormEmbedHtml ? (
             <div 
-              className="w-full h-full min-h-[560px] sm:min-h-[680px] flex items-center justify-center"
+              className="w-full h-full min-h-[640px] sm:min-h-[820px] flex items-center justify-center [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:min-h-[640px] sm:[&>iframe]:min-h-[820px] [&>iframe]:border-0"
               dangerouslySetInnerHTML={{ __html: googleFormEmbedHtml }} 
             />
           ) : googleFormEmbedUrl ? (
             <iframe
               src={googleFormEmbedUrl}
-              title="OSU Tamil Sangam Dance Performance Registration Google Form"
-              className="w-full h-full min-h-[560px] sm:min-h-[680px] border-0 rounded-b-xl"
+              title="Diwali 2026 - TS X MS X KS Sign-Up & Performance Registration"
+              className="w-full min-h-[640px] sm:min-h-[820px] border-0 rounded-b-xl"
               loading="lazy"
             >
               Loading registration form...
