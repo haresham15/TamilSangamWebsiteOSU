@@ -254,7 +254,7 @@ export const metadata: Metadata = {
   },
   robots: DEFAULT_ROBOTS,
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "YJJyZIzkF4tlcLo3GJIg3hIosEOiVp-j8t7MLUqffL8",
   },
   other: {
     "apple-mobile-web-app-title": "OSU Tamil Sangam",
