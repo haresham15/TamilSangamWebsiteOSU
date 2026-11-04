@@ -1,89 +1,269 @@
-# GEMINI.md — Antigravity Project Directives
+# GEMINI.md — Antigravity Project Directives & Maintenance Codex
 
-This file sets project-specific runtime behavior for the Antigravity agent in `TamilSangamWebsiteOSU`.
+This file sets permanent project-specific runtime behavior and operational procedures for the Antigravity agent in `TamilSangamWebsiteOSU` (`haresham15/TamilSangamWebsiteOSU`).
 
-## 1. Autonomous Verification Loop (Non-Negotiable)
+---
 
-- **Zero Hallucinated Renders**: After modifying or creating visual components, never assume the code works based on syntax alone.
-- **Verification Stack**:
-  1. Compile Check: Run `npx tsc --noEmit` to verify type integrity.
-  2. Live DOM/Visual Inspection: Use `chrome-devtools-mcp` or Antigravity's browser tools to inspect computed styles, check console logs for React errors, and verify layout rendering.
-  3. Responsive Auditing: Check both desktop (1440px) and mobile viewport (375px) renders.
+## ⚡ Mandatory Deployment & Verification Protocol
 
-## 2. Design Engineering Ground Truth
+Whenever the user asks for an event, link, or content update, you must **autonomously execute this full 4-step deployment cycle without stopping halfway**:
 
-- **Design Tokens**: Read and follow [`design/tokens.json`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/design/tokens.json) and [`DESIGN.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/DESIGN.md).
-- **Never Inline Magic Numbers**: Never hardcode hex codes or arbitrary pixel margins (`px-[37px]`). All colors must map to the semantic OKLCH palette defined in `globals.css` `@theme`.
-- **Anti-Slop Enforcement**: Invoke the `slop-checklist` skill before declaring any UI screen complete. Failures must be corrected immediately.
+1. **Implement Code Updates**:
+   Update all relevant files across the repository according to the precise workflows below. Maintain bidirectional bilingual fidelity (English & Tamil with `lang="ta"`).
+2. **Local Build & Typecheck Gate**:
+   Execute `npm run build` in the terminal to verify zero TypeScript errors, zero Next.js Turbopack build failures, and pass all prebuild validators (JSON-LD schemas, games data audits, reference frame parities).
+3. **Commit & Push Directly to `main`**:
+   Stage changes, create a clean semantic commit (e.g. `feat(events): update upcoming event showcase to Pongal 2027`), and push directly to `origin main` using local `git` or the `github-mcp-server` MCP tool.
+4. **Vercel Deployment Verification**:
+   Use the `vercel-plugin_vercel` MCP server (`get_project` / `list_deployments` / `get_deployment`) to track the deployment triggered by the commit. Confirm that the latest production deployment on `tamil-sangam-website-osu` transitions to `READY` status, and report verification of the live URL:
+   `https://tamil-sangam-website-osu.vercel.app/`
 
-## 3. Subagent Orchestration
+---
 
-- Follow the orchestration pipeline defined in [`.agents/AGENTS.md`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/.agents/AGENTS.md):
-  - Phase 1–3 Design & Tokens: `design-architect` (`design-system-generator`)
-  - Phase 4 Frontend Architecture: `frontend-planner` (`frontend-system-architect`, Smart vs Dumb decomposition)
-  - Phase 5 Component Implementation: `ui-engineer` (scaffolds shared dumb components first)
-  - Phase 6 Micro-Interactions & Physics: `motion-engineer`
-  - Phase 7 Second-Opinion Audit: `critique-agent` (`second-opinion-audit`) -> `a11y-auditor`
-  - Enterprise Data & Cloud: `enterprise-data-architect`
-  - Enterprise Security & Verification: `enterprise-security-auditor` -> `autonomous-verifier`
-- Never let an execution agent critique its own design homework.
+## 🛠️ Routine Maintenance Workflows & Ground Truth
 
-## 4. Context Engineering & Anti-Rot Protocols
+### Workflow 1: Getting Ready for the Next Event
 
-- **Working Memory as RAM**: Treat the context window as active working RAM, never a dumping ground for raw logs or entire files.
-- **Recursive Compaction**: Condense trajectories into high-density state summaries upon milestone completion.
-- **Latest 3–5 Verbatim**: Retain only the 3–5 most recent tool responses verbatim; compress earlier outputs.
-- **Selective Line Slicing**: Always inspect targeted line slices (`StartLine`/`EndLine` ≤ 100 lines) rather than dumping large files.
-- **Subagent Offloading**: Delegate noisy compilation or test-loop execution to isolated sidecar subagents.
+When preparing the site for an upcoming event, make coordinated updates across these exact files:
 
-## 5. Structured Sequential Deliberation & Cost Auditing
+#### 1. Navbar Upcoming Event Badge & Route
+- **File**: `src/components/navigation/navRoutes.ts`
+- **Target**: `NAV_ROUTES` array
+- **Data Shape**:
+  ```typescript
+  export interface NavRoute {
+    href: string;
+    en: string;
+    ta: string;
+    badge?: boolean;
+    isNew?: boolean;
+    isNextEvent?: boolean;
+  }
+  ```
+- **Action**: Update the entry with `isNextEvent: true` to point to the new event slug:
+  ```typescript
+  {
+    href: "/events/<new-event-slug>",
+    en: "Next Event",
+    ta: "அடுத்த நிகழ்வு",
+    isNextEvent: true,
+    badge: true,
+  }
+  ```
+- **Rendering Mechanism**:
+  - `src/components/navigation/NavBilingualItem.tsx` checks `route.isNextEvent` and renders an animated pulsing dot and an emerald tag (`NEXT` in English or `அடுத்தது` in Tamil).
+  - `src/components/navigation/Navbar.tsx` reflects active state and handles desktop bar + mobile drawer.
 
-- **ReAct Interleaving**: Interleave cognitive reasoning traces with concrete actions; ground next steps in observed tool feedback.
-- **Sequential Thinking MCP**: For multi-step architectures, refactoring, or algorithmic design, use the `sequential-thinking` server (`sequentialthinking` tool) to track stateful reasoning trees and revise invalidated assumptions.
-- **Cost-Efficiency Auditing**: Invoke `cost-efficiency-audit` to eliminate N+1 queries, un-cached API calls, unbounded LLM token usage, and serverless cold starts.
+#### 2. Homepage Next-Event Showcase (Hero & Dossier Section)
+- **File**: `src/config/upcomingEvent.ts`
+- **Target**: `activeUpcomingEvent: FlagshipEventConfig`
+- **Data Shape**:
+  ```typescript
+  export interface FlagshipEventConfig {
+    id: string; // e.g. "namma-deepavali-2026"
+    seasonKey: "halloween" | "diwali" | "pongal" | "spring" | "custom";
+    title: string; // e.g. "Namma Deepavali (TS × MS × KS)"
+    tamilTitle: string; // e.g. "நம்ம தீபாவளி"
+    teaserQuote: string; // Editorial quote displayed above title
+    description: string; // Narrative summary of the event
+    telemetry: {
+      date: string; // e.g. "November 15, 2026"
+      time: string; // e.g. "5:30 PM - 9:00 PM ET"
+      location: string; // e.g. "Ohio Union (Archie Griffin Ballroom)"
+      doorsOpen: string; // e.g. "5:00 PM"
+      admission: string; // e.g. "Subsidized / Free Admission Tiers"
+    };
+    visual: {
+      silhouetteSrc: string; // Transparent PNG / SVG in /public
+      altText: string;
+      aspectRatio: "square" | "portrait" | "landscape";
+      dither: {
+        veilColor: string; // Primary accent hex (e.g. "#A6F0CF")
+        shadowColor: string; // Deep shadow hex (e.g. "#1A1715")
+        matrixSize: 4 | 8; // Grain density
+        grainScale: number; // Pixelation grain factor (e.g. 2.5)
+        noiseIntensity: number; // Turbulence (0.0 - 1.0)
+        interactive: boolean; // Cursor tilt & mouse interaction
+      };
+    };
+    action: {
+      label: string; // e.g. "Explore Event Dossier"
+      tamilLabel: string; // e.g. "நிகழ்வு விவரங்கள்"
+      href: string; // e.g. "/events/namma-deepavali-2026"
+      external: boolean; // false for internal dossiers
+    };
+    signUpAction?: {
+      label: string; // e.g. "Sign-Up / Performance Form"
+      tamilLabel: string; // e.g. "நிகழ்வு பதிவு"
+      href: string; // Google Form URL
+      external: boolean; // true
+    };
+  }
+  ```
+- **Rendering Mechanism**:
+  - `src/components/home/NextFlagshipGathering.tsx` renders this curated config into an asymmetric 12-column architectural courtyard layout on `/`.
 
-## 7. Universal Development & AI Engineering Constitution
+#### 3. Left-Side 3D Dither-Veil Logo Asset Path
+- **File**: `src/config/upcomingEvent.ts` under `activeUpcomingEvent.visual.silhouetteSrc`
+- **Location of Assets**: Place transparent PNG or SVG silhouettes inside `public/images/themes/` (e.g. `/images/themes/firecracker.png`, `/images/themes/pumpkin.png`, or `/emblem.svg`).
+- **Shader Component**: Rendered by `src/components/ui/DitherVeil.tsx` inside `NextFlagshipGathering.tsx`.
 
-### 1. Agent Persona & Execution Logic
+---
 
-- **Decouple Ideation from Execution**: The agent must never modify file logic immediately upon receiving a vague prompt. It must first generate a structured implementation plan and wait for human architectural approval before writing code.
-- **Explicit over Implicit**: Ban "magic" one-liners and undocumented abstractions. Strive for DRY (Don't Repeat Yourself) code and adhere strictly to SOLID principles, keeping components small, decoupled, and focused.
-- **Low-Cardinality Logging**: Mandate that all error handling includes robust, low-cardinality logging with stable message strings (e.g., `logger.error({ err: error }, "Failed to process transaction")`) rather than interpolated strings, ensuring optimal aggregation and debugging in APM tools.
+### Workflow 2: Updating the Linktree (`/links` Bio Hub)
 
-### 2. AI & Machine Learning Engineering Standards
+The `/links` page serves as the Instagram bio hub and collegiate portal.
 
-- **Deterministic Execution**: For all Python and AI model scripts, automatically set deterministic random seeds (`torch.manual_seed(42)`, `np.random.seed(42)`, `random.seed(42)`) to ensure model training, dataset partitioning, and vector embeddings are 100% reproducible.
-- **Defensive Tensor Operations**: Forbid assuming array or tensor shapes. Write explicit assertions (`assert x.shape == (batch_size, channels, H, W)`) before passing data through computer vision pipelines or neural network layers.
-- **Resource Validation**: Include device-agnostic execution checks (`torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")`) and implement memory-clearing garbage collection (`import gc; gc.collect(); torch.cuda.empty_cache()`) within iterative loops to prevent out-of-memory crashes.
+#### 1. Page Implementation File
+- **File**: `src/app/links/page.tsx`
 
-### 3. Full-Stack & Frontend Guardrails
+#### 2. Featured Upcoming Event Card (Top of Links Stack)
+- Located in JSX at lines ~225–285 in `src/app/links/page.tsx`.
+- Update the title, Tamil title, description, Google Form RSVP button link, and link to the `/events/<slug>` dossier.
 
-- **The "Anti-Slop" UI Protocol**: When scaffolding Next.js or React user interfaces, strictly forbid the AI Starter Pack aesthetics (pure black `#000000` backgrounds, generic indigo gradients `from-indigo-500 to-purple-600`, and oversized nested cards). Require CSS variables or Tailwind CSS `@theme` directives mapped to perceptually uniform OKLCH color spaces.
-- **Stateful Backend Security**: When generating database operations for platforms like Supabase, AWS, or PostgreSQL, wrap all multi-step mutations in atomic transactions (`BEGIN ... COMMIT`) and prioritize server-side protections (Row Level Security, Prisma middleware, verified JWT claims) over client-side filtering.
+#### 3. Previous Event Photo Vaults Expandable Menu
+- **Target**: `PREVIOUS_EVENT_ALBUMS: PreviousEventAlbum[]` array near top of `src/app/links/page.tsx`:
+  ```typescript
+  interface PreviousEventAlbum {
+    id: string;
+    num: string; // e.g. "01", "02"
+    title: string; // e.g. 'TS "Yaar Andha Killer?" Mystery'
+    season: string; // e.g. "Fall 2026 · Murder Mystery Night"
+    location: string; // e.g. "Houston Grove Room, Ohio Union"
+    url: string; // Link to Google Photos album
+  }
+  ```
+- Connects to central album URLs stored in `SITE_CONFIG.googlePhotosAlbums` in `src/data/siteConfig.ts`.
 
-### 4. Global Workflow Trajectories
+#### 4. Action Link Cards Structure & Props
+Link cards use the courtyard card design system:
+```tsx
+<Link
+  href="/destination"
+  className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(166,240,207,0.06)] transition-all"
+>
+  <div className="flex items-start justify-between gap-3">
+    <div className="flex items-start gap-3 min-w-0">
+      <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#A6F0CF] group-hover:border-[#A6F0CF]/60 transition-colors shrink-0 mt-0.5">
+        <IconComponent className="w-4 h-4" />
+      </div>
+      <div className="min-w-0">
+        <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
+          EYEBROW TAG
+        </span>
+        <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
+          Card Title
+        </h2>
+        <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+          Brief description
+        </p>
+      </div>
+    </div>
+    <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
+  </div>
+</Link>
+```
+- **Supported Icons**:
+  - Lucide: `Calendar`, `Users`, `Compass`, `MessageSquare`, `Mail`, `Check`, `ChevronRight`, `ChevronDown`, `ArrowRight`, `Sparkles`, `ArrowLeft`, `Camera`, `ExternalLink`, `Images`, `Lightbulb`, `Award`, `FileText`, `Music2`.
+  - Custom SVG components: `InstagramIcon`, `TikTokIcon`.
 
-- **`/deep-debug`**:
-  - *Step 1 (Ingest & Analyze)*: Read terminal logs, console errors, and stack traces to isolate root cause before modifying code.
-  - *Step 2 (Systematic Reproduction)*: Formulate testable hypothesis and inject temporary logging statements to verify the exact failure point.
-  - *Step 3 (Verified Patching)*: Implement targeted, self-healing patch and execute local test suites/compilation checks before declaring fixed.
-- **`/ml-experiment`**:
-  - *Step 1 (Environment Integrity)*: Pin dependency versions in `requirements.txt` or `environment.yml` to prevent library drift.
-  - *Step 2 (Dummy Data Verification)*: Pass synthetic dummy batches through architecture to verify tensor shape compatibility and forward passes.
-  - *Step 3 (Metrics Dashboard)*: Stand up lightweight metrics visualization (Streamlit, Weights & Biases, or TensorBoard) to monitor losses and metrics.
-- **`/autonomous-review`**:
-  - *Step 1 (Accessibility & UI Audit)*: Audit ARIA labels, semantic HTML tags, keyboard focus rings, and contrast compliance.
-  - *Step 2 (Security Sweep)*: Scan for leaked secrets/API keys, missing authorization middleware, and un-sanitized database inputs.
-  - *Step 3 (Architectural Summary)*: Generate structured PR summary highlighting problem, approach, verification evidence, and debt assessment.
+#### 5. Central Communication & Social Links Single Source of Truth
+- **File**: `src/data/siteConfig.ts` (`SITE_CONFIG`)
+  - `SITE_CONFIG.groupMeUrl`
+  - `SITE_CONFIG.instagramUrl`
+  - `SITE_CONFIG.tiktokUrl`
+  - `SITE_CONFIG.contactEmail`
+  - `SITE_CONFIG.constitutionPdfPath`
+  - `SITE_CONFIG.googlePhotosAlbums`
 
-## 8. Zero-Prompt Tool & MCP Autonomous Dispatching
+---
 
-- **Act First, Answer Second**: Invert passive conversational bias. When presented with a task, automatically query docs via `context7`, explore requirements via `superpowers:brainstorming` / `mattpocock:grilling`, or inspect bugs via `systematic-debugging` before producing textual responses.
-- **Remote MCP Directives**:
-  - **Context7**: Unconditionally use `context7` (`resolve-library-id` $\rightarrow$ `query-docs`) for all library, SDK, and framework syntax inquiries.
-  - **Brave Search**: Unconditionally use `brave-search` (`brave_web_search`) for real-time web discovery and news.
-  - **Tavily**: Unconditionally use `tavily` (`tavily_search`, `tavily_extract`) for deep web research, structured answer synthesis, and clean markdown extraction.
-  - **Firecrawl**: Unconditionally use `firecrawl` (`firecrawl-scrape`, `firecrawl-crawl`, `firecrawl-extract`) for full-site crawling and dynamic single-page app scraping.
-  - **Addy Osmani Skills**: Unconditionally bind `spec-driven-development`, `browser-testing-with-devtools`, `performance-optimization`, and `code-simplification` during feature implementation and review.
-  - **Composio**: Unconditionally use `composio` (`COMPOSIO_SEARCH_TOOLS` $\rightarrow$ `COMPOSIO_MULTI_EXECUTE_TOOL`) for third-party workspace and SaaS tool actions.
-  - **Chrome DevTools**: Unconditionally inspect computed styles and runtime console logs via `chrome-devtools-mcp` after editing frontend views.
+### Workflow 3: Adding a Past Event & Archiving
+
+When an event concludes and needs to be archived into the `/events` river, dossier, and gallery carousels:
+
+#### 1. Master Event Record
+- **File**: `src/data/events.ts`
+- **Target**: `EVENTS: SangamEvent[]`
+- **Action**: Add new event or update existing entry with `status: "past"`:
+  ```typescript
+  export interface SangamEvent {
+    slug: string; // e.g. "yaar-andha-killer"
+    titleEn: string;
+    titleTa: string;
+    taglineEn: string;
+    taglineTa: string;
+    date: string; // e.g. "October 23, 2026"
+    time: string; // e.g. "5:30 PM - 8:30 PM ET"
+    tamilDate: string; // e.g. "ஐப்பசி 6, விசுவாவசு ஆண்டு"
+    location: string; // e.g. "Houston Grove Room, Ohio Union"
+    venueAddress: string;
+    price: string;
+    statusBadgeEn: string;
+    statusBadgeTa: string;
+    status: "upcoming" | "past"; // Set to "past"
+    academicYear: string; // e.g. "2026-2027"
+    descriptionEn: string;
+    descriptionTa: string;
+    dressCodeEn: string;
+    dressCodeTa: string;
+    schedule: Array<{ time: string; activityEn: string; activityTa: string }>;
+    posterImage: string; // e.g. "/events/yaar-andha-killer/killer-01.jpg"
+    hoverImage: string;
+    ticketUrl?: string;
+    interestFormUrl?: string;
+    albumSlug?: string;
+    googlePhotosUrl?: string; // High-res Google Photos link
+    tags: string[];
+  }
+  ```
+- **Automatic Effects**:
+  - Appears in `/events` Gatherings River (`src/components/events/EventsClientView.tsx`).
+  - Pre-renders static dossier page at `/events/[slug]` with SEO metadata, BreadcrumbList, and Event JSON-LD via `src/app/events/[slug]/page.tsx`.
+
+#### 2. Event Photos & Assets
+- Create directory `public/events/<slug>/`.
+- Place high-resolution photos (e.g. `killer-01.jpg`, `killer-02.jpg`).
+- Photos are auto-detected by `src/lib/event-photos.ts` (`getRandomizedEventPhotos(slug, 5, 8)`) for the dossier's parallax scatter.
+
+#### 3. Photo Carousel Archive
+- **File**: `src/data/gallery.ts`
+- **Target**: `GALLERY_ALBUMS: GalleryAlbum[]`
+- Add album entry with `slug`, `eventSlug`, `googlePhotosUrl`, and `photos: PhotoItem[]`.
+- Displayed in `EditorialPhotoCarousel` (`src/components/events/EditorialPhotoCarousel.tsx`) on `/events` and on `/gallery`.
+
+#### 4. Wiring the Bottom Google Photos Album External Link
+- **Event Dossier Bottom**:
+  - `src/components/events/EventDossierView.tsx` (line ~356) passes `event.googlePhotosUrl` to `<VaultGateway>`:
+    ```tsx
+    <VaultGateway
+      googlePhotosUrl={event.googlePhotosUrl || "https://photos.app.goo.gl/..."}
+      totalPhotosCount={300}
+    />
+    ```
+- **Magnetic Proximity Link**:
+  - `src/components/events/VaultGateway.tsx` lines 108–126 render the magnetic headline link:
+    `<a href={googlePhotosUrl} target="_blank" rel="noopener noreferrer">... Open the Google Photos Vault ↗ ...</a>`
+- **Carousel & Strips**:
+  - `src/components/events/EditorialPhotoCarousel.tsx` (lines 149–158): Links `activeAlbum.googlePhotosUrl` as "Full Google Photos Album ↗".
+  - `src/components/gateways/GooglePhotosVaultsStrip.tsx`: Lists past event Google Photos albums.
+  - `src/data/siteConfig.ts`: Keep `SITE_CONFIG.googlePhotosAlbums` in sync.
+
+---
+
+## 🎨 Design Engineering Ground Truth & Anti-Slop Directives
+
+1. **Autonomous Verification (Non-Negotiable)**:
+   - Always run `npm run build` (`npx tsc --noEmit` + Turbopack build) to confirm zero syntax or typing errors.
+   - Zero Hallucinated Renders: Inspect computed DOM structure and ensure no broken assets.
+2. **Design Tokens & Colors**:
+   - Follow semantic colors from `globals.css` and `design/tokens.json`.
+   - Never use raw un-tinted black (`#000000`) or generic Tailwind purple-indigo gradients (`from-indigo-500 to-purple-600`).
+   - Use the warm courtyard palette: royal violet (`#140C20`, `#25173B`), mint radiant bloom (`#A6F0CF`), and warm terracotta/sandstone accents.
+3. **Typography & Bilingual Integrity**:
+   - Tamil script must always have `lang="ta"`, zero letter spacing (`tracking-normal` / `style={{ letterSpacing: 0 }}`), and adequate line-height (≥ 1.6).
+   - Display headings use serif fonts (Marcellus, Cormorant, Prata); body copy uses Outfit; mono uses Fragment Mono/Azeret Mono.
+4. **Motion & Interaction**:
+   - Physics springs (`stiffness: 150–400, damping: 15–30`) for user-driven interactions (magnetic hover, drag).
+   - Bézier tweens with fixed duration (`duration: 0.35s, ease: [0.16, 1, 0.3, 1]`) for entrance/exit.
+   - Respect `useReducedMotion()` and Lite mode fallbacks unconditionally.
