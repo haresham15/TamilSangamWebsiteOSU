@@ -321,6 +321,30 @@ export default function JoinPage() {
                   </div>
                 )}
 
+                {/* Performer Dance Form Gateway */}
+                {membershipType === "performer" && (
+                  <div className="p-4 rounded-xl bg-[#25173B] border border-[#A6F0CF]/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-2.5">
+                      <Music2 className="w-5 h-5 text-[#A6F0CF] shrink-0" />
+                      <div>
+                        <span className="font-mono text-[10px] uppercase tracking-wider text-[#A6F0CF] font-bold block">
+                          Dance Troupe &amp; Stage Performance Sign-Ups
+                        </span>
+                        <p className="font-serif text-sm text-[#F4F0FA]">
+                          Looking to join Kuthu, Gaana, or fusion choreography?
+                        </p>
+                      </div>
+                    </div>
+                    <Link
+                      href="/dance"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#A6F0CF] text-[#140C20] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#7AE7B5] transition-all shrink-0"
+                    >
+                      <span>Dance Form Space</span>
+                      <Sparkles className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                )}
+
                 {/* Selected Track Ribbon */}
                 <div className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-[#25173B]/40 border border-[rgba(125,96,166,0.25)]">
                   <div className="flex items-center gap-2 text-xs font-sans">

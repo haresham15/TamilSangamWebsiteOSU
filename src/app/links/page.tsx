@@ -20,7 +20,8 @@ import {
   Images,
   Lightbulb,
   Award,
-  FileText
+  FileText,
+  Music2
 } from "lucide-react";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
 import { SITE_CONFIG } from "@/data/siteConfig";
@@ -241,6 +242,37 @@ export default function LinksBioHubPage() {
                     </h2>
                     <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
                       Celebrations, festivals, dates, and campus event dossiers
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
+              </div>
+            </Link>
+
+            {/* Dance Performance Sign-Ups */}
+            <Link
+              href="/dance"
+              className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(166,240,207,0.06)] transition-all focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3 min-w-0">
+                  <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#A6F0CF] group-hover:border-[#A6F0CF]/60 transition-colors shrink-0 mt-0.5">
+                    <Music2 className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
+                        Stage Sign-Ups · ஆடல் அரங்கம்
+                      </span>
+                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#A6F0CF]/15 text-[#A6F0CF] font-bold">
+                        Form Opening
+                      </span>
+                    </div>
+                    <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
+                      Dance Performance Registration
+                    </h2>
+                    <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+                      Kuthu, Gaana, cinematic fusion, and solo/group stage routines
                     </p>
                   </div>
                 </div>

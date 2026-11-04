@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, Download, Calendar, Clock, MapPin, Shirt, Shuffle } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Download, Calendar, Clock, MapPin, Shirt, Shuffle, Music2 } from "lucide-react";
 import type { SangamEvent } from "@/data/events";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
@@ -253,6 +253,17 @@ END:VCALENDAR`;
                 <ArrowUpRight className="w-3.5 h-3.5 text-[#A6F0CF]" />
                 <span>OFFICIAL TICKETING / RSVP</span>
               </a>
+
+              {event.status === "upcoming" && (
+                <Link
+                  href="/dance"
+                  onClick={playClick}
+                  className="inline-flex items-center gap-1.5 text-[#A6F0CF] hover:text-[#F4F0FA] transition-colors"
+                >
+                  <Music2 className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                  <span>DANCE / STAGE SIGN-UPS ↗</span>
+                </Link>
+              )}
             </div>
           </div>
         </section>
