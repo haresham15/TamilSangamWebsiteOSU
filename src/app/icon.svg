@@ -1,57 +1,75 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
   <defs>
-    <!-- Royal Violet Base Gradient -->
-    <radialGradient id="sangamVioletGlow" cx="50%" cy="45%" r="55%">
-      <stop offset="0%" stop-color="#5a2f8d" />
-      <stop offset="70%" stop-color="#462270" />
-      <stop offset="100%" stop-color="#361759" />
+    <!-- Royal Violet Background Gradient -->
+    <radialGradient id="favBg" cx="50%" cy="46%" r="56%">
+      <stop offset="0%" stop-color="#442075" />
+      <stop offset="65%" stop-color="#22103d" />
+      <stop offset="100%" stop-color="#120821" />
     </radialGradient>
 
-    <!-- Mint Teal Drop Shadow Color -->
-    <filter id="mintTealExtrusion" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="8" dy="8" stdDeviation="0" flood-color="#55CCA2" flood-opacity="1" />
-      <feDropShadow dx="14" dy="14" stdDeviation="4" flood-color="#3eb088" flood-opacity="0.6" />
+    <!-- Metallic Gold Rim Gradient -->
+    <linearGradient id="favGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF3C4" />
+      <stop offset="35%" stop-color="#F5D061" />
+      <stop offset="70%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#997316" />
+    </linearGradient>
+
+    <!-- Mint Bloom Accent Gradient -->
+    <linearGradient id="favMint" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4FAF0" />
+      <stop offset="50%" stop-color="#A6F0CF" />
+      <stop offset="100%" stop-color="#55CCA2" />
+    </linearGradient>
+
+    <!-- Elevation Shadow Filter -->
+    <filter id="favShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.75" />
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#A6F0CF" flood-opacity="0.3" />
     </filter>
-
-    <!-- Clip Path for Circular Boundary -->
-    <clipPath id="circleClip">
-      <circle cx="250" cy="250" r="235" />
-    </clipPath>
-
-    <!-- Repeating Tamil Script Pattern "தமிழ்" -->
-    <pattern id="tamilPattern" width="120" height="42" patternUnits="userSpaceOnUse" patternTransform="rotate(0)">
-      <text x="6" y="16" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#8b65b6" opacity="0.62" letter-spacing="0">தமிழ்</text>
-      <text x="66" y="16" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#8b65b6" opacity="0.62" letter-spacing="0">தமிழ்</text>
-      <text x="36" y="37" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#8b65b6" opacity="0.62" letter-spacing="0">தமிழ்</text>
-      <text x="96" y="37" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#8b65b6" opacity="0.62" letter-spacing="0">தமிழ்</text>
-    </pattern>
   </defs>
 
-  <!-- Outer Ring Highlight -->
-  <circle cx="250" cy="250" r="242" fill="none" stroke="#55CCA2" stroke-width="6" opacity="0.8" />
+  <!-- Base Circle & Outer Rims -->
+  <circle cx="250" cy="250" r="242" fill="url(#favBg)" />
+  <circle cx="250" cy="250" r="238" fill="none" stroke="url(#favMint)" stroke-width="12" />
+  <circle cx="250" cy="250" r="222" fill="none" stroke="url(#favGold)" stroke-width="4" opacity="0.85" />
 
-  <!-- Base Circle with Clip -->
-  <g clip-path="url(#circleClip)">
-    <!-- Deep Royal Violet Background -->
-    <circle cx="250" cy="250" r="235" fill="url(#sangamVioletGlow)" />
+  <!-- Inner Beaded Accents (16 cardinal beads) -->
+  <g fill="#A6F0CF" opacity="0.85">
+    <circle cx="458.0" cy="250.0" r="4" /><circle cx="442.2" cy="329.6" r="4" /><circle cx="397.1" cy="397.1" r="4" /><circle cx="329.6" cy="442.2" r="4" /><circle cx="250.0" cy="458.0" r="4" /><circle cx="170.4" cy="442.2" r="4" /><circle cx="102.9" cy="397.1" r="4" /><circle cx="57.8" cy="329.6" r="4" /><circle cx="42.0" cy="250.0" r="4" /><circle cx="57.8" cy="170.4" r="4" /><circle cx="102.9" cy="102.9" r="4" /><circle cx="170.4" cy="57.8" r="4" /><circle cx="250.0" cy="42.0" r="4" /><circle cx="329.6" cy="57.8" r="4" /><circle cx="397.1" cy="102.9" r="4" /><circle cx="442.2" cy="170.4" r="4" />
+  </g>
 
-    <!-- Watermarked Repeating Tamil Script Texture -->
-    <rect x="0" y="0" width="500" height="500" fill="url(#tamilPattern)" />
+  <!-- Sacred Crest: Flame, Classical Letter "த", and Lotus Base -->
+  <g filter="url(#favShadow)">
+    <!-- Wisdom Flame / Agal Vilakku Top -->
+    <g transform="translate(250, 88)">
+      <path d="M 0,-36 C -14,-12 -20,0 -16,14 C -12,28 0,32 0,32 C 0,32 12,28 16,14 C 20,0 14,-12 0,-36 Z" fill="url(#favMint)" opacity="0.85" />
+      <path d="M 0,-26 C -8,-8 -12,2 -10,12 C -6,22 0,24 0,24 C 0,24 6,22 10,12 C 12,2 8,-8 0,-26 Z" fill="url(#favGold)" />
+      <path d="M -32,28 C -24,42 24,42 32,28 C 36,34 24,46 0,46 C -24,46 -36,34 -32,28 Z" fill="url(#favGold)" />
+    </g>
 
-    <!-- Central Typography: TAMIL -->
-    <!-- Extrusion Shadow Layer in Mint Teal -->
-    <text x="259" y="239" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="94" font-weight="900" fill="#55CCA2" letter-spacing="6">TAMIL</text>
-    <text x="257" y="237" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="94" font-weight="900" fill="#55CCA2" letter-spacing="6">TAMIL</text>
-    <text x="255" y="235" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="94" font-weight="900" fill="#55CCA2" letter-spacing="6">TAMIL</text>
-    <!-- Foreground Pure White Layer -->
-    <text x="250" y="230" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="94" font-weight="900" fill="#FFFDF9" letter-spacing="6">TAMIL</text>
+    <!-- Classical Tamil Letter "த" (Large, Bold, High Legibility at 16-32px) -->
+    <text
+      x="250"
+      y="315"
+      text-anchor="middle"
+      font-family="'Mukta Malar', 'Anek Tamil', 'Nirmala UI', 'Latha', 'Noto Sans Tamil', serif"
+      font-size="210"
+      font-weight="900"
+      fill="#FFFDF9"
+      stroke="#120821"
+      stroke-width="5"
+      paint-order="stroke fill"
+    >த</text>
 
-    <!-- Central Typography: SANGAM -->
-    <!-- Extrusion Shadow Layer in Mint Teal -->
-    <text x="259" y="324" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="86" font-weight="900" fill="#55CCA2" letter-spacing="6">SANGAM</text>
-    <text x="257" y="322" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="86" font-weight="900" fill="#55CCA2" letter-spacing="6">SANGAM</text>
-    <text x="255" y="320" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="86" font-weight="900" fill="#55CCA2" letter-spacing="6">SANGAM</text>
-    <!-- Foreground Pure White Layer -->
-    <text x="250" y="315" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="86" font-weight="900" fill="#FFFDF9" letter-spacing="6">SANGAM</text>
+    <!-- Stylized Lotus / Kolam Base Pedestal -->
+    <g transform="translate(250, 375)">
+      <path d="M 0,-16 C -12,8 -20,24 0,40 C 20,24 12,8 0,-16 Z" fill="url(#favGold)" stroke="#120821" stroke-width="2.5" />
+      <path d="M -4,0 C -28,4 -48,24 -24,40 C -8,36 4,24 -4,0 Z" fill="url(#favMint)" stroke="#120821" stroke-width="2.5" opacity="0.95" />
+      <path d="M -20,16 C -52,20 -72,44 -44,50 C -28,48 -12,36 -20,16 Z" fill="#D4AF37" stroke="#120821" stroke-width="2" opacity="0.85" />
+      <path d="M 4,0 C 28,4 48,24 24,40 C 8,36 -4,24 4,0 Z" fill="url(#favMint)" stroke="#120821" stroke-width="2.5" opacity="0.95" />
+      <path d="M 20,16 C 52,20 72,44 44,50 C 28,48 12,36 20,16 Z" fill="#D4AF37" stroke="#120821" stroke-width="2" opacity="0.85" />
+      <path d="M -64,50 Q 0,58 64,50 Q 0,66 -64,50 Z" fill="url(#favGold)" />
+    </g>
   </g>
 </svg>

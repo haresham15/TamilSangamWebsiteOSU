@@ -14,7 +14,7 @@ export const NAV_ROUTES: NavRoute[] = [
   { href: "/about", en: "About", ta: "அறிமுகம்" },
   { href: "/board", en: "Board", ta: "அவை" },
   { href: "/gallery", en: "Gallery", ta: "நினைவுகள்" },
-  { href: "/games", en: "Games", ta: "விளையாட்டு", isNew: true },
   { href: "/guide", en: "Guide", ta: "வழிகாட்டி" },
   { href: "/links", en: "Links", ta: "இணைப்புகள்" },
+  { href: "/games", en: "Games", ta: "விளையாட்டு", isNew: true, badge: true },
 ];

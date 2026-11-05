@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
@@ -173,24 +174,36 @@ export const Navbar: React.FC = () => {
         }`}
       >
         {/* ======================================================================= */}
-        {/* LEFT: Brand Lockup                                                      */}
+        {/* LEFT: Brand Lockup with Official Seal Crest                            */}
         {/* ======================================================================= */}
         <Link
           href="/"
           onClick={handleBrandClick}
           aria-label="OSU Tamil Sangam Home"
-          className="group flex flex-col text-left shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] rounded-sm select-none pr-3"
+          className="group flex items-center gap-2.5 text-left shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] rounded-sm select-none pr-3"
         >
-          <span className="font-serif font-bold text-sm sm:text-base tracking-tight text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors leading-tight">
-            {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"}
-          </span>
-          <span
-            lang="ta"
-            style={{ letterSpacing: 0 }}
-            className="font-tamil text-[9px] text-[#A6F0CF]/80 group-hover:text-[#A6F0CF] transition-opacity mt-0.5 leading-none font-medium"
-          >
-            {locale === "ta" ? "The Ohio State University" : "ஒஹையோ மாநிலப் பல்கலைக்கழகம்"}
-          </span>
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-full p-[1.5px] bg-gradient-to-tr from-[#A6F0CF]/70 via-[#F5D061]/50 to-[#7D60A6]/70 group-hover:from-[#A6F0CF] group-hover:to-[#FFE082] transition-all shadow-sm">
+            <Image
+              src="/emblem.svg"
+              alt="The Ohio State University Tamil Sangam Official Seal"
+              width={36}
+              height={36}
+              priority
+              className="w-full h-full object-contain rounded-full"
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-serif font-bold text-sm sm:text-base tracking-tight text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors leading-tight">
+              {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"}
+            </span>
+            <span
+              lang="ta"
+              style={{ letterSpacing: 0 }}
+              className="font-tamil text-[9px] text-[#A6F0CF]/80 group-hover:text-[#A6F0CF] transition-opacity mt-0.5 leading-none font-medium"
+            >
+              {locale === "ta" ? "The Ohio State University" : "ஒஹையோ மாநிலப் பல்கலைக்கழகம்"}
+            </span>
+          </div>
         </Link>
 
         {/* ======================================================================= */}

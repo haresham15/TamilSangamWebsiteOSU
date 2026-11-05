@@ -474,15 +474,37 @@
         "descriptionTa": "ஓஹியோ ஸ்டேட் தமிழ் சங்கம் வழங்கும் 'யார் அந்த கில்லர்?' ஹாலோவீன் மர்ம மற்றும் புதிர் இரவு. சுவையான இலவச உணவு மற்றும் சிறந்த ஆடை அணிந்தவர்களுக்கான சிறப்பு பரிசுகள் உண்டு! அனைத்து மாணவர்களுக்கும் அனுமதி முற்றிலும் இலவசம்.",
         "dressCodeEn": "Halloween Costumes / Mystery Attire (Best Dressed Wins a Prize!)",
         "schedule": [
-          { "time": "5:15 PM", "activityEn": "Doors Open & Welcome Gathering" },
-          { "time": "5:30 PM", "activityEn": "Free Food Dinner Served & Suspect Introductions" },
-          { "time": "6:15 PM", "activityEn": "The Murder Mystery Whodunnit Game Begins" },
-          { "time": "7:45 PM", "activityEn": "Case Solved & Best Dressed Costume Prize Winner" },
-          { "time": "8:15 PM", "activityEn": "Group Photos & Wrap-up Hangout" }
+          {
+            "time": "5:15 PM",
+            "activityEn": "Doors Open & Welcome Gathering"
+          },
+          {
+            "time": "5:30 PM",
+            "activityEn": "Free Food Dinner Served & Suspect Introductions"
+          },
+          {
+            "time": "6:15 PM",
+            "activityEn": "The Murder Mystery Whodunnit Game Begins"
+          },
+          {
+            "time": "7:45 PM",
+            "activityEn": "Case Solved & Best Dressed Costume Prize Winner"
+          },
+          {
+            "time": "8:15 PM",
+            "activityEn": "Group Photos & Wrap-up Hangout"
+          }
         ],
         "posterImage": "/events/yaar-andha-killer/killer-01.jpg",
         "googlePhotosUrl": "https://photos.app.goo.gl/k2Kg17MX4nriMbnw7",
-        "tags": ["halloween", "mystery", "free-food", "costume", "games", "social"]
+        "tags": [
+          "halloween",
+          "mystery",
+          "free-food",
+          "costume",
+          "games",
+          "social"
+        ]
       },
       {
         "slug": "berry-cute-picnic",
@@ -503,13 +525,30 @@
         "descriptionTa": "புதிய மற்றும் மூத்த மாணவர்களை ஒன்றிணைக்கும் இலையுதிர்கால புல்வெளி பிக்னிக்: கஹூட் வினாடி-வினா, குழு விளையாட்டுக்கள், மற்றும் சுவையான பிரியாணி, சமோசா, குளிர்பானங்களுடன் கூடிய நட்பு சங்கமம்.",
         "dressCodeEn": "Casual outdoor attire / cozy picnic wear",
         "schedule": [
-          { "time": "3:30 PM", "activityEn": "Doors Open, Music & Team Check-In" },
-          { "time": "4:15 PM", "activityEn": "Kahoot Trivia, Musical Chairs & Small-Group Team Games" },
-          { "time": "5:30 PM", "activityEn": "Hot Biryani, Indian Snacks, Drinks & Open Hangout" }
+          {
+            "time": "3:30 PM",
+            "activityEn": "Doors Open, Music & Team Check-In"
+          },
+          {
+            "time": "4:15 PM",
+            "activityEn": "Kahoot Trivia, Musical Chairs & Small-Group Team Games"
+          },
+          {
+            "time": "5:30 PM",
+            "activityEn": "Hot Biryani, Indian Snacks, Drinks & Open Hangout"
+          }
         ],
         "posterImage": "/events/berry-cute-picnic/picnic-01.jpg",
         "googlePhotosUrl": "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7",
-        "tags": ["picnic", "oval", "free-food", "social", "casual", "games", "biryani"]
+        "tags": [
+          "picnic",
+          "oval",
+          "free-food",
+          "social",
+          "casual",
+          "games",
+          "biryani"
+        ]
       },
       {
         "slug": "streetside-sapad",
@@ -530,13 +569,30 @@
         "descriptionTa": "வளாக அரங்கில் நடைபெற்ற பொதுக் குழு சந்திப்பு: கஹூட் வினாடி-வினா, இசை நாற்காலி, சுவாரஸ்யமான குழு போட்டிகள், மற்றும் மலர்களால் அலங்கரிக்கப்பட்ட மேசையில் சுடச்சுட பரிமாறப்பட்ட பிரியாணி, சமோசா, சிற்றுண்டிகள்.",
         "dressCodeEn": "Casual everyday campus wear",
         "schedule": [
-          { "time": "6:30 PM", "activityEn": "Doors Open, Music & Team Check-In" },
-          { "time": "7:15 PM", "activityEn": "Kahoot Trivia, Musical Chairs & Small-Group Team Games" },
-          { "time": "8:00 PM", "activityEn": "Hot Biryani, Indian Snacks, Drinks & Open Hangout" }
+          {
+            "time": "6:30 PM",
+            "activityEn": "Doors Open, Music & Team Check-In"
+          },
+          {
+            "time": "7:15 PM",
+            "activityEn": "Kahoot Trivia, Musical Chairs & Small-Group Team Games"
+          },
+          {
+            "time": "8:00 PM",
+            "activityEn": "Hot Biryani, Indian Snacks, Drinks & Open Hangout"
+          }
         ],
         "posterImage": "/events/streetside-sapad/picnic-01.jpg",
         "googlePhotosUrl": "https://photos.app.goo.gl/PnkceBh19PqytYQ89",
-        "tags": ["food", "sapad", "biryani", "games", "trivia", "social", "casual"]
+        "tags": [
+          "food",
+          "sapad",
+          "biryani",
+          "games",
+          "trivia",
+          "social",
+          "casual"
+        ]
       },
       {
         "slug": "namma-jathara",
@@ -557,13 +613,30 @@
         "descriptionTa": "ஓஹியோ ஸ்டேட் தமிழ் சங்கமும் தெலுங்கு தமாஷா அமைப்பும் இணைந்து நடத்திய 'நம்ம ஜாதரா' வசந்தகால திருவிழா: விளையாட்டுகள், நடன வட்டம், மற்றும் சுவையான பிரியாணி, சிற்றுண்டிகளுடன் கூடிய கொண்டாட்டம்.",
         "dressCodeEn": "Casual or Colorful Festive Wear",
         "schedule": [
-          { "time": "4:00 PM", "activityEn": "Doors Open, Music & Team Check-In" },
-          { "time": "5:00 PM", "activityEn": "Kahoot Trivia, Musical Chairs & Small-Group Team Games" },
-          { "time": "6:30 PM", "activityEn": "Hot Biryani, Indian Snacks, Drinks & Open Hangout" }
+          {
+            "time": "4:00 PM",
+            "activityEn": "Doors Open, Music & Team Check-In"
+          },
+          {
+            "time": "5:00 PM",
+            "activityEn": "Kahoot Trivia, Musical Chairs & Small-Group Team Games"
+          },
+          {
+            "time": "6:30 PM",
+            "activityEn": "Hot Biryani, Indian Snacks, Drinks & Open Hangout"
+          }
         ],
         "posterImage": "/events/namma-jathara/picnic-01.jpg",
         "googlePhotosUrl": "https://photos.app.goo.gl/NBTxg98ppmd9uhWX9",
-        "tags": ["carnival", "games", "collab", "outdoor", "free", "social", "biryani"]
+        "tags": [
+          "carnival",
+          "games",
+          "collab",
+          "outdoor",
+          "free",
+          "social",
+          "biryani"
+        ]
       },
       {
         "slug": "ts-x-tt-event",
@@ -584,13 +657,30 @@
         "descriptionTa": "தெலுங்கு தமாஷா அமைப்போடு இணைந்து நடத்திய கூட்டுச் சந்திப்பு. கஹூட் வினாடி வினா, இசை நாற்காலி மற்றும் குழு விளையாட்டுகளுடன், சுவையான பிரியாணி மற்றும் சிற்றுண்டிகளுடன் இனிதே நடந்த மாலை.",
         "dressCodeEn": "Casual everyday campus wear",
         "schedule": [
-          { "time": "5:00 PM", "activityEn": "Doors Open, Music & Team Check-In" },
-          { "time": "5:45 PM", "activityEn": "Kahoot Trivia, Musical Chairs & Small-Group Team Games" },
-          { "time": "7:15 PM", "activityEn": "Hot Biryani, Indian Snacks, Drinks & Open Hangout" }
+          {
+            "time": "5:00 PM",
+            "activityEn": "Doors Open, Music & Team Check-In"
+          },
+          {
+            "time": "5:45 PM",
+            "activityEn": "Kahoot Trivia, Musical Chairs & Small-Group Team Games"
+          },
+          {
+            "time": "7:15 PM",
+            "activityEn": "Hot Biryani, Indian Snacks, Drinks & Open Hangout"
+          }
         ],
         "posterImage": "/events/berry-cute-picnic/picnic-01.jpg",
         "googlePhotosUrl": "https://photos.app.goo.gl/QrUrPkvPQqQvz7H29",
-        "tags": ["gathering", "games", "collab", "trivia", "biryani", "free-food", "social"]
+        "tags": [
+          "gathering",
+          "games",
+          "collab",
+          "trivia",
+          "biryani",
+          "free-food",
+          "social"
+        ]
       }
     ]
   },
@@ -741,7 +831,11 @@
       "openGraphImage": "https://tamil-sangam-website-osu.vercel.app/opengraph-image",
       "twitterImage": "https://tamil-sangam-website-osu.vercel.app/twitter-image",
       "nanbaSvg": "/nanba.svg",
-      "coinFaceSvg": "/coin-face.svg"
+      "coinFaceSvg": "/coin-face.svg",
+      "faviconIco": "/favicon.ico",
+      "appleTouchIconPng": "/apple-touch-icon.png",
+      "icon192Png": "/icon-192.png",
+      "icon512Png": "/icon-512.png"
     },
     "heroPostersAndImagery": {
       "eventSilhouetteHero": "/events/silhouette-hero.png",

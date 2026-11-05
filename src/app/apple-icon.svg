@@ -1,53 +1,174 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
   <defs>
-    <!-- Royal Violet Base Gradient -->
-    <radialGradient id="sangamVioletGlow" cx="50%" cy="45%" r="55%">
-      <stop offset="0%" stop-color="#5a2f8d" />
-      <stop offset="70%" stop-color="#462270" />
-      <stop offset="100%" stop-color="#361759" />
+    <!-- Royal Violet Background Gradients -->
+    <radialGradient id="sealCanvasGrad" cx="50%" cy="46%" r="56%">
+      <stop offset="0%" stop-color="#3d1d69" />
+      <stop offset="60%" stop-color="#241142" />
+      <stop offset="100%" stop-color="#140924" />
     </radialGradient>
 
-    <!-- Mint Teal Drop Shadow Color -->
-    <filter id="mintTealExtrusion" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="8" dy="8" stdDeviation="0" flood-color="#55CCA2" flood-opacity="1" />
-      <feDropShadow dx="14" dy="14" stdDeviation="4" flood-color="#3eb088" flood-opacity="0.6" />
+    <!-- Center Sanctum Radial Glow -->
+    <radialGradient id="sanctumGlow" cx="50%" cy="48%" r="48%">
+      <stop offset="0%" stop-color="#5a2f8d" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#381a5e" stop-opacity="0.75" />
+      <stop offset="100%" stop-color="#180b2b" stop-opacity="0.98" />
+    </radialGradient>
+
+    <!-- Metallic Gold Rim Gradient -->
+    <linearGradient id="goldRimGleam" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF3C4" />
+      <stop offset="30%" stop-color="#F5D061" />
+      <stop offset="70%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#997316" />
+    </linearGradient>
+
+    <!-- Mint Bloom Accent Gradient -->
+    <linearGradient id="mintAccentGleam" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4FAF0" />
+      <stop offset="50%" stop-color="#A6F0CF" />
+      <stop offset="100%" stop-color="#55CCA2" />
+    </linearGradient>
+
+    <!-- Soft Elevation Drop Shadow Filter -->
+    <filter id="crestShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.65" />
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#A6F0CF" flood-opacity="0.3" />
     </filter>
-
-    <!-- Clip Path for Circular Boundary -->
-    <clipPath id="circleClip">
-      <circle cx="250" cy="250" r="235" />
-    </clipPath>
-
-    <!-- Repeating Tamil Script Pattern "தமிழ்" -->
-    <pattern id="tamilPattern" width="120" height="42" patternUnits="userSpaceOnUse" patternTransform="rotate(0)">
-      <text x="6" y="16" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#8b65b6" opacity="0.62" letter-spacing="0">தமிழ்</text>
-      <text x="66" y="16" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#8b65b6" opacity="0.62" letter-spacing="0">தமிழ்</text>
-      <text x="36" y="37" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#8b65b6" opacity="0.62" letter-spacing="0">தமிழ்</text>
-      <text x="96" y="37" font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif" font-size="16" font-weight="700" fill="#8b65b6" opacity="0.62" letter-spacing="0">தமிழ்</text>
-    </pattern>
   </defs>
 
-  <!-- Outer Ring Highlight -->
-  <circle cx="250" cy="250" r="242" fill="none" stroke="#55CCA2" stroke-width="6" opacity="0.8" />
+  <!-- 1. BASE OUTER SHIELD & BEVELED MEDALLION RIM -->
+  <circle cx="250" cy="250" r="246" fill="url(#sealCanvasGrad)" />
+  <circle cx="250" cy="250" r="244" fill="none" stroke="url(#mintAccentGleam)" stroke-width="2.5" opacity="0.95" />
+  <circle cx="250" cy="250" r="238" fill="none" stroke="url(#goldRimGleam)" stroke-width="1.5" opacity="0.8" />
 
-  <!-- Base Circle with Clip -->
-  <g clip-path="url(#circleClip)">
-    <!-- Deep Royal Violet Background -->
-    <circle cx="250" cy="250" r="235" fill="url(#sangamVioletGlow)" />
+  <!-- Collegiate Milling Beads around Outer Track -->
+  <g fill="#A6F0CF" opacity="0.7">
+    <circle cx="482.0" cy="250.0" r="1.8" /><circle cx="480.0" cy="280.3" r="1.8" /><circle cx="474.1" cy="310.0" r="1.8" /><circle cx="464.3" cy="338.8" r="1.8" /><circle cx="450.9" cy="366.0" r="1.8" /><circle cx="434.1" cy="391.2" r="1.8" /><circle cx="414.0" cy="414.0" r="1.8" /><circle cx="391.2" cy="434.1" r="1.8" /><circle cx="366.0" cy="450.9" r="1.8" /><circle cx="338.8" cy="464.3" r="1.8" /><circle cx="310.0" cy="474.1" r="1.8" /><circle cx="280.3" cy="480.0" r="1.8" /><circle cx="250.0" cy="482.0" r="1.8" /><circle cx="219.7" cy="480.0" r="1.8" /><circle cx="190.0" cy="474.1" r="1.8" /><circle cx="161.2" cy="464.3" r="1.8" /><circle cx="134.0" cy="450.9" r="1.8" /><circle cx="108.8" cy="434.1" r="1.8" /><circle cx="86.0" cy="414.0" r="1.8" /><circle cx="65.9" cy="391.2" r="1.8" /><circle cx="49.1" cy="366.0" r="1.8" /><circle cx="35.7" cy="338.8" r="1.8" /><circle cx="25.9" cy="310.0" r="1.8" /><circle cx="20.0" cy="280.3" r="1.8" /><circle cx="18.0" cy="250.0" r="1.8" /><circle cx="20.0" cy="219.7" r="1.8" /><circle cx="25.9" cy="190.0" r="1.8" /><circle cx="35.7" cy="161.2" r="1.8" /><circle cx="49.1" cy="134.0" r="1.8" /><circle cx="65.9" cy="108.8" r="1.8" /><circle cx="86.0" cy="86.0" r="1.8" /><circle cx="108.8" cy="65.9" r="1.8" /><circle cx="134.0" cy="49.1" r="1.8" /><circle cx="161.2" cy="35.7" r="1.8" /><circle cx="190.0" cy="25.9" r="1.8" /><circle cx="219.7" cy="20.0" r="1.8" /><circle cx="250.0" cy="18.0" r="1.8" /><circle cx="280.3" cy="20.0" r="1.8" /><circle cx="310.0" cy="25.9" r="1.8" /><circle cx="338.8" cy="35.7" r="1.8" /><circle cx="366.0" cy="49.1" r="1.8" /><circle cx="391.2" cy="65.9" r="1.8" /><circle cx="414.0" cy="86.0" r="1.8" /><circle cx="434.1" cy="108.8" r="1.8" /><circle cx="450.9" cy="134.0" r="1.8" /><circle cx="464.3" cy="161.2" r="1.8" /><circle cx="474.1" cy="190.0" r="1.8" /><circle cx="480.0" cy="219.7" r="1.8" />
+  </g>
 
-    <!-- Watermarked Repeating Tamil Script Texture -->
-    <rect x="0" y="0" width="500" height="500" fill="url(#tamilPattern)" />
+  <!-- Inscription Track Inner Boundary Ring -->
+  <circle cx="250" cy="250" r="162" fill="none" stroke="url(#mintAccentGleam)" stroke-width="2" opacity="0.85" />
+  <circle cx="250" cy="250" r="158" fill="none" stroke="url(#goldRimGleam)" stroke-width="1.2" opacity="0.7" />
 
-    <!-- Central Typography: TAMIL -->
-    <text x="259" y="239" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="94" font-weight="900" fill="#55CCA2" letter-spacing="6">TAMIL</text>
-    <text x="257" y="237" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="94" font-weight="900" fill="#55CCA2" letter-spacing="6">TAMIL</text>
-    <text x="255" y="235" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="94" font-weight="900" fill="#55CCA2" letter-spacing="6">TAMIL</text>
-    <text x="250" y="230" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="94" font-weight="900" fill="#FFFDF9" letter-spacing="6">TAMIL</text>
+  <!-- 2. COLLEGIATE ARCHED INSCRIPTIONS -->
+  <g>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-70.00) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">T</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-64.17) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">H</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-58.33) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">E</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-52.50) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central"> </text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-46.67) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">O</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-40.83) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">H</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-35.00) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">I</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-29.17) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">O</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-23.33) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central"> </text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-17.50) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">S</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-11.67) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">T</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-5.83) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">A</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(0.00) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">T</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(5.83) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">E</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(11.67) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central"> </text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(17.50) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">U</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(23.33) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">N</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(29.17) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">I</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(35.00) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">V</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(40.83) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">E</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(46.67) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">R</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(52.50) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">S</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(58.33) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">I</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(64.17) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">T</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(70.00) translate(0, -196.00)" font-family="'Marcellus', 'Georgia', serif" font-size="20" font-weight="bold" fill="#FFFDF9" text-anchor="middle" dominant-baseline="central">Y</text>
+  </g>
 
-    <!-- Central Typography: SANGAM -->
-    <text x="259" y="324" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="86" font-weight="900" fill="#55CCA2" letter-spacing="6">SANGAM</text>
-    <text x="257" y="322" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="86" font-weight="900" fill="#55CCA2" letter-spacing="6">SANGAM</text>
-    <text x="255" y="320" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="86" font-weight="900" fill="#55CCA2" letter-spacing="6">SANGAM</text>
-    <text x="250" y="315" text-anchor="middle" font-family="'Clash Display', 'Arial Black', 'Impact', sans-serif" font-size="86" font-weight="900" fill="#FFFDF9" letter-spacing="6">SANGAM</text>
+  <!-- Flanking Stars (Left and Right) -->
+  <g fill="#F5D061">
+    <circle cx="58" cy="250" r="3.5" fill="#A6F0CF" />
+    <polygon points="58,241 60,247 66,250 60,253 58,259 56,253 50,250 56,247" />
+    <circle cx="442" cy="250" r="3.5" fill="#A6F0CF" />
+    <polygon points="442,241 444,247 450,250 444,253 442,259 440,253 434,250 440,247" />
+  </g>
+
+  <g>
+    <text x="0" y="0" transform="translate(250, 250) rotate(68.00) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">T</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(62.09) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">A</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(56.17) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">M</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(50.26) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">I</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(44.35) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">L</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(38.43) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central"> </text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(32.52) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">S</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(26.61) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">A</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(20.70) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">N</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(14.78) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">G</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(8.87) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">A</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(2.96) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">M</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-2.96) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central"> </text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-8.87) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">·</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-14.78) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central"> </text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-20.70) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">E</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-26.61) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">S</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-32.52) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">T</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-38.43) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">.</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-44.35) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central"> </text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-50.26) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">2</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-56.17) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">0</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-62.09) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">2</text>
+    <text x="0" y="0" transform="translate(250, 250) rotate(-68.00) translate(0, 196.00) rotate(180)" font-family="'Marcellus', 'Georgia', serif" font-size="17.5" font-weight="bold" fill="#A6F0CF" text-anchor="middle" dominant-baseline="central">1</text>
+  </g>
+
+  <!-- 3. INNER SANCTUM & CALLIGRAPHIC CREST -->
+  <circle cx="250" cy="250" r="156" fill="url(#sanctumGlow)" />
+
+  <!-- Subtle Heritage Sunburst Rays -->
+  <g stroke="#7D60A6" stroke-width="0.8" opacity="0.3">
+    <line x1="375.0" y1="250.0" x2="404.0" y2="250.0" /><line x1="372.6" y1="274.4" x2="401.0" y2="280.0" /><line x1="365.5" y1="297.8" x2="392.3" y2="308.9" /><line x1="353.9" y1="319.4" x2="378.0" y2="335.6" /><line x1="338.4" y1="338.4" x2="358.9" y2="358.9" /><line x1="319.4" y1="353.9" x2="335.6" y2="378.0" /><line x1="297.8" y1="365.5" x2="308.9" y2="392.3" /><line x1="274.4" y1="372.6" x2="280.0" y2="401.0" /><line x1="250.0" y1="375.0" x2="250.0" y2="404.0" /><line x1="225.6" y1="372.6" x2="220.0" y2="401.0" /><line x1="202.2" y1="365.5" x2="191.1" y2="392.3" /><line x1="180.6" y1="353.9" x2="164.4" y2="378.0" /><line x1="161.6" y1="338.4" x2="141.1" y2="358.9" /><line x1="146.1" y1="319.4" x2="122.0" y2="335.6" /><line x1="134.5" y1="297.8" x2="107.7" y2="308.9" /><line x1="127.4" y1="274.4" x2="99.0" y2="280.0" /><line x1="125.0" y1="250.0" x2="96.0" y2="250.0" /><line x1="127.4" y1="225.6" x2="99.0" y2="220.0" /><line x1="134.5" y1="202.2" x2="107.7" y2="191.1" /><line x1="146.1" y1="180.6" x2="122.0" y2="164.4" /><line x1="161.6" y1="161.6" x2="141.1" y2="141.1" /><line x1="180.6" y1="146.1" x2="164.4" y2="122.0" /><line x1="202.2" y1="134.5" x2="191.1" y2="107.7" /><line x1="225.6" y1="127.4" x2="220.0" y2="99.0" /><line x1="250.0" y1="125.0" x2="250.0" y2="96.0" /><line x1="274.4" y1="127.4" x2="280.0" y2="99.0" /><line x1="297.8" y1="134.5" x2="308.9" y2="107.7" /><line x1="319.4" y1="146.1" x2="335.6" y2="122.0" /><line x1="338.4" y1="161.6" x2="358.9" y2="141.1" /><line x1="353.9" y1="180.6" x2="378.0" y2="164.4" /><line x1="365.5" y1="202.2" x2="392.3" y2="191.1" /><line x1="372.6" y1="225.6" x2="401.0" y2="220.0" />
+  </g>
+
+  <!-- Inner Concentric Beaded Halo -->
+  <circle cx="250" cy="250" r="124" fill="none" stroke="#A6F0CF" stroke-width="1.2" stroke-dasharray="2, 3" opacity="0.6" />
+
+  <!-- Central Crest Group -->
+  <g filter="url(#crestShadow)">
+    <!-- Wisdom Flame / Agal Vilakku Top -->
+    <g transform="translate(250, 150)">
+      <path d="M 0,-18 C -7,-6 -10,0 -8,7 C -6,14 0,16 0,16 C 0,16 6,14 8,7 C 10,0 7,-6 0,-18 Z" fill="url(#mintAccentGleam)" opacity="0.75" />
+      <path d="M 0,-13 C -4,-4 -6,1 -5,6 C -3,11 0,12 0,12 C 0,12 3,11 5,6 C 6,1 4,-4 0,-13 Z" fill="url(#goldRimGleam)" />
+      <path d="M -16,14 C -12,21 12,21 16,14 C 18,17 12,23 0,23 C -12,23 -18,17 -16,14 Z" fill="url(#goldRimGleam)" />
+    </g>
+
+    <!-- Classical Central Tamil Letter "த" (Tha) -->
+    <text
+      x="250"
+      y="288"
+      text-anchor="middle"
+      font-family="'Mukta Malar', 'Anek Tamil', 'Nirmala UI', 'Latha', 'Noto Sans Tamil', serif"
+      font-size="124"
+      font-weight="900"
+      fill="#FFFDF9"
+      stroke="#140924"
+      stroke-width="3"
+      paint-order="stroke fill"
+    >த</text>
+
+    <!-- Stylized Collegiate Lotus Pedestal -->
+    <g transform="translate(250, 326)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 0,-8 C -6,4 -10,12 0,20 C 10,12 6,4 0,-8 Z" fill="url(#goldRimGleam)" stroke="#140924" stroke-width="1.2" />
+      <path d="M -2,0 C -14,2 -24,12 -12,20 C -4,18 2,12 -2,0 Z" fill="url(#mintAccentGleam)" stroke="#140924" stroke-width="1.2" opacity="0.95" />
+      <path d="M 2,0 C 14,2 24,12 12,20 C 4,18 -2,12 2,0 Z" fill="url(#mintAccentGleam)" stroke="#140924" stroke-width="1.2" opacity="0.95" />
+      <path d="M -10,8 C -26,10 -36,22 -22,25 C -14,24 -6,18 -10,8 Z" fill="#D4AF37" stroke="#140924" stroke-width="1" opacity="0.85" />
+      <path d="M 10,8 C 26,10 36,22 22,25 C 14,24 6,18 10,8 Z" fill="#D4AF37" stroke="#140924" stroke-width="1" opacity="0.85" />
+      <path d="M -32,25 Q 0,29 32,25 Q 0,33 -32,25 Z" fill="url(#goldRimGleam)" />
+    </g>
+
+    <!-- Subtitle Inscription: தமிழ்ச்சங்கம் -->
+    <text
+      x="250"
+      y="384"
+      text-anchor="middle"
+      font-family="'Mukta Malar', 'Noto Sans Tamil', 'Latha', sans-serif"
+      font-size="14.5"
+      font-weight="bold"
+      fill="#A6F0CF"
+      letter-spacing="2"
+      opacity="0.9"
+    >தமிழ்ச்சங்கம்</text>
   </g>
 </svg>

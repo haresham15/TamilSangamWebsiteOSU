@@ -85,7 +85,7 @@ export function constructAlternates(path: string = "") {
 
 export const ROUTE_METADATA = {
   home: {
-    title: "OSU Tamil Sangam | Tamil Student Organization at Ohio State",
+    title: "OSU Tamil Sangam | Official Tamil Student Organization at Ohio State",
     description:
       "Official Tamil student organization at The Ohio State University (Columbus, OH). Free membership, cultural events, Pongal feasts, and community.",
     path: "/",
@@ -139,7 +139,7 @@ export const ROUTE_METADATA = {
     path: "/suggestions",
   },
   join: {
-    title: "Join OSU Tamil Club | Free Membership Sign-Up",
+    title: "Join OSU Tamil Sangam | Official Membership Portal",
     description:
       "Join Tamil Sangam at The Ohio State University. 100% free membership, zero dues, open to all students regardless of background or language fluency.",
     path: "/join",

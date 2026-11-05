@@ -2,10 +2,10 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "OSU Tamil Sangam",
-    short_name: "Tamil Sangam OSU",
+    name: "OSU Tamil Sangam · The Ohio State University",
+    short_name: "OSU Tamil Sangam",
     description:
-      "Official Tamil cultural student organization at The Ohio State University in Columbus, Ohio. 100% free membership, Kollywood galas, Pongal banquets, dance, and collegiate community.",
+      "Official Tamil cultural student organization at The Ohio State University in Columbus, Ohio. Recognized student organization connecting Buckeyes through heritage, banquets, galas, and community.",
     start_url: "/",
     display: "standalone",
     orientation: "portrait-primary",
@@ -15,10 +15,33 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["education", "community", "culture", "events"],
     icons: [
       {
+        src: "/favicon.ico",
+        sizes: "16x16 32x32 48x48",
+        type: "image/x-icon",
+      },
+      {
         src: "/icon.svg",
         sizes: "any",
         type: "image/svg+xml",
         purpose: "any",
+      },
+      {
+        src: "/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable",
       },
       {
         src: "/emblem.svg",

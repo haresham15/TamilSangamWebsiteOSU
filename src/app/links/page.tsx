@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Calendar,
@@ -148,22 +149,41 @@ export default function LinksBioHubPage() {
           </div>
         </Link>
 
-        {/* Club Crest / Avatar */}
-        <div className="relative w-20 h-20 mb-4 rounded-full border-2 border-[#A6F0CF]/40 bg-[#25173B] flex items-center justify-center shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
-          <span className="text-4xl font-serif font-bold text-[#A6F0CF]" lang="ta">
-            ஐ
-          </span>
+        {/* Official Collegiate Crest & Verified Organization Badge */}
+        <div className="relative w-24 h-24 mb-4 rounded-full p-1 bg-gradient-to-tr from-[#A6F0CF] via-[#F5D061] to-[#7D60A6] shadow-[0_4px_24px_rgba(166,240,207,0.22)]">
+          <div className="relative w-full h-full rounded-full overflow-hidden bg-[#140C20] flex items-center justify-center">
+            <Image
+              src="/emblem.svg"
+              alt="The Ohio State University Tamil Sangam Official Seal"
+              width={96}
+              height={96}
+              priority
+              className="w-full h-full object-contain"
+            />
+          </div>
+          {/* Official Verification Badge */}
+          <div 
+            className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#140C20] border-2 border-[#A6F0CF] flex items-center justify-center shadow-md"
+            title="Recognized Student Organization · The Ohio State University"
+          >
+            <Check className="w-3.5 h-3.5 text-[#A6F0CF] stroke-[3]" />
+          </div>
         </div>
 
-        {/* Club Handle & Tagline */}
-        <h1 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA] mb-1">
-          {SITE_CONFIG.brandNameEn}
-        </h1>
-        <p className="text-xs text-[#A6F0CF] font-mono uppercase tracking-widest mb-2 font-bold">
+        {/* Club Handle & Institutional Badge */}
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#F4F0FA]">
+            {SITE_CONFIG.brandNameEn}
+          </h1>
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#A6F0CF]/15 text-[#A6F0CF] border border-[#A6F0CF]/30">
+            Official RSO
+          </span>
+        </div>
+        <p className="text-xs text-[#A6F0CF] font-mono uppercase tracking-widest mb-1.5 font-bold">
           @tamilsangam.osu · The Ohio State University
         </p>
-        <p className="text-xs text-[#C4B7D7] mb-6 max-w-xs leading-relaxed font-sans">
-          Open student hearth · ஆட்டம் · பாட்டம் · கொண்டாட்டம் · Columbus, OH
+        <p className="text-xs text-[#C4B7D7] mb-6 max-w-sm leading-relaxed font-sans">
+          Office of Student Life · Recognized Student Organization · Columbus, OH
         </p>
 
         {/* Quick Social Actions Row */}
