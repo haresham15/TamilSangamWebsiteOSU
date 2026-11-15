@@ -3,6 +3,8 @@
 import React, { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { useStaticBatch } from "@/gl/useStaticBatch";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
 
@@ -14,8 +16,11 @@ interface CholaCrown3DProps {
 /**
  * Micro-Detail 2: Specular filigree diamond/ruby glints that sparkle across the crown
  */
+const GLINT_DUMMY = new THREE.Object3D();
+
+/** 6 glints × 2 crossed planes as one InstancedMesh (was 12 draws); per-glint motion unchanged. */
 function CholaCrownFiligreeGlints() {
-  const glintsRef = useRef<THREE.Group>(null);
+  const glintsRef = useRef<THREE.InstancedMesh>(null);
   const glintPositions: [number, number, number][] = useMemo(
     () => [
       [0, 0.42, 0.52],     // Forehead central ruby
@@ -28,10 +33,14 @@ function CholaCrownFiligreeGlints() {
     []
   );
 
-  const glintGeos = useMemo(() => {
+  // The two crossed bars (0.12×0.024 and 0.024×0.12) merged into one geometry.
+  const glintGeo = useMemo(() => {
     const plane1 = new THREE.PlaneGeometry(0.12, 0.024);
     const plane2 = new THREE.PlaneGeometry(0.024, 0.12);
-    return { plane1, plane2 };
+    const merged = mergeGeometries([plane1, plane2], false);
+    plane1.dispose();
+    plane2.dispose();
+    return merged ?? new THREE.PlaneGeometry(0.12, 0.024);
   }, []);
 
   const glintMat = useMemo(() => {
@@ -47,34 +56,30 @@ function CholaCrownFiligreeGlints() {
 
   useEffect(() => {
     return () => {
-      glintGeos.plane1.dispose();
-      glintGeos.plane2.dispose();
+      glintGeo.dispose();
       glintMat.dispose();
     };
-  }, [glintGeos, glintMat]);
+  }, [glintGeo, glintMat]);
 
-  useFrame(({ clock }) => {
-    if (!glintsRef.current) return;
+  useFrame(({ clock }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    const mesh = glintsRef.current;
+    if (dt <= 0 || !mesh) return;
     const t = clock.getElapsedTime();
-    glintsRef.current.children.forEach((child, idx) => {
+    glintPositions.forEach((pos, idx) => {
       const phase = idx * 1.05;
       const sparkle = Math.pow(Math.max(0, Math.sin(t * 3.0 + phase)), 4.0);
-      const scale = sparkle * 0.9;
-      child.scale.set(scale, scale, scale);
-      child.rotation.z = t * 0.5 + phase;
+      GLINT_DUMMY.position.set(pos[0], pos[1], pos[2]);
+      GLINT_DUMMY.rotation.set(0, 0, t * 0.5 + phase);
+      GLINT_DUMMY.scale.setScalar(sparkle * 0.9);
+      GLINT_DUMMY.updateMatrix();
+      mesh.setMatrixAt(idx, GLINT_DUMMY.matrix);
     });
+    mesh.instanceMatrix.needsUpdate = true;
   });
 
-  return (
-    <group ref={glintsRef}>
-      {glintPositions.map((pos, i) => (
-        <group key={i} position={pos}>
-          <mesh geometry={glintGeos.plane1} material={glintMat} />
-          <mesh geometry={glintGeos.plane2} material={glintMat} />
-        </group>
-      ))}
-    </group>
-  );
+  // Tiny additive sparkles inside the crown's bounds; skip per-instance culling.
+  return <instancedMesh ref={glintsRef} args={[glintGeo, glintMat, glintPositions.length]} frustumCulled={false} />;
 }
 
 /**
@@ -95,6 +100,11 @@ export function CholaCrown3D({
 }: CholaCrown3DProps) {
   const groupRef = useRef<THREE.Group>(null);
   const crownMeshRef = useRef<THREE.Group>(null);
+  const glintsWrapRef = useRef<THREE.Group>(null);
+  // ~60 jewel/trim meshes → one draw per material. The crown spins as a whole (merged
+  // meshes ride crownMeshRef); glints animate individually and stay unbatched.
+  useStaticBatch(crownMeshRef, [glintsWrapRef]);
+  useStaticBatch(groupRef, [crownMeshRef]);
 
   // Memoized shared asset pool to strictly prevent Three.js memory allocations
   const assets = useMemo(() => {
@@ -338,7 +348,7 @@ export function CholaCrown3D({
       {/* ------------------------------------------------------------- */}
       <group ref={crownMeshRef}>
         {/* Micro-Detail 2: Specular filigree glints */}
-        {isHeroCinematicEnabled("board") && <CholaCrownFiligreeGlints />}
+        <group ref={glintsWrapRef}>{isHeroCinematicEnabled("board") && <CholaCrownFiligreeGlints />}</group>
 
         {/* ----------------------------------------------------------- */}
         {/* A. Base Diadem (Patta / Forehead Band)                     */}

@@ -97,8 +97,11 @@ gl_FragColor.rgb += vec3(1.0, 0.95, 0.85) * dew;
     return () => {
       walkwayMaterial.dispose();
       curbMaterial.dispose();
+      // Loader textures are per-mount (not cached); without this each visit leaked two.
+      cobblestoneDiffuse.dispose();
+      cobblestoneRoughness.dispose();
     };
-  }, [walkwayMaterial, curbMaterial]);
+  }, [walkwayMaterial, curbMaterial, cobblestoneDiffuse, cobblestoneRoughness]);
 
   return (
     <group position={[0, 0, 0]}>

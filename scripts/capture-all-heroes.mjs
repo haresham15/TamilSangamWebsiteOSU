@@ -79,6 +79,15 @@ const PAGES = [
     scrollSteps: [0, 400, 900, 1400, 2000],
   },
   {
+    id: "10-games",
+    slug: "games",
+    route: "/games",
+    title: "Games",
+    heroName: "Jailer 2 Beach Blast Hybrid Sequence",
+    heroPinSelector: "[data-hero-container='true'], section:first-of-type",
+    scrollSteps: [0, 500, 1000, 1600, 2400],
+  },
+  {
     id: "09-event-dossier",
     slug: "event-dossier",
     route: "/events/berry-cute-picnic",
@@ -283,7 +292,190 @@ async function run() {
   console.log("All hero animations, videos, GIFs, and screenshots successfully captured!");
 }
 
-run().catch((e) => {
+// ---------------------------------------------------------------------------
+// --perf mode: per-hero frame-time / draw-call / memory harness.
+// Run:  node --experimental-strip-types scripts/capture-all-heroes.mjs --perf
+//         [--heroes=home,join] [--profile=desktop|mobile|both] [--headed] [--tier=A|B]
+// Needs a running server (PLAYWRIGHT_BASE_URL, default http://localhost:3100).
+// Reads window.__heroPerf from src/engine/perfProbe.ts (enabled by ?perf).
+// Headless GPU numbers are indicative only; sign off budgets from a --headed run.
+// ---------------------------------------------------------------------------
+
+const PERF_PROFILES = {
+  desktop: { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1, cpuThrottle: 1, budgetKey: "desktopP95Ms", fpsKey: "desktopFpsMin" },
+  mobile: { viewport: { width: 375, height: 812 }, deviceScaleFactor: 3, cpuThrottle: 4, budgetKey: "mobileP95Ms", fpsKey: "mobileFpsMin" },
+};
+const PERF_EXCLUDED = new Set(["gallery", "event-dossier"]);
+
+function cliArg(name, fallback) {
+  const hit = process.argv.find((a) => a.startsWith(`--${name}=`));
+  return hit ? hit.slice(name.length + 3) : fallback;
+}
+
+async function wheelScroll(page, distance, durationMs) {
+  const steps = Math.max(1, Math.round(durationMs / 50));
+  const delta = distance / steps;
+  for (let i = 0; i < steps; i++) {
+    await page.mouse.wheel(0, delta);
+    await page.waitForTimeout(50);
+  }
+}
+
+const perfSummary = (page) => page.evaluate(() => window.__heroPerf?.summary() ?? null);
+const perfReset = (page) => page.evaluate(() => window.__heroPerf?.reset());
+const glMemory = (page) =>
+  page.evaluate(() => {
+    const gl = window.__r3fRenderer;
+    return gl ? { geometries: gl.info.memory.geometries, textures: gl.info.memory.textures, programs: gl.info.programs?.length ?? 0 } : null;
+  });
+
+async function waitForSettledHero(page, timeoutMs = 30000) {
+  const start = Date.now();
+  let lastPrograms = -1;
+  let stableSince = 0;
+  while (Date.now() - start < timeoutMs) {
+    const state = await page.evaluate(() => ({
+      programs: window.__r3fRenderer?.info.programs?.length ?? -1,
+      frames: window.__heroPerf?.samples().length ?? 0,
+    }));
+    if (state.programs > 0 && state.frames >= 30 && state.programs === lastPrograms) {
+      if (!stableSince) stableSince = Date.now();
+      if (Date.now() - stableSince >= 3000) return Date.now() - start;
+    } else {
+      stableSince = 0;
+    }
+    lastPrograms = state.programs;
+    await page.waitForTimeout(500);
+  }
+  return -1; // never settled; the run is still recorded
+}
+
+function checkBudget(budget, profile, active) {
+  const failures = [];
+  if (!budget) return ["no budget entry"];
+  if (!active || active.frames < 30) return [`only ${active?.frames ?? 0} rendered frames during scroll`];
+  const p95Limit = budget[profile.budgetKey];
+  if (p95Limit != null && active.intervalP95 > p95Limit) failures.push(`p95 ${active.intervalP95} ms > ${p95Limit} ms`);
+  const fpsMin = budget[profile.fpsKey];
+  if (fpsMin != null && active.fps < fpsMin) failures.push(`fps ${active.fps} < ${fpsMin}`);
+  if (budget.callsPeak != null && active.callsPeak > budget.callsPeak) failures.push(`calls ${active.callsPeak} > ${budget.callsPeak}`);
+  if (budget.trianglesPeak != null && active.trianglesPeak > budget.trianglesPeak) failures.push(`triangles ${active.trianglesPeak} > ${budget.trianglesPeak}`);
+  if (budget.textureMb != null && active.textureMbEstimate > budget.textureMb) failures.push(`texture est. ${active.textureMbEstimate} MB > ${budget.textureMb} MB`);
+  return failures;
+}
+
+async function leakCheck(page, route) {
+  // Two client-side round trips; growth between trip 1 and trip 2 suggests a leak.
+  const away = route === "/" ? "/about" : "/";
+  const trips = [];
+  for (let i = 0; i < 2; i++) {
+    const clicked = await page.evaluate((href) => {
+      const link = document.querySelector(`a[href="${href}"]`);
+      if (!link) return false;
+      link.click();
+      return true;
+    }, away);
+    if (!clicked) return { skipped: `no client link to ${away}` };
+    await page.waitForTimeout(3000);
+    await page.goBack({ waitUntil: "domcontentloaded" }).catch(() => {});
+    await page.waitForTimeout(4000);
+    trips.push(await glMemory(page));
+  }
+  const [a, b] = trips;
+  const grew = a && b ? b.geometries > a.geometries || b.textures > a.textures : null;
+  return { afterTrip1: a, afterTrip2: b, grew };
+}
+
+async function runPerf() {
+  const { HERO_BUDGETS } = await import("../src/config/heroBudgets.ts");
+  const heroFilter = cliArg("heroes", "").split(",").filter(Boolean);
+  const profileArg = cliArg("profile", "both");
+  const profiles = profileArg === "both" ? ["desktop", "mobile"] : [profileArg];
+  const tier = cliArg("tier", "A");
+  const headed = process.argv.includes("--headed");
+  const outDir = path.join(ROOT_DIR, "tests", "artifacts", "perf");
+  fs.mkdirSync(outDir, { recursive: true });
+
+  const pages = PAGES.filter((p) => !PERF_EXCLUDED.has(p.slug) && (heroFilter.length === 0 || heroFilter.includes(p.slug)));
+  const browser = await chromium.launch({
+    headless: !headed,
+    args: ["--enable-webgl", "--ignore-gpu-blocklist", "--use-angle=d3d11", "--disable-dev-shm-usage", "--no-sandbox"],
+  });
+  const report = { baseUrl: BASE_URL, headed, tier, startedAt: new Date().toISOString(), results: [] };
+  let failed = 0;
+
+  for (const pageConfig of pages) {
+    for (const profileName of profiles) {
+      const profile = PERF_PROFILES[profileName];
+      const context = await browser.newContext({ viewport: profile.viewport, deviceScaleFactor: profile.deviceScaleFactor });
+      await context.addInitScript((t) => {
+        window.localStorage.setItem("sangam_tier", t);
+        window.localStorage.setItem("sangam_lite_mode", "false");
+        window.sessionStorage.setItem("sangam_boot_shown", "true");
+      }, tier);
+      const page = await context.newPage();
+      const consoleErrors = [];
+      page.on("console", (msg) => {
+        if (msg.type() === "error") consoleErrors.push(msg.text().slice(0, 300));
+      });
+      page.on("pageerror", (err) => consoleErrors.push(String(err).slice(0, 300)));
+      const result = { hero: pageConfig.slug, profile: profileName, viewport: profile.viewport, dpr: profile.deviceScaleFactor, cpuThrottle: profile.cpuThrottle };
+
+      try {
+        if (profile.cpuThrottle > 1) {
+          const cdp = await context.newCDPSession(page);
+          await cdp.send("Emulation.setCPUThrottlingRate", { rate: profile.cpuThrottle });
+        }
+        await page.goto(`${BASE_URL}${pageConfig.route}?perf=1`, { waitUntil: "domcontentloaded", timeout: 60000 });
+        // Warm-up: the canvas mounts after LCP, then compiles programs and uploads textures.
+        // Measure only once frames flow and the program count has been stable for 3 s.
+        result.warmupMs = await waitForSettledHero(page);
+        await page.mouse.move(profile.viewport.width / 2, profile.viewport.height / 2);
+        result.memoryAtLoad = await glMemory(page);
+
+        const distance = pageConfig.scrollSteps[pageConfig.scrollSteps.length - 1];
+        await perfReset(page);
+        await wheelScroll(page, distance, 4000);
+        await wheelScroll(page, -distance, 4000);
+        result.active = await perfSummary(page);
+
+        await perfReset(page);
+        await page.waitForTimeout(10000);
+        result.idle = await perfSummary(page);
+
+        result.leak = await leakCheck(page, pageConfig.route);
+      } catch (err) {
+        result.error = String(err).slice(0, 500);
+      }
+      result.consoleErrors = consoleErrors.slice(0, 20);
+      result.budget = HERO_BUDGETS[pageConfig.slug] ?? null;
+      result.failures = result.error ? [result.error] : checkBudget(result.budget, profile, result.active);
+      if (result.leak?.grew) result.failures.push("GPU geometries/textures grew across route round trips");
+      result.pass = result.failures.length === 0;
+      if (!result.pass) failed++;
+      report.results.push(result);
+
+      const a = result.active;
+      console.log(
+        `${result.pass ? "PASS" : "FAIL"} ${pageConfig.slug.padEnd(12)} ${profileName.padEnd(7)} ` +
+          (a
+            ? `fps ${a.fps} p95 ${a.intervalP95}ms cpu95 ${a.cpuP95}ms gpu95 ${a.gpuP95 ?? "n/a"} calls ${a.callsPeak} tris ${a.trianglesPeak} tex~${a.textureMbEstimate}MB`
+            : "no samples") +
+          (result.failures.length ? `  <- ${result.failures.join("; ")}` : "")
+      );
+      await context.close();
+    }
+  }
+
+  await browser.close();
+  const stamp = report.startedAt.replace(/[:.]/g, "-");
+  const outFile = path.join(outDir, `perf-${stamp}.json`);
+  fs.writeFileSync(outFile, JSON.stringify(report, null, 2));
+  console.log(`\nWrote ${outFile} (${report.results.length} runs, ${failed} failing)`);
+  process.exitCode = failed ? 1 : 0;
+}
+
+(process.argv.includes("--perf") ? runPerf : run)().catch((e) => {
   console.error("Fatal capture script error:", e);
   process.exit(1);
 });

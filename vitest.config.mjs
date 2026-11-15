@@ -17,6 +17,8 @@ export default defineConfig({
       "src/components/join/**/*.test.ts",
       "src/components/games/**/*.test.ts",
       "src/components/navigation/**/*.test.ts",
+      "src/gl/**/*.test.ts",
+      "src/engine/**/*.test.ts",
     ],
     environment: "node",
   },

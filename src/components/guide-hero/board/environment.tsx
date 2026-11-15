@@ -2,7 +2,8 @@
 
 import React, { useRef } from "react";
 import * as THREE from "three";
-import { Environment, Lightformer } from "@react-three/drei";
+import { Lightformer } from "@react-three/drei";
+import { BakedEnvironment } from "@/gl/BakedEnvironment";
 
 interface GuideEnvironmentProps {
   keyLightIntensity?: number; // default 2.0, dimmed to 1.2 on scroll (PRD §8)
@@ -18,7 +19,7 @@ export function GuideEnvironment({ keyLightIntensity = 2.0 }: GuideEnvironmentPr
   return (
     <>
       {/* 1. Procedural Overcast Environment (3 Custom Lightformers, no CDN downloads) */}
-      <Environment resolution={256} frames={1} background={false}>
+      <BakedEnvironment resolution={256}>
         {/* Overcast sky dome: broad, cool-white diffuse ceiling */}
         <Lightformer
           form="ring"
@@ -46,7 +47,7 @@ export function GuideEnvironment({ keyLightIntensity = 2.0 }: GuideEnvironmentPr
           rotation-x={-Math.PI / 2}
           position={[0, -4, 0]}
         />
-      </Environment>
+      </BakedEnvironment>
 
       {/* 2. Key Light: Gap in the Overcast Cloud (Cool White #E6F0FA, castShadow) */}
       <directionalLight

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useSyncExternalStore } from "react";
 import { governor, GovernorLevel } from "@/engine/governor";
-import { getRenderer } from "@/engine/renderer";
+import { summarizePerf, type PerfSummary } from "@/engine/perfProbe";
 import { useTier } from "@/components/providers/TierProvider";
 import { getActivePlanes, getTextureMemoryUsage } from "@/components/gl/planes/registry";
 import { scroll } from "@/engine/masterTick";
@@ -17,40 +17,20 @@ export function GlobalDebugHUD() {
     },
     () => false
   );
-  const [fps, setFps] = useState(60);
+  const [perf, setPerf] = useState<PerfSummary | null>(null);
   const [govLevel, setGovLevel] = useState<GovernorLevel>(0);
   const [asks, setAsks] = useState<Record<string, GovernorLevel>>({});
   const [planesCount, setPlanesCount] = useState(0);
   const [texMemMb, setTexMemMb] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const [scrollVel, setScrollVel] = useState(0);
-  const [glInfo, setGlInfo] = useState<{
-    calls: number;
-    triangles: number;
-    geometries: number;
-    textures: number;
-  }>({
-    calls: 0,
-    triangles: 0,
-    geometries: 0,
-    textures: 0,
-  });
 
   useEffect(() => {
     if (!visible) return;
 
-    let frameCount = 0;
-    let lastFpsTime = performance.now();
-
     const interval = setInterval(() => {
-      // Calculate FPS
-      const now = performance.now();
-      frameCount++;
-      if (now - lastFpsTime >= 500) {
-        setFps(Math.round((frameCount * 1000) / (now - lastFpsTime)));
-        frameCount = 0;
-        lastFpsTime = now;
-      }
+      // Rendered-frame metrics over the last ~1 s (perfProbe wraps every advance()).
+      setPerf(summarizePerf(60));
 
       // Governor metrics
       setGovLevel(governor.level());
@@ -65,16 +45,6 @@ export function GlobalDebugHUD() {
       setScrollY(Math.round(scroll.y));
       setScrollVel(Math.round(scroll.velocity));
 
-      // Three.js renderer metrics
-      const gl = getRenderer();
-      if (gl) {
-        setGlInfo({
-          calls: gl.info.render.calls,
-          triangles: gl.info.render.triangles,
-          geometries: gl.info.memory.geometries,
-          textures: gl.info.memory.textures,
-        });
-      }
     }, 100);
 
     return () => clearInterval(interval);
@@ -108,7 +78,8 @@ export function GlobalDebugHUD() {
       <div className="grid grid-cols-2 gap-2 mb-2">
         <div className="bg-stone-900/80 p-1.5 rounded border border-stone-800">
           <div className="text-[10px] text-stone-400">FRAME RATE</div>
-          <div className="text-base font-bold text-emerald-400">{fps} <span className="text-[10px] text-stone-400">FPS</span></div>
+          <div className="text-base font-bold text-emerald-400">{perf?.fps ?? 0} <span className="text-[10px] text-stone-400">FPS</span></div>
+          <div className="text-[10px] text-stone-400">p95 {perf?.intervalP95 ?? 0} ms</div>
         </div>
 
         <div className={`p-1.5 rounded border ${govLevelColor}`}>
@@ -122,16 +93,24 @@ export function GlobalDebugHUD() {
       {/* WebGL Metrics */}
       <div className="border-t border-stone-800/80 pt-1.5 space-y-1 text-[10px]">
         <div className="flex justify-between">
-          <span className="text-stone-400">Draw Calls:</span>
-          <span className="text-[#A6F0CF] font-medium">{glInfo.calls}</span>
+          <span className="text-stone-400">CPU / GPU p95:</span>
+          <span className="text-stone-300 font-medium">{perf?.cpuP95 ?? 0} / {perf?.gpuP95 ?? "n/a"} ms</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-stone-400">Triangles:</span>
-          <span className="text-stone-300 font-medium">{glInfo.triangles.toLocaleString()}</span>
+          <span className="text-stone-400">Draw Calls (frame):</span>
+          <span className="text-[#A6F0CF] font-medium">{perf?.callsAvg ?? 0} <span className="text-stone-500">pk {perf?.callsPeak ?? 0}</span></span>
         </div>
         <div className="flex justify-between">
-          <span className="text-stone-400">GPU Textures / Geo:</span>
-          <span className="text-stone-300">{glInfo.textures} / {glInfo.geometries}</span>
+          <span className="text-stone-400">Triangles (frame):</span>
+          <span className="text-stone-300 font-medium">{(perf?.trianglesAvg ?? 0).toLocaleString()}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-stone-400">GPU Tex / Geo / Prog:</span>
+          <span className="text-stone-300">{perf?.textures ?? 0} / {perf?.geometries ?? 0} / {perf?.programs ?? 0}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-stone-400">Tex MB (est.):</span>
+          <span className="text-stone-300">{perf?.textureMbEstimate ?? 0}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-stone-400">DOM Planes / Mem:</span>

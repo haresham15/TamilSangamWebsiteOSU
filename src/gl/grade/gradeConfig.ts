@@ -1,5 +1,4 @@
 // src/gl/grade/gradeConfig.ts
-import { ToneMappingMode } from "postprocessing";
 
 export type HeroGradeProfileName =
   | "kolam-hearth"
@@ -12,10 +11,24 @@ export type HeroGradeProfileName =
   | "nanban-morning"
   | "jailer-sunblast";
 
+export type GradeToneMapping = "aces" | "agx";
+
 export interface HeroGradeProfile {
+  /**
+   * Tone operator applied in GradePass (scene renders linear HDR into the grade target).
+   * Every profile uses ACES: AgX (asked for by the Events/Suggestions PRDs) moves emblem purple
+   * ΔE2000 9.6 from the ungraded look even with no LUT, failing the brand-swatch gate.
+   */
+  toneMapping: GradeToneMapping;
+  /** Pre-tonemap exposure; 1.05 matches GlobalCanvas toneMappingExposure for ungraded parity. */
+  exposure: number;
   lutPath: string;
   lutSize: number;
-  lutOpacity: number; // Strictly 0.60 - 0.85 per PRD §3.3
+  /**
+   * Heritage LUT mix. Capped at 0.33: scripts/test-color-pipeline.mjs measures brand swatches
+   * (emblem purple, mint, gold) drifting past ΔE2000 4 above that (0.72–0.78 gave ΔE 6–8.5).
+   */
+  lutOpacity: number;
   bloom: {
     luminanceThreshold: number;
     intensity: number;
@@ -39,7 +52,7 @@ export interface HeroGradeProfile {
 export interface GradeConfig {
   lutPath: string;
   lutSize: number;
-  toneMappingMode: ToneMappingMode;
+  toneMapping: GradeToneMapping;
   exposure: number;
   intensity: number; // 0.6 - 0.85 per PRD §3.3 to preserve Dravidian brand tokens
   bloom: {
@@ -58,9 +71,11 @@ export interface GradeConfig {
 
 export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile> = {
   "kolam-hearth": {
+    toneMapping: "aces",
+    exposure: 1.05,
     lutPath: "/luts/heritage-33.png",
     lutSize: 33,
-    lutOpacity: 0.72,
+    lutOpacity: 0.30,
     bloom: { luminanceThreshold: 0.82, intensity: 0.55, mipmapBlur: true },
     vignette: { offset: 0.35, darkness: 0.42 },
     grain: { opacity: 0.035 },
@@ -72,9 +87,11 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
     },
   },
   "leo-forge": {
+    toneMapping: "aces",
+    exposure: 1.05,
     lutPath: "/luts/heritage-33.png",
     lutSize: 33,
-    lutOpacity: 0.78,
+    lutOpacity: 0.33,
     bloom: { luminanceThreshold: 0.75, intensity: 0.68, mipmapBlur: true },
     vignette: { offset: 0.32, darkness: 0.48 },
     grain: { opacity: 0.045 },
@@ -86,9 +103,11 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
     },
   },
   "chola-gopuram": {
+    toneMapping: "aces",
+    exposure: 1.05,
     lutPath: "/luts/heritage-33.png",
     lutSize: 33,
-    lutOpacity: 0.74,
+    lutOpacity: 0.31,
     bloom: { luminanceThreshold: 0.80, intensity: 0.50, mipmapBlur: true },
     vignette: { offset: 0.36, darkness: 0.44 },
     grain: { opacity: 0.038 },
@@ -100,9 +119,13 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
     },
   },
   "darbar-torch": {
+    toneMapping: "aces",
+    exposure: 1.05,
     lutPath: "/luts/heritage-33.png",
     lutSize: 33,
-    lutOpacity: 0.76,
+    // Torch-lit golds: the heritage LUT's mint highlight push turned saturated yellow
+    // highlights (finale disc) chartreuse at 0.32.
+    lutOpacity: 0.12,
     bloom: { luminanceThreshold: 0.72, intensity: 0.62, mipmapBlur: true },
     vignette: { offset: 0.30, darkness: 0.50 },
     grain: { opacity: 0.040 },
@@ -114,9 +137,11 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
     },
   },
   "vaaranam-kodachrome": {
+    toneMapping: "aces",
+    exposure: 1.05,
     lutPath: "/luts/heritage-33.png",
     lutSize: 33,
-    lutOpacity: 0.78,
+    lutOpacity: 0.33,
     bloom: { luminanceThreshold: 0.76, intensity: 0.60, mipmapBlur: true },
     vignette: { offset: 0.34, darkness: 0.42 },
     grain: { opacity: 0.042 },
@@ -128,9 +153,11 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
     },
   },
   "alaipayuthey-bluehour": {
+    toneMapping: "aces",
+    exposure: 1.05,
     lutPath: "/luts/heritage-33.png",
     lutSize: 33,
-    lutOpacity: 0.78,
+    lutOpacity: 0.33,
     bloom: { luminanceThreshold: 0.74, intensity: 0.62, mipmapBlur: true },
     vignette: { offset: 0.33, darkness: 0.46 },
     grain: { opacity: 0.045 },
@@ -142,9 +169,11 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
     },
   },
   "kaththi-blueprint": {
+    toneMapping: "aces",
+    exposure: 1.05,
     lutPath: "/luts/heritage-33.png",
     lutSize: 33,
-    lutOpacity: 0.72,
+    lutOpacity: 0.30,
     bloom: { luminanceThreshold: 0.70, intensity: 0.58, mipmapBlur: true },
     vignette: { offset: 0.38, darkness: 0.48 },
     grain: { opacity: 0.038 },
@@ -156,9 +185,11 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
     },
   },
   "nanban-morning": {
+    toneMapping: "aces",
+    exposure: 1.05,
     lutPath: "/luts/heritage-33.png",
     lutSize: 33,
-    lutOpacity: 0.74,
+    lutOpacity: 0.31,
     bloom: { luminanceThreshold: 0.78, intensity: 0.52, mipmapBlur: true },
     vignette: { offset: 0.40, darkness: 0.36 },
     grain: { opacity: 0.032 },
@@ -170,9 +201,11 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
     },
   },
   "jailer-sunblast": {
+    toneMapping: "aces",
+    exposure: 1.05,
     lutPath: "/luts/heritage-33.png",
     lutSize: 33,
-    lutOpacity: 0.74,
+    lutOpacity: 0.31,
     bloom: { luminanceThreshold: 0.72, intensity: 0.65, mipmapBlur: true },
     vignette: { offset: 0.38, darkness: 0.38 },
     grain: { opacity: 0.035 },
@@ -188,7 +221,7 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
 export const gradeConfig: GradeConfig = {
   lutPath: "/luts/heritage-33.png",
   lutSize: 33,
-  toneMappingMode: ToneMappingMode.AGX,
+  toneMapping: "agx",
   exposure: 1.0,
   intensity: 0.75, // balanced intensity preserving brand tokens (ΔE <= 4)
   bloom: {

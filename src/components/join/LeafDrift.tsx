@@ -174,7 +174,8 @@ export function LeafDrift({
   const particleCount = useMemo(() => {
     if (reducedMotion || tier === "C") return 0;
     if (propCount !== undefined) return propCount;
-    return tier === "A" ? 150 : 60;
+    // PRD §5: 400+ drifting leaves in a single instanced draw (Tier A); Tier B keeps 60.
+    return tier === "A" ? 420 : 60;
   }, [propCount, tier, reducedMotion]);
 
   const atlasTexture = useMemo(() => createLeafAtlasTexture(), []);
@@ -192,6 +193,8 @@ export function LeafDrift({
     if (particleCount <= 0) return null;
 
     const geo = new THREE.InstancedBufferGeometry();
+    // Default is Infinity; three clamps the draw but renderer.info then reports Infinity triangles.
+    geo.instanceCount = particleCount;
     const plane = new THREE.PlaneGeometry(1, 1, 2, 2);
     geo.index = plane.index;
     geo.attributes.position = plane.attributes.position;

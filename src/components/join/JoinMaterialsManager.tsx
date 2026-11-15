@@ -174,8 +174,12 @@ export function JoinMaterialsManager({
       limestoneMaterial.dispose();
       ironMatA.dispose();
       ironMatB.dispose();
+      // Loader textures are per-mount (not cached); without this each visit leaked three.
+      limestoneDiffuse.dispose();
+      limestoneNormal.dispose();
+      limestoneRoughness.dispose();
     };
-  }, [limestoneMaterial, ironMatA, ironMatB]);
+  }, [limestoneMaterial, ironMatA, ironMatB, limestoneDiffuse, limestoneNormal, limestoneRoughness]);
 
   return null;
 }

@@ -55,6 +55,13 @@ export function createCinemaCameraDamper(config: CinemaDamperConfig = {}) {
   };
 
   let initialized = false;
+  // Reused every frame: callers copy position/lookAt immediately (no per-frame allocation).
+  const output = {
+    position: new THREE.Vector3(),
+    lookAt: new THREE.Vector3(),
+    roll: 0,
+    smoothProgress: 0,
+  };
 
   return {
     /**
@@ -142,13 +149,13 @@ export function createCinemaCameraDamper(config: CinemaDamperConfig = {}) {
       );
       state.currentRoll = effectiveRoll;
 
-      const outputPos = state.currentPos.clone().add(new THREE.Vector3(breathX, breathY, 0));
-      return {
-        position: outputPos,
-        lookAt: state.currentLookAt.clone(),
-        roll: state.currentRoll,
-        smoothProgress: state.smoothProgress,
-      };
+      output.position.copy(state.currentPos);
+      output.position.x += breathX;
+      output.position.y += breathY;
+      output.lookAt.copy(state.currentLookAt);
+      output.roll = state.currentRoll;
+      output.smoothProgress = state.smoothProgress;
+      return output;
     },
 
     getState() {

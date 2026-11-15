@@ -2,8 +2,9 @@
 import type Lenis from "lenis";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { governor } from "./governor";
-import { rendererAdvance, getRendererClock } from "./renderer";
+import { rendererAdvance, getRendererClock, hasVisibleScenes } from "./renderer";
 import { heroScrollProgress } from "./heroScrollStore";
+import { qualityGovernor } from "./qualityGovernor";
 
 /**
  * Master Clock & Ticker (§4.1)
@@ -137,5 +138,6 @@ export function masterTick(timeSec: number, lenis: Lenis | null) {
     r3fClock.elapsedTime = masterSimTime;
   }
 
+  qualityGovernor.frame(now, effectiveLevel === 2 && hasVisibleScenes());
   rendererAdvance(masterSimTime, true);
 }

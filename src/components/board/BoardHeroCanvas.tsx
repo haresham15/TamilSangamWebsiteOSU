@@ -3,7 +3,7 @@
 import React, { Suspense, useState, useEffect, useRef, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { PerspectiveCamera, Environment, BakeShadows } from "@react-three/drei";
+import { PerspectiveCamera, Environment } from "@react-three/drei";
 import { SceneView as View } from "@/components/canvas/SceneView";
 import { CraneCameraRig } from "./CraneCameraRig";
 import { CorridorTreadmill } from "./CorridorTreadmill";
@@ -13,15 +13,11 @@ import { CholaCrown3D } from "./CholaCrown3D";
 import { Terminal } from "lucide-react";
 import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 import { useWarmup } from "@/components/gl/useWarmup";
-import { governor } from "@/engine/governor";
-import { SceneRegistrar } from "@/director/wireframe";
 
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
-import { useTier } from "@/components/providers/TierProvider";
-import { useLiteMode } from "@/context/LiteModeContext";
-import { GradeStack } from "@/gl/grade/GradeStack";
+import { useRenderMode } from "@/components/providers/useRenderMode";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -37,10 +33,9 @@ function BoardSceneWarmup() {
  */
 function CorridorIncenseEmbers() {
   const pointsRef = useRef<THREE.Points>(null);
-  const tier = useTier();
-  const { isLiteMode } = useLiteMode();
+  const { mode } = useRenderMode();
 
-  const particleCount = tier === "A" ? 48 : 24;
+  const particleCount = mode === "A" ? 48 : 24;
   const { geometry, material, speeds, phases } = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
@@ -83,8 +78,8 @@ function CorridorIncenseEmbers() {
   }, [geometry, material]);
 
   useFrame(({ clock }, delta) => {
-    if (isLiteMode || tier === "C" || !pointsRef.current) return;
     const dt = Math.min(delta, 0.05);
+    if (dt <= 0 || mode === "static" || !pointsRef.current) return;
     const t = clock.getElapsedTime();
     const attr = geometry.attributes.position as THREE.BufferAttribute;
     const pos = attr.array as Float32Array;
@@ -99,7 +94,7 @@ function CorridorIncenseEmbers() {
     attr.needsUpdate = true;
   });
 
-  if (isLiteMode || tier === "C") return null;
+  if (mode === "static") return null;
 
   return <points ref={pointsRef} geometry={geometry} material={material} />;
 }
@@ -113,16 +108,10 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
   const sectionRef = useRef<HTMLDivElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const goldOverlayRef = useRef<HTMLDivElement>(null);
-  const tier = useTier();
-  const isCinematic = isHeroCinematicEnabled("board");
-
-  const inViewRef = useRef(false);
-  const [reducedMotion, setReducedMotion] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    }
-    return false;
-  });
+  const [isCinematic] = useState(() => isHeroCinematicEnabled("board"));
+  // One quality source; Tier C / Lite / reduced motion render the static poster (no canvas).
+  const { mode } = useRenderMode();
+  const reducedMotion = mode === "static";
 
   // Bespoke scene-matched environment reflections (§1.1b PRD Mandate)
   const bespokeEnv = React.useMemo(() => createBespokeEnvironmentTexture("chola-darbar"), []);
@@ -140,37 +129,11 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
   const localProgress = useRef(reducedMotion ? 1.0 : 0);
 
 
-  // Sync debugMode and listen to prefers-reduced-motion changes
+  // Sync debugMode (frame requests + offscreen culling are owned by SceneView).
   useEffect(() => {
     useBoardHeroStore.getState().setDebugMode(debugActive);
-    if (typeof window !== "undefined") {
-      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-      const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-      mediaQuery.addEventListener("change", handler);
-      return () => {
-        mediaQuery.removeEventListener("change", handler);
-        useBoardHeroStore.getState().setDebugMode(false);
-      };
-    }
+    return () => useBoardHeroStore.getState().setDebugMode(false);
   }, [debugActive]);
-
-  // IntersectionObserver to set frameloop="demand" when hero leaves viewport (§9)
-  useEffect(() => {
-    if (!sectionRef.current) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[entries.length - 1];
-        inViewRef.current = entry.isIntersecting;
-        governor.request("board-corridor", inViewRef.current ? 2 : 0);
-      },
-      { threshold: 0.05 }
-    );
-    observer.observe(sectionRef.current);
-    return () => {
-      observer.disconnect();
-      governor.request("board-corridor", 0);
-    };
-  }, []);
 
   // §6: GSAP ScrollTrigger Pinned Timeline (Pins sectionRef with +=1600 scroll distance)
   useEffect(() => {
@@ -192,7 +155,6 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
           const p = self.progress;
           localProgress.current = p;
           if (debugActive) useBoardHeroStore.getState().setScrollProgress(p);
-          governor.request("board-corridor", inViewRef.current ? 2 : 0);
 
           // If user scrolls back up into corridor, smoothly restore canvas opacity & reset gold flash
           if (p < 0.96) {
@@ -245,8 +207,21 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
         {/* R3F 3D VIEWPORT WITH PHYSICAL CAMERA & ATMOSPHERE (Clean Cinematic Scene) */}
         {/* ========================================================================= */}
         <div className="relative flex-1 w-full h-full">
-          <View className="w-full h-full pointer-events-auto" index={2}>
-            <SceneRegistrar />
+          {reducedMotion ? (
+            // PRD §5: reduced motion = static throne-room snapshot at the crown reveal.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src="/board/board-hero-poster.webp"
+              alt="Torch-lit stone corridor of a Chola royal hall, the golden crown floating above the floor"
+              className="absolute inset-0 h-full w-full object-cover"
+              decoding="async"
+            />
+          ) : (
+          <View
+            className="w-full h-full pointer-events-auto"
+            index={2}
+            grade={{ hero: "board", profile: "darbar-torch" }}
+          >
             <BoardSceneWarmup />
             <PerspectiveCamera makeDefault position={[0, 2.22, 30]} fov={32} near={0.05} far={100} />
             <color attach="background" args={["#120A06"]} />
@@ -276,7 +251,6 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
                 <directionalLight position={[0, 4.0, 15.0]} intensity={0.5} color="#2A1825" />
                 <directionalLight position={[0, -2.0, 20.0]} intensity={0.35} color="#D47B37" />
                 <CorridorIncenseEmbers />
-                <GradeStack tier={tier} profile="darbar-torch" />
               </>
             ) : (
               <>
@@ -292,8 +266,9 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
               </>
             )}
 
-            {/* Static Mandapam Architecture Shadow Baking */}
-            <BakeShadows />
+            {/* Shadows update every frame: the instanced colonnade makes the shadow pass a
+                handful of draws, and the swaying tapestries need live shadows (BakeShadows
+                froze them). */}
 
             {/* Crane Camera Rig with spring-lag inertia (§6) */}
             <CraneCameraRig scrollProgress={localProgress} reducedMotion={reducedMotion} />
@@ -312,6 +287,7 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
               onFinaleTriggered={handleFinaleTriggered}
             />
           </View>
+          )}
 
           {/* Optical Post-Processing: CSS Vignette Overlay (§1, Spike S3) */}
           <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(20,10,5,0.45)_100%)]" />

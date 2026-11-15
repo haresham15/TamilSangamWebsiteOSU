@@ -6,11 +6,19 @@ import { useFrame } from "@react-three/fiber";
 import { BoardMember } from "@/data/board";
 import { noise1D } from "./noise";
 
+/** Shared brass/finial/cord materials so the corridor can batch every banner's trims. */
+export interface TapestryTrimMaterials {
+  rod: THREE.Material;
+  finial: THREE.Material;
+  cord: THREE.Material;
+}
+
 interface TapestryPortraitProps {
   member: BoardMember;
   position: [number, number, number];
   rotation?: [number, number, number];
   isLeftAisle?: boolean;
+  trimMaterials?: TapestryTrimMaterials;
 }
 
 /**
@@ -226,6 +234,7 @@ export function TapestryPortrait({
   position,
   rotation = [0, 0, 0],
   isLeftAisle = false,
+  trimMaterials,
 }: TapestryPortraitProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
@@ -310,29 +319,29 @@ export function TapestryPortrait({
       {/* ========================================================================= */}
       {/* 1. HORIZONTAL BRASS SUSPENSION ROD & FINIALS                              */}
       {/* ========================================================================= */}
-      <mesh position={[0, 1.08, 0]} rotation={[0, 0, Math.PI / 2]}>
+      <mesh position={[0, 1.08, 0]} rotation={[0, 0, Math.PI / 2]} material={trimMaterials?.rod}>
         <cylinderGeometry args={[0.025, 0.025, 1.4, 12]} />
-        <meshStandardMaterial color="#8A6D1C" roughness={0.4} metalness={0.85} />
+        {!trimMaterials && <meshStandardMaterial color="#8A6D1C" roughness={0.4} metalness={0.85} />}
       </mesh>
       {/* Left Finial */}
-      <mesh position={[-0.72, 1.08, 0]}>
+      <mesh position={[-0.72, 1.08, 0]} material={trimMaterials?.finial}>
         <sphereGeometry args={[0.045, 12, 12]} />
-        <meshStandardMaterial color="#A6F0CF" roughness={0.3} metalness={0.9} />
+        {!trimMaterials && <meshStandardMaterial color="#A6F0CF" roughness={0.3} metalness={0.9} />}
       </mesh>
       {/* Right Finial */}
-      <mesh position={[0.72, 1.08, 0]}>
+      <mesh position={[0.72, 1.08, 0]} material={trimMaterials?.finial}>
         <sphereGeometry args={[0.045, 12, 12]} />
-        <meshStandardMaterial color="#A6F0CF" roughness={0.3} metalness={0.9} />
+        {!trimMaterials && <meshStandardMaterial color="#A6F0CF" roughness={0.3} metalness={0.9} />}
       </mesh>
 
       {/* Hanging Support Cords */}
-      <mesh position={[-0.5, 1.35, 0]}>
+      <mesh position={[-0.5, 1.35, 0]} material={trimMaterials?.cord}>
         <cylinderGeometry args={[0.008, 0.008, 0.55, 8]} />
-        <meshBasicMaterial color="#3d2714" />
+        {!trimMaterials && <meshBasicMaterial color="#3d2714" />}
       </mesh>
-      <mesh position={[0.5, 1.35, 0]}>
+      <mesh position={[0.5, 1.35, 0]} material={trimMaterials?.cord}>
         <cylinderGeometry args={[0.008, 0.008, 0.55, 8]} />
-        <meshBasicMaterial color="#3d2714" />
+        {!trimMaterials && <meshBasicMaterial color="#3d2714" />}
       </mesh>
 
       {/* ========================================================================= */}

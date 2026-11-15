@@ -41,7 +41,24 @@ function checkSource(file, code) {
       ts.forEachChild(node, visit);
     }
     visit(source);
+    failures.push(...checkModuleScopeGpu(file, source));
     return failures;
+}
+
+// GPU resources built at import time allocate even on static/Lite paths and are never disposed.
+const GPU_CTOR = /^(THREE\.)?[A-Z]\w*(Geometry|Material)$/;
+function checkModuleScopeGpu(file, source) {
+  const failures = [];
+  function walk(node) {
+    if (ts.isFunctionLike(node) || ts.isClassLike(node)) return; // deferred until called
+    if (ts.isNewExpression(node) && GPU_CTOR.test(node.expression.getText(source))) {
+      const line = source.getLineAndCharacterOfPosition(node.getStart()).line + 1;
+      failures.push(`${path.relative(root, file)}:${line}: module-scope ${node.expression.getText(source)} (allocate lazily and dispose)`);
+    }
+    ts.forEachChild(node, walk);
+  }
+  for (const statement of source.statements) walk(statement);
+  return failures;
 }
 
 // Ensure checker catches absent, late, unused, and bypassed clamps before auditing source.
@@ -56,6 +73,12 @@ for (const code of [
   "useFrame((state, delta) => { const dt = Math.min(delta, 0.05); position += dt; });",
   "useFrame((state, delta) => { const dt = Math.min(delta, 0.05); if (dt <= 0) return; update(); });",
 ]) assert.deepEqual(checkSource("fixture.tsx", code), [], "Bounded fixture rejected");
+assert.ok(checkSource("fixture.tsx", "const geo = new THREE.BoxGeometry(1, 1, 1);").length > 0, "Module-scope geometry accepted");
+assert.deepEqual(
+  checkSource("fixture.tsx", "function make() { return new THREE.BoxGeometry(); } const lazy = () => new MeshBasicMaterial();"),
+  [],
+  "Lazy GPU allocation rejected"
+);
 frames = 0;
 
 const failures = [];
@@ -63,7 +86,7 @@ function inspect(directory) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
     const file = path.join(directory, entry.name);
     if (entry.isDirectory()) inspect(file);
-    else if (/\.tsx?$/.test(file)) failures.push(...checkSource(file, fs.readFileSync(file, "utf8")));
+    else if (/\.tsx?$/.test(file) && !/\.test\.tsx?$/.test(file)) failures.push(...checkSource(file, fs.readFileSync(file, "utf8")));
   }
 }
 

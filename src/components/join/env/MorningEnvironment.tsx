@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Environment, Lightformer } from "@react-three/drei";
+import { Lightformer } from "@react-three/drei";
+import { BakedEnvironment } from "@/gl/BakedEnvironment";
 import { SUN_POS } from "./sun";
 
 interface MorningEnvironmentProps {
@@ -19,7 +20,7 @@ interface MorningEnvironmentProps {
  */
 export function MorningEnvironment({ resolution = 256 }: MorningEnvironmentProps) {
   return (
-    <Environment resolution={resolution} frames={1} background={false}>
+    <BakedEnvironment resolution={resolution}>
       {/* Sun softbox, back-right */}
       <Lightformer
         form="rect"
@@ -56,6 +57,6 @@ export function MorningEnvironment({ resolution = 256 }: MorningEnvironmentProps
         position={[0, 4, 18]}
         target={[0, 2, 0]}
       />
-    </Environment>
+    </BakedEnvironment>
   );
 }

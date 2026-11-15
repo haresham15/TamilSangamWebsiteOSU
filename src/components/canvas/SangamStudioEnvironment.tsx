@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import { Environment, Lightformer } from "@react-three/drei";
+import { Lightformer } from "@react-three/drei";
+import { BakedEnvironment } from "@/gl/BakedEnvironment";
 
 export function SangamStudioEnvironment() {
   return (
-    <Environment frames={1} resolution={128}>
+    <BakedEnvironment resolution={128}>
       {/* Warm Ivory Key Strip (-X) */}
       <Lightformer
         form="rect"
@@ -42,6 +43,6 @@ export function SangamStudioEnvironment() {
         position={[0, -6, 2]}
         target={[0, 0, 0]}
       />
-    </Environment>
+    </BakedEnvironment>
   );
 }

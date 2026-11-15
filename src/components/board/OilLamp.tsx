@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, useState } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { noise1D } from "./noise";
@@ -53,6 +53,8 @@ export function OilLamp({
 }: OilLampProps) {
   const flameMeshRef = useRef<THREE.Mesh>(null);
   const pointLightRef = useRef<THREE.PointLight>(null);
+  // URL flag parsed once per mount, not per frame.
+  const [isCinematic] = useState(() => isHeroCinematicEnabled("board"));
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
@@ -67,7 +69,6 @@ export function OilLamp({
     const dt = Math.min(delta, 0.05);
     if (dt <= 0) return;
     const time = clock.getElapsedTime();
-    const isCinematic = isHeroCinematicEnabled("board");
     uniforms.uTime.value = time;
     uniforms.uCinematic.value = isCinematic ? 1.0 : 0.0;
     const n = noise1D(time * 4.2 + phaseOffset * 17.3);
@@ -145,8 +146,9 @@ export function OilLamp({
             side={THREE.DoubleSide}
           />
         </mesh>
-        {/* Soft Point Glow Core */}
-        <pointLight color="#FF9A3C" intensity={1.8} distance={3.5} decay={2} />
+        {/* No per-lamp "glow core" point light: every extra light is evaluated by every lit
+            fragment in the hero. Glow comes from the flame billboards (+ grade bloom); real
+            illumination from the capped `isRealLight` light below (PRD §5). */}
       </group>
 
       {/* Conditional Real PointLight */}

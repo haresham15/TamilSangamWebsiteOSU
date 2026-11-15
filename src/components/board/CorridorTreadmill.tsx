@@ -1,427 +1,371 @@
 "use client";
 
-import React, { useRef, useState, useMemo, useEffect } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { OilLamp } from "./OilLamp";
 import { TapestryPortrait } from "./TapestryPortrait";
+import { useStaticBatch } from "@/gl/useStaticBatch";
 import { CURRENT_BOARD } from "@/data/board";
 import { useBoardHeroStore } from "@/store/boardHeroStore";
 import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
+import { noise1D } from "./noise";
+import {
+  AISLE_WIDTH,
+  ARCH_PARTS,
+  POOL_SIZE,
+  UNIT_LENGTH,
+  lampPositions,
+  nearestLampPair,
+  partPositions,
+  segmentZ,
+  type ArchGeometryKey,
+  type ArchMaterialKey,
+  type Vec3,
+} from "./corridorLayout";
 
-// Corridor Dimensions
-export const UNIT_LENGTH = 5.0; // 5 meters per modular arch/pillar unit
-export const POOL_SIZE = 7;     // 7 recycled instances
-export const AISLE_WIDTH = 3.8; // 3.8m wide stone aisle between pillars
-export const PILLAR_HEIGHT = 4.2;
-
-interface SharedAssets {
-  geometries: {
-    floor: THREE.BoxGeometry;
-    inlay: THREE.BoxGeometry;
-    groove: THREE.BoxGeometry;
-    plinth: THREE.BoxGeometry;
-    shaft: THREE.CylinderGeometry;
-    capital: THREE.BoxGeometry;
-    bracket: THREE.BoxGeometry;
-    crossBeam: THREE.BoxGeometry;
-    ceiling: THREE.BoxGeometry;
-    joist: THREE.BoxGeometry;
-    opening: THREE.BoxGeometry;
-  };
-  materials: {
-    floor: THREE.MeshStandardMaterial;
-    inlay: THREE.MeshStandardMaterial;
-    darkGroove: THREE.MeshBasicMaterial;
-    plinth: THREE.MeshStandardMaterial;
-    shaft: THREE.MeshStandardMaterial;
-    capital: THREE.MeshStandardMaterial;
-    corbel: THREE.MeshStandardMaterial;
-    crossBeam: THREE.MeshStandardMaterial;
-    ceiling: THREE.MeshStandardMaterial;
-    joist: THREE.MeshStandardMaterial;
-    opening: THREE.MeshBasicMaterial;
-  };
-}
-
-interface CorridorSegmentProps {
-  unitIndex: number;
-  nearestLampIndices: Set<number>;
-  sharedAssets: SharedAssets;
-}
+export { AISLE_WIDTH, PILLAR_HEIGHT, POOL_SIZE, UNIT_LENGTH } from "./corridorLayout";
 
 /**
- * Procedural Dravidian / Chola Stone Architecture Unit (§1, §3).
- * Symmetrical archway span, octagonal fluted pillars, lotus capitals,
- * stone slab paving, and ceiling lintels in warm torch-lit sandstone (#6B4A32).
- * All meshes draw from a shared memoized geometry and material pool to eliminate allocations.
+ * §3 Chola corridor, instanced.
+ *
+ * The colonnade units never move (the crane camera does), so every architectural part is
+ * one InstancedMesh across all units, and every lamp part is one InstancedMesh across all
+ * 14 lamps. Before: ~250 draws plus 16 point lights (an unconditional "glow core" light per
+ * lamp). Now: 11 architecture + 6 lamp-body + 1 flame draw, and exactly two real point
+ * lights that follow the nearest lamps, which is the PRD's own cap (§5: real lights 2–3).
  */
-function CholaModularSegment({
-  unitIndex,
-  nearestLampIndices,
-  sharedAssets,
-}: CorridorSegmentProps) {
-  const halfAisle = AISLE_WIDTH / 2;
 
-  // Board member assigned to this segment
-  const memberLeft = CURRENT_BOARD[(unitIndex * 2) % CURRENT_BOARD.length];
-  const memberRight = CURRENT_BOARD[(unitIndex * 2 + 1) % CURRENT_BOARD.length];
+const DUMMY = new THREE.Object3D();
 
-  const lampIndexLeft = unitIndex * 2;
-  const lampIndexRight = unitIndex * 2 + 1;
-
-  const isLeftLampReal = nearestLampIndices.has(lampIndexLeft);
-  const isRightLampReal = nearestLampIndices.has(lampIndexRight);
-
-  const { geometries, materials } = sharedAssets;
-
-  return (
-    <group>
-      {/* ========================================================================= */}
-      {/* 1. FLOOR & SEAMED FLAGSTONE SLABS (Sandstone #2B1D14)                     */}
-      {/* ========================================================================= */}
-      <mesh
-        position={[0, -0.15, 0]}
-        receiveShadow
-        geometry={geometries.floor}
-        material={materials.floor}
-      />
-
-      {/* Center Pathway Worn Flagstone Inlay */}
-      <mesh
-        position={[0, 0.005, 0]}
-        receiveShadow
-        geometry={geometries.inlay}
-        material={materials.inlay}
-      />
-
-      {/* Flagstone Tile Cross Grooves */}
-      {[-1.8, -0.6, 0.6, 1.8].map((z, i) => (
-        <mesh
-          key={i}
-          position={[0, 0.012, z]}
-          geometry={geometries.groove}
-          material={materials.darkGroove}
-        />
-      ))}
-
-      {/* ========================================================================= */}
-      {/* 2. LEFT & RIGHT CARVED STONE PILLARS (Dravidian Mandapam Colonnade)       */}
-      {/* ========================================================================= */}
-      {/* LEFT PILLAR */}
-      <group position={[-halfAisle, 0, 0]}>
-        {/* Square Plinth Base (Upapitha) */}
-        <mesh
-          position={[0, 0.3, 0]}
-          castShadow
-          receiveShadow
-          geometry={geometries.plinth}
-          material={materials.plinth}
-        />
-        {/* Octagonal Fluted Shaft (Kambam) */}
-        <mesh
-          position={[0, 2.0, 0]}
-          castShadow
-          receiveShadow
-          geometry={geometries.shaft}
-          material={materials.shaft}
-        />
-        {/* Carved Lotus Capital (Palagai & Kumbham) */}
-        <mesh
-          position={[0, 3.5, 0]}
-          castShadow
-          geometry={geometries.capital}
-          material={materials.capital}
-        />
-        {/* Corbel Bracket (Bodegai) */}
-        <mesh
-          position={[0.2, 3.75, 0]}
-          castShadow
-          geometry={geometries.bracket}
-          material={materials.corbel}
-        />
-
-        {/* Oil Lamp Mounted on Inside Face of Left Pillar */}
-        <OilLamp
-          position={[0.36, 1.9, 0]}
-          phaseOffset={unitIndex * 1.3}
-          isRealLight={isLeftLampReal}
-        />
-
-        {/* Silk Tapestry Banner hanging between left pillars */}
-        {unitIndex % 2 === 0 && (
-          <TapestryPortrait
-            member={memberLeft}
-            position={[0.2, 2.1, -1.8]}
-            rotation={[0, 0.15, 0]}
-            isLeftAisle={true}
-          />
-        )}
-      </group>
-
-      {/* RIGHT PILLAR */}
-      <group position={[halfAisle, 0, 0]}>
-        {/* Square Plinth Base */}
-        <mesh
-          position={[0, 0.3, 0]}
-          castShadow
-          receiveShadow
-          geometry={geometries.plinth}
-          material={materials.plinth}
-        />
-        {/* Octagonal Fluted Shaft */}
-        <mesh
-          position={[0, 2.0, 0]}
-          castShadow
-          receiveShadow
-          geometry={geometries.shaft}
-          material={materials.shaft}
-        />
-        {/* Carved Lotus Capital */}
-        <mesh
-          position={[0, 3.5, 0]}
-          castShadow
-          geometry={geometries.capital}
-          material={materials.capital}
-        />
-        {/* Corbel Bracket */}
-        <mesh
-          position={[-0.2, 3.75, 0]}
-          castShadow
-          geometry={geometries.bracket}
-          material={materials.corbel}
-        />
-
-        {/* Oil Lamp Mounted on Inside Face of Right Pillar */}
-        <OilLamp
-          position={[-0.36, 1.9, 0]}
-          phaseOffset={unitIndex * 1.3 + 3.14}
-          isRealLight={isRightLampReal}
-        />
-
-        {/* Silk Tapestry Banner hanging between right pillars */}
-        {unitIndex % 2 === 1 && (
-          <TapestryPortrait
-            member={memberRight}
-            position={[-0.2, 2.1, -1.8]}
-            rotation={[0, -0.15, 0]}
-            isLeftAisle={false}
-          />
-        )}
-      </group>
-
-      {/* ========================================================================= */}
-      {/* 3. ARCHWAY LINTEL & VAULTED CEILING SPAN (#6B4A32)                        */}
-      {/* ========================================================================= */}
-      {/* Heavy Cross Beam Spanning Aisle */}
-      <mesh
-        position={[0, PILLAR_HEIGHT - 0.2, 0]}
-        castShadow
-        receiveShadow
-        geometry={geometries.crossBeam}
-        material={materials.crossBeam}
-      />
-
-      {/* Carved Stone Vault Ceiling Slabs */}
-      <mesh
-        position={[0, PILLAR_HEIGHT + 0.3, 0]}
-        receiveShadow
-        geometry={geometries.ceiling}
-        material={materials.ceiling}
-      />
-
-      {/* Longitudinal Archway Side Joists */}
-      <mesh
-        position={[-halfAisle, PILLAR_HEIGHT - 0.1, 0]}
-        geometry={geometries.joist}
-        material={materials.joist}
-      />
-      <mesh
-        position={[halfAisle, PILLAR_HEIGHT - 0.1, 0]}
-        geometry={geometries.joist}
-        material={materials.joist}
-      />
-
-      {/* Outer Colonnade Openings (Distant Dusk Sky Aperture) */}
-      <mesh
-        position={[-halfAisle - 1.2, 2.0, 0]}
-        geometry={geometries.opening}
-        material={materials.opening}
-      />
-      <mesh
-        position={[halfAisle + 1.2, 2.0, 0]}
-        geometry={geometries.opening}
-        material={materials.opening}
-      />
-    </group>
-  );
-}
-
-/**
- * §3: Corridor Treadmill Manager
- * Recycles a fixed pool of modular units relative to camera Z.
- * Keeps draw calls flat and memory bounded.
- */
-export function CorridorTreadmill() {
-  // Memoized shared geometries & materials pool (shared across all 7 segments)
-  const sharedAssets = useMemo<SharedAssets>(() => {
-    const assets: SharedAssets = {
-      geometries: {
-        floor: new THREE.BoxGeometry(AISLE_WIDTH + 2.4, 0.3, UNIT_LENGTH),
-        inlay: new THREE.BoxGeometry(AISLE_WIDTH - 0.8, 0.01, UNIT_LENGTH - 0.1),
-        groove: new THREE.BoxGeometry(AISLE_WIDTH - 0.7, 0.005, 0.03),
-        plinth: new THREE.BoxGeometry(0.7, 0.6, 0.7),
-        shaft: new THREE.CylinderGeometry(0.26, 0.28, 2.8, 8),
-        capital: new THREE.BoxGeometry(0.85, 0.2, 0.85),
-        bracket: new THREE.BoxGeometry(0.45, 0.3, 0.6),
-        crossBeam: new THREE.BoxGeometry(AISLE_WIDTH + 0.8, 0.45, 0.7),
-        ceiling: new THREE.BoxGeometry(AISLE_WIDTH + 2.0, 0.3, UNIT_LENGTH),
-        joist: new THREE.BoxGeometry(0.5, 0.35, UNIT_LENGTH),
-        opening: new THREE.BoxGeometry(0.1, 3.2, UNIT_LENGTH - 0.4),
-      },
-      materials: {
-        floor: new THREE.MeshStandardMaterial({
-          color: "#120E0C",
-          roughness: 0.18,
-          metalness: 0.45,
-        }),
-        inlay: new THREE.MeshStandardMaterial({
-          color: "#1A1412",
-          roughness: 0.15,
-          metalness: 0.5,
-        }),
-        darkGroove: new THREE.MeshBasicMaterial({ color: "#1a110a" }),
-        plinth: new THREE.MeshStandardMaterial({
-          color: "#4d3524",
-          roughness: 0.88,
-          metalness: 0.25,
-        }),
-        shaft: new THREE.MeshStandardMaterial({
-          color: "#5e412c",
-          roughness: 0.85,
-          metalness: 0.2,
-        }),
-        capital: new THREE.MeshStandardMaterial({
-          color: "#6b4a32",
-          roughness: 0.8,
-          metalness: 0.3,
-        }),
-        corbel: new THREE.MeshStandardMaterial({
-          color: "#543a27",
-          roughness: 0.8,
-          metalness: 0.25,
-        }),
-        crossBeam: new THREE.MeshStandardMaterial({
-          color: "#4a3321",
-          roughness: 0.85,
-          metalness: 0.2,
-        }),
-        ceiling: new THREE.MeshStandardMaterial({
-          color: "#2d1d12",
-          roughness: 0.92,
-          metalness: 0.1,
-        }),
-        joist: new THREE.MeshStandardMaterial({
-          color: "#3d281a",
-          roughness: 0.88,
-        }),
-        opening: new THREE.MeshBasicMaterial({ color: "#1a110a" }),
-      },
-    };
-
-    const isCinematic = isHeroCinematicEnabled("board");
-    if (isCinematic) {
-      const graniteNormal = proceduralPbrMaps.getGraniteNormal("board-corridor-granite", 256, 256);
-      const floorRough = proceduralPbrMaps.getNoiseRoughness("board-corridor-rough", 256, 256, 0.14, 0.32);
-
-      assets.materials.floor.normalMap = graniteNormal;
-      assets.materials.floor.roughnessMap = floorRough;
-      assets.materials.floor.normalScale = new THREE.Vector2(0.35, 0.35);
-
-      assets.materials.inlay.normalMap = graniteNormal;
-      assets.materials.inlay.roughnessMap = floorRough;
-      assets.materials.inlay.normalScale = new THREE.Vector2(0.25, 0.25);
-
-      assets.materials.plinth.normalMap = graniteNormal;
-      assets.materials.plinth.normalScale = new THREE.Vector2(0.2, 0.2);
-
-      assets.materials.shaft.normalMap = graniteNormal;
-      assets.materials.shaft.normalScale = new THREE.Vector2(0.15, 0.15);
-    }
-
-    return assets;
-  }, []);
-
-  // Complete unmount lifecycle disposal for shared assets
+function useInstancedPlacement(
+  ref: React.RefObject<THREE.InstancedMesh | null>,
+  transforms: { position: Vec3; rotation?: Vec3 }[]
+) {
   useEffect(() => {
-    return () => {
-      Object.values(sharedAssets.geometries).forEach((g) => g.dispose());
-      Object.values(sharedAssets.materials).forEach((m) => m.dispose());
-      if (isHeroCinematicEnabled("board")) {
-        proceduralPbrMaps.release("board-corridor-granite");
-        proceduralPbrMaps.release("board-corridor-rough");
-      }
-    };
-  }, [sharedAssets]);
+    const mesh = ref.current;
+    if (!mesh) return;
+    transforms.forEach(({ position, rotation }, i) => {
+      DUMMY.position.set(...position);
+      DUMMY.rotation.set(...(rotation ?? [0, 0, 0]));
+      DUMMY.scale.setScalar(1);
+      DUMMY.updateMatrix();
+      mesh.setMatrixAt(i, DUMMY.matrix);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+    mesh.computeBoundingSphere();
+  }, [ref, transforms]);
+}
 
-  // Internal Z positions for each segment in the colonnade (Z = 30 to Z = 0)
-  const segmentPositions = useMemo(
-    () => Array.from({ length: POOL_SIZE }, (_, i) => 30 - i * UNIT_LENGTH),
-    []
+function InstancedPart({
+  geometry,
+  material,
+  transforms,
+  castShadow,
+  receiveShadow,
+}: {
+  geometry: THREE.BufferGeometry;
+  material: THREE.Material;
+  transforms: { position: Vec3; rotation?: Vec3 }[];
+  castShadow?: boolean;
+  receiveShadow?: boolean;
+}) {
+  const ref = useRef<THREE.InstancedMesh>(null);
+  useInstancedPlacement(ref, transforms);
+  return (
+    <instancedMesh
+      ref={ref}
+      args={[geometry, material, transforms.length]}
+      castShadow={castShadow}
+      receiveShadow={receiveShadow}
+    />
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Lamps (Chola kuthuvilakku wall sconces), same parts and offsets as OilLamp.
+// ---------------------------------------------------------------------------
+
+const LAMP_PARTS: {
+  key: string;
+  geometry: () => THREE.BufferGeometry;
+  material: () => THREE.Material;
+  offset: Vec3;
+  rotation?: Vec3;
+}[] = [
+  { key: "plate", geometry: () => new THREE.BoxGeometry(0.24, 0.45, 0.08), material: () => new THREE.MeshStandardMaterial({ color: "#2d1e15", roughness: 0.85, metalness: 0.6 }), offset: [0, 0, -0.22] },
+  { key: "arm", geometry: () => new THREE.CylinderGeometry(0.035, 0.045, 0.28, 8), material: () => new THREE.MeshStandardMaterial({ color: "#4a331f", roughness: 0.7, metalness: 0.75 }), offset: [0, -0.08, -0.1] },
+  { key: "vessel", geometry: () => new THREE.CylinderGeometry(0.18, 0.09, 0.12, 16), material: () => new THREE.MeshStandardMaterial({ color: "#5c3f25", roughness: 0.6, metalness: 0.8 }), offset: [0, 0, 0] },
+  { key: "base", geometry: () => new THREE.CylinderGeometry(0.12, 0.16, 0.06, 16), material: () => new THREE.MeshStandardMaterial({ color: "#3b2614", roughness: 0.7, metalness: 0.85 }), offset: [0, -0.06, 0] },
+  { key: "oil", geometry: () => new THREE.CircleGeometry(0.16, 16), material: () => new THREE.MeshStandardMaterial({ color: "#1f140a", roughness: 0.15, metalness: 0.4 }), offset: [0, 0.05, 0], rotation: [-Math.PI / 2, 0, 0] },
+  { key: "wick", geometry: () => new THREE.CylinderGeometry(0.015, 0.015, 0.06, 8), material: () => new THREE.MeshStandardMaterial({ color: "#1a1208", roughness: 0.9 }), offset: [0, 0.08, 0.04] },
+];
+
+const LAMP_PHASE = (lampIndex: number) => Math.floor(lampIndex / 2) * 1.3 + (lampIndex % 2) * 3.14;
+
+// Flicker identical to OilLamp's CPU noise1D, evaluated per instance on the GPU.
+const FLAME_VERT = /* glsl */ `
+  attribute float aPhase;
+  varying vec2 vUv;
+  varying float vPhase;
+  void main() {
+    vUv = uv;
+    vPhase = aPhase;
+    gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
+  }
+`;
+
+const FLAME_FRAG = /* glsl */ `
+  varying vec2 vUv;
+  varying float vPhase;
+  uniform float uTime;
+  uniform float uCinematic;
+
+  float hash11(float p) {
+    p = fract(p * 0.1031);
+    p *= p + 33.33;
+    p *= p + p;
+    return fract(p);
+  }
+  float noise1D(float x) {
+    float i = floor(x);
+    float f = fract(x);
+    float u = f * f * (3.0 - 2.0 * f);
+    return mix(hash11(i), hash11(i + 1.0), u) * 2.0 - 1.0;
+  }
+
+  void main() {
+    float intensity = (0.85 + 0.35 * noise1D(uTime * 4.2 + vPhase * 17.3)) * 1.5;
+    float windFlutter = uCinematic > 0.5 ? sin(uTime * 14.0 + vUv.y * 7.0 + vPhase * 3.0) * 0.035 * (1.0 - vUv.y) : 0.0;
+    vec2 centeredUv = (vUv - vec2(0.5, 0.28)) + vec2(windFlutter, 0.0);
+    float radial = smoothstep(0.48, 0.0, length(centeredUv * vec2(1.5, 0.88)));
+    float verticalFade = pow(1.0 - clamp(vUv.y, 0.0, 1.0), 1.6);
+    float flicker = 0.92 + 0.08 * sin(uTime * 13.0 + vPhase) * cos(uTime * 7.3);
+    vec3 flameCol = mix(vec3(0.78, 0.35, 0.19), vec3(1.0, 0.88, 0.55), radial);
+    gl_FragColor = vec4(flameCol * flicker, radial * verticalFade * intensity);
+  }
+`;
+
+function CorridorLamps({ cinematic }: { cinematic: boolean }) {
+  const lamps = useMemo(() => lampPositions(), []);
+
+  const parts = useMemo(
+    () =>
+      LAMP_PARTS.map((p) => ({
+        key: p.key,
+        geometry: p.geometry(),
+        material: p.material(),
+        transforms: lamps.map((l) => ({
+          position: [l[0] + p.offset[0], l[1] + p.offset[1], l[2] + p.offset[2]] as Vec3,
+          rotation: p.rotation,
+        })),
+      })),
+    [lamps]
   );
 
-  // Set of lamp indices that are currently granted real PointLights (max 2-3)
-  const [nearestLampIndices, setNearestLampIndices] = useState<Set<number>>(new Set([0, 1]));
-  const nearestLampIndicesRef = useRef<Set<number>>(new Set([0, 1]));
-  const lastUpdatedZRef = useRef(30);
+  const flame = useMemo(() => {
+    const geometry = new THREE.PlaneGeometry(0.22, 0.36);
+    const phases = new Float32Array(lamps.length * 2);
+    lamps.forEach((_, i) => {
+      phases[i * 2] = LAMP_PHASE(i);
+      phases[i * 2 + 1] = LAMP_PHASE(i);
+    });
+    geometry.setAttribute("aPhase", new THREE.InstancedBufferAttribute(phases, 1));
+    const material = new THREE.ShaderMaterial({
+      vertexShader: FLAME_VERT,
+      fragmentShader: FLAME_FRAG,
+      uniforms: { uTime: { value: 0 }, uCinematic: { value: cinematic ? 1 : 0 } },
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      side: THREE.DoubleSide,
+    });
+    // Two crossed billboards per lamp (0° and 90° about Y), as in OilLamp.
+    const transforms = lamps.flatMap((l) => {
+      const position: Vec3 = [l[0], l[1] + 0.24, l[2] + 0.04];
+      return [{ position }, { position, rotation: [0, Math.PI / 2, 0] as Vec3 }];
+    });
+    return { geometry, material, transforms };
+  }, [lamps, cinematic]);
+
+  useEffect(
+    () => () => {
+      for (const p of parts) {
+        p.geometry.dispose();
+        p.material.dispose();
+      }
+      flame.geometry.dispose();
+      flame.material.dispose();
+    },
+    [parts, flame]
+  );
+
+  // Two real lights that follow the nearest lamp pair; flicker matches the flame shader.
+  const lightA = useRef<THREE.PointLight>(null);
+  const lightB = useRef<THREE.PointLight>(null);
+  const lastPair = useRef<[number, number]>([-1, -1]);
+
+  useEffect(() => {
+    useBoardHeroStore.getState().setActiveRealLights(2);
+  }, []);
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
     if (dt <= 0) return;
-    const camZ = state.camera.position.z;
+    const time = state.clock.elapsedTime;
+    flame.material.uniforms.uTime.value = time;
 
-    // Dynamic light assignment: find the closest active lamps to camera Z (fully reversible)
-    if (Math.abs(camZ - lastUpdatedZRef.current) > 0.8) {
-      lastUpdatedZRef.current = camZ;
-
-      // Calculate distances for all lamps relative to camera Z
-      const lampDistances: { index: number; dist: number }[] = [];
-      for (let i = 0; i < POOL_SIZE; i++) {
-        const segZ = segmentPositions[i];
-        // Give lamps slightly in front of the camera natural priority over lamps passed behind
-        const zDiff = segZ - camZ;
-        const dist = zDiff > 1.5 ? Math.abs(zDiff) + 6.0 : Math.abs(zDiff);
-        lampDistances.push({ index: i * 2, dist });
-        lampDistances.push({ index: i * 2 + 1, dist });
+    const pair = nearestLampPair(state.camera.position.z);
+    const lights = [lightA.current, lightB.current];
+    pair.forEach((lampIndex, k) => {
+      const light = lights[k];
+      if (!light || lampIndex < 0) return;
+      if (lastPair.current[k] !== lampIndex) {
+        const l = lamps[lampIndex];
+        light.position.set(l[0], l[1] + 0.25, l[2] + 0.15);
+        lastPair.current[k] = lampIndex;
       }
-
-      lampDistances.sort((a, b) => a.dist - b.dist);
-
-      const top0 = lampDistances[0].index;
-      const top1 = lampDistances[1].index;
-
-      const current = nearestLampIndicesRef.current;
-      if (!current.has(top0) || !current.has(top1)) {
-        const nextSet = new Set<number>([top0, top1]);
-        nearestLampIndicesRef.current = nextSet;
-        setNearestLampIndices(nextSet);
-        useBoardHeroStore.getState().setActiveRealLights(nextSet.size);
-      }
-    }
+      const n = noise1D(time * 4.2 + LAMP_PHASE(lampIndex) * 17.3);
+      light.intensity = (0.85 + 0.35 * n) * 2.8;
+      if (cinematic) light.color.setRGB(1.0, 0.6 + 0.08 * n, 0.24);
+    });
   });
 
   return (
     <group>
-      {Array.from({ length: POOL_SIZE }).map((_, i) => (
-        <group key={i} position={[0, 0, 30 - i * UNIT_LENGTH]}>
-          <CholaModularSegment
-            unitIndex={i}
-            nearestLampIndices={nearestLampIndices}
-            sharedAssets={sharedAssets}
-          />
-        </group>
+      {parts.map((p) => (
+        <InstancedPart key={p.key} geometry={p.geometry} material={p.material} transforms={p.transforms} />
       ))}
+      <InstancedPart geometry={flame.geometry} material={flame.material} transforms={flame.transforms} />
+      <pointLight ref={lightA} color="#FF9E44" intensity={2.8} distance={8} decay={2} />
+      <pointLight ref={lightB} color="#FF9E44" intensity={2.8} distance={8} decay={2} />
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Architecture
+// ---------------------------------------------------------------------------
+
+type Geometries = Record<ArchGeometryKey, THREE.BufferGeometry>;
+type Materials = Record<ArchMaterialKey, THREE.Material>;
+
+function createArchitecture(cinematic: boolean): { geometries: Geometries; materials: Materials } {
+  const geometries: Geometries = {
+    floor: new THREE.BoxGeometry(AISLE_WIDTH + 2.4, 0.3, UNIT_LENGTH),
+    inlay: new THREE.BoxGeometry(AISLE_WIDTH - 0.8, 0.01, UNIT_LENGTH - 0.1),
+    groove: new THREE.BoxGeometry(AISLE_WIDTH - 0.7, 0.005, 0.03),
+    plinth: new THREE.BoxGeometry(0.7, 0.6, 0.7),
+    shaft: new THREE.CylinderGeometry(0.26, 0.28, 2.8, 8),
+    capital: new THREE.BoxGeometry(0.85, 0.2, 0.85),
+    bracket: new THREE.BoxGeometry(0.45, 0.3, 0.6),
+    crossBeam: new THREE.BoxGeometry(AISLE_WIDTH + 0.8, 0.45, 0.7),
+    ceiling: new THREE.BoxGeometry(AISLE_WIDTH + 2.0, 0.3, UNIT_LENGTH),
+    joist: new THREE.BoxGeometry(0.5, 0.35, UNIT_LENGTH),
+    opening: new THREE.BoxGeometry(0.1, 3.2, UNIT_LENGTH - 0.4),
+  };
+  const floor = new THREE.MeshStandardMaterial({ color: "#120E0C", roughness: 0.18, metalness: 0.45 });
+  const inlay = new THREE.MeshStandardMaterial({ color: "#1A1412", roughness: 0.15, metalness: 0.5 });
+  const plinth = new THREE.MeshStandardMaterial({ color: "#4d3524", roughness: 0.88, metalness: 0.25 });
+  const shaft = new THREE.MeshStandardMaterial({ color: "#5e412c", roughness: 0.85, metalness: 0.2 });
+  const materials: Materials = {
+    floor,
+    inlay,
+    darkGroove: new THREE.MeshBasicMaterial({ color: "#1a110a" }),
+    plinth,
+    shaft,
+    capital: new THREE.MeshStandardMaterial({ color: "#6b4a32", roughness: 0.8, metalness: 0.3 }),
+    corbel: new THREE.MeshStandardMaterial({ color: "#543a27", roughness: 0.8, metalness: 0.25 }),
+    crossBeam: new THREE.MeshStandardMaterial({ color: "#4a3321", roughness: 0.85, metalness: 0.2 }),
+    ceiling: new THREE.MeshStandardMaterial({ color: "#2d1d12", roughness: 0.92, metalness: 0.1 }),
+    joist: new THREE.MeshStandardMaterial({ color: "#3d281a", roughness: 0.88 }),
+    opening: new THREE.MeshBasicMaterial({ color: "#1a110a" }),
+  };
+
+  if (cinematic) {
+    const graniteNormal = proceduralPbrMaps.getGraniteNormal("board-corridor-granite", 256, 256);
+    const floorRough = proceduralPbrMaps.getNoiseRoughness("board-corridor-rough", 256, 256, 0.14, 0.32);
+    floor.normalMap = graniteNormal;
+    floor.roughnessMap = floorRough;
+    floor.normalScale = new THREE.Vector2(0.35, 0.35);
+    inlay.normalMap = graniteNormal;
+    inlay.roughnessMap = floorRough;
+    inlay.normalScale = new THREE.Vector2(0.25, 0.25);
+    plinth.normalMap = graniteNormal;
+    plinth.normalScale = new THREE.Vector2(0.2, 0.2);
+    shaft.normalMap = graniteNormal;
+    shaft.normalScale = new THREE.Vector2(0.15, 0.15);
+  }
+  return { geometries, materials };
+}
+
+export function CorridorTreadmill() {
+  const [cinematic] = React.useState(() => isHeroCinematicEnabled("board"));
+  const arch = useMemo(() => createArchitecture(cinematic), [cinematic]);
+  const placements = useMemo(
+    () => ARCH_PARTS.map((part) => partPositions(part).map((position) => ({ position }))),
+    []
+  );
+
+  // One shared set of banner trim materials → all 7 banners' rods/finials/cords batch
+  // into 3 draws (cloth meshes keep their own portrait material and stay separate).
+  const trimMaterials = useMemo(
+    () => ({
+      rod: new THREE.MeshStandardMaterial({ color: "#8A6D1C", roughness: 0.4, metalness: 0.85 }),
+      finial: new THREE.MeshStandardMaterial({ color: "#A6F0CF", roughness: 0.3, metalness: 0.9 }),
+      cord: new THREE.MeshBasicMaterial({ color: "#3d2714" }),
+    }),
+    []
+  );
+  useEffect(() => () => Object.values(trimMaterials).forEach((m) => m.dispose()), [trimMaterials]);
+  const bannersRef = useRef<THREE.Group>(null);
+  useStaticBatch(bannersRef);
+
+  useEffect(
+    () => () => {
+      Object.values(arch.geometries).forEach((g) => g.dispose());
+      Object.values(arch.materials).forEach((m) => m.dispose());
+      if (cinematic) {
+        proceduralPbrMaps.release("board-corridor-granite");
+        proceduralPbrMaps.release("board-corridor-rough");
+      }
+    },
+    [arch, cinematic]
+  );
+
+  return (
+    <group>
+      {ARCH_PARTS.map((part, i) => (
+        <InstancedPart
+          key={part.geometry}
+          geometry={arch.geometries[part.geometry]}
+          material={arch.materials[part.material]}
+          transforms={placements[i]}
+          castShadow={part.castShadow}
+          receiveShadow={part.receiveShadow}
+        />
+      ))}
+
+      <CorridorLamps cinematic={cinematic} />
+
+      {/* Silk tapestry banners: one per unit, alternating aisle sides (unchanged placement). */}
+      <group ref={bannersRef}>
+      {Array.from({ length: POOL_SIZE }, (_, unit) => {
+        const isLeft = unit % 2 === 0;
+        const member = CURRENT_BOARD[(unit * 2 + (isLeft ? 0 : 1)) % CURRENT_BOARD.length];
+        const x = isLeft ? -AISLE_WIDTH / 2 + 0.2 : AISLE_WIDTH / 2 - 0.2;
+        return (
+          <TapestryPortrait
+            key={unit}
+            member={member}
+            position={[x, 2.1, segmentZ(unit) - 1.8]}
+            rotation={[0, isLeft ? 0.15 : -0.15, 0]}
+            isLeftAisle={isLeft}
+            trimMaterials={trimMaterials}
+          />
+        );
+      })}
+      </group>
     </group>
   );
 }

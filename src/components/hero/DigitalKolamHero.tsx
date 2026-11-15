@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useRef, useEffect, useMemo, useSyncExternalStore, Suspense } from "react";
+import React, { useRef, useEffect, useMemo, useState, useSyncExternalStore, Suspense } from "react";
 import * as THREE from "three";
 import { useFrame, type RootState } from "@react-three/fiber";
-import { PerspectiveCamera, Text3D, Center, Environment, Lightformer } from "@react-three/drei";
+import { PerspectiveCamera, Text3D, Center, Lightformer } from "@react-three/drei";
+import { BakedEnvironment } from "@/gl/BakedEnvironment";
 import { SceneView as View } from "@/components/canvas/SceneView";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
-import { SceneRegistrar } from "@/director/wireframe";
 import { heroScrollProgress, heroDirectorState } from "@/engine/heroScrollStore";
 import { governor } from "@/engine/governor";
 import { registerSystem } from "@/engine/masterTick";
@@ -30,7 +30,6 @@ import muktaFont from "../../../public/fonts/mukta-malar-tamil.json";
 import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 import { createCinemaCameraDamper, smootherstep } from "@/lib/cinemaCameraDamper";
 import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
-import { GradeStack } from "@/gl/grade/GradeStack";
 
 /**
  * Camera Vertical Truck Glide (§PRD 5.2)
@@ -40,6 +39,10 @@ import { GradeStack } from "@/gl/grade/GradeStack";
 function HeroTruckCamera() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const currentPos = useRef(new THREE.Vector3(0, 0, 12));
+  const targetPos = useRef(new THREE.Vector3());
+  const targetLookAt = useRef(new THREE.Vector3());
+  // URL flag parsed once per mount, not per frame.
+  const [isCinematic] = useState(() => isHeroCinematicEnabled("home"));
   const kineticsRef = useRef(createHeroKineticsTracker(4.2, 5.0, 4.0));
   const { isLiteMode } = useLiteMode();
   const reducedMotion = useReducedMotion();
@@ -60,7 +63,6 @@ function HeroTruckCamera() {
       : heroScrollProgress.current;
 
     const kinetics = kineticsRef.current.update(rawP, state.pointer, safeDelta);
-    const isCinematic = isHeroCinematicEnabled("home");
     const p = isCinematic ? rawP : kinetics.smoothProgress;
 
     const { camY, camZ, pitchDeg } = evalCamera(p);
@@ -75,10 +77,10 @@ function HeroTruckCamera() {
       const py = -kinetics.smoothPointerY * 0.25;
       const aspectScale = state.viewport.aspect < 1.2 ? 1.2 / Math.max(state.viewport.aspect, 0.5) : 1.0;
 
-      const targetPos = new THREE.Vector3(px, camY + py, (camZ - portalZOffset) * aspectScale);
-      const targetLookAt = new THREE.Vector3(0, camY + py * 0.4, -4.0);
+      targetPos.current.set(px, camY + py, (camZ - portalZOffset) * aspectScale);
+      targetLookAt.current.set(0, camY + py * 0.4, -4.0);
 
-      const damped = damperRef.current.update(targetPos, targetLookAt, p, safeDelta, {
+      const damped = damperRef.current.update(targetPos.current, targetLookAt.current, p, safeDelta, {
         isReducedMotion: isReduced,
         isLiteMode,
         additionalRoll: kinetics.velocityBank * 0.6,
@@ -205,7 +207,8 @@ function GroundedPulliPoints({ lattice }: { lattice: PulliDotLattice }) {
   const dotsRef = useRef<THREE.InstancedMesh>(null);
   const totalCount = lattice.dotCount * 2;
 
-  const dotGeo = useMemo(() => new THREE.SphereGeometry(0.026, 10, 8), []);
+  // 8×6 segments: dots are 4–10 px on screen; 10×8 cost 93k triangles for 582 instances.
+  const dotGeo = useMemo(() => new THREE.SphereGeometry(0.026, 8, 6), []);
   const dotMat = useMemo(() => {
     const mat = new THREE.MeshStandardMaterial({
       color: "#FFF4D0",
@@ -283,6 +286,15 @@ function GroundedPulliPoints({ lattice }: { lattice: PulliDotLattice }) {
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
+  useEffect(
+    () => () => {
+      dotGeo.dispose();
+      dotMat.dispose();
+      dotWireMat.dispose();
+    },
+    [dotGeo, dotMat, dotWireMat]
+  );
+
   useEffect(() => {
     if (!dotsRef.current) return;
     let idx = 0;
@@ -341,7 +353,7 @@ function GroundedPulliPoints({ lattice }: { lattice: PulliDotLattice }) {
  * As p advances, lines peel exclusively at the top seam (V-notch) and flow downward into the wreath.
  */
 function PeelAndFlowKolamMesh({ isMobile, tier }: { isMobile: boolean; tier: string }) {
-  const { lattice, rightGeometry, rightConveyor, leftConveyor } = useMemo(() => {
+  const { lattice, rightGeometry, rightConveyor, leftConveyor, pathTexture } = useMemo(() => {
     const lattice = generatePulliLattice(isMobile);
     const strands = [];
     const compositePaths = [];
@@ -353,7 +365,8 @@ function PeelAndFlowKolamMesh({ isMobile, tier }: { isMobile: boolean; tier: str
       compositePaths.push(buildCompositePath(strand, k, 0.02));
     }
 
-    const bundle = buildPathTextureBundle(compositePaths, 4096);
+    // PRD §8.3: path samples N = 4096 (Tier A) / 2048 (Tier B)
+    const bundle = buildPathTextureBundle(compositePaths, tier === "A" ? 4096 : 2048);
 
     const radialSegs = tier === "A" ? 10 : 8;
     const dsTube = tier === "A" ? 0.045 : 0.07;
@@ -367,8 +380,21 @@ function PeelAndFlowKolamMesh({ isMobile, tier }: { isMobile: boolean; tier: str
     const rightConveyor = createPeelConveyorMaterial(bundle, +0.03);
     const leftConveyor = createPeelConveyorMaterial(bundle, -0.03);
 
-    return { lattice, rightGeometry, rightConveyor, leftConveyor };
+    return { lattice, rightGeometry, rightConveyor, leftConveyor, pathTexture: bundle.texture };
   }, [isMobile, tier]);
+
+  // Built by hand in useMemo, so R3F never disposes them; release on rebuild/unmount.
+  useEffect(
+    () => () => {
+      rightGeometry.dispose();
+      rightConveyor.material.dispose();
+      rightConveyor.wireMaterial.dispose();
+      leftConveyor.material.dispose();
+      leftConveyor.wireMaterial.dispose();
+      pathTexture.dispose();
+    },
+    [rightGeometry, rightConveyor, leftConveyor, pathTexture]
+  );
 
   const containerRef = useRef<THREE.Group>(null);
 
@@ -582,7 +608,7 @@ function ScrollExpandIntroOverlay() {
  * - Monumental scale 1.35x per user request for full-screen edge-to-edge immersion.
  * - Gentle micro-motion, leaving the frame purely as the camera descends.
  */
-function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
+function GoldenTamilEmblem({ isMobile, tier }: { isMobile: boolean; tier: string }) {
   const groupRef = useRef<THREE.Group>(null);
   const materialRef = useRef<THREE.MeshPhysicalMaterial>(null);
   const specularLightRef = useRef<THREE.PointLight>(null);
@@ -659,11 +685,13 @@ function GoldenTamilEmblem({ isMobile }: { isMobile: boolean }) {
           font={muktaFont as unknown as Parameters<typeof Text3D>[0]["font"]}
           size={letterSize}
           height={0.32}
-          curveSegments={64}
+          // 64/16 produced 196k triangles (×2 with the shadow pass) for a ~3 px bevel;
+          // 32/8 (52k) and 24/6 (30k) are visually identical at this size.
+          curveSegments={tier === "A" ? 32 : 24}
           bevelEnabled
           bevelSize={0.018}
           bevelThickness={0.032}
-          bevelSegments={16}
+          bevelSegments={tier === "A" ? 8 : 6}
           rotation={[0, 0, 0]}
           userData={{ wireMaterial: emblemWireMat }}
           castShadow
@@ -876,8 +904,7 @@ export function DigitalKolamHero() {
   return (
     <div ref={viewportRef} className="absolute inset-0 z-0 pointer-events-none w-full h-full overflow-hidden">
       {mounted && isWebglEnabled && (
-        <View className="w-full h-full pointer-events-auto" index={2}>
-          <SceneRegistrar />
+        <View className="w-full h-full pointer-events-auto" index={2} grade={{ hero: "home", profile: "kolam-hearth" }}>
           <color attach="background" args={["#050201"]} />
           <fogExp2 attach="fog" args={["#050201", 0.03]} />
           <HeroTruckCamera />
@@ -885,7 +912,7 @@ export function DigitalKolamHero() {
           {isHeroCinematicEnabled("home") ? (
             <>
               {/* Sangam Studio Environment: Motivated 3-Point + Procedural IBL Rig */}
-              <Environment frames={1} resolution={256} background={false}>
+              <BakedEnvironment resolution={256}>
                 {/* Warm Ivory Key Strip (-X) */}
                 <Lightformer
                   form="rect"
@@ -922,7 +949,7 @@ export function DigitalKolamHero() {
                   position={[0, -5, 0]}
                   target={[0, 0, 0]}
                 />
-              </Environment>
+              </BakedEnvironment>
 
               {/* Directional Key with Soft Dimensional PCF Shadows */}
               <directionalLight
@@ -949,14 +976,11 @@ export function DigitalKolamHero() {
 
               {/* Detail 2: Brass Pulli Grid Registration Nodes */}
               <PulliGridNodes isMobile={isMobile} />
-
-              {/* Color Grading Stack for Home Hero */}
-              <GradeStack tier={tier} profile="kolam-hearth" />
             </>
           ) : (
             <>
               {/* Baseline Studio Lighting */}
-              <Environment frames={1} resolution={256} background={false}>
+              <BakedEnvironment resolution={256}>
                 <Lightformer
                   form="rect"
                   intensity={3.5}
@@ -989,7 +1013,7 @@ export function DigitalKolamHero() {
                   position={[0, -6, 2]}
                   target={[0, 0, 0]}
                 />
-              </Environment>
+              </BakedEnvironment>
               <ambientLight intensity={0.8} color="#2a1a08" />
               <directionalLight position={[5, 8, 5]} intensity={3.0} color="#FFF8E7" castShadow />
               <directionalLight position={[-5, 4, 4]} intensity={1.8} color="#FFE8B5" />
@@ -1006,7 +1030,7 @@ export function DigitalKolamHero() {
 
           {/* Golden "அ" Emblem in Protected Central Void */}
           <Suspense fallback={null}>
-            <GoldenTamilEmblem isMobile={isMobile} />
+            <GoldenTamilEmblem isMobile={isMobile} tier={tier} />
           </Suspense>
         </View>
       )}

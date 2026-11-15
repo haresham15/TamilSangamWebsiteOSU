@@ -7,6 +7,28 @@ import gsap from "gsap";
 import { useBoardHeroStore } from "@/store/boardHeroStore";
 import { OilLamp } from "./OilLamp";
 
+const HALO_VERT = /* glsl */ `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+const HALO_FRAG = /* glsl */ `
+  uniform vec3 uColor;
+  uniform float uOpacity;
+  varying vec2 vUv;
+  void main() {
+    float d = length(vUv - 0.5) * 2.0;
+    float a = pow(1.0 - smoothstep(0.0, 1.0, d), 2.0);
+    gl_FragColor = vec4(uColor, a * uOpacity);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
+// Same colour and peak opacity as the old flat plane; module-scope uniforms hold no GPU resources.
+const haloUniforms = { uColor: { value: new THREE.Color("#F4F0FA") }, uOpacity: { value: 0.35 } };
+
 interface EmblemFinaleProps {
   scrollProgress: RefObject<number>;
   onFinaleTriggered?: () => void;
@@ -146,13 +168,15 @@ export function EmblemFinale({ scrollProgress, onFinaleTriggered }: EmblemFinale
         />
       </mesh>
 
-      {/* Backlit Golden Morning Bloom Plane for Smooth Page Melt */}
+      {/* Backlit Golden Morning Bloom halo for Smooth Page Melt. Radial falloff: the
+          previous flat additive plane read as a pale square card behind the emblem. */}
       <mesh position={[0, 0.3, -0.2]}>
         <planeGeometry args={[4.2, 4.2]} />
-        <meshBasicMaterial
-          color="#F4F0FA"
+        <shaderMaterial
+          vertexShader={HALO_VERT}
+          fragmentShader={HALO_FRAG}
+          uniforms={haloUniforms}
           transparent={true}
-          opacity={0.35}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />

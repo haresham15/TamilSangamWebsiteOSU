@@ -3,12 +3,12 @@
 import React, { Suspense, useState, useEffect, useRef, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { PerspectiveCamera, BakeShadows, Sky } from "@react-three/drei";
+import { PerspectiveCamera, Sky } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import type * as THREE from "three";
 import { SceneView as View } from "@/components/canvas/SceneView";
 import { useWarmup } from "@/components/gl/useWarmup";
-import { governor } from "@/engine/governor";
 import { useLocale } from "@/context/LocaleContext";
-import { SceneRegistrar } from "@/director/wireframe";
 import { CampusGate } from "./CampusGate";
 import { GateLettering } from "./GateLettering";
 import { ShadowLatticeDecal } from "./ShadowLatticeDecal";
@@ -25,8 +25,8 @@ import { JoinMaterialsManager, type IronVariant } from "./JoinMaterialsManager";
 import { MorningCampusVignette } from "./vignette/MorningCampusVignette";
 import { NanbanQuadEnvironment } from "./NanbanQuadEnvironment";
 import { soundEngine } from "@/lib/soundEngine";
-import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
-import { GradeStack } from "@/gl/grade/GradeStack";
+import { useRenderMode } from "@/components/providers/useRenderMode";
+import { useShadowUpdates } from "@/gl/shadows";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -37,25 +37,86 @@ function JoinSceneWarmup() {
   return null;
 }
 
+/**
+ * Replaces drei <BakeShadows>, which froze the shadow map after the first frame even though
+ * the lattice leaves swing open. Re-renders shadows only while the gate is moving.
+ */
+function GateShadowUpdates({ gateProgressRef }: { gateProgressRef: React.RefObject<number> }) {
+  const invalidate = useShadowUpdates({ mode: "onChange" });
+  const last = useRef(-1);
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
+    const g = gateProgressRef.current ?? 0;
+    if (Math.abs(g - last.current) > 1e-4) {
+      last.current = g;
+      invalidate();
+    }
+  }, 1.4);
+  return null;
+}
+
+/**
+ * drei <Sky> is a <primitive>, which R3F never disposes; each visit leaked its box
+ * geometry and shader material. Same props, freed on unmount.
+ */
+function MorningSky() {
+  const ref = useRef<THREE.Mesh<THREE.BoxGeometry, THREE.ShaderMaterial>>(null);
+  useEffect(() => {
+    const sky = ref.current;
+    return () => {
+      sky?.geometry.dispose();
+      sky?.material.dispose();
+    };
+  }, []);
+  return (
+    <Sky
+      ref={ref}
+      distance={450000}
+      sunPosition={SUN_POS}
+      turbidity={7}
+      rayleigh={1.5}
+      mieCoefficient={0.008}
+      mieDirectionalG={0.82}
+    />
+  );
+}
+
+/** Tier C / Lite / reduced motion: a rendered still of the scene (PRD §5 static courtyard view). */
+function JoinStaticPoster({ locale }: { locale: string }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/join/join-hero-poster.webp"
+      alt={
+        locale === "ta"
+          ? "காலை வெளிச்சத்தில் திறக்கும் இரும்பு வளாக வாயில்கள்"
+          : "Wrought-iron campus gates opening onto a sunlit morning courtyard"
+      }
+      className="absolute inset-0 h-full w-full object-cover"
+      decoding="async"
+    />
+  );
+}
+
 export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = {}) {
   const { locale } = useLocale();
 
   const pinWrapperRef = useRef<HTMLDivElement>(null);
-  const inViewRef = useRef(false);
 
-  const [reducedMotion, setReducedMotion] = useState(() => 
-    typeof window !== "undefined" ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false
-  );
+  // One quality source (TierProvider + Lite + reduced motion + adaptive governor).
+  const { mode } = useRenderMode();
+  const isStatic = mode === "static";
+  const reducedMotion = isStatic;
 
-  // Auto-detect tier B on mobile touch screens if not explicitly specified
+  // Narrow screens keep the lighter Tier B scene (mobile GPUs), as before.
   const tier: "A" | "B" | "C" = useMemo(() => {
-    if (reducedMotion) return "C";
+    if (isStatic) return "C";
     if (propTier) return propTier;
+    if (mode === "B") return "B";
     if (typeof window !== "undefined" && window.innerWidth < 768) return "B";
     return "A";
-  }, [propTier, reducedMotion]);
-
-  const isCinematic = isHeroCinematicEnabled("join");
+  }, [propTier, mode, isStatic]);
 
   const [ironVariant, setIronVariant] = useState<IronVariant>(() => {
     if (typeof window !== "undefined") {
@@ -110,32 +171,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
     };
   }, [ironVariant, tier]);
 
-  // Listen to prefers-reduced-motion
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, []);
-
-  // IntersectionObserver for frameloop culling
-  useEffect(() => {
-    if (!pinWrapperRef.current) return;
-    const observer = new IntersectionObserver(
-       (entries) => {
-         const entry = entries[entries.length - 1];
-         inViewRef.current = entry.isIntersecting;
-         governor.request("join-hero", inViewRef.current ? 2 : 0);
-       },
-       { threshold: 0.05 }
-     );
-     observer.observe(pinWrapperRef.current);
-     return () => {
-       observer.disconnect();
-       governor.request("join-hero", 0);
-     };
-  }, []);
+  // Frame requests and offscreen culling are owned by SceneView (governor + IntersectionObserver).
 
   // GSAP ScrollTrigger Pinned Timeline: Scrolls smoothly into and through the gates
   useEffect(() => {
@@ -160,9 +196,6 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
         onUpdate: (self) => {
           const p = self.progress;
           scrollProgressRef.current = p;
-
-          // Request level 2 while visible (§4.3)
-          governor.request("join-hero", inViewRef.current ? 2 : 0);
 
           // Strict Hero HUD Exit Window (p = 0.70 -> 0.78):
           if (skipLinkRef.current) {
@@ -209,7 +242,6 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
     }, pinWrapperRef);
 
     return () => {
-      governor.request("join-hero", 0);
       ctx.revert();
     };
   }, [reducedMotion]);
@@ -256,8 +288,14 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
       {/* 2. R3F 3D VIEWPORT WITH PBR ENVIRONMENT, GATES & POST-PROCESSING   */}
       {/* ================================================================= */}
       <div className="relative w-full h-full">
+        {isStatic ? (
+          <JoinStaticPoster locale={locale} />
+        ) : (
+        // Ungraded by design: Join's high-key art is tuned for per-material tone mapping.
+        // Through GradePass its additive shafts/haze sum in linear and veil the scene
+        // (measured: luma mean 146 → 161, contrast std 74.6 → 66.5 even with bloom limited
+        // to highlights), and its own CSS vignette already fades at the threshold pass.
         <View className="w-full h-full pointer-events-auto" index={2}>
-          <SceneRegistrar />
           <JoinSceneWarmup />
           <PerspectiveCamera makeDefault position={[0, 2.4, 12.2]} fov={44} near={0.05} far={100} />
 
@@ -266,7 +304,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
           <fogExp2 attach="fog" args={[FOG_COLOR, FOG_DENSITY]} />
 
           {/* Custom Morning Gradient Sky Dome (§3.2) */}
-          <Sky distance={450000} sunPosition={SUN_POS} turbidity={7} rayleigh={1.5} mieCoefficient={0.008} mieDirectionalG={0.82} />
+          <MorningSky />
 
           {/* Procedural 4-Lightformer Environment (§3.3) */}
           <MorningEnvironment />
@@ -281,7 +319,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
           <CraneCameraRig scrollProgressRef={scrollProgressRef} />
 
           <Suspense fallback={null}>
-            <BakeShadows />
+            <GateShadowUpdates gateProgressRef={gateProgressRef} />
             {/* Phase 3 PBR Materials: Limestone Pillars & Iron Variant A/B */}
             <JoinMaterialsManager ironVariant={ironVariant} pillarMaterialMode="limestone" />
 
@@ -308,11 +346,9 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
 
             {/* Finale Sunrise Bloom */}
             <WhiteoutFinale scrollProgressRef={scrollProgressRef} gateProgressRef={gateProgressRef} />
-
-            {/* Cinematic LUT & Grade Stack */}
-            {isCinematic && <GradeStack tier={tier} profile="nanban-morning" />}
           </Suspense>
         </View>
+        )}
 
         {/* Optical Post-Processing: CSS Vignette Overlay (§1, Spike S3) */}
         <div

@@ -15,6 +15,11 @@
 - **Attribution**: Created specifically for OSU Tamil Sangam. Dedicated to the public domain. Free for commercial, personal, educational, and creative reuse with zero royalties or restrictions.
 - **Network Footprint**: 100% self-hosted, offline, zero third-party CDN dependencies.
 
+### Static Poster (`public/join/join-hero-poster.webp`)
+
+- **Origin / Source**: A still frame of the site's own `/join` WebGL scene (gates closed, ungraded), captured headless at 1600×900 and encoded to WebP (quality 80). Shown in place of the canvas for Lite, Tier C and reduced motion.
+- **License / Attribution**: Same as the scene's procedural assets above; no third-party imagery.
+
 ### Ironwork Lattice Materials
 
 - **Variant A**: High-specular wrought iron (`#1A1A1A`, metalness 0.9, roughness 0.25). Procedural PBR shader.
