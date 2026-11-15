@@ -282,9 +282,8 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
     });
 
     const score = gameStatus === "won" ? `${guesses.length}/${maxGuesses}` : `X/${maxGuesses}`;
-    const editionNum = editionKey.replace("2026-", "");
     const modeLabel = mode === "tanglish" ? "Tanglish" : "தமிழ்";
-    const text = `OSU Tamil Sangam · Sollu #${editionNum} (${edition.monthEn} · ${modeLabel}) 🕶️💥\nScore: ${score}\n\n${rows.join(
+    const text = `OSU Tamil Sangam · Sollu ${edition.editionNo} (${edition.periodEn || edition.monthEn} · ${modeLabel}) 🕶️💥\nScore: ${score}\n\n${rows.join(
       "\n"
     )}\n\nPlay: https://tamil-sangam-website-osu.vercel.app/games`;
 

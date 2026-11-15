@@ -683,7 +683,7 @@ export default function LinksBioHubPage() {
                       Wordle, Connections &amp; Kolam
                     </h2>
                     <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
-                      Play daily Tamil-English word puzzles (Sollu) and pattern games
+                      Play biweekly Tamil-English word puzzles (Sollu) and pattern games
                     </p>
                   </div>
                 </div>

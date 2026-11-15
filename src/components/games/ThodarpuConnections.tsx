@@ -254,8 +254,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
     });
 
     const isWin = solvedCategories.length === 4 && mistakesRemaining > 0;
-    const editionNum = editionKey.replace("2026-", "");
-    const header = `OSU Tamil Sangam · Thodarpu #${editionNum} (${edition.monthEn}) 🕶️💥`;
+    const header = `OSU Tamil Sangam · Thodarpu ${edition.editionNo} (${edition.periodEn || edition.monthEn}) 🕶️💥`;
     const score = isWin ? `Solved in ${guessHistory.length} guesses!` : `Completed with solutions`;
 
     const text = `${header}\n${score}\n\n${emojis.join(

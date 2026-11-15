@@ -115,9 +115,9 @@ export const ROUTE_METADATA = {
     path: "/gallery",
   },
   games: {
-    title: "Sangam Arcade: Tamil Wordle & Games | OSU TS",
+    title: "Sangam Arcade: Biweekly Tamil Wordle & Games | OSU TS",
     description:
-      "Play monthly Tamil games: Sollu (Tamil/Tanglish Wordle) and Thodarpu (Tamil Connections) with streak tracking and share cards.",
+      "Play biweekly Tamil games: Sollu (Tamil/Tanglish Wordle) and Thodarpu (Tamil Connections) with streak tracking and share cards.",
     path: "/games",
   },
   guide: {

@@ -1,17 +1,20 @@
 // scripts/verify-games-data.mjs
 import assert from "node:assert/strict";
 import {
+  SOLLU_BIWEEKLY_EDITIONS,
   SOLLU_MONTHLY_EDITIONS,
+  THODARPU_BIWEEKLY_EDITIONS,
   THODARPU_MONTHLY_EDITIONS,
   splitTamilAksharas,
   THODARPU_TIER_COLORS,
+  BIWEEKLY_EDITION_IDS,
 } from "../src/data/gamesData.ts";
 import {
   VALIDATED_TANGLISH_5_WORDS,
   isValidSolluGuess,
 } from "../src/data/solluDictionary.ts";
 
-console.log("Auditing Games Data integrity against PRD v1.1 gates...");
+console.log("Auditing Biweekly Games Data integrity against PRD v1.1 gates...");
 
 // Gate 1: Tanglish seed dictionary
 assert.ok(VALIDATED_TANGLISH_5_WORDS.length >= 113, `Expected at least 113 words, got ${VALIDATED_TANGLISH_5_WORDS.length}`);
@@ -21,11 +24,10 @@ for (const word of VALIDATED_TANGLISH_5_WORDS) {
 }
 console.log(`PASS: 113 Tanglish words validated strictly as 5-letter uppercase ASCII.`);
 
-// Gate 2: Sollu monthly editions & akshara counts
-const editions = ["2026-10", "2026-11", "2026-12"];
-for (const edId of editions) {
-  const ed = SOLLU_MONTHLY_EDITIONS[edId];
-  assert.ok(ed, `Missing Sollu edition ${edId}`);
+// Gate 2: Sollu biweekly editions & akshara counts
+for (const edId of BIWEEKLY_EDITION_IDS) {
+  const ed = SOLLU_BIWEEKLY_EDITIONS[edId];
+  assert.ok(ed, `Missing Sollu biweekly edition ${edId}`);
   assert.equal(ed.tanglishWord.length, 5, `Edition ${edId} tanglishWord must be 5 letters`);
   assert.match(ed.tanglishWord, /^[A-Z]{5}$/);
   assert.ok(isValidSolluGuess(ed.tanglishWord), `Target word ${ed.tanglishWord} must be in valid dictionary`);
@@ -36,13 +38,22 @@ for (const edId of editions) {
     ed.aksharaCount,
     `Tamil word "${ed.tamilAkshara.targetWord}" split into ${aksharas.length} aksharas (${JSON.stringify(aksharas)}), expected ${ed.aksharaCount}`
   );
+
+  // Verify all target letters are in keyboard
+  for (const letter of aksharas) {
+    assert.ok(
+      ed.tamilAkshara.keyboardLetters.includes(letter),
+      `Edition ${edId} keyboard missing target letter "${letter}"`
+    );
+  }
+
   console.log(`PASS: Edition ${edId} Sollu (${ed.tanglishWord} & ${ed.tamilAkshara.targetWord} -> [${aksharas.join(", ")}]: ${aksharas.length} aksharas) verified.`);
 }
 
 // Gate 3: Thodarpu categories & tiles
-for (const edId of editions) {
-  const ed = THODARPU_MONTHLY_EDITIONS[edId];
-  assert.ok(ed, `Missing Thodarpu edition ${edId}`);
+for (const edId of BIWEEKLY_EDITION_IDS) {
+  const ed = THODARPU_BIWEEKLY_EDITIONS[edId];
+  assert.ok(ed, `Missing Thodarpu biweekly edition ${edId}`);
   assert.equal(ed.categories.length, 4, `Edition ${edId} must have exactly 4 categories`);
 
   const seenTiles = new Set();
@@ -75,4 +86,12 @@ assert.equal(SOLLU_MONTHLY_EDITIONS["2026-12"].tanglishWord, "KOLAM");
 // Gate 5: Tier 3 Semman Dark / Logo Chromatic Pink
 assert.equal(THODARPU_TIER_COLORS[3].bg, "#D6459B", "Tier 3 background must be #D6459B");
 
-console.log("ALL GAMES DATA AUDIT GATES PASSED (D-11, D-12, D-13 RESOLVED)!");
+// Gate 6: Backward Compatibility with legacy monthly keys
+const legacyKeys = ["2026-10", "2026-11", "2026-12"];
+for (const lk of legacyKeys) {
+  assert.ok(SOLLU_MONTHLY_EDITIONS[lk], `Legacy Sollu key ${lk} must exist`);
+  assert.ok(THODARPU_MONTHLY_EDITIONS[lk], `Legacy Thodarpu key ${lk} must exist`);
+}
+console.log("PASS: Legacy monthly edition aliases verified.");
+
+console.log("ALL BIWEEKLY GAMES DATA AUDIT GATES PASSED (D-11, D-12, D-13 RESOLVED)!");

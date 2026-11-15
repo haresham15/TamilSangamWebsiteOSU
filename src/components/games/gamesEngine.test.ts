@@ -1,5 +1,18 @@
 import { describe, it, expect } from "vitest";
-import { splitTamilAksharas, SOLLU_MONTHLY_EDITIONS, THODARPU_MONTHLY_EDITIONS } from "@/data/gamesData";
+import {
+  splitTamilAksharas,
+  SOLLU_MONTHLY_EDITIONS,
+  THODARPU_MONTHLY_EDITIONS,
+  SOLLU_BIWEEKLY_EDITIONS,
+  THODARPU_BIWEEKLY_EDITIONS,
+  BIWEEKLY_EDITION_IDS,
+} from "@/data/gamesData";
+import {
+  getCurrentBiweeklyEditionId,
+  isEditionUnlocked,
+  getUnlockCountdown,
+  normalizeEditionId,
+} from "@/lib/gamesStorage";
 import { evaluateCameraRail, evaluateForegroundRig, evaluateFireball } from "@/components/games-hero/gamesRail";
 
 describe("Tamil Akshara Grapheme Tokenizer & Games Engine (D-11)", () => {
@@ -25,7 +38,7 @@ describe("Tamil Akshara Grapheme Tokenizer & Games Engine (D-11)", () => {
     expect(tokens4.length).toBe(7);
   });
 
-  it("contains all 3 valid monthly editions for Sollu and Thodarpu", () => {
+  it("contains all 3 valid legacy monthly editions for Sollu and Thodarpu", () => {
     expect(SOLLU_MONTHLY_EDITIONS["2026-10"]).toBeDefined();
     expect(SOLLU_MONTHLY_EDITIONS["2026-11"]).toBeDefined();
     expect(SOLLU_MONTHLY_EDITIONS["2026-12"]).toBeDefined();
@@ -33,6 +46,34 @@ describe("Tamil Akshara Grapheme Tokenizer & Games Engine (D-11)", () => {
     expect(THODARPU_MONTHLY_EDITIONS["2026-10"].categories.length).toBe(4);
     expect(THODARPU_MONTHLY_EDITIONS["2026-11"].categories.length).toBe(4);
     expect(THODARPU_MONTHLY_EDITIONS["2026-12"].categories.length).toBe(4);
+  });
+
+  it("contains 8 complete biweekly editions spanning Oct 2026 to Jan 2027", () => {
+    expect(BIWEEKLY_EDITION_IDS.length).toBe(8);
+    for (const id of BIWEEKLY_EDITION_IDS) {
+      expect(SOLLU_BIWEEKLY_EDITIONS[id]).toBeDefined();
+      expect(SOLLU_BIWEEKLY_EDITIONS[id].tanglishWord.length).toBe(5);
+      expect(THODARPU_BIWEEKLY_EDITIONS[id]).toBeDefined();
+      expect(THODARPU_BIWEEKLY_EDITIONS[id].categories.length).toBe(4);
+    }
+  });
+
+  it("correctly determines biweekly edition from calendar date", () => {
+    expect(getCurrentBiweeklyEditionId(new Date("2026-10-05T12:00:00Z"))).toBe("2026-10-A");
+    expect(getCurrentBiweeklyEditionId(new Date("2026-10-20T12:00:00Z"))).toBe("2026-10-B");
+    expect(getCurrentBiweeklyEditionId(new Date("2026-11-05T12:00:00Z"))).toBe("2026-11-A");
+    expect(getCurrentBiweeklyEditionId(new Date("2026-11-20T12:00:00Z"))).toBe("2026-11-B");
+    expect(getCurrentBiweeklyEditionId(new Date("2026-12-05T12:00:00Z"))).toBe("2026-12-A");
+    expect(getCurrentBiweeklyEditionId(new Date("2026-12-20T12:00:00Z"))).toBe("2026-12-B");
+    expect(getCurrentBiweeklyEditionId(new Date("2027-01-05T12:00:00Z"))).toBe("2027-01-A");
+    expect(getCurrentBiweeklyEditionId(new Date("2027-01-20T12:00:00Z"))).toBe("2027-01-B");
+  });
+
+  it("normalizes legacy edition IDs to biweekly canonical IDs", () => {
+    expect(normalizeEditionId("2026-10")).toBe("2026-10-A");
+    expect(normalizeEditionId("2026-11")).toBe("2026-11-A");
+    expect(normalizeEditionId("2026-12")).toBe("2026-12-A");
+    expect(normalizeEditionId("2026-10-B")).toBe("2026-10-B");
   });
 });
 
