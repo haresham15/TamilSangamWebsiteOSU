@@ -13,6 +13,7 @@ import { splitTamilAksharas } from "../lib/tamilGraphemes.ts";
 import { isValidSolluGuess } from "./solluDictionary.ts";
 export { splitTamilAksharas, isValidSolluGuess };
 export const TANG_ENGLISH_VALID_DICTIONARY = { has: (w: string) => isValidSolluGuess(w) };
+export * from "./aazhamData.ts";
 
 export interface SolluEdition {
   id: string;

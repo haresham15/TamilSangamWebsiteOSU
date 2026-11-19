@@ -46,7 +46,7 @@ export function PillarSiblingSwitcher({ currentSlug }: PillarSiblingSwitcherProp
                 onMouseEnter={() => {
                   if (!isActive) soundEngine.playPillarHover(idx);
                 }}
-                className={`group relative p-4 rounded-xl border transition-all duration-300 flex flex-col justify-between ${
+                className={`group relative p-4 rounded-xl border transition-[border-color,background-color,box-shadow] duration-200 flex flex-col justify-between ${
                   isActive
                     ? "bg-[#140C20]/10 border-[#A6F0CF]/35 ring-1 ring-[#A6F0CF]/50 shadow-lg"
                     : "bg-[#140C20]/80 border-[rgba(125,96,166,0.25)] hover:border-[rgba(125,96,166,0.25)] hover:bg-[#25173B]"

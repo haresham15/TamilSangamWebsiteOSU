@@ -2,11 +2,12 @@
 
 import React, { useState, useRef, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { GALLERY_ALBUMS, PhotoItem } from "@/data/gallery";
 import { CinemaLightbox, type LightboxPhoto } from "@/components/ui/CinemaLightbox";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { ChevronLeft, ChevronRight, ExternalLink, Camera, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, Camera, Sparkles, ArrowRight } from "lucide-react";
 
 export function EditorialPhotoCarousel() {
   const { locale } = useLocale();
@@ -52,7 +53,7 @@ export function EditorialPhotoCarousel() {
   };
 
   return (
-    <section aria-labelledby="editorial-photo-carousel-heading" className="w-full my-20 sm:my-28 text-left">
+    <section id="photo-archives" aria-labelledby="editorial-photo-carousel-heading" className="w-full my-20 sm:my-28 text-left scroll-mt-24">
       {/* Header & Controls Bar */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[rgba(125,96,166,0.25)]">
         <div className="space-y-2">
@@ -81,7 +82,7 @@ export function EditorialPhotoCarousel() {
             type="button"
             onClick={() => handleScroll("left")}
             aria-label="Scroll photo gallery left"
-            className="p-2.5 rounded-full border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] text-[#F4F0FA] hover:text-[#A6F0CF] bg-white transition-colors focus-visible:outline-2 focus-visible:outline-[#4FD6E0] cursor-pointer"
+            className="p-2.5 rounded-full border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] text-[#F4F0FA] hover:text-[#A6F0CF] bg-[#1A1028] hover:bg-[#25173B] transition-colors focus-visible:outline-2 focus-visible:outline-[#4FD6E0] cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -89,7 +90,7 @@ export function EditorialPhotoCarousel() {
             type="button"
             onClick={() => handleScroll("right")}
             aria-label="Scroll photo gallery right"
-            className="p-2.5 rounded-full border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] text-[#F4F0FA] hover:text-[#A6F0CF] bg-white transition-colors focus-visible:outline-2 focus-visible:outline-[#4FD6E0] cursor-pointer"
+            className="p-2.5 rounded-full border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] text-[#F4F0FA] hover:text-[#A6F0CF] bg-[#1A1028] hover:bg-[#25173B] transition-colors focus-visible:outline-2 focus-visible:outline-[#4FD6E0] cursor-pointer"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -104,7 +105,7 @@ export function EditorialPhotoCarousel() {
             playClick();
             setActiveAlbumSlug("all");
           }}
-          className={`px-3.5 py-1.5 rounded-full transition-all shrink-0 cursor-pointer ${
+          className={`px-3.5 py-1.5 rounded-full transition-colors shrink-0 cursor-pointer ${
             activeAlbumSlug === "all"
               ? "bg-[#25173B] text-[#F4F0FA] font-semibold shadow-xs"
               : "bg-[#25173B] text-[#C4B7D7] hover:bg-[#25173B] hover:text-[#F4F0FA]"
@@ -122,7 +123,7 @@ export function EditorialPhotoCarousel() {
                 playClick();
                 setActiveAlbumSlug(album.slug);
               }}
-              className={`px-3.5 py-1.5 rounded-full transition-all shrink-0 cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-full transition-colors shrink-0 cursor-pointer ${
                 isSelected
                   ? "bg-[#25173B] text-[#F4F0FA] font-semibold shadow-xs"
                   : "bg-[#25173B] text-[#C4B7D7] hover:bg-[#25173B] hover:text-[#F4F0FA]"
@@ -136,7 +137,7 @@ export function EditorialPhotoCarousel() {
 
       {/* Album Context Banner (If single album filtered) */}
       {activeAlbum && (
-        <div className="mt-2 mb-6 p-4 rounded-xl bg-[#F7F4EE] border border-[#E8DFC8] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-sans">
+        <div className="mt-2 mb-6 p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-sans text-[#F4F0FA]">
           <div>
             <span className="font-mono text-[#A6F0CF] uppercase tracking-wider block font-semibold text-[10px]">
               {activeAlbum.eventDate} · {activeAlbum.location}
@@ -145,17 +146,27 @@ export function EditorialPhotoCarousel() {
               {locale === "ta" ? activeAlbum.descriptionTa : activeAlbum.descriptionEn}
             </p>
           </div>
-          {activeAlbum.googlePhotosUrl && (
-            <a
-              href={activeAlbum.googlePhotosUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-[#A6F0CF] hover:text-[#A04E2F] shrink-0 border-b border-[#A6F0CF] pb-0.5"
+          <div className="flex items-center gap-4 shrink-0 flex-wrap">
+            <Link
+              href={`/events/${activeAlbum.eventSlug || activeAlbum.slug}#photo-vault`}
+              onClick={playClick}
+              className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-[#A6F0CF] hover:text-[#55CCA2] border-b border-[#A6F0CF] pb-0.5 transition-colors"
             >
-              <span>Full Google Photos Album</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          )}
+              <span>View Event Dossier &amp; Vault</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            {activeAlbum.googlePhotosUrl && (
+              <a
+                href={activeAlbum.googlePhotosUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-mono text-xs font-medium text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors"
+              >
+                <span>Google Vault</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            )}
+          </div>
         </div>
       )}
 
@@ -185,7 +196,7 @@ export function EditorialPhotoCarousel() {
               role="button"
               tabIndex={0}
               aria-label={`View enlarged photo: ${photo.titleEn}`}
-              className="group relative flex-none w-[280px] sm:w-[340px] md:w-[380px] snap-start rounded-xl overflow-hidden bg-[#140C20] border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:shadow-lg transition-all duration-300 cursor-pointer text-left focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+              className="group relative flex-none w-[280px] sm:w-[340px] md:w-[380px] snap-start rounded-xl overflow-hidden bg-[#140C20] border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:shadow-lg transition-[border-color,box-shadow] duration-200 cursor-pointer text-left focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               {/* Aspect Ratio Locked Frame */}
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-200">

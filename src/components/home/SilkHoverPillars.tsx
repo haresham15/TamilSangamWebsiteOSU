@@ -119,7 +119,7 @@ export function SilkHoverPillars() {
                   soundEngine.playPillarHover(idx);
                 }}
                 onMouseLeave={() => setHoveredPillar(null)}
-                className="group relative flex flex-col justify-between p-8 sm:p-10 rounded-xl bg-[#25173B] border border-[#A6F0CF]/35 hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_12px_40px_rgba(166,240,207,0.12)] transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.25)] focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+                className="group relative flex flex-col justify-between p-8 sm:p-10 rounded-xl bg-[#25173B] border border-[#A6F0CF]/35 hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_12px_40px_rgba(166,240,207,0.12)] transition-[border-color,background-color,box-shadow,transform] duration-200 shadow-[0_8px_30px_rgba(0,0,0,0.25)] focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
               >
                 {/* Top Lockup: Numeral & Icon */}
                 <div>

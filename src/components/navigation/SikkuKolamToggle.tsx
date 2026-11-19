@@ -49,13 +49,13 @@ export const SikkuKolamToggle: React.FC<SikkuKolamToggleProps> = ({
       aria-label={isOpen ? "Close navigation menu" : "Open navigation menu (Sikku Kolam)"}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.94 }}
-      className={`group relative flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border transition-all duration-300 select-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] ${
+      className={`group relative flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border transition-[border-color,background-color,box-shadow] duration-200 select-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] ${
         isOpen
           ? isDarkHero
             ? "border-[#A6F0CF]/35 bg-[#A6F0CF]/20 text-[#F4F0FA] shadow-[0_0_12px_rgba(166,240,207,0.35)]"
             : "border-[rgba(125,96,166,0.25)] bg-[#140C20] text-[#A6F0CF] shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
           : isDarkHero
-          ? "border-white/15 bg-white/10 hover:border-[#A6F0CF]/35 hover:bg-white/15 text-[#F4F0FA]"
+          ? "border-[rgba(125,96,166,0.35)] bg-[#140C20]/60 hover:border-[#A6F0CF]/40 hover:bg-[#25173B]/80 text-[#F4F0FA]"
           : "border-[rgba(125,96,166,0.25)] bg-[#25173B]/90 hover:border-[#A6F0CF]/35 hover:bg-[#352254] text-[#F4F0FA]"
       } ${className}`}
     >

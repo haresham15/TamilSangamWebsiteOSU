@@ -63,7 +63,7 @@ export function LiveBoxOfficeTicketModule({
       {/* Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10 text-xs font-mono">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-amber-400" />
           <span className="text-amber-400 font-bold uppercase tracking-wider text-[11px]">
             Next Ticket Drop · Coming Soon
           </span>
@@ -124,7 +124,7 @@ export function LiveBoxOfficeTicketModule({
             target="_blank"
             rel="noopener noreferrer"
             onClick={playClick}
-            className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono text-xs font-semibold uppercase tracking-wider transition-all border border-white/20 focus-visible:outline-2 focus-visible:outline-white"
+            className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono text-xs font-semibold uppercase tracking-wider transition-colors border border-white/20 focus-visible:outline-2 focus-visible:outline-white"
           >
             <Users className="w-3 h-3 text-emerald-400" />
             <span>Join GroupMe</span>
@@ -136,7 +136,7 @@ export function LiveBoxOfficeTicketModule({
             target="_blank"
             rel="noopener noreferrer"
             onClick={playClick}
-            className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-[#F26BB5]/40 hover:bg-[#7AE7B5]/60 text-white font-mono text-xs font-semibold uppercase tracking-wider transition-all border border-[#A6F0CF]/35 focus-visible:outline-2 focus-visible:outline-white"
+            className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-[#25173B] hover:bg-[#A6F0CF] text-[#A6F0CF] hover:text-[#140C20] font-mono text-xs font-semibold uppercase tracking-wider transition-colors border border-[#A6F0CF]/40 focus-visible:outline-2 focus-visible:outline-white"
           >
             <span>Instagram Updates</span>
             <ExternalLink className="w-2.5 h-2.5 opacity-60" />

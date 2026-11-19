@@ -373,8 +373,8 @@ export function generateStayInSangamConfirmationHtml(params: {
         <div class="tamil-title">வணக்கம்!</div>
         <h2 style="font-family: 'Georgia', serif; font-size: 24px; font-weight: normal; margin: 0 0 14px 0;">${escapeHtml(greeting)}</h2>
 
-        <div style="display: inline-block; background: #25173B; border: 1px solid #352254; padding: 4px 10px; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; margin-bottom: 18px;">
-          ${isBuckeye ? "🔴 VERIFIED BUCKEYE STATUS" : "⚪ COMMUNITY MEMBER"}
+        <div style="display: inline-block; background: #25173B; border: 1px solid #352254; padding: 4px 10px; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; margin-bottom: 18px; color: #A6F0CF;">
+          ${isBuckeye ? "[VERIFIED BUCKEYE STATUS]" : "[COMMUNITY MEMBER]"}
         </div>
 
         <p style="font-size: 15px; line-height: 1.6; color: #C4B7D7;">

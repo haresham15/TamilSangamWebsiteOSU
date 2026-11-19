@@ -232,7 +232,9 @@ function DualLayerContrail({
   const point = useMemo(() => new THREE.Vector3(), []);
   const next = useMemo(() => new THREE.Vector3(), []);
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const q = Math.pow(THREE.MathUtils.clamp((scrollP - LAUNCHES[index]) / (FIREBALLS[index].hit - LAUNCHES[index]), 0, 1), 1.3);
     ribbonUniforms.uProgress.value = q;
 
@@ -372,7 +374,9 @@ function PracticalFireballCluster({
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const fx = evaluateFireball(scrollP, index);
     const baseX = 0.43 + (FIREBALLS[index].x - 0.43) * (portrait ? PORTRAIT_STANDOFF_SCALE : 1);
     const isVisible = scrollP > FIREBALLS[index].hit;
@@ -484,7 +488,9 @@ export function MissilePyroSystem({ scrollP, portrait = false }: MissilePyroSyst
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     const centreBlast = FIREBALLS[1];
     const tShrapnel = Math.max(0, 10.5 * (scrollP - centreBlast.hit));
     const k = portrait ? PORTRAIT_STANDOFF_SCALE : 1;

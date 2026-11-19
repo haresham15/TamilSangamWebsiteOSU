@@ -1,0 +1,1350 @@
+"use client";
+
+import React, { useRef, useMemo, useState, useEffect } from "react";
+import * as THREE from "three";
+import { useFrame, useThree } from "@react-three/fiber";
+import { ContactShadows, PerspectiveCamera } from "@react-three/drei";
+import { SceneView as View } from "@/components/canvas/SceneView";
+import { useWarmup } from "@/components/gl/useWarmup";
+import { useHeroStageVisibility } from "@/components/canvas/HeroScrollStage";
+import { BlueprintPin, BLUEPRINT_PINS } from "./BlueprintSVG";
+import { buildOhioStadiumLines, StadiumGeometryData } from "./OhioStadiumWireframe";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { createCinemaCameraDamper, smootherstep } from "@/lib/cinemaCameraDamper";
+import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
+
+interface EphemeralPin {
+  id: string;
+  x: number;
+  y: number;
+}
+
+interface BlueprintSceneLegacyProps {
+  scrollProgress: React.MutableRefObject<number>; // 0 to 1
+  newPin?: EphemeralPin | null;
+  onSelectPin?: (pin: BlueprintPin) => void;
+  className?: string;
+}
+
+// Legacy (?cinematic_suggestions=0) ground: the old plum void + copper grid, now drawn
+// procedurally instead of from a 2048² canvas texture (~21 MB with mips).
+const LegacyGroundShader = {
+  vertexShader: /* glsl */ `
+    varying vec2 vP;
+    void main() {
+      vP = position.xy;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: /* glsl */ `
+    varying vec2 vP;
+    float grid(vec2 p, float s, float w) {
+      vec2 c = p / s;
+      vec2 fw = max(fwidth(c), vec2(1e-4));
+      vec2 g = abs(fract(c - 0.5) - 0.5) / fw;
+      float l = min(g.x, g.y);
+      float fade = 1.0 - smoothstep(0.15, 0.45, max(fw.x, fw.y));
+      return (1.0 - smoothstep(w * 0.5 - 0.5, w * 0.5 + 0.5, l)) * fade;
+    }
+    void main() {
+      float r = length(vP) / 28.0;
+      vec3 col = mix(vec3(0.141, 0.063, 0.129), vec3(0.082, 0.035, 0.078), smoothstep(0.0, 0.55, r));
+      col = mix(col, vec3(0.059, 0.020, 0.039), smoothstep(0.55, 1.0, r));
+      col = mix(col, vec3(0.545, 0.353, 0.169), grid(vP, 0.875, 1.0) * 0.16);
+      col = mix(col, vec3(0.686, 0.431, 0.196), grid(vP, 3.5, 1.6) * 0.30);
+      float vignette = smoothstep(0.30, 0.48, r);
+      col = mix(col, vec3(0.059, 0.020, 0.039), vignette);
+      // Values are the old canvas hex colours, written straight to the display buffer.
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `,
+};
+
+// Kaththi-style holographic line construction shader
+import { createHeroKineticsTracker } from "@/lib/heroKinetics";
+
+// Kaththi-style holographic world-space laser scan-plane construction shader
+const StadiumLineShader = {
+  vertexShader: `
+    attribute float aOrigY;
+    attribute float aTag;
+    uniform float uProgress;
+    uniform float uMaxHeight;
+    uniform float uTime;
+    varying float vOrigY;
+    varying float vTag;
+    varying float vScanIntensity;
+    varying float vIsGhost;
+
+    void main() {
+      vOrigY = aOrigY;
+      vTag = aTag;
+      
+      // World-space vertical laser scan plane
+      float scanH = uProgress * (uMaxHeight + 0.1);
+      
+      // Vertices above scan height render as ghost wireframe
+      vIsGhost = (aOrigY > scanH) ? 1.0 : 0.0;
+
+      // Hot laser construction edge: vertices within ±0.45m of scan horizon
+      float distToHorizon = abs(aOrigY - scanH);
+      vScanIntensity = smoothstep(0.45, 0.0, distToHorizon);
+
+      vec3 transformed = position;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform vec3 uColorBase;
+    uniform vec3 uColorGlow;
+    uniform vec3 uColorField;
+    uniform vec3 uColorRotunda;
+    uniform float uTime;
+    uniform float uCinematic;
+    varying float vOrigY;
+    varying float vTag;
+    varying float vScanIntensity;
+    varying float vIsGhost;
+
+    void main() {
+      // Crisp architectural cyan base (#4FD6E0)
+      vec3 color = vec3(0.83, 0.69, 0.22);
+
+      // Element-specific architectural coloration
+      if (vTag < 0.5) {
+        color = uColorField;
+      } else if (vTag > 3.5 && vTag < 4.5) {
+        color = uColorRotunda;
+      } else if (vTag > 4.5) {
+        color = vec3(0.65, 0.94, 0.81);
+      } else if (vTag > 1.5 && vTag < 2.5) {
+        color = mix(color, vec3(1.0, 0.82, 0.4), 0.45);
+      }
+
+      float alpha = 0.94;
+
+      if (vIsGhost > 0.5) {
+        // Faint 6% opacity ghost wireframe being printed upward
+        alpha = 0.06;
+        color = vec3(0.65, 0.55, 0.40);
+      } else if (vScanIntensity > 0.01) {
+        // Hot, bright ivory-cyan Laser Construction Edge at ±0.45m
+        vec3 hotEdge = mix(vec3(1.0, 0.98, 0.92), vec3(0.35, 0.95, 0.85), 0.5 + 0.5 * sin(uTime * 6.0));
+        color = mix(color, hotEdge, min(1.0, vScanIntensity * 2.5));
+        alpha = 1.0;
+      } else if (uCinematic > 0.5) {
+        // Micro-detail 1: Subtle traveling electrical data shimmer along the architectural grid lines
+        float pulse = sin(vOrigY * 3.8 - uTime * 3.5);
+        float shimmer = smoothstep(0.72, 1.0, pulse) * 0.28;
+        color += vec3(0.95, 0.75, 0.35) * shimmer;
+      }
+
+      gl_FragColor = vec4(color, alpha);
+    }
+  `,
+};
+
+// 3D Ohio Stadium Real-Time Wireframe Component
+function OhioStadiumWireframeMesh({ scrollProgress }: { scrollProgress: React.MutableRefObject<number> }) {
+  const lineMeshRef = useRef<THREE.LineSegments>(null);
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+
+  // Generate the complete Ohio Stadium wireframe geometry once
+  const { geometry, maxHeight } = useMemo(() => {
+    const data: StadiumGeometryData = buildOhioStadiumLines();
+    const geom = new THREE.BufferGeometry();
+    geom.setAttribute("position", new THREE.BufferAttribute(data.positions, 3));
+    geom.setAttribute("aOrigY", new THREE.BufferAttribute(data.originalY, 1));
+    geom.setAttribute("aTag", new THREE.BufferAttribute(data.typeTags, 1));
+    return { geometry: geom, maxHeight: data.maxHeight };
+  }, []);
+
+  // Custom Shader Material uniforms: Blazing cinematic amber/gold palette (§Phase 1 Overhaul)
+  const shaderMaterial = useMemo(() => {
+    return new THREE.ShaderMaterial({
+      vertexShader: StadiumLineShader.vertexShader,
+      fragmentShader: StadiumLineShader.fragmentShader,
+      uniforms: {
+        uProgress: { value: 0 },
+        uMaxHeight: { value: maxHeight },
+        uTime: { value: 0 },
+        uCinematic: { value: isCinematic ? 1.0 : 0.0 },
+        uColorBase: { value: new THREE.Color("#A6F0CF") }, // Blazing cinematic mint (#A6F0CF)
+        uColorGlow: { value: new THREE.Color("#FFA01C") }, // Deep amber construction glow
+        uColorField: { value: new THREE.Color("#E59838") }, // Warm copper/amber turf lines
+        uColorRotunda: { value: new THREE.Color("#FFD066") }, // Radiating Rotunda gold
+      },
+      transparent: true,
+      depthWrite: true,
+      blending: THREE.AdditiveBlending,
+    });
+  }, [maxHeight, isCinematic]);
+
+  // Unmount cleanup for stadium wireframe geometry & shader material
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+      shaderMaterial.dispose();
+    };
+  }, [geometry, shaderMaterial]);
+
+  // Laser elevation ring at the active construction height
+  const laserRingRef = useRef<THREE.Mesh>(null);
+
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    const mesh = lineMeshRef.current;
+    if (!mesh) return;
+    const mat = mesh.material as THREE.ShaderMaterial;
+    if (!mat?.uniforms) return;
+
+    mat.uniforms.uTime.value += dt;
+    
+    // Progress smoothly interpolates from 0 to 1 as user scrolls
+    const p = Math.min(1, Math.max(0, scrollProgress.current));
+    mat.uniforms.uProgress.value = p;
+
+    // Move the laser construction scan plane to current elevation
+    if (laserRingRef.current) {
+      const curH = p * (maxHeight + 0.2);
+      laserRingRef.current.position.y = curH;
+      // Laser ring only visible when actively constructing
+      const isConstructing = p > 0.02 && p < 0.98;
+      laserRingRef.current.visible = isConstructing;
+    }
+  });
+
+  return (
+    <group position={[0, 0, 0]}>
+      {/* 1. Main Ohio Stadium Wireframe Model */}
+      <lineSegments ref={lineMeshRef} geometry={geometry} material={shaderMaterial} />
+
+      {/* 2. Kaththi Holographic Laser Construction Scan Plane */}
+      <mesh ref={laserRingRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.1, -1.2]}>
+        <ringGeometry args={[5.2, 5.8, 48]} />
+        <meshBasicMaterial
+          color="#A6F0CF"
+          transparent
+          opacity={0.65}
+          side={THREE.DoubleSide}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// Steady Axonometric / Isometric Architectural Camera Controller with Interactive CAD Turntable Orbit
+function SteadyIsometricCamera({ scrollProgress }: { scrollProgress?: React.MutableRefObject<number> }) {
+  const { camera } = useThree();
+  const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
+  const basePos = useMemo(() => new THREE.Vector3(16.0, 13.5, 18.5), []);
+  const lookTarget = useMemo(() => new THREE.Vector3(0.0, 1.4, -1.2), []);
+  const targetPos = useRef(new THREE.Vector3(16.0, 13.5, 18.5));
+  const targetLook = useMemo(() => new THREE.Vector3(), []);
+
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+  const damperRef = useRef(
+    createCinemaCameraDamper({
+      lambdaPos: 5.5,
+      lambdaLook: 9.0,
+      enableBreathing: true,
+      breathingAmplitude: 0.002, // very subtle architectural stability
+      breathingRoll: 0.001,
+      breathFreqPrimary: 0.14,
+    })
+  );
+
+  useFrame((state, delta) => {
+    const dt = Math.min(delta, 0.05);
+    const kinetics = kineticsRef.current.update(0, state.pointer, dt);
+
+    if (!isCinematic) {
+      // Baseline behavior (100% reversible)
+      const azimuthOffset = kinetics.smoothPointerX * 2.2;
+      const elevationOffset = kinetics.smoothPointerY * 1.2;
+
+      targetPos.current.set(
+        basePos.x + azimuthOffset,
+        basePos.y + elevationOffset,
+        basePos.z - kinetics.smoothPointerX * 0.8
+      );
+
+      camera.position.lerp(targetPos.current, 1 - Math.exp(-4 * dt));
+      camera.lookAt(lookTarget);
+      camera.rotation.z = kinetics.velocityBank * 0.35;
+      return;
+    }
+
+    // Elevated Cinematic Behavior:
+    // 1. C1 Hermite Smootherstep on scrollProgress (construction progress of Ohio Stadium)
+    const rawP = Math.min(1, Math.max(0, scrollProgress?.current ?? 0));
+    const smoothP = smootherstep(rawP);
+
+    // 2. Architectural Isometric Vantage Arc:
+    // Base position drifts smoothly from [16.0, 13.5, 18.5] to [14.8, 14.5, 17.2]
+    // Look target elevates from [0.0, 1.4, -1.2] to [0.0, 2.0, -1.5]
+    const curBaseX = THREE.MathUtils.lerp(16.0, 14.8, smoothP);
+    const curBaseY = THREE.MathUtils.lerp(13.5, 14.5, smoothP);
+    const curBaseZ = THREE.MathUtils.lerp(18.5, 17.2, smoothP);
+
+    const azimuthOffset = kinetics.smoothPointerX * 2.2;
+    const elevationOffset = kinetics.smoothPointerY * 1.2;
+
+    targetPos.current.set(
+      curBaseX + azimuthOffset,
+      curBaseY + elevationOffset,
+      curBaseZ - kinetics.smoothPointerX * 0.8
+    );
+
+    targetLook.set(0.0, THREE.MathUtils.lerp(1.4, 2.0, smoothP), THREE.MathUtils.lerp(-1.2, -1.5, smoothP));
+
+    const dampResult = damperRef.current.update(
+      targetPos.current,
+      targetLook,
+      smoothP,
+      dt,
+      {
+        // The 3D scene only mounts outside reduced motion (static mode shows the SVG).
+        isReducedMotion: false,
+        additionalRoll: kinetics.velocityBank * 0.25,
+      }
+    );
+
+    camera.position.copy(dampResult.position);
+    camera.lookAt(dampResult.lookAt);
+    camera.rotation.z = dampResult.roll;
+  });
+
+  return null;
+}
+
+// Landmark Callout Pins at Ohio Stadium
+function StadiumCalloutPins({
+  onSelectPin,
+  hoveredPinId,
+  setHoveredPinId,
+  scrollProgress,
+}: {
+  onSelectPin?: (pin: BlueprintPin) => void;
+  hoveredPinId: string | null;
+  setHoveredPinId: (id: string | null) => void;
+  scrollProgress: React.MutableRefObject<number>;
+}) {
+  // Pins positioned at authentic landmarks:
+  // Pin 1: 50-Yard Line (The Turf & Events)
+  // Pin 2: North Rotunda (Heritage & Architecture)
+  // Pin 3: West Press Box (Initiatives & Executive Tower)
+  const pinWorldCoords = useMemo(
+    () => [
+      { pin: BLUEPRINT_PINS[0], pos: [0, 0.2, 0] as const }, // 50-Yard Line
+      { pin: BLUEPRINT_PINS[1], pos: [0, 1.8, -7.5] as const }, // North Rotunda
+      { pin: BLUEPRINT_PINS[2], pos: [-5.8, 3.8, 0] as const }, // West Press Tower
+    ],
+    []
+  );
+
+  const ringRef = useRef<THREE.Group>(null);
+  const [visible, setVisible] = useState(false);
+
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    const revealed = scrollProgress.current > 0.15;
+    if (revealed !== visible) setVisible(revealed);
+    if (ringRef.current) {
+      ringRef.current.rotation.y += dt * 0.6;
+    }
+  });
+
+  if (!visible) return null;
+
+  return (
+    <group ref={ringRef}>
+      {pinWorldCoords.map(({ pin, pos }) => {
+        const isHovered = hoveredPinId === pin.id;
+
+        return (
+          <group
+            key={pin.id}
+            position={pos}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelectPin?.(pin);
+            }}
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              setHoveredPinId(pin.id);
+              if (typeof document !== "undefined") document.body.style.cursor = "pointer";
+            }}
+            onPointerOut={() => {
+              setHoveredPinId(null);
+              if (typeof document !== "undefined") document.body.style.cursor = "auto";
+            }}
+          >
+            {/* Vertical Light Beacon Beam */}
+            <mesh position={[0, 0.8, 0]}>
+              <cylinderGeometry args={[0.02, 0.06, 1.6, 12]} />
+              <meshBasicMaterial
+                color={isHovered ? "#A6F0CF" : "#4FD6E0"}
+                transparent
+                opacity={isHovered ? 0.85 : 0.45}
+              />
+            </mesh>
+
+            {/* Glowing Beacon Head */}
+            <mesh position={[0, 1.6, 0]}>
+              <sphereGeometry args={[isHovered ? 0.22 : 0.16, 16, 16]} />
+              <meshStandardMaterial
+                color={isHovered ? "#A6F0CF" : "#4FD6E0"}
+                emissive={isHovered ? "#A6F0CF" : "#4FD6E0"}
+                emissiveIntensity={isHovered ? 1.6 : 0.9}
+                roughness={0.2}
+              />
+            </mesh>
+
+            {/* Ground Ring Indicator */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
+              <ringGeometry args={[0.25, 0.35, 24]} />
+              <meshBasicMaterial
+                color={isHovered ? "#A6F0CF" : "#4FD6E0"}
+                transparent
+                opacity={0.65}
+              />
+            </mesh>
+          </group>
+        );
+      })}
+    </group>
+  );
+}
+
+// Newly Dropped Suggestion Pin with Spring Bounce
+function NewlyDroppedPin({ pin }: { pin: EphemeralPin }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const ringRef = useRef<THREE.Mesh>(null);
+  const altitudeRef = useRef(6.0);
+  const velocityRef = useRef(0);
+
+  // Normalize coords onto the Ohio Stadium field
+  const posX = (pin.x / 6) * 1.6;
+  const posZ = (pin.y / 4) * 3.5;
+
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (altitudeRef.current > 0.05 || Math.abs(velocityRef.current) > 0.05) {
+      const gravity = 18;
+      const nextVel = velocityRef.current - gravity * dt;
+      let nextAlt = altitudeRef.current + nextVel * dt;
+
+      if (nextAlt <= 0) {
+        nextAlt = 0;
+        velocityRef.current = -nextVel * 0.42;
+      } else {
+        velocityRef.current = nextVel;
+      }
+      altitudeRef.current = nextAlt;
+
+      if (groupRef.current) {
+        groupRef.current.position.y = nextAlt;
+      }
+      if (ringRef.current) {
+        ringRef.current.position.y = -nextAlt + 0.02;
+      }
+    }
+  });
+
+  return (
+    <group ref={groupRef} position={[posX, 6.0, posZ]}>
+      {/* Golden Pin Head */}
+      <mesh position={[0, 1.0, 0]} rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[0.18, 0.5, 16]} />
+        <meshStandardMaterial
+          color="#A6F0CF"
+          emissive="#FFA01C"
+          emissiveIntensity={1.5}
+        />
+      </mesh>
+      <mesh position={[0, 1.4, 0]}>
+        <sphereGeometry args={[0.2, 16, 16]} />
+        <meshStandardMaterial
+          color="#FFE5B4"
+          emissive="#4FD6E0"
+          emissiveIntensity={1.3}
+        />
+      </mesh>
+
+      <pointLight color="#A6F0CF" intensity={3.0} distance={5} position={[0, 1.2, 0]} />
+
+      {/* Ripple ring on ground */}
+      <mesh ref={ringRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -6.0 + 0.02, 0]}>
+        <ringGeometry args={[0.35, 0.5, 32]} />
+        <meshBasicMaterial color="#A6F0CF" transparent opacity={0.8} />
+      </mesh>
+    </group>
+  );
+}
+
+// Ambient Floating Luminescent Particles (GPU Shader)
+function generateFloatingParticles(count: number) {
+  let seed = 42;
+  const rand = () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
+  const pos = new Float32Array(count * 3);
+  const ph = new Float32Array(count);
+  for (let i = 0; i < count; i++) {
+    pos[i * 3] = (rand() - 0.5) * 14;
+    pos[i * 3 + 1] = rand() * 5 + 0.2;
+    pos[i * 3 + 2] = (rand() - 0.5) * 16 - 2;
+    ph[i] = rand() * Math.PI * 2;
+  }
+  return { positions: pos, phases: ph };
+}
+
+let cachedFloatingParticles: ReturnType<typeof generateFloatingParticles> | null = null;
+function getFloatingParticles(count: number) {
+  if (!cachedFloatingParticles) {
+    cachedFloatingParticles = generateFloatingParticles(count);
+  }
+  return cachedFloatingParticles;
+}
+
+const particleVertexShader = `
+  uniform float uTime;
+  attribute float aPhase;
+  void main() {
+    vec3 pos = position;
+    pos.y += sin(uTime * 0.8 + aPhase) * 0.2;
+    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
+    gl_PointSize = (40.0 / -mvPosition.z);
+  }
+`;
+
+const particleFragmentShader = `
+  void main() {
+    float dist = length(gl_PointCoord - vec2(0.5));
+    if (dist > 0.5) discard;
+    float alpha = smoothstep(0.5, 0.0, dist) * 0.65;
+    gl_FragColor = vec4(1.0, 0.847, 0.459, alpha);
+  }
+`;
+
+function FloatingParticles() {
+  const count = 100;
+  const pointsRef = useRef<THREE.Points>(null);
+  const { positions, phases } = useMemo(() => getFloatingParticles(count), [count]);
+
+  const uniforms = useMemo(() => ({ uTime: { value: 0 } }), []);
+
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (pointsRef.current) {
+      const mat = pointsRef.current.material as THREE.ShaderMaterial;
+      if (mat?.uniforms?.uTime) {
+        mat.uniforms.uTime.value += dt;
+      }
+    }
+  });
+
+  useEffect(() => {
+    const currentPoints = pointsRef.current;
+    return () => {
+      if (currentPoints) {
+        currentPoints.geometry.dispose();
+        if (Array.isArray(currentPoints.material)) {
+          currentPoints.material.forEach((m) => m.dispose());
+        } else {
+          currentPoints.material.dispose();
+        }
+      }
+    };
+  }, []);
+
+  return (
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-aPhase" args={[phases, 1]} />
+      </bufferGeometry>
+      <shaderMaterial
+        vertexShader={particleVertexShader}
+        fragmentShader={particleFragmentShader}
+        uniforms={uniforms}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 1. THE ARCHITECTURAL HERITAGE COIN (Collegiate Landmark Relic)
+// ---------------------------------------------------------------------------
+// A 3D cylindrical coin (CylinderGeometry) resting on one of the grid intersections
+// near the stadium entrance. Highly reflective silver/steel (MeshPhysicalMaterial)
+// catching the overhead spotlight.
+function ArchitecturalHeritageCoin() {
+  const coinPos: [number, number, number] = [3.6, 0.035, 4.4];
+
+  return (
+    <group position={coinPos} rotation={[0, 0.42, 0]}>
+      {/* Outer Coin Body: Cylindrical Silver/Steel Coin with high clearcoat */}
+      <mesh castShadow receiveShadow position={[0, 0, 0]}>
+        <cylinderGeometry args={[0.55, 0.55, 0.07, 64]} />
+        <meshPhysicalMaterial
+          color="#E8EEF5"
+          metalness={1.0}
+          roughness={0.15}
+          clearcoat={1.0}
+          clearcoatRoughness={0.08}
+          reflectivity={0.95}
+        />
+      </mesh>
+
+      {/* Raised Outer Rim Ring */}
+      <mesh castShadow position={[0, 0.036, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.46, 0.54, 48]} />
+        <meshPhysicalMaterial
+          color="#D4DFEE"
+          metalness={1.0}
+          roughness={0.18}
+          clearcoat={1.0}
+        />
+      </mesh>
+
+      {/* Minted Inner Seal Center */}
+      <mesh castShadow position={[0, 0.0365, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.18, 0.23, 32]} />
+        <meshPhysicalMaterial
+          color="#CCD9E8"
+          metalness={1.0}
+          roughness={0.2}
+          clearcoat={0.9}
+        />
+      </mesh>
+      <mesh castShadow position={[0, 0.037, 0]}>
+        <cylinderGeometry args={[0.11, 0.11, 0.006, 24]} />
+        <meshPhysicalMaterial
+          color="#F2F6FA"
+          metalness={1.0}
+          roughness={0.12}
+          clearcoat={1.0}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 2. THE BRASS DRAFTING COMPASS (The Architect — Kaththi Memorabilia)
+// ---------------------------------------------------------------------------
+// An authentic 3D drafting compass/caliper resting flat on the grid floor.
+// Material: Aged brass/bronze (metalness: 0.8, roughness: 0.4, color: #B5A642).
+function BrassDraftingCompass() {
+  const compassPos: [number, number, number] = [-3.8, 0.04, 3.6];
+  const legLength = 2.6;
+  const spreadAngle = 0.26; // ~15 degrees each side
+
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+  const textures = useMemo(() => {
+    if (!isCinematic) return null;
+    const normalMap = proceduralPbrMaps.getBrushedMetalNormal("suggestions-compass-brass-normal", 256, 256);
+    const roughMap = proceduralPbrMaps.getNoiseRoughness("suggestions-compass-brass-rough", 256, 256, 0.28, 0.45);
+    return { normalMap, roughMap };
+  }, [isCinematic]);
+
+  useEffect(() => {
+    return () => {
+      if (isCinematic) {
+        proceduralPbrMaps.release("suggestions-compass-brass-normal");
+        proceduralPbrMaps.release("suggestions-compass-brass-rough");
+      }
+    };
+  }, [isCinematic]);
+
+  return (
+    <group position={compassPos} rotation={[0, -0.38, 0]}>
+      {/* 1. Hinge Pivot Head Assembly */}
+      <group position={[0, 0, -legLength / 2]}>
+        {/* Central Cylindrical Brass Hinge Disc */}
+        <mesh castShadow receiveShadow position={[0, 0.03, 0]}>
+          <cylinderGeometry args={[0.22, 0.22, 0.08, 24]} />
+          <meshPhysicalMaterial
+            color="#B5A642"
+            metalness={0.8}
+            roughness={0.4}
+            normalMap={textures?.normalMap}
+            roughnessMap={textures?.roughMap}
+            clearcoat={isCinematic ? 0.35 : undefined}
+          />
+        </mesh>
+        {/* Steel Hinge Screw Core */}
+        <mesh castShadow position={[0, 0.075, 0]}>
+          <cylinderGeometry args={[0.08, 0.08, 0.03, 16]} />
+          <meshStandardMaterial color="#555860" metalness={0.9} roughness={0.25} />
+        </mesh>
+        {/* Knurled Brass Thumb Handle pointing backwards */}
+        <mesh castShadow position={[0, 0.03, -0.32]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.065, 0.065, 0.45, 16]} />
+          <meshStandardMaterial
+            color="#B5A642"
+            metalness={0.8}
+            roughness={0.45}
+            normalMap={textures?.normalMap}
+            roughnessMap={textures?.roughMap}
+          />
+        </mesh>
+      </group>
+
+      {/* 2. Left Leg (Tapered Brass Arm with Steel Needle Point) */}
+      <group position={[0, 0, -legLength / 2]} rotation={[0, spreadAngle, 0]}>
+        {/* Main Brass Arm */}
+        <mesh castShadow receiveShadow position={[-0.03, 0.03, legLength * 0.4]}>
+          <boxGeometry args={[0.09, 0.06, legLength * 0.8]} />
+          <meshPhysicalMaterial
+            color="#B5A642"
+            metalness={0.8}
+            roughness={0.4}
+            normalMap={textures?.normalMap}
+            roughnessMap={textures?.roughMap}
+            clearcoat={isCinematic ? 0.3 : undefined}
+          />
+        </mesh>
+        {/* Needle Holder Collar */}
+        <mesh castShadow position={[-0.03, 0.03, legLength * 0.82]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.045, 0.045, 0.12, 12]} />
+          <meshStandardMaterial color="#8C7F32" metalness={0.85} roughness={0.35} />
+        </mesh>
+        {/* Fine Steel Needle Point extending to the blueprint grid */}
+        <mesh castShadow position={[-0.03, 0.02, legLength * 0.96]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.015, 0.005, 0.24, 8]} />
+          <meshStandardMaterial color="#4A4E57" metalness={0.95} roughness={0.2} />
+        </mesh>
+      </group>
+
+      {/* 3. Right Leg (Tapered Brass Arm with Drafting Lead Tip) */}
+      <group position={[0, 0, -legLength / 2]} rotation={[0, -spreadAngle, 0]}>
+        {/* Main Brass Arm */}
+        <mesh castShadow receiveShadow position={[0.03, 0.03, legLength * 0.4]}>
+          <boxGeometry args={[0.09, 0.06, legLength * 0.8]} />
+          <meshPhysicalMaterial
+            color="#B5A642"
+            metalness={0.8}
+            roughness={0.4}
+            normalMap={textures?.normalMap}
+            roughnessMap={textures?.roughMap}
+            clearcoat={isCinematic ? 0.3 : undefined}
+          />
+        </mesh>
+        {/* Lead Clamp Collar & Thumb Screw */}
+        <mesh castShadow position={[0.03, 0.03, legLength * 0.82]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.05, 0.05, 0.14, 12]} />
+          <meshStandardMaterial color="#8C7F32" metalness={0.85} roughness={0.35} />
+        </mesh>
+        {/* Graphite / Drafting Lead Tip */}
+        <mesh castShadow position={[0.03, 0.02, legLength * 0.95]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.02, 0.006, 0.22, 8]} />
+          <meshStandardMaterial color="#2B2D31" metalness={0.2} roughness={0.85} />
+        </mesh>
+      </group>
+
+      {/* 4. Horizontal Spindle & Knurled Adjustment Wheel */}
+      <group position={[0, 0.03, -legLength * 0.08]}>
+        {/* Threaded Brass Spindle Bar */}
+        <mesh castShadow position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.025, 0.025, 1.1, 12]} />
+          <meshStandardMaterial
+            color="#B5A642"
+            metalness={0.85}
+            roughness={0.35}
+            normalMap={textures?.normalMap}
+            roughnessMap={textures?.roughMap}
+          />
+        </mesh>
+        {/* Center Knurled Adjustment Wheel */}
+        <mesh castShadow position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.15, 0.15, 0.08, 24]} />
+          <meshStandardMaterial
+            color="#9C8D35"
+            metalness={0.8}
+            roughness={0.5}
+            normalMap={textures?.normalMap}
+            roughnessMap={textures?.roughMap}
+          />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+function HydrologyWaterValveRing({ isCinematic }: { isCinematic: boolean }) {
+  const ringRef = useRef<THREE.Mesh>(null);
+  const time = useRef(0);
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    time.current += dt;
+    if (!isCinematic || !ringRef.current) return;
+    const t = time.current * 2.4;
+    const scale = 1.0 + (Math.sin(t) * 0.5 + 0.5) * 0.32;
+    ringRef.current.scale.set(scale, scale, 1);
+    const mat = ringRef.current.material as THREE.MeshBasicMaterial;
+    if (mat) {
+      mat.opacity = 0.75 - (scale - 1.0) * 0.8;
+    }
+  });
+
+  return (
+    <mesh ref={ringRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]}>
+      <ringGeometry args={[0.12, 0.18, 24]} />
+      <meshBasicMaterial
+        color="#00E5FF"
+        transparent
+        opacity={0.7}
+        blending={THREE.AdditiveBlending}
+        depthTest={false}
+        depthWrite={false}
+      />
+    </mesh>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 3. THE HYDROLOGY PIPE NODES (The Mission — Kaththi Memorabilia)
+// ---------------------------------------------------------------------------
+// Below the primary grid, a faint, secondary glowing layer of interconnected
+// lines resembling underground water pipes with 4 glowing cyan PointLight nodes.
+// Rendered with additive blending and depthTest={false} to create the iconic
+// "hidden water blueprint" x-ray effect from Kaththi.
+function HydrologyPipeNodes() {
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+  const pipeGeometry = useMemo(() => {
+    // Interconnected underground municipal pipeline network (Jeeva's Chennai water map reference)
+    const lines: number[] = [
+      // Primary West-East arterial conduit through south precinct
+      -16, -0.05, 1.2,   16, -0.05, 1.2,
+      // Secondary South-North pipeline 1 (West campus supply)
+      -2.6, -0.05, -9.0,  -2.6, -0.05, 8.5,
+      // Secondary South-North pipeline 2 (East campus supply)
+      2.4, -0.05, -9.0,   2.4, -0.05, 8.5,
+      // North Rotunda sub-surface ring conduit
+      -7.0, -0.05, -5.5,   7.0, -0.05, -5.5,
+      // Southern reservoir arterial line near entrance
+      -9.0, -0.05, 4.4,    9.0, -0.05, 4.4,
+      // Field subterranean cross-conduits
+      -2.6, -0.05, -2.0,   2.4, -0.05, -2.0,
+      -2.6, -0.05, -5.5,   2.4, -0.05, -5.5,
+      // Perimeter distribution feeds
+      -6.8, -0.05, -5.5,  -6.8, -0.05, 4.4,
+      6.8, -0.05, -5.5,   6.8, -0.05, 4.4,
+      // Diagonal feeder branch connecting to Kaththi coin intersection
+      -2.6, -0.05, 1.2,    3.6, -0.05, 4.4,
+      // Western aquifer branch past the drafting compass
+      -3.8, -0.05, 3.6,   -2.6, -0.05, 1.2,
+    ];
+
+    const geom = new THREE.BufferGeometry();
+    geom.setAttribute("position", new THREE.Float32BufferAttribute(lines, 3));
+    return geom;
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      pipeGeometry.dispose();
+    };
+  }, [pipeGeometry]);
+
+  // 4 glowing municipal pipe intersection nodes (Jeeva's discovered water nodes)
+  const nodes: [number, number, number][] = [
+    [-2.6, 0.05, 1.2],   // Node 1: Main West Junction
+    [2.4, 0.05, 1.2],    // Node 2: Main East Junction
+    [-2.6, 0.05, -5.5],  // Node 3: North Rotunda Underpass
+    [3.6, 0.05, 4.4],    // Node 4: South Gate Reservoir Feed (at Kaththi coin)
+  ];
+
+  return (
+    <group renderOrder={2}>
+      {/* Underground Water Pipe Lines rendered as faint luminous x-ray tracks */}
+      <lineSegments geometry={pipeGeometry}>
+        <lineBasicMaterial
+          color="#06B6D4"
+          transparent
+          opacity={0.55}
+          blending={THREE.AdditiveBlending}
+          depthTest={false}
+          depthWrite={false}
+        />
+      </lineSegments>
+
+      {/* 4 Glowing Blue/Cyan PointLight Nodes */}
+      {nodes.map((pos, idx) => (
+        <group key={idx} position={pos}>
+          {/* Subtle cyan PointLight providing dramatic thematic contrast */}
+          <pointLight
+            color="#00E5FF"
+            intensity={0.65}
+            distance={2.5}
+            decay={2}
+          />
+
+          {/* Glowing Junction Marker Sphere */}
+          <mesh>
+            <sphereGeometry args={[0.075, 16, 16]} />
+            <meshStandardMaterial
+              color="#22D3EE"
+              emissive="#00E5FF"
+              emissiveIntensity={2.5}
+              roughness={0.1}
+            />
+          </mesh>
+
+          {/* Water Valve Pulse Ring on ground (Micro-detail 2) */}
+          <HydrologyWaterValveRing isCinematic={isCinematic} />
+        </group>
+      ))}
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 4. ROLLED BLUEPRINT SCROLLS (The Master City Plans — Kaththi Memorabilia)
+// ---------------------------------------------------------------------------
+// A bundle of rolled architectural blueprints tied with copper ribbons on the outer East corner
+function RolledBlueprintScrolls() {
+  const scrollGroupPos: [number, number, number] = [7.8, 0.0, -3.0];
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+
+  const textures = useMemo(() => {
+    if (!isCinematic) return null;
+    const roughMap = proceduralPbrMaps.getNoiseRoughness("suggestions-scroll-paper-rough", 256, 256, 0.65, 0.88);
+    return { roughMap };
+  }, [isCinematic]);
+
+  useEffect(() => {
+    return () => {
+      if (isCinematic) {
+        proceduralPbrMaps.release("suggestions-scroll-paper-rough");
+      }
+    };
+  }, [isCinematic]);
+
+  return (
+    <group position={scrollGroupPos} rotation={[0, 0.65, 0]}>
+      {/* Scroll 1: Base bottom scroll */}
+      <group position={[0, 0.22, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <mesh castShadow receiveShadow>
+          <cylinderGeometry args={[0.22, 0.22, 4.2, 24]} />
+          <meshStandardMaterial
+            color="#D8C8AA"
+            roughness={0.85}
+            metalness={0.05}
+            roughnessMap={textures?.roughMap}
+          />
+        </mesh>
+        {/* Dark spiral paper roll core (Left) */}
+        <mesh position={[0, -2.11, 0]}>
+          <cylinderGeometry args={[0.21, 0.21, 0.02, 24]} />
+          <meshBasicMaterial color="#3D3020" />
+        </mesh>
+        {/* Dark spiral paper roll core (Right) */}
+        <mesh position={[0, 2.11, 0]}>
+          <cylinderGeometry args={[0.21, 0.21, 0.02, 24]} />
+          <meshBasicMaterial color="#3D3020" />
+        </mesh>
+        {/* Brass tie ribbons */}
+        {[-1.2, 1.2].map((y, i) => (
+          <mesh key={i} castShadow position={[0, y, 0]}>
+            <cylinderGeometry args={[0.226, 0.226, 0.08, 24]} />
+            <meshStandardMaterial color="#B5A642" metalness={0.8} roughness={0.35} />
+          </mesh>
+        ))}
+      </group>
+
+      {/* Scroll 2: Companion bottom scroll */}
+      <group position={[0.32, 0.18, 0.35]} rotation={[0, 0, Math.PI / 2]}>
+        <mesh castShadow receiveShadow>
+          <cylinderGeometry args={[0.18, 0.18, 3.8, 24]} />
+          <meshStandardMaterial
+            color="#CCBA98"
+            roughness={0.85}
+            metalness={0.05}
+            roughnessMap={textures?.roughMap}
+          />
+        </mesh>
+        {/* Brass tie ribbons */}
+        {[-0.9, 0.9].map((y, i) => (
+          <mesh key={i} castShadow position={[0, y, 0]}>
+            <cylinderGeometry args={[0.186, 0.186, 0.06, 24]} />
+            <meshStandardMaterial color="#B5A642" metalness={0.8} roughness={0.35} />
+          </mesh>
+        ))}
+      </group>
+
+      {/* Scroll 3: Top nested scroll */}
+      <group position={[0.15, 0.38, 0.18]} rotation={[0, 0, Math.PI / 2]}>
+        <mesh castShadow receiveShadow>
+          <cylinderGeometry args={[0.16, 0.16, 3.6, 24]} />
+          <meshStandardMaterial
+            color="#E0D2B8"
+            roughness={0.8}
+            metalness={0.05}
+            roughnessMap={textures?.roughMap}
+          />
+        </mesh>
+        {/* Cyan drafting seal tape (Jeeva's water plan seal) */}
+        <mesh castShadow position={[0, 0, 0]}>
+          <cylinderGeometry args={[0.166, 0.166, 0.14, 24]} />
+          <meshStandardMaterial color="#06B6D4" roughness={0.5} metalness={0.2} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 5. TRIANGULAR ARCHITECT SCALE RULER (The Scale Tool)
+// ---------------------------------------------------------------------------
+// Classic 3-sided architectural scale ruler in matte ivory with amber center groove
+function ArchitectScaleRuler() {
+  const rulerPos: [number, number, number] = [6.8, 0.08, 1.2];
+
+  return (
+    <group position={rulerPos} rotation={[0, -0.15, 0]}>
+      {/* 3-sided triangular prism ruler body */}
+      <mesh castShadow receiveShadow rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.13, 0.13, 4.0, 3]} />
+        <meshStandardMaterial color="#EAE4D5" roughness={0.7} metalness={0.1} />
+      </mesh>
+      {/* Color-coded center measurement groove stripe (Amber/Gold) */}
+      <mesh castShadow position={[0, 0.08, 0]}>
+        <boxGeometry args={[0.025, 0.015, 3.9]} />
+        <meshBasicMaterial color="#A6F0CF" />
+      </mesh>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 6. DRAFTING GRAPHITE PENCIL (The Drafting Instrument)
+// ---------------------------------------------------------------------------
+// Hexagonal amber drafting pencil with sharpened cedar cone and graphite lead
+function DraftingPencil() {
+  const pencilPos: [number, number, number] = [7.2, 0.04, 2.6];
+
+  return (
+    <group position={pencilPos} rotation={[0, 0.25, 0]}>
+      {/* Hexagonal wooden barrel (6 facets) */}
+      <mesh castShadow receiveShadow rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.045, 0.045, 2.4, 6]} />
+        <meshStandardMaterial color="#E08E20" roughness={0.4} metalness={0.15} />
+      </mesh>
+      {/* Sharpened conical cedar wood cone */}
+      <mesh castShadow position={[0, 0, -1.29]} rotation={[-Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.045, 0.18, 12]} />
+        <meshStandardMaterial color="#E5CCA2" roughness={0.9} />
+      </mesh>
+      {/* Sharp graphite lead tip */}
+      <mesh castShadow position={[0, 0, -1.41]} rotation={[-Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.015, 0.08, 8]} />
+        <meshStandardMaterial color="#2B2D30" metalness={0.8} roughness={0.25} />
+      </mesh>
+      {/* Brass ferrule collar at eraser end */}
+      <mesh castShadow position={[0, 0, 1.25]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.047, 0.047, 0.12, 12]} />
+        <meshStandardMaterial color="#C2A649" metalness={0.85} roughness={0.35} />
+      </mesh>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 7. ARCHITECT PRECISION UTILITY BLADE (The Precision Modeling Tool)
+// ---------------------------------------------------------------------------
+// Surgical stainless-steel folding knife resting half-open on the blueprint floor,
+// modeled as an architect's precision scale modeling instrument.
+function ArchitectPrecisionUtilityBlade() {
+  const bladePos: [number, number, number] = [-7.2, 0.05, -0.6];
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+  const edgeRef = useRef<THREE.Mesh>(null);
+
+  const time = useRef(0);
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    time.current += dt;
+    if (!isCinematic || !edgeRef.current) return;
+    const mat = edgeRef.current.material as THREE.MeshPhysicalMaterial;
+    if (mat) {
+      // Micro-detail 3: Subtle glint/sparkle modulation catching overhead spotlight
+      const glint = Math.sin(time.current * 3.0) * 0.5 + 0.5;
+      mat.roughness = 0.06 + (1 - glint) * 0.08;
+      mat.clearcoatRoughness = 0.04 + (1 - glint) * 0.05;
+    }
+  });
+
+  return (
+    <group position={bladePos} rotation={[0, 0.45, 0]}>
+      {/* Contoured titanium/carbon-steel handle */}
+      <mesh castShadow receiveShadow position={[0, 0.04, 0]}>
+        <boxGeometry args={[0.22, 0.08, 1.8]} />
+        <meshStandardMaterial color="#22262E" metalness={0.85} roughness={0.35} />
+      </mesh>
+      {/* Brass pivot rivet hinge */}
+      <mesh castShadow position={[0, 0.085, -0.7]} rotation={[0, 0, 0]}>
+        <cylinderGeometry args={[0.055, 0.055, 0.02, 16]} />
+        <meshStandardMaterial color="#B5A642" metalness={0.9} roughness={0.25} />
+      </mesh>
+      {/* Razor-sharp stainless steel blade angled out at ~35 degrees */}
+      <group position={[0, 0.04, -0.7]} rotation={[0, 0.6, 0]}>
+        <mesh castShadow position={[0, 0, -0.75]}>
+          <boxGeometry args={[0.03, 0.09, 1.5]} />
+          <meshPhysicalMaterial
+            color="#F0F5FA"
+            metalness={1.0}
+            roughness={0.12}
+            clearcoat={1.0}
+            clearcoatRoughness={0.06}
+          />
+        </mesh>
+        {/* Polished blade bevel cutting edge (Micro-detail 3) */}
+        <mesh ref={edgeRef} castShadow position={[0.015, -0.025, -0.75]}>
+          <boxGeometry args={[0.008, 0.03, 1.48]} />
+          <meshPhysicalMaterial
+            color="#FFFFFF"
+            metalness={1.0}
+            roughness={0.08}
+            clearcoat={1.0}
+          />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 8. THANJAVUR SOIL SPECIMEN VIAL (The Village Earth — The Emotional Core)
+// ---------------------------------------------------------------------------
+// A laboratory specimen glass jar holding Thanjavur alluvial soil with a threaded brass cap,
+// resting near the North Rotunda to anchor the emotional stakes of Kaththi.
+function ThanjavurSoilVial() {
+  const jarPos: [number, number, number] = [-4.5, 0.28, -7.8];
+
+  return (
+    <group position={jarPos}>
+      {/* Translucent cylindrical glass jar body */}
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[0.26, 0.26, 0.58, 24]} />
+        <meshStandardMaterial
+          color="#D8EEF8"
+          transparent
+          opacity={0.35}
+          roughness={0.08}
+          metalness={0.1}
+        />
+      </mesh>
+      {/* Rich dark alluvial soil inside the jar */}
+      <mesh position={[0, -0.06, 0]}>
+        <cylinderGeometry args={[0.24, 0.24, 0.44, 20]} />
+        <meshStandardMaterial color="#24160E" roughness={0.96} metalness={0.02} />
+      </mesh>
+      {/* Threaded antique brass cap */}
+      <mesh castShadow position={[0, 0.32, 0]}>
+        <cylinderGeometry args={[0.28, 0.28, 0.12, 24]} />
+        <meshStandardMaterial color="#B5A642" metalness={0.85} roughness={0.35} />
+      </mesh>
+      {/* Archival paper specimen label */}
+      <mesh castShadow position={[0, 0, 0.265]}>
+        <boxGeometry args={[0.28, 0.22, 0.005]} />
+        <meshStandardMaterial color="#FAF6EE" roughness={0.8} />
+      </mesh>
+    </group>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 9. SOLID BRASS BLUEPRINT PAPERWEIGHT (The Drafting Desk Anchor)
+// ---------------------------------------------------------------------------
+// Solid chamfered brass anchor weight holding down the outer blueprint paper corner
+function BrassPaperweight() {
+  const weightPos: [number, number, number] = [-7.5, 0.06, 4.5];
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+
+  const textures = useMemo(() => {
+    if (!isCinematic) return null;
+    const normalMap = proceduralPbrMaps.getBrushedMetalNormal("suggestions-paperweight-brass-normal", 256, 256);
+    const roughMap = proceduralPbrMaps.getNoiseRoughness("suggestions-paperweight-brass-rough", 256, 256, 0.22, 0.38);
+    return { normalMap, roughMap };
+  }, [isCinematic]);
+
+  useEffect(() => {
+    return () => {
+      if (isCinematic) {
+        proceduralPbrMaps.release("suggestions-paperweight-brass-normal");
+        proceduralPbrMaps.release("suggestions-paperweight-brass-rough");
+      }
+    };
+  }, [isCinematic]);
+
+  return (
+    <group position={weightPos}>
+      {/* Main chamfered brass disc */}
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[0.45, 0.48, 0.12, 32]} />
+        <meshPhysicalMaterial
+          color="#C2A649"
+          metalness={0.85}
+          roughness={0.32}
+          normalMap={textures?.normalMap}
+          roughnessMap={textures?.roughMap}
+          clearcoat={isCinematic ? 0.35 : undefined}
+        />
+      </mesh>
+      {/* Center recessed ergonomic finger grip ring */}
+      <mesh castShadow position={[0, 0.05, 0]}>
+        <cylinderGeometry args={[0.24, 0.20, 0.03, 24]} />
+        <meshStandardMaterial
+          color="#8A7326"
+          metalness={0.9}
+          roughness={0.4}
+          normalMap={textures?.normalMap}
+          roughnessMap={textures?.roughMap}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+function BlueprintSceneContent({
+  groundMaterial,
+  scrollProgress,
+  onSelectPin,
+  hoveredPinId,
+  setHoveredPinId,
+  newPin,
+}: {
+  groundMaterial: THREE.ShaderMaterial;
+  scrollProgress: React.MutableRefObject<number>;
+  onSelectPin?: (pin: BlueprintPin) => void;
+  hoveredPinId: string | null;
+  setHoveredPinId: (id: string | null) => void;
+  newPin?: EphemeralPin | null;
+}) {
+  useWarmup("ideas-blueprint");
+  const isCinematic = isHeroCinematicEnabled("suggestions");
+
+  return (
+    <>
+      <color attach="background" args={["#0F050A"]} />
+      <PerspectiveCamera makeDefault position={[16.0, 13.5, 18.5]} fov={32} near={0.1} far={120} />
+      <fog attach="fog" args={["#0F050A", 28, 90]} />
+
+      {/* Cinematic War Room Lighting */}
+      <ambientLight intensity={0.8} color="#381D2C" />
+      <directionalLight
+        position={[20, 25, 15]}
+        intensity={1.8}
+        color="#A6F0CF"
+        castShadow={isCinematic}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-bias={-0.0001}
+        shadow-normalBias={0.02}
+      />
+      <directionalLight position={[-15, 18, -15]} intensity={0.9} color="#8B5A2B" />
+
+      {/* Soft overhead SpotLight creating a dramatic vignette pool of light on the blueprint floor */}
+      <spotLight
+        position={[0, 22, -1.2]}
+        color="#FFF0D4"
+        intensity={1.5}
+        angle={Math.PI / 4.2}
+        penumbra={0.85}
+        distance={45}
+        decay={2}
+        castShadow
+        shadow-bias={-0.0001}
+        shadow-normalBias={0.02}
+      />
+
+      {/* 1. Large Blueprint Ground Plane (y = 0) */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} material={groundMaterial}>
+        <planeGeometry args={[56, 56]} />
+      </mesh>
+
+      {/* Soft Contact Shadows */}
+      <ContactShadows
+        position={[0, 0.012, 0]}
+        opacity={0.82}
+        scale={34}
+        blur={1.8}
+        far={4.0}
+        resolution={512}
+        color="#070308"
+      />
+
+      {/* Diegetic 3D Architectural Props */}
+      <ArchitecturalHeritageCoin />
+      <BrassDraftingCompass />
+      <HydrologyPipeNodes />
+      <RolledBlueprintScrolls />
+      <ArchitectScaleRuler />
+      <DraftingPencil />
+      <ArchitectPrecisionUtilityBlade />
+      <ThanjavurSoilVial />
+      <BrassPaperweight />
+
+      {/* 2. Ohio Stadium ("The Shoe") 3D Wireframe Real-Time Construction */}
+      <OhioStadiumWireframeMesh scrollProgress={scrollProgress} />
+
+      {/* 3. Authentic Landmark Pins (50-Yard Line, North Rotunda, West Tower) */}
+      <StadiumCalloutPins
+        onSelectPin={onSelectPin}
+        hoveredPinId={hoveredPinId}
+        setHoveredPinId={setHoveredPinId}
+        scrollProgress={scrollProgress}
+      />
+
+      {/* 4. Newly Dropped Ephemeral Pin */}
+      {newPin && <NewlyDroppedPin key={newPin.id} pin={newPin} />}
+
+      {/* 5. Floating Luminescent Particles */}
+      <FloatingParticles />
+
+      {/* 6. Steady Axonometric / Isometric Architectural Camera */}
+      <SteadyIsometricCamera scrollProgress={scrollProgress} />
+
+    </>
+  );
+}
+
+/** The pre-art-pass scene, kept behind ?cinematic_suggestions=0 for A/B comparison. */
+export function BlueprintSceneLegacy({
+  scrollProgress,
+  newPin = null,
+  onSelectPin,
+  className = "",
+}: BlueprintSceneLegacyProps) {
+  const [hoveredPinId, setHoveredPinId] = useState<string | null>(null);
+  const groundMaterial = useMemo(
+    () => new THREE.ShaderMaterial({ vertexShader: LegacyGroundShader.vertexShader, fragmentShader: LegacyGroundShader.fragmentShader }),
+    []
+  );
+  useEffect(() => () => groundMaterial.dispose(), [groundMaterial]);
+  const visible = useHeroStageVisibility();
+
+  return (
+    <div className={`relative w-full h-full bg-transparent ${className}`}>
+      <View className="w-full h-full pointer-events-auto" index={2} visible={visible}>
+        <BlueprintSceneContent
+          groundMaterial={groundMaterial}
+          scrollProgress={scrollProgress}
+          onSelectPin={onSelectPin}
+          hoveredPinId={hoveredPinId}
+          setHoveredPinId={setHoveredPinId}
+          newPin={newPin}
+        />
+      </View>
+    </div>
+  );
+}

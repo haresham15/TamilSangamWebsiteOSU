@@ -234,19 +234,19 @@ export default function BoardPage() {
         <dl className={styles.bezel} aria-label="Tamil Sangam at a glance">
           <div>
             <dt>Buckeye Members</dt>
-            <dd>{reduceMotion ? 120 : <CountUp to={120} duration={2} />}+</dd>
+            <dd><CountUp to={120} duration={2} />+</dd>
           </div>
           <div>
             <dt>Executive Officers</dt>
-            <dd>{reduceMotion ? 9 : <CountUp to={9} duration={1.5} />}</dd>
+            <dd><CountUp to={9} duration={1.5} /></dd>
           </div>
           <div>
             <dt>Campus Galas & Events</dt>
-            <dd>{reduceMotion ? 14 : <CountUp to={14} duration={1.8} />}</dd>
+            <dd><CountUp to={14} duration={1.8} /></dd>
           </div>
           <div>
             <dt>Est. at Ohio State</dt>
-            <dd>{reduceMotion ? 2021 : <CountUp to={2021} from={2000} duration={2.2} separator="" />}</dd>
+            <dd><CountUp to={2021} from={2000} duration={2.2} separator="" /></dd>
           </div>
         </dl>
 

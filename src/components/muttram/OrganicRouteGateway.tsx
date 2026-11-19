@@ -25,7 +25,6 @@ const ROUTE_CHAPTER_MAP: Record<string, { chapter: string; fallbackTitleEn: stri
   "/events": { chapter: "02", fallbackTitleEn: "The Gatherings River", fallbackTitleTa: "நிகழ்வுகள்" },
   "/about": { chapter: "03", fallbackTitleEn: "The Sangam Epic", fallbackTitleTa: "அறிமுகம்" },
   "/board": { chapter: "04", fallbackTitleEn: "The Executive Board", fallbackTitleTa: "அவை" },
-  "/gallery": { chapter: "05", fallbackTitleEn: "The Canvas", fallbackTitleTa: "நினைவுகள்" },
   "/guide": { chapter: "06", fallbackTitleEn: "Student Guide & FAQ", fallbackTitleTa: "வழிகாட்டி" },
   "/suggestions": { chapter: "07", fallbackTitleEn: "The Ideas Hearth", fallbackTitleTa: "கருத்து" },
   "/ideas": { chapter: "07", fallbackTitleEn: "The Ideas Hearth", fallbackTitleTa: "கருத்து" },
@@ -104,7 +103,7 @@ export const OrganicRouteGateway: React.FC<OrganicRouteGatewayProps> = ({
               {primaryLabel}
             </span>
             <Magnet magnetStrength={2.5} maxOffset={10}>
-              <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border border-[rgba(125,96,166,0.25)] group-hover:border-white/40 flex items-center justify-center bg-white/70 group-hover:bg-[#140C20] text-[#F4F0FA] group-hover:text-[#A6F0CF] shadow-sm group-hover:shadow-lg group-hover:scale-105 transition-all duration-300">
+              <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border border-[rgba(125,96,166,0.3)] group-hover:border-[#A6F0CF]/50 flex items-center justify-center bg-[#25173B] group-hover:bg-[#140C20] text-[#F4F0FA] group-hover:text-[#A6F0CF] shadow-sm group-hover:shadow-lg group-hover:scale-105 transition-[background-color,border-color,color,box-shadow,transform] duration-200">
                 <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </div>
             </Magnet>

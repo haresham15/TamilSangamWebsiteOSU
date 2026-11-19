@@ -89,14 +89,14 @@ export function BlueprintSVG({
             <circle cx="12" cy="12" r="1.2" fill="#A6F0CF" fillOpacity="0.25" />
             <path
               d="M12 4L20 12L12 20L4 12Z"
-              stroke="#8B5A2B"
+              stroke="#7FB8D0"
               strokeWidth="0.4"
               strokeDasharray="1 3"
               strokeOpacity="0.25"
             />
           </pattern>
 
-          {/* Kaththi War Room Bruised Plum Void Gradient */}
+          {/* Ink-blue drafting sheet falling off to the plum-black table (matches the 3D hero) */}
           <radialGradient
             id="cyanotype-bg"
             cx="50%"
@@ -105,9 +105,9 @@ export function BlueprintSVG({
             fx="50%"
             fy="45%"
           >
-            <stop offset="0%" stopColor="#241021" />
-            <stop offset="60%" stopColor="#150914" />
-            <stop offset="100%" stopColor="#0F050A" />
+            <stop offset="0%" stopColor="#1E2747" />
+            <stop offset="60%" stopColor="#151B33" />
+            <stop offset="100%" stopColor="#0D0912" />
           </radialGradient>
 
           {/* Golden Zari Dimension Line Gradient */}
@@ -420,14 +420,14 @@ export function BlueprintSVG({
       {/* Roundel Hover Lens Callout Card (§2.3 Roundel Hover Lens pattern) */}
       {activePin && (
         <div
-          className="absolute z-30 transition-all duration-300 pointer-events-auto max-w-xs"
+          className="absolute z-30 transition-[left,top] duration-200 pointer-events-auto max-w-xs"
           style={{
             left: `${(activePin.x / 1000) * 100}%`,
             top: `${(activePin.y / 700) * 100}%`,
             transform: "translate(-50%, -125%)",
           }}
         >
-          <div className="relative p-4 bg-[#140C20]/95 border-2 border-[#4FD6E0] shadow-[6px_6px_0px_#352254] backdrop-blur-md rounded-lg text-white">
+          <div className="relative p-4 bg-[#140C20]/95 border border-[#4FD6E0]/60 shadow-[0_12px_32px_rgba(0,0,0,0.5)] backdrop-blur-md rounded-xl text-white">
             <button
               onClick={() => setActivePin(null)}
               className="absolute top-2 right-2 text-amber-200/60 hover:text-white"
@@ -441,7 +441,7 @@ export function BlueprintSVG({
               <span>{locale === "ta" ? activePin.labelTa : activePin.labelEn}</span>
             </div>
 
-            <p className="text-xs font-body text-slate-200 leading-relaxed mb-3">
+            <p className="text-xs font-body text-[#C4B7D7] leading-relaxed mb-3">
               {locale === "ta" ? activePin.questionTa : activePin.questionEn}
             </p>
 
@@ -452,7 +452,7 @@ export function BlueprintSVG({
                 const formEl = document.getElementById("suggestion-form-box");
                 if (formEl) formEl.scrollIntoView({ behavior: "smooth" });
               }}
-              className="w-full text-center py-1.5 px-3 bg-[#A6F0CF] hover:bg-[#ffc978] text-[#150914] text-[11px] font-mono font-bold uppercase tracking-wider transition-colors"
+              className="w-full text-center py-2 px-3 bg-[#A6F0CF] hover:bg-[#7AE7B5] text-[#140C20] rounded-lg text-[11px] font-mono font-bold uppercase tracking-wider transition-colors"
             >
               {locale === "ta" ? "யோசனையை எழுத" : "Suggest for this area →"}
             </button>

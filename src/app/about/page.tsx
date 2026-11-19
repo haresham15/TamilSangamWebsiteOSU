@@ -355,7 +355,7 @@ export default function AboutPage() {
           <section className="my-16 sm:my-24 text-left">
             <Link
               href="/guide"
-              className="group block p-8 sm:p-12 rounded-2xl bg-[#140C20] text-[#F4F0FA] border border-[#A6F0CF]/35 hover:border-[#A6F0CF] transition-all duration-300 shadow-xl focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+              className="group block p-8 sm:p-12 rounded-2xl bg-[#140C20] text-[#F4F0FA] border border-[#A6F0CF]/35 hover:border-[#A6F0CF] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 shadow-xl focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="space-y-3 max-w-2xl">

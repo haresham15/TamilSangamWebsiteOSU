@@ -19,6 +19,7 @@ uniform vec3 uHorizon;  // = FOG_COLOR (#F4EEDD)
 uniform vec3 uMid;      // #F7E7C6
 uniform vec3 uZenith;   // #9CC4E8
 uniform vec3 uSunDir;
+uniform float uGlow;
 
 void main() {
   vec3 d = normalize(vDir);
@@ -26,22 +27,33 @@ void main() {
   vec3 c = mix(uHorizon, uMid, smoothstep(0.00, 0.18, h));
   c = mix(c, uZenith, smoothstep(0.12, 0.85, h));
   float s = max(dot(d, uSunDir), 0.0);
-  c += vec3(1.0, 0.86, 0.62) * (pow(s, 64.0) * 0.8 + pow(s, 6.0) * 0.18); // disc + halo
+  c += vec3(1.0, 0.86, 0.62) * (pow(s, 64.0) * 0.8 + pow(s, 6.0) * uGlow + pow(s, 2.0) * uGlow * 0.35); // disc + halo + wide glow
   gl_FragColor = vec4(c, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }
 `;
 
-export function MorningSkyDome() {
+interface MorningSkyDomeProps {
+  /** Art pass overrides: sky gradient stops and dome radius (must sit inside camera.far). */
+  horizon?: string;
+  mid?: string;
+  zenith?: string;
+  radius?: number;
+  /** Strength of the glow around the sun. */
+  glow?: number;
+}
+
+export function MorningSkyDome({ horizon = FOG_COLOR, mid = SKY_MID, zenith = SKY_ZENITH, radius = 140, glow = 0.18 }: MorningSkyDomeProps = {}) {
   const uniforms = useMemo(
     () => ({
-      uHorizon: { value: new THREE.Color(FOG_COLOR) },
-      uMid: { value: new THREE.Color(SKY_MID) },
-      uZenith: { value: new THREE.Color(SKY_ZENITH) },
+      uHorizon: { value: new THREE.Color(horizon) },
+      uMid: { value: new THREE.Color(mid) },
+      uZenith: { value: new THREE.Color(zenith) },
       uSunDir: { value: SUN_DIR.clone() },
+      uGlow: { value: glow },
     }),
-    []
+    [horizon, mid, zenith, glow]
   );
 
   const material = useMemo(
@@ -65,7 +77,7 @@ export function MorningSkyDome() {
 
   return (
     <mesh renderOrder={-1} material={material}>
-      <sphereGeometry args={[140, 32, 24]} />
+      <sphereGeometry args={[radius, 32, 24]} />
     </mesh>
   );
 }

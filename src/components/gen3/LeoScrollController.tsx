@@ -4,7 +4,7 @@ import { useRef, type RefObject } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { MathUtils } from "three";
 import { leoKinematics } from "@/store/leoHeroStore";
-import { updateEventCamera } from "./eventCameraPath";
+import { FORGE_CAMERA_STOPS, updateEventCamera } from "./eventCameraPath";
 import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 import { setScrollProgress } from "./useScrollCinematic";
 
@@ -20,7 +20,7 @@ export function LeoScrollController({ progressRef }: { progressRef: RefObject<nu
       // In cinematic mode, cinemaCameraDamper in LeoCameraRig performs dual-channel damping.
       // We pass the raw target progress with Hermite C1 interpolation so the damper responds instantaneously without lag.
       progress.current = rawP;
-      updateEventCamera(progress.current, size.width < size.height, leoKinematics.targetPosition, leoKinematics.targetLookAt, true);
+      updateEventCamera(progress.current, size.width < size.height, leoKinematics.targetPosition, leoKinematics.targetLookAt, true, FORGE_CAMERA_STOPS, 1.3);
     } else {
       progress.current = MathUtils.damp(progress.current, rawP, 16, dt);
       updateEventCamera(progress.current, size.width < size.height, leoKinematics.targetPosition, leoKinematics.targetLookAt, false);

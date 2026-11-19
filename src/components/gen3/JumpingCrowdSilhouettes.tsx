@@ -26,7 +26,7 @@ function pseudoRand(seed: number) {
 // High-Quality Organic Procedural Silhouettes (Full Body & Cheering Arms)
 // ---------------------------------------------------------------------------
 
-function drawHumanCheeringSilhouette(
+export function drawHumanCheeringSilhouette(
   ctx: CanvasRenderingContext2D,
   cx: number,
   baseY: number,

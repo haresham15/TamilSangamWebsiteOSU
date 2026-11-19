@@ -447,11 +447,11 @@ export function ImageGalleryJsonLd({ album }: { album: GalleryAlbum }) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ImageGallery",
-    "@id": `${SITE_URL}/gallery/${album.slug}#gallery`,
+    "@id": `${SITE_URL}/events/${album.eventSlug || album.slug}#photo-vault`,
     name: `${album.titleEn} | Campus Photo Archive`,
     alternateName: album.titleTa,
     description: album.descriptionEn,
-    url: `${SITE_URL}/gallery/${album.slug}`,
+    url: `${SITE_URL}/events/${album.eventSlug || album.slug}`,
     datePublished: album.eventDate,
     organizer: {
       "@id": `${SITE_URL}/#organization`,

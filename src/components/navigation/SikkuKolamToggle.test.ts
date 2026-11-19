@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { KOLAM_PATHS, PULLI_DOTS } from "./SikkuKolamToggle";
-import { NAV_ROUTES } from "./navRoutes";
+import { NAV_ROUTES, PRIMARY_NAV_ROUTES, SECONDARY_NAV_ROUTES } from "./navRoutes";
 
 describe("SikkuKolamToggle specifications", () => {
   it("defines 4-segment cubic Bezier paths for seamless morphing", () => {
@@ -24,11 +24,13 @@ describe("SikkuKolamToggle specifications", () => {
     expect(ids).toEqual(["top", "bottom", "left", "right"]);
   });
 
-  it("positions Games as the final route with isNew and badge active", () => {
-    const lastRoute = NAV_ROUTES[NAV_ROUTES.length - 1];
-    expect(lastRoute.href).toBe("/games");
-    expect(lastRoute.isNew).toBe(true);
-    expect(lastRoute.badge).toBe(true);
-    expect(NAV_ROUTES.length).toBe(8);
+  it("positions Games as the final primary route with isNew and badge active", () => {
+    const lastPrimaryRoute = PRIMARY_NAV_ROUTES[PRIMARY_NAV_ROUTES.length - 1];
+    expect(lastPrimaryRoute.href).toBe("/games");
+    expect(lastPrimaryRoute.isNew).toBe(true);
+    expect(lastPrimaryRoute.badge).toBe(true);
+    expect(PRIMARY_NAV_ROUTES.length).toBe(6);
+    expect(SECONDARY_NAV_ROUTES.length).toBe(3);
+    expect(NAV_ROUTES.length).toBe(9);
   });
 });

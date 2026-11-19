@@ -97,7 +97,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         category: "Gallery" as const,
         title: `${a.titleEn} (${a.titleTa})`,
         subtitle: `${a.photoCount} photos · ${a.academicYear}`,
-        href: `/gallery/${a.slug}`,
+        href: `/events/${a.eventSlug || a.slug}#photo-vault`,
         icon: <ImageIcon className="w-4 h-4 text-[#0b7a75]" />,
       })),
 

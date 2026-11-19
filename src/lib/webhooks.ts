@@ -42,17 +42,17 @@ export interface NewsletterSubmission {
 const TRACK_LABELS: Record<MembershipTrack, { title: string; badge: string; desc: string }> = {
   general: {
     title: "General Member",
-    badge: "🏛️ GENERAL MEMBER",
+    badge: "GENERAL MEMBER",
     desc: "Attend feasts, lawn picnics, and campus socials",
   },
   performer: {
     title: "Dance & Music",
-    badge: "💃 DANCE & MUSIC",
+    badge: "DANCE & MUSIC",
     desc: "Kuthu & Gaana dance circles, acoustic music jams",
   },
   committee: {
     title: "Working Council",
-    badge: "⚙️ WORKING COUNCIL",
+    badge: "WORKING COUNCIL",
     desc: "Festival organizing, media trailers, and catering",
   },
 };
@@ -71,7 +71,7 @@ export function buildGuestbookDiscordEmbed(data: GuestbookSubmission) {
     avatar_url: "https://osutamilsangam.org/logo.svg",
     embeds: [
       {
-        title: "🏛️ NEW GUESTBOOK ENTRY — SANGAM HEARTH",
+        title: "NEW GUESTBOOK ENTRY — SANGAM HEARTH",
         description: `A new student has signed the digital guestbook and joined **OSU Tamil Sangam**!`,
         color: 0xa6f0cf, // Official Logo Mint #A6F0CF
         author: {
@@ -80,32 +80,32 @@ export function buildGuestbookDiscordEmbed(data: GuestbookSubmission) {
         },
         fields: [
           {
-            name: "👤 Student Name",
+            name: "Student Name",
             value: `**${data.name}**`,
             inline: true,
           },
           {
-            name: "✉️ Buckeye Email",
-            value: `\`${data.email}\` ${isBuckeye ? "🔴 *(Verified Buckeye)*" : "⚪ *(Community)*"}`,
+            name: "Buckeye Email",
+            value: `\`${data.email}\` ${isBuckeye ? "*(Verified Buckeye)*" : "*(Community)*"}`,
             inline: true,
           },
           {
-            name: "🎓 Ohio State Major",
+            name: "Ohio State Major",
             value: `**${data.major || "Undeclared / Not specified"}**`,
             inline: false,
           },
           {
-            name: "🎯 Participation Track",
-            value: `**${trackInfo.badge}**\n*${trackInfo.desc}*`,
+            name: "Participation Track",
+            value: `**[${trackInfo.badge}]**\n*${trackInfo.desc}*`,
             inline: false,
           },
           {
-            name: "📝 Personal Notes / Inquiry",
+            name: "Personal Notes / Inquiry",
             value: data.notes?.trim() ? `>>> ${data.notes.trim()}` : "*(None provided)*",
             inline: false,
           },
           {
-            name: "📋 Action Checklist",
+            name: "Action Checklist",
             value:
               "• [ ] Welcome on GroupMe\n• [ ] Track tagged in Members Ledger\n• [ ] Rehearsal / Meeting invite queued",
             inline: false,
@@ -131,7 +131,7 @@ export function buildSuggestionDiscordEmbed(data: SuggestionSubmission) {
     avatar_url: "https://osutamilsangam.org/logo.svg",
     embeds: [
       {
-        title: `💡 NEW PROPOSAL PINNED — [${data.category.toUpperCase()}]`,
+        title: `NEW PROPOSAL PINNED — [${data.category.toUpperCase()}]`,
         description: `A new idea was pinned to the digital blueprint at **/suggestions**!`,
         color: 0x4fd6e0, // Official Logo Cyan #4FD6E0
         author: {
@@ -140,22 +140,22 @@ export function buildSuggestionDiscordEmbed(data: SuggestionSubmission) {
         },
         fields: [
           {
-            name: "🏷️ Category",
+            name: "Category",
             value: `**${data.category}**`,
             inline: true,
           },
           {
-            name: "👤 Submitter",
+            name: "Submitter",
             value: `**${authorName}**\n${authorContact}`,
             inline: true,
           },
           {
-            name: "📜 Proposal Text",
+            name: "Proposal Text",
             value: `>>> ${data.message}`,
             inline: false,
           },
           {
-            name: "🗳️ Executive Board Agenda",
+            name: "Executive Board Agenda",
             value: "• [ ] Add to Sunday Agenda\n• [ ] Assign lead officer\n• [ ] Follow up if email provided",
             inline: false,
           },
@@ -179,7 +179,7 @@ export function buildNewsletterDiscordEmbed(data: NewsletterSubmission) {
     avatar_url: "https://osutamilsangam.org/logo.svg",
     embeds: [
       {
-        title: "📬 NEW DISPATCH SUBSCRIBER — STAY IN SANGAM",
+        title: "NEW DISPATCH SUBSCRIBER — STAY IN SANGAM",
         description: `New member subscribed for date drops & festival dispatches.`,
         color: 0x8c4a2f, // Deep Terracotta
         author: {
@@ -188,22 +188,22 @@ export function buildNewsletterDiscordEmbed(data: NewsletterSubmission) {
         },
         fields: [
           {
-            name: "✉️ Email",
+            name: "Email",
             value: `\`${data.email}\``,
             inline: true,
           },
           {
-            name: "🔴 Status",
+            name: "Status",
             value: data.isBuckeye ? "**Verified Buckeye**" : "**Community / Alumni**",
             inline: true,
           },
           {
-            name: "🏷️ Topics / Interests",
+            name: "Topics / Interests",
             value: interestsList,
             inline: false,
           },
           {
-            name: "📢 Next Event Banner",
+            name: "Next Event Banner",
             value: "NEXT EVENT: TBA • Join GroupMe for Date Drops",
             inline: false,
           },
@@ -225,14 +225,14 @@ export function buildNewsletterDiscordEmbed(data: NewsletterSubmission) {
 export function buildGuestbookSlackPayload(data: GuestbookSubmission) {
   const trackInfo = TRACK_LABELS[data.membershipType] || TRACK_LABELS.general;
   return {
-    text: `🏛️ *New Guestbook Entry:* ${data.name} (${trackInfo.title})`,
+    text: `*New Guestbook Entry:* ${data.name} (${trackInfo.title})`,
     blocks: [
       {
         type: "header",
         text: {
           type: "plain_text",
-          text: "🏛️ NEW GUESTBOOK ENTRY — SANGAM HEARTH",
-          emoji: true,
+          text: "NEW GUESTBOOK ENTRY — SANGAM HEARTH",
+          emoji: false,
         },
       },
       {
@@ -241,7 +241,7 @@ export function buildGuestbookSlackPayload(data: GuestbookSubmission) {
           { type: "mrkdwn", text: `*Student Name:*\n${data.name}` },
           { type: "mrkdwn", text: `*Buckeye Email:*\n<mailto:${data.email}|${data.email}>` },
           { type: "mrkdwn", text: `*OSU Major:*\n${data.major || "Undeclared"}` },
-          { type: "mrkdwn", text: `*Track:*\n${trackInfo.badge}` },
+          { type: "mrkdwn", text: `*Track:*\n[${trackInfo.badge}]` },
         ],
       },
       {
@@ -256,7 +256,7 @@ export function buildGuestbookSlackPayload(data: GuestbookSubmission) {
         elements: [
           {
             type: "mrkdwn",
-            text: `📍 Presiding: *Meenakshi Varadarajan & Executive Board* · Submitted at ${data.submittedAt || new Date().toLocaleString()}`,
+            text: `Presiding: *Meenakshi Varadarajan & Executive Board* · Submitted at ${data.submittedAt || new Date().toLocaleString()}`,
           },
         ],
       },
@@ -267,14 +267,14 @@ export function buildGuestbookSlackPayload(data: GuestbookSubmission) {
 
 export function buildSuggestionSlackPayload(data: SuggestionSubmission) {
   return {
-    text: `💡 *New Proposal Pinned:* [${data.category}] by ${data.name || "Anonymous"}`,
+    text: `*New Proposal Pinned:* [${data.category}] by ${data.name || "Anonymous"}`,
     blocks: [
       {
         type: "header",
         text: {
           type: "plain_text",
-          text: `💡 NEW PROPOSAL PINNED — ${data.category.toUpperCase()}`,
-          emoji: true,
+          text: `NEW PROPOSAL PINNED — ${data.category.toUpperCase()}`,
+          emoji: false,
         },
       },
       {
@@ -299,7 +299,7 @@ export function buildSuggestionSlackPayload(data: SuggestionSubmission) {
         elements: [
           {
             type: "mrkdwn",
-            text: `📌 OSU Tamil Sangam Blueprint Engine · For review by *President Meenakshi Varadarajan*`,
+            text: `OSU Tamil Sangam Blueprint Engine · For review by *President Meenakshi Varadarajan*`,
           },
         ],
       },
@@ -314,11 +314,11 @@ export function buildSuggestionSlackPayload(data: SuggestionSubmission) {
 
 export function buildGuestbookGroupMeText(data: GuestbookSubmission): string {
   const trackInfo = TRACK_LABELS[data.membershipType] || TRACK_LABELS.general;
-  return `[TAMIL SANGAM GUESTBOOK] 🏛️\nNew Member: ${data.name}\nEmail: ${data.email}\nMajor: ${data.major || "Undeclared"}\nTrack: ${trackInfo.title}\nNotes: ${data.notes || "None"}\nWelcome to the Hearth!`;
+  return `[TAMIL SANGAM GUESTBOOK]\nNew Member: ${data.name}\nEmail: ${data.email}\nMajor: ${data.major || "Undeclared"}\nTrack: ${trackInfo.title}\nNotes: ${data.notes || "None"}\nWelcome to the Hearth!`;
 }
 
 export function buildSuggestionGroupMeText(data: SuggestionSubmission): string {
-  return `[THE IDEAS HEARTH] 💡\nCategory: ${data.category}\nFrom: ${data.name || "Anonymous"}\nProposal: ${data.message}`;
+  return `[THE IDEAS HEARTH]\nCategory: ${data.category}\nFrom: ${data.name || "Anonymous"}\nProposal: ${data.message}`;
 }
 
 // =========================================================================
@@ -415,7 +415,7 @@ export async function dispatchBoardNotification(
       let text = "";
       if (flow === "guestbook") text = buildGuestbookGroupMeText(data as GuestbookSubmission);
       else if (flow === "suggestion") text = buildSuggestionGroupMeText(data as SuggestionSubmission);
-      else text = `[TAMIL SANGAM DISPATCH] 📬\nNew subscriber: ${(data as NewsletterSubmission).email}`;
+      else text = `[TAMIL SANGAM DISPATCH]\nNew subscriber: ${(data as NewsletterSubmission).email}`;
 
       const targetUrl = groupMeUrl || "https://api.groupme.com/v3/bots/post";
       const body = groupMeBotId ? { bot_id: groupMeBotId, text } : { text };

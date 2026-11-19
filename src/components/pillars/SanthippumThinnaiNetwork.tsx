@@ -140,7 +140,7 @@ export function SanthippumThinnaiNetwork() {
                 spotlightColor="rgba(85, 204, 162, 0.15)"
                 goldColor="rgba(212, 175, 55, 0.08)"
                 radius={360}
-                className={`p-6 sm:p-8 rounded-2xl border transition-all duration-300 flex flex-col justify-between ${
+                className={`p-6 sm:p-8 rounded-2xl border transition-[border-color,background-color,box-shadow] duration-200 flex flex-col justify-between ${
                   isSelected
                     ? "bg-[#140C20] border-[#55CCA2] shadow-xl shadow-[#55CCA2]/10"
                     : "bg-[#140C20] border-[rgba(125,96,166,0.25)] hover:border-[#55CCA2]/40"
@@ -151,7 +151,7 @@ export function SanthippumThinnaiNetwork() {
                 }}
               >
                 <div className="space-y-5">
-                  <div className="w-10 h-10 rounded-full bg-[#55CCA2]/15 flex items-center justify-center text-[#2A7B5E]">
+                  <div className="w-10 h-10 rounded-full bg-[#55CCA2]/15 flex items-center justify-center text-[#A6F0CF]">
                     <Icon className="w-5 h-5" />
                   </div>
 

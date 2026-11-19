@@ -668,7 +668,9 @@ export function BeachCompoundScene({ scrollP, backgroundBokeh, portrait = false 
     []
   );
 
-  useFrame(() => {
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
     skyUniforms.uBokeh.value = backgroundBokeh;
     sandUniforms.uBokeh.value = backgroundBokeh;
   });

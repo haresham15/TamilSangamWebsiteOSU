@@ -104,6 +104,16 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/gallery",
+        destination: "/events#photo-archives",
+        permanent: true,
+      },
+      {
+        source: "/gallery/:album",
+        destination: "/events/:album#photo-vault",
+        permanent: true,
+      },
+      {
         source: "/groupme",
         destination: "https://web.groupme.com/join_group/83424812/BeBIRg7f",
         permanent: false,

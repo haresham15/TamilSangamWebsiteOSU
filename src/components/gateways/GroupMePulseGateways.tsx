@@ -45,7 +45,7 @@ export function GroupMePulseGateways({
   return (
     <section
       aria-labelledby="groupme-pulse-heading"
-      className={`w-full py-12 px-4 sm:px-6 md:px-8 rounded-2xl border transition-all ${
+      className={`w-full py-12 px-4 sm:px-6 md:px-8 rounded-2xl border ${
         isDark
           ? "bg-[#140C20] border-white/10 text-white"
           : "bg-[#25173B] border-[rgba(125,96,166,0.25)] text-[#F4F0FA]"
@@ -74,7 +74,7 @@ export function GroupMePulseGateways({
             href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider transition-all bg-[#A6F0CF] text-[#140C20] hover:bg-[#A04E2F] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#4FD6E0]"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider transition-colors bg-[#A6F0CF] text-[#140C20] hover:bg-[#55CCA2] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#4FD6E0]"
           >
             <span>Join Campus Chat</span>
             <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
@@ -88,10 +88,10 @@ export function GroupMePulseGateways({
             return (
               <div
                 key={card.id}
-                className={`relative flex flex-col justify-between p-6 rounded-xl border transition-all duration-300 hover:-translate-y-1 ${
+                className={`relative flex flex-col justify-between p-6 rounded-xl border transition-[border-color,transform,box-shadow] duration-200 hover:-translate-y-1 ${
                   isDark
                     ? "bg-[#1A1028] border-white/10 hover:border-white/20"
-                    : "bg-[#1A1028] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 shadow-sm"
+                    : "bg-[#1A1028] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/40 shadow-sm"
                 }`}
               >
                 <div className="space-y-4">

@@ -5,16 +5,18 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { guideStationPalette } from "./palette";
 import { SdfSilhouette } from "./SdfSilhouette";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 
-function createVignetteBackdropTexture() {
+function createVignetteBackdropTexture(warm: boolean) {
   const width = 256;
   const height = 256;
   const pixels = new Uint8Array(width * height * 4);
 
   // HDR core [2.8, 1.85, 0.65] (represented in sRGB canvas)
-  const core = new THREE.Color("#A6F0CF");
-  const amber = new THREE.Color("#FF8A2A");
-  const edge = new THREE.Color("#3A1608");
+  // Art pass: tungsten compartment light (cream core → amber → ember) against the blue hour.
+  const core = new THREE.Color(warm ? "#FFE7BE" : "#A6F0CF");
+  const amber = new THREE.Color(warm ? "#FFA748" : "#FF8A2A");
+  const edge = new THREE.Color(warm ? "#4A1A08" : "#3A1608");
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
@@ -56,7 +58,8 @@ interface WindowAssemblyProps {
 export function WindowAssembly({ progress = 0, getProgress }: WindowAssemblyProps) {
   const readProgress = useMemo(() => getProgress ?? (() => progress), [getProgress, progress]);
 
-  const backdropTexture = useMemo(() => createVignetteBackdropTexture(), []);
+  const warm = isHeroCinematicEnabled("guide");
+  const backdropTexture = useMemo(() => createVignetteBackdropTexture(warm), [warm]);
   useEffect(() => {
     return () => backdropTexture.dispose();
   }, [backdropTexture]);
@@ -211,7 +214,8 @@ export function WindowAssembly({ progress = 0, getProgress }: WindowAssemblyProp
     }
 
     const p = readProgress();
-    const intensity = Math.max(0.15, 1.0 - p * 0.85);
+    // Art pass: the grade's bloom already halates the window, so the hand-made halo is kept faint.
+    const intensity = Math.max(0.15, 1.0 - p * 0.85) * (warm ? 0.4 : 1);
 
     if (halationMatRef.current) {
       halationMatRef.current.uniforms.uTime.value = time;
@@ -237,10 +241,10 @@ export function WindowAssembly({ progress = 0, getProgress }: WindowAssemblyProp
       {/* Compartment point light spilling warmth through the window */}
       <pointLight
         position={[0.3, 2.2, -1.2]}
-        intensity={85}
+        intensity={warm ? 48 : 85}
         distance={8}
         decay={2}
-        color={guideStationPalette.windowGlow}
+        color={warm ? "#FFB84D" : guideStationPalette.windowGlow}
       />
 
       {/* =========================================================================
@@ -350,22 +354,22 @@ export function WindowAssembly({ progress = 0, getProgress }: WindowAssemblyProp
         {/* Top frame bar */}
         <mesh position={[0, 0.48, 0]}>
           <boxGeometry args={[1.46, 0.06, 0.05]} />
-          <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.75} roughness={0.32} />
+          <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.75} roughness={warm ? 0.55 : 0.32} />
         </mesh>
         {/* Bottom frame sill */}
         <mesh position={[0, -0.48, 0]}>
           <boxGeometry args={[1.50, 0.07, 0.08]} />
-          <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.75} roughness={0.30} />
+          <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.75} roughness={warm ? 0.55 : 0.30} />
         </mesh>
         {/* Left frame upright */}
         <mesh position={[-0.70, 0, 0]}>
           <boxGeometry args={[0.06, 0.98, 0.05]} />
-          <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.75} roughness={0.32} />
+          <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.75} roughness={warm ? 0.55 : 0.32} />
         </mesh>
         {/* Right frame upright */}
         <mesh position={[0.70, 0, 0]}>
           <boxGeometry args={[0.06, 0.98, 0.05]} />
-          <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.75} roughness={0.32} />
+          <meshStandardMaterial color={guideStationPalette.coachEdge} metalness={0.75} roughness={warm ? 0.55 : 0.32} />
         </mesh>
         {/* Upper louvered rain-shutter overhang */}
         <mesh position={[0, 0.41, -0.015]}>

@@ -52,7 +52,7 @@ The lighting and atmosphere draw inspiration from the college arrival and memory
 
 - **Morning Blue Hour into Golden Dawn:** The scene transitions from the cool stillness of early morning into a radiant golden haze as sunlight filters through the gate bars.
 - **Cast Bronze Arch Plaque:** A sweeping arch crowning the stone pillars displays hand-set polished bronze lettering spelling `"TAMIL SANGAM"`, anchored beneath by an authentic plaque inscribed:
-  $$\text{"ஓஹியோ தமிழ் சங்கம் · EST. 2024"}$$
+  $$\text{"ஓஹியோ தமிழ் சங்கம் · EST. 2021"}$$
 
 ---
 

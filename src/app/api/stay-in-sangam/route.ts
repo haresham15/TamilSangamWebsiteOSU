@@ -71,8 +71,8 @@ export async function POST(req: NextRequest) {
     const dispatchResult = await dispatchEmail({
       to: validation.normalizedEmail,
       subject: validation.isBuckeye
-        ? "Vanakkam Buckeye! You're in the Sangam Loop 🪔"
-        : "Vanakkam from OSU Tamil Sangam! You're in the Loop 🪔",
+        ? "Vanakkam Buckeye! You're in the Sangam Loop ✦"
+        : "Vanakkam from OSU Tamil Sangam! You're in the Loop ✦",
       html: emailContent.html,
       text: emailContent.text,
     });

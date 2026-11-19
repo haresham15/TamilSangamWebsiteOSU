@@ -39,6 +39,13 @@ vec3 karis(vec3 a, vec3 b, vec3 c, vec3 d) {
   return (a * wa + b * wb + c * wc + d * wd) / (wa + wb + wc + wd);
 }
 
+// Scene shaders can emit NaN/Inf (pow of a negative, divide by zero). Unlike an 8-bit
+// canvas, the HalfFloat target keeps them and the blur spreads them into black blotches,
+// so the first bloom tap replaces non-finite samples with black.
+vec3 finite(vec3 c) {
+  return any(isnan(c)) || any(isinf(c)) ? vec3(0.0) : c;
+}
+
 void main() {
   vec2 t = uTexel;
   vec3 A = texture(tSrc, vUv + t * vec2(-2.0, -2.0)).rgb;
@@ -57,6 +64,8 @@ void main() {
 
   vec3 color;
   if (uPrefilter) {
+    A = finite(A); B = finite(B); C = finite(C); D = finite(D); E = finite(E); F = finite(F); G = finite(G);
+    H = finite(H); I = finite(I); J = finite(J); K = finite(K); L = finite(L); M = finite(M);
     // Karis average per 2×2 block suppresses single-pixel fireflies (specular sparks).
     color = karis(D, F, I, J) * 0.5
           + karis(A, B, G, E) * 0.125
@@ -196,6 +205,7 @@ ${TONEMAP_GLSL}
 ${NOISE_GLSL}
 void main() {
   vec4 s = texture(tScene, vUv);
+  if (any(isnan(s)) || any(isinf(s))) s = vec4(0.0, 0.0, 0.0, 1.0);
   vec3 bloom = uBloomOn ? texture(tBloom, vUv).rgb * uBloomIntensity : vec3(0.0);
   vec3 lin = s.rgb + bloom;
   float a = clamp(s.a + dot(bloom, vec3(0.2126, 0.7152, 0.0722)), 0.0, 1.0);

@@ -3,36 +3,44 @@ import * as THREE from "three";
 import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 
-/**
- * Diagnostic wireframe material: unlit matrix green (#00FF41) without tone mapping (§6.3)
- */
-export const diagnosticWireMaterial = new THREE.MeshBasicMaterial({
-  color: 0x00ff41,
-  wireframe: true,
-  toneMapped: false,
-});
-
-export const diagnosticPointsMaterial = new THREE.PointsMaterial({
-  color: 0x00ff41,
-  size: 2.5,
-  sizeAttenuation: false,
-  transparent: true,
-  opacity: 0.85,
-  toneMapped: false,
-});
-
-export const diagnosticLineMaterial = new THREE.LineBasicMaterial({
-  color: 0x00ff41,
-  toneMapped: false,
-});
-
 // Defensive proxy so any component calling (m.material as ShaderMaterial).uniforms.foo.value never crashes
 const safeUniformsProxy = new Proxy({} as Record<string, { value: number }>, {
   get: () => ({ value: 0 }),
 });
-(diagnosticWireMaterial as unknown as { uniforms: unknown }).uniforms = safeUniformsProxy;
-(diagnosticPointsMaterial as unknown as { uniforms: unknown }).uniforms = safeUniformsProxy;
-(diagnosticLineMaterial as unknown as { uniforms: unknown }).uniforms = safeUniformsProxy;
+
+interface DiagnosticMaterials {
+  wire: THREE.MeshBasicMaterial;
+  points: THREE.PointsMaterial;
+  line: THREE.LineBasicMaterial;
+}
+let diagnostics: DiagnosticMaterials | null = null;
+
+/**
+ * Diagnostic wire materials: unlit matrix green (#00FF41) without tone mapping (§6.3).
+ * Created on first use so pages that never toggle wire mode allocate nothing.
+ */
+function getDiagnosticMaterials(): DiagnosticMaterials {
+  if (!diagnostics) {
+    diagnostics = {
+      wire: new THREE.MeshBasicMaterial({ color: 0x00ff41, wireframe: true, toneMapped: false }),
+      points: new THREE.PointsMaterial({
+        color: 0x00ff41,
+        size: 2.5,
+        sizeAttenuation: false,
+        transparent: true,
+        opacity: 0.85,
+        toneMapped: false,
+      }),
+      line: new THREE.LineBasicMaterial({ color: 0x00ff41, toneMapped: false }),
+    };
+    for (const m of Object.values(diagnostics)) {
+      (m as unknown as { uniforms: unknown }).uniforms = safeUniformsProxy;
+    }
+  }
+  return diagnostics;
+}
+
+export const getDiagnosticWireMaterial = () => getDiagnosticMaterials().wire;
 
 type RenderableObject = THREE.Mesh | THREE.Points | THREE.Line;
 
@@ -54,11 +62,11 @@ function applyWireToObject(o: RenderableObject, on: boolean) {
     if (o.userData?.wireMaterial) {
       o.material = o.userData.wireMaterial;
     } else if ((o as THREE.Mesh).isMesh) {
-      o.material = diagnosticWireMaterial;
+      o.material = getDiagnosticMaterials().wire;
     } else if ((o as THREE.Points).isPoints) {
-      o.material = diagnosticPointsMaterial;
+      o.material = getDiagnosticMaterials().points;
     } else if ((o as THREE.Line).isLine) {
-      o.material = diagnosticLineMaterial;
+      o.material = getDiagnosticMaterials().line;
     }
   } else if (originals.has(o)) {
     o.material = originals.get(o)!;

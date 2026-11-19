@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { EVENTS } from "@/data/events";
+import { GALLERY_ALBUMS } from "@/data/gallery";
 import { getRandomizedEventPhotos } from "@/lib/event-photos";
 import { EventDossierView } from "@/components/events/EventDossierView";
-import { EventJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { EventJsonLd, BreadcrumbJsonLd, ImageGalleryJsonLd } from "@/components/seo/JsonLd";
 import { constructAlternates, constructCanonical, DEFAULT_ROBOTS, SITE_URL } from "@/lib/seo";
 
 interface EventPageProps {
@@ -84,6 +85,7 @@ export default async function EventDetailPage({ params }: EventPageProps) {
   }
 
   const randomizedPhotos = await getRandomizedEventPhotos(slug, 5, 8);
+  const album = GALLERY_ALBUMS.find((a) => a.eventSlug === slug || a.slug === slug);
 
   const breadcrumbs = [
     { name: "Home", url: "/" },
@@ -95,6 +97,7 @@ export default async function EventDetailPage({ params }: EventPageProps) {
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
       <EventJsonLd event={event} />
+      {album && <ImageGalleryJsonLd album={album} />}
       <EventDossierView key={event.slug} event={event} photos={randomizedPhotos} />
     </>
   );

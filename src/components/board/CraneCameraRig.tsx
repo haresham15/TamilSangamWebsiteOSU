@@ -21,6 +21,17 @@ function easeInOutCubic(x: number): number {
   return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 }
 
+/**
+ * Portrait framing. The legacy rig pushed the camera back by up to 2.4× on narrow screens,
+ * which put it 40 m outside the hall (the corridor seen as a box in the dark). Instead keep
+ * the camera inside the colonnade and widen the vertical FOV until the horizontal view
+ * holds at least `minHorizontalFov`, capped so verticals do not stretch.
+ */
+function portraitFov(baseFov: number, aspect: number, minHorizontalFov = 46, maxFov = 72): number {
+  const needed = (2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(minHorizontalFov) / 2) / Math.max(aspect, 0.3)) * 180) / Math.PI;
+  return THREE.MathUtils.clamp(Math.max(baseFov, needed), baseFov, maxFov);
+}
+
 function smootherstep(t: number): number {
   return t <= 0 ? 0 : t >= 1 ? 1 : t * t * t * (t * (t * 6 - 15) + 10);
 }
@@ -92,7 +103,13 @@ export function CraneCameraRig({ scrollProgress, reducedMotion: reducedMotionPro
     } else {
       // Cinematic elevation: Hermite smootherstep + dual-channel exponential damper
       const smoothedP = smootherstep(p);
-      const targetZ = THREE.MathUtils.lerp(30 * aspectScale, 5.2 * aspectScale, smoothedP);
+      // Portrait: start a little nearer the crown (it is small in a tall frame), end at the
+      // same sanctum framing as desktop.
+      const portrait = state.viewport.aspect < 1;
+      // End far enough back that the whole prabha ring and altar sit in frame.
+      // Portrait starts further back (still inside the first bay) so the near banner fits the
+      // narrower horizontal view without stretching the vertical FOV past 72°.
+      const targetZ = THREE.MathUtils.lerp(portrait ? 31.0 : 30, portrait ? 6.6 : 6.1, smoothedP);
       const swayX = Math.sin(p * 6.0) * 0.10 + kinetics.smoothPointerX * 0.28;
 
       const craneDescend = p < 0.28 ? Math.pow(p / 0.28, 1.5) : 1.0;
@@ -102,7 +119,10 @@ export function CraneCameraRig({ scrollProgress, reducedMotion: reducedMotionPro
 
       // Dignified processional look-at sweep with leading carriage focusing ahead on colonnade
       const lookWeaveX = Math.sin(p * Math.PI * 3.0) * 0.28 + kinetics.smoothPointerX * 0.18;
-      const lookY = p < 0.28 ? THREE.MathUtils.lerp(1.38, 1.62, p / 0.28) : 1.62;
+      const lookY =
+        p < 0.28
+          ? THREE.MathUtils.lerp(portrait ? 1.45 : 1.58, 1.62, p / 0.28)
+          : THREE.MathUtils.lerp(1.62, 2.0, smootherstep((p - 0.7) / 0.3));
       const lookZ = targetZ - 8.5;
       lookTarget.set(lookWeaveX, lookY, lookZ);
 
@@ -125,7 +145,7 @@ export function CraneCameraRig({ scrollProgress, reducedMotion: reducedMotionPro
 
       if ("fov" in camera) {
         const persCamera = camera as THREE.PerspectiveCamera;
-        persCamera.fov = THREE.MathUtils.lerp(32, 44, smoothedP);
+        persCamera.fov = portraitFov(THREE.MathUtils.lerp(36, 44, smoothedP), state.viewport.aspect);
         persCamera.updateProjectionMatrix();
       }
     }

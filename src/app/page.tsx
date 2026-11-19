@@ -394,7 +394,7 @@ export default function HomePage() {
                       ? "Click to pause pronunciation · ஒலி வடிவத்தை நிறுத்தவும்"
                       : "Click quote to hear Tamil pronunciation · குறள் 81 ஒலி கேட்க"
                   }
-                  className="group cursor-pointer font-noto-serif-tamil text-[clamp(1.15rem,1.65vw,1.55rem)] text-[#FAFAFA] font-medium p-3 sm:p-4 rounded-xl transition-all duration-300 hover:bg-white/[0.05] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0]"
+                  className="group cursor-pointer font-noto-serif-tamil text-[clamp(1.15rem,1.65vw,1.55rem)] text-[#FAFAFA] font-medium p-3 sm:p-4 rounded-xl transition-colors duration-200 hover:bg-white/[0.05] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0]"
                   style={{ letterSpacing: "0px" }}
                 >
                   <span className="block sm:whitespace-nowrap leading-[1.8] sm:leading-[1.9]">
@@ -409,7 +409,7 @@ export default function HomePage() {
               {/* Tier 2: Translation (SplitText word-by-word cascade) */}
               <p
                 ref={kuralEnglishRef}
-                className="font-space-mono text-xs sm:text-sm text-white/80 max-w-lg mt-6 sm:mt-7 leading-relaxed sm:leading-loose tracking-wide"
+                className="font-space-mono text-xs sm:text-sm text-white/85 max-w-lg mt-6 sm:mt-7 leading-relaxed sm:leading-loose tracking-wide max-sm:[text-shadow:0_0_6px_#140d09,0_0_14px_#140d09,0_0_2px_#140d09]"
               >
                 &ldquo;The entire virtue of establishing a home is to welcome guests with an open heart and extend generosity.&rdquo;
               </p>
@@ -417,7 +417,7 @@ export default function HomePage() {
               {/* Tier 3: Clean, unboxed monospace line with subtle audio button (§MASTER DIRECTIVE) */}
               <div
                 ref={kuralMetaRef}
-                className="mt-5 sm:mt-6 flex items-center justify-center gap-2.5 font-space-mono text-[10px] sm:text-[11px] text-[#A6F0CF]/85 tracking-[0.22em] uppercase pointer-events-auto"
+                className="mt-5 sm:mt-6 flex items-center justify-center gap-2.5 font-space-mono text-[10px] sm:text-[11px] text-[#A6F0CF]/85 tracking-[0.22em] uppercase pointer-events-auto max-sm:[text-shadow:0_0_6px_#140d09,0_0_14px_#140d09,0_0_2px_#140d09]"
               >
                 <span>THIRUKKURAL 81 · விருந்தோம்பல்</span>
                 <ThirukkuralAudioButton
@@ -488,7 +488,7 @@ export default function HomePage() {
                   <Link
                     href="/join"
                     onClick={playClick}
-                    className="px-4 py-2 sm:px-5 sm:py-2.5 bg-[#A6F0CF] text-[#140C20] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#7AE7B5] transition-colors ticket-chamfer-tl-br shadow-sm"
+                    className="px-4 py-2 sm:px-5 sm:py-2.5 bg-[#A6F0CF] text-[#140C20] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#7AE7B5] transition-colors rounded-xl shadow-sm"
                   >
                     Join the Hearth →
                   </Link>

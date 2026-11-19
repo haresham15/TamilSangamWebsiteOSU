@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useState, useEffect, useRef, useMemo } from "react";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PerspectiveCamera, Environment } from "@react-three/drei";
@@ -10,12 +10,12 @@ import { CorridorTreadmill } from "./CorridorTreadmill";
 import { EmblemFinale } from "./EmblemFinale";
 import { useBoardHeroStore } from "@/store/boardHeroStore";
 import { CholaCrown3D } from "./CholaCrown3D";
+import { CholaCrownArt } from "./CholaCrownArt";
+import { DustMotes, HazeLayer } from "@/gl/art/Atmosphere";
 import { Terminal } from "lucide-react";
 import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 import { useWarmup } from "@/components/gl/useWarmup";
 
-import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
 import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 import { useRenderMode } from "@/components/providers/useRenderMode";
 
@@ -26,77 +26,6 @@ if (typeof window !== "undefined") {
 function BoardSceneWarmup() {
   useWarmup("board-corridor");
   return null;
-}
-
-/**
- * Micro-Detail 3: Drifting incense embers and golden motes in the royal corridor
- */
-function CorridorIncenseEmbers() {
-  const pointsRef = useRef<THREE.Points>(null);
-  const { mode } = useRenderMode();
-
-  const particleCount = mode === "A" ? 48 : 24;
-  const { geometry, material, speeds, phases } = useMemo(() => {
-    const geo = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    const spds = new Float32Array(particleCount);
-    const phs = new Float32Array(particleCount);
-
-    let seed = 4321;
-    const rand = () => {
-      seed = (seed * 16807) % 2147483647;
-      return (seed - 1) / 2147483646;
-    };
-
-    for (let i = 0; i < particleCount; i++) {
-      positions[i * 3 + 0] = (rand() - 0.5) * 3.6; // X in [-1.8, 1.8]
-      positions[i * 3 + 1] = 0.3 + rand() * 3.5;   // Y in [0.3, 3.8]
-      positions[i * 3 + 2] = 2.0 + rand() * 30.0;  // Z in [2, 32]
-      spds[i] = 0.08 + rand() * 0.14;              // gentle upward drift
-      phs[i] = rand() * Math.PI * 2;
-    }
-
-    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-
-    const mat = new THREE.PointsMaterial({
-      color: "#FFAE42",
-      size: 0.05,
-      transparent: true,
-      opacity: 0.65,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-
-    return { geometry: geo, material: mat, speeds: spds, phases: phs };
-  }, [particleCount]);
-
-  useEffect(() => {
-    return () => {
-      geometry.dispose();
-      material.dispose();
-    };
-  }, [geometry, material]);
-
-  useFrame(({ clock }, delta) => {
-    const dt = Math.min(delta, 0.05);
-    if (dt <= 0 || mode === "static" || !pointsRef.current) return;
-    const t = clock.getElapsedTime();
-    const attr = geometry.attributes.position as THREE.BufferAttribute;
-    const pos = attr.array as Float32Array;
-
-    for (let i = 0; i < particleCount; i++) {
-      pos[i * 3 + 1] += dt * speeds[i];
-      if (pos[i * 3 + 1] > 3.8) {
-        pos[i * 3 + 1] = 0.3;
-      }
-      pos[i * 3 + 0] += Math.sin(t * 0.7 + phases[i]) * 0.0015;
-    }
-    attr.needsUpdate = true;
-  });
-
-  if (mode === "static") return null;
-
-  return <points ref={pointsRef} geometry={geometry} material={material} />;
 }
 
 interface BoardHeroCanvasProps {
@@ -110,7 +39,7 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
   const goldOverlayRef = useRef<HTMLDivElement>(null);
   const [isCinematic] = useState(() => isHeroCinematicEnabled("board"));
   // One quality source; Tier C / Lite / reduced motion render the static poster (no canvas).
-  const { mode } = useRenderMode();
+  const { mode, qualityLevel } = useRenderMode();
   const reducedMotion = mode === "static";
 
   // Bespoke scene-matched environment reflections (§1.1b PRD Mandate)
@@ -212,8 +141,10 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src="/board/board-hero-poster.webp"
-              alt="Torch-lit stone corridor of a Chola royal hall, the golden crown floating above the floor"
+              alt="Chola Darbar (சோழர் அவை): a lamp-lit granite colonnade hung with silk banners of the executive committee, a jewelled gold Chola crown on a lotus pedestal in the foreground"
               className="absolute inset-0 h-full w-full object-cover"
+              width={1600}
+              height={900}
               decoding="async"
             />
           ) : (
@@ -231,26 +162,53 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
             {/* Bespoke Scene-Matched Chola Darbar Environment Map */}
             {bespokeEnv && <Environment map={bespokeEnv} background={false} />}
 
-            {/* Ambient & Rim Lighting (Moody torchlight balance, max 0.6 luminance) */}
             {isCinematic ? (
               <>
-                <ambientLight intensity={0.42} color="#40281b" />
+                {/* Light hierarchy: lamp pools (fake + two real lights, CorridorTreadmill) are the
+                    key; a faint cool fill keeps the shadows from going flat black; one warm spot
+                    from above picks out the crown; the crown adds its own rim at the reveal. */}
+                <hemisphereLight args={["#6a6496", "#4a2c18", 0.42]} userData={{ gradeRole: "fill" }} />
                 <spotLight
-                  position={[0, 6.0, 26.5]}
-                  target-position={[0, 0.65, 23.5]}
-                  angle={0.42}
+                  position={[0.5, 6.2, 25.4]}
+                  target-position={[0, 0.55, 23.5]}
+                  angle={0.2}
                   penumbra={0.7}
-                  intensity={3.5}
-                  color="#FFE09A"
+                  intensity={30}
+                  color="#ffc890"
                   castShadow
-                  shadow-mapSize-width={1024}
-                  shadow-mapSize-height={1024}
-                  shadow-bias={-0.0001}
+                  shadow-mapSize-width={512}
+                  shadow-mapSize-height={512}
+                  shadow-bias={-0.0002}
                   shadow-normalBias={0.02}
+                  userData={{ gradeRole: "key" }}
                 />
-                <directionalLight position={[0, 4.0, 15.0]} intensity={0.5} color="#2A1825" />
-                <directionalLight position={[0, -2.0, 20.0]} intensity={0.35} color="#D47B37" />
-                <CorridorIncenseEmbers />
+                {/* Air: haze sheets at three depths separate the colonnade into planes. */}
+                <HazeLayer position={[0, 1.3, 21.5]} size={[5, 3]} color="#c98a52" intensity={0.05} />
+                <HazeLayer position={[0, 1.6, 15]} size={[7, 4]} color="#c08850" intensity={0.055} />
+                <HazeLayer position={[0, 1.8, 10]} size={[7, 4.4]} color="#c08850" intensity={0.06} />
+                <HazeLayer position={[0, 1.9, 6.5]} size={[7, 4.8]} color="#d0925a" intensity={0.07} />
+                <HazeLayer position={[0, 2.0, 4.2]} size={[7, 5]} color="#e0a060" intensity={0.075} />
+                <HazeLayer position={[0, 2.2, 1.6]} size={[6, 4.4]} color="#ffb870" intensity={0.05} />
+                <DustMotes
+                  position={[0, 2.0, 15]}
+                  size={[3.6, 3.6, 30]}
+                  count={qualityLevel === 0 && mode === "A" ? 520 : 260}
+                  color="#ffd2a0"
+                  intensity={0.5}
+                  pointSize={30}
+                  drift={[0.01, 0.02, 0.0]}
+                />
+                {/* Embers: fewer, larger, warmer, rising from the lamps' height. */}
+                <DustMotes
+                  position={[0, 2.2, 15]}
+                  size={[3.4, 3.2, 30]}
+                  count={qualityLevel === 0 && mode === "A" ? 140 : 70}
+                  color="#ffb066"
+                  intensity={0.75}
+                  pointSize={34}
+                  drift={[0.0, 0.11, 0.0]}
+                  seed={21}
+                />
               </>
             ) : (
               <>
@@ -274,7 +232,11 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
             <CraneCameraRig scrollProgress={localProgress} reducedMotion={reducedMotion} />
 
             {/* Floating Imperial Chola Crown placed lower near stone floor so camera glides above it (z = 23.5) */}
-            <CholaCrown3D position={[0, 0.65, 23.5]} scale={0.88} />
+            {isCinematic ? (
+              <CholaCrownArt position={[0, 0.65, 23.5]} scale={0.88} />
+            ) : (
+              <CholaCrown3D position={[0, 0.65, 23.5]} scale={0.88} />
+            )}
 
             {/* 3D Modular Corridor Treadmill (§3) */}
             <Suspense fallback={null}>
@@ -293,7 +255,7 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
           <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(20,10,5,0.45)_100%)]" />
 
           {/* Bottom Vignette Gradient to dissolve floor into DOM */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#120A06] via-[#120A06]/70 to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#120A06] via-[#120A06]/35 to-transparent z-10" />
         </div>
 
         {/* ========================================================================= */}

@@ -4,18 +4,22 @@ import React, { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { seededRandom } from "@/lib/prng";
+import { useRenderMode } from "@/components/providers/useRenderMode";
 
 // ---------------------------------------------------------------------------
-// 4K High-Detail Procedural Texture for Festival Arena Back Wall
+// Procedural Texture for Festival Arena Back Wall. Painted in a 4096×2048 logical space
+// but rasterised at 2048×1024 (32 MB → 8 MB of GPU memory with mips); the wall is never
+// seen closer than that resolves.
 // ---------------------------------------------------------------------------
 
-function createArenaBackWallTexture(): THREE.CanvasTexture | null {
+function createArenaBackWallTexture(anisotropy: number): THREE.CanvasTexture | null {
   if (typeof document === "undefined") return null;
   const canvas = document.createElement("canvas");
-  canvas.width = 4096;
-  canvas.height = 2048;
+  canvas.width = 2048;
+  canvas.height = 1024;
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
+  ctx.scale(0.5, 0.5);
 
   // 1. Dark Weathered Heavy Industrial Concrete Base
   ctx.fillStyle = "#110f13";
@@ -527,7 +531,7 @@ function createArenaBackWallTexture(): THREE.CanvasTexture | null {
   const texture = new THREE.CanvasTexture(canvas);
   texture.wrapS = THREE.ClampToEdgeWrapping;
   texture.wrapT = THREE.ClampToEdgeWrapping;
-  texture.anisotropy = 16;
+  texture.anisotropy = anisotropy;
   return texture;
 }
 
@@ -535,7 +539,7 @@ function createArenaBackWallTexture(): THREE.CanvasTexture | null {
 // Procedural Side Wall Textures (Left & Right Bays)
 // ---------------------------------------------------------------------------
 
-function createSideWallTexture(side: "left" | "right"): THREE.CanvasTexture | null {
+function createSideWallTexture(side: "left" | "right", anisotropy: number): THREE.CanvasTexture | null {
   if (typeof document === "undefined") return null;
   const canvas = document.createElement("canvas");
   canvas.width = 2048;
@@ -669,7 +673,7 @@ function createSideWallTexture(side: "left" | "right"): THREE.CanvasTexture | nu
   const texture = new THREE.CanvasTexture(canvas);
   texture.wrapS = THREE.ClampToEdgeWrapping;
   texture.wrapT = THREE.ClampToEdgeWrapping;
-  texture.anisotropy = 8;
+  texture.anisotropy = anisotropy;
   return texture;
 }
 
@@ -1437,11 +1441,16 @@ function FactorySparks({ count = 140 }) {
 // ---------------------------------------------------------------------------
 
 export function LeoFactoryEnvironment() {
-  const backWallTexture = useMemo(() => createArenaBackWallTexture(), []);
+  // One quality source: full detail only on Tier A at governor level 0.
+  const { mode, qualityLevel } = useRenderMode();
+  const full = mode === "A" && qualityLevel === 0;
+  const anisotropy = full ? 8 : 4;
+  const sparkCount = full ? 140 : mode === "A" ? 90 : 60;
+  const backWallTexture = useMemo(() => createArenaBackWallTexture(anisotropy), [anisotropy]);
   const floorTexture = useMemo(() => createFloorTexture(), []);
   const crateTexture = useMemo(() => createCrateTexture(), []);
-  const leftWallTexture = useMemo(() => createSideWallTexture("left"), []);
-  const rightWallTexture = useMemo(() => createSideWallTexture("right"), []);
+  const leftWallTexture = useMemo(() => createSideWallTexture("left", anisotropy), [anisotropy]);
+  const rightWallTexture = useMemo(() => createSideWallTexture("right", anisotropy), [anisotropy]);
 
   // Dispose procedural canvas textures on unmount to prevent GPU accumulation
   useEffect(() => {
@@ -1587,7 +1596,7 @@ export function LeoFactoryEnvironment() {
       <HangingChain position={[5.0, 12, 2.5]} length={5.8} />
 
       {/* 9. Upward Drifting Festival Embers */}
-      <FactorySparks count={140} />
+      <FactorySparks count={sparkCount} />
     </group>
   );
 }

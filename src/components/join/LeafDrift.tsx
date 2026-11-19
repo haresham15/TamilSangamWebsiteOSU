@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { SUN_DIR } from "./env/sun";
 import { createLeafAtlasTexture } from "./leafAtlas";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 
 interface LeafDriftProps {
   count?: number;
@@ -32,6 +33,8 @@ const JASMINE_COLORS = [
   new THREE.Color("#F5EEDB"),
   new THREE.Color("#FFF8E7"),
 ];
+
+const TMP_COLOR = new THREE.Color();
 
 const leafVertexShader = /* glsl */ `
 uniform float uTime;
@@ -145,7 +148,7 @@ void main() {
   vec3 sunLight = vec3(1.0, 0.94, 0.82) * (NdotL * 0.75 + wrapLight * 0.25);
   vec3 translucentGlow = vec3(1.0, 0.90, 0.65) * backScatter * (vType > 0.5 ? 0.95 : 1.2);
 
-  vec3 finalColor = vColor * (ambient + sunLight) + translucentGlow;
+  vec3 finalColor = vColor * texColor.rgb * (ambient + sunLight) + translucentGlow * texColor.rgb;
   float alpha = texColor.a * vFade;
 
   if (alpha < 0.05) discard;
@@ -169,6 +172,7 @@ export function LeafDrift({
   reducedMotion = false,
 }: LeafDriftProps) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const [artPass] = React.useState(() => isHeroCinematicEnabled("join"));
 
   // Particle budget per tier (§0 & §6)
   const particleCount = useMemo(() => {
@@ -178,7 +182,7 @@ export function LeafDrift({
     return tier === "A" ? 420 : 60;
   }, [propCount, tier, reducedMotion]);
 
-  const atlasTexture = useMemo(() => createLeafAtlasTexture(), []);
+  const atlasTexture = useMemo(() => createLeafAtlasTexture({ blossom: artPass }), [artPass]);
 
   const uniforms = useMemo(
     () => ({
@@ -226,10 +230,20 @@ export function LeafDrift({
       types[i] = isJasmine ? 1.0 : 0.0;
 
       const palette = isJasmine ? JASMINE_COLORS : BUCKEYE_COLORS;
-      const col = palette[Math.floor(pseudoRandom(i * 5 + 10) * palette.length)];
-      colors[i * 3 + 0] = col.r;
-      colors[i * 3 + 1] = col.g;
-      colors[i * 3 + 2] = col.b;
+      const pick = pseudoRandom(i * 5 + 10) * palette.length;
+      const col = palette[Math.floor(pick)];
+      if (artPass && !isJasmine) {
+        // Art pass: blend toward the neighbouring hue and jitter brightness so no two
+        // leaves share a flat swatch; sizes spread wider.
+        const next = palette[Math.min(palette.length - 1, Math.floor(pick) + 1)];
+        TMP_COLOR.copy(col).lerp(next, pseudoRandom(i * 5 + 11) * 0.7).multiplyScalar(0.82 + pseudoRandom(i * 5 + 12) * 0.3);
+        scales[i] = 0.11 + pseudoRandom(i * 5 + 8) * 0.15;
+      } else {
+        TMP_COLOR.copy(col);
+      }
+      colors[i * 3 + 0] = TMP_COLOR.r;
+      colors[i * 3 + 1] = TMP_COLOR.g;
+      colors[i * 3 + 2] = TMP_COLOR.b;
     }
 
     geo.setAttribute("aInitialPos", new THREE.InstancedBufferAttribute(initialPos, 3));
@@ -240,7 +254,7 @@ export function LeafDrift({
     geo.setAttribute("aType", new THREE.InstancedBufferAttribute(types, 1));
 
     return geo;
-  }, [particleCount]);
+  }, [particleCount, artPass]);
 
   useEffect(() => {
     return () => {

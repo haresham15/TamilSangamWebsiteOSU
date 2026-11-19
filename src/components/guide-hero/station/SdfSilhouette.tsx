@@ -103,7 +103,9 @@ export function SdfSilhouette({
 
   // Woman is 1.1x1.1m seated quad, Man is 0.9x1.75m standing quad
   const geometryArgs: [number, number] = kind === "woman" ? [1.1, 1.1] : [0.9, 1.75];
-  const renderOrder = kind === "woman" ? 2 : 5;
+  // The man stands in front of the glass and its additive glare cards (renderOrder 10–18), so
+  // he draws after them; otherwise the glare paints over his body where it overlaps the window.
+  const renderOrder = kind === "woman" ? 2 : 20;
 
   return (
     <mesh

@@ -14,13 +14,21 @@ export const FOCUS_GAUSSIAN_WEIGHTS = [0.2270270270, 0.1945945946, 0.1216216216,
 export const blurFragment = /* glsl */ `
   uniform sampler2D uSource;
   uniform vec2 uRadius;
+  uniform float uClamp;
   varying vec2 vUv;
 
+  // Out-of-focus HDR specks (blast rim light on a fingertip) otherwise print each sparse tap as a dot.
+  vec4 tap(vec2 uv) {
+    vec4 s = texture2D(uSource, clamp(uv, 0.0, 1.0));
+    if (uClamp > 0.0) s.rgb = min(s.rgb, vec3(uClamp * s.a));
+    return s;
+  }
+
   void main() {
-    vec4 sum = texture2D(uSource, vUv) * ${FOCUS_GAUSSIAN_WEIGHTS[0]};
+    vec4 sum = tap(vUv) * ${FOCUS_GAUSSIAN_WEIGHTS[0]};
     ${FOCUS_GAUSSIAN_WEIGHTS.slice(1).map((weight, index) => `sum += (
-      texture2D(uSource, clamp(vUv + uRadius * ${((index + 1) / 4).toFixed(2)}, 0.0, 1.0)) +
-      texture2D(uSource, clamp(vUv - uRadius * ${((index + 1) / 4).toFixed(2)}, 0.0, 1.0))) * ${weight};`).join("\n    ")}
+      tap(vUv + uRadius * ${((index + 1) / 4).toFixed(2)}) +
+      tap(vUv - uRadius * ${((index + 1) / 4).toFixed(2)})) * ${weight};`).join("\n    ")}
     // Positive normalized weights preserve premultiplied RGBA without introducing halos.
     gl_FragColor = sum;
   }
@@ -38,7 +46,73 @@ export const compositeFragment = /* glsl */ `
   uniform float uAspect;
   uniform float uTextureAspect;
   uniform float uBgCenterX;
+  // Cinematic look (0 = legacy ACES foreground, no plate treatment).
+  uniform float uLook;
+  uniform float uLookPower;
+  uniform float uGrain;
+  uniform float uGrainSeed;
+  uniform vec4 uHeat[3];
+  uniform float uHeatPhase;
+  uniform vec3 uSkyReflection;
+  uniform vec3 uPlateBlack;
+  uniform float uFgSoft;
   varying vec2 vUv;
+
+  float gamesHash(vec2 p) {
+    vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
+  }
+
+  float gamesNoise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(gamesHash(i), gamesHash(i + vec2(1.0, 0.0)), f.x),
+      mix(gamesHash(i + vec2(0.0, 1.0)), gamesHash(i + vec2(1.0, 1.0)), f.x), f.y);
+  }
+
+  // Blender's AgX (the plates' view transform) with a log-space power standing in for its
+  // "Medium High Contrast" look, so live skin and acetate roll off like the baked frames.
+  vec3 gamesAgX(vec3 color) {
+    const mat3 inset = mat3(
+      vec3(0.856627153315983, 0.137318972929847, 0.11189821299995),
+      vec3(0.0951212405381588, 0.761241990602591, 0.0767994186031903),
+      vec3(0.0482516061458583, 0.101439036467562, 0.811302368396859));
+    const mat3 outset = mat3(
+      vec3(1.1271005818144368, -0.1413297634984383, -0.14132976349843826),
+      vec3(-0.11060664309660323, 1.157823702216272, -0.11060664309660294),
+      vec3(-0.016493938717834573, -0.016493938717834257, 1.2519364065950405));
+    const float minEv = -12.47393;
+    const float maxEv = 4.026069;
+    color *= toneMappingExposure;
+    color = LINEAR_SRGB_TO_LINEAR_REC2020 * color;
+    color = inset * color;
+    color = clamp((log2(max(color, 1e-10)) - minEv) / (maxEv - minEv), 0.0, 1.0);
+    color = agxDefaultContrastApprox(color);
+    color = pow(max(color, 0.0), vec3(uLookPower));
+    color = outset * color;
+    color = pow(max(vec3(0.0), color), vec3(2.2));
+    color = LINEAR_REC2020_TO_LINEAR_SRGB * color;
+    return clamp(color, 0.0, 1.0);
+  }
+
+  // Heat haze above each blast: a scroll-driven refraction of the plate, never a blur.
+  vec2 heatOffset(vec2 bgUv) {
+    vec2 offset = vec2(0.0);
+    for (int i = 0; i < 3; i++) {
+      vec4 heat = uHeat[i];
+      if (heat.w <= 0.0) continue;
+      float dx = (bgUv.x - heat.x) / heat.z;
+      float rise = bgUv.y - heat.y;
+      float column = exp(-dx * dx * 1.6) * smoothstep(-0.03, 0.04, rise) * (1.0 - smoothstep(0.10, 0.34, rise));
+      if (column <= 0.001) continue;
+      vec2 q = vec2(bgUv.x * 70.0, bgUv.y * 26.0 - uHeatPhase - float(i) * 3.1);
+      vec2 wobble = vec2(gamesNoise(q), gamesNoise(q + vec2(17.3, 5.9))) - 0.5;
+      offset += wobble * column * heat.w;
+    }
+    return offset * vec2(0.0058, 0.0036);
+  }
 
   vec3 compositeAt(vec2 uv) {
     vec2 bgUv = uv;
@@ -51,18 +125,40 @@ export const compositeFragment = /* glsl */ `
         bgUv.y = clamp((uv.y - 0.5) * scaleY + 0.5, 0.0, 1.0);
       }
     }
+    if (uLook > 0.5) bgUv = clamp(bgUv + heatOffset(bgUv), 0.0, 1.0);
+    float lensRaw = texture2D(uLensMask, uv).r * uForegroundOpacity;
     vec3 background = texture2D(uBackground, bgUv).rgb;
     vec4 foreground = texture2D(uForeground, uv);
+    if (uLook > 0.5 && uFgSoft > 0.0) {
+      // Match the plate's optical softness (Blender's 1.5 px pixel filter, WebP) on an in-focus layer.
+      vec2 o = uTexel * uFgSoft;
+      foreground = foreground * 0.4 + 0.15 * (texture2D(uForeground, uv + vec2(o.x, o.y)) + texture2D(uForeground, uv - vec2(o.x, o.y))
+        + texture2D(uForeground, uv + vec2(o.x, -o.y)) + texture2D(uForeground, uv - vec2(o.x, -o.y)));
+    }
     // Render targets contain scene-linear premultiplied foreground; grade straight color once.
-    foreground.rgb = foreground.a > 0.00001
-      ? ACESFilmicToneMapping(foreground.rgb / foreground.a) * foreground.a : vec3(0.0);
+    if (foreground.a > 0.00001) {
+      vec3 straight = foreground.rgb / foreground.a;
+      vec3 graded = uLook > 0.5 ? gamesAgX(straight) : ACESFilmicToneMapping(straight);
+      // Same air as the plate: lift live blacks to the displayed plate's own black floor.
+      if (uLook > 0.5) graded = uPlateBlack + graded * (1.0 - uPlateBlack);
+      foreground.rgb = graded * foreground.a;
+    } else {
+      foreground.rgb = vec3(0.0);
+    }
     foreground *= uForegroundOpacity;
-    float lens = texture2D(uLensMask, uv).r * uLensPop * uForegroundOpacity;
+    float lens = lensRaw * uLensPop;
 
     // +12% micro-contrast & subtle golden sunlit pop inside the lens apertures
     vec3 lensColor = max((background - 0.18) * 1.12 + 0.18, 0.0);
     lensColor *= vec3(1.015, 1.005, 0.99);
     background = mix(background, lensColor, lens);
+    if (uLook > 0.5 && lensRaw > 0.002) {
+      // Coated glass: a faint reflection of the plate's own sky, brighter toward the top of the frame.
+      // (Edge refraction from the quarter-resolution aperture mask stair-stepped the plate; left out.)
+      vec3 sky = mix(uSkyReflection * 0.82, uSkyReflection * 1.08, smoothstep(0.2, 0.95, uv.y));
+      float sheen = (0.08 + 0.07 * smoothstep(0.35, 1.0, uv.y)) * lensRaw;
+      background = mix(background, sky, sheen);
+    }
 
     // Premultiplied alpha over-composite
     return foreground.rgb + background * (1.0 - foreground.a);
@@ -89,6 +185,14 @@ export const compositeFragment = /* glsl */ `
     }
     gl_FragColor = vec4(color, 1.0);
     #include <colorspace_fragment>
+    if (uLook > 0.5) {
+      // One shared, display-referred grain over plate and live layers: peak ±uGrain, densest in midtones.
+      // Reseeded only when the plate changes, so a paused frame stays still.
+      vec2 cell = floor(gl_FragCoord.xy / 1.3) + uGrainSeed * 37.0;
+      float grain = gamesHash(cell) + gamesHash(cell + 71.7) - 1.0;
+      float luma = dot(gl_FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+      gl_FragColor.rgb += grain * uGrain * (0.45 + 2.2 * luma * (1.0 - luma));
+    }
   }
 `;
 
@@ -140,6 +244,7 @@ export function createLayeredFocusTargets(
     uniforms: {
       uSource: { value: foreground.texture },
       uRadius: { value: new THREE.Vector2() },
+      uClamp: { value: 0 },
     },
   });
 
@@ -161,6 +266,15 @@ export function createLayeredFocusTargets(
       uAspect: { value: 2.39 },
       uTextureAspect: { value: 2.39 },
       uBgCenterX: { value: 0.5 },
+      uLook: { value: 0 },
+      uLookPower: { value: 1 },
+      uGrain: { value: 0 },
+      uGrainSeed: { value: 0 },
+      uHeat: { value: [new THREE.Vector4(), new THREE.Vector4(), new THREE.Vector4()] },
+      uHeatPhase: { value: 0 },
+      uSkyReflection: { value: new THREE.Color() },
+      uPlateBlack: { value: new THREE.Color(0, 0, 0) },
+      uFgSoft: { value: 0 },
     },
   });
 

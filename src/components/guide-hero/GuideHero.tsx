@@ -2,12 +2,14 @@
 
 import React, { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
-import { useLiteMode } from "@/context/LiteModeContext";
-import { useTier } from "@/components/providers/TierProvider";
+import { useRenderMode } from "@/components/providers/useRenderMode";
+import { registerSystem } from "@/engine/masterTick";
 import { useGuideStore } from "./store/guideStore";
 import { GuideHeroPoster } from "./GuideHeroPoster";
 import type { RankedFaq } from "@/lib/faq-engagement/contracts";
 import { getGuideStationProgress } from "./station/useGuideStationTimeline";
+
+const noopSubscribe = () => () => {};
 
 const BoardView = dynamic(() => import("./BoardView"), {
   ssr: false,
@@ -31,24 +33,20 @@ export function GuideHero({
   activeTitle = "SANGAM JUNCTION · FAQ DEPARTURE BOARD",
   initialPopularRanking,
 }: GuideHeroProps) {
-  const { isLiteMode } = useLiteMode();
-  const tier = useTier();
+  const { mode } = useRenderMode();
   const runwayRef = useRef<HTMLElement>(null);
   const stickyViewportRef = useRef<HTMLDivElement>(null);
   const handoffGradientRef = useRef<HTMLDivElement>(null);
 
-  const [reduceMotion, setReduceMotion] = React.useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      } catch {}
-    }
-    return false;
-  });
   const activeItem = useGuideStore((state) => state.activeItem);
   const source = useGuideStore((state) => state.source);
   const liveTitle = activeItem?.text || activeTitle;
-  const isFallback = isLiteMode || tier === "C" || reduceMotion;
+  // Render mode is client-only (tier, Lite, reduced motion), so neither the 3D view nor the static
+  // poster is chosen until hydration; the server and first client render stay identical.
+  const hydrated = useSyncExternalStore(noopSubscribe, () => true, () => false);
+  // Static mode (Tier C, Lite, reduced motion): poster only, the 3D chunk is never requested.
+  const isFallback = hydrated && mode === "static";
+  const show3d = hydrated && mode !== "static";
 
   useEffect(() => {
     let active = true;
@@ -66,38 +64,44 @@ export function GuideHero({
     };
   }, [initialPopularRanking]);
 
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduceMotion(media.matches);
-    update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
-
   const ctaRef = useRef<HTMLButtonElement>(null);
 
-  // Fade out Skip CTA between p = 0.70 and 0.78
+  const heroInViewRef = useRef(false);
+
+  // Fade out Skip CTA between p = 0.70 and 0.78. Runs on the master tick only while the
+  // 3D sequence is mounted and the runway is on screen; in static mode the CTA stays put.
   useEffect(() => {
-    let frameId: number;
-    const checkHandoff = () => {
-      const p = getGuideStationProgress();
-      if (ctaRef.current) {
-        const exit = Math.max(0, Math.min(1, (p - 0.70) / 0.08));
-        ctaRef.current.style.opacity = String(1 - exit);
-        ctaRef.current.style.transform = `translateY(${-16 * exit}px)`;
-        ctaRef.current.style.pointerEvents = exit >= 1 ? "none" : "auto";
-      }
-      frameId = requestAnimationFrame(checkHandoff);
+    const ctaEl = ctaRef.current;
+    if (!show3d || !ctaEl) return;
+    let lastExit = -1;
+    const stop = registerSystem({
+      order: 46,
+      step: () => {
+        const cta = ctaEl;
+        if (!heroInViewRef.current) return;
+        const p = getGuideStationProgress();
+        const exit = Math.round(Math.max(0, Math.min(1, (p - 0.70) / 0.08)) * 1000) / 1000;
+        if (exit === lastExit) return;
+        lastExit = exit;
+        cta.style.opacity = String(1 - exit);
+        cta.style.transform = `translateY(${-16 * exit}px)`;
+        cta.style.pointerEvents = exit >= 1 ? "none" : "auto";
+      },
+    });
+    return () => {
+      stop();
+      ctaEl.style.opacity = "";
+      ctaEl.style.transform = "";
+      ctaEl.style.pointerEvents = "";
     };
-    frameId = requestAnimationFrame(checkHandoff);
-    return () => cancelAnimationFrame(frameId);
-  }, []);
+  }, [show3d]);
 
   useEffect(() => {
     const element = runwayRef.current;
     if (!element) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
+        heroInViewRef.current = entry.isIntersecting;
         const isPast = entry.boundingClientRect.top < 0 && entry.intersectionRatio < 0.2;
         useGuideStore.getState().setIsPastHero(isPast);
       },
@@ -160,7 +164,7 @@ export function GuideHero({
         />
 
         {/* Tracked 3D View scene */}
-        {!isFallback && <BoardView sequenceElement={runwayRef} {...board} />}
+        {show3d && <BoardView sequenceElement={runwayRef} {...board} />}
 
         {/* Accessible Skip Intro Control (48x48px min target, visible on focus & dwell, clears mobile dock) */}
         <div className="pointer-events-none absolute inset-x-0 bottom-20 sm:bottom-8 z-20 flex justify-between items-end px-6 sm:px-8">

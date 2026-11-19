@@ -122,7 +122,7 @@ export function KondatamSeasonAlmanac() {
                 setSelectedSeason(season.id);
                 audioLayer.playTapeClack();
               }}
-              className={`p-4 rounded-xl text-left transition-all duration-300 border cursor-pointer ${
+              className={`p-4 rounded-xl text-left transition-[border-color,background-color,box-shadow] duration-200 border cursor-pointer ${
                 isSelected
                   ? "bg-[#140C20] border-[#A6F0CF] shadow-md shadow-[#A6F0CF]/15"
                   : "bg-[#140C20] border-transparent hover:border-[rgba(125,96,166,0.25)]"

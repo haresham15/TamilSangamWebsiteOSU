@@ -18,8 +18,10 @@ import {
 } from "lucide-react";
 import { SolluWordle } from "./SolluWordle";
 import { ThodarpuConnections } from "./ThodarpuConnections";
+import { AazhamGame } from "./aazham/AazhamGame";
 import { SolluThumbnail } from "./SolluThumbnail";
 import { ThodarpuThumbnail } from "./ThodarpuThumbnail";
+import { AazhamThumbnail } from "./AazhamThumbnail";
 import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import {
   SOLLU_BIWEEKLY_EDITIONS,
@@ -51,11 +53,11 @@ export function GamesHub() {
     return currentLiveId;
   });
 
-  const [activeGame, setActiveGame] = useState<"sollu" | "thodarpu" | null>(() => {
+  const [activeGame, setActiveGame] = useState<"sollu" | "thodarpu" | "aazham" | null>(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const game = params.get("game");
-      if (game === "sollu" || game === "thodarpu") return game;
+      if (game === "sollu" || game === "thodarpu" || game === "aazham") return game;
     }
     return null;
   });
@@ -82,7 +84,7 @@ export function GamesHub() {
   const isCurrentLive = selectedEdition === currentLiveId;
 
   // Sync selected game with URL query param without full reload
-  const selectGame = useCallback((game: "sollu" | "thodarpu" | null) => {
+  const selectGame = useCallback((game: "sollu" | "thodarpu" | "aazham" | null) => {
     setActiveGame(game);
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
@@ -115,7 +117,7 @@ export function GamesHub() {
     const url = "https://tamil-sangam-website-osu.vercel.app/games";
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard
-        .writeText(`Play The Sangam Arcade — Biweekly Tamil Puzzles at Ohio State! 🕶️💥\n${url}`)
+        .writeText(`Play The Sangam Arcade — Biweekly Tamil Puzzles at Ohio State ✦\n${url}`)
         .then(() => {
           setCopiedHub(true);
           setTimeout(() => setCopiedHub(false), 2400);
@@ -303,13 +305,13 @@ export function GamesHub() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* CARD 1: 01 SOLLU · சொல்லு */}
               <motion.article
                 whileHover={{ y: -6 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 onClick={() => selectGame("sollu")}
-                className="cursor-pointer group relative bg-[#140C20] rounded-2xl border-2 border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] p-6 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300"
+                className="cursor-pointer group relative bg-[#140C20] rounded-2xl border-2 border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] p-6 flex flex-col justify-between shadow-xs hover:shadow-xl transition-[border-color,box-shadow] duration-200"
               >
                 {/* Editorial Header */}
                 <div>
@@ -353,7 +355,7 @@ export function GamesHub() {
                 whileHover={{ y: -6 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 onClick={() => selectGame("thodarpu")}
-                className="cursor-pointer group relative bg-[#140C20] rounded-2xl border-2 border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] p-6 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300"
+                className="cursor-pointer group relative bg-[#140C20] rounded-2xl border-2 border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] p-6 flex flex-col justify-between shadow-xs hover:shadow-xl transition-[border-color,box-shadow] duration-200"
               >
                 {/* Editorial Header */}
                 <div>
@@ -391,6 +393,50 @@ export function GamesHub() {
                   </span>
                 </div>
               </motion.article>
+
+              {/* CARD 3: 03 AAZHAM · ஆழம் */}
+              <motion.article
+                whileHover={{ y: -6 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                onClick={() => selectGame("aazham")}
+                className="cursor-pointer group relative bg-[#140C20] rounded-2xl border-2 border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] p-6 flex flex-col justify-between shadow-xs hover:shadow-xl transition-[border-color,box-shadow] duration-200"
+              >
+                {/* Editorial Header */}
+                <div>
+                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[rgba(125,96,166,0.25)]">
+                    <span className="font-mono text-xs uppercase tracking-wider text-[#38BDF8]">
+                      Rarest-Answer Trivia
+                    </span>
+                    <span className="font-mono text-[11px] text-[#A6F0CF] font-bold uppercase tracking-wider">
+                      7,000m Dive
+                    </span>
+                  </div>
+
+                  <h3 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal tracking-tight mb-2">
+                    Aazham · <span lang="ta" className="font-tamil font-semibold text-[#38BDF8]">ஆழம்</span>
+                  </h3>
+                  <p className="font-sans text-xs sm:text-sm text-[#F4F0FA]/75 leading-relaxed mb-4">
+                    7 cultural prompts under 25s. The rarest answer sinks you deeper toward the ancient Kumari Kandam seabed.
+                  </p>
+                </div>
+
+                {/* Bespoke Thumbnail */}
+                <div className="my-2">
+                  <AazhamThumbnail />
+                </div>
+
+                {/* Editorial Action Footer */}
+                <div className="mt-6 pt-4 border-t border-[rgba(125,96,166,0.25)] flex items-center justify-between text-sm font-sans font-medium text-[#F4F0FA]">
+                  <span className="flex items-center gap-1.5 group-hover:text-[#38BDF8] transition-colors">
+                    <span>Play Aazham</span>
+                    <span lang="ta" className="font-tamil text-xs text-[#38BDF8]">(ஆழம்)</span>
+                  </span>
+                  <span className="flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#A6F0CF] group-hover:translate-x-1 transition-transform">
+                    <span>Start Game</span>
+                    <ArrowRight className="size-3.5" aria-hidden="true" />
+                  </span>
+                </div>
+              </motion.article>
             </div>
           </div>
         ) : (
@@ -410,15 +456,34 @@ export function GamesHub() {
 
               <div className="flex items-center gap-4 text-xs font-mono">
                 <span className="font-bold text-[#F4F0FA]">
-                  {activeGame === "sollu" ? "01 Sollu (சொல்லு)" : "02 Thodarpu (தொடர்பு)"}
+                  {activeGame === "sollu"
+                    ? "01 Sollu (சொல்லு)"
+                    : activeGame === "thodarpu"
+                    ? "02 Thodarpu (தொடர்பு)"
+                    : "03 Aazham (ஆழம்)"}
                   <span className="text-[#A6F0CF] ml-2">[{currentEditionMeta.editionNo}]</span>
                 </span>
                 <span className="text-[#F4F0FA]/30 hidden sm:inline">|</span>
                 <button
-                  onClick={() => selectGame(activeGame === "sollu" ? "thodarpu" : "sollu")}
+                  onClick={() =>
+                    selectGame(
+                      activeGame === "sollu"
+                        ? "thodarpu"
+                        : activeGame === "thodarpu"
+                        ? "aazham"
+                        : "sollu"
+                    )
+                  }
                   className="hidden sm:inline-flex items-center gap-1 text-[#F4F0FA]/65 hover:text-[#A6F0CF] font-semibold transition-colors"
                 >
-                  <span>Switch to {activeGame === "sollu" ? "02 Thodarpu" : "01 Sollu"}</span>
+                  <span>
+                    Next:{" "}
+                    {activeGame === "sollu"
+                      ? "02 Thodarpu"
+                      : activeGame === "thodarpu"
+                      ? "03 Aazham"
+                      : "01 Sollu"}
+                  </span>
                   <ArrowRight className="size-3" />
                 </button>
               </div>
@@ -433,11 +498,18 @@ export function GamesHub() {
                     editionKey={selectedEdition}
                     onSolved={handleGameSolved}
                   />
-                ) : (
+                ) : activeGame === "thodarpu" ? (
                   <ThodarpuConnections
                     key={`thodarpu-${selectedEdition}-${solvedVersion}`}
                     editionKey={selectedEdition}
                     onSolved={handleGameSolved}
+                  />
+                ) : (
+                  <AazhamGame
+                    key={`aazham-${selectedEdition}-${solvedVersion}`}
+                    editionId={selectedEdition}
+                    onSolved={handleGameSolved}
+                    onBackToArcade={() => selectGame(null)}
                   />
                 )
               ) : (
@@ -524,7 +596,7 @@ export function GamesHub() {
                     </ul>
                   </div>
 
-                  <div>
+                  <div className="border-b border-[rgba(125,96,166,0.25)] pb-4">
                     <h4 className="font-bold text-sm text-[#F4F0FA] mb-2">
                       02 Thodarpu (தொடர்பு) · Cultural Connections
                     </h4>
@@ -535,6 +607,20 @@ export function GamesHub() {
                       <li>Select 4 tiles and press <strong>Submit · சரிபார்</strong>.</li>
                       <li>Categories range in difficulty from <strong>Straightforward 🟨</strong>, <strong>Medium 🟩</strong>, <strong>Challenging 🟧</strong>, to <strong>Tricky 🟦</strong>.</li>
                       <li>Turn on <strong>Cultural Hints</strong> for non-spoiler definitions of classical instruments, dishes, and cinema lore.</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h4 className="font-bold text-sm text-[#A6F0CF] mb-2">
+                      03 Aazham (ஆழம்) · Rarest-Answer Trivia
+                    </h4>
+                    <p className="mb-2">
+                      Answer 7 cultural prompts under a 25-second countdown. The rarer your valid answer, the deeper you sink toward Kumari Kandam (up to 7,000 meters).
+                    </p>
+                    <ul className="list-disc pl-5 space-y-1 text-xs">
+                      <li><strong className="text-amber-400">Over-Smart Trap (15pt):</strong> Avoid the second most obvious answer everyone tries to be sneaky with!</li>
+                      <li><strong className="text-indigo-300">The Deep (60pt) & Sunken City (85pt):</strong> Rewards deep cultural literacy and regional Tamil heritage.</li>
+                      <li><strong className="text-[#A6F0CF]">Valampuri Pearl (100pt):</strong> Flawless deep cuts that plunge you +1,000 meters toward the seabed.</li>
                     </ul>
                   </div>
                 </div>

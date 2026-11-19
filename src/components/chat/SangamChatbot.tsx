@@ -416,7 +416,7 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
                       <div className="w-6 h-6 rounded-full bg-[#140C20] border border-[#A6F0CF]/35 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
                         <NanbaAvatar size={18} className="w-4.5 h-4.5" />
                       </div>
-                      <div className="p-3.5 rounded-2xl rounded-tl-xs bg-white text-[#F4F0FA] border border-[rgba(125,96,166,0.25)] shadow-sm">
+                      <div className="p-3.5 rounded-2xl rounded-tl-xs bg-[#1A1028] text-[#F4F0FA] border border-[rgba(125,96,166,0.35)] shadow-sm">
                         <p className="text-xs leading-relaxed whitespace-pre-line font-body font-normal">
                           {m.content}
                         </p>
@@ -471,7 +471,7 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(prompt)}
-                    className="whitespace-nowrap px-3 py-1.5 rounded-full bg-white hover:bg-[#140C20] border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 text-[10px] font-mono font-medium text-[#F4F0FA] hover:text-[#A6F0CF] transition-colors shrink-0 shadow-2xs cursor-pointer"
+                    className="whitespace-nowrap px-3 py-1.5 rounded-full bg-[#140C20] hover:bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/50 text-[10px] font-mono font-medium text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors shrink-0 shadow-2xs cursor-pointer"
                   >
                     {prompt}
                   </button>

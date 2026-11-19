@@ -80,7 +80,7 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
     vignette: { offset: 0.35, darkness: 0.42 },
     grain: { opacity: 0.035 },
     tierBFallback: {
-      keyLightTint: "#A6F0CF",
+      keyLightTint: "#FFD9B0",
       fillLightTint: "#352254",
       fogTint: "#140C20",
       exposureBias: 1.05,

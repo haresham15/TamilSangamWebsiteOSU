@@ -20,11 +20,13 @@ import { useGuideStore } from "../store/guideStore";
 import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 import { createCinemaCameraDamper, smootherstep } from "@/lib/cinemaCameraDamper";
 import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
-import { GradeStack } from "@/gl/grade/GradeStack";
-import { useTier } from "@/components/providers/TierProvider";
 import { useLiteMode } from "@/context/LiteModeContext";
+import { ArtCoaches, STATION_ART_FOG, StationArtSet, WindowSpill } from "./art/StationSet";
 
 interface StationSceneProps {
+  /** Render-mode scaling (PRD §8.1): rain 500 / 250, crowd 12 / 8 for Tier A / B. */
+  rainCount?: number;
+  crowdCount?: number;
   progress?: number;
   getProgress?: () => number;
   getTargetProgress?: () => number;
@@ -621,7 +623,7 @@ function LuminousHaze() {
  * During departure beat (p from 0.35 to 0.85), the train translates along -x,
  * while the platform man remains standing alone.
  */
-function TrainSet({ getProgress }: { getProgress: () => number }) {
+function TrainSet({ getProgress, art }: { getProgress: () => number; art: boolean }) {
   const trainRef = useRef<THREE.Group>(null);
 
   useFrame((_, delta) => {
@@ -632,6 +634,16 @@ function TrainSet({ getProgress }: { getProgress: () => number }) {
     // Smoothly slide coach left along -x during departure
     trainRef.current.position.x = -frame.departureOffset * 22.0;
   });
+
+  if (art) {
+    return (
+      <group ref={trainRef} name="StationTrainSet">
+        <ArtCoaches />
+        <WindowAssembly getProgress={getProgress} />
+        <WindowSpill />
+      </group>
+    );
+  }
 
   return (
     <group ref={trainRef} name="StationTrainSet">
@@ -655,7 +667,14 @@ function TrainSet({ getProgress }: { getProgress: () => number }) {
  * When the train coach translates left along -x during departure (p = 0.35 to 0.85),
  * the standing man remains stationary on the platform watching the train depart.
  */
-function PlatformFigures() {
+function PlatformFigures({ art }: { art: boolean }) {
+  if (art) {
+    return (
+      <group name="StationPlatformFigures">
+        <SdfSilhouette kind="man" position={[-0.52, 1.52, 0.62]} scale={1.05} fog={true} />
+      </group>
+    );
+  }
   return (
     <group name="StationPlatformFigures">
       {/* Standing Man SDF on the platform facing +x toward where the train window was */}
@@ -682,79 +701,11 @@ function PlatformFigures() {
 }
 
 /**
- * Atmospheric rain mist particles swirling in the station beam (Alaipayuthey blue-hour).
- */
-function StationMistyParticles() {
-  const count = 48;
-  const meshRef = useRef<THREE.InstancedMesh>(null);
-  const dummy = useMemo(() => new THREE.Object3D(), []);
-
-  const particles = useMemo(() => {
-    return Array.from({ length: count }, (_, i) => ({
-      x: Math.sin(i * 1.7) * 4.2,
-      y: 0.4 + ((i * 1.25) % 4.6),
-      z: 0.8 + Math.cos(i * 2.3) * 2.4,
-      speedY: 0.08 + (i % 7) * 0.02,
-      phase: i * 0.45,
-      scale: 0.012 + (i % 5) * 0.005,
-    }));
-  }, [count]);
-
-  const geo = useMemo(() => new THREE.SphereGeometry(1, 6, 6), []);
-  const mat = useMemo(
-    () =>
-      new THREE.MeshBasicMaterial({
-        color: "#9BD0F5",
-        transparent: true,
-        opacity: 0.32,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      }),
-    []
-  );
-
-  useEffect(() => {
-    return () => {
-      geo.dispose();
-      mat.dispose();
-    };
-  }, [geo, mat]);
-
-  useFrame((state, delta) => {
-    const mesh = meshRef.current;
-    if (!mesh) return;
-    const t = state.clock.getElapsedTime();
-    const dt = Math.min(delta, 0.05);
-
-    particles.forEach((p, i) => {
-      p.y -= p.speedY * dt;
-      if (p.y < 0.2) p.y = 5.0;
-
-      const swayX = Math.sin(t * 0.8 + p.phase) * 0.08;
-      const swayZ = Math.cos(t * 0.6 + p.phase) * 0.08;
-
-      dummy.position.set(p.x + swayX, p.y, p.z + swayZ);
-      dummy.scale.setScalar(p.scale);
-      dummy.updateMatrix();
-      mesh.setMatrixAt(i, dummy.matrix);
-    });
-    mesh.instanceMatrix.needsUpdate = true;
-  });
-
-  return (
-    <instancedMesh
-      ref={meshRef}
-      args={[geo, mat, count]}
-      frustumCulled={false}
-      renderOrder={15}
-    />
-  );
-}
-
-/**
  * The complete Guide Hero v3 "Station Sequence" 3D Scene.
  */
 export function StationScene({
+  rainCount = 500,
+  crowdCount = 12,
   progress = 0,
   getProgress,
   getTargetProgress,
@@ -765,59 +716,64 @@ export function StationScene({
     () => getTargetProgress ?? readProgress,
     [getTargetProgress, readProgress]
   );
-  const tier = useTier();
   const isCinematic = isHeroCinematicEnabled("guide");
+  const [reduceMotion, setReduceMotion] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduceMotion(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  const getWindowX = useMemo(() => () => -sampleGuideRail(readProgress()).departureOffset * 22.0, [readProgress]);
+  const getDensity = useMemo(() => () => sampleGuideRail(readProgress()).drizzle, [readProgress]);
+  const fogColor = isCinematic ? STATION_ART_FOG : guideStationPalette.fog;
 
   return (
     <>
-      {/* Dark blue-hour background and global atmosphere fog */}
-      <color attach="background" args={[guideStationPalette.fog]} />
-      <fogExp2 attach="fog" args={[guideStationPalette.fog, GUIDE_STATION_FOG_DENSITY]} />
+      {/* Blue-hour background and global atmosphere fog */}
+      <color attach="background" args={[fogColor]} />
+      <fogExp2 attach="fog" args={[fogColor, GUIDE_STATION_FOG_DENSITY]} />
 
       {/* Cinematic camera rig sampling calibrated guideRail.ts */}
       <StationCamera getProgress={readProgress} getTargetProgress={readTargetProgress} />
 
-      {/* Dedicated Blue-Hour Lighting Rig: Illuminates +z coach face and wet platform */}
-      <hemisphereLight args={[guideStationPalette.rim, guideStationPalette.fog, isCinematic ? 0.65 : 0.55]} />
-      <directionalLight
-        position={[2.0, 6.0, 5.0]}
-        intensity={isCinematic ? 2.4 : 1.8}
-        color="#6CA6D8"
-        castShadow={isCinematic}
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
-        shadow-bias={-0.0001}
-        shadow-normalBias={0.02}
-      />
-      <directionalLight position={[-6.0, 10.0, 8.0]} intensity={0.65} color={guideStationPalette.rim} />
+      {isCinematic ? (
+        <StationArtSet
+          rainCount={rainCount}
+          crowdCount={crowdCount}
+          animate={!reduceMotion}
+          getWindowX={getWindowX}
+          getDensity={getDensity}
+        />
+      ) : (
+        <>
+          <hemisphereLight args={[guideStationPalette.rim, guideStationPalette.fog, 0.55]} />
+          <directionalLight position={[2.0, 6.0, 5.0]} intensity={1.8} color="#6CA6D8" />
+          <directionalLight position={[-6.0, 10.0, 8.0]} intensity={0.65} color={guideStationPalette.rim} />
+          {[-3.2, 3.2].map((x) => (
+            <group key={x} position={[x, 4.0, 3.5]} name={`PlatformLamp_${x}`}>
+              <mesh position={[0, 0.15, 0]}>
+                <cylinderGeometry args={[0.22, 0.36, 0.22, 16, 1, true]} />
+                <meshStandardMaterial color="#1A2836" metalness={0.7} roughness={0.3} />
+              </mesh>
+              <mesh position={[0, 0.08, 0]}>
+                <sphereGeometry args={[0.1, 16, 16]} />
+                <meshBasicMaterial color="#7CB8F8" toneMapped={false} />
+              </mesh>
+              <pointLight color="#5B9BD5" intensity={55} distance={16} decay={1.8} />
+            </group>
+          ))}
+          <WetPlatform />
+          <RainStreaks />
+          <HallRafters />
+          <LuminousHaze />
+        </>
+      )}
 
-      {/* Overhead Platform Mercury-Vapor / Blue-Hour Lamps */}
-      {[-3.2, 3.2].map((x) => (
-        <group key={x} position={[x, 4.0, 3.5]} name={`PlatformLamp_${x}`}>
-          <mesh position={[0, 0.15, 0]}>
-            <cylinderGeometry args={[0.22, 0.36, 0.22, 16, 1, true]} />
-            <meshStandardMaterial color="#1A2836" metalness={0.7} roughness={0.3} />
-          </mesh>
-          <mesh position={[0, 0.08, 0]}>
-            <sphereGeometry args={[0.1, 16, 16]} />
-            <meshBasicMaterial color="#7CB8F8" toneMapped={false} />
-          </mesh>
-          <pointLight color="#5B9BD5" intensity={isCinematic ? 75 : 55} distance={16} decay={1.8} />
-        </group>
-      ))}
-
-      {/* Scene Elements */}
-      <WetPlatform />
-      <PlatformFigures />
-      <TrainSet getProgress={readProgress} />
-      <RainStreaks />
-      {isCinematic && <StationMistyParticles />}
-      <HallRafters />
-      <LuminousHaze />
+      <PlatformFigures art={isCinematic} />
+      <TrainSet getProgress={readProgress} art={isCinematic} />
       <StationBoard getProgress={readProgress} board={board} />
-
-      {/* Cinematic LUT & Grade Stack */}
-      {isCinematic && <GradeStack tier={tier} profile="alaipayuthey-bluehour" />}
     </>
   );
 }

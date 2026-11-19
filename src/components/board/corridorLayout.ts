@@ -56,7 +56,8 @@ export const ARCH_PARTS: ArchPart[] = [
   { geometry: "crossBeam", material: "crossBeam", offsets: [[0, PILLAR_HEIGHT - 0.2, 0]], castShadow: true, receiveShadow: true },
   { geometry: "ceiling", material: "ceiling", offsets: [[0, PILLAR_HEIGHT + 0.3, 0]], receiveShadow: true },
   { geometry: "joist", material: "joist", offsets: [[-H, PILLAR_HEIGHT - 0.1, 0], [H, PILLAR_HEIGHT - 0.1, 0]] },
-  { geometry: "opening", material: "opening", offsets: [[-H - 1.2, 2.0, 0], [H + 1.2, 2.0, 0]] },
+  // Outer aisle walls sit between pillar pairs so their niche frames the gap.
+  { geometry: "opening", material: "opening", offsets: [[-H - 1.2, 2.0, UNIT_LENGTH / 2], [H + 1.2, 2.0, UNIT_LENGTH / 2]] },
 ];
 
 export const segmentZ = (unit: number) => 30 - unit * UNIT_LENGTH;
@@ -76,7 +77,8 @@ export function lampPositions(): Vec3[] {
   const out: Vec3[] = [];
   for (let u = 0; u < POOL_SIZE; u++) {
     const z = segmentZ(u);
-    out.push([-H + 0.36, 1.9, z], [H - 0.36, 1.9, z]);
+    // Below the banner hems, so no flame sits over a name.
+    out.push([-H + 0.36, 1.5, z], [H - 0.36, 1.5, z]);
   }
   return out;
 }

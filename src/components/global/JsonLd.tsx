@@ -103,7 +103,7 @@ export const PhotoAlbumJsonLd: React.FC<{ album: GalleryAlbum }> = ({ album }) =
     alternateName: album.titleTa,
     description: album.descriptionEn,
     datePublished: album.eventDate,
-    url: `${SITE_URL}/gallery/${album.slug}`,
+    url: `${SITE_URL}/events/${album.eventSlug || album.slug}`,
     image: toAbsoluteUrl(album.coverImage),
     author: {
       "@type": "EducationalOrganization",

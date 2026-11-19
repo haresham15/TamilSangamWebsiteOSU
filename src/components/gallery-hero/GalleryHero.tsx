@@ -181,7 +181,7 @@ export function GalleryHero() {
                   return (
                     <span
                       key={strIdx}
-                      className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                      className={`h-2 w-2 rounded-full transition-[background-color,transform,box-shadow] duration-200 ${
                         isPlucked
                           ? "bg-[#A6F0CF] scale-125 shadow-[0_0_8px_#A6F0CF]"
                           : "bg-[#140C20]/25"

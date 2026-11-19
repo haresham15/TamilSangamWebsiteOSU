@@ -192,7 +192,7 @@ export function DraggableMemoryArchive() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 mb-4 border-b border-[#250d38]/20 gap-3">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#87500e]">
-            <span className="w-2 h-2 bg-[#55CCA2] inline-block animate-pulse" />
+            <span className="w-2 h-2 bg-[#55CCA2] inline-block" />
             <span>CAMPUS MEMORY DESK · புகைப்பட நினைவுகள்</span>
           </div>
           <p className="text-[11px] text-[#250d38]/70 font-sans">

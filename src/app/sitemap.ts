@@ -36,13 +36,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       images: [`${SITE_URL}/emblem.svg`],
     },
     {
-      url: `${SITE_URL}/gallery`,
-      lastModified: baseDate,
-      changeFrequency: "weekly",
-      priority: 0.9,
-      images: [`${SITE_URL}/emblem.svg`],
-    },
-    {
       url: `${SITE_URL}/guide`,
       lastModified: baseDate,
       changeFrequency: "weekly",
@@ -114,33 +107,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // Dynamic Event Dossier pages with image attachments for Google Image Search
-  const eventPages: MetadataRoute.Sitemap = EVENTS.map((event) => ({
-    url: `${SITE_URL}/events/${event.slug}`,
-    lastModified: parseSafeDate(event.date),
-    changeFrequency: event.status === "upcoming" ? "weekly" : "monthly",
-    priority: event.status === "upcoming" ? 0.95 : 0.8,
-    images: [
-      event.posterImage?.startsWith("http")
-        ? event.posterImage
-        : `${SITE_URL}${event.posterImage || "/emblem.svg"}`,
-    ],
-  }));
+  // Curated album photography is attached directly to event dossiers
+  const eventPages: MetadataRoute.Sitemap = EVENTS.map((event) => {
+    const album = GALLERY_ALBUMS.find(
+      (a) => a.eventSlug === event.slug || a.slug === event.slug
+    );
+    const albumImages = album
+      ? [
+          album.coverImage?.startsWith("http")
+            ? album.coverImage
+            : `${SITE_URL}${album.coverImage || "/emblem.svg"}`,
+          ...album.photos.map((p) =>
+            p.imageUrl?.startsWith("http") ? p.imageUrl : `${SITE_URL}${p.imageUrl}`
+          ),
+        ]
+      : [];
 
-  // Dynamic Gallery Album pages with photo previews
-  const galleryPages: MetadataRoute.Sitemap = GALLERY_ALBUMS.map((album) => ({
-    url: `${SITE_URL}/gallery/${album.slug}`,
-    lastModified: parseSafeDate(album.eventDate),
-    changeFrequency: "monthly",
-    priority: 0.75,
-    images: [
-      album.coverImage?.startsWith("http")
-        ? album.coverImage
-        : `${SITE_URL}${album.coverImage || "/emblem.svg"}`,
-      ...album.photos.slice(0, 4).map((p) =>
-        p.imageUrl?.startsWith("http") ? p.imageUrl : `${SITE_URL}${p.imageUrl}`
-      ),
-    ].filter(Boolean),
-  }));
+    return {
+      url: `${SITE_URL}/events/${event.slug}`,
+      lastModified: parseSafeDate(event.date),
+      changeFrequency: event.status === "upcoming" ? "weekly" : "monthly",
+      priority: event.status === "upcoming" ? 0.95 : 0.8,
+      images: [
+        event.posterImage?.startsWith("http")
+          ? event.posterImage
+          : `${SITE_URL}${event.posterImage || "/emblem.svg"}`,
+        ...albumImages,
+      ].filter(Boolean) as string[],
+    };
+  });
 
-  return [...staticPages, ...pillarPages, ...eventPages, ...galleryPages];
+  return [...staticPages, ...pillarPages, ...eventPages];
 }

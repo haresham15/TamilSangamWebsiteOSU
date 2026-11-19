@@ -42,11 +42,11 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="ticket-chamfer-tl-br w-full sm:w-auto px-7 py-3.5 bg-[#A6F0CF] hover:bg-[#FFC86B] text-[#0F050A] font-mono font-bold text-xs uppercase tracking-wider transition-[background-color,box-shadow,transform] duration-150 shadow-[4px_4px_0px_#8B5A2B] hover:shadow-[5px_5px_0px_#8B5A2B] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#8B5A2B] flex items-center justify-center gap-2.5 disabled:opacity-60 disabled:pointer-events-none cursor-pointer hover:glow-sodium"
+      className="rounded-xl w-full sm:w-auto px-7 py-3.5 bg-[#A6F0CF] hover:bg-[#7AE7B5] text-[#140C20] font-mono font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center gap-2.5 disabled:opacity-60 disabled:pointer-events-none cursor-pointer"
     >
       {pending ? (
         <>
-          <RefreshCw className="w-4 h-4 animate-spin text-[#0F050A]" />
+          <RefreshCw className="w-4 h-4 animate-spin text-[#140C20]" />
           <span>
             {locale === "ta"
               ? "வரைபடத்தில் பதிக்கப்படுகிறது..."
@@ -55,7 +55,7 @@ function SubmitButton() {
         </>
       ) : (
         <>
-          <Send className="w-4 h-4 text-[#0F050A]" />
+          <Send className="w-4 h-4 text-[#140C20]" />
           <span>
             {locale === "ta"
               ? "யோசனையைப் பகிரவும் (Pin to Blueprint)"
@@ -105,22 +105,25 @@ export function SuggestionForm({
 
   return (
     <div
-      className={`ticket-chamfer-tl-br relative bg-[#150914]/95 backdrop-blur-md border-2 border-[#4A2038] p-6 sm:p-10 shadow-[8px_8px_0px_#2B1020] text-white hover:border-[#A6F0CF]/40 transition-colors ${className}`}
+      className={`rounded-2xl relative bg-[#1A1028]/95 backdrop-blur-md border border-[rgba(125,96,166,0.35)] p-6 sm:p-10 shadow-2xl text-[#F4F0FA] hover:border-[#A6F0CF]/40 transition-colors ${className}`}
     >
       {/* Title block */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[rgba(125,96,166,0.35)] mb-8">
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[rgba(125,96,166,0.25)] mb-8">
         <div>
-          <h3 className="text-2xl sm:text-3xl font-extrabold font-display text-[#F4F0FA] tracking-tight">
+          <span className="text-xs font-mono uppercase tracking-widest text-[#A6F0CF] block mb-1.5 font-semibold">
+            COMMUNITY VOICE
+          </span>
+          <h3 className="text-2xl sm:text-3xl font-normal font-serif text-[#F4F0FA] tracking-tight" {...(locale === "ta" ? { lang: "ta" } : {})}>
             {locale === "ta" ? "உங்கள் யோசனையைப் பகிருங்கள்" : "Drop an Idea onto the Blueprint"}
           </h3>
-          <p className="text-xs sm:text-sm text-slate-300 mt-1 font-body">
+          <p className="text-xs sm:text-sm text-[#C4B7D7] mt-1 font-body leading-relaxed" {...(locale === "ta" ? { lang: "ta" } : {})}>
             {locale === "ta"
               ? "நமது சங்கத்தின் அடுத்த கட்ட நிகழ்வுகள் மற்றும் முன்னெடுப்புகளுக்கு உங்கள் பரிந்துரைகள் வரவேற்கப்படுகின்றன."
               : "Share ideas for events, cultural initiatives, campus partnerships, or website feedback."}
           </p>
         </div>
 
-        <div className="text-right hidden sm:block font-mono text-[11px] text-slate-400">
+        <div className="text-right hidden sm:block font-mono text-[11px] text-[#C4B7D7]">
           <p className="text-[#A6F0CF]">osutamilsangam@gmail.com</p>
           <p>Reviewed Weekly</p>
         </div>
@@ -129,17 +132,17 @@ export function SuggestionForm({
       {state.success ? (
         /* Success State */
         <div className="py-10 text-center space-y-6">
-          <div className="w-16 h-16 bg-[#A6F0CF]/20 border-2 border-[#4FD6E0] text-[#A6F0CF] flex items-center justify-center mx-auto shadow-[4px_4px_0px_#352254]">
+          <div className="w-16 h-16 rounded-xl bg-[#A6F0CF]/15 border border-[#A6F0CF]/40 text-[#A6F0CF] flex items-center justify-center mx-auto shadow-sm">
             <CheckCircle2 className="w-8 h-8" />
           </div>
 
           <div className="space-y-2 max-w-lg mx-auto">
-            <h4 className="text-2xl font-bold font-display text-[#F4F0FA]">
+            <h4 className="text-2xl font-normal font-serif text-[#F4F0FA]" {...(locale === "ta" ? { lang: "ta" } : {})}>
               {locale === "ta"
                 ? "நன்றி! உங்கள் யோசனை வரைபடத்தில் பதிக்கப்பட்டது!"
                 : "Vanakkam! Your Idea Has Been Pinned!"}
             </h4>
-            <p className="text-sm text-slate-300 font-body leading-relaxed">
+            <p className="text-sm text-[#C4B7D7] font-body leading-relaxed">
               {state.message ||
                 "Your idea has been dispatched directly to the executive board and recorded in our blueprint ledger."}
             </p>
@@ -153,7 +156,7 @@ export function SuggestionForm({
           <button
             type="button"
             onClick={handleReset}
-            className="px-6 py-2.5 bg-[#241021] hover:bg-[#351830] text-[#F4F0FA] border border-[#A6F0CF]/50 text-xs font-mono uppercase tracking-wider transition-colors inline-flex items-center gap-2 cursor-pointer"
+            className="px-6 py-2.5 rounded-xl bg-[#25173B] hover:bg-[#352254] text-[#F4F0FA] border border-[#A6F0CF]/40 text-xs font-mono uppercase tracking-wider transition-colors inline-flex items-center gap-2 cursor-pointer shadow-sm"
           >
             <RefreshCw className="w-3.5 h-3.5 text-[#A6F0CF]" />
             <span>Submit Another Suggestion</span>
@@ -191,22 +194,22 @@ export function SuggestionForm({
                     onClick={() => setSelectedCategory(cat.id)}
                     aria-label={`Select category: ${cat.labelEn}`}
                     aria-pressed={isSelected}
-                    className={`ticket-chamfer-tl-br p-3 text-left border-2 transition-all cursor-pointer flex flex-col justify-between ${
+                    className={`rounded-xl p-3 text-left border transition-[border-color,background-color,box-shadow,transform] duration-150 cursor-pointer flex flex-col justify-between ${
                       isSelected
-                        ? "bg-[#25173B] border-[#4FD6E0] shadow-[3px_3px_0px_#4FD6E0] text-white hover:glow-sodium"
-                        : "bg-[#1A1028] border-[rgba(125,96,166,0.35)] text-slate-400 hover:border-[#8B5A2B] hover:text-slate-200"
+                        ? "bg-[#25173B] border-[#A6F0CF] text-[#F4F0FA] shadow-[0_4px_20px_rgba(166,240,207,0.12)] -translate-y-0.5"
+                        : "bg-[#140C20] border-[rgba(125,96,166,0.25)] text-[#C4B7D7] hover:border-[#A6F0CF]/40 hover:text-[#F4F0FA]"
                     }`}
                   >
                     <Icon
                       className={`w-4 h-4 mb-2 ${
-                        isSelected ? "text-[#A6F0CF]" : "text-slate-400"
+                        isSelected ? "text-[#A6F0CF]" : "text-[#9B8EB3]"
                       }`}
                     />
                     <div>
-                      <span className="block text-xs font-mono font-bold leading-tight">
+                      <span className="block text-xs font-mono font-bold leading-tight" {...(locale === "ta" ? { lang: "ta" } : {})}>
                         {locale === "ta" ? cat.labelTa : cat.labelEn}
                       </span>
-                      <span className="block text-[10px] text-slate-400 font-body mt-0.5">
+                      <span className="block text-[10px] text-[#9B8EB3] font-body mt-0.5">
                         {cat.labelEn}
                       </span>
                     </div>
@@ -223,14 +226,14 @@ export function SuggestionForm({
             <div className="flex items-center justify-between mb-2">
               <label
                 htmlFor="suggestion-message"
-                className="text-xs font-mono uppercase tracking-wider text-[#FFC526] font-bold"
+                className="text-xs font-mono uppercase tracking-wider text-[#A6F0CF] font-bold"
               >
                 2. Your Suggestion or Vision · யோசனை{" "}
-                <span className="text-[#55CCA2]">*</span>
+                <span className="text-[#F26BB5]">*</span>
               </label>
               <span
                 className={`text-[11px] font-mono ${
-                  message.length > 2500 ? "text-rose-400 font-bold" : "text-slate-400"
+                  message.length > 2500 ? "text-rose-400 font-bold" : "text-[#9B8EB3]"
                 }`}
               >
                 {message.length} / 2500 chars
@@ -244,7 +247,7 @@ export function SuggestionForm({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="e.g. A Tamil movie screening at Gateway Film Center, classical instrumental fusion jam on the Oval, career shadow nights with alumni in tech/healthcare, Pongal kolam contest..."
-              className="w-full px-4 py-3 bg-[#1A1028] border-2 border-[rgba(125,96,166,0.35)] focus:border-[#A6F0CF] text-[#F4F0FA] placeholder:text-slate-500 text-sm outline-none transition-colors font-body leading-relaxed resize-y"
+              className="w-full px-4 py-3 bg-[#140C20] border border-[rgba(125,96,166,0.35)] focus:border-[#A6F0CF] rounded-xl text-[#F4F0FA] placeholder:text-[#9B8EB3]/50 text-sm outline-none transition-colors font-body leading-relaxed resize-y"
             />
           </div>
 
@@ -253,9 +256,9 @@ export function SuggestionForm({
             <div>
               <label
                 htmlFor="suggestion-name"
-                className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1.5"
+                className="block text-xs font-mono uppercase tracking-wider text-[#C4B7D7] mb-1.5"
               >
-                Your Name <span className="text-slate-500 font-normal">(Optional · Anonymous is fine)</span>
+                Your Name <span className="text-[#9B8EB3] font-normal">(Optional · Anonymous is fine)</span>
               </label>
               <input
                 id="suggestion-name"
@@ -264,16 +267,16 @@ export function SuggestionForm({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Maya Sundaram (or leave blank)"
-                className="w-full px-4 py-2.5 bg-[#1A1028] border-2 border-[rgba(125,96,166,0.35)] focus:border-[#A6F0CF] text-[#F4F0FA] placeholder:text-slate-500 text-sm outline-none transition-colors font-body"
+                className="w-full px-4 py-2.5 bg-[#140C20] border border-[rgba(125,96,166,0.35)] focus:border-[#A6F0CF] rounded-xl text-[#F4F0FA] placeholder:text-[#9B8EB3]/50 text-sm outline-none transition-colors font-body"
               />
             </div>
 
             <div>
               <label
                 htmlFor="suggestion-email"
-                className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1.5"
+                className="block text-xs font-mono uppercase tracking-wider text-[#C4B7D7] mb-1.5"
               >
-                Your Email <span className="text-slate-500 font-normal">(Optional · For board follow-up)</span>
+                Your Email <span className="text-[#9B8EB3] font-normal">(Optional · For board follow-up)</span>
               </label>
               <input
                 id="suggestion-email"
@@ -282,14 +285,14 @@ export function SuggestionForm({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. sundaram.123@osu.edu"
-                className="w-full px-4 py-2.5 bg-[#1A1028] border-2 border-[rgba(125,96,166,0.35)] focus:border-[#A6F0CF] text-[#F4F0FA] placeholder:text-slate-500 text-sm outline-none transition-colors font-body"
+                className="w-full px-4 py-2.5 bg-[#140C20] border border-[rgba(125,96,166,0.35)] focus:border-[#A6F0CF] rounded-xl text-[#F4F0FA] placeholder:text-[#9B8EB3]/50 text-sm outline-none transition-colors font-body"
               />
             </div>
           </div>
 
           {/* Error Message Alert */}
           {state.error && (
-            <div className="p-4 bg-rose-950/90 border-2 border-rose-500 text-rose-200 text-xs flex items-start gap-3 shadow-[4px_4px_0px_#881337]">
+            <div className="p-4 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-200 text-xs flex items-start gap-3 shadow-sm">
               <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold mb-1">Submission Could Not Be Completed</p>
@@ -312,7 +315,7 @@ export function SuggestionForm({
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
             <SubmitButton />
 
-            <p className="text-[11px] font-mono text-slate-400 text-center sm:text-right">
+            <p className="text-[11px] font-mono text-[#9B8EB3] text-center sm:text-right">
               Protected by anti-spam verification · Anonymous submissions welcomed
             </p>
           </div>

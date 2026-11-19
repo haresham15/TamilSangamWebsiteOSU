@@ -2,16 +2,15 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, Download, Calendar, Clock, MapPin, Shirt, Shuffle, Music2 } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Download, Calendar, Clock, MapPin, Shirt, Music2 } from "lucide-react";
 import type { SangamEvent } from "@/data/events";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { useReducedMotion } from "framer-motion";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { SplitText } from "./SplitText";
-import { ParallaxScatter } from "./ParallaxScatter";
+import { EventPhotoVault } from "./EventPhotoVault";
 import { VaultGateway } from "./VaultGateway";
-import { Magnet } from "@/components/ui/react-bits";
 import { EditorialBackgroundCanvas } from "@/components/ui/EditorialBackgroundCanvas";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 
@@ -31,29 +30,10 @@ interface EventDossierViewProps {
  */
 export function EventDossierView({ event, photos }: EventDossierViewProps) {
   const { locale } = useLocale();
-  const { playClick, playCardSlide } = useAudio();
+  const { playClick } = useAudio();
   const reducedMotion = useReducedMotion();
   const { isLiteMode } = useLiteMode();
   const [downloadFeedback, setDownloadFeedback] = useState(false);
-  const [selectedPhotos, setSelectedPhotos] = useState(() => [...new Set(photos)]);
-  const [shuffleCount, setShuffleCount] = useState(0);
-
-  const shuffleArchive = () => {
-    playClick();
-    playCardSlide();
-    setSelectedPhotos(current => {
-      const next = [...current];
-      for (let i = next.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [next[i], next[j]] = [next[j], next[i]];
-      }
-      if (next.length > 1 && next.every((photo, index) => photo === current[index])) {
-        next.push(next.shift()!);
-      }
-      return next;
-    });
-    setShuffleCount(count => count + 1);
-  };
 
   const displayTitle = locale === "ta" ? event.titleTa : event.titleEn;
   const secondaryTitle = locale === "ta" ? event.titleEn : event.titleTa;
@@ -110,9 +90,9 @@ END:VCALENDAR`;
             <Link
               href="/#flagship-gathering"
               onClick={playClick}
-              className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.15em] text-[#F4F0FA] bg-[#25173B] border border-[#A6F0CF]/40 hover:border-[#A6F0CF] px-3.5 py-1.5 rounded-full hover:text-[#A6F0CF] transition-all shadow-[0_0_12px_rgba(166,240,207,0.2)]"
+              className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.15em] text-[#F4F0FA] bg-[#25173B] border border-[#A6F0CF]/40 hover:border-[#A6F0CF] px-3.5 py-1.5 rounded-full hover:text-[#A6F0CF] transition-colors"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF]" />
               <span>HOME FLAGSHIP SHOWCASE ↗</span>
             </Link>
           )}
@@ -275,7 +255,7 @@ END:VCALENDAR`;
           <section aria-label="Event Registration and Performance Sign-Up" className="mb-20">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-5 border-b border-[rgba(125,96,166,0.25)] pb-3">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#A6F0CF] animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-[#A6F0CF]" />
                 <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-[#A6F0CF] font-semibold">
                   OFFICIAL SIGN-UP &amp; REGISTRATION FORM · படிவம்
                 </h2>
@@ -305,47 +285,14 @@ END:VCALENDAR`;
         )}
 
         {/* ============================================================ */}
-        {/* EDITORIAL PHOTO SPREAD (Recessed Archival Mat-Board Well)   */}
+        {/* EDITORIAL PHOTO VAULT & LIGHTBOX (Consolidated Gallery)     */}
         {/* ============================================================ */}
-        <section aria-label="Curated Photographic Dossier" className="mt-20 -mx-6 sm:-mx-10 lg:-mx-16 px-6 sm:px-10 lg:px-16 py-16 bg-[#25173B]/75 border-y border-[rgba(125,96,166,0.25)] shadow-[inset_0_2px_12px_rgba(0,0,0,0.2)]">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[rgba(125,96,166,0.25)] pb-4 mb-16">
-            <div>
-              <h2 className="text-3xl sm:text-4xl font-serif text-[#F4F0FA] flex items-baseline gap-3">
-                <span>Selected Archive</span>
-                <span lang="ta" className="text-xl sm:text-2xl font-tamil text-[#F4F0FA]/50 font-normal">
-                  தொகுப்பு
-                </span>
-                <span className="text-xs font-mono text-[#A6F0CF] font-semibold">
-                  ({selectedPhotos.length})
-                </span>
-              </h2>
-            </div>
-          </div>
-
-          <div className="mb-12 inline-block">
-            <Magnet magnetStrength={2} maxOffset={8}>
-              <button
-                type="button"
-                onClick={shuffleArchive}
-                disabled={selectedPhotos.length < 2}
-                className="inline-flex min-h-12 items-center gap-3 border-b border-[#A6F0CF] text-[#A6F0CF] font-mono text-xs tracking-widest hover:text-[#4FD6E0] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4FD6E0] disabled:opacity-50 cursor-pointer"
-              >
-                <Shuffle aria-hidden="true" className="h-4 w-4" />
-                SHUFFLE ARCHIVE
-              </button>
-            </Magnet>
-          </div>
-          <p role="status" className="sr-only">{shuffleCount > 0 ? `Archive reshuffled. ${selectedPhotos.length} selected samples.` : ""}</p>
-
-          {/* The Asymmetrical Parallax Scatter */}
-          {selectedPhotos.length > 0 ? (
-            <ParallaxScatter photos={selectedPhotos} eventTitle={event.titleEn} />
-          ) : (
-            <div className="py-24 text-center font-serif text-xl text-[#F4F0FA]/75 italic">
-              Photographic prints being cataloged in the local vault.
-            </div>
-          )}
-        </section>
+        <EventPhotoVault
+          eventSlug={event.slug}
+          eventTitle={event.titleEn}
+          scatterPhotos={photos}
+          googlePhotosUrl={event.googlePhotosUrl}
+        />
 
         <KolamSectionRule tone="sandstone" />
 

@@ -3,6 +3,8 @@
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { CampusProps } from "./CampusProps";
+import { useStaticBatch } from "@/gl/useStaticBatch";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 
 interface MorningCampusVignetteProps {
   tier?: "A" | "B" | "C";
@@ -25,6 +27,9 @@ interface MorningCampusVignetteProps {
  */
 export function MorningCampusVignette({ tier = "A" }: MorningCampusVignetteProps) {
   const rootRef = useRef<THREE.Group>(null);
+  // Art pass: the props are ~50 static meshes on a handful of materials; batch them.
+  const [artPass] = React.useState(() => isHeroCinematicEnabled("join"));
+  useStaticBatch(rootRef, [], artPass && tier !== "C");
 
   // Runtime assertion check verifying 0 vignette meshes intersect the keep-out volume (§5)
   useEffect(() => {

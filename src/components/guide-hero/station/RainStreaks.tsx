@@ -136,8 +136,8 @@ export function RainStreaks() {
   }, []);
 
   useFrame((_, delta) => {
-    if (reduceMotion) return;
     const dt = Math.min(delta, 0.05);
+    if (reduceMotion) return;
     if (materialRef.current) {
       materialRef.current.uniforms.uTime.value += dt;
     }

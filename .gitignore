@@ -64,4 +64,6 @@ public/videos/
 tests/artifacts/
 graphify-out/cache/
 .vitest/
+.visual-audit/
+visual-audit-screenshots/
 

@@ -44,10 +44,6 @@ export const ROUTE_INFO_MAP: Record<
     titleEn: "Executive Board",
     titleTa: "நிர்வாக அவை",
   },
-  "/gallery": {
-    titleEn: "Photo Vault",
-    titleTa: "நினைவலைகள்",
-  },
   "/games": {
     titleEn: "Sangam Arcade",
     titleTa: "அரங்கம்",

@@ -240,7 +240,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
                   href={icsDownloadUrl}
                   download
                   onClick={() => playWoodClick()}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white hover:bg-[#25173B] text-[#F4F0FA] border border-[rgba(125,96,166,0.25)] text-xs font-sans font-medium transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#140C20] hover:bg-[#25173B] text-[#F4F0FA] border border-[rgba(125,96,166,0.3)] text-xs font-sans font-medium transition-colors"
                 >
                   <Download className="w-3.5 h-3.5 text-[#A6F0CF]" />
                   <span>Apple / Outlook (.ics)</span>

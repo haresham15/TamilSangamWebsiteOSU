@@ -170,7 +170,7 @@ export function PronounceableQuote({
     <Component
       role="region"
       aria-label={label || `Tamil pronunciation available for: ${tamilText}`}
-      className={`group relative select-none rounded-xl transition-all duration-300 ${speakingRingClasses} ${className}`}
+      className={`group relative select-none rounded-xl transition-[box-shadow,ring-color] duration-200 ${speakingRingClasses} ${className}`}
     >
       {/* Top Badge */}
       {showWaveBadge && badgePosition === "top" && (

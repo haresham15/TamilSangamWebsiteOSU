@@ -394,7 +394,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 375, height: 812 
     const errors: string[] = [];
     page.on("pageerror", error => errors.push(error.message));
     for (const [route, key] of [["/", "home-hero"], ["/board", "board-corridor"],
-      ["/gallery", "gallery-hero"], ["/join", "join-hero"]]) {
+      ["/events", "events-arena"], ["/join", "join-hero"]]) {
       await page.goto(route);
       await expect(page.locator("main")).toBeVisible();
       await page.evaluate(async () => { await document.fonts.ready; });

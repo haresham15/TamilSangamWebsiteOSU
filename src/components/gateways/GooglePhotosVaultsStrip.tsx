@@ -71,7 +71,7 @@ export function GooglePhotosVaultsStrip({ className = "", variant = "light" }: G
   return (
     <section
       aria-labelledby="google-photos-vaults-heading"
-      className={`w-full py-12 px-4 sm:px-6 md:px-8 rounded-2xl transition-all bg-[#25173B] border border-[rgba(125,96,166,0.25)] text-[#F4F0FA] ${className}`}
+      className={`w-full py-12 px-4 sm:px-6 md:px-8 rounded-2xl bg-[#25173B] border border-[rgba(125,96,166,0.25)] text-[#F4F0FA] ${className}`}
     >
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header Strip */}
@@ -106,7 +106,7 @@ export function GooglePhotosVaultsStrip({ className = "", variant = "light" }: G
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Open Google Photos Vault for ${album.titleEn}`}
-              className={`group relative flex flex-col justify-between p-5 rounded-xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#4FD6E0] bg-[#1A1028] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 text-[#F4F0FA]`}
+              className="group relative flex flex-col justify-between p-5 rounded-xl border transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#4FD6E0] bg-[#1A1028] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/40 text-[#F4F0FA]"
             >
               {/* Top Accent Strip */}
               <div className="space-y-3">
@@ -115,7 +115,7 @@ export function GooglePhotosVaultsStrip({ className = "", variant = "light" }: G
                     0{album.num}
                   </span>
                   <ExternalLink
-                    className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"
+                    className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-[transform,opacity] duration-200"
                     aria-hidden="true"
                   />
                 </div>

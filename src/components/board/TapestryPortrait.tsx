@@ -1,5 +1,6 @@
 "use client";
 
+import { splitTamilAksharas } from "@/lib/tamilGraphemes";
 import React, { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
@@ -128,16 +129,38 @@ function createTapestryTexture(member: BoardMember): THREE.CanvasTexture {
   ctx.arc(photoCenterX, photoCenterY, photoRadius, 0, Math.PI * 2);
   ctx.fill();
 
-  // Royal Chola Tiger Crest Silhouette inside medallion
-  ctx.fillStyle = "#A6F0CF";
-  ctx.font = "bold 88px sans-serif";
-  ctx.textBaseline = "middle";
-  ctx.fillText("🐅", photoCenterX, photoCenterY - 10);
+  // Royal Chola Heraldic Medallion Seal (Geometric crest & Tamil monogram)
+  ctx.save();
+  ctx.strokeStyle = "rgba(166, 240, 207, 0.4)";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(photoCenterX, photoCenterY, photoRadius * 0.72, 0, Math.PI * 2);
+  ctx.stroke();
 
-  // Subtle name initial watermark behind tiger
-  ctx.fillStyle = "rgba(212, 175, 55, 0.25)";
-  ctx.font = "bold 64px 'Anek Tamil', serif";
-  ctx.fillText(member.nameEn.charAt(0), photoCenterX, photoCenterY + 70);
+  // Decorative 4-point cardinal ticks on inner seal
+  const innerR = photoRadius * 0.72;
+  const tickLen = 6;
+  ctx.strokeStyle = "rgba(242, 107, 181, 0.5)";
+  ctx.lineWidth = 2;
+  for (let i = 0; i < 4; i++) {
+    const angle = (i * Math.PI) / 2;
+    ctx.beginPath();
+    ctx.moveTo(photoCenterX + Math.cos(angle) * (innerR - tickLen), photoCenterY + Math.sin(angle) * (innerR - tickLen));
+    ctx.lineTo(photoCenterX + Math.cos(angle) * (innerR + tickLen), photoCenterY + Math.sin(angle) * (innerR + tickLen));
+    ctx.stroke();
+  }
+
+  // Member Tamil Initial Monogram inside seal
+  ctx.fillStyle = "#A6F0CF";
+  ctx.font = "bold 56px 'Mukta Malar', 'Anek Tamil', serif";
+  ctx.textBaseline = "middle";
+  ctx.fillText(splitTamilAksharas(member.nameTa)[0] || "த", photoCenterX, photoCenterY - 8);
+
+  // Monospace Title & Year Crest Subtitle
+  ctx.fillStyle = "rgba(244, 240, 250, 0.65)";
+  ctx.font = "600 11px 'Fragment Mono', monospace";
+  ctx.fillText("CHOLA SEAL · 2026", photoCenterX, photoCenterY + 44);
+  ctx.restore();
   ctx.restore();
 
   // 5. Bilingual Typography Roster Lockup

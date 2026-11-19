@@ -1,4 +1,5 @@
 .runway { position: relative; height: 640dvh; }
+.runway[data-static="true"] { height: 100dvh; }
 .stage { position: sticky; top: 0; width: 100%; height: 100dvh; overflow: clip; color: var(--color-ink); }
 .frame, .overlays { position: absolute; inset: 0; pointer-events: none; }
 .view { position: absolute !important; inset: 0; width: 100%; height: 100%; }
@@ -11,8 +12,11 @@
 .captionStack { display: grid; }
 .captionBeat { grid-area: 1 / 1; transition: opacity .22s linear, transform .22s ease; }
 .exitWash { position: absolute; inset: 0; z-index: 2; background: var(--color-bg); pointer-events: none; }
-.skip { position: absolute; z-index: 5; right: 5%; bottom: max(5%, 96px); display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 10px 20px; border: 1px solid var(--color-accent); border-radius: 8px; color: var(--color-ink); background: var(--color-surface); font-size: 13px; font-weight: 500; backdrop-filter: blur(8px); transition: background-color 0.2s, transform 0.2s; }
-.skip:focus-visible { outline: 3px solid var(--color-accent-3); outline-offset: 5px; }
+.skip { position: absolute; z-index: 5; right: 5%; bottom: max(5%, 96px); display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 10px 20px; border: 1px solid var(--color-accent); border-radius: 8px; color: var(--color-ink); background: var(--color-surface); font-size: 13px; font-weight: 500; backdrop-filter: blur(8px); transition: background-color 0.2s, transform 0.2s; }
+.skip:focus-visible, .stills button:focus-visible { outline: 3px solid var(--color-accent-3); outline-offset: 5px; }
+.stills { display: flex; gap: 4px; margin-top: 12px; pointer-events: auto; }
+.stills button { width: 48px; height: 48px; border-radius: 8px; border-bottom: 2px solid transparent; color: var(--color-ink); background: var(--color-surface); font-size: 14px; font-variant-numeric: tabular-nums; }
+.stills button[aria-pressed="true"] { border-color: var(--color-accent); color: var(--color-accent); }
 .sheet { position: relative; z-index: 20; }
 @media (min-aspect-ratio: 13/10) {
   .frame, .overlays { inset: auto; top: 50%; left: 50%; width: min(100vw, 239dvh); height: min(100dvh, calc(100vw / 2.39)); transform: translate(-50%, -50%); }
@@ -20,7 +24,7 @@
 }
 @media (max-width: 767px) {
   .runway { height: 440dvh; }
-  .skip { bottom: 84px; right: 5%; padding: 8px 16px; font-size: 12px; min-height: 40px; }
+  .skip { bottom: 84px; right: 5%; padding: 8px 16px; font-size: 12px; min-height: 48px; }
   .caption { bottom: 160px; left: 6%; }
   .intro { top: 120px; left: 6%; }
 }
@@ -42,4 +46,12 @@
   .stage::before, .stage::after { top: 0; bottom: 0; width: calc((100vw - 239dvh) / 2 + 1px); }
   .stage::before { left: 0; }
   .stage::after { right: 0; }
+}
+
+/* Cinematic look: between 13:10 and 2.39:1 the frame fills the viewport and the plate is cover-cropped
+   around a 75% anchor (GamesFocusScene COVER_ANCHOR), so there are no dead bands above and below. */
+@media (min-aspect-ratio: 13/10) and (max-aspect-ratio: 239/100) {
+  .runway[data-cover="true"] .frame, .runway[data-cover="true"] .overlays { top: 0; left: 0; width: 100%; height: 100%; transform: none; }
+  .runway[data-cover="true"] .poster { object-fit: cover; object-position: 75% 50%; }
+  .runway[data-cover="true"] .stage::before, .runway[data-cover="true"] .stage::after { content: none; }
 }

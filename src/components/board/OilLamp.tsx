@@ -1,9 +1,13 @@
 "use client";
 
-import React, { useRef, useMemo, useState } from "react";
+import React, { useEffect, useRef, useMemo, useState } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { noise1D } from "./noise";
+import { applyInstanceTransforms } from "@/gl/art/geometry";
+import { createSurfaceMaterial } from "@/gl/art/surface";
+import { useDisposeOnUnmount } from "@/gl/dispose";
+import { STANDING_FLAMES, createFlameGeometry, createFlameMaterial, createStandingLampGeometry } from "./boardArt";
 
 import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 
@@ -162,6 +166,48 @@ export function OilLamp({
           decay={2.0}
         />
       )}
+    </group>
+  );
+}
+
+/**
+ * Art-pass altar lamps: a pair of floor-standing brass kuthuvilakku with five lit lips each.
+ * Shared geometry and material, ONE instanced body draw and ONE instanced flame draw for
+ * both lamps (the legacy pair cost ~16 draws with per-mesh JSX materials and two extra real
+ * lights). Their light on the sanctum stone comes from the fake lamp light, not real lights.
+ */
+export function FinaleLamps({ positions }: { positions: [number, number, number][] }) {
+  const bodyRef = useRef<THREE.InstancedMesh>(null);
+  const flameRef = useRef<THREE.InstancedMesh>(null);
+
+  const assets = useMemo(() => {
+    const body = createStandingLampGeometry();
+    const brass = createSurfaceMaterial("agedBrass", {}, { cavity: true, space: "local" });
+    const flames = positions.flatMap((p, li) =>
+      STANDING_FLAMES.map((f, fi) => ({ position: [p[0] + f[0], p[1] + f[1], p[2] + f[2]] as [number, number, number], phase: li * 2.4 + fi * 1.7 }))
+    );
+    const flameGeo = createFlameGeometry(flames.map((f) => f.phase), 0.85);
+    // No wide glow: five overlapping glows per lamp summed into a visible box.
+    const flameMat = createFlameMaterial({ halo: 0.3, glow: 0, fog: 0.0 });
+    return { body, brass, flames, flameGeo, flameMat };
+  }, [positions]);
+  useDisposeOnUnmount(assets.body, assets.brass, assets.flameGeo, assets.flameMat);
+
+  useEffect(() => {
+    if (bodyRef.current) applyInstanceTransforms(bodyRef.current, positions.map((position) => ({ position })));
+    if (flameRef.current) applyInstanceTransforms(flameRef.current, assets.flames);
+  }, [positions, assets]);
+
+  useFrame(({ clock }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (dt <= 0) return;
+    assets.flameMat.uniforms.uTime.value = clock.elapsedTime;
+  });
+
+  return (
+    <group>
+      <instancedMesh ref={bodyRef} args={[assets.body, assets.brass, positions.length]} />
+      <instancedMesh ref={flameRef} args={[assets.flameGeo, assets.flameMat, assets.flames.length]} frustumCulled={false} />
     </group>
   );
 }

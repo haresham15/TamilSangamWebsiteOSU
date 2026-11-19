@@ -20,6 +20,12 @@
 - **Origin / Source**: A still frame of the site's own `/join` WebGL scene (gates closed, ungraded), captured headless at 1600×900 and encoded to WebP (quality 80). Shown in place of the canvas for Lite, Tier C and reduced motion.
 - **License / Attribution**: Same as the scene's procedural assets above; no third-party imagery.
 
+### Cast Gate Lettering Glyphs (`src/components/join/art/optimerBoldCaps.json`)
+
+- **Origin / Source**: Outlines for eight capitals (T, A, M, I, L, S, N, G) subset from `optimer_bold.typeface.json`, shipped with the installed three.js package (`three/examples/fonts/`). Used to extrude the "TAMIL SANGAM" bronze lettering on the `/join` gate arch. Nothing was downloaded.
+- **License**: **MgOpen licence** (permissive, Bitstream Vera style). Copyright © 2004 MAGENTA Ltd. The full licence text is embedded in the JSON file's `license` field, as the licence requires for copies.
+- **Attribution**: MgOpen typeface by MAGENTA Ltd. This is not CC0; it is the one third-party item in the `/join` scene.
+
 ### Ironwork Lattice Materials
 
 - **Variant A**: High-specular wrought iron (`#1A1A1A`, metalness 0.9, roughness 0.25). Procedural PBR shader.
@@ -29,6 +35,12 @@
 ### Cultural Motifs & Typography
 
 - **Tamil Typography**: Mukta Malar (`var(--font-tamil)`), Anek Tamil (`var(--font-display)`), rendered in accordance with classical orthographic rules (no uppercase, no split glyph clusters).
+
+## 1b. Home and Board Hero Static Posters
+
+- **Files**: `public/home/home-hero-poster.webp` (threshold stone and brass அ, early peel) and `public/board/board-hero-poster.webp` (Chola darbar crown view).
+- **Origin / Source**: Still frames of the site's own WebGL scenes, rendered headless at 1600×900 with the page UI hidden and encoded to WebP. Shown in place of the canvas for reduced motion, Lite and Tier C.
+- **License / Attribution**: Repository-authored procedural geometry, materials and lighting (`src/gl/art/`, `src/components/hero/`, `src/components/board/`). No third-party imagery, textures or models.
 
 ## 2. Sensory Layer — Color Grading & Audio Synthesis
 

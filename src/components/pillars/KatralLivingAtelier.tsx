@@ -179,7 +179,7 @@ export function KatralLivingAtelier() {
           return (
             <SpotlightCard
               key={phrase.id}
-              className={`p-6 sm:p-7 rounded-2xl cursor-pointer transition-all duration-300 border flex flex-col justify-between ${
+              className={`p-6 sm:p-7 rounded-2xl cursor-pointer transition-[border-color,background-color,box-shadow] duration-200 border flex flex-col justify-between ${
                 isSelected
                   ? "bg-[#140C20] text-[#F4F0FA] border-[#A6F0CF]/60 shadow-xl"
                   : "bg-[#140C20] text-[#F4F0FA] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/40 hover:bg-[#25173B]"

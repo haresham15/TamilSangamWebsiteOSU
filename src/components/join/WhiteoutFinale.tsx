@@ -7,6 +7,8 @@ import { useFrame } from "@react-three/fiber";
 interface WhiteoutFinaleProps {
   scrollProgressRef: React.RefObject<number>;
   gateProgressRef?: React.RefObject<number>;
+  /** Scales the additive sun-bloom behind the gate (the art pass has its own shafts/haze). */
+  portalStrength?: number;
 }
 
 const FORWARD_OFFSET = new THREE.Vector3(0, 0, -0.6);
@@ -23,6 +25,7 @@ const sunBloomShader = {
     uniform float uTime;
     uniform float uGateProgress;
     uniform float uScrollProgress;
+    uniform float uStrength;
     varying vec2 vUv;
 
     void main() {
@@ -48,14 +51,14 @@ const sunBloomShader = {
 
       float alpha = bloom * (0.35 + uGateProgress * 0.65) + motes * uGateProgress;
       // Fade out when scroll pasts gate into threshold
-      alpha = clamp(alpha, 0.0, 1.0);
+      alpha = clamp(alpha * uStrength, 0.0, 1.0);
 
       gl_FragColor = vec4(col, alpha);
     }
   `,
 };
 
-export function WhiteoutFinale({ scrollProgressRef, gateProgressRef }: WhiteoutFinaleProps) {
+export function WhiteoutFinale({ scrollProgressRef, gateProgressRef, portalStrength = 1 }: WhiteoutFinaleProps) {
   const portalMeshRef = useRef<THREE.Mesh>(null);
   const portalMatRef = useRef<THREE.ShaderMaterial>(null);
 
@@ -68,8 +71,9 @@ export function WhiteoutFinale({ scrollProgressRef, gateProgressRef }: WhiteoutF
       uTime: { value: 0 },
       uGateProgress: { value: 0 },
       uScrollProgress: { value: 0 },
+      uStrength: { value: portalStrength },
     }),
-    []
+    [portalStrength]
   );
 
   useFrame((state, delta) => {

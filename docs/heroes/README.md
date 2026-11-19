@@ -33,7 +33,8 @@ Each page on the OSU Tamil Sangam website is engineered as a **theatrical prolog
 | **05** | `/gallery` | **24-Fret Acoustic Guitar Highway**<br>`GalleryHero.tsx` | ***Vaaranam Aayiram* (2008)**<br>(Gautham Vasudev Menon / Suriya / Harris Jayaraj) | • True 12-TET 24-fret acoustic neck along coastal highway<br>• Suriya's single red rose contact brake at $p=0.52$<br>• Military dog tags at $p=0.755$ & guitar pick strum vibration | [PRD](./gallery-hero-prd.md)<br>• [GIF](./media/gallery_hero_animation.gif)<br>• [Video](./media/gallery_hero_animation.webm)<br>• [Rest](./media/gallery_hero_rest.png) |
 | **06** | `/guide` | **The Station Sequence**<br>`GuideHero.tsx` | ***Alaipayuthey* (2000)**<br>(Mani Ratnam / Madhavan & Shalini / A.R. Rahman) | • Blue hour rain-damp suburban railway platform<br>• Compartment window silhouettes (woman inside, man on platform)<br>• Solari mechanical split-flap board with 8ms acoustic impact bus | [PRD](./guide-hero-v3-station-sequence-prd.md)<br>• [GIF](./media/guide_hero_animation.gif)<br>• [Video](./media/guide_hero_animation.webm)<br>• [Rest](./media/guide_hero_rest.png) |
 | **07** | `/suggestions` | **The Kaththi War Room Blueprint**<br>`BlueprintScene3D.tsx` | ***Kaththi* (2014)**<br>(A.R. Murugadoss / Thalapathy Vijay / Anirudh) | • Bruised plum void gradient (`#241021`) & tactical drafting grid<br>• Procedural 3D wireframe mesh of Ohio Stadium ("The Horseshoe")<br>• Kathiresan's coin drop intersection (`[3.6, 0.05, 4.4]`) & hydrology pipe nodes | [PRD](./suggestions-hero-kaththi-war-room-prd.md)<br>• [GIF](./media/suggestions_hero_animation.gif)<br>• [Video](./media/suggestions_hero_animation.webm)<br>• [Rest](./media/suggestions_hero_rest.png) |
-| **08** | `/join` | **Morning Campus Courtyard Gates**<br>`JoinHeroCanvas.tsx` | ***Autograph* (2004)** & ***Minnale* (2001)**<br>(Cheran / GVM / Collegiate Confluence) | • Heavy wrought-iron collegiate gates with procedural hinge physics<br>• GPU leaf drift: **90% Ohio Buckeye leaves + 10% Madurai Jasmine (*malli poo*)**<br>• Cast bronze arch plaque: *"ஓஹியோ தமிழ் சங்கம் · EST. 2024"* | [PRD](./join-hero-collegiate-gates-prd.md)<br>• [GIF](./media/join_hero_animation.gif)<br>• [Video](./media/join_hero_animation.webm)<br>• [Rest](./media/join_hero_rest.png) |
+| **08** | `/join` | **Morning Campus Courtyard Gates**<br>`JoinHeroCanvas.tsx` | ***Autograph* (2004)** & ***Minnale* (2001)**<br>(Cheran / GVM / Collegiate Confluence) | • Heavy wrought-iron collegiate gates with procedural hinge physics<br>• GPU leaf drift: **90% Ohio Buckeye leaves + 10% Madurai Jasmine (*malli poo*)**<br>• Cast bronze arch plaque: *"ஓஹியோ தமிழ் சங்கம் · EST. 2021"* | [PRD](./join-hero-collegiate-gates-prd.md)<br>• [GIF](./media/join_hero_animation.gif)<br>• [Video](./media/join_hero_animation.webm)<br>• [Rest](./media/join_hero_rest.png) |
+| **10** | `/games` | **Hybrid Cinematic Beach Compound**<br>`src/components/games-hero/GamesHeroCanvas.tsx` | Pre-rendered Blender plates + live hand/eyeglasses layer | • Focus compositor racks from the live glasses to the baked scene<br>• Baked missile blasts with live heat haze<br>• Static poster for reduced motion, Lite and Tier C | [PRD](./games-hero-hybrid-cinematic-prd.md)<br>• [Optimization PRD](./games-hero-hybrid-optimization-prd.md) |
 | **09** | `/events/[slug]` | **Sunlit Randomized Dossier**<br>`EventDossierView.tsx` | *Awwwards High-Fashion Editorial Broadsheet* | • Server-side Fisher-Yates shuffle slicing 5–8 photos per visit<br>• ReactBits `SplitText` letterpress emergence (Intl.Segmenter clusters)<br>• 3-track `ParallaxScatter` & magnetic proximity `VaultGateway` door | [PRD](./event-dossier-prd.md)<br>• [GIF](./media/event-dossier_hero_animation.gif)<br>• [Video](./media/event-dossier_hero_animation.webm)<br>• [Rest](./media/event-dossier_rest.png) |
 
 ---
@@ -127,7 +128,29 @@ docs/
 
 ---
 
-## 5. Live Interactive Inspection Board
+## 5. Hero Quality Pass (November 2026)
+
+Every mounted hero (Home, Events, About, Board, Guide, Suggestions, Join, Games) was rebuilt on a shared look kit and measured against budgets. Gallery is retired; its content moved into Events.
+
+- **Look kit:** `src/gl/art/` (bevelled and turned geometry, baked vertex AO, surface-detail materials, light rig, haze and shafts, contact shadows). Working guide and QA scripts: `scripts/hero-qa/README.md`.
+- **Grade pass:** `src/gl/grade/` renders each View through a HalfFloat target with bloom, ACES, LUT, vignette and grain. Turn it off with `?grade=0`; restore a hero's old look with `?cinematic_<hero>=0`.
+- **Budgets:** `src/config/heroBudgets.ts`. Run `PLAYWRIGHT_BASE_URL=http://localhost:3000 node --no-warnings --experimental-strip-types scripts/capture-all-heroes.mjs --perf --heroes=<hero>`; JSON lands in `tests/artifacts/perf/`.
+- **Frame-loop rules:** `node scripts/check-frame-deltas.cjs` (now part of `prebuild`) rejects unclamped `useFrame` deltas and module-scope GPU objects.
+
+| Hero | Component root | Grade | Static fallback | Draw calls (desktop, graded) |
+|---|---|---|---|---|
+| Home | `src/components/hero/` | kolam-hearth | `public/home/home-hero-poster.webp` | 24 |
+| Events | `src/components/gen3/` | leo-forge | `public/events/events-hero-poster.webp` | 43 |
+| About | `src/components/about/` | chola-gopuram | typographic spread | 23 |
+| Board | `src/components/board/` | darbar-torch | `public/board/board-hero-poster.webp` | 42 |
+| Guide | `src/components/guide-hero/` | alaipayuthey-bluehour | `public/guide/guide-hero-poster.webp` | 47–49 |
+| Suggestions | `src/components/suggestions/` | kaththi-blueprint | `BlueprintSVG` | 27 |
+| Join | `src/components/join/` | ungraded (additive haze washed out under the grade) | `public/join/join-hero-poster.webp` | 44 |
+| Games | `src/components/games-hero/` | own focus compositor | DOM poster | 24 |
+
+Draw calls were measured on the dev server. Frame-time budgets still need a run on an idle machine against a production build.
+
+## 6. Live Interactive Inspection Board
 
 To inspect all 9 page artboards, animated hero GIFs, video playback, and cinematic metadata side-by-side in your local browser:
 

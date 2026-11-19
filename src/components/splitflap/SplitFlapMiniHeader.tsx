@@ -74,7 +74,7 @@ export function SplitFlapMiniHeader({ onSearchFocus }: SplitFlapMiniHeaderProps)
   return (
     <aside
       aria-label="Split-Flap Status and Navigation Controls"
-      className={`fixed top-16 left-0 right-0 z-40 w-full bg-[#0c0907]/95 border-b border-[#2b2017] backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition-all duration-300 ${
+      className={`fixed top-16 left-0 right-0 z-40 w-full bg-[#0c0907]/95 border-b border-[#2b2017] backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isPastHero
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 -translate-y-3 pointer-events-none"

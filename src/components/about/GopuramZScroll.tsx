@@ -1,24 +1,15 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useSyncExternalStore } from "react";
+import React, { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import dynamic from "next/dynamic";
 import { useLocale } from "@/context/LocaleContext";
-import { useLiteMode } from "@/context/LiteModeContext";
-import { useReducedMotion } from "framer-motion";
-import { useTier } from "@/components/providers/TierProvider";
+import { useRenderMode } from "@/components/providers/useRenderMode";
 import { HeroScrollStage, useHeroStageVisibility } from "@/components/canvas/HeroScrollStage";
-import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
-import { PerspectiveCamera } from "@react-three/drei";
-import { SceneView as View } from "@/components/canvas/SceneView";
 import { registerSystem } from "@/engine/masterTick";
-import { SceneRegistrar } from "@/director/wireframe";
-import { SangamStudioEnvironment } from "@/components/canvas/SangamStudioEnvironment";
-import { useWarmup } from "@/components/gl/useWarmup";
-import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
-import { createCinemaCameraDamper, smootherstep } from "@/lib/cinemaCameraDamper";
-import { proceduralPbrMaps } from "@/lib/proceduralPbrMaps";
-import { GradeStack } from "@/gl/grade/GradeStack";
 import { PronounceableQuote } from "@/components/ui/PronounceableQuote";
+
+// The 3D ascent is code-split: static mode (Tier C, Lite, reduced motion) never loads it.
+const GopuramCanvas = dynamic(() => import("./GopuramCanvas"), { ssr: false, loading: () => null });
 
 interface TierItem {
   id: string;
@@ -96,110 +87,6 @@ const TIERS: TierItem[] = [
   },
 ];
 
-// Parametric 3D Sikku Kolam (Brahma Mudi) Curve with wide, gentle, flowing turns
-class KolamKnotCurve extends THREE.Curve<THREE.Vector3> {
-  radius: number;
-  amplitude: number;
-  p: number;
-  q: number;
-  depth: number;
-
-  constructor(radius = 3.0, amplitude = 0.25, p = 3, q = 8, depth = 0.45) {
-    super();
-    this.radius = radius;
-    this.amplitude = amplitude; // Gentle radial oscillation ensures rounded, flowing bends without sharp hairpins
-    this.p = p;
-    this.q = q;
-    this.depth = depth;
-  }
-
-  getPoint(t: number, optionalTarget = new THREE.Vector3()) {
-    // Closed knot loops over p * 2 * PI
-    const u = t * this.p * Math.PI * 2;
-    const quOverP = (this.q / this.p) * u;
-    const cs = Math.cos(quOverP);
-    
-    // Smooth harmonic radial modulation forming 8 lotus-petal loops
-    const r = this.radius * (1 + this.amplitude * cs);
-    const x = r * Math.cos(u);
-    const y = r * Math.sin(u);
-    const z = this.depth * Math.sin(quOverP);
-
-    return optionalTarget.set(x, y, z);
-  }
-}
-
-// Shared memoized geometries and materials for Bronze Kolam rings across all tiers
-// 720 tubular segments & 32 radial segments guarantee silky, mathematically continuous curves with 0 faceting
-const sharedKolamCurve = new KolamKnotCurve(3.0, 0.25, 3, 8, 0.45);
-const sharedKolamGeo = new THREE.TubeGeometry(sharedKolamCurve, 720, 0.07, 32, true);
-const sharedTorusGeo = new THREE.TorusGeometry(4.0, 0.12, 32, 200);
-const sharedInnerRingGeo = new THREE.TorusGeometry(1.85, 0.04, 24, 120);
-const sharedCenterDotGeo = new THREE.SphereGeometry(0.28, 32, 24);
-
-import { createHeroKineticsTracker } from "@/lib/heroKinetics";
-
-const sharedRingMat = new THREE.MeshPhysicalMaterial({
-  color: "#A6F0CF",
-  metalness: 0.92,
-  roughness: 0.22,
-  clearcoat: 0.6,
-  clearcoatRoughness: 0.2,
-  emissive: new THREE.Color("#2A1808"),
-  emissiveIntensity: 0.15,
-});
-
-sharedRingMat.onBeforeCompile = (shader) => {
-  shader.vertexShader = `
-    varying vec3 vWorldPosition;
-    ${shader.vertexShader}
-  `.replace(
-    `#include <begin_vertex>`,
-    `#include <begin_vertex>
-     vWorldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
-    `
-  );
-
-  shader.fragmentShader = `
-    varying vec3 vWorldPosition;
-    ${shader.fragmentShader}
-  `.replace(
-    `#include <roughnessmap_fragment>`,
-    `#include <roughnessmap_fragment>
-     // Procedural astrolabe degree ticks on astronomical brass
-     float angle = atan(vWorldPosition.y, vWorldPosition.x);
-     float tick = step(0.92, sin(angle * 90.0));
-     roughnessFactor = mix(roughnessFactor, 0.48, tick * 0.65);
-    `
-  ).replace(
-    `#include <emissivemap_fragment>`,
-    `#include <emissivemap_fragment>
-     // Warm Fresnel edge sheen on outer ring bevels
-     vec3 viewDir = normalize(vViewPosition);
-     float fresnel = pow(1.0 - max(0.0, dot(normalize(vNormal), viewDir)), 3.0);
-     totalEmissiveRadiance += vec3(0.98, 0.72, 0.28) * (fresnel * 0.35);
-    `
-  );
-};
-
-const sharedKolamMat = new THREE.MeshPhysicalMaterial({
-  color: "#CD7F32",
-  metalness: 0.88,
-  roughness: 0.24,
-  clearcoat: 0.85,
-});
-
-const sharedCoreMat = new THREE.MeshPhysicalMaterial({
-  color: "#F2BE54",
-  metalness: 0.94,
-  roughness: 0.15,
-  clearcoat: 1.0,
-  emissive: new THREE.Color("#A6F0CF"),
-  emissiveIntensity: 0.45,
-});
-
-const CURSOR_LIGHT_COLOR = "#4FD6E0";
-
 const STAGE_RANGES = [
   { start: 0.00, end: 0.16 },
   { start: 0.16, end: 0.32 },
@@ -208,239 +95,21 @@ const STAGE_RANGES = [
   { start: 0.64, end: 0.80 },
 ];
 
-// Hook for procedural PBR textures and elevated materials in Cinematic Mode
-function useCinematicBronzeMaterials(isCinematic: boolean) {
-  const timeUniformRef = useRef<{ uTime: { value: number } }>({ uTime: { value: 0 } });
+const COPY_GAP = 0.006;
+const COPY_FADE = 0.016;
 
-  useFrame((state) => {
-    if (isCinematic) {
-      timeUniformRef.current.uTime.value = state.clock.getElapsedTime();
-    }
-  });
-
-  const textures = useMemo(() => {
-    if (!isCinematic) return null;
-    const brushedNormal = proceduralPbrMaps.getBrushedMetalNormal("gopuram-brushed-normal", 256, 256);
-    const noiseRoughness = proceduralPbrMaps.getNoiseRoughness("gopuram-noise-roughness", 256, 256, 0.12, 0.28);
-    const graniteNormal = proceduralPbrMaps.getGraniteNormal("gopuram-granite-normal", 256, 256);
-    return { brushedNormal, noiseRoughness, graniteNormal };
-  }, [isCinematic]);
-
-  useEffect(() => {
-    if (!isCinematic) return;
-    return () => {
-      proceduralPbrMaps.release("gopuram-brushed-normal");
-      proceduralPbrMaps.release("gopuram-noise-roughness");
-      proceduralPbrMaps.release("gopuram-granite-normal");
-    };
-  }, [isCinematic]);
-
-  const materials = useMemo(() => {
-    if (!isCinematic || !textures) {
-      return {
-        ringMat: sharedRingMat,
-        kolamMat: sharedKolamMat,
-        coreMat: sharedCoreMat,
-      };
-    }
-
-    const ringMat = new THREE.MeshPhysicalMaterial({
-      color: "#A6F0CF",
-      metalness: 0.94,
-      roughness: 0.18,
-      roughnessMap: textures.noiseRoughness,
-      normalMap: textures.brushedNormal,
-      normalScale: new THREE.Vector2(0.3, 0.3),
-      clearcoat: 0.85,
-      clearcoatRoughness: 0.15,
-      emissive: new THREE.Color("#2A1808"),
-      emissiveIntensity: 0.18,
-    });
-
-    ringMat.onBeforeCompile = (shader) => {
-      shader.vertexShader = `
-        varying vec3 vWorldPosition;
-        ${shader.vertexShader}
-      `.replace(
-        `#include <begin_vertex>`,
-        `#include <begin_vertex>
-         vWorldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
-        `
-      );
-
-      shader.fragmentShader = `
-        varying vec3 vWorldPosition;
-        ${shader.fragmentShader}
-      `.replace(
-        `#include <roughnessmap_fragment>`,
-        `#include <roughnessmap_fragment>
-         // Astrolabe major ticks (every 30 deg) and fine degree ticks
-         float angle = atan(vWorldPosition.y, vWorldPosition.x);
-         float majorTick = step(0.96, sin(angle * 12.0));
-         float minorTick = step(0.92, sin(angle * 90.0));
-         float tick = max(majorTick, minorTick * 0.6);
-         roughnessFactor = mix(roughnessFactor, 0.52, tick * 0.7);
-        `
-      ).replace(
-        `#include <emissivemap_fragment>`,
-        `#include <emissivemap_fragment>
-         // Warm Fresnel edge sheen + major tick glint
-         vec3 viewDir = normalize(vViewPosition);
-         float fresnel = pow(1.0 - max(0.0, dot(normalize(vNormal), viewDir)), 3.0);
-         totalEmissiveRadiance += vec3(0.98, 0.72, 0.28) * (fresnel * 0.38);
-         float majorAngle = atan(vWorldPosition.y, vWorldPosition.x);
-         float majorSparkle = step(0.96, sin(majorAngle * 12.0));
-         totalEmissiveRadiance += vec3(1.0, 0.84, 0.42) * (majorSparkle * 0.45);
-        `
-      );
-    };
-
-    const kolamMat = new THREE.MeshPhysicalMaterial({
-      color: "#CD7F32",
-      metalness: 0.90,
-      roughness: 0.20,
-      roughnessMap: textures.noiseRoughness,
-      normalMap: textures.brushedNormal,
-      normalScale: new THREE.Vector2(0.35, 0.35),
-      clearcoat: 0.95,
-      clearcoatRoughness: 0.12,
-    });
-
-    kolamMat.onBeforeCompile = (shader) => {
-      shader.uniforms.uTime = timeUniformRef.current.uTime;
-      shader.vertexShader = `
-        varying vec3 vWorldPosition;
-        ${shader.vertexShader}
-      `.replace(
-        `#include <begin_vertex>`,
-        `#include <begin_vertex>
-         vWorldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
-        `
-      );
-
-      shader.fragmentShader = `
-        uniform float uTime;
-        varying vec3 vWorldPosition;
-        ${shader.fragmentShader}
-      `.replace(
-        `#include <emissivemap_fragment>`,
-        `#include <emissivemap_fragment>
-         // Sacred golden thread traveling pulse along Brahmamudi knot
-         float threadPhase = fract(vWorldPosition.z * 0.25 - uTime * 0.35);
-         float threadPulse = smoothstep(0.0, 0.15, threadPhase) * smoothstep(0.3, 0.15, threadPhase);
-         totalEmissiveRadiance += vec3(1.0, 0.82, 0.38) * (threadPulse * 0.45);
-        `
-      );
-    };
-
-    const coreMat = new THREE.MeshPhysicalMaterial({
-      color: "#F2BE54",
-      metalness: 0.96,
-      roughness: 0.12,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.08,
-      emissive: new THREE.Color("#A6F0CF"),
-      emissiveIntensity: 0.55,
-    });
-
-    return { ringMat, kolamMat, coreMat };
-  }, [isCinematic, textures]);
-
-  useEffect(() => {
-    if (!isCinematic) return;
-    return () => {
-      if (materials.ringMat !== sharedRingMat) materials.ringMat.dispose();
-      if (materials.kolamMat !== sharedKolamMat) materials.kolamMat.dispose();
-      if (materials.coreMat !== sharedCoreMat) materials.coreMat.dispose();
-    };
-  }, [isCinematic, materials]);
-
-  return materials;
-}
-
-// Optimized abstract cinematic Bronze Rings with lightweight shared geometry
-function BronzeRing({
-  position,
-  scale = 1,
-  rotation = [0, 0, 0] as [number, number, number],
-  scrollProgressRef,
-  ringMat = sharedRingMat,
-  kolamMat = sharedKolamMat,
-  coreMat = sharedCoreMat,
-  isCinematic = false,
-  tier = "A",
-}: {
-  position: [number, number, number];
-  scale?: number;
-  rotation?: [number, number, number];
-  scrollProgressRef: React.RefObject<number>;
-  ringMat?: THREE.Material;
-  kolamMat?: THREE.Material;
-  coreMat?: THREE.Material;
-  isCinematic?: boolean;
-  tier?: "A" | "B" | "C";
-}) {
-  const meshRef = useRef<THREE.Group>(null);
-  const coreLightRef = useRef<THREE.PointLight>(null);
-
-  useFrame((_, delta) => {
-    const dt = Math.min(delta, 0.05);
-    if (meshRef.current) {
-      const p = scrollProgressRef.current;
-      // 5-stage gyroscopic detent curve: accelerates between chapters and settles into alignment
-      const chapterPhase = p * 5.0;
-      const detentOffset = (Math.sin(chapterPhase * Math.PI * 2.0) / (Math.PI * 10.0)) * 0.55;
-      const detentP = p - detentOffset;
-
-      // Mandala coplanar concentric alignment as p -> 1.0
-      const alignment = 1 - THREE.MathUtils.smoothstep(detentP, 0.78, 0.98);
-      meshRef.current.rotation.x = THREE.MathUtils.damp(meshRef.current.rotation.x, rotation[0] * alignment, 8, dt);
-      meshRef.current.rotation.y = THREE.MathUtils.damp(meshRef.current.rotation.y, rotation[1] * alignment, 8, dt);
-      meshRef.current.rotation.z = THREE.MathUtils.damp(meshRef.current.rotation.z, rotation[2] * alignment, 8, dt);
-
-      // Specular pulse from core at chapter detent points
-      if (coreLightRef.current) {
-        const resonance = Math.pow(Math.cos(chapterPhase * Math.PI), 8.0);
-        coreLightRef.current.intensity = 6 + resonance * 8;
-      }
-    }
-  });
-
-  return (
-    <group position={position} rotation={rotation} ref={meshRef} dispose={null}>
-      {/* Outer Thiruvachi Torus with shared geometry and uniform scale */}
-      <mesh
-        geometry={sharedTorusGeo}
-        material={ringMat}
-        scale={[scale, scale, scale]}
-        castShadow={isCinematic && tier === "A"}
-        receiveShadow={isCinematic && tier === "A"}
-      />
-      {/* Inner Concentric Halo */}
-      <mesh
-        geometry={sharedInnerRingGeo}
-        material={ringMat}
-        scale={[scale, scale, scale]}
-        castShadow={isCinematic && tier === "A"}
-        receiveShadow={isCinematic && tier === "A"}
-      />
-      {/* Central Sacred Pulli Dot (Radiant Core) */}
-      <mesh
-        geometry={sharedCenterDotGeo}
-        material={coreMat}
-        scale={[scale, scale, scale]}
-      />
-      <pointLight ref={coreLightRef} color="#4FD6E0" intensity={6} distance={4} decay={2} />
-      {/* Flowing 8-Petal Sikku Kolam 3D Knot with silky-smooth bends */}
-      <mesh
-        geometry={sharedKolamGeo}
-        material={kolamMat}
-        scale={[scale, scale, scale]}
-        castShadow={isCinematic && tier === "A"}
-        receiveShadow={isCinematic && tier === "A"}
-      />
-    </group>
-  );
+/**
+ * Chapter copy cross-fade: the outgoing chapter is fully gone COPY_GAP before the boundary
+ * and the incoming one starts COPY_GAP after it, so two chapters never share the screen.
+ */
+export function chapterCopyState(p: number, index: number) {
+  const range = STAGE_RANGES[index];
+  if (!range || p < range.start || p > range.end) return { opacity: 0, y: p < (range?.start ?? 0) ? 16 : -16 };
+  const enter = index === 0 ? 1 : Math.min(1, Math.max(0, (p - range.start - COPY_GAP) / COPY_FADE));
+  const exit = Math.min(1, Math.max(0, (range.end - COPY_GAP - p) / COPY_FADE));
+  const opacity = Math.min(enter, exit);
+  const y = enter < 1 ? 16 * (1 - enter) : exit < 1 ? -16 * (1 - exit) : 0;
+  return { opacity, y };
 }
 
 // Seamless Floating Titles for Each Passing Bronze Kolam Ring
@@ -459,54 +128,38 @@ function RingModalCard({
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => registerSystem({
-    order: 51,
-    step: () => {
-      const element = cardRef.current;
-      if (!element) return;
-      const range = STAGE_RANGES[index];
-      if (!range) {
-        element.style.opacity = "0";
-        element.style.visibility = "hidden";
-        return;
-      }
-      const p = scrollProgressRef.current;
-      if (p < range.start || p > range.end) {
-        element.style.opacity = "0";
-        element.style.visibility = "hidden";
-        element.style.transform = p < range.start ? "translateY(20px)" : "translateY(-20px)";
-        return;
-      }
+  useEffect(() => {
+    // Write styles only when they change: per-frame writes dirty layout, and the View's
+    // per-frame getBoundingClientRect then forces a full-page relayout (mobile CPU).
+    let lastOpacity = -1;
+    let lastY = Number.NaN;
+    return registerSystem({
+      order: 51,
+      step: () => {
+        const element = cardRef.current;
+        if (!element) return;
+        const { opacity, y } = chapterCopyState(scrollProgressRef.current ?? 0, index);
+        const o = Math.round(opacity * 200) / 200;
+        const yy = Math.round(y * 2) / 2;
+        if (o === lastOpacity && yy === lastY) return;
+        if (o !== lastOpacity) {
+          element.style.opacity = String(o);
+          element.style.visibility = o > 0 ? "visible" : "hidden";
+        }
+        if (yy !== lastY) element.style.transform = `translateY(${yy}px)`;
+        lastOpacity = o;
+        lastY = yy;
+      },
+    });
+  }, [index, scrollProgressRef]);
 
-      // Smooth enter, hold plateau, and exit interpolation
-      const isFirst = index === 0;
-      const enterDur = isFirst ? 0 : 0.025;
-      const exitDur = 0.025;
-      let opacity = 1;
-      let yOffset = 0;
-
-      if (!isFirst && p < range.start + enterDur) {
-        const norm = (p - range.start) / enterDur;
-        opacity = Math.max(0, Math.min(1, norm));
-        yOffset = 18 * (1 - norm);
-      } else if (p > range.end - exitDur) {
-        const norm = (range.end - p) / exitDur;
-        opacity = Math.max(0, Math.min(1, norm));
-        yOffset = -18 * (1 - norm);
-      }
-
-      element.style.opacity = opacity.toFixed(3);
-      element.style.visibility = opacity > 0 ? "visible" : "hidden";
-      element.style.transform = `translateY(${yOffset.toFixed(1)}px)`;
-    },
-  }), [index, scrollProgressRef]);
-
-  const Heading = index === 0 ? "h1" : "h2";
+  // The page owns the h1 (sr-only); each tala title is a section heading.
+  const Heading = "h2";
 
   return (
     <div
       ref={cardRef}
-      className="absolute inset-y-0 left-0 z-20 flex w-full flex-col justify-center px-6 sm:px-12 lg:px-20 lg:w-7/12 xl:w-6/12 pointer-events-none transition-transform duration-75"
+      className="absolute inset-y-0 left-0 z-20 flex w-full flex-col justify-end pb-28 px-6 sm:px-12 lg:justify-center lg:pb-0 lg:px-20 lg:w-7/12 xl:w-6/12 pointer-events-none"
       style={{
         opacity: index === 0 ? 1 : 0,
         visibility: index === 0 ? "visible" : "hidden",
@@ -516,15 +169,15 @@ function RingModalCard({
       {/* Floating Organic Titles: Seamlessly Integrated into the 3D Scene */}
       <div className="max-w-xl text-left select-none space-y-3 pointer-events-auto">
         {/* Understated Category Subtitle */}
-        <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF]/75 block drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+        <span className="font-mono text-xs uppercase tracking-widest text-sangam-mint/80 block drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
           {locale === "ta" ? tier.subtitleTa : tier.subtitleEn}
         </span>
 
         {/* Primary Title */}
         <Heading
           lang={locale === "ta" ? "ta" : "en"}
-          className={`text-3xl sm:text-4xl lg:text-5xl text-[#F4F0FA] font-normal leading-[1.12] tracking-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.95)] ${
-            locale === "ta" ? "font-tamil leading-relaxed" : "font-serif"
+          className={`text-3xl sm:text-4xl lg:text-5xl text-sangam-cream font-normal drop-shadow-[0_2px_18px_rgba(0,0,0,0.95)] ${
+            locale === "ta" ? "font-tamil leading-relaxed tracking-normal" : "font-serif leading-[1.12] tracking-tight"
           }`}
         >
           {locale === "ta" ? tier.titleTa : tier.titleEn}
@@ -542,7 +195,7 @@ function RingModalCard({
             <p
               lang="ta"
               style={{ letterSpacing: 0 }}
-              className="text-lg sm:text-2xl font-medium text-[#A6F0CF] font-tamil leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]"
+              className="text-lg sm:text-2xl font-medium text-sangam-mint font-tamil leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]"
             >
               {tier.titleTa}
             </p>
@@ -552,7 +205,7 @@ function RingModalCard({
         {/* Narrative Description */}
         <p
           lang={locale === "ta" ? "ta" : "en"}
-          className={`text-sm sm:text-base text-[#C4B7D7] leading-relaxed font-sans max-w-lg pt-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] ${
+          className={`text-sm sm:text-base text-sangam-lilac leading-relaxed font-sans max-w-lg pt-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] ${
             locale === "ta" ? "font-tamil" : ""
           }`}
         >
@@ -563,245 +216,28 @@ function RingModalCard({
   );
 }
 
-// Baseline Camera Controller with gyroscopic chapter detents and mandala portal push
-function AscendingGopuramCamera({
-  scrollProgressRef,
-  isMobile,
-}: {
-  scrollProgressRef: React.RefObject<number>;
-  isMobile: boolean;
-}) {
-  const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
-
-  useFrame((state, delta) => {
-    const dt = Math.min(delta, 0.05);
-    const camera = state.camera;
-    const rawP = scrollProgressRef.current;
-    const kinetics = kineticsRef.current.update(rawP, state.pointer, dt);
-    const p = kinetics.smoothProgress;
-
-    // Gyroscopic Chapter Detents: locks into alignment at chapter holds across all 5 tiers
-    const chapterPhase = p * 5.0;
-    const detentOffset = (Math.sin(chapterPhase * Math.PI * 2.0) / (Math.PI * 10.0)) * 0.55;
-    const detentP = p - detentOffset;
-
-    // 5 rings spaced 20 units apart (0, -20, -40, -60, -80). Z travels from 12 to -88.
-    const startZ = 12;
-    const endZ = -88;
-    const targetZ = THREE.MathUtils.lerp(startZ, endZ, detentP);
-
-    // Mandala Alignment & Camera Push Exit (p = 0.80 -> 1.00)
-    const exitT = Math.max(0, Math.min(1, (p - 0.80) / 0.20));
-    const exitPush = exitT * exitT * 8.0;
-
-    // Pointer parallax
-    const px = isMobile ? 0 : kinetics.smoothPointerX * 0.45;
-    const py = -kinetics.smoothPointerY * 0.28;
-
-    const targetX = (isMobile ? 0 : -2) * (1 - exitT) + px;
-    const targetY = py;
-
-    camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 16.0, dt);
-    camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 16.0, dt);
-    camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ - exitPush, 16.0, dt);
-
-    // Natural subtle breeze sway + velocity banking
-    const swayTime = camera.position.z * 0.08;
-    camera.position.x += Math.sin(swayTime) * 0.03 * dt;
-    camera.position.y += Math.cos(swayTime * 1.4) * 0.03 * dt;
-    camera.rotation.z = THREE.MathUtils.damp(camera.rotation.z, kinetics.velocityBank * 0.5, 8.0, dt);
-
-    camera.lookAt(targetX * 0.5, targetY * 0.5, targetZ - exitPush - 10);
-  });
-
-  return null;
-}
-
-// Elevated Cinematic Camera with dual-channel exponential damping, smootherstep detents & leading carriage
-function CinematicGopuramCamera({
-  scrollProgressRef,
-  isMobile,
-  isReducedMotion,
-  isLiteMode,
-}: {
-  scrollProgressRef: React.RefObject<number>;
-  isMobile: boolean;
-  isReducedMotion: boolean;
-  isLiteMode: boolean;
-}) {
-  const damperRef = useRef(
-    createCinemaCameraDamper({
-      lambdaPos: 6.2,
-      lambdaLook: 10.5,
-      breathingAmplitude: 0.003,
-      breathingRoll: 0.0015,
-      enableBreathing: !isReducedMotion && !isLiteMode,
-    })
-  );
-  const kineticsRef = useRef(createHeroKineticsTracker(7.5, 5.0, 4.0));
-  const targetPos = useRef(new THREE.Vector3());
-  const targetLookAt = useRef(new THREE.Vector3());
-
-  useFrame((state, delta) => {
-    const dt = Math.min(delta, 0.05);
-    const camera = state.camera;
-    const rawP = scrollProgressRef.current;
-    const kinetics = kineticsRef.current.update(rawP, state.pointer, dt);
-    const p = kinetics.smoothProgress;
-
-    // Gyroscopic Chapter Detents: locks into alignment at chapter holds across all 5 tiers
-    const chapterPhase = p * 5.0;
-    const detentOffset = (Math.sin(chapterPhase * Math.PI * 2.0) / (Math.PI * 10.0)) * 0.55;
-    const detentP = THREE.MathUtils.clamp(p - detentOffset, 0, 1);
-
-    // 5 rings spaced 20 units apart (0, -20, -40, -60, -80). Z travels from 12 to -88.
-    const startZ = 12;
-    const endZ = -88;
-    const targetZ = THREE.MathUtils.lerp(startZ, endZ, detentP);
-
-    // Mandala Alignment & Camera Push Exit (p = 0.80 -> 1.00)
-    const exitT = Math.max(0, Math.min(1, (p - 0.80) / 0.20));
-    const exitPush = smootherstep(exitT) * 8.0;
-
-    // Pointer parallax
-    const px = isMobile ? 0 : kinetics.smoothPointerX * 0.45;
-    const py = -kinetics.smoothPointerY * 0.28;
-
-    const targetX = (isMobile ? 0 : -2) * (1 - exitT) + px;
-    const targetY = py + (1 - exitT) * 0.15; // subtle majesty elevation
-
-    targetPos.current.set(targetX, targetY, targetZ - exitPush);
-    // Look-at leading carriage: leads along -Z by 14 units with slight upward gaze (+0.35m)
-    targetLookAt.current.set(targetX * 0.45, targetY * 0.45 + 0.35, targetZ - exitPush - 14.0);
-
-    const rollBank = !isReducedMotion && !isLiteMode ? kinetics.velocityBank * 0.35 : 0;
-
-    const result = damperRef.current.update(
-      targetPos.current,
-      targetLookAt.current,
-      p,
-      dt,
-      {
-        isReducedMotion,
-        isLiteMode,
-        additionalRoll: rollBank,
-      }
-    );
-
-    camera.position.copy(result.position);
-    camera.lookAt(result.lookAt);
-    if (!isReducedMotion && !isLiteMode) {
-      camera.rotation.z += result.roll;
-    }
-  });
-
-  return null;
-}
-
-// Micro-Detail 3: Floating Golden Temple Sanctum Dust Motes along the Z-corridor
-function TempleSanctumMotes({ count = 64 }: { count?: number }) {
-  const pointsRef = useRef<THREE.Points>(null);
-
-  const [geo, mat] = useMemo(() => {
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(count * 3);
-    const speeds = new Float32Array(count);
-
-    let seed = 424242;
-    const rand = () => {
-      seed = (seed * 16807) % 2147483647;
-      return (seed - 1) / 2147483646;
-    };
-
-    for (let i = 0; i < count; i++) {
-      positions[i * 3 + 0] = (rand() - 0.5) * 16;
-      positions[i * 3 + 1] = (rand() - 0.5) * 14;
-      positions[i * 3 + 2] = 15 - rand() * 110;
-      speeds[i] = 0.2 + rand() * 0.4;
-    }
-
-    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute("speed", new THREE.BufferAttribute(speeds, 1));
-
-    const material = new THREE.PointsMaterial({
-      color: new THREE.Color("#FFD27D"),
-      size: 0.18,
-      transparent: true,
-      opacity: 0.65,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-
-    return [geometry, material];
-  }, [count]);
-
-  useFrame((state, delta) => {
-    if (!pointsRef.current) return;
-    const dt = Math.min(delta, 0.05);
-    const pos = geo.attributes.position as THREE.BufferAttribute;
-    const array = pos.array as Float32Array;
-    const time = state.clock.getElapsedTime();
-
-    for (let i = 0; i < count; i++) {
-      const idx = i * 3;
-      array[idx + 1] += Math.sin(time * 0.5 + i) * 0.08 * dt;
-      array[idx + 0] += Math.cos(time * 0.4 + i) * 0.06 * dt;
-    }
-    pos.needsUpdate = true;
-  });
-
-  useEffect(() => {
-    return () => {
-      geo.dispose();
-      mat.dispose();
-    };
-  }, [geo, mat]);
-
-  return <points ref={pointsRef} geometry={geo} material={mat} />;
-}
-
-function GopuramWarmup() {
-  useWarmup("about-gopuram");
-  return null;
-}
-
-function CursorLight() {
-  const light = useRef<THREE.PointLight>(null);
-  const finePointer = useSyncExternalStore(
-    callback => {
-      const query = window.matchMedia("(hover: hover) and (pointer: fine)");
-      query.addEventListener("change", callback);
-      return () => query.removeEventListener("change", callback);
-    },
-    () => window.matchMedia("(hover: hover) and (pointer: fine)").matches,
-    () => false,
-  );
-  useFrame(({ camera, pointer }, delta) => {
-    const dt = Math.min(delta, 0.05);
-    if (!light.current) return;
-    light.current.position.x = THREE.MathUtils.damp(light.current.position.x, camera.position.x + pointer.x * 7, 8, dt);
-    light.current.position.y = THREE.MathUtils.damp(light.current.position.y, pointer.y * 5, 8, dt);
-    light.current.position.z = camera.position.z - 4;
-  });
-  return finePointer ? <pointLight ref={light} color={CURSOR_LIGHT_COLOR} intensity={30} distance={22} decay={2} /> : null;
-}
-
 const emptySubscribe = () => () => {};
 
 export function GopuramZScroll() {
   const { locale } = useLocale();
-  const { isLiteMode } = useLiteMode();
-  const tier = useTier();
-  const reducedMotion = useReducedMotion();
-  const isStatic = isLiteMode || tier === "C" || !!reducedMotion;
+  const { mode: liveMode, qualityLevel: liveLevel } = useRenderMode();
+  // Quality only ever steps down within a mount. The governor can flip A <-> B under load;
+  // following it both ways rebuilt materials and geometry on every flip (shader compiles that
+  // caused the next flip), which pinned throttled phones at ~20 ms of script per frame.
+  const [latched, setLatched] = useState<{ mode: "A" | "B"; qualityLevel: number } | null>(null);
+  if (liveMode !== "static") {
+    const nextMode = latched?.mode === "B" || liveMode === "B" ? "B" : "A";
+    const nextLevel = Math.max(latched?.qualityLevel ?? 0, liveLevel);
+    if (!latched || latched.mode !== nextMode || latched.qualityLevel !== nextLevel) {
+      setLatched({ mode: nextMode, qualityLevel: nextLevel });
+    }
+  }
+  const mode = liveMode === "static" ? "static" : (latched?.mode ?? liveMode);
+  const qualityLevel = latched?.qualityLevel ?? liveLevel;
+  const isStatic = mode === "static";
   const scrollProgressRef = useRef(0);
 
-  const mounted = useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false
-  );
-
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const isMobile = useSyncExternalStore(
     (callback) => {
       window.addEventListener("resize", callback);
@@ -824,126 +260,13 @@ export function GopuramZScroll() {
           scrollProgressRef={scrollProgressRef}
           isMobile={isMobile}
           locale={locale}
-          tier={tier}
-          isReducedMotion={!!reducedMotion}
-          isLiteMode={isLiteMode}
+          mode={mode}
+          qualityLevel={qualityLevel}
         />
       ) : (
-        <div className="relative z-10 flex min-h-dvh flex-col justify-center gap-8 px-6 py-32 sm:px-16 max-w-4xl">
-          {TIERS.map((tierItem, idx) => (
-            <div key={tierItem.id} className="space-y-2 border-b border-paper/10 pb-6 last:border-b-0">
-              <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] block">
-                {`// CHAPTER 0${idx + 1} · ${locale === "ta" ? tierItem.subtitleTa : tierItem.subtitleEn}`}
-              </span>
-              <h2 lang={locale === "ta" ? "ta" : "en"} className={`text-2xl sm:text-4xl text-[#F4F0FA] ${locale === "ta" ? "font-tamil leading-relaxed" : "font-display"}`}>
-                {locale === "ta" ? tierItem.titleTa : tierItem.titleEn}
-              </h2>
-              <p lang="ta" className="font-tamil text-lg leading-relaxed text-[#A6F0CF]">{tierItem.titleTa}</p>
-              <p lang={locale === "ta" ? "ta" : "en"} className="text-base text-[#C4B7D7] leading-relaxed">{locale === "ta" ? tierItem.descTa : tierItem.descEn}</p>
-            </div>
-          ))}
-        </div>
+        <StaticSpread locale={locale} />
       )}
     </HeroScrollStage>
-  );
-}
-
-function GopuramCanvasContent({
-  scrollProgressRef,
-  isMobile,
-  tier,
-  isReducedMotion,
-  isLiteMode,
-  isCinematic,
-}: {
-  scrollProgressRef: React.RefObject<number>;
-  isMobile: boolean;
-  tier: "A" | "B" | "C";
-  isReducedMotion: boolean;
-  isLiteMode: boolean;
-  isCinematic: boolean;
-}) {
-  const materials = useCinematicBronzeMaterials(isCinematic);
-
-  return (
-    <>
-      <SceneRegistrar />
-      <GopuramWarmup />
-      <color attach="background" args={["#140C20"]} />
-      <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={50} near={0.05} far={150} />
-      <fog attach="fog" args={["#140C20", 10, 95]} />
-
-      <SangamStudioEnvironment />
-
-      {isCinematic ? (
-        <>
-          {/* Sunset Grazing Directional Key with Soft PCF Shadows */}
-          <directionalLight
-            position={[12, 18, 14]}
-            intensity={2.6}
-            color="#FFAE42"
-            castShadow={tier === "A"}
-            shadow-mapSize={[1024, 1024]}
-            shadow-bias={-0.0001}
-            shadow-camera-near={0.5}
-            shadow-camera-far={120}
-            shadow-camera-left={-12}
-            shadow-camera-right={12}
-            shadow-camera-top={12}
-            shadow-camera-bottom={-12}
-          />
-          {/* Deep Cool Twilight Sky Fill */}
-          <directionalLight position={[-14, 8, -12]} intensity={1.1} color="#4A6572" />
-          {/* Warm Under-Mandapa Bounce Fill */}
-          <directionalLight position={[0, -12, 0]} intensity={0.65} color="#D47B37" />
-          {/* Sanctum Accent Rim Light */}
-          <pointLight position={[0, 0, -50]} intensity={12} distance={80} decay={2} color="#A6F0CF" />
-        </>
-      ) : (
-        <>
-          <directionalLight position={[10, 20, 10]} intensity={2.2} color="#F4F0FA" />
-          <ambientLight intensity={1.2} color="#3A2618" />
-          <directionalLight position={[-10, 5, -10]} intensity={0.8} color="#A6F0CF" />
-        </>
-      )}
-
-      <CursorLight />
-
-      {/* Detail 3: Drifting Temple Sanctum Motes */}
-      {isCinematic && !isReducedMotion && !isLiteMode && tier === "A" && (
-        <TempleSanctumMotes count={64} />
-      )}
-
-      {/* Z-Axis Rings mapping: Aligned along flythrough path */}
-      {TIERS.map((tierItem, idx) => (
-        <BronzeRing
-          key={tierItem.id}
-          position={[isMobile ? 0 : 2.4, 0, -idx * 20]}
-          scale={1 + idx * 0.08}
-          rotation={[0.2, -0.25, (idx * Math.PI) / 4]}
-          scrollProgressRef={scrollProgressRef}
-          ringMat={materials.ringMat}
-          kolamMat={materials.kolamMat}
-          coreMat={materials.coreMat}
-          isCinematic={isCinematic}
-          tier={tier}
-        />
-      ))}
-
-      {isCinematic ? (
-        <CinematicGopuramCamera
-          scrollProgressRef={scrollProgressRef}
-          isMobile={isMobile}
-          isReducedMotion={isReducedMotion}
-          isLiteMode={isLiteMode}
-        />
-      ) : (
-        <AscendingGopuramCamera scrollProgressRef={scrollProgressRef} isMobile={isMobile} />
-      )}
-
-      {/* Color Grading Pipeline */}
-      {isCinematic && <GradeStack tier={tier} profile="chola-gopuram" />}
-    </>
   );
 }
 
@@ -951,32 +274,32 @@ function GopuramScene({
   scrollProgressRef,
   isMobile,
   locale,
-  tier,
-  isReducedMotion,
-  isLiteMode,
+  mode,
+  qualityLevel,
 }: {
   scrollProgressRef: React.RefObject<number>;
   isMobile: boolean;
   locale: string;
-  tier: "A" | "B" | "C";
-  isReducedMotion: boolean;
-  isLiteMode: boolean;
+  mode: "A" | "B";
+  qualityLevel: number;
 }) {
   const visible = useHeroStageVisibility();
-  const isCinematic = isHeroCinematicEnabled("about");
 
   return (
     <>
-      <View className="absolute inset-0 w-full h-full pointer-events-none" index={2} visible={visible}>
-        <GopuramCanvasContent
-          scrollProgressRef={scrollProgressRef}
-          isMobile={isMobile}
-          tier={tier}
-          isReducedMotion={isReducedMotion}
-          isLiteMode={isLiteMode}
-          isCinematic={isCinematic}
-        />
-      </View>
+      <GopuramCanvas
+        scrollProgressRef={scrollProgressRef}
+        isMobile={isMobile}
+        visible={visible}
+        mode={mode}
+        qualityLevel={qualityLevel}
+      />
+
+      {/* Reading scrim: copy sits over the left pier on desktop and the terrace on mobile. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-sangam-purple-dark/85 via-sangam-purple-dark/35 to-transparent lg:bg-gradient-to-r lg:from-sangam-purple-dark/90 lg:via-sangam-purple-dark/60 lg:via-40% lg:to-transparent lg:to-70%"
+      />
 
       {/* 5 Sacred Ring Floating Titles */}
       {TIERS.map((tierItem, index) => (
@@ -990,5 +313,48 @@ function GopuramScene({
         />
       ))}
     </>
+  );
+}
+
+/**
+ * Static / Lite / reduced-motion hero: all five talas as one typographic spread that fits a
+ * desktop viewport (the opening verse large, the four pillars in a ruled two-by-two grid).
+ */
+function StaticSpread({ locale }: { locale: string }) {
+  const ta = locale === "ta";
+  const lang = ta ? "ta" : "en";
+  const label = (idx: number, item: TierItem) => (
+    <span
+      lang={lang}
+      className={`block text-xs text-sangam-mint ${ta ? "font-tamil leading-relaxed" : "font-mono uppercase tracking-widest"}`}
+    >
+      {`0${idx + 1} · ${ta ? item.subtitleTa : item.subtitleEn}`}
+    </span>
+  );
+  const [first, ...rest] = TIERS;
+  return (
+    <div className="relative z-10 mx-auto grid min-h-dvh max-w-6xl content-center gap-10 px-6 pb-10 pt-28 sm:px-12 lg:grid-cols-[1fr_1.15fr] lg:gap-16 lg:pb-8 lg:pt-24">
+      <div className="space-y-4 self-center">
+        {label(0, first)}
+        <h2 lang={lang} className={`text-3xl text-sangam-cream sm:text-5xl ${ta ? "font-tamil leading-relaxed" : "font-display leading-tight"}`}>
+          {ta ? first.titleTa : first.titleEn}
+        </h2>
+        {!ta && <p lang="ta" className="font-tamil text-xl leading-relaxed text-sangam-mint sm:text-2xl">{first.titleTa}</p>}
+        <p lang={lang} className={`max-w-md text-base leading-relaxed text-sangam-lilac ${ta ? "font-tamil" : ""}`}>{ta ? first.descTa : first.descEn}</p>
+        {first.kuralQuote && <p lang="ta" className="font-tamil text-sm leading-relaxed text-sangam-lilac/80">{first.kuralQuote}</p>}
+      </div>
+      <ol className="grid gap-x-8 gap-y-6 self-center sm:grid-cols-2">
+        {rest.map((item, i) => (
+          <li key={item.id} className="space-y-1.5 border-t border-sangam-lilac/20 pt-4">
+            {label(i + 1, item)}
+            <h3 lang={lang} className={`text-lg text-sangam-cream sm:text-xl ${ta ? "font-tamil leading-relaxed" : "font-display leading-snug"}`}>
+              {ta ? item.titleTa : item.titleEn}
+            </h3>
+            {!ta && <p lang="ta" className="font-tamil text-base leading-relaxed text-sangam-mint">{item.titleTa}</p>}
+            <p lang={lang} className={`text-sm leading-relaxed text-sangam-lilac ${ta ? "font-tamil" : ""}`}>{ta ? item.descTa : item.descEn}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }

@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
+import { useSyncExternalStore } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+
+const emptySubscribe = () => () => {};
 
 export interface SplitTextProps {
   text: string;
@@ -26,11 +29,14 @@ export function SplitText({
   as: Component = "span",
 }: SplitTextProps) {
   const shouldReduceMotion = useReducedMotion();
+  // useReducedMotion is null on the server; switching markup during hydration caused a
+  // text mismatch for reduced-motion visitors. Take the plain branch only after hydration.
+  const hydrated = useSyncExternalStore(emptySubscribe, () => true, () => false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Tag = Component as any;
   const words = text.split(" ");
 
-  if (shouldReduceMotion) {
+  if (hydrated && shouldReduceMotion) {
     return <Tag className={className}>{text}</Tag>;
   }
 

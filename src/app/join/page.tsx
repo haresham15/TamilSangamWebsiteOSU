@@ -20,8 +20,8 @@ import { HeroKolamLoader } from "@/components/ui/HeroKolamLoader";
 import styles from "./join.module.css";
 
 // =========================================================================
-// CRITICAL & IMMUTABLE: R3F Nanban Hero Canvas
-// HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES
+// R3F Nanban Hero Canvas (src/components/join/)
+// Reworked in the hero-quality art pass; change it through src/components/join and scripts/hero-qa.
 // =========================================================================
 const JoinHeroCanvas = dynamic(
   () => import("@/components/join/JoinHeroCanvas").then((m) => m.JoinHeroCanvas),

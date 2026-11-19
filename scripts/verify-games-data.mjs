@@ -94,4 +94,36 @@ for (const lk of legacyKeys) {
 }
 console.log("PASS: Legacy monthly edition aliases verified.");
 
-console.log("ALL BIWEEKLY GAMES DATA AUDIT GATES PASSED (D-11, D-12, D-13 RESOLVED)!");
+// Gate 7: Aazham (ஆழம்) Rarest-Answer Trivia Editions Integrity
+import("../src/data/aazhamData.ts").then(({ AAZHAM_BIWEEKLY_EDITIONS }) => {
+  for (const [edId, edition] of Object.entries(AAZHAM_BIWEEKLY_EDITIONS)) {
+    assert.ok(edition, `Missing Aazham edition ${edId}`);
+    assert.equal(edition.prompts.length, 7, `Edition ${edId} must have exactly 7 prompts`);
+    
+    for (let i = 0; i < 7; i++) {
+      const p = edition.prompts[i];
+      assert.equal(p.order, i + 1, `Prompt ${p.id} must have order ${i + 1}`);
+      assert.ok(p.titleEn && p.titleEn.trim().length > 0, `Prompt ${p.id} missing titleEn`);
+      assert.ok(p.titleTa && p.titleTa.trim().length > 0, `Prompt ${p.id} missing titleTa`);
+      assert.ok(p.obviousAnswer, `Prompt ${p.id} missing obviousAnswer`);
+      assert.ok(p.trapAnswer, `Prompt ${p.id} missing trapAnswer`);
+      assert.ok(p.answers.length >= 6, `Prompt ${p.id} must have at least 6 answers, got ${p.answers.length}`);
+
+      const seenEntityIds = new Set();
+      const tiersSeen = new Set();
+      for (const ans of p.answers) {
+        assert.ok(!seenEntityIds.has(ans.id), `Duplicate entity id "${ans.id}" in prompt ${p.id}`);
+        seenEntityIds.add(ans.id);
+        tiersSeen.add(ans.tier);
+        assert.ok(ans.displayEn, `Entity ${ans.id} missing displayEn`);
+        assert.ok(ans.displayTa, `Entity ${ans.id} missing displayTa`);
+        assert.ok(Array.isArray(ans.aliases), `Entity ${ans.id} aliases must be array`);
+      }
+      assert.ok(tiersSeen.has(10), `Prompt ${p.id} missing Tier 10`);
+      assert.ok(tiersSeen.has(15), `Prompt ${p.id} missing Tier 15 (Trap)`);
+      assert.ok(tiersSeen.has(100), `Prompt ${p.id} missing Tier 100 (Valampuri)`);
+    }
+    console.log(`PASS: Edition ${edId} Aazham (7 prompts, verified tiers & entities) verified.`);
+  }
+  console.log("ALL BIWEEKLY GAMES DATA AUDIT GATES PASSED (D-11, D-12, D-13, AAZHAM RESOLVED)!");
+});

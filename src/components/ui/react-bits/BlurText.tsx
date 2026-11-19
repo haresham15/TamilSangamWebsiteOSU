@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
+import { useSyncExternalStore } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+
+const emptySubscribe = () => () => {};
 
 export interface BlurTextProps {
   text: string;
@@ -27,12 +30,15 @@ export function BlurText({
   as: Component = "span",
 }: BlurTextProps) {
   const shouldReduceMotion = useReducedMotion();
+  // useReducedMotion is null on the server: switch to the plain branch only after hydration
+  // so reduced-motion visitors don't get a hydration text mismatch.
+  const hydrated = useSyncExternalStore(emptySubscribe, () => true, () => false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Tag = Component as any;
   // Strictly split by whitespace only — NEVER by character codepoints!
   const words = text.split(/\s+/).filter(Boolean);
 
-  if (shouldReduceMotion) {
+  if (hydrated && shouldReduceMotion) {
     return (
       <Tag lang={lang} className={className} style={{ letterSpacing: lang === "ta" ? 0 : undefined }}>
         {text}

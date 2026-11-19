@@ -31,8 +31,6 @@ export function getSceneIdForPath(pathname: string): string | null {
       return "board-corridor";
     case "/events":
       return "events-arena";
-    case "/gallery":
-      return "gallery-fretboard";
     case "/games":
       return "games-hero";
     case "/guide":

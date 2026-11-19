@@ -112,7 +112,7 @@ export const ROUTE_METADATA = {
     title: "Campus Photo Gallery & Archive | OSU Tamil Sangam",
     description:
       "Browse 35mm photos, cultural performances, Pongal banquets, and campus memories from Tamil Sangam at The Ohio State University.",
-    path: "/gallery",
+    path: "/events#photo-archives",
   },
   games: {
     title: "Sangam Arcade: Biweekly Tamil Wordle & Games | OSU TS",

@@ -329,7 +329,7 @@ export const BASELINE_KNOWLEDGE: KnowledgeItem[] = [
       "gallery",
       "take down",
     ],
-    route: "/gallery",
+    route: "/events#photo-archives",
   },
 
   // 7. Website Tools

@@ -8,9 +8,25 @@ import { createCinemaCameraDamper, smootherstep } from "@/lib/cinemaCameraDamper
 
 interface CraneCameraRigProps {
   scrollProgressRef: React.RefObject<number>;
+  /** Extra look-at height at the top of the scroll, eased out by p = 0.35 (art pass framing). */
+  lookLift?: number;
+  /**
+   * Widen the vertical FOV on narrow (portrait) screens so the gate and its arch lettering
+   * keep at least ±MIN_HALF_WIDTH_DEG horizontally (art pass).
+   */
+  fitWidth?: boolean;
 }
 
-export function CraneCameraRig({ scrollProgressRef }: CraneCameraRigProps) {
+const MIN_HALF_WIDTH_DEG = 16;
+const MAX_FIT_FOV = 62;
+
+/** Vertical FOV (deg) needed to show ±MIN_HALF_WIDTH_DEG horizontally at this aspect. */
+export function fovForWidth(aspect: number) {
+  const half = THREE.MathUtils.degToRad(MIN_HALF_WIDTH_DEG);
+  return Math.min(MAX_FIT_FOV, THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(half) / Math.max(aspect, 0.1))));
+}
+
+export function CraneCameraRig({ scrollProgressRef, lookLift = 0, fitWidth = false }: CraneCameraRigProps) {
   const isCinematic = isHeroCinematicEnabled("join");
   const damperRef = useRef(
     createCinemaCameraDamper({
@@ -53,6 +69,11 @@ export function CraneCameraRig({ scrollProgressRef }: CraneCameraRigProps) {
       targetLookY = THREE.MathUtils.lerp(2.6, 2.4, t);
     }
 
+    if (lookLift !== 0) {
+      const fade = Math.min(Math.max(p / 0.35, 0), 1);
+      targetLookY += lookLift * (1 - fade * fade * (3 - 2 * fade));
+    }
+
     if (!isCinematic) {
       // Baseline frame-rate independent damped inertia (§1.3)
       camera.position.x = 0;
@@ -61,8 +82,9 @@ export function CraneCameraRig({ scrollProgressRef }: CraneCameraRigProps) {
       camera.lookAt(0, targetLookY, -6);
 
       if ("fov" in camera) {
-        const targetFov = THREE.MathUtils.lerp(42, 46, p);
         const persCamera = camera as THREE.PerspectiveCamera;
+        const baseFov = THREE.MathUtils.lerp(42, 46, p);
+        const targetFov = fitWidth ? Math.max(baseFov, fovForWidth(persCamera.aspect)) : baseFov;
         persCamera.fov = THREE.MathUtils.damp(persCamera.fov, targetFov, 4.0, dt);
         persCamera.updateProjectionMatrix();
       }
@@ -99,8 +121,9 @@ export function CraneCameraRig({ scrollProgressRef }: CraneCameraRigProps) {
     camera.rotation.z = dampResult.roll;
 
     if ("fov" in camera) {
-      const targetFov = THREE.MathUtils.lerp(42, 46, smoothP);
       const persCamera = camera as THREE.PerspectiveCamera;
+      const baseFov = THREE.MathUtils.lerp(42, 46, smoothP);
+      const targetFov = fitWidth ? Math.max(baseFov, fovForWidth(persCamera.aspect)) : baseFov;
       persCamera.fov = THREE.MathUtils.damp(persCamera.fov, targetFov, 4.5, dt);
       persCamera.updateProjectionMatrix();
     }

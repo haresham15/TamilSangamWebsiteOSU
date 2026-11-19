@@ -193,7 +193,7 @@ export function PaatamSonicJamDeck() {
                 spotlightColor="rgba(166, 240, 207, 0.14)"
                 goldColor="rgba(242, 107, 181, 0.10)"
                 radius={380}
-                className={`p-6 sm:p-8 rounded-2xl border transition-all duration-300 flex flex-col justify-between ${
+                className={`p-6 sm:p-8 rounded-2xl border transition-[border-color,background-color,box-shadow] duration-200 flex flex-col justify-between ${
                   isSelected
                     ? "bg-[#140C20] border-[#A6F0CF] shadow-lg shadow-[#A6F0CF]/15"
                     : "bg-[#140C20] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35"

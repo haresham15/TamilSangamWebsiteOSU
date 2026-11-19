@@ -95,7 +95,7 @@ function SubmitSuggestionButton() {
       <button
         type="submit"
         disabled={pending}
-        className="px-8 py-3.5 bg-[#A6F0CF] text-[#140C20] font-sans text-sm font-semibold rounded-full hover:bg-[#A6F0CF] hover:text-[#F4F0FA] transition-all duration-300 flex items-center gap-2.5 shadow-md shadow-stone-900/5 cursor-pointer disabled:opacity-50"
+        className="px-8 py-3.5 bg-[#A6F0CF] hover:bg-[#7AE7B5] text-[#140C20] font-mono text-xs font-bold uppercase tracking-wider rounded-xl transition-colors duration-150 flex items-center gap-2.5 shadow-md cursor-pointer disabled:opacity-50"
       >
         {pending ? (
           <>
@@ -134,7 +134,9 @@ export default function SuggestionsPage() {
         // Fade out cleanly between p = 0.72 and p = 0.80
         const exit = Math.max(0, Math.min(1, (p - 0.72) / 0.08));
         dispatchCtaRef.current.style.opacity = String(1 - exit);
-        dispatchCtaRef.current.style.transform = `translate(-50%, ${-16 * exit}px)`;
+        // Y only: the -translate-x-1/2 class already centres it (Tailwind v4 uses the `translate`
+        // property, which stacks with `transform`; a second -50% pushed it off-screen on mobile).
+        dispatchCtaRef.current.style.transform = `translateY(${-16 * exit}px)`;
         dispatchCtaRef.current.style.pointerEvents = exit >= 1 ? "none" : "auto";
       },
     });
@@ -213,11 +215,11 @@ export default function SuggestionsPage() {
         {/* Clean Architectural Bottom Bezel Dispatch Button */}
         <div
           ref={dispatchCtaRef}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-auto transition-transform will-change-[transform,opacity]"
+          className="absolute bottom-28 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-auto transition-transform will-change-[transform,opacity]"
         >
           <button
             onClick={scrollToForm}
-            className="flex items-center gap-2.5 px-5 py-2.5 bg-[#140C20]/90 border border-[#A6F0CF]/35 text-[#F4F0FA] font-mono text-xs uppercase tracking-widest hover:border-[#A6F0CF] hover:bg-[#140C20] transition-all rounded-full shadow-lg backdrop-blur-md cursor-pointer"
+            className="flex items-center gap-2.5 whitespace-nowrap min-h-12 px-5 py-2.5 bg-[#140C20]/90 border border-[#A6F0CF]/35 text-[#F4F0FA] font-mono text-xs uppercase tracking-widest hover:border-[#A6F0CF] hover:bg-[#140C20] transition-all rounded-full shadow-lg backdrop-blur-md cursor-pointer"
           >
             <span>DISPATCH SUGGESTION</span>
             <ArrowDown className="w-3.5 h-3.5 text-[#A6F0CF] animate-bounce" />

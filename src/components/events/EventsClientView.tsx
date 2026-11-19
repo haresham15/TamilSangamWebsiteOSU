@@ -30,8 +30,8 @@ import { GooglePhotosVaultsStrip } from "@/components/gateways/GooglePhotosVault
 import { GroupMePulseGateways } from "@/components/gateways/GroupMePulseGateways";
 
 // =========================================================================
-// CRITICAL & IMMUTABLE: 3D Sodium-Vapor Amber Events Hero Scene
-// HERO ANIMATIONS ARE NEVER TOUCHED OR MODIFIED UNDER ANY CIRCUMSTANCES
+// 3D Events hero (Leo forge arena), reworked in the hero-quality art pass:
+// see src/components/gen3/art/ and EventsGen3Canvas (static poster + error boundary).
 // =========================================================================
 const EventsGen3Canvas = dynamic(
   () =>
@@ -173,14 +173,15 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
 
   return (
     <div className="w-full text-left bg-transparent">
-      {/* 1. Cinematic Sodium-Vapor Amber Events Hero Scene - UNTOUCHED */}
+      {/* 1. Cinematic Events hero (Leo forge arena) */}
       <HeroScrollStage
         id="events-hero-trigger"
         progressRef={eventsProgress}
         static={staticHero}
         tone="espresso"
       >
-        {!staticHero && <EventsGen3Canvas progressRef={eventsProgress} />}
+        {/* Mounted in every mode: in static mode it renders the poster and loads no 3D. */}
+        <EventsGen3Canvas progressRef={eventsProgress} />
         <div
           ref={heroOverlayRef}
           className="absolute inset-0 z-10 flex flex-col justify-end px-6 pb-20 text-[#F4F0FA] pointer-events-none transition-transform will-change-[transform,opacity]"
@@ -209,7 +210,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
           <div
             ref={cursorRef}
             aria-hidden="true"
-            className="fixed top-0 left-0 pointer-events-none z-50 w-72 sm:w-96 h-52 sm:h-64 overflow-hidden rounded-2xl shadow-2xl shadow-stone-900/25 bg-white border border-[rgba(125,96,166,0.25)]"
+            className="fixed top-0 left-0 pointer-events-none z-50 w-72 sm:w-96 h-52 sm:h-64 overflow-hidden rounded-2xl shadow-2xl shadow-stone-900/25 bg-[#140C20] border border-[rgba(125,96,166,0.25)]"
             style={{ willChange: "transform, opacity" }}
           >
             {hoveredEvent && (
@@ -263,7 +264,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
                 role="radio"
                 aria-checked={currentView === "list"}
                 onClick={() => setViewMode("list")}
-                className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-sans font-semibold transition-all cursor-pointer min-h-[44px] ${
+                className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-sans font-semibold transition-colors cursor-pointer min-h-[44px] ${
                   currentView === "list"
                     ? "bg-[#140C20] text-[#F4F0FA] shadow-sm border border-[rgba(125,96,166,0.25)]"
                     : "text-[#C4B7D7] hover:text-[#F4F0FA]"
@@ -278,7 +279,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
                 role="radio"
                 aria-checked={currentView === "calendar"}
                 onClick={() => setViewMode("calendar")}
-                className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-sans font-semibold transition-all cursor-pointer min-h-[44px] ${
+                className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-sans font-semibold transition-colors cursor-pointer min-h-[44px] ${
                   currentView === "calendar"
                     ? "bg-[#140C20] text-[#F4F0FA] shadow-sm border border-[rgba(125,96,166,0.25)]"
                     : "text-[#C4B7D7] hover:text-[#F4F0FA]"

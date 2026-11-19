@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import * as THREE from "three";
 import { useDirectorStore } from "./directorStore";
 import { isTyping } from "./keys";
-import { registerScene, setWire, diagnosticWireMaterial } from "./wireframe";
+import { registerScene, setWire, getDiagnosticWireMaterial } from "./wireframe";
 
 console.log("=== Running Phase 4 Director Viewport Unit Tests (§6, §8) ===");
 
@@ -82,9 +82,9 @@ const unregister = registerScene(testScene);
 
 // Enable Wireframe
 setWire(true);
-assert.equal(mesh1.material, diagnosticWireMaterial, "Mesh 1 must swap to unlit green wireMat (#00FF41)");
+assert.equal(mesh1.material, getDiagnosticWireMaterial(), "Mesh 1 must swap to unlit green wireMat (#00FF41)");
 assert.equal(mesh2.material, customWireMat, "Mesh 2 must preserve its vertex-patch custom wireMaterial");
-assert.notEqual(meshNoWire.material, diagnosticWireMaterial, "noWire mesh must NOT be converted to wireframe");
+assert.notEqual(meshNoWire.material, getDiagnosticWireMaterial(), "noWire mesh must NOT be converted to wireframe");
 
 // Disable Wireframe
 setWire(false);

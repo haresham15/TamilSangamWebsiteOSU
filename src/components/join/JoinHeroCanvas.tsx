@@ -18,8 +18,17 @@ import { CraneCameraRig } from "./CraneCameraRig";
 import { WhiteoutFinale } from "./WhiteoutFinale";
 import { MorningEnvironment } from "./env/MorningEnvironment";
 import { MorningKeyLight } from "./env/MorningKeyLight";
+import { MorningSkyDome } from "./env/MorningSkyDome";
 import { MorningLightShafts } from "./env/MorningLightShafts";
-import { FOG_COLOR, FOG_DENSITY, SUN_POS } from "./env/sun";
+import { FOG_COLOR, FOG_DENSITY, SUN_DIR, SUN_POS } from "./env/sun";
+import { ArtGate } from "./art/ArtGate";
+import { CastLettering } from "./art/CastLettering";
+import { PavedApproach } from "./art/PavedApproach";
+import { CampusBackdrop } from "./art/CampusBackdrop";
+import { MorningAir } from "./art/MorningAir";
+import { ForegroundLeaves } from "./art/ForegroundLeaves";
+import { LightRig } from "@/gl/art/LightRig";
+import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 
 import { JoinMaterialsManager, type IronVariant } from "./JoinMaterialsManager";
 import { MorningCampusVignette } from "./vignette/MorningCampusVignette";
@@ -31,6 +40,21 @@ import { useShadowUpdates } from "@/gl/shadows";
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
+
+// Art pass: a little more haze so the avenue and hall sit back in the morning air.
+const ART_FOG_DENSITY = 0.019;
+// Warm honey haze at the horizon (sky, fog and background agree, so the hall dissolves into it).
+const ART_HAZE = "#efdcb9";
+// Opening frame aims higher so the arch lettering clears the nav bar at desktop and 375px.
+const ART_LOOK_LIFT = 0.85;
+// The kit rig's shadow camera spans ±20 m around its position, so the key sits 20 m up-sun
+// of the gate rather than at the sky-dome distance.
+const ART_KEY_TARGET: [number, number, number] = [0, 1.2, 2.5];
+const ART_KEY_POS: [number, number, number] = [
+  ART_KEY_TARGET[0] + SUN_DIR.x * 20,
+  ART_KEY_TARGET[1] + SUN_DIR.y * 20,
+  ART_KEY_TARGET[2] + SUN_DIR.z * 20,
+];
 
 function JoinSceneWarmup() {
   useWarmup("join-morning-gates");
@@ -106,6 +130,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
 
   // One quality source (TierProvider + Lite + reduced motion + adaptive governor).
   const { mode } = useRenderMode();
+  const [artPass] = useState(() => isHeroCinematicEnabled("join"));
   const isStatic = mode === "static";
   const reducedMotion = isStatic;
 
@@ -139,7 +164,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
     if (typeof window !== "undefined") {
       (window as unknown as {
         __joinHero?: {
-          setGateProgress: (p: number) => void;
+          setGateProgress: (p: number, scroll?: number) => void;
           getState: () => {
             scrollProgress: number;
             gateProgress: number;
@@ -149,11 +174,11 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
           setIronVariant: (v: IronVariant) => void;
         };
       }).__joinHero = {
-        setGateProgress: (p: number) => {
+        setGateProgress: (p: number, scroll?: number) => {
           const clamped = Math.min(Math.max(p, 0), 1);
           gateProgressRef.current = clamped;
           const approxScrollP = 0.18 + clamped * 0.54;
-          scrollProgressRef.current = approxScrollP;
+          scrollProgressRef.current = scroll ?? approxScrollP;
         },
         getState: () => ({
           scrollProgress: scrollProgressRef.current,
@@ -295,48 +320,88 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
         // Through GradePass its additive shafts/haze sum in linear and veil the scene
         // (measured: luma mean 146 → 161, contrast std 74.6 → 66.5 even with bloom limited
         // to highlights), and its own CSS vignette already fades at the threshold pass.
+        // Re-tested after the art pass (kit LightShaft/HazeLayer/DustMotes at low intensity,
+        // nanban-morning): still veiled the hall into haze and drew the shafts as dashed
+        // dark streaks, so the hero stays ungraded.
         <View className="w-full h-full pointer-events-auto" index={2}>
           <JoinSceneWarmup />
           <PerspectiveCamera makeDefault position={[0, 2.4, 12.2]} fov={44} near={0.05} far={100} />
 
           {/* Seamless matching canvas background & fog (§3.2) */}
-          <color attach="background" args={[FOG_COLOR]} />
-          <fogExp2 attach="fog" args={[FOG_COLOR, FOG_DENSITY]} />
+          <color attach="background" args={[artPass ? ART_HAZE : FOG_COLOR]} />
+          <fogExp2 attach="fog" args={[artPass ? ART_HAZE : FOG_COLOR, artPass ? ART_FOG_DENSITY : FOG_DENSITY]} />
 
-          {/* Custom Morning Gradient Sky Dome (§3.2) */}
-          <MorningSky />
+          {/* Morning sky: art pass uses the warm gradient dome with a glow around the sun. */}
+          {artPass ? (
+            <MorningSkyDome horizon={ART_HAZE} mid="#f2d7a8" zenith="#8db4e2" radius={80} glow={0.32} />
+          ) : (
+            <MorningSky />
+          )}
 
           {/* Procedural 4-Lightformer Environment (§3.3) */}
-          <MorningEnvironment />
+          <MorningEnvironment variant={artPass ? "art" : "legacy"} />
 
-          {/* Key Directional Light & Tight Shadow Frustum (§3.4) */}
-          <MorningKeyLight tier={tier} />
-
-          {/* Morning Sunbeam Light Shafts aligned to -SUN_DIR (§3.5) */}
-          <MorningLightShafts enabled={tier === "A" && !reducedMotion} reducedMotion={reducedMotion} />
+          {artPass ? (
+            // Low sun behind the gate as the one shadow-casting key, cool sky fill well
+            // below it, warm grazing rim from the sun side.
+            <LightRig
+              keyColor="#ffc877"
+              keyIntensity={4.5}
+              keyPosition={ART_KEY_POS}
+              keyTarget={ART_KEY_TARGET}
+              shadowMapSize={tier === "A" ? 2048 : 1024}
+              shadowExtent={9}
+              skyColor="#b9acd9"
+              groundColor="#8a6a48"
+              fillIntensity={0.45}
+              rimColor="#ffb86e"
+              rimIntensity={0.7}
+              rimPosition={[12, 3, -1]}
+            />
+          ) : (
+            <>
+              {/* Key Directional Light & Tight Shadow Frustum (§3.4) */}
+              <MorningKeyLight tier={tier} />
+              {/* Morning Sunbeam Light Shafts aligned to -SUN_DIR (§3.5) */}
+              <MorningLightShafts enabled={tier === "A" && !reducedMotion} reducedMotion={reducedMotion} />
+            </>
+          )}
 
           {/* Scroll-driven Crane Camera Kinematics */}
-          <CraneCameraRig scrollProgressRef={scrollProgressRef} />
+          <CraneCameraRig scrollProgressRef={scrollProgressRef} lookLift={artPass ? ART_LOOK_LIFT : 0} fitWidth={artPass} />
 
           <Suspense fallback={null}>
             <GateShadowUpdates gateProgressRef={gateProgressRef} />
-            {/* Phase 3 PBR Materials: Limestone Pillars & Iron Variant A/B */}
-            <JoinMaterialsManager ironVariant={ironVariant} pillarMaterialMode="limestone" />
+            {artPass ? (
+              <>
+                <PavedApproach tier={tier} />
+                <ArtGate gateProgressRef={gateProgressRef} quality={tier === "A" ? 0 : 1} />
+                <CampusBackdrop tier={tier} quality={tier === "A" ? 0 : 1} />
+                <CastLettering />
+                <MorningAir tier={tier} gateProgressRef={gateProgressRef} />
+                {tier === "A" && <ForegroundLeaves scrollProgressRef={scrollProgressRef} />}
+              </>
+            ) : (
+              <>
+                {/* Phase 3 PBR Materials: Limestone Pillars & Iron Variant A/B */}
+                <JoinMaterialsManager ironVariant={ironVariant} pillarMaterialMode="limestone" />
 
-            {/* Stone Walkway & Dynamic Gate Shadow Lattice */}
-            <ShadowLatticeDecal />
+                {/* Stone Walkway & Dynamic Gate Shadow Lattice */}
+                <ShadowLatticeDecal />
 
-            {/* Collegiate Brick Pillars & Swinging Lattice Leaves (PBR Materials & Bump Maps) */}
-            <CampusGate gateProgressRef={gateProgressRef} />
+                {/* Collegiate Brick Pillars & Swinging Lattice Leaves (PBR Materials & Bump Maps) */}
+                <CampusGate gateProgressRef={gateProgressRef} />
 
-            {/* Nanban Collegiate Perimeter Walls, Tree Colonnade & Distant Heritage Hall */}
-            <NanbanQuadEnvironment />
+                {/* Nanban Collegiate Perimeter Walls, Tree Colonnade & Distant Heritage Hall */}
+                <NanbanQuadEnvironment />
 
-            {/* Parametric "TAMIL SANGAM" Bronze Arch Lettering */}
-            <GateLettering />
+                {/* Parametric "TAMIL SANGAM" Bronze Arch Lettering */}
+                <GateLettering />
 
-            {/* Volumetric Morning Sunbeams pouring through Gateway */}
-            <MorningVolumetrics gateProgressRef={gateProgressRef} />
+                {/* Volumetric Morning Sunbeams pouring through Gateway */}
+                <MorningVolumetrics gateProgressRef={gateProgressRef} />
+              </>
+            )}
 
             {/* Phase 5 Vignette: Chai Bench, Blackboard, Tin Trunk, Mortarboard & Campus Props (§5) */}
             <MorningCampusVignette tier={tier} />
@@ -345,7 +410,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
             <LeafDrift tier={tier} reducedMotion={reducedMotion} />
 
             {/* Finale Sunrise Bloom */}
-            <WhiteoutFinale scrollProgressRef={scrollProgressRef} gateProgressRef={gateProgressRef} />
+            <WhiteoutFinale scrollProgressRef={scrollProgressRef} gateProgressRef={gateProgressRef} portalStrength={artPass ? 0.45 : 1} />
           </Suspense>
         </View>
         )}

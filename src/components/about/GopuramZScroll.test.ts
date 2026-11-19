@@ -74,3 +74,15 @@ describe("GopuramZScroll Hero Cinematic Elevation", () => {
     expect(result.roll).toBe(0);
   });
 });
+
+describe("chapter copy cross-fade", () => {
+  it("never shows two chapters at once", async () => {
+    const { chapterCopyState } = await import("./GopuramZScroll");
+    for (let p = 0; p <= 1; p += 0.001) {
+      const visible = [0, 1, 2, 3, 4].filter((i) => chapterCopyState(p, i).opacity > 0);
+      expect(visible.length).toBeLessThanOrEqual(1);
+    }
+    expect(chapterCopyState(0, 0).opacity).toBe(1);
+    expect(chapterCopyState(0.4, 2).opacity).toBe(1);
+  });
+});

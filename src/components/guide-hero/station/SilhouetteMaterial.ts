@@ -25,7 +25,8 @@ export function createSilhouetteMaterial({ sdfA, sdfB, fog = false, kind = "woma
         uHaloWidth: { value: 0.05 },
         uRimStrength: { value: 0.65 },
         uIsMan: { value: kind === "man" ? 1.0 : 0.0 },
-        uInk: { value: new THREE.Color(0.024, 0.038, 0.062) }, // Deep blue-black (#060A10)
+        // Linear values: #060A10 in sRGB is (0.0018, 0.003, 0.0052); near-black, never flat #000 (PRD §3.3).
+        uInk: { value: new THREE.Color(0.004, 0.0055, 0.008) },
         uRim: { value: new THREE.Color(0.65, 0.94, 0.81) }, // Mint (#A6F0CF)
       },
     ]),

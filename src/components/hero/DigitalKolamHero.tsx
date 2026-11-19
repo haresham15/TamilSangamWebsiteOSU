@@ -2,12 +2,12 @@
 
 import React, { useRef, useEffect, useMemo, useState, useSyncExternalStore, Suspense } from "react";
 import * as THREE from "three";
+import Image from "next/image";
 import { useFrame, type RootState } from "@react-three/fiber";
 import { PerspectiveCamera, Text3D, Center, Lightformer } from "@react-three/drei";
 import { BakedEnvironment } from "@/gl/BakedEnvironment";
 import { SceneView as View } from "@/components/canvas/SceneView";
 import { useLiteMode } from "@/context/LiteModeContext";
-import { useTier } from "@/components/providers/TierProvider";
 import { heroScrollProgress, heroDirectorState } from "@/engine/heroScrollStore";
 import { governor } from "@/engine/governor";
 import { registerSystem } from "@/engine/masterTick";
@@ -22,7 +22,22 @@ import {
   buildPathTextureBundle,
   PulliDotLattice,
 } from "./pathBuilder";
-import { createPeelConveyorMaterial } from "./peelConveyorShader";
+import {
+  createPeelConveyorMaterial,
+  createPowderConveyorMaterial,
+  createPowderSharedUniforms,
+  createShedGrainGeometry,
+  THRESHOLD_FLOOR_Z,
+} from "./peelConveyorShader";
+import { createThresholdStoneMaterial, HERO_SCENE_BG } from "./thresholdStone";
+import { createDabGeometry, createDabMaterial } from "./powderDabs";
+import { createSurfaceMaterial } from "@/gl/art/surface";
+import { seeded } from "@/gl/art/geometry";
+import { DustMotes as ArtDustMotes } from "@/gl/art/Atmosphere";
+import { ContactShadows } from "@/gl/art/ContactShadow";
+import { useDisposeOnUnmount } from "@/gl/dispose";
+import { useShadowUpdates } from "@/gl/shadows";
+import { useRenderMode } from "@/components/providers/useRenderMode";
 import { playCinematicWhoosh } from "@/audio/sounds";
 import { useReducedMotion } from "framer-motion";
 import { createHeroKineticsTracker } from "@/lib/heroKinetics";
@@ -69,16 +84,27 @@ function HeroTruckCamera() {
 
     if (isCinematic) {
       // Workstream 1: Dual-Channel Camera Damper with C1 Hermite Portal Push
-      const pushT = Math.max(0, Math.min(1, (p - 0.62) / 0.16));
+      // The wreath frames the Kural through its whole beat (PRD §9: tiers 0.54–0.66, dwell to
+      // Act III); the push only starts once the verse has left (page timeline, p ≈ 0.875).
+      const pushT = heroPushT(p);
       const easePush = smootherstep(pushT);
-      const portalZOffset = easePush * 6.5;
+      // Shorter push than the tube look: past ~3 units the powder dabs grow into blobs.
+      const portalZOffset = easePush * 3.0;
 
       const px = kinetics.smoothPointerX * 0.35;
       const py = -kinetics.smoothPointerY * 0.25;
       const aspectScale = state.viewport.aspect < 1.2 ? 1.2 / Math.max(state.viewport.aspect, 0.5) : 1.0;
 
-      targetPos.current.set(px, camY + py, (camZ - portalZOffset) * aspectScale);
-      targetLookAt.current.set(0, camY + py * 0.4, -4.0);
+      // Oblique view onto the threshold: the camera sits back along -Y and looks across the
+      // stone, so the floor recedes toward the top of the frame. The aim point stays (0, camY).
+      const dist = heroCamDist(p, camZ, state.viewport.aspect) - portalZOffset * aspectScale;
+      const tilt = THREE.MathUtils.degToRad(heroTiltDeg(p));
+      targetPos.current.set(px, camY - dist * Math.sin(tilt) + py, THRESHOLD_FLOOR_Z + dist * Math.cos(tilt));
+      targetLookAt.current.set(0, camY + py * 0.4, THRESHOLD_FLOOR_Z);
+      // As the wreath forms, aim a little below its centre so the near (larger) side of the
+      // ring stays in frame and the ring sits centred around the Kural.
+      const settle = THREE.MathUtils.smoothstep(p, 0.3, 0.6);
+      targetPos.current.y -= 0.3 * settle;
 
       const damped = damperRef.current.update(targetPos.current, targetLookAt.current, p, safeDelta, {
         isReducedMotion: isReduced,
@@ -88,7 +114,7 @@ function HeroTruckCamera() {
 
       state.camera.position.copy(damped.position);
       state.camera.rotation.set(
-        pitchDeg * (Math.PI / 180) - kinetics.smoothPointerY * 0.035 + kinetics.velocityPitch,
+        (pitchDeg + heroTiltDeg(p)) * (Math.PI / 180) - kinetics.smoothPointerY * 0.035 + kinetics.velocityPitch,
         kinetics.smoothPointerX * 0.045,
         damped.roll
       );
@@ -125,6 +151,43 @@ function HeroTruckCamera() {
   });
 
   return <PerspectiveCamera ref={cameraRef} makeDefault position={[0, 0, 12]} fov={35} />;
+}
+
+/** Cinematic camera tilt off the stone's normal (degrees): an oblique view across the threshold. */
+const HERO_TILT_DEG = 26;
+
+/**
+ * Tilt for scroll p. While the strands peel (p 0.1–0.5) the camera looks a little further
+ * across the stone so the letter stays at the top of frame as the threads leave it, instead of
+ * dropping out abruptly; it is gone by p 0.45 (PRD §5.3).
+ */
+function heroTiltDeg(p: number): number {
+  const up = THREE.MathUtils.smoothstep(p, 0.08, 0.2);
+  const down = 1 - THREE.MathUtils.smoothstep(p, 0.37, 0.47);
+  return HERO_TILT_DEG + 20 * up * down;
+}
+
+/** Camera push-through toward Act III, 0→1. Starts after the Kural has faded out. */
+function heroPushT(p: number): number {
+  return Math.max(0, Math.min(1, (p - 0.86) / 0.12));
+}
+
+/** Half-extent of the finished wreath plus a margin for the nav and screen edge (world units). */
+const WREATH_FRAME_HALF_W = 5.0;
+const WREATH_FRAME_HALF_H = 3.75;
+
+/**
+ * Camera distance to the aim point. During the descent it follows the PRD camera (camZ, scaled
+ * up on narrow screens); as the wreath forms it backs off just enough that the whole ring fits
+ * the frame (on 375 px that means further back, not cropped sides).
+ */
+function heroCamDist(p: number, camZ: number, aspect: number): number {
+  const aspectScale = aspect < 1.2 ? 1.2 / Math.max(aspect, 0.5) : 1.0;
+  const base = camZ * aspectScale;
+  const t = Math.tan(THREE.MathUtils.degToRad(17.5));
+  const fit = Math.max(WREATH_FRAME_HALF_H / t, WREATH_FRAME_HALF_W / (t * Math.max(aspect, 0.3)));
+  const k = THREE.MathUtils.smoothstep(p, 0.42, 0.62);
+  return base + Math.max(0, fit - base) * k;
 }
 
 /**
@@ -352,7 +415,157 @@ function GroundedPulliPoints({ lattice }: { lattice: PulliDotLattice }) {
  * At p = 0.00, renders the pristine stationary weave.
  * As p advances, lines peel exclusively at the top seam (V-notch) and flow downward into the wreath.
  */
-function PeelAndFlowKolamMesh({ isMobile, tier }: { isMobile: boolean; tier: string }) {
+function PeelAndFlowKolamMesh({ isMobile, tier, look }: { isMobile: boolean; tier: string; look: "powder" | "tube" }) {
+  if (look === "powder") return <PowderKolam isMobile={isMobile} tier={tier} />;
+  return <TubeKolam isMobile={isMobile} tier={tier} />;
+}
+
+/**
+ * Cinematic path: the same conveyor drawn as rice powder on the threshold stone.
+ * Ridge (lit, casts the peel shadow) + skirt (contact darkening, loose grains) per half,
+ * and the pulli as powder dabs.
+ */
+function PowderKolam({ isMobile, tier }: { isMobile: boolean; tier: string }) {
+  const built = useMemo(() => {
+    const lattice = generatePulliLattice(isMobile);
+    const strands = [];
+    const compositePaths = [];
+    for (let k = 0; k < STRAND_COUNT; k++) {
+      const strand = buildResampledStrand(generateStrandWaypoints(k, STRAND_COUNT), k, 0.02);
+      strands.push(strand);
+      compositePaths.push(buildCompositePath(strand, k, 0.02));
+    }
+    const bundle = buildPathTextureBundle(compositePaths, tier === "A" ? 4096 : 2048);
+    // The ridge's underside is buried in the stone, so 10/8 radial segments keep the
+    // triangle count inside the PRD §8.3 budget (84k A / 43k B for both halves).
+    const ridgeGeometry = buildStaticKolamMeshes(strands, tier === "A" ? 10 : 8, tier === "A" ? 0.045 : 0.07, 0.024).rightGeometry;
+    // Skirt: a flat ribbon (2 quads across) on the stone, coarser along the line.
+    const skirtGeometry = buildStaticKolamMeshes(strands, 2, tier === "A" ? 0.06 : 0.09, 0.024).rightGeometry;
+    const shared = createPowderSharedUniforms();
+    const right = createPowderConveyorMaterial(bundle, +0.03, shared);
+    const left = createPowderConveyorMaterial(bundle, -0.03, shared);
+    // Different seeds per half so the shed dust does not mirror.
+    const grainRight = createShedGrainGeometry(STRAND_COUNT, tier === "A" ? 28 : 12, 5);
+    const grainLeft = createShedGrainGeometry(STRAND_COUNT, tier === "A" ? 28 : 12, 17);
+    return { lattice, ridgeGeometry, skirtGeometry, grainRight, grainLeft, shared, right, left, pathTexture: bundle.texture };
+  }, [isMobile, tier]);
+
+  useEffect(
+    () => () => {
+      built.ridgeGeometry.dispose();
+      built.skirtGeometry.dispose();
+      built.grainRight.dispose();
+      built.grainLeft.dispose();
+      for (const half of [built.right, built.left]) {
+        half.material.dispose();
+        half.depthMaterial.dispose();
+        half.skirtMaterial.dispose();
+        half.grainMaterial.dispose();
+        half.wireMaterial.dispose();
+      }
+      built.pathTexture.dispose();
+    },
+    [built]
+  );
+
+  const containerRef = useRef<THREE.Group>(null);
+
+  useSafeFrame((state) => {
+    const p = heroDirectorState.scrubActive ? heroDirectorState.scrubProgress : heroScrollProgress.current;
+    built.shared.uP.value = p;
+    built.shared.uTime.value = state.clock.elapsedTime * heroDirectorState.speedMultiplier;
+    // Depth falloff from the camera's aim distance to the far edge; deeper under the intro title.
+    const cam = state.camera;
+    const aimDist = Math.max(1, cam.position.z - THRESHOLD_FLOOR_Z) / Math.max(0.2, Math.cos(cam.rotation.x));
+    const introT = 1 - THREE.MathUtils.smoothstep(p, 0.06, 0.14);
+    built.shared.uDepthDim.value.set(aimDist * (0.95 - 0.1 * introT), aimDist * 1.6, 0.5 + 0.4 * introT);
+    // Grains about 0.012 world units across, in framebuffer pixels.
+    const fov = (state.camera as THREE.PerspectiveCamera).fov;
+    built.shared.uPointScale.value =
+      (0.012 * state.size.height * state.viewport.dpr) / (2 * Math.tan(THREE.MathUtils.degToRad(fov * 0.5)));
+    if (containerRef.current) {
+      // Portal push-through (Act II → III): the wreath opens radially past the frustum.
+      const pushT = heroPushT(p);
+      const radialScale = 1.0 + pushT * pushT * 2.8;
+      containerRef.current.scale.set(radialScale, radialScale, 1.0);
+      // The skirt is a decal on the stone; once the ring scales off the floor it would float.
+      built.shared.uSkirtOpacity.value = 1 - Math.min(1, pushT * 3);
+    }
+  });
+
+  return (
+    <>
+      <PowderDabs lattice={built.lattice} depthDim={built.shared.uDepthDim} />
+      <group ref={containerRef} name="PowderKolamContainer">
+        <mesh name="RightSkirt" geometry={built.skirtGeometry} material={built.right.skirtMaterial} frustumCulled={false} renderOrder={1} />
+        <mesh name="LeftSkirt" geometry={built.skirtGeometry} material={built.left.skirtMaterial} scale={[-1, 1, 1]} frustumCulled={false} renderOrder={1} />
+        <points name="RightShed" geometry={built.grainRight} material={built.right.grainMaterial} frustumCulled={false} renderOrder={2} />
+        <points name="LeftShed" geometry={built.grainLeft} material={built.left.grainMaterial} scale={[-1, 1, 1]} frustumCulled={false} renderOrder={2} />
+        <mesh
+          name="RightHalf"
+          geometry={built.ridgeGeometry}
+          material={built.right.material}
+          customDepthMaterial={built.right.depthMaterial}
+          userData={{ wireMaterial: built.right.wireMaterial }}
+          frustumCulled={false}
+          castShadow
+        />
+        <mesh
+          name="LeftHalf"
+          geometry={built.ridgeGeometry}
+          material={built.left.material}
+          customDepthMaterial={built.left.depthMaterial}
+          userData={{ wireMaterial: built.left.wireMaterial }}
+          scale={[-1, 1, 1]}
+          frustumCulled={false}
+          castShadow
+        />
+      </group>
+    </>
+  );
+}
+
+/** Pulli dots as powder dabs on the stone: one instanced draw, static matrices. */
+function PowderDabs({ lattice, depthDim }: { lattice: PulliDotLattice; depthDim: { value: THREE.Vector3 } }) {
+  const ref = useRef<THREE.InstancedMesh>(null);
+  const total = lattice.dotCount * 2;
+  const geometry = useMemo(() => createDabGeometry(10), []);
+  const dab = useMemo(() => createDabMaterial(depthDim), [depthDim]);
+  useDisposeOnUnmount(geometry, dab.material);
+
+  useEffect(() => {
+    const mesh = ref.current;
+    if (!mesh) return;
+    const rand = seeded(31);
+    const m = new THREE.Matrix4();
+    const q = new THREE.Quaternion();
+    const pos = new THREE.Vector3();
+    const scl = new THREE.Vector3();
+    const zAxis = new THREE.Vector3(0, 0, 1);
+    let idx = 0;
+    for (const dots of [lattice.leftDots, lattice.rightDots]) {
+      for (let i = 0; i < lattice.dotCount; i++) {
+        const r = 0.034 * (0.7 + rand() * 0.65);
+        pos.set(dots[i * 3] + (rand() - 0.5) * 0.012, dots[i * 3 + 1] + (rand() - 0.5) * 0.012, THRESHOLD_FLOOR_Z);
+        q.setFromAxisAngle(zAxis, rand() * Math.PI * 2);
+        scl.set(r * (0.9 + rand() * 0.25), r * (0.8 + rand() * 0.2), 0.011 * (0.8 + rand() * 0.45));
+        mesh.setMatrixAt(idx++, m.compose(pos, q, scl));
+      }
+    }
+    mesh.instanceMatrix.needsUpdate = true;
+    mesh.computeBoundingSphere();
+  }, [lattice]);
+
+  useSafeFrame((state) => {
+    if (ref.current) ref.current.visible = heroDirectorState.dotsVisible;
+    dab.uniforms.uP.value = heroDirectorState.scrubActive ? heroDirectorState.scrubProgress : heroScrollProgress.current;
+    dab.uniforms.uTime.value = state.clock.elapsedTime;
+  });
+
+  return <instancedMesh ref={ref} args={[geometry, dab.material, total]} receiveShadow />;
+}
+
+function TubeKolam({ isMobile, tier }: { isMobile: boolean; tier: string }) {
   const { lattice, rightGeometry, rightConveyor, leftConveyor, pathTexture } = useMemo(() => {
     const lattice = generatePulliLattice(isMobile);
     const strands = [];
@@ -456,6 +669,9 @@ function PeelAndFlowKolamMesh({ isMobile, tier }: { isMobile: boolean; tier: str
  * the headline held over the frame that lifts away as the media takes over,
  * and the subtle scroll hint.
  */
+// Intro surround colour (warm espresso, same as the scene's darkest value).
+const INTRO_MATTE = "#140d09";
+
 function ScrollExpandIntroOverlay() {
   const frameRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
@@ -504,16 +720,15 @@ function ScrollExpandIntroOverlay() {
           const startH = isMobile ? 42 : 42;
           const w = startW + (100 - startW) * easeE;
           const h = startH + (100 - startH) * easeE;
-          const r = (isMobile ? 20 : 24) * (1 - easeE);
-          const borderW = Math.max(0, 2 * (1 - easeE));
 
-          // Expanding Visible Black Frame with thick solid black bezel matte
-          frameRef.current.style.width = `${w}vw`;
-          frameRef.current.style.height = `${h}vh`;
-          frameRef.current.style.borderRadius = `${r}px`;
-          frameRef.current.style.border = "none";
-          frameRef.current.style.outline = "none";
-          frameRef.current.style.boxShadow = "0 0 0 9999px #050201";
+          // Feathered ellipse of light: no edge, the scene falls off into warm darkness. The
+          // gradient is painted once per breakpoint and grown with a compositor-only scale, so
+          // scrolling the intro never repaints a full-screen gradient.
+          if (frameRef.current.dataset.matte !== String(isMobile)) {
+            frameRef.current.dataset.matte = String(isMobile);
+            frameRef.current.style.background = `radial-gradient(ellipse ${startW * 0.78}vw ${startH * 0.78}vh at 50% 50%, ${INTRO_MATTE}00 0%, ${INTRO_MATTE}00 42%, ${INTRO_MATTE}c7 78%, ${INTRO_MATTE}f5 100%)`;
+          }
+          frameRef.current.style.transform = `scale(${w / startW}, ${h / startH})`;
           frameRef.current.style.opacity = `${borderOpacity}`;
         }
       }
@@ -535,13 +750,13 @@ function ScrollExpandIntroOverlay() {
 
       // Hint fades immediately on scroll
       if (hintRef.current) {
-        if (p >= 0.05) {
+        if (p >= 0.065) {
           hintRef.current.style.opacity = "0";
           hintRef.current.style.visibility = "hidden";
           hintRef.current.style.pointerEvents = "none";
         } else {
           hintRef.current.style.visibility = "visible";
-          const gone = Math.min(1, Math.max(0, p / 0.035));
+          const gone = Math.min(1, Math.max(0, (p - 0.01) / 0.05));
           const easeGone = gone * gone * (3 - 2 * gone);
           hintRef.current.style.opacity = `${1 - easeGone}`;
           hintRef.current.style.transform = `translate3d(0, ${10 * easeGone}px, 0)`;
@@ -560,15 +775,10 @@ function ScrollExpandIntroOverlay() {
       {/* Expanding Visible Black Frame with Thick Black Bezel Matte */}
       <div
         ref={frameRef}
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          width: "34vw",
-          height: "42vh",
-          borderRadius: "24px",
-          border: "none",
-          outline: "none",
-          boxShadow: "0 0 0 9999px #050201",
-          willChange: "width, height, border-radius, opacity",
+          background: `radial-gradient(ellipse 26vw 33vh at 50% 50%, ${INTRO_MATTE}00 0%, ${INTRO_MATTE}00 42%, ${INTRO_MATTE}c7 78%, ${INTRO_MATTE}f5 100%)`,
+          willChange: "transform, opacity",
         }}
       />
 
@@ -593,8 +803,12 @@ function ScrollExpandIntroOverlay() {
         className="absolute bottom-16 sm:bottom-8 left-0 right-0 text-center px-4 transition-opacity"
         style={{ willChange: "opacity, transform" }}
       >
-        <p className="font-space-mono text-[11px] sm:text-xs tracking-[0.22em] text-[#A6F0CF]/85 uppercase">
-          SCROLL TO ENTER · கீழே உருட்டவும் &darr;
+        <p className="font-space-mono text-[11px] sm:text-xs tracking-[0.22em] text-sangam-cream uppercase drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]">
+          SCROLL TO ENTER ·{" "}
+          <span lang="ta" className="tracking-normal normal-case">
+            கீழே உருட்டவும்
+          </span>{" "}
+          &darr;
         </p>
       </div>
     </div>
@@ -729,74 +943,207 @@ function GoldenTamilEmblem({ isMobile, tier }: { isMobile: boolean; tier: string
 }
 
 /**
- * Cinematic Detail 2: Instanced Brass Pulli (Dot) Registration Nodes
- * Up to 36 subtle brass registration points that softly glint as the peeling Kolam passes.
+ * Cinematic "அ": cast aged brass resting on the threshold stone. Bevelled so the rim light
+ * has an edge to catch; roughness breakup from the kit; grounded by the key's shadow.
+ * Static (PRD §5.1): the camera's parallax supplies the motion.
  */
-function PulliGridNodes({ isMobile }: { isMobile: boolean }) {
-  const meshRef = useRef<THREE.InstancedMesh>(null);
-  const lattice = useMemo(() => generatePulliLattice(isMobile), [isMobile]);
-  const dummy = useMemo(() => new THREE.Object3D(), []);
-
-  // Filter up to 36 dots around central weave zone
-  const dots = useMemo(() => {
-    const list: [number, number, number][] = [];
-    const maxHalf = 18;
-    for (let i = 0; i < lattice.dotCount && list.length < maxHalf; i++) {
-      const x = lattice.rightDots[i * 3];
-      const y = lattice.rightDots[i * 3 + 1];
-      const z = lattice.rightDots[i * 3 + 2];
-      if (Math.abs(y) <= 3.8) {
-        list.push([x, y, z]);
-      }
-    }
-    for (let i = 0; i < lattice.dotCount && list.length < maxHalf * 2; i++) {
-      const x = lattice.leftDots[i * 3];
-      const y = lattice.leftDots[i * 3 + 1];
-      const z = lattice.leftDots[i * 3 + 2];
-      if (Math.abs(y) <= 3.8) {
-        list.push([x, y, z]);
-      }
-    }
-    return list;
-  }, [lattice]);
-
-  useEffect(() => {
-    if (!meshRef.current) return;
-    dots.forEach((dot, idx) => {
-      dummy.position.set(dot[0], dot[1], dot[2] - 0.02);
-      dummy.scale.setScalar(1.0);
-      dummy.updateMatrix();
-      meshRef.current!.setMatrixAt(idx, dummy.matrix);
-    });
-    meshRef.current.instanceMatrix.needsUpdate = true;
-  }, [dots, dummy]);
-
-  useSafeFrame((state) => {
-    if (!meshRef.current) return;
-    const rawP = heroDirectorState.scrubActive
-      ? heroDirectorState.scrubProgress
-      : heroScrollProgress.current;
-    const time = state.clock.getElapsedTime();
-    const mat = meshRef.current.material as THREE.MeshPhysicalMaterial;
-    if (mat) {
-      mat.emissiveIntensity = 0.22 + 0.18 * Math.max(0, Math.sin(time * 2.5 + rawP * 8.0));
-    }
-  });
-
-  if (dots.length === 0) return null;
+function CastEmblem({ isMobile, tier }: { isMobile: boolean; tier: string }) {
+  const material = useMemo(
+    () =>
+      createSurfaceMaterial(
+        "agedBrass",
+        // Lower roughness than the preset so the key draws a hot line along the bevel.
+        { color: "#ad8f62", roughness: 0.3, envMapIntensity: 1.35 },
+        { space: "local", scale: 11, bump: 0.0012, roughnessVariation: 0.18, albedoVariation: 0.1, tintAmount: 0.08 }
+      ),
+    []
+  );
+  useDisposeOnUnmount(material);
+  // Mobile frames the scene from much further back; 1.4x keeps the letter the subject.
+  const letterSize = isMobile ? 1.96 : 1.85;
+  const scale = 1.35;
+  const depth = 0.22;
+  const bevelThickness = 0.07;
+  // Back face just under the stone so the letter reads as resting on it, not hovering.
+  const restZ = THRESHOLD_FLOOR_Z + ((depth + 2 * bevelThickness) / 2) * scale - 0.015;
+  const footprint = letterSize * scale;
+  const contact = useMemo(
+    () => [{ position: [0, 0, 0] as [number, number, number], size: [footprint * 1.22, footprint * 0.98] as [number, number], opacity: 0.5 }],
+    [footprint]
+  );
 
   return (
-    <instancedMesh ref={meshRef} args={[undefined, undefined, dots.length]}>
-      <sphereGeometry args={[0.024, 12, 12]} />
-      <meshPhysicalMaterial
-        color="#A6F0CF"
-        emissive="#FFA01C"
-        emissiveIntensity={0.25}
-        metalness={0.92}
-        roughness={0.22}
-        clearcoat={0.6}
-      />
-    </instancedMesh>
+    <>
+      {/* Contact occlusion on the stone around the letter's base. The kit lays decals in XZ;
+          the group turns that plane onto the XY stone. */}
+      <group position={[0, 0, THRESHOLD_FLOOR_Z]} rotation={[Math.PI / 2, 0, 0]}>
+        <ContactShadows spots={contact} softness={0.55} lift={0.002} />
+      </group>
+      <group position={[0, 0, restZ]} scale={scale}>
+        <Center>
+          <Text3D
+            font={muktaFont as unknown as Parameters<typeof Text3D>[0]["font"]}
+            size={letterSize}
+            height={depth}
+            curveSegments={tier === "A" ? 24 : 16}
+            bevelEnabled
+            bevelSize={0.055}
+            bevelThickness={bevelThickness}
+            bevelSegments={tier === "A" ? 6 : 3}
+            castShadow
+            receiveShadow
+          >
+            அ
+            <primitive object={material} attach="material" />
+          </Text3D>
+        </Center>
+      </group>
+    </>
+  );
+}
+
+const KEY_OFFSET = new THREE.Vector3(-7.0, 6.0, 4.4); // low raking dawn sun, upper left (~25° above the stone)
+const RIM_OFFSET = new THREE.Vector3(6.0, -5.0, 1.6); // cool grazing rim from lower right
+
+/**
+ * Light and stone for the cinematic path. One warm raking key (the only shadow caster), a
+ * dim cool sky fill, a cool rim that rises as the emblem is revealed, and the threshold
+ * stone. The rig follows the camera's scripted descent (a pure function of scroll), so the
+ * shadow map only re-renders when scroll moves the scene.
+ */
+function ThresholdStage({ mode }: { mode: "A" | "B" }) {
+  const rigRef = useRef<THREE.Group>(null);
+  const keyRef = useRef<THREE.DirectionalLight>(null);
+  const rimRef = useRef<THREE.DirectionalLight>(null);
+  const [keyTarget] = useState(() => new THREE.Object3D());
+  const stone = useMemo(() => createThresholdStoneMaterial(), []);
+  const floorGeometry = useMemo(() => new THREE.PlaneGeometry(70, 70, 1, 1), []);
+  useDisposeOnUnmount(floorGeometry, stone.material);
+  const invalidateShadows = useShadowUpdates({ mode: "onChange" });
+  const last = useRef({ p: -1, ext: 0, frame: 0, reveal: 0 });
+
+  useSafeFrame((state, dt) => {
+    const p = heroDirectorState.scrubActive ? heroDirectorState.scrubProgress : heroScrollProgress.current;
+    const cam = state.camera as THREE.PerspectiveCamera;
+    const l = last.current;
+    l.frame++;
+
+    // Scripted camera height (no pointer parallax) keeps the shadow frustum still on mouse move.
+    const { camY, camZ } = evalCamera(p);
+    const aspect = state.viewport.aspect;
+    if (rigRef.current) rigRef.current.position.set(0, camY, 0);
+    // Depth falloff across the tilted stone; scaled so the far-back mobile framing is not drowned.
+    const fog = state.scene.fog as THREE.FogExp2 | null;
+    if (fog && "density" in fog) fog.density = 0.48 / heroCamDist(p, camZ, aspect);
+
+    // Visible stretch of stone for the tilted camera: near edge (bottom of frame) to far edge (top).
+    const halfFov = THREE.MathUtils.degToRad(cam.fov * 0.5);
+    const camH = Math.max(1, cam.position.z - THRESHOLD_FLOOR_Z);
+    const yNear = cam.position.y + camH * Math.tan(cam.rotation.x - halfFov);
+    const yFar = cam.position.y + camH * Math.tan(Math.min(1.45, cam.rotation.x + halfFov));
+    const aimDist = camH / Math.cos(cam.rotation.x);
+    stone.uniforms.uViewCenter.value.set(cam.position.x, (yNear + yFar) * 0.5);
+    stone.uniforms.uViewHalf.value.set(aimDist * Math.tan(halfFov) * aspect * 1.15, (yFar - yNear) * 0.5);
+    stone.uniforms.uP.value = p;
+
+    const key = keyRef.current;
+    if (key) {
+      // Shadow frustum from the scripted camera (no pointer parallax), centred on the aim point.
+      const tilt = THREE.MathUtils.degToRad(heroTiltDeg(p));
+      const dist = heroCamDist(p, camZ, aspect);
+      const h = dist * Math.cos(tilt);
+      const back = dist * Math.sin(tilt);
+      const farRel = h * Math.tan(tilt + THREE.MathUtils.degToRad(17.5)) - back;
+      const nearRel = back - h * Math.tan(tilt - THREE.MathUtils.degToRad(17.5));
+      const halfW = (h / Math.cos(tilt + THREE.MathUtils.degToRad(17.5))) * Math.tan(THREE.MathUtils.degToRad(17.5)) * aspect;
+      const ext = Math.max(farRel, nearRel, halfW) * 1.05;
+      if (Math.abs(ext - l.ext) > l.ext * 0.04) {
+        l.ext = ext;
+        const sc = key.shadow.camera;
+        sc.left = -ext;
+        sc.right = ext;
+        sc.top = ext;
+        sc.bottom = -ext;
+        sc.near = 1;
+        sc.far = 30;
+        sc.updateProjectionMatrix();
+        invalidateShadows();
+      }
+    }
+    // Re-render shadows when scroll moves the threads; while strands are in flight the
+    // lifted tails also ripple with time, so refresh every other frame inside that window.
+    const inFlight = p > 0.035 && p < 0.64;
+    if (Math.abs(p - l.p) > 1e-5 || (inFlight && l.frame % 2 === 0)) {
+      l.p = p;
+      invalidateShadows();
+    }
+
+    // Emblem reveal: the cool rim rises over the first seconds, then settles.
+    l.reveal = Math.min(1, l.reveal + dt / 2.6);
+    const r = l.reveal;
+    if (rimRef.current) rimRef.current.intensity = r * r * (3 - 2 * r) * (0.9 + 0.8 * Math.sin(Math.PI * r));
+  });
+
+  // 1024/512: a 2048 map alone was +12 MB of texture memory; the only shadows that need
+  // detail are the emblem's and the lifted threads', and both are soft at this scale.
+  const shadowSize = mode === "A" ? 1024 : 512;
+
+  return (
+    <>
+      <BakedEnvironment resolution={128}>
+        {/* Dawn sky through the doorway (matches the key), a cool open sky, dark ground bounce */}
+        <Lightformer form="rect" intensity={2.2} color="#ffcf9e" position={[-6, 5, 4]} scale={[7, 4, 1]} target={[0, 0, 0]} />
+        <Lightformer form="rect" intensity={0.5} color="#8fa6d6" position={[5, 4, 6]} scale={[8, 6, 1]} target={[0, 0, 0]} />
+        <Lightformer form="rect" intensity={0.25} color="#3a2a1c" position={[0, -6, 2]} scale={[12, 4, 1]} target={[0, 0, 0]} />
+        {/* Lit stone all around at low angle: what the bevels mirror (else they read as black outlines) */}
+        <Lightformer form="rect" intensity={0.55} color="#c9b49a" position={[-8, 0, 1]} scale={[3, 14, 1]} target={[0, 0, 0]} />
+        <Lightformer form="rect" intensity={0.45} color="#c9b49a" position={[0, -8, 1]} scale={[14, 3, 1]} target={[0, 0, 0]} />
+        <Lightformer form="rect" intensity={0.3} color="#9fb0cf" position={[8, 2, 1]} scale={[3, 14, 1]} target={[0, 0, 0]} />
+        {/* Open sky over the threshold: what a face lying on the stone mirrors */}
+        <Lightformer form="rect" intensity={0.7} color="#d9cbb6" position={[0, 0, 8]} scale={[10, 10, 1]} target={[0, 0, 0]} />
+      </BakedEnvironment>
+
+      <group ref={rigRef}>
+        <primitive object={keyTarget} position={[0, 0, THRESHOLD_FLOOR_Z]} />
+        <directionalLight
+          ref={keyRef}
+          position={[KEY_OFFSET.x, KEY_OFFSET.y, KEY_OFFSET.z]}
+          target={keyTarget}
+          color="#ffc890"
+          intensity={3.1}
+          castShadow
+          shadow-mapSize={[shadowSize, shadowSize]}
+          shadow-bias={-0.0003}
+          shadow-normalBias={0.02}
+          shadow-radius={2}
+        />
+        <directionalLight
+          ref={rimRef}
+          position={[RIM_OFFSET.x, RIM_OFFSET.y, RIM_OFFSET.z]}
+          target={keyTarget}
+          color="#a9c1ff"
+          intensity={0}
+          userData={{ gradeRole: "rim" }}
+        />
+        {/* A few motes hanging in the key light; nothing else is additive in the scene. */}
+        <ArtDustMotes
+          position={[0, 0, 1.4]}
+          size={[11, 7, 2.4]}
+          count={mode === "A" ? 34 : 16}
+          color="#ffd59e"
+          intensity={0.28}
+          pointSize={22}
+          drift={[0.01, 0.006, 0]}
+          seed={11}
+        />
+      </group>
+      {/* Dim warm-sand fill from the open side (sky = +Z, toward the camera).
+          Key and fill are not tagged gradeRole: the kolam-hearth Tier-B fallback lerps the key
+          toward mint and the fill toward purple, which turns this stone olive. */}
+      <hemisphereLight args={["#a08467", "#2b1c12", 0.5]} position={[0, 0, 1]} />
+
+      <mesh geometry={floorGeometry} material={stone.material} position={[0, -6, THRESHOLD_FLOOR_Z]} receiveShadow />
+    </>
   );
 }
 
@@ -855,10 +1202,12 @@ function DustMotes({ isMobile, tier }: { isMobile: boolean; tier: string }) {
 
 export function DigitalKolamHero() {
   const viewportRef = useRef<HTMLDivElement>(null);
-  const { isLiteMode } = useLiteMode();
-  const tier = useTier();
-  const reducedMotion = useReducedMotion();
-  const isWebglEnabled = !isLiteMode && tier !== "C" && !reducedMotion;
+  // static = Tier C, Lite or reduced motion: the SVG fallback, no 3D assets.
+  const { mode } = useRenderMode();
+  const isWebglEnabled = mode !== "static";
+  const tier = mode === "A" ? "A" : "B";
+  // URL flag parsed once per mount: ?cinematic_home=0 shows the previous tube look.
+  const [cinematic] = useState(() => isHeroCinematicEnabled("home"));
 
   const isMobile = useSyncExternalStore(
     (callback) => {
@@ -905,77 +1254,17 @@ export function DigitalKolamHero() {
     <div ref={viewportRef} className="absolute inset-0 z-0 pointer-events-none w-full h-full overflow-hidden">
       {mounted && isWebglEnabled && (
         <View className="w-full h-full pointer-events-auto" index={2} grade={{ hero: "home", profile: "kolam-hearth" }}>
-          <color attach="background" args={["#050201"]} />
-          <fogExp2 attach="fog" args={["#050201", 0.03]} />
+          <color attach="background" args={[cinematic ? HERO_SCENE_BG : "#050201"]} />
+          <fogExp2 attach="fog" args={[cinematic ? HERO_SCENE_BG : "#050201", 0.03]} />
           <HeroTruckCamera />
 
-          {isHeroCinematicEnabled("home") ? (
+          {cinematic ? (
             <>
-              {/* Sangam Studio Environment: Motivated 3-Point + Procedural IBL Rig */}
-              <BakedEnvironment resolution={256}>
-                {/* Warm Ivory Key Strip (-X) */}
-                <Lightformer
-                  form="rect"
-                  intensity={3.2}
-                  color="#F4F0FA"
-                  position={[-4, 3, 5]}
-                  scale={[8, 5, 1]}
-                  target={[0, 0, 0]}
-                />
-                {/* High-Contrast Terracotta/Gold Rim Strip (+X, Carving out right stem of 'அ') */}
-                <Lightformer
-                  form="rect"
-                  intensity={4.6}
-                  color="#F26BB5"
-                  position={[5.5, 1.5, -1.5]}
-                  scale={[6, 8, 1]}
-                  target={[0, 0, 0]}
-                />
-                {/* Antique Brass Overhead Fill (+Y) */}
-                <Lightformer
-                  form="ring"
-                  intensity={2.0}
-                  color="#A6F0CF"
-                  scale={10}
-                  position={[0, 7, 0]}
-                  target={[0, 0, 0]}
-                />
-                {/* Warm Espresso Floor Bounce (-Y) */}
-                <Lightformer
-                  form="rect"
-                  intensity={1.2}
-                  color="#3A2618"
-                  scale={[12, 4, 1]}
-                  position={[0, -5, 0]}
-                  target={[0, 0, 0]}
-                />
-              </BakedEnvironment>
-
-              {/* Directional Key with Soft Dimensional PCF Shadows */}
-              <directionalLight
-                position={[3, 5, 6]}
-                intensity={3.2}
-                color="#FFF8E7"
-                castShadow
-                shadow-mapSize-width={1024}
-                shadow-mapSize-height={1024}
-                shadow-camera-near={1}
-                shadow-camera-far={16}
-                shadow-camera-left={-4.5}
-                shadow-camera-right={4.5}
-                shadow-camera-top={4.5}
-                shadow-camera-bottom={-4.5}
-                shadow-bias={-0.0004}
-                shadow-normalBias={0.02}
-                shadow-radius={3}
-              />
-              <directionalLight position={[-4, 3, 3]} intensity={1.6} color="#FFE8B5" />
-              <ambientLight intensity={0.7} color="#2A1808" />
-              <pointLight position={[0, 0, 4.0]} intensity={4.0} color="#FFF5DE" distance={16} />
-              <pointLight position={[0, -2, 2.0]} intensity={2.5} color="#A6F0CF" distance={12} />
-
-              {/* Detail 2: Brass Pulli Grid Registration Nodes */}
-              <PulliGridNodes isMobile={isMobile} />
+              <ThresholdStage mode={tier} />
+              <PeelAndFlowKolamMesh isMobile={isMobile} tier={tier} look="powder" />
+              <Suspense fallback={null}>
+                <CastEmblem isMobile={isMobile} tier={tier} />
+              </Suspense>
             </>
           ) : (
             <>
@@ -1019,19 +1308,13 @@ export function DigitalKolamHero() {
               <directionalLight position={[-5, 4, 4]} intensity={1.8} color="#FFE8B5" />
               <pointLight position={[0, 0, 4.0]} intensity={4.5} color="#FFF5DE" distance={16} />
               <pointLight position={[0, -2, 2.0]} intensity={3.0} color="#A6F0CF" distance={12} />
+              <DustMotes isMobile={isMobile} tier={tier} />
+              <PeelAndFlowKolamMesh isMobile={isMobile} tier={tier} look="tube" />
+              <Suspense fallback={null}>
+                <GoldenTamilEmblem isMobile={isMobile} tier={tier} />
+              </Suspense>
             </>
           )}
-
-          {/* Ambient Floating Dust Motes */}
-          <DustMotes isMobile={isMobile} tier={tier} />
-
-          {/* Peel & Flow Kolam Halves (§PRD Home Hero) */}
-          <PeelAndFlowKolamMesh isMobile={isMobile} tier={tier} />
-
-          {/* Golden "அ" Emblem in Protected Central Void */}
-          <Suspense fallback={null}>
-            <GoldenTamilEmblem isMobile={isMobile} tier={tier} />
-          </Suspense>
         </View>
       )}
 
@@ -1048,81 +1331,38 @@ export function DigitalKolamHero() {
 
 /**
  * Static Kolam Fallback Component (§PRD 10)
- * High-fidelity 2D vector composition rendered when WebGL is unavailable,
- * disabled by Lite Mode, or when the user prefers reduced motion.
+ * Shown when WebGL is unavailable, Lite Mode is on, or the user prefers reduced motion:
+ * a rendered still of the cinematic scene (rice-powder kolam and the brass "அ" on the
+ * threshold stone), so the static page keeps the same look without loading any 3D.
  */
 function StaticKolamFallback({ isMobile: _isMobile }: { isMobile: boolean }) {
-  const letterScale = 1.0;
-
-  const dots: { x: number; y: number }[] = [];
-  const rings = [180, 225, 270, 315, 360, 405];
-  rings.forEach((r, ringIdx) => {
-    const count = 16 + ringIdx * 8;
-    for (let i = 0; i < count; i++) {
-      const angle = (i / count) * Math.PI * 2;
-      dots.push({
-        x: Math.round(Math.cos(angle) * r),
-        y: Math.round(Math.sin(angle) * r),
-      });
-    }
-  });
-
   return (
-    <div className="absolute inset-0 z-0 flex items-center justify-center bg-[#050201] overflow-hidden select-none pointer-events-none">
-      {/* Central 2D Gold Fallback Letter "அ" scaling with scroll */}
+    <div className="absolute inset-0 z-0 overflow-hidden select-none pointer-events-none" style={{ backgroundColor: HERO_SCENE_BG }}>
+      {/* Full-bleed in landscape; a 16:9 band in portrait. The mask feathers the band's own
+          edges so the still never reads as a card. */}
       <div
-        className="absolute z-10 flex items-center justify-center transition-transform"
-        style={{ transform: `scale(${letterScale})` }}
+        className="absolute inset-0 portrait:inset-x-0 portrait:inset-y-auto portrait:top-1/2 portrait:-translate-y-1/2 portrait:aspect-video"
+        style={{
+          maskImage: "radial-gradient(ellipse 60% 50% at 50% 50%, #000 45%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 60% 50% at 50% 50%, #000 45%, transparent 100%)",
+        }}
       >
-        <span className="font-noto-serif-tamil text-7xl sm:text-9xl font-bold bg-gradient-to-br from-[#A6F0CF] via-[#4FD6E0] to-[#F26BB5] bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(166,240,207,0.4)]">
-          அ
-        </span>
+        <Image
+          src="/home/home-hero-poster.webp"
+          alt=""
+          aria-hidden="true"
+          fill
+          sizes="100vw"
+          priority
+          // Already a 77 KB WebP; served as-is so a re-rendered poster is never shadowed by a cached resize.
+          unoptimized
+          className="object-cover object-center"
+        />
       </div>
-
-      <svg
-        viewBox="-480 -480 960 960"
-        className="w-full h-full max-w-[900px] max-h-[900px] object-contain opacity-90"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient id="goldFallbackGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fde68a" />
-            <stop offset="40%" stopColor="#f59e0b" />
-            <stop offset="80%" stopColor="#d97706" />
-            <stop offset="100%" stopColor="#92400e" />
-          </linearGradient>
-          <radialGradient id="voidVignette" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#050201" stopOpacity="0.85" />
-            <stop offset="45%" stopColor="#050201" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#050201" stopOpacity="0" />
-          </radialGradient>
-          <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="8" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
-
-        {/* Central Void Shadow */}
-        <circle cx="0" cy="0" r="170" fill="url(#voidVignette)" />
-
-        {/* Pulli Dots Lattice */}
-        <g fill="#A6F0CF" opacity="0.45">
-          {dots.map((d, i) => (
-            <circle key={i} cx={d.x} cy={d.y} r="2.5" />
-          ))}
-        </g>
-
-        {/* Sikku Concentric Braided Loops */}
-        <g fill="none" stroke="#F1E9D2" strokeWidth="2.8" opacity="0.82" strokeLinecap="round">
-          {/* Inner Laurel Loop */}
-          <path d="M 0,-185 C 100,-185 185,-100 185,0 C 185,100 100,185 0,185 C -100,185 -185,100 -185,0 C -185,-100 -100,-185 0,-185 Z" />
-
-          {/* Undulating Sikku Braids */}
-          <path d="M 0,-240 C 70,-260 140,-210 200,-160 C 260,-110 280,-40 270,30 C 260,100 200,160 140,210 C 80,260 0,270 0,270 C 0,270 -80,260 -140,210 C -200,160 -260,100 -270,30 C -280,-40 -260,-110 -200,-160 C -140,-210 -70,-260 0,-240 Z" />
-          <path d="M 0,-310 C 100,-330 200,-270 280,-200 C 350,-130 370,-30 350,60 C 330,150 250,230 170,290 C 90,340 0,350 0,350 C 0,350 -90,340 -170,290 C -250,230 -330,150 -350,60 C -370,-30 -350,-130 -280,-200 C -200,-270 -100,-330 0,-310 Z" />
-          <path d="M 0,-380 C 120,-410 250,-330 350,-240 C 430,-150 450,-30 420,80 C 390,190 290,290 190,360 C 90,420 0,430 0,430 C 0,430 -90,420 -190,360 C -290,290 -390,190 -420,80 C -450,-30 -430,-150 -350,-240 C -250,-330 -120,-410 0,-380 Z" />
-        </g>
-      </svg>
+      {/* The letter in the still is decorative; keep it in the accessibility tree as text. */}
+      <span className="sr-only" lang="ta">
+        அ
+      </span>
     </div>
   );
 }

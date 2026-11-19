@@ -112,7 +112,7 @@ export function AatamMovementStudio() {
                 spotlightColor="rgba(166, 240, 207, 0.16)"
                 goldColor="rgba(242, 107, 181, 0.12)"
                 radius={360}
-                className={`h-full cursor-pointer transition-all duration-300 rounded-2xl p-6 sm:p-8 flex flex-col justify-between border ${
+                className={`h-full cursor-pointer transition-[border-color,background-color,box-shadow] duration-200 rounded-2xl p-6 sm:p-8 flex flex-col justify-between border ${
                   isSelected
                     ? "bg-[#140C20] border-[#A6F0CF] shadow-xl shadow-[#F26BB5]/15"
                     : "bg-[#140C20] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 shadow-sm"

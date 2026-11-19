@@ -23,7 +23,7 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
   const { isSoundEnabled, toggleSound, playClick } = useAudio();
   const { locale } = useLocale();
   const normalizedPath = pathname.replace(/\/+$/, "") || "/";
-  const darkHeroRoutes = ["/", "/events", "/about", "/board", "/gallery", "/games", "/guide", "/suggestions", "/join"];
+  const darkHeroRoutes = ["/", "/events", "/about", "/board", "/games", "/guide", "/suggestions", "/join"];
   const isHeroRoute = darkHeroRoutes.includes(normalizedPath);
   const [isInHeroZone, setIsInHeroZone] = useState(() => isHeroRoute);
   const inHeroZoneRef = useRef(isHeroRoute);
@@ -89,10 +89,10 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
   return (
     <aside
       aria-label="Quick tools dock"
-      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none pointer-events-auto transition-all duration-300"
+      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none pointer-events-auto"
     >
       <StarBorder className="rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.35)]" color="#A6F0CF" trailColor="#4FD6E0" thickness={1}>
-        <div className="bg-[#140C20] text-[#F4F0FA] border border-[rgba(125,96,166,0.25)] backdrop-blur-md rounded-xl h-10 px-3 sm:px-4 flex items-center gap-2.5 sm:gap-3 transition-all duration-200">
+        <div className="bg-[#140C20] text-[#F4F0FA] border border-[rgba(125,96,166,0.25)] backdrop-blur-md rounded-xl h-10 px-3 sm:px-4 flex items-center gap-2.5 sm:gap-3 transition-[background-color,border-color] duration-200">
         {/* 1. Ask Nanba Trigger */}
         <button
           type="button"

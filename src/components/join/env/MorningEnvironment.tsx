@@ -7,6 +7,8 @@ import { SUN_POS } from "./sun";
 
 interface MorningEnvironmentProps {
   resolution?: number;
+  /** "art": dimmer sky/bounce/front fill so the sun key has contrast (art pass). */
+  variant?: "legacy" | "art";
 }
 
 /**
@@ -18,14 +20,15 @@ interface MorningEnvironmentProps {
  * 3. Warm ground bounce (simulates limestone path reflection)
  * 4. Soft front fill (prevents camera-facing limestone pillars from turning dark/muddy)
  */
-export function MorningEnvironment({ resolution = 256 }: MorningEnvironmentProps) {
+export function MorningEnvironment({ resolution = 256, variant = "legacy" }: MorningEnvironmentProps) {
+  const art = variant === "art";
   return (
     <BakedEnvironment resolution={resolution}>
       {/* Sun softbox, back-right */}
       <Lightformer
         form="rect"
-        intensity={6}
-        color="#FFF3D6"
+        intensity={art ? 5 : 6}
+        color={art ? "#ffd69a" : "#FFF3D6"}
         scale={[14, 10, 1]}
         position={SUN_POS}
         target={[0, 0, 0]}
@@ -33,8 +36,8 @@ export function MorningEnvironment({ resolution = 256 }: MorningEnvironmentProps
       {/* Cool sky dome overhead */}
       <Lightformer
         form="ring"
-        intensity={1.4}
-        color="#BFD9F2"
+        intensity={art ? 0.55 : 1.4}
+        color={art ? "#c4bce3" : "#BFD9F2"}
         scale={30}
         position={[0, 24, 0]}
         target={[0, 0, 0]}
@@ -42,8 +45,8 @@ export function MorningEnvironment({ resolution = 256 }: MorningEnvironmentProps
       {/* Warm ground bounce */}
       <Lightformer
         form="rect"
-        intensity={0.9}
-        color="#E8D9B8"
+        intensity={art ? 0.3 : 0.9}
+        color={art ? "#e8c890" : "#E8D9B8"}
         scale={[30, 30, 1]}
         rotation-x={-Math.PI / 2}
         position={[0, -2, 0]}
@@ -51,7 +54,7 @@ export function MorningEnvironment({ resolution = 256 }: MorningEnvironmentProps
       {/* Soft front fill so camera-facing stone is not mud */}
       <Lightformer
         form="rect"
-        intensity={1.1}
+        intensity={art ? 0.22 : 1.1}
         color="#FFF8EE"
         scale={[20, 8, 1]}
         position={[0, 4, 18]}

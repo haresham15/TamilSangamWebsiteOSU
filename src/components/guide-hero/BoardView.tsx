@@ -5,6 +5,7 @@ import { SceneView as View } from "@/components/canvas/SceneView";
 import type { BoardProps } from "./Board";
 import { governor } from "@/engine/governor";
 import { useWarmup } from "@/components/gl/useWarmup";
+import { useRenderMode } from "@/components/providers/useRenderMode";
 import { StationScene } from "./station/StationScene";
 import { getGuideStationProgress, getGuideStationTargetProgress, useGuideStationTimeline } from "./station/useGuideStationTimeline";
 
@@ -12,12 +13,19 @@ interface BoardViewProps extends Pick<BoardProps, "boardWidth" | "boardHeight" |
   sequenceElement: React.RefObject<HTMLElement | null>;
 }
 
-function StationViewScene({ boardWidth, boardHeight, cols, rows }: Omit<BoardViewProps, "sequenceElement">) {
+interface StationViewSceneProps extends Omit<BoardViewProps, "sequenceElement"> {
+  rainCount: number;
+  crowdCount: number;
+}
+
+function StationViewScene({ boardWidth, boardHeight, cols, rows, rainCount, crowdCount }: StationViewSceneProps) {
   useWarmup("guide-station");
 
   return (
     <Suspense fallback={null}>
       <StationScene
+        rainCount={rainCount}
+        crowdCount={crowdCount}
         getProgress={getGuideStationProgress}
         getTargetProgress={getGuideStationTargetProgress}
         board={{ boardWidth, boardHeight, cols, rows }}
@@ -30,6 +38,10 @@ function StationViewScene({ boardWidth, boardHeight, cols, rows }: Omit<BoardVie
 export default function BoardView({ sequenceElement, ...boardProps }: BoardViewProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   useGuideStationTimeline(sequenceElement);
+  // PRD §8.1 tiers: rain 500 / 250 and crowd 12 / 8 (static mode never mounts this view).
+  const { mode } = useRenderMode();
+  const rainCount = mode === "A" ? 500 : 250;
+  const crowdCount = mode === "A" ? 12 : 8;
 
   React.useEffect(() => {
     governor.request("guide-station", 2);
@@ -50,8 +62,8 @@ export default function BoardView({ sequenceElement, ...boardProps }: BoardViewP
   return (
     <div ref={containerRef} className="absolute inset-0 h-full w-full pointer-events-none">
       {/* Index 2 deliberately renders after the global grade stack; see Phase 0B checkpoint. */}
-      <View className="h-full w-full pointer-events-auto" index={2}>
-        <StationViewScene {...boardProps} />
+      <View className="h-full w-full pointer-events-auto" index={2} grade={{ hero: "guide", profile: "alaipayuthey-bluehour" }}>
+        <StationViewScene {...boardProps} rainCount={rainCount} crowdCount={crowdCount} />
       </View>
     </div>
   );
