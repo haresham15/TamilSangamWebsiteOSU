@@ -32,10 +32,10 @@ for (const edId of BIWEEKLY_EDITION_IDS) {
   const ed = SOLLU_BIWEEKLY_EDITIONS[edId];
   assert.ok(ed, `Missing Sollu biweekly edition ${edId}`);
   assert.ok(
-    ed.tanglishWord.length >= 3 && ed.tanglishWord.length <= 6,
-    `Edition ${edId} tanglishWord "${ed.tanglishWord}" must be between 3 and 6 letters`
+    ed.tanglishWord.length >= 3 && ed.tanglishWord.length <= 7,
+    `Edition ${edId} tanglishWord "${ed.tanglishWord}" must be between 3 and 7 letters`
   );
-  assert.match(ed.tanglishWord, /^[A-Z]{3,6}$/);
+  assert.match(ed.tanglishWord, /^[A-Z]{3,7}$/);
   assert.ok(isValidSolluGuess(ed.tanglishWord), `Target word ${ed.tanglishWord} must be in valid dictionary`);
   tanglishLengthsSeen.add(ed.tanglishWord.length);
 
@@ -58,10 +58,10 @@ for (const edId of BIWEEKLY_EDITION_IDS) {
 }
 assert.deepEqual(
   Array.from(tanglishLengthsSeen).sort(),
-  [3, 4, 5, 6],
-  `Expected biweekly editions to span lengths 3, 4, 5, 6, got ${Array.from(tanglishLengthsSeen).sort()}`
+  [3, 4, 5, 6, 7],
+  `Expected biweekly editions to span lengths 3, 4, 5, 6, 7, got ${Array.from(tanglishLengthsSeen).sort()}`
 );
-console.log(`PASS: Biweekly Sollu editions span full range of 3, 4, 5, and 6 letters!`);
+console.log(`PASS: Biweekly Sollu editions span full range of 3, 4, 5, 6, and 7 letters!`);
 
 // Gate 3: Thodarpu categories & tiles
 for (const edId of BIWEEKLY_EDITION_IDS) {

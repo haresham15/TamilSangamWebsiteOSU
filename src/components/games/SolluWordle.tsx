@@ -309,7 +309,9 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
       ? "size-13 sm:size-16 text-xl sm:text-2xl"
       : wordLength === 5
       ? "size-12 sm:size-15 text-xl sm:text-2xl"
-      : "size-10 sm:size-13 text-lg sm:text-xl";
+      : wordLength === 6
+      ? "size-10 sm:size-13 text-lg sm:text-xl"
+      : "size-9 sm:size-12 text-base sm:text-lg";
 
   return (
     <div className="w-full max-w-xl mx-auto flex flex-col items-center">
@@ -374,7 +376,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
               key={rowIdx}
               animate={isCurrent && shakeRow ? { x: [-8, 8, -6, 6, -3, 3, 0] } : {}}
               transition={{ duration: 0.4 }}
-              className="flex gap-1.5 sm:gap-2 justify-center"
+              className="flex gap-1 sm:gap-2 justify-center"
             >
               {Array.from({ length: wordLength }).map((_, colIdx) => {
                 const char = rowTokens[colIdx] || "";

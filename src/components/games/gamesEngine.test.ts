@@ -48,19 +48,19 @@ describe("Tamil Akshara Grapheme Tokenizer & Games Engine (D-11)", () => {
     expect(THODARPU_MONTHLY_EDITIONS["2026-12"].categories.length).toBe(4);
   });
 
-  it("contains 8 complete biweekly editions spanning Oct 2026 to Jan 2027 with Tanglish words spanning 3-6 letters", () => {
+  it("contains 8 complete biweekly editions spanning Oct 2026 to Jan 2027 with Tanglish words spanning 3-7 letters", () => {
     expect(BIWEEKLY_EDITION_IDS.length).toBe(8);
     const lengths = new Set<number>();
     for (const id of BIWEEKLY_EDITION_IDS) {
       expect(SOLLU_BIWEEKLY_EDITIONS[id]).toBeDefined();
       const len = SOLLU_BIWEEKLY_EDITIONS[id].tanglishWord.length;
       expect(len).toBeGreaterThanOrEqual(3);
-      expect(len).toBeLessThanOrEqual(6);
+      expect(len).toBeLessThanOrEqual(7);
       lengths.add(len);
       expect(THODARPU_BIWEEKLY_EDITIONS[id]).toBeDefined();
       expect(THODARPU_BIWEEKLY_EDITIONS[id].categories.length).toBe(4);
     }
-    expect(Array.from(lengths).sort()).toEqual([3, 4, 5, 6]);
+    expect(Array.from(lengths).sort()).toEqual([3, 4, 5, 6, 7]);
   });
 
   it("correctly determines biweekly edition from calendar date", () => {

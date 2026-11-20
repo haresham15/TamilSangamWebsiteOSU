@@ -400,7 +400,7 @@ export const SOLLU_BIWEEKLY_EDITIONS: Record<string, SolluEdition> = {
     monthNameEn: "January 2027 · Part 1",
     monthNameTa: "தை 2027 · பகுதி 1",
     year: 2027,
-    tanglishWord: "TAMIL",
+    tanglishWord: "THAMIZH",
     tamilWord: "தமிழ்",
     culturalContext:
       "The oldest living classical language in the world, embodying sweetness, ancient poetic wisdom, and collegiate Buckeyes kinship.",
@@ -410,7 +410,7 @@ export const SOLLU_BIWEEKLY_EDITIONS: Record<string, SolluEdition> = {
     ],
     aksharaCount: 3,
     tanglish: {
-      targetWord: "TAMIL",
+      targetWord: "THAMIZH",
       tamilScript: "தமிழ்",
       phonetic: "Tha-mizh",
       clue: "The oldest living classical language and our Sangam community identity",
