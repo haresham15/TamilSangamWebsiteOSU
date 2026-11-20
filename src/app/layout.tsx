@@ -25,7 +25,7 @@ import { Providers } from "@/components/providers/Providers";
 import { GlobalCanvas } from "@/components/gl/GlobalCanvas";
 import { AppShell } from "@/components/global/AppShell";
 import { RootGraphJsonLd } from "@/components/seo/JsonLd";
-import { SITE_URL, ROUTE_METADATA, DEFAULT_ROBOTS, constructAlternates } from "@/lib/seo";
+import { SITE_URL, ROUTE_METADATA, DEFAULT_ROBOTS, constructAlternates, DEFAULT_KEYWORDS } from "@/lib/seo";
 import { ViewfinderCursor } from "@/components/ui/ViewfinderCursor";
 
 const muktaMalar = Mukta_Malar({
@@ -164,41 +164,7 @@ export const metadata: Metadata = {
   },
   description: ROUTE_METADATA.home.description,
   applicationName: "OSU Tamil Sangam",
-  keywords: [
-    "OSU Tamil Sangam",
-    "Tamil Sangam at OSU",
-    "Ohio State Tamil Sangam",
-    "Tamil Sangam Ohio State University",
-    "Tamil student organization OSU",
-    "Indian South Asian student organizations at Ohio State",
-    "Columbus Tamil student community",
-    "The Ohio State University",
-    "Ohio State University",
-    "Tamil Sangam OSU",
-    "Tamil student organization Ohio State",
-    "OSU South Asian student organizations",
-    "Columbus Tamil Sangam",
-    "Columbus Tamil",
-    "Tamil Students Ohio",
-    "Buckeye Tamil",
-    "Aatam Paatam Kondatam",
-    "Aatam Paatam Kondatam Ohio State",
-    "OSU Diwali",
-    "OSU Pongal",
-    "Ohio Union cultural events",
-    "Bharatanatyam Columbus",
-    "Gaana dance team OSU",
-    "South Asian student orgs OSU",
-    "Tamil culture Columbus Ohio",
-    "Tamil diaspora Midwest",
-    "Midwest collegiate Tamil Sangam",
-    "Thirukkural study Ohio State",
-    "தமிழ் சங்கம்",
-    "ஒஹையோ மாநிலப் பல்கலைக்கழகத் தமிழ்ச் சங்கம்",
-    "ஓஹையோ தமிழ் சங்கம்",
-    "ஓஹையோ ஸ்டேட் பல்கலைக்கழகம்",
-    "கொலம்பஸ் தமிழ்",
-  ],
+  keywords: DEFAULT_KEYWORDS,
   category: "Student Organization",
   classification: "Collegiate Cultural Student Organization",
   referrer: "origin-when-cross-origin",
@@ -259,7 +225,7 @@ export const metadata: Metadata = {
   },
   robots: DEFAULT_ROBOTS,
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "YJJyZIzkF4tlcLo3GJIg3hIosEOiVp-j8t7MLUqffL8",
+    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "YJJyZIzkF4tlcLo3GJIg3hIosEOiVp-j8t7MLUqffL8",
   },
   other: {
     "apple-mobile-web-app-title": "OSU Tamil Sangam",

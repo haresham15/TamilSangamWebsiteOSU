@@ -91,7 +91,7 @@ export const COLUMBUS_GUIDE: GuideSpot[] = [
     category: "Food & Groceries",
     address: "6080 Sawmill Rd, Dublin, OH 43017",
     distanceFromCampus: "20 mins drive from campus",
-    descriptionEn: "Vibrant fast-casual Indian street food hall. Offers over 150 items including crispy Mumbai pav bhaji, live dosa counter, dahi puri, samosa chaats, and freshly pressed sugarcane juice.",
+    descriptionEn: "A popular fast-casual Indian street food hall in Northwest Columbus. Offers over 150 items including crispy Mumbai pav bhaji, live dosa counter, dahi puri, samosa chaats, and freshly pressed sugarcane juice.",
     descriptionTa: "பல்வேறு வகையான பானிபூரி, சாட் வகைகள், சமோசா, தோசை மற்றும் புதிய கரும்புச் சாறு கிடைக்கும் பிரம்மாண்ட உணவகம்.",
     recommendationEn: "Best spot for late-night weekend study fuel and quick bites with large friend groups.",
     recommendationTa: "நண்பர்களோடு சேர்ந்து பலவிதமான சாட் உணவுகளை சுவைக்க ஏற்ற இடம்.",

@@ -41,13 +41,13 @@ interface SolluWordleProps {
 
 type TileStatus = "correct" | "present" | "absent" | "empty";
 
-const VICTORY_APPRAISALS: Record<number, { ta: string; en: string; icon: string }> = {
-  1: { ta: "ஒரு நொடியில்!", en: "First-Try Legend!", icon: "🌟" },
-  2: { ta: "அசாத்திய புத்திசாலி!", en: "Pure Genius!", icon: "🏆" },
-  3: { ta: "அருமை!", en: "Magnificent Play!", icon: "🎯" },
-  4: { ta: "கெத்து!", en: "Solid & Stylish!", icon: "⚡" },
-  5: { ta: "அப்பாடா தப்பிச்சீங்க!", en: "Clutch Save!", icon: "😌" },
-  6: { ta: "கடைசி வினாடி வெற்றி!", en: "Buzzer Beater!", icon: "🔥" },
+const VICTORY_APPRAISALS: Record<number, { ta: string; en: string }> = {
+  1: { ta: "ஒரு நொடியில்!", en: "First-Try Legend!" },
+  2: { ta: "அசாத்திய புத்திசாலி!", en: "Pure Genius!" },
+  3: { ta: "அருமை!", en: "Magnificent Play!" },
+  4: { ta: "கெத்து!", en: "Solid & Stylish!" },
+  5: { ta: "அப்பாடா தப்பிச்சீங்க!", en: "Clutch Save!" },
+  6: { ta: "கடைசி வினாடி வெற்றி!", en: "Buzzer Beater!" },
 };
 
 export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
@@ -416,13 +416,13 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
       {/* Top Utility Controls Bar: Mode Switcher, Clue Button, Stats Button */}
       <div className="w-full flex items-center justify-between gap-2 mb-4">
         {/* Mode Switcher Segmented Control */}
-        <div className="flex items-center gap-1 p-1 bg-[#25173B] rounded-xl border border-[rgba(125,96,166,0.3)] shadow-xs">
+        <div className="flex items-center gap-1 p-1 bg-[#1C122B] rounded-xl border border-[#C79347]/30 shadow-xs">
           <button
             onClick={() => handleModeChange("tanglish")}
             className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all ${
               mode === "tanglish"
-                ? "bg-[#140C20] text-[#A6F0CF] shadow-xs border border-[#A6F0CF]/30"
-                : "text-[#F4F0FA]/70 hover:text-[#F4F0FA]"
+                ? "bg-[#271A3C] text-[#2BB5A8] shadow-xs border border-[#2BB5A8]/30 font-bold"
+                : "text-[#CBBBA8] hover:text-[#FAF5ED]"
             }`}
           >
             Tanglish ({edition.tanglishWord.length}L)
@@ -431,8 +431,8 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
             onClick={() => handleModeChange("tamil")}
             className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all ${
               mode === "tamil"
-                ? "bg-[#140C20] text-[#A6F0CF] shadow-xs border border-[#A6F0CF]/30"
-                : "text-[#F4F0FA]/70 hover:text-[#F4F0FA]"
+                ? "bg-[#271A3C] text-[#2BB5A8] shadow-xs border border-[#2BB5A8]/30 font-bold"
+                : "text-[#CBBBA8] hover:text-[#FAF5ED]"
             }`}
           >
             <span lang="ta" className="font-tamil">
@@ -672,38 +672,38 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
-            className="w-full bg-[#201332] border-2 border-[#A6F0CF]/50 rounded-2xl p-6 mb-8 shadow-2xl relative overflow-hidden"
+            className="w-full bg-[#1C122B] border-2 border-[#C79347]/50 rounded-2xl p-6 mb-8 shadow-2xl relative overflow-hidden card-pathirikai"
           >
             {/* Celebratory Sparkle Particles Effect */}
             {gameStatus === "won" && (
               <div className="absolute top-0 right-0 p-3 pointer-events-none opacity-40">
-                <Sparkles className="size-16 text-[#A6F0CF] animate-pulse" />
+                <Sparkles className="size-16 text-[#C79347] animate-pulse" />
               </div>
             )}
 
             {/* Appraisal Header */}
             <div className="flex items-center justify-between mb-3">
-              <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] font-bold flex items-center gap-1.5">
+              <span className="font-mono text-xs uppercase tracking-widest text-[#C79347] font-bold flex items-center gap-1.5">
                 {gameStatus === "won" ? (
                   <>
-                    <span>{winAppraisal?.icon}</span>
+                    <Sparkles className="size-4 text-[#C79347]" />
                     <span>{winAppraisal?.ta} · SOLVED!</span>
                   </>
                 ) : (
                   <span>விடை · REVEALED</span>
                 )}
               </span>
-              <span className="text-xs font-mono text-[#F4F0FA]/60">
+              <span className="text-xs font-mono text-[#CBBBA8]">
                 {edition.monthEn} {edition.year}
               </span>
             </div>
 
             {/* Bilingual Target Word & Pronunciation Listen Button */}
             <div className="flex flex-wrap items-baseline gap-3 mb-3">
-              <h3 className="text-3xl font-serif text-[#F4F0FA] font-bold tracking-tight">
+              <h3 className="text-3xl font-serif text-[#FAF5ED] font-bold tracking-tight">
                 {edition.tanglishWord}
               </h3>
-              <span lang="ta" className="text-2xl font-tamil text-[#A6F0CF] font-semibold">
+              <span lang="ta" className="text-2xl font-tamil text-[#2BB5A8] font-semibold">
                 {edition.tamilWord}
               </span>
 
@@ -713,8 +713,8 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
                   onClick={handleListenPronunciation}
                   className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-mono font-medium transition-all ${
                     isPlayingAudio
-                      ? "bg-[#A6F0CF] text-[#140C20]"
-                      : "bg-[#2E1B46] hover:bg-[#3E255F] text-[#A6F0CF] border border-[#A6F0CF]/30"
+                      ? "bg-[#0F766E] text-[#FAF5ED]"
+                      : "bg-[#271A3C] hover:bg-[#34224f] text-[#2BB5A8] border border-[#2BB5A8]/30"
                   }`}
                   title="Listen to Tamil pronunciation"
                 >

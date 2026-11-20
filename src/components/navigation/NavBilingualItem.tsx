@@ -52,7 +52,7 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
             ? `${locale === "ta" ? route.ta : route.en}, new puzzles available`
             : undefined
         }
-        className={`relative flex flex-col items-center justify-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] rounded-full px-2.5 py-1 transition-all duration-200 ${
+        className={`relative flex flex-col items-center justify-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8] rounded-full px-2.5 py-1 transition-all duration-200 ${
           isActive
             ? isDarkHero
               ? "bg-white/[0.12] border border-white/10 shadow-xs"
@@ -115,11 +115,11 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
           className={`font-tamil text-[9px] xl:text-[9.5px] leading-none mt-0.5 whitespace-nowrap transition-all duration-200 pointer-events-none ${
             isDarkHero
               ? isActive
-                ? "text-[#A6F0CF] font-semibold opacity-100"
-                : "text-[#A6F0CF]/75 font-medium opacity-75"
+                ? "text-[#2BB5A8] font-semibold opacity-100"
+                : "text-[#2BB5A8]/75 font-medium opacity-75"
               : isActive
-              ? "text-[#A6F0CF] font-semibold opacity-100"
-              : "text-[#A6F0CF] font-medium opacity-80"
+              ? "text-[#2BB5A8] font-semibold opacity-100"
+              : "text-[#2BB5A8] font-medium opacity-80"
           }`}
         >
           {locale === "ta" ? route.en : route.ta}
