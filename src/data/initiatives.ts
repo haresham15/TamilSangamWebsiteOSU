@@ -120,7 +120,7 @@ export const ART_FORMS: ArtForm[] = [
     category: "Folk",
     originEn: "Kongu Nadu & Southern Tamil Nadu (Madurai, Tirunelveli)",
     originTa: "கொங்கு மண்டலம் மற்றும் தென் தமிழக நாட்டுப்புறக் கலை",
-    descriptionEn: "The 'Dance of Grace', traditionally performed in synchronized rows by dancers waving vibrant colored handkerchiefs and wearing ankle bells (salangai), stepping to resonant thavil rhythms.",
+    descriptionEn: "The 'Dance of Grace', traditionally performed in synchronized rows by dancers waving colorful silk handkerchiefs and wearing ankle bells (salangai), stepping to resonant thavil rhythms.",
     descriptionTa: "வண்ணக் கைக்குட்டைகளை அசைத்து, கால்களில் சலங்கை கட்டி, நளினமாகவும் கம்பீரமாகவும் ஆடப்படும் குழு நடனம்.",
     rhythmOrStyleEn: "Synchronized unison stepping with sweeping upper body arcs.",
     rhythmOrStyleTa: "வரிசை ஒழுங்கும் துல்லியமான பாத அசைவுகளும்.",

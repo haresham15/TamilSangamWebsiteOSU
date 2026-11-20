@@ -1178,9 +1178,9 @@ export const THODARPU_BIWEEKLY_EDITIONS: Record<string, ThodarpuEdition> = {
         nameEn: "TRADITIONAL TAMIL FOLK DANCE FORMS",
         nameTa: "பாரம்பரியத் தமிழ்க் கிராமியக் கலைகள்",
         culturalExplanation:
-          "Vibrant folk dances performed during temple carnivals and harvest festivals.",
+          "Energetic folk dances performed during temple carnivals and harvest festivals.",
         descriptionEn:
-          "Vibrant folk dances performed during temple carnivals and harvest festivals.",
+          "Energetic folk dances performed during temple carnivals and harvest festivals.",
         descriptionTa: "மகிழ்ச்சி பொங்கும் கிராமிய நாட்டுப்புற நடனங்கள்.",
         tiles: [
           { id: "01b-3-1", categoryTitle: "TRADITIONAL TAMIL FOLK DANCE FORMS", termEn: "KARAGAM", termTa: "கரகாட்டம்", word: "KARAGAM", tamilSubtitle: "கரகாட்டம்", hint: "Balancing decorated brass pots with intricate head and body rhythm" },

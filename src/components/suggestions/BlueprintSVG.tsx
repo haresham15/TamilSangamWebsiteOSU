@@ -379,7 +379,7 @@ export function BlueprintSVG({
                 cx={pin.x}
                 cy={pin.y}
                 r="12"
-                stroke="#A6F0CF"
+                stroke="#C79347"
                 strokeWidth="1.2"
                 strokeDasharray="2 2"
               />
@@ -388,7 +388,7 @@ export function BlueprintSVG({
                 cx={pin.x}
                 cy={pin.y}
                 r="5"
-                fill={isActive ? "#A6F0CF" : "#352254"}
+                fill={isActive ? "#C79347" : "#352254"}
               />
 
               {/* Pin Tag Label */}
@@ -398,7 +398,7 @@ export function BlueprintSVG({
                 width="135"
                 height="22"
                 fill="#150914"
-                stroke="#A6F0CF"
+                stroke="#C79347"
                 strokeWidth="1"
                 rx="2"
               />
@@ -427,21 +427,21 @@ export function BlueprintSVG({
             transform: "translate(-50%, -125%)",
           }}
         >
-          <div className="relative p-4 bg-[#140C20]/95 border border-[#4FD6E0]/60 shadow-[0_12px_32px_rgba(0,0,0,0.5)] backdrop-blur-md rounded-xl text-white">
+          <div className="relative p-4 bg-[#1C122B]/98 border border-[rgba(212,163,106,0.35)] shadow-[0_12px_32px_rgba(0,0,0,0.5)] backdrop-blur-md rounded-xl text-white">
             <button
               onClick={() => setActivePin(null)}
-              className="absolute top-2 right-2 text-amber-200/60 hover:text-white"
+              className="absolute top-2 right-2 text-[#CBBBA8]/60 hover:text-white"
               aria-label="Close callout"
             >
               <X className="w-3.5 h-3.5" />
             </button>
 
-            <div className="flex items-center gap-1.5 text-[#A6F0CF] text-[10px] font-mono font-bold uppercase tracking-wider mb-1.5">
+            <div className="flex items-center gap-1.5 text-[#C79347] text-[10px] font-mono font-bold uppercase tracking-wider mb-1.5">
               <Lightbulb className="w-3.5 h-3.5" />
               <span>{locale === "ta" ? activePin.labelTa : activePin.labelEn}</span>
             </div>
 
-            <p className="text-xs font-body text-[#C4B7D7] leading-relaxed mb-3">
+            <p className="text-xs font-body text-[#CBBBA8] leading-relaxed mb-3">
               {locale === "ta" ? activePin.questionTa : activePin.questionEn}
             </p>
 
@@ -452,13 +452,13 @@ export function BlueprintSVG({
                 const formEl = document.getElementById("suggestion-form-box");
                 if (formEl) formEl.scrollIntoView({ behavior: "smooth" });
               }}
-              className="w-full text-center py-2 px-3 bg-[#A6F0CF] hover:bg-[#7AE7B5] text-[#140C20] rounded-lg text-[11px] font-mono font-bold uppercase tracking-wider transition-colors"
+              className="w-full text-center py-2 px-3 bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] rounded-lg text-[11px] font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
             >
               {locale === "ta" ? "யோசனையை எழுத" : "Suggest for this area →"}
             </button>
 
             {/* Circular Roundel Lens Accent Dot at bottom */}
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#140C20] border-b-2 border-r-2 border-[#4FD6E0] rotate-45" />
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#1C122B] border-b-2 border-r-2 border-[#C79347] rotate-45" />
           </div>
         </div>
       )}
