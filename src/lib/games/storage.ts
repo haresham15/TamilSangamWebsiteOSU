@@ -65,6 +65,11 @@ export interface ArcadeGameMeta {
   estimatedMinutes: number;
   accentColor: string;
   description: string;
+  originalGame: string;
+  originalGameSubtitle: string;
+  originalGameDescription: string;
+  alteredTamilVersion: string;
+  alteredTamilTwist: string;
 }
 
 export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
@@ -80,6 +85,11 @@ export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
     estimatedMinutes: 2,
     accentColor: "#A6F0CF",
     description: "Trace an unbroken rice-flour chalk line through every single dot without crossing your path.",
+    originalGame: "LinkedIn Zip",
+    originalGameSubtitle: "Linear Dot Trail",
+    originalGameDescription: "Connect numbers 1 to N along a grid in a single non-intersecting linear path.",
+    alteredTamilVersion: "Pulli Kolam Path (புள்ளி கோலம்)",
+    alteredTamilTwist: "Traces an unbroken sacred rice-flour chalk line through every pulli dot on an obsidian courtyard without crossing lines, powered by a Warnsdorff Hamiltonian generator.",
   },
   {
     slug: "arasigal",
@@ -92,6 +102,11 @@ export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
     estimatedMinutes: 3,
     accentColor: "#E5B869",
     description: "Place one Chola crown in every row, column, and colored region such that no two touch.",
+    originalGame: "LinkedIn Queens",
+    originalGameSubtitle: "Regional N-Queens",
+    originalGameDescription: "Place one queen per row, column, and color region with zero diagonal or adjacent contact.",
+    alteredTamilVersion: "Arasigal / Chola Dynastic Crowns (சோழ அரசிகள்)",
+    alteredTamilTwist: "Position sacred Chola crowns across dynastic territories of ancient Tamilakam. Strict royal boundaries ensure no two crowns touch—even diagonally.",
   },
   {
     slug: "irattaichinnam",
@@ -104,6 +119,11 @@ export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
     estimatedMinutes: 3,
     accentColor: "#F49D79",
     description: "Balance Sun and Moon symbols on a 6×6 grid following strict harmony constraints.",
+    originalGame: "LinkedIn Tango",
+    originalGameSubtitle: "Binary Constraint Grid",
+    originalGameDescription: "Fill a grid balancing two symbols with no more than two identical consecutive items.",
+    alteredTamilVersion: "Surya & Chandra Celestial Balance (இரட்டைச் சின்னம்)",
+    alteredTamilTwist: "Harmonize Surya (☀ Gold Sun) and Chandra (☾ Silver Crescent) across a 6×6 Tamil astrological mandala governed by '=' (harmony) and '×' (opposition) cosmic seals.",
   },
   {
     slug: "en-puthir",
@@ -116,6 +136,11 @@ export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
     estimatedMinutes: 2,
     accentColor: "#9BB1FF",
     description: "Unravel a hidden 8-character math equation in 6 tries with optional Tamil numerals (௦–௯).",
+    originalGame: "Nerdle",
+    originalGameSubtitle: "Daily Math Equation",
+    originalGameDescription: "Guess a hidden 8-character arithmetic equation in 6 tries with color-coded tile feedback.",
+    alteredTamilVersion: "En Puthir with Tamil Numerals (எண் புதிர்)",
+    alteredTamilTwist: "Solve 8-character BODMAS arithmetic formulas with a live toggle for classical Tamil numeral glyphs (௧–௯, ௦) celebrating ancient Sangam mathematical notation.",
   },
 
   // 2. Words & Culture
@@ -130,6 +155,11 @@ export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
     estimatedMinutes: 4,
     accentColor: "#A6F0CF",
     description: "Solve four Tamil/Tanglish Wordle boards simultaneously in 9 guesses with a unified keyboard.",
+    originalGame: "Quordle",
+    originalGameSubtitle: "4 Simultaneous Wordles",
+    originalGameDescription: "Solve four 5-letter English words simultaneously in 9 guesses using a single shared keyboard.",
+    alteredTamilVersion: "Naanku Sorkal (நான்கு சொற்கள்)",
+    alteredTamilTwist: "Concurrently deduce four Tamil/Tanglish cultural words in 9 attempts with a 4-quadrant segmented keyboard and grapheme-aware Tamil script segmentation.",
   },
   {
     slug: "thodarbu",
@@ -142,6 +172,11 @@ export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
     estimatedMinutes: 2,
     accentColor: "#E5B869",
     description: "Five progressive clues reveal one by one. Identify the hidden Tamil cultural connection.",
+    originalGame: "LinkedIn Pinpoint",
+    originalGameSubtitle: "Progressive 5-Clue Deductions",
+    originalGameDescription: "Guess the hidden common category as 5 increasingly specific clues are uncovered one by one.",
+    alteredTamilVersion: "Thodarbu Cultural Clue Ladder (தொடர்பு புதிர்)",
+    alteredTamilTwist: "Five progressive clues reveal Tamil cinema lore, Carnatic ragas, temple architecture, and Tamil history, backed by phonetic Tanglish fuzzy matching.",
   },
   {
     slug: "ezhuthu-theni",
@@ -154,6 +189,11 @@ export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
     estimatedMinutes: 4,
     accentColor: "#F49D79",
     description: "Create everyday Tamil & Tanglish words from a 7-tile honeycomb with one mandatory center letter.",
+    originalGame: "NYT Spelling Bee",
+    originalGameSubtitle: "Honeycomb Vocabulary Bee",
+    originalGameDescription: "Create 4+ letter words from a 7-letter honeycomb, always using the mandatory center letter.",
+    alteredTamilVersion: "Ezhuthu Theni (எழுத்து தேனீ)",
+    alteredTamilTwist: "Authentic Tamil pangram honeycombs accepting both classical Tamil and everyday Tanglish vocabulary. Always requires the center root letter with celebratory Pangram discovery.",
   },
   {
     slug: "kurukkezhuthu",
@@ -166,6 +206,11 @@ export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
     estimatedMinutes: 2,
     accentColor: "#C4B7D7",
     description: "A snappy 60-second 5×5 crossword themed around Kollywood, Tamil food, and OSU life.",
+    originalGame: "NYT Mini Crossword",
+    originalGameSubtitle: "5×5 Daily Speed Crossword",
+    originalGameDescription: "A quick daily 5×5 crossword grid designed for snappy 60-second completion.",
+    alteredTamilVersion: "Kurukkezhuthu (குறுக்கெழுத்து)",
+    alteredTamilTwist: "A 100% rotationally symmetric 5×5 bilingual crossword packed with Kollywood cinema trivia, Tamil food, Chennai slang, and OSU campus culture.",
   },
   {
     slug: "sol-vettai",
@@ -178,6 +223,11 @@ export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
     estimatedMinutes: 3,
     accentColor: "#7DD3FC",
     description: "Trace themed words in 8 directions across a letter grid to uncover the golden cultural Spangram.",
+    originalGame: "NYT Strands",
+    originalGameSubtitle: "8-Way Drag Word Search & Spangram",
+    originalGameDescription: "Find theme words across a letter grid using all letters, including a Spangram spanning two sides.",
+    alteredTamilVersion: "Sol Vettai & Golden Spangram (சொல் வேட்டை)",
+    alteredTamilTwist: "Drag across 48 letters in 8 directions to discover Tamil cultural theme words. Uncovers a golden cultural Spangram touching opposite borders that cleanly partitions the board.",
   },
 
   // 3. Kollywood & Geography
@@ -192,6 +242,11 @@ export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
     estimatedMinutes: 2,
     accentColor: "#A6F0CF",
     description: "Identify the mystery Tamil Nadu district from its vector silhouette with compass & km clues.",
+    originalGame: "Worldle",
+    originalGameSubtitle: "Geographic Outline Guessing",
+    originalGameDescription: "Identify a country by its outline with distance and compass direction indicators.",
+    alteredTamilVersion: "Oor Kandupidi (ஊர் கண்டுபிடி)",
+    alteredTamilTwist: "Guess mystery Tamil Nadu districts from exact vector silhouettes. Evaluates spherical Haversine distance in kilometers and 8-point compass bearing with temperature feedback.",
   },
   {
     slug: "paadal-kandupidi",
@@ -204,6 +259,11 @@ export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
     estimatedMinutes: 2,
     accentColor: "#E5B869",
     description: "Listen to 1s, 2s, 4s, 7s, 11s, 16s audio snippets and guess the iconic Kollywood song.",
+    originalGame: "Heardle",
+    originalGameSubtitle: "Progressive Song Intro Guesser",
+    originalGameDescription: "Listen to 1s, 2s, 4s, 7s, 11s, 16s audio snippets and guess the song.",
+    alteredTamilVersion: "Paadal Kandupidi (பாடல் கண்டுபிடி)",
+    alteredTamilTwist: "Stream live Kollywood audio snippets (1s to 16s) via Apple Music/iTunes previews featuring legends Ilaiyaraaja, A.R. Rahman, Anirudh, Harris, and Yuvan.",
   },
   {
     slug: "padam-kandupidi",
@@ -216,6 +276,11 @@ export const ARCADE_GAMES_CATALOG: readonly ArcadeGameMeta[] = [
     estimatedMinutes: 2,
     accentColor: "#F49D79",
     description: "Guess the blockbuster Tamil movie across 6 progressive visual, dialogue, and composer clues.",
+    originalGame: "Framed",
+    originalGameSubtitle: "Movie In 6 Frames",
+    originalGameDescription: "Guess the movie from 6 sequential movie still screenshots.",
+    alteredTamilVersion: "Padam Kandupidi (படம் கண்டுபிடி)",
+    alteredTamilTwist: "Deduce blockbuster Tamil cinema across 6 progressive cinematic dossiers: color palette, iconic punch dialogue / lyric, signature prop silhouette, cast & director telemetry, and visual frames.",
   },
 ];
 

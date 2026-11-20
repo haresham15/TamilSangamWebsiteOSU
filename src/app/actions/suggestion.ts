@@ -131,13 +131,13 @@ export async function submitSuggestion(
     const emailHtml = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 2px solid #352254; background-color: #140C20; box-shadow: 4px 4px 0px #25173B;">
         <div style="background-color: #25173B; color: #F4F0FA; padding: 12px 16px; margin: -24px -24px 20px -24px;">
-          <span style="font-family: monospace; font-size: 10px; letter-spacing: 2px; color: #A6F0CF; text-transform: uppercase;">THE IDEAS HEARTH · INTERNAL OFFICER ALERT</span>
+          <span style="font-family: monospace; font-size: 10px; letter-spacing: 2px; color: #C79347; text-transform: uppercase;">THE IDEAS HEARTH · INTERNAL OFFICER ALERT</span>
           <h2 style="margin: 4px 0 0 0; font-size: 18px; color: #F4F0FA; font-family: Georgia, serif;">New Community Proposal Pinned</h2>
         </div>
         <p style="font-size: 14px; color: #C4B7D7;">A visitor submitted a new proposal via the <strong>/suggestions</strong> blueprint matrix:</p>
         
         <div style="background-color: #1A1028; border: 2px solid #352254; padding: 16px; margin: 16px 0;">
-          <p style="margin: 0 0 8px 0; font-size: 12px; font-family: monospace; text-transform: uppercase; color: #F26BB5; font-weight: bold;">
+          <p style="margin: 0 0 8px 0; font-size: 12px; font-family: monospace; text-transform: uppercase; color: #2BB5A8; font-weight: bold;">
             [CATEGORY]: <span>${sanitizedCategory}</span>
           </p>
           <p style="margin: 0 0 8px 0; font-size: 12px; font-family: monospace; text-transform: uppercase; color: #C4B7D7;">

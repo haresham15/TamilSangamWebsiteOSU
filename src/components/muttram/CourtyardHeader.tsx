@@ -44,20 +44,20 @@ export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
       >
         <div className="space-y-3">
           {showEyebrow && (
-            <span className={`font-sans text-xs tracking-widest uppercase font-semibold block ${dark ? "text-[#A6F0CF]" : "text-[#A6F0CF]"}`}>
+            <span className={`font-sans text-xs tracking-widest uppercase font-semibold block ${dark ? "text-[#C79347]" : "text-[#9A6B3E]"}`}>
               {eyebrow}
             </span>
           )}
 
           <div className="space-y-1">
-            <h2 className={`text-3xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight leading-[1.12] ${dark ? "text-[#F4F0FA]" : "text-[#F4F0FA]"}`}>
+            <h2 className={`text-3xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight leading-[1.12] ${dark ? "text-[#FAF5ED]" : "text-[#261A14]"}`}>
               <SplitText text={title} splitType="words" effect="rise" mask />
             </h2>
 
             {tamilTitle && (
               <p
                 lang="ta"
-                className={`font-tamil text-lg sm:text-2xl font-light ${dark ? "text-[#C4B7D7]" : "text-[#F4F0FA]/60"}`}
+                className={`font-tamil text-lg sm:text-2xl font-light ${dark ? "text-[#CBBBA8]" : "text-[#5E4C40]"}`}
               >
                 <BlurText text={tamilTitle} animateBy="words" />
               </p>
@@ -66,7 +66,7 @@ export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
 
           {description && (
             <p
-              className={`font-sans text-base sm:text-lg leading-relaxed max-w-2xl pt-2 ${dark ? "text-[#C4B7D7]" : "text-[#C4B7D7]"} ${
+              className={`font-sans text-base sm:text-lg leading-relaxed max-w-2xl pt-2 ${dark ? "text-[#CBBBA8]" : "text-[#5E4C40]"} ${
                 isCenter ? "mx-auto" : ""
               }`}
             >

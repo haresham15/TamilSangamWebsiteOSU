@@ -2,10 +2,10 @@
  * Brutalist HTML Email Templates — OSU Tamil Sangam
  *
  * Implements the editorial Muttram aesthetic:
- * - Surfaces: Warm Ivory (#F4F0FA), Warm Sand (#25173B), Espresso (#140C20)
- * - Accents: Terracotta (#F26BB5), Turmeric (#A6F0CF)
+ * - Surfaces: Warm Ivory (#FAF6F0), Warm Sand (#F0E6D6), Royal Aubergine (#1C122B)
+ * - Accents: Kumkum Vermilion (#B84A39), Zari Gold (#C79347), Peacock Teal (#0F766E)
  * - Typography: Cormorant Garamond / Marcellus serif, Outfit sans, Fragment Mono monospace, Mukta Malar Tamil
- * - Structure: High-contrast 2px solid #140C20 borders, brutalist offset shadows, zero generic corporate gradients
+ * - Structure: High-contrast 2px solid #352254 borders, brutalist offset shadows, zero generic corporate gradients
  *
  * Covers all 3 active community submission flows:
  * 1. "Sign Our Guestbook" (/join)
@@ -65,20 +65,20 @@ export function generateGuestbookConfirmationHtml(params: {
     table { border-collapse: collapse; }
     .main-wrap { width: 100%; max-width: 600px; margin: 32px auto; background-color: #25173B; border: 2px solid #352254; box-shadow: 6px 6px 0px #140C20; }
     .masthead { background-color: #140C20; color: #F4F0FA; padding: 18px 24px; text-align: left; }
-    .masthead-sub { font-family: 'Courier New', Courier, monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #A6F0CF; margin: 0 0 4px 0; font-weight: bold; }
-    .masthead-title { font-family: 'Georgia', serif; font-size: 20px; font-weight: normal; margin: 0; letter-spacing: 0.5px; color: #F4F0FA; }
+    .masthead-sub { font-family: 'Courier New', Courier, monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #C79347; margin: 0 0 4px 0; font-weight: bold; }
+    .masthead-title { font-family: 'Georgia', serif; font-size: 20px; font-weight: normal; margin: 0; letter-spacing: 0.5px; color: #FAF5ED; }
     .content { padding: 36px 32px; }
-    .tamil-salutation { font-family: 'Mukta Malar', 'Georgia', serif; font-size: 32px; font-weight: bold; color: #A6F0CF; margin: 0 0 6px 0; line-height: 1.2; }
-    .en-salutation { font-family: 'Georgia', serif; font-size: 24px; font-weight: normal; color: #F4F0FA; margin: 0 0 16px 0; }
-    .deck { font-size: 15px; line-height: 1.6; color: #C4B7D7; margin: 0 0 28px 0; }
+    .tamil-salutation { font-family: 'Mukta Malar', 'Georgia', serif; font-size: 32px; font-weight: bold; color: #C79347; margin: 0 0 6px 0; line-height: 1.2; }
+    .en-salutation { font-family: 'Georgia', serif; font-size: 24px; font-weight: normal; color: #FAF5ED; margin: 0 0 16px 0; }
+    .deck { font-size: 15px; line-height: 1.6; color: #CBBBA8; margin: 0 0 28px 0; }
     .dossier-card { background-color: #1A1028; border: 2px solid #352254; padding: 22px; margin: 0 0 28px 0; box-shadow: 3px 3px 0px #140C20; }
-    .dossier-header { font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #A6F0CF; font-weight: bold; margin-bottom: 14px; border-bottom: 1px dashed rgba(166, 240, 207, 0.35); padding-bottom: 8px; }
+    .dossier-header { font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #C79347; font-weight: bold; margin-bottom: 14px; border-bottom: 1px dashed rgba(199, 147, 71, 0.35); padding-bottom: 8px; }
     .dossier-row { margin-bottom: 10px; font-size: 14px; line-height: 1.4; }
-    .dossier-label { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #C4B7D7; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px; }
-    .dossier-val { font-size: 15px; font-weight: bold; color: #F4F0FA; }
-    .tag-track { display: inline-block; background-color: #140C20; color: #F4F0FA; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; padding: 4px 10px; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+    .dossier-label { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #CBBBA8; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px; }
+    .dossier-val { font-size: 15px; font-weight: bold; color: #FAF5ED; }
+    .tag-track { display: inline-block; background-color: #140C20; color: #FAF5ED; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; padding: 4px 10px; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
     .cta-container { text-align: center; margin: 32px 0 24px 0; }
-    .btn-brutalist { display: inline-block; background-color: #A6F0CF; color: #F4F0FA !important; text-decoration: none; font-family: 'Courier New', Courier, monospace; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; padding: 14px 28px; border: 2px solid #352254; box-shadow: 4px 4px 0px #140C20; transition: all 0.2s ease; }
+    .btn-brutalist { display: inline-block; background-color: #0F766E; color: #FAF5ED !important; text-decoration: none; font-family: 'Courier New', Courier, monospace; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; padding: 14px 28px; border: 2px solid #352254; box-shadow: 4px 4px 0px #140C20; transition: all 0.2s ease; }
     .signoff-box { border-top: 1px solid rgba(125, 96, 166, 0.25); padding-top: 24px; margin-top: 28px; }
     .signoff-name { font-family: 'Georgia', serif; font-size: 16px; font-weight: bold; color: #F4F0FA; margin: 0 0 2px 0; }
     .signoff-title { font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #C4B7D7; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
@@ -139,11 +139,11 @@ export function generateGuestbookConfirmationHtml(params: {
         </div>
 
         <!-- Next Steps Instruction -->
-        <div style="margin: 24px 0; padding: 16px 20px; border-left: 4px solid #A6F0CF; background-color: #25173B; color: #F4F0FA;">
-          <strong style="font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #B37D1D; display: block; margin-bottom: 6px;">
+        <div style="margin: 24px 0; padding: 16px 20px; border-left: 4px solid #2BB5A8; background-color: #25173B; color: #FAF5ED;">
+          <strong style="font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #C79347; display: block; margin-bottom: 6px;">
             NEXT STEPS FOR YOUR TRACK:
           </strong>
-          <span style="font-size: 14px; color: #F4F0FA; line-height: 1.5;">
+          <span style="font-size: 14px; color: #FAF5ED; line-height: 1.5;">
             ${escapeHtml(track.nextStep)}
           </span>
         </div>
@@ -233,17 +233,17 @@ export function generateIdeasHearthConfirmationHtml(params: {
     body { margin: 0; padding: 0; background-color: #140C20; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #F4F0FA; }
     .main-wrap { width: 100%; max-width: 600px; margin: 32px auto; background-color: #25173B; border: 2px solid #352254; box-shadow: 6px 6px 0px #140C20; }
     .masthead { background-color: #140C20; color: #F4F0FA; padding: 18px 24px; }
-    .masthead-sub { font-family: 'Courier New', Courier, monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #A6F0CF; margin: 0 0 4px 0; font-weight: bold; }
-    .masthead-title { font-family: 'Georgia', serif; font-size: 20px; font-weight: normal; margin: 0; color: #F4F0FA; }
+    .masthead-sub { font-family: 'Courier New', Courier, monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #C79347; margin: 0 0 4px 0; font-weight: bold; }
+    .masthead-title { font-family: 'Georgia', serif; font-size: 20px; font-weight: normal; margin: 0; color: #FAF5ED; }
     .content { padding: 36px 32px; }
-    .tamil-title { font-family: 'Mukta Malar', 'Georgia', serif; font-size: 28px; font-weight: bold; color: #A6F0CF; margin: 0 0 6px 0; line-height: 1.2; }
-    .en-title { font-family: 'Georgia', serif; font-size: 22px; font-weight: normal; color: #F4F0FA; margin: 0 0 16px 0; }
-    .deck { font-size: 15px; line-height: 1.6; color: #C4B7D7; margin: 0 0 24px 0; }
+    .tamil-title { font-family: 'Mukta Malar', 'Georgia', serif; font-size: 28px; font-weight: bold; color: #C79347; margin: 0 0 6px 0; line-height: 1.2; }
+    .en-title { font-family: 'Georgia', serif; font-size: 22px; font-weight: normal; color: #FAF5ED; margin: 0 0 16px 0; }
+    .deck { font-size: 15px; line-height: 1.6; color: #CBBBA8; margin: 0 0 24px 0; }
     .receipt-box { background-color: #1A1028; border: 2px solid #352254; padding: 22px; margin: 0 0 28px 0; box-shadow: 3px 3px 0px #140C20; }
-    .receipt-id { font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #A6F0CF; font-weight: bold; border-bottom: 1px dashed rgba(166, 240, 207, 0.35); padding-bottom: 8px; margin-bottom: 14px; }
-    .receipt-category { display: inline-block; background-color: #A6F0CF; color: #F4F0FA; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; padding: 4px 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-    .receipt-body { font-family: 'Georgia', serif; font-size: 15px; color: #F4F0FA; line-height: 1.6; white-space: pre-wrap; background: #25173B; padding: 14px 18px; border-left: 3px solid #A6F0CF; }
-    .board-note { background-color: #25173B; border-left: 4px solid #F26BB5; color: #F4F0FA; padding: 14px 18px; margin: 24px 0; font-size: 13px; line-height: 1.5; color: #F4F0FA; }
+    .receipt-id { font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #C79347; font-weight: bold; border-bottom: 1px dashed rgba(199, 147, 71, 0.35); padding-bottom: 8px; margin-bottom: 14px; }
+    .receipt-category { display: inline-block; background-color: #0F766E; color: #FAF5ED; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; padding: 4px 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .receipt-body { font-family: 'Georgia', serif; font-size: 15px; color: #FAF5ED; line-height: 1.6; white-space: pre-wrap; background: #25173B; padding: 14px 18px; border-left: 3px solid #2BB5A8; }
+    .board-note { background-color: #25173B; border-left: 4px solid #B84A39; color: #FAF5ED; padding: 14px 18px; margin: 24px 0; font-size: 13px; line-height: 1.5; color: #FAF5ED; }
     .footer { background-color: #1A1028; border-top: 2px solid #352254; padding: 22px 32px; font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 1.5; color: #C4B7D7; }
   </style>
 </head>
@@ -273,14 +273,14 @@ export function generateIdeasHearthConfirmationHtml(params: {
         </div>
 
         <div class="board-note">
-          <strong style="font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #A6F0CF; display: block; margin-bottom: 4px;">
+          <strong style="font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #C79347; display: block; margin-bottom: 4px;">
             EXECUTIVE REVIEW PROTOCOL:
           </strong>
           President Meenakshi Varadarajan and the executive board review all community submissions every Sunday during weekly agenda planning. Selected projects are assigned to our student working council for implementation.
         </div>
 
         <div style="text-align: center; margin: 28px 0 16px 0;">
-          <a href="${GROUPME_URL}" style="display: inline-block; background-color: #140C20; color: #F4F0FA; text-decoration: none; font-family: 'Courier New', Courier, monospace; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; padding: 12px 24px; border: 2px solid #352254; box-shadow: 4px 4px 0px #A6F0CF;" target="_blank">
+          <a href="${GROUPME_URL}" style="display: inline-block; background-color: #0F766E; color: #FAF5ED; text-decoration: none; font-family: 'Courier New', Courier, monospace; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; padding: 12px 24px; border: 2px solid #352254; box-shadow: 4px 4px 0px #140C20;" target="_blank">
             JOIN STUDENT GROUPME FOR AGENDA DROPS →
           </a>
         </div>
@@ -352,13 +352,13 @@ export function generateStayInSangamConfirmationHtml(params: {
     body { margin: 0; padding: 0; background-color: #140C20; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #F4F0FA; }
     .main-wrap { width: 100%; max-width: 600px; margin: 32px auto; background-color: #25173B; border: 2px solid #352254; box-shadow: 6px 6px 0px #140C20; }
     .masthead { background-color: #140C20; color: #F4F0FA; padding: 18px 24px; }
-    .masthead-sub { font-family: 'Courier New', Courier, monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #A6F0CF; margin: 0 0 4px 0; font-weight: bold; }
-    .masthead-title { font-family: 'Georgia', serif; font-size: 20px; font-weight: normal; margin: 0; color: #F4F0FA; }
+    .masthead-sub { font-family: 'Courier New', Courier, monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #C79347; margin: 0 0 4px 0; font-weight: bold; }
+    .masthead-title { font-family: 'Georgia', serif; font-size: 20px; font-weight: normal; margin: 0; color: #FAF5ED; }
     .content { padding: 36px 32px; }
-    .tamil-title { font-family: 'Mukta Malar', 'Georgia', serif; font-size: 30px; font-weight: bold; color: #A6F0CF; margin: 0 0 6px 0; }
-    .banner-event { background-color: #A6F0CF; color: #F4F0FA; padding: 12px 18px; font-family: 'Courier New', Courier, monospace; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin: 20px 0; border: 2px solid #352254; }
+    .tamil-title { font-family: 'Mukta Malar', 'Georgia', serif; font-size: 30px; font-weight: bold; color: #C79347; margin: 0 0 6px 0; }
+    .banner-event { background-color: #0F766E; color: #FAF5ED; padding: 12px 18px; font-family: 'Courier New', Courier, monospace; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin: 20px 0; border: 2px solid #352254; }
     .box-interests { background-color: #1A1028; border: 2px solid #352254; padding: 18px 22px; margin: 22px 0; }
-    .footer { background-color: #1A1028; border-top: 2px solid #352254; padding: 22px 32px; font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 1.5; color: #C4B7D7; }
+    .footer { background-color: #1A1028; border-top: 2px solid #352254; padding: 22px 32px; font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 1.5; color: #CBBBA8; }
   </style>
 </head>
 <body>
@@ -373,11 +373,11 @@ export function generateStayInSangamConfirmationHtml(params: {
         <div class="tamil-title">வணக்கம்!</div>
         <h2 style="font-family: 'Georgia', serif; font-size: 24px; font-weight: normal; margin: 0 0 14px 0;">${escapeHtml(greeting)}</h2>
 
-        <div style="display: inline-block; background: #25173B; border: 1px solid #352254; padding: 4px 10px; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; margin-bottom: 18px; color: #A6F0CF;">
+        <div style="display: inline-block; background: #25173B; border: 1px solid #352254; padding: 4px 10px; font-family: 'Courier New', Courier, monospace; font-size: 11px; font-weight: bold; margin-bottom: 18px; color: #C79347;">
           ${isBuckeye ? "[VERIFIED BUCKEYE STATUS]" : "[COMMUNITY MEMBER]"}
         </div>
 
-        <p style="font-size: 15px; line-height: 1.6; color: #C4B7D7;">
+        <p style="font-size: 15px; line-height: 1.6; color: #CBBBA8;">
           You are now plugged directly into our dispatch network. You will receive priority notice on campus feasts, cultural showcases, ticket releases, and casual student kickbacks.
         </p>
 
@@ -387,16 +387,16 @@ export function generateStayInSangamConfirmationHtml(params: {
         </div>
 
         <div class="box-interests">
-          <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #A6F0CF; font-weight: bold; margin-bottom: 10px;">
+          <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #C79347; font-weight: bold; margin-bottom: 10px;">
             SUBSCRIBED TOPICS:
           </div>
-          <ul style="margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.8; color: #F4F0FA; list-style-type: none;">
+          <ul style="margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.8; color: #FAF5ED; list-style-type: none;">
             ${interestsList}
           </ul>
         </div>
 
         <div style="text-align: center; margin: 32px 0 20px 0;">
-          <a href="${GROUPME_URL}" style="display: inline-block; background-color: #A6F0CF; color: #F4F0FA; text-decoration: none; font-family: 'Courier New', Courier, monospace; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; padding: 14px 28px; border: 2px solid #352254; box-shadow: 4px 4px 0px #140C20;" target="_blank">
+          <a href="${GROUPME_URL}" style="display: inline-block; background-color: #0F766E; color: #FAF5ED; text-decoration: none; font-family: 'Courier New', Courier, monospace; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; padding: 14px 28px; border: 2px solid #352254; box-shadow: 4px 4px 0px #140C20;" target="_blank">
             JOIN OFFICIAL STUDENT GROUPME →
           </a>
         </div>

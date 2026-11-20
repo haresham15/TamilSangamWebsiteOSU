@@ -24,6 +24,7 @@ import { ThodarpuThumbnail } from "./ThodarpuThumbnail";
 import { AazhamThumbnail } from "./AazhamThumbnail";
 import { DailyGauntletStrip } from "./DailyGauntletStrip";
 import { ArcadeGameCard } from "./ArcadeGameCard";
+import { FlagshipGameCard } from "./FlagshipGameCard";
 import { ARCADE_GAMES_CATALOG } from "@/lib/games/storage";
 import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import {
@@ -363,109 +364,64 @@ export function GamesHub() {
               {/* Biweekly Flagship Originals (Sollu, Thodarbu, Aazham) */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 {/* CARD 1: 01 SOLLU · சொல்லு */}
-                <motion.article
-                  whileHover={{ y: -5 }}
-                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                  onClick={() => selectGame("sollu")}
-                  className="cursor-pointer group relative bg-[#271A3C] rounded-2xl border-2 border-[rgba(212,163,106,0.24)] hover:border-[#C79347] p-5 flex flex-col justify-between shadow-lg transition-all duration-200 text-[#FAF5ED]"
-                >
-                  <div>
-                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(212,163,106,0.2)]">
-                      <span className="font-mono text-xs uppercase tracking-wider text-[#C79347]">
-                        The Cultural Wordle
-                      </span>
-                      <span className="font-mono text-[10px] text-[#C79347] font-bold px-2 py-0.5 rounded-full bg-[#C79347]/15 border border-[#C79347]/30">
-                        BIWEEKLY
-                      </span>
-                    </div>
-
-                    <h4 className="font-serif text-2xl text-[#FAF5ED] font-medium tracking-tight mb-1">
-                      Sollu · <span lang="ta" className="text-[#C79347]" style={{ letterSpacing: 0 }}>சொல்லு</span>
-                    </h4>
-                    <p className="font-sans text-xs text-[#CBBBA8] leading-relaxed mb-3">
-                      Guess the secret 5-letter cultural word in 6 attempts. Featuring Tanglish cinema and classical Tamil Akshara editions.
-                    </p>
-                  </div>
-
-                  <div className="my-1">
-                    <SolluThumbnail />
-                  </div>
-
-                  <div className="mt-4 pt-3 border-t border-[rgba(212,163,106,0.2)] flex items-center justify-between text-xs font-mono text-[#C79347]">
-                    <span>Play Edition {currentEditionMeta.editionNo}</span>
-                    <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </motion.article>
+                <FlagshipGameCard
+                  gameKey="sollu"
+                  titleEn="Sollu"
+                  titleTa="சொல்லு"
+                  eyebrowEn="The Cultural Wordle"
+                  badgeText="BIWEEKLY"
+                  accentColor="#C79347"
+                  hoverBorderColor="hover:border-[#C79347]"
+                  description="Guess the secret 5-letter cultural word in 6 attempts. Featuring Tanglish cinema and classical Tamil Akshara editions."
+                  thumbnail={<SolluThumbnail />}
+                  actionText={`Play Edition ${currentEditionMeta.editionNo}`}
+                  originalGame="Wordle"
+                  originalGameSubtitle="Daily 5-Letter Secret Word"
+                  originalGameDescription="Guess a hidden 5-letter English word in 6 attempts with color-coded tile feedback."
+                  alteredTamilVersion="Tanglish & Akshara Tamil Wordle (சொல்லு)"
+                  alteredTamilTwist="Dual-mode engine: Tanglish colloquial cinema edition and authentic Tamil Akshara Uyirmei mode decomposing compound characters by grapheme clusters."
+                  onSelect={() => selectGame("sollu")}
+                />
 
                 {/* CARD 2: 02 THODARPU CONNECTIONS · தொடர்பு */}
-                <motion.article
-                  whileHover={{ y: -5 }}
-                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                  onClick={() => selectGame("thodarpu")}
-                  className="cursor-pointer group relative bg-[#271A3C] rounded-2xl border-2 border-[rgba(212,163,106,0.24)] hover:border-[#2BB5A8] p-5 flex flex-col justify-between shadow-lg transition-all duration-200 text-[#FAF5ED]"
-                >
-                  <div>
-                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(212,163,106,0.2)]">
-                      <span className="font-mono text-xs uppercase tracking-wider text-[#2BB5A8]">
-                        Cultural Connections
-                      </span>
-                      <span className="font-mono text-[10px] text-[#2BB5A8] font-bold px-2 py-0.5 rounded-full bg-[#2BB5A8]/15 border border-[#2BB5A8]/30">
-                        BIWEEKLY
-                      </span>
-                    </div>
-
-                    <h4 className="font-serif text-2xl text-[#FAF5ED] font-medium tracking-tight mb-1">
-                      Thodarbu · <span lang="ta" className="text-[#2BB5A8]" style={{ letterSpacing: 0 }}>தொடர்பு</span>
-                    </h4>
-                    <p className="font-sans text-xs text-[#CBBBA8] leading-relaxed mb-3">
-                      Find four groups of four culturally connected items across cinema lore, Carnatic ragas, and traditions.
-                    </p>
-                  </div>
-
-                  <div className="my-1">
-                    <ThodarpuThumbnail />
-                  </div>
-
-                  <div className="mt-4 pt-3 border-t border-[rgba(212,163,106,0.2)] flex items-center justify-between text-xs font-mono text-[#2BB5A8]">
-                    <span>Play Edition {currentEditionMeta.editionNo}</span>
-                    <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </motion.article>
+                <FlagshipGameCard
+                  gameKey="thodarpu"
+                  titleEn="Thodarbu"
+                  titleTa="தொடர்பு"
+                  eyebrowEn="Cultural Connections"
+                  badgeText="BIWEEKLY"
+                  accentColor="#2BB5A8"
+                  hoverBorderColor="hover:border-[#2BB5A8]"
+                  description="Find four groups of four culturally connected items across cinema lore, Carnatic ragas, and traditions."
+                  thumbnail={<ThodarpuThumbnail />}
+                  actionText={`Play Edition ${currentEditionMeta.editionNo}`}
+                  originalGame="NYT Connections"
+                  originalGameSubtitle="4 Groups of 4 Items"
+                  originalGameDescription="Identify four distinct groups of four related items with tricky multi-meaning overlaps."
+                  alteredTamilVersion="Cultural 4×4 Connections (பண்பாட்டுத் தொடர்பு)"
+                  alteredTamilTwist="Sort 16 cultural cards across Carnatic music ragas, Chola temple architecture, Mani Ratnam cinema, and Tamil Nadu festivals with clever cultural red herrings."
+                  onSelect={() => selectGame("thodarpu")}
+                />
 
                 {/* CARD 3: 03 AAZHAM · ஆழம் */}
-                <motion.article
-                  whileHover={{ y: -5 }}
-                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                  onClick={() => selectGame("aazham")}
-                  className="cursor-pointer group relative bg-[#271A3C] rounded-2xl border-2 border-[rgba(212,163,106,0.24)] hover:border-[#C79347] p-5 flex flex-col justify-between shadow-lg transition-all duration-200 text-[#FAF5ED]"
-                >
-                  <div>
-                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(212,163,106,0.2)]">
-                      <span className="font-mono text-xs uppercase tracking-wider text-[#C79347]">
-                        Rarest-Answer Trivia
-                      </span>
-                      <span className="font-mono text-[10px] text-[#C79347] font-bold px-2 py-0.5 rounded-full bg-[#C79347]/15 border border-[#C79347]/30">
-                        7,000m DIVE
-                      </span>
-                    </div>
-
-                    <h4 className="font-serif text-2xl text-[#FAF5ED] font-medium tracking-tight mb-1">
-                      Aazham · <span lang="ta" className="text-[#C79347]" style={{ letterSpacing: 0 }}>ஆழம்</span>
-                    </h4>
-                    <p className="font-sans text-xs text-[#CBBBA8] leading-relaxed mb-3">
-                      7 cultural prompts under 25s. The rarest answer sinks you deeper toward the ancient Kumari Kandam seabed.
-                    </p>
-                  </div>
-
-                  <div className="my-1">
-                    <AazhamThumbnail />
-                  </div>
-
-                  <div className="mt-4 pt-3 border-t border-[rgba(212,163,106,0.2)] flex items-center justify-between text-xs font-mono text-[#C79347]">
-                    <span>Dive 7,000m</span>
-                    <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </motion.article>
+                <FlagshipGameCard
+                  gameKey="aazham"
+                  titleEn="Aazham"
+                  titleTa="ஆழம்"
+                  eyebrowEn="Rarest-Answer Trivia"
+                  badgeText="7,000m DIVE"
+                  accentColor="#C79347"
+                  hoverBorderColor="hover:border-[#C79347]"
+                  description="7 cultural prompts under 25s. The rarest answer sinks you deeper toward the ancient Kumari Kandam seabed."
+                  thumbnail={<AazhamThumbnail />}
+                  actionText="Dive 7,000m"
+                  originalGame="Rarest-Answer Trivia"
+                  originalGameSubtitle="Pointless / Obscure Knowledge"
+                  originalGameDescription="Name the least commonly known valid answer from a category to achieve the lowest possible score."
+                  alteredTamilVersion="7,000m Deep Cultural Seabed Dive (ஆழம்)"
+                  alteredTamilTwist="Rapid 25-second rounds where rarer authentic Tamil cultural answers propel your submarine deeper past Mariana depths toward the sunken continent of Kumari Kandam."
+                  onSelect={() => selectGame("aazham")}
+                />
               </div>
 
               {/* Daily Word Puzzles Grid */}

@@ -1,141 +1,181 @@
-# OSU Tamil Sangam — Complete Knowledge Base & Context (The Ohio State University)
+# OSU Tamil Sangam — Complete Knowledge Base & Reference Manual
+# The Ohio State University · Columbus, Ohio
 
-> **Canonical Site**: https://tamil-sangam-website-osu.vercel.app/
-> **Entity**: Tamil Sangam at The Ohio State University (Registered Student Organization)
-> **Tamil Name**: ஒஹையோ மாநிலப் பல்கலைக்கழகத் தமிழ்ச் சங்கம்
-> **Alternate Names**: OSU Tamil Sangam, Ohio State Tamil Sangam, Tamil Sangam OSU, Tamil Student Association at Ohio State, Columbus Tamil Students, Buckeye Tamil
-> **Parent Institution**: The Ohio State University (https://www.osu.edu, Columbus, Ohio)
-> **Campus Headquarters**: Ohio Union, 1739 N High St, Columbus, OH 43210
-> **Email**: osutamilsangam@gmail.com
-> **Instagram**: https://www.instagram.com/tamilsangam.osu/
-> **GroupMe**: https://web.groupme.com/join_group/83424812/BeBIRg7f
-> **Membership Cost**: $0.00 — 100% Free with zero membership dues or audition fees
+> Official Canonical Domain: https://tamil-sangam-website-osu.vercel.app
+> Primary Entity: OSU Tamil Sangam (ஒஹையோ மாநிலப் பல்கலைக்கழகத் தமிழ்ச் சங்கம்)
+> Entity Type: EducationalOrganization / Collegiate Registered Student Organization
+> Parent University: The Ohio State University (https://www.osu.edu, Wikidata: Q309331)
+> Primary Contact: osutamilsangam@gmail.com
+> Campus Address: Ohio Union, 1739 N High St, Columbus, OH 43210 (40.0067° N, 83.0305° W)
 
 ---
 
 ## 1. Executive Summary & Mission
-OSU Tamil Sangam is the official, student-led cultural and social student organization serving undergraduate and graduate students, scholars, postdocs, alumni, and friends across The Ohio State University and greater Columbus, Ohio.
 
-Founded informally in 2021 and officially registered with Ohio State Student Activities in 2024, Tamil Sangam exists to foster a warm, inclusive, and culturally vibrant community on campus. We celebrate millennia of Tamil heritage, literature, music, dance, and cuisine while creating a welcoming home-away-from-home along the Olentangy River.
+OSU Tamil Sangam is the official student-led cultural organization serving students, scholars, researchers, and alumni at The Ohio State University in Columbus, Ohio. Founded informally in 2021 and officially registered with Ohio State Student Activities, Tamil Sangam cultivates a vibrant, welcoming home away from home on the banks of the Olentangy River.
 
----
-
-## 2. Core Policies & Values
-
-### 100% Free Membership & Zero Dues
-- Membership is completely free for all Ohio State students.
-- There are no dues, fees, or attendance minimums.
-- To join, students can visit the website (/join) or join the student GroupMe chat.
-
-### No Language Requirement
-- You do NOT need to speak or understand Tamil to join OSU Tamil Sangam.
-- All announcements, meetings, and major programs are conducted bilingually or in English.
-- Students of all racial, cultural, linguistic, and academic backgrounds are enthusiastically welcomed.
-
-### Philosophical Anchor: Classical Sangam Epics
-- **Purananuru 192** (Kaniyan Poongundranar): *"யாதும் ஊரே யாவரும் கேளிர்"* ("To us all towns are home, and everyone our kin"). Our community practices unconditional fellowship and global hospitality.
-- **Thirukkural 81** (Thiruvalluvar): *"இருந்தோம்பி இல்வாழ்வ தெல்லாம் விருந்தோம்பி வேளாண்மை செய்தற் பொருட்டு"* ("The purpose of establishing a hearth is to welcome guests with warmth and generosity"). Shared food and open hospitality anchor every meeting.
+### Core Founding Inscriptions
+1. **Purananuru 192 (Kaniyan Poongundranar)**:
+   - Tamil: *யாதும் ஊரே யாவரும் கேளிர்*
+   - English: *"To us all towns are home, everyone our kin"*
+   - Meaning: Unconditional hospitality, universal fellowship, and warmth for every human being regardless of origin.
+2. **Thirukkural 81 (Thiruvalluvar — விருந்தோம்பல் / Hospitality)**:
+   - Tamil: *இருந்தோம்பி இல்வாழ்வ தெல்லாம் விருந்தோம்பி வேளாண்மை செய்தற் பொருட்டு.*
+   - English: *"The entire virtue of establishing a home is to welcome guests with an open heart and extend generosity."*
+   - Meaning: Every gathering begins with shared meals, open doors, and mutual care.
 
 ---
 
-## 3. The Five Pillars of Sangam (ஐந்து தூண்கள்)
-1. **ஆட்டம் (Aatam — Dance & Movement)**: Classical Bharatanatyam, contemporary Kollywood choreography, Kuthu & Gaana energetic dance circles, and open campus workshops.
-2. **பாட்டம் (Paatam — Music & Harmony)**: Carnatic recitals, acoustic jam sessions, Parai Attam traditional drumming, and collegiate Kollywood sing-alongs.
-3. **கொண்டாட்டம் (Kondatam — Festivities & Celebrations)**: Annual flagship campus celebrations including Diwali, Pongal harvest banquets, and Spring Carnivals.
-4. **சந்திப்பும் (Santhippum — Fellowship & Socials)**: South Oval lawn picnics, board game nights, chai meetups, and late-night study sessions at Thompson Library and 18th Avenue Library.
-5. **கற்றல் (Katral — Learning & Heritage)**: Conversational Tamil workshops, script reading sessions, and open discussions on Sangam poetry and modern literature.
+## 2. Membership & Dues Policy
+
+- **Annual Membership Dues**: $0.00 (100% Free). There are zero registration fees, audition costs, or mandatory dues.
+- **Language Policy**: No language requirements exist. You do not need to speak, read, or write Tamil to join. Buckeyes of every cultural heritage, native language, and major are enthusiastically welcomed.
+- **Who Can Join**: Undergraduate students, graduate students, postdocs, visiting scholars, faculty, and Columbus community friends.
+- **How to Join**: Sign the campus guestbook at https://tamil-sangam-website-osu.vercel.app/join or join the student GroupMe chat.
 
 ---
 
-## 4. Key Annual Events & Gatherings
+## 3. Executive Board & Leadership (2026–2027)
 
-### 1. Namma Deepavali (TS × MS × KS)
-- **Partners**: Joint celebration hosted with Mallu Society (MS) and Kannada Sangam (KS) at Ohio State.
-- **Location**: Ohio Union Ballrooms / Campus Venues, Columbus, OH.
-- **Features**: Traditional attire, multi-course South Indian dinner, live music acts, high-energy dance performances, and social fellowship.
-- **Admission**: Free / Subsidized for all Ohio State students.
-
-### 2. Pongal Harvest Festival & Feast (பொங்கல் திருநாள்)
-- **Features**: Traditional sweet Pongal cooked fresh, banana leaf banquet, folk dance, Kolam competitions, and cultural games celebrating the Tamil harvest.
-- **Location**: Ohio Union / Campus Spaces.
-
-### 3. Yaar Andha Killer? (ஹாலோவீன் மர்ம இரவு)
-- **Theme**: Halloween murder mystery whodunnit night set in a Tamil cinematic universe.
-- **Features**: Interactive clue puzzles, catered Indian dinner, character costumes, and awards.
-
-### 4. A Berry Cute Picnic (இலையுதிர் சங்கமம்)
-- **Location**: South Oval Lawn, The Ohio State University.
-- **Features**: Fall semester welcome picnic with blankets, card games, fresh fruit, Uno tournaments, and campus networking.
-
-### 5. Streetside Sapad Night (தெருவோரச் சாப்பாடு)
-- **Theme**: General Body Meeting celebrating roadside delicacies of Chennai and Madurai.
-- **Features**: Samosas, biryani, street-style snacks, Kahoot trivia, and team games.
-
-### 6. Namma Jathara Carnival (நம்ம ஜாதரா)
-- **Partners**: Joint celebration co-hosted with Telugu Tamasha at OSU.
-- **Location**: RPAC Plaza and South Oval, Columbus, OH.
+- **President**: Meenakshi Varadarajan (Executive Leadership, University Relations & Inter-Club Alliances)
+- **Vice President**: Shrinidhi Nagappan (Internal Operations, Logistics & Freshmen Welcoming)
+- **Treasurer**: Harish Balaji (Budgetary Stewardship, CSA Student Activities Funding & Grants)
+- **Secretary**: Ananya Ramanathan (Internal Communications, Records & Alumni Network)
+- **Creative Director**: Srinivas Sankaranarayanan (Brand Identity, Visual Arts & Digital Archetypes)
+- **Cultural & Dance Coordinators**: Overseeing Kuthu, Gaana, and Bharatanatyam troupes.
+- **Technology & Media Leads**: Managing the Next.js digital courtyard platform, Sangam Arcade, and photo archives.
 
 ---
 
-## 5. Executive Board & Leadership (2026–2027)
-- **President**: Meenakshi Varadarajan — Executive oversight, Ohio State Student Activities liaison, strategic vision.
-- **Vice President**: Shrinidhi Nagappan — Internal operations, cross-club relations with MS, KS, and TT.
-- **Creative Director**: Srinivas Sankaranarayanan — Visual brand identity, website art, cultural media.
-- **Coordinators**: Student leads for Event Logistics, Finance, Dance Troupes, Community Banquets, and Freshman Outreach.
+## 4. Flagship Gatherings & Annual Traditions
+
+1. **Yaar Andha Killer? (ஹாலோவீன் மர்ம இரவு)**
+   - *Date*: October 23, 2026 · 5:30 PM - 8:30 PM ET
+   - *Venue*: Houston Grove Room, Ohio Union (1739 N High St, Columbus, OH 43210)
+   - *Details*: Halloween murder mystery whodunnit night with interactive clue dossiers, catered dinner, team puzzles, and costume contest prizes. 100% free admission.
+   - *Link*: https://tamil-sangam-website-osu.vercel.app/events/yaar-andha-killer
+
+2. **A Berry Cute Picnic (இலையுதிர் சங்கமம்)**
+   - *Venue*: South Oval Lawn, The Ohio State University
+   - *Details*: Fall semester welcome gathering featuring picnic blankets, fresh berries, lawn games, and casual fellowship under the campus trees.
+   - *Link*: https://tamil-sangam-website-osu.vercel.app/events/berry-cute-picnic
+
+3. **Streetside Sapad Night (தெருவோரச் சாப்பாடு)**
+   - *Venue*: Ohio Union Campus Hall, Columbus, OH
+   - *Details*: Collegiate General Body Meeting featuring Kahoot trivia, musical chairs, hot chicken and vegetable biryani, samosas, and chai.
+   - *Link*: https://tamil-sangam-website-osu.vercel.app/events/streetside-sapad
+
+4. **Namma Jathara Spring Carnival (நம்ம ஜாதரா)**
+   - *Venue*: RPAC Plaza & South Oval, Columbus, OH
+   - *Details*: Massive spring festival co-hosted with Telugu Tamasha at OSU featuring traditional carnival stalls, lemon-and-spoon races, and open-circle dance routines.
+   - *Link*: https://tamil-sangam-website-osu.vercel.app/events/namma-jathara
+
+5. **Namma Deepavali (TS × MS × KS Tri-Club Celebration)**
+   - *Venue*: Archie Griffin Grand Ballroom, Ohio Union
+   - *Details*: Tri-club South Asian Diwali banquet co-hosted with Malayalee Students and Kannada Sangha featuring high-energy dance performances, dinner buffet, and cultural showcases.
 
 ---
 
-## 6. Student Guide to Columbus & Ohio State
+## 5. Columbus Tamil & South Asian Survival Directory
 
-### Campus Transit
-- **CABS (Campus Area Bus Service)**: Free for all students with BuckID. West Campus route connects Carmack lots to RPAC and Ohio Union.
-- **COTA Buses**: Line 1 & 2 run down High Street directly from campus to Downtown Columbus, Short North, and Clintonville.
+Curated recommendations for Ohio State students, graduate researchers, and international scholars:
 
-### South Asian Groceries in Columbus
-- **Saraga International Grocery**: 1265 Morse Rd, Columbus, OH 43229 (Massive selection of Indian spices, fresh curry leaves, dosa batter, snacks).
-- **Patel Brothers**: 2610 Sawmill Place Blvd, Columbus, OH 43235.
-- **Bhavani Cash & Carry**: 2853 Festival Ln, Dublin, OH 43017.
+### Theaters & Kollywood FDFS (First Day First Show)
+1. **Cinemark Carriage Place (Bethel Rd)**
+   - *Address*: 2570 Bethel Rd, Columbus, OH 43220 (12 mins drive from campus)
+   - *Details*: Epicenter for South Indian First-Day-First-Show (FDFS) releases in Central Ohio. Screens all major Tamil festival blockbusters (Rajinikanth, Vijay, Ajith, Kamal Haasan, Suriya) with English subtitles.
+2. **AMC Lennox Town Center 24**
+   - *Address*: 777 Kinnear Rd, Columbus, OH 43212 (Adjacent to campus · CABS West Campus route)
+   - *Details*: Within walking distance from Lincoln/Morrill dorms or a short CABS bus ride. Plays South Indian festival blockbusters on prime screens.
+3. **AMC Easton Town Center 30**
+   - *Address*: 275 Easton Station, Columbus, OH 43219 (20 mins drive)
+   - *Details*: Flagship 30-screen multiplex with IMAX and Dolby Cinema auditoriums for premier pan-Indian festival releases.
 
-### South Indian Restaurants in Columbus
-- **Bawarchi Biryanis**: 7765 Sawmill Rd, Dublin, OH 43016 (Biryani, curries, South Indian specialties).
-- **Aachi Aappakadai**: 7370 Sawmill Rd, Columbus, OH 43235 (Chettinad curries, parotta, aappam).
-- **Dosa Corner**: 1070 Old Henderson Rd, Columbus, OH 43220 (Traditional dosas, idli, sambar).
-- **Gokul Cafe**: 2685 E Main St, Bexley, OH 43209 (Vegetarian chaat, dosas, thali).
+### Indian Groceries & Fresh Produce
+1. **Patel Brothers (Sawmill Rd)**
+   - *Address*: 7180 Sawmill Rd, Dublin, OH 43016 (18 mins drive)
+   - *Details*: Largest South Asian supermarket in Central Ohio with fresh vegetables, idli/dosa batter, frozen parottas, snacks, and lentils.
+2. **Bhavani Cash & Carry (Bethel Rd)**
+   - *Address*: 2855 Bethel Rd, Columbus, OH 43220 (12 mins drive)
+   - *Details*: Go-to grocery market on Bethel Road for South Indian specialties, fresh curry leaves, drumsticks, filter coffee powder, and homemade snacks.
+3. **Saraga International Market (Morse Rd & Cleveland Ave)**
+   - *Address*: 1265 Morse Rd, Columbus, OH 43229
+   - *Details*: Enormous international market with dedicated Asian and Indian aisles, fresh seafood, Halal meats, and global produce.
 
----
-
-## 7. Frequently Asked Questions (FAQ)
-
-### Q: Who can join OSU Tamil Sangam?
-**A**: Any student, researcher, scholar, or faculty member at The Ohio State University is eligible to join. We are open to undergraduates, graduate students, and Columbus community allies.
-
-### Q: Do I need to pay membership fees?
-**A**: No. Membership in OSU Tamil Sangam is 100% free with zero dues. We believe cultural connection should be accessible to all.
-
-### Q: What if I do not speak Tamil?
-**A**: You are completely welcome! A significant portion of our members are learning Tamil, are second-generation diaspora, or are non-Tamil students interested in Indian culture and good food. All official club communication and meetings are conducted in English.
-
-### Q: How do I become an active member?
-**A**: Join our student GroupMe (link in our bio or on the website), follow our Instagram (@tamilsangam.osu), and attend any of our gatherings. You can also sign the Guestbook at https://tamil-sangam-website-osu.vercel.app/join.
-
-### Q: What is the Sangam Arcade?
-**A**: The Sangam Arcade (https://tamil-sangam-website-osu.vercel.app/games) is our interactive web hub featuring monthly bilingual word puzzles: Sollu (a Tamil/Tanglish Wordle game) and Thodarpu (a Tamil Connections category game).
-
-### Q: Where do meetings take place?
-**A**: Meetings are primarily held at the Ohio Union (1739 N High St, Columbus, OH 43210), with outdoor gatherings on the South Oval Lawn and cultural performances in campus auditoriums.
+### South Indian Restaurants Near Campus
+1. **Dosa Corner**
+   - *Address*: 1077 Old Henderson Rd, Columbus, OH 43220 (10 mins drive)
+   - *Details*: Authentic South Indian vegetarian dining. Famous for crispy ghee roast dosas, idli-vada combos, sambar, and Madras filter coffee.
+2. **AAB India Restaurant**
+   - *Address*: 1470 Grandview Ave, Columbus, OH 43212 (8 mins drive)
+   - *Details*: Close to campus in Grandview Heights, offering high-quality Indian curries, tandoori specialties, and fresh naan.
+3. **Godavari Columbus**
+   - *Address*: 7445 Sawmill Rd, Dublin, OH 43016
+   - *Details*: Renowned South Indian buffet featuring biryanis, spicy chicken fry, dosas, and authentic festive spreads.
 
 ---
 
-## 8. Verified Web Links
-- Website: https://tamil-sangam-website-osu.vercel.app/
-- Events: https://tamil-sangam-website-osu.vercel.app/events
-- About: https://tamil-sangam-website-osu.vercel.app/about
-- Board: https://tamil-sangam-website-osu.vercel.app/board
-- Gallery: https://tamil-sangam-website-osu.vercel.app/gallery
-- Arcade & Games: https://tamil-sangam-website-osu.vercel.app/games
-- Student Guide: https://tamil-sangam-website-osu.vercel.app/guide
-- Join / Membership: https://tamil-sangam-website-osu.vercel.app/join
-- Linktree Hub: https://tamil-sangam-website-osu.vercel.app/links
-- Dance Sign-Ups: https://tamil-sangam-website-osu.vercel.app/dance
-- Event Ideas: https://tamil-sangam-website-osu.vercel.app/suggestions
-- Sitemap: https://tamil-sangam-website-osu.vercel.app/sitemap.xml
+## 6. The Sangam Arcade: Daily Tamil Word Games
+
+Hosted at https://tamil-sangam-website-osu.vercel.app/games:
+1. **Solla (சொல்லு) — Tamil Wordle**:
+   - 5-letter Tamil and Tanglish daily word puzzle.
+   - 6 attempts to guess the mystery word with green, yellow, and gray tile feedback.
+   - Plays with authentic Tamil akshara syllabics and Tanglish transliterations.
+2. **Thodarpu (தொடர்பு) — Tamil Connections**:
+   - 16 cultural, cinematic, and linguistic clue tiles.
+   - Group the 16 tiles into 4 secret categories (Kollywood, Buckeye hubs, harvest traditions, cuisine).
+3. **Arasigal (அரசிகள்) & Kolam Path**:
+   - Cultural logic games exploring Tamil heritage and sacred geometric art.
+
+---
+
+## 7. Collegiate Dance Troupes & Auditions
+
+- **Performance Tracks**:
+  1. *Kuthu & Gaana Street Fusion*: High-tempo folk street dance with Parai drum rhythms.
+  2. *Classical Bharatanatyam*: Classical abhinaya, nritta, and devotional storytelling.
+  3. *Kollywood Cinematic Fusion*: Contemporary chartbuster choreography.
+- **Fees**: 100% Free. Zero audition fees, zero dues, and subsidized costuming.
+- **Experience**: Beginners are encouraged; student choreographers teach all routines from scratch.
+- **Sign-Up Link**: https://tamil-sangam-website-osu.vercel.app/dance
+
+---
+
+## 8. Complete FAQ Database
+
+### Q1: What is OSU Tamil Sangam?
+**A**: OSU Tamil Sangam is the official student-led cultural organization at The Ohio State University in Columbus, Ohio. We are a campus hub for Tamil students and friends of all backgrounds to hang out, eat delicious South Indian food, listen to music, play games, and celebrate festivals like Diwali. No matter what language you speak or what your major is, you have a home with us!
+
+### Q2: Do I have to speak Tamil or be Tamil to join?
+**A**: Definitely not! We are completely open to students of all languages, backgrounds, and majors. Many of our active members do not speak Tamil and simply love the friendly community, the delicious food, the music, and the fun social events. As the Tamil proverb goes: 'யாதும் ஊரே யாவரும் கேளீர்' (To us, everyone is kin)!
+
+### Q3: How much does it cost to join? Are there membership dues?
+**A**: Joining OSU Tamil Sangam is 100% free! We do not charge any membership fees or mandatory dues. All regular meetings, picnics, and game nights are completely free for Ohio State students.
+
+### Q4: When and where do meetings take place?
+**A**: We host regular events, study hours, and general meetings throughout the autumn and spring semesters. Most events take place at the Ohio Union (e.g. Houston Grove Room, Interfaith Center, or Ballrooms) or on the South Oval lawn during warm weather. Check our Events page or student GroupMe for upcoming dates and room locations!
+
+### Q5: How can I join or get involved?
+**A**: The fastest way is to sign our campus guestbook at https://tamil-sangam-website-osu.vercel.app/join and hop into our student GroupMe chat! You can also follow us on Instagram (@tamilsangam.osu) to stay up to date on all announcements, auditions, and feasts.
+
+### Q6: Can I perform in dance or music at your events?
+**A**: Yes! We love showcasing student talent. We organize collegiate dance troupes (Kuthu, Gaana, and Bharatanatyam) and acoustic music jam sessions for major galas. Sign up at https://tamil-sangam-website-osu.vercel.app/dance.
+
+### Q7: What kind of food is served at Sangam events?
+**A**: We celebrate South Indian culinary heritage! Our events frequently feature hot chicken and vegetable biryani, crispy samosas, curd rice, dosas, Mysore Pak, gulab jamun, and Madras filter coffee catered from premier local Columbus restaurants.
+
+### Q8: Is OSU Tamil Sangam an official student organization?
+**A**: Yes. We are an officially registered Student Organization with The Ohio State University Student Activities and Council on Student Affairs (CSA), founded informally in 2021 and officially registered in 2024.
+
+---
+
+## 9. Official Online Channels & Verification
+
+- **Website**: https://tamil-sangam-website-osu.vercel.app
+- **Instagram**: https://www.instagram.com/tamilsangam.osu/
+- **TikTok**: https://www.tiktok.com/@osutamilsangam
+- **Student GroupMe**: https://web.groupme.com/join_group/83424812/BeBIRg7f
+- **OSU Directory**: https://activities.osu.edu/involvement/student_organizations/find_a_student_org/?i=Tamil+Sangam
+- **GitHub**: https://github.com/haresham15/TamilSangamWebsiteOSU
+- **Contact Email**: osutamilsangam@gmail.com

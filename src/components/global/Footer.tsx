@@ -473,21 +473,25 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
 
         {/* Links & Bottom Navigation Bar */}
         <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-white/70">
-          <nav aria-label="Footer Navigation" className="flex flex-wrap items-center gap-6 font-sans font-medium">
+          <nav aria-label="Footer Navigation" className="flex flex-wrap items-center gap-x-5 gap-y-2 font-sans font-medium">
             <Link href="/" className="hover:text-[#2BB5A8] transition-colors">{t("nav.home")}</Link>
             <Link href="/events" className="hover:text-[#2BB5A8] transition-colors">{t("nav.events")}</Link>
-            <Link href="/about" className="hover:text-[#2BB5A8] transition-colors">{t("nav.about")}</Link>
-            <Link href="/board" className="hover:text-[#2BB5A8] font-semibold transition-colors">{t("nav.board")}</Link>
-            <Link href="/links" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "இணைப்புகள்" : "Links"}</Link>
-            <Link href="/guide" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "வழிகாட்டி & கேள்வி-பதில்" : "Guide & FAQ"}</Link>
-            <Link href="/suggestions" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "கருத்துகள்" : "Ideas"}</Link>
+            <Link href="/guide" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "வழிகாட்டி" : "Guide"}</Link>
             <Link href="/games" className="hover:text-[#2BB5A8] transition-colors inline-flex items-center gap-1.5">
               <span>{locale === "ta" ? "விளையாட்டு" : "Games"}</span>
               <span className="font-mono text-[8.5px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full bg-[#2BB5A8]/20 text-[#2BB5A8] border border-[#2BB5A8]/35">
                 {locale === "ta" ? "புதிது" : "NEW"}
               </span>
             </Link>
+            <Link href="/dance" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "நடனம்" : "Dance"}</Link>
+            <Link href="/gallery" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "புகைப்படங்கள்" : "Gallery"}</Link>
+            <Link href="/board" className="hover:text-[#2BB5A8] font-semibold transition-colors">{t("nav.board")}</Link>
+            <Link href="/about" className="hover:text-[#2BB5A8] transition-colors">{t("nav.about")}</Link>
+            <Link href="/suggestions" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "கருத்துகள்" : "Ideas"}</Link>
             <Link href="/join" className="hover:text-[#3ED0C2] font-semibold text-[#2BB5A8] transition-colors">{t("nav.join")}</Link>
+            <Link href="/links" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "இணைப்புகள்" : "Links"}</Link>
+            <Link href="/faq" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "கேள்வி-பதில்" : "FAQ"}</Link>
+            <Link href="/privacy" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "தனியுரிமை" : "Privacy"}</Link>
             <a 
               href={`mailto:${SITE_CONFIG.contactEmail}`}
               className="text-white/80 hover:text-[#2BB5A8] transition-colors"

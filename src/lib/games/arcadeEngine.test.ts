@@ -5,6 +5,7 @@ import { isValidEquation, getDailyEquation } from "./generators/nerdleGenerator"
 import { matchesTanglishFuzzy } from "./tanglish";
 import { calculateDistanceKm, calculateBearing, calculateProximity } from "@/data/games/districtsData";
 import { getRankTitle } from "@/data/games/spellingBeeData";
+import { ARCADE_GAMES_CATALOG } from "./storage";
 
 describe("Arcade Games Engine & Mechanics Verification", () => {
   describe("Kolam Path Generator", () => {
@@ -99,6 +100,30 @@ describe("Arcade Games Engine & Mechanics Verification", () => {
       expect(getRankTitle(25, 100)).toBe("Solid · நன்று");
       expect(getRankTitle(65, 100)).toBe("Master · வித்வான்");
       expect(getRankTitle(85, 100)).toBe("Tamil Scholar · புலவர்");
+    });
+  });
+
+  describe("Arcade Catalog Metadata & Blueprint Parity", () => {
+    it("contains all 12 games with complete Original vs Tamil transformation blueprints", () => {
+      expect(ARCADE_GAMES_CATALOG.length).toBe(12);
+
+      for (const game of ARCADE_GAMES_CATALOG) {
+        expect(game.slug).toBeDefined();
+        expect(game.titleEn.length).toBeGreaterThan(0);
+        expect(game.titleTa.length).toBeGreaterThan(0);
+        expect(game.estimatedMinutes).toBeGreaterThan(0);
+
+        // Verify Original Inspiration metadata
+        expect(game.originalGame).toBeDefined();
+        expect(game.originalGame.length).toBeGreaterThan(2);
+        expect(game.originalGameSubtitle.length).toBeGreaterThan(2);
+        expect(game.originalGameDescription.length).toBeGreaterThan(10);
+
+        // Verify Altered Tamil Version metadata
+        expect(game.alteredTamilVersion).toBeDefined();
+        expect(game.alteredTamilVersion.length).toBeGreaterThan(2);
+        expect(game.alteredTamilTwist.length).toBeGreaterThan(15);
+      }
     });
   });
 });

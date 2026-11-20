@@ -49,7 +49,7 @@ const SEASONS: SeasonGathering[] = [
     flagshipEvent: "Diwali Sparkler Evening & Winter Banquet",
     icon: Flame,
     tone: "Warm Gold & Candlelight Amber",
-    accentHex: "#A6F0CF",
+    accentHex: "#C79347",
     culinaryTraditions: ["Warm Gulab Jamun", "Mysore Pak & Murukku", "Indian Chai & Spiced Refreshments"],
     activities: ["Outdoor Cold-Night Sparkler Circles", "Traditional Silk Attire Showcase", "Semester Finals Relief Hangouts"],
     blueprintVision:
@@ -65,7 +65,7 @@ const SEASONS: SeasonGathering[] = [
     flagshipEvent: "Streetside Sapad & Pongal Gathering",
     icon: Utensils,
     tone: "Turmeric Gold & Clay Terracotta",
-    accentHex: "#A6F0CF",
+    accentHex: "#C79347",
     culinaryTraditions: ["Sweet Sakkarai Pongal with Cashews", "Crispy Medu Vadai", "Hot South Indian Festive Meals"],
     activities: ["Live Kolam Floor Art Competitions", "Traditional Sugarcane Cracking", "Folk Parai Drumming & Village Roots"],
     blueprintVision:

@@ -371,14 +371,14 @@ export function EventPhotoVault({
             <motion.div
               layoutId={reducedMotion || isLiteMode ? undefined : `photo-card-${selectedPhoto.id}`}
               transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="w-full max-w-5xl bg-[#1A1028] border border-[rgba(125,96,166,0.35)] rounded-2xl p-6 sm:p-8 shadow-2xl relative text-left"
+              className="w-full max-w-5xl bg-[#271A3C] border border-[#C79347]/30 rounded-2xl p-6 sm:p-8 shadow-2xl relative text-left"
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
               {/* Close Button (48x48px min hit target, accessible) */}
               <button
                 type="button"
                 onClick={handleCloseLightbox}
-                className="absolute top-4 right-4 w-12 h-12 rounded-full bg-[#25173B] hover:bg-[#A6F0CF] hover:text-[#140C20] text-[#F4F0FA] border border-[rgba(125,96,166,0.35)] z-20 transition-colors active:scale-95 flex items-center justify-center cursor-pointer shadow-sm focus-visible:outline-2 focus-visible:outline-[#A6F0CF]"
+                className="absolute top-4 right-4 w-12 h-12 rounded-full bg-[#1C122B] hover:bg-[#0F766E] hover:text-[#FAF5ED] text-[#FAF5ED] border border-[#C79347]/30 z-20 transition-colors active:scale-95 flex items-center justify-center cursor-pointer shadow-sm focus-visible:outline-2 focus-visible:outline-[#2BB5A8]"
                 aria-label="Close photo preview"
               >
                 <X className="w-5 h-5" />
@@ -390,7 +390,7 @@ export function EventPhotoVault({
                   <button
                     type="button"
                     onClick={handlePrevPhoto}
-                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#25173B]/90 hover:bg-[#A6F0CF] hover:text-[#140C20] text-[#F4F0FA] border border-[rgba(125,96,166,0.35)] z-20 active:scale-95 transition-colors flex items-center justify-center shadow-md cursor-pointer focus-visible:outline-2 focus-visible:outline-[#A6F0CF]"
+                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#1C122B]/90 hover:bg-[#0F766E] hover:text-[#FAF5ED] text-[#FAF5ED] border border-[#C79347]/30 z-20 active:scale-95 transition-colors flex items-center justify-center shadow-md cursor-pointer focus-visible:outline-2 focus-visible:outline-[#2BB5A8]"
                     aria-label="Previous photo"
                   >
                     <ChevronLeft className="w-5 h-5" />
@@ -398,7 +398,7 @@ export function EventPhotoVault({
                   <button
                     type="button"
                     onClick={handleNextPhoto}
-                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#25173B]/90 hover:bg-[#A6F0CF] hover:text-[#140C20] text-[#F4F0FA] border border-[rgba(125,96,166,0.35)] z-20 active:scale-95 transition-colors flex items-center justify-center shadow-md cursor-pointer focus-visible:outline-2 focus-visible:outline-[#A6F0CF]"
+                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#1C122B]/90 hover:bg-[#0F766E] hover:text-[#FAF5ED] text-[#FAF5ED] border border-[#C79347]/30 z-20 active:scale-95 transition-colors flex items-center justify-center shadow-md cursor-pointer focus-visible:outline-2 focus-visible:outline-[#2BB5A8]"
                     aria-label="Next photo"
                   >
                     <ChevronRight className="w-5 h-5" />
@@ -408,7 +408,7 @@ export function EventPhotoVault({
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 {/* Photo High-Res Container */}
-                <div className="lg:col-span-8 relative h-80 sm:h-[480px] rounded-2xl bg-[#140C20] overflow-hidden border border-[rgba(125,96,166,0.25)]">
+                <div className="lg:col-span-8 relative h-80 sm:h-[480px] rounded-2xl bg-[#1C122B] overflow-hidden border border-[#C79347]/20">
                   <Image
                     src={selectedPhoto.imageUrl}
                     alt={selectedPhoto.titleEn}
@@ -420,14 +420,14 @@ export function EventPhotoVault({
                 </div>
 
                 {/* Metadata & Captions Column */}
-                <div className="lg:col-span-4 space-y-4 text-[#F4F0FA]">
-                  <div className="text-xs font-mono text-[#A6F0CF] font-semibold uppercase tracking-wider">
+                <div className="lg:col-span-4 space-y-4 text-[#FAF5ED]">
+                  <div className="text-xs font-mono text-[#C79347] font-semibold uppercase tracking-wider">
                     Photo {currentPhotoIndex + 1} of {photos.length}
                   </div>
 
                   <h3
                     lang={locale === "ta" ? "ta" : "en"}
-                    className="text-2xl font-normal text-[#F4F0FA] font-serif"
+                    className="text-2xl font-normal text-[#FAF5ED] font-serif"
                     style={{ letterSpacing: locale === "ta" ? 0 : undefined }}
                   >
                     {locale === "ta" ? selectedPhoto.titleTa : selectedPhoto.titleEn}
@@ -435,7 +435,7 @@ export function EventPhotoVault({
 
                   <p
                     lang={locale === "ta" ? "ta" : "en"}
-                    className="text-sm text-[#C4B7D7] leading-relaxed font-sans"
+                    className="text-sm text-[#CBBBA8] leading-relaxed font-sans"
                     style={{
                       letterSpacing: locale === "ta" ? 0 : undefined,
                       lineHeight: locale === "ta" ? 1.6 : undefined,
@@ -444,7 +444,7 @@ export function EventPhotoVault({
                     {locale === "ta" ? selectedPhoto.captionTa : selectedPhoto.captionEn}
                   </p>
 
-                  <div className="text-xs font-mono text-[#C4B7D7] space-y-1 pt-3 border-t border-[rgba(125,96,166,0.25)]">
+                  <div className="text-xs font-mono text-[#CBBBA8] space-y-1 pt-3 border-t border-[#C79347]/20">
                     <p>Photographer: {selectedPhoto.photographer}</p>
                     <p>Event Date: {selectedPhoto.eventDate}</p>
                   </div>
@@ -453,19 +453,19 @@ export function EventPhotoVault({
                     {selectedPhoto.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2.5 py-1 rounded-full bg-[#25173B] text-[11px] font-mono text-[#A6F0CF] border border-[rgba(125,96,166,0.35)]"
+                        className="px-2.5 py-1 rounded-full bg-[#1C122B] text-[11px] font-mono text-[#2BB5A8] border border-[#C79347]/20"
                       >
                         #{tag}
                       </span>
                     ))}
                   </div>
 
-                  <div className="pt-4 border-t border-[rgba(125,96,166,0.25)] flex items-center justify-between gap-3">
+                  <div className="pt-4 border-t border-[#C79347]/20 flex items-center justify-between gap-3">
                     <a
                       href={selectedPhoto.imageUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs font-mono text-[#A6F0CF] hover:underline flex items-center gap-1.5 font-semibold uppercase tracking-wider"
+                      className="text-xs font-mono text-[#2BB5A8] hover:text-[#3ED0C2] hover:underline flex items-center gap-1.5 font-semibold uppercase tracking-wider"
                     >
                       <Maximize2 className="w-3.5 h-3.5" />
                       <span>Full Resolution ↗</span>
@@ -476,7 +476,7 @@ export function EventPhotoVault({
                         href={finalGooglePhotosUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs font-mono text-[#C4B7D7] hover:text-[#A6F0CF] flex items-center gap-1.5 uppercase tracking-wider"
+                        className="text-xs font-mono text-[#CBBBA8] hover:text-[#C79347] flex items-center gap-1.5 uppercase tracking-wider"
                       >
                         <span>Google Vault ↗</span>
                       </a>

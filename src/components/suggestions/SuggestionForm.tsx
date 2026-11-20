@@ -42,11 +42,11 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="rounded-xl w-full sm:w-auto px-7 py-3.5 bg-[#A6F0CF] hover:bg-[#7AE7B5] text-[#140C20] font-mono font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center gap-2.5 disabled:opacity-60 disabled:pointer-events-none cursor-pointer"
+      className="rounded-xl w-full sm:w-auto px-7 py-3.5 bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] font-mono font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center gap-2.5 disabled:opacity-60 disabled:pointer-events-none cursor-pointer"
     >
       {pending ? (
         <>
-          <RefreshCw className="w-4 h-4 animate-spin text-[#140C20]" />
+          <RefreshCw className="w-4 h-4 animate-spin text-[#FAF5ED]" />
           <span>
             {locale === "ta"
               ? "வரைபடத்தில் பதிக்கப்படுகிறது..."
@@ -55,7 +55,7 @@ function SubmitButton() {
         </>
       ) : (
         <>
-          <Send className="w-4 h-4 text-[#140C20]" />
+          <Send className="w-4 h-4 text-[#FAF5ED]" />
           <span>
             {locale === "ta"
               ? "யோசனையைப் பகிரவும் (Pin to Blueprint)"
@@ -105,26 +105,26 @@ export function SuggestionForm({
 
   return (
     <div
-      className={`rounded-2xl relative bg-[#1A1028]/95 backdrop-blur-md border border-[rgba(125,96,166,0.35)] p-6 sm:p-10 shadow-2xl text-[#F4F0FA] hover:border-[#A6F0CF]/40 transition-colors ${className}`}
+      className={`rounded-2xl relative bg-[#271A3C]/95 backdrop-blur-md border border-[#C79347]/30 p-6 sm:p-10 shadow-2xl text-[#FAF5ED] hover:border-[#2BB5A8]/40 transition-colors ${className}`}
     >
       {/* Title block */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[rgba(125,96,166,0.25)] mb-8">
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[#C79347]/20 mb-8">
         <div>
-          <span className="text-xs font-mono uppercase tracking-widest text-[#A6F0CF] block mb-1.5 font-semibold">
+          <span className="text-xs font-mono uppercase tracking-widest text-[#C79347] block mb-1.5 font-semibold">
             COMMUNITY VOICE
           </span>
-          <h3 className="text-2xl sm:text-3xl font-normal font-serif text-[#F4F0FA] tracking-tight" {...(locale === "ta" ? { lang: "ta" } : {})}>
+          <h3 className="text-2xl sm:text-3xl font-normal font-serif text-[#FAF5ED] tracking-tight" {...(locale === "ta" ? { lang: "ta" } : {})}>
             {locale === "ta" ? "உங்கள் யோசனையைப் பகிருங்கள்" : "Drop an Idea onto the Blueprint"}
           </h3>
-          <p className="text-xs sm:text-sm text-[#C4B7D7] mt-1 font-body leading-relaxed" {...(locale === "ta" ? { lang: "ta" } : {})}>
+          <p className="text-xs sm:text-sm text-[#CBBBA8] mt-1 font-body leading-relaxed" {...(locale === "ta" ? { lang: "ta" } : {})}>
             {locale === "ta"
               ? "நமது சங்கத்தின் அடுத்த கட்ட நிகழ்வுகள் மற்றும் முன்னெடுப்புகளுக்கு உங்கள் பரிந்துரைகள் வரவேற்கப்படுகின்றன."
               : "Share ideas for events, cultural initiatives, campus partnerships, or website feedback."}
           </p>
         </div>
 
-        <div className="text-right hidden sm:block font-mono text-[11px] text-[#C4B7D7]">
-          <p className="text-[#A6F0CF]">osutamilsangam@gmail.com</p>
+        <div className="text-right hidden sm:block font-mono text-[11px] text-[#CBBBA8]">
+          <p className="text-[#2BB5A8]">osutamilsangam@gmail.com</p>
           <p>Reviewed Weekly</p>
         </div>
       </div>
@@ -132,22 +132,22 @@ export function SuggestionForm({
       {state.success ? (
         /* Success State */
         <div className="py-10 text-center space-y-6">
-          <div className="w-16 h-16 rounded-xl bg-[#A6F0CF]/15 border border-[#A6F0CF]/40 text-[#A6F0CF] flex items-center justify-center mx-auto shadow-sm">
+          <div className="w-16 h-16 rounded-xl bg-[#2BB5A8]/15 border border-[#2BB5A8]/40 text-[#2BB5A8] flex items-center justify-center mx-auto shadow-sm">
             <CheckCircle2 className="w-8 h-8" />
           </div>
 
           <div className="space-y-2 max-w-lg mx-auto">
-            <h4 className="text-2xl font-normal font-serif text-[#F4F0FA]" {...(locale === "ta" ? { lang: "ta" } : {})}>
+            <h4 className="text-2xl font-normal font-serif text-[#FAF5ED]" {...(locale === "ta" ? { lang: "ta" } : {})}>
               {locale === "ta"
                 ? "நன்றி! உங்கள் யோசனை வரைபடத்தில் பதிக்கப்பட்டது!"
                 : "Vanakkam! Your Idea Has Been Pinned!"}
             </h4>
-            <p className="text-sm text-[#C4B7D7] font-body leading-relaxed">
+            <p className="text-sm text-[#CBBBA8] font-body leading-relaxed">
               {state.message ||
                 "Your idea has been dispatched directly to the executive board and recorded in our blueprint ledger."}
             </p>
             {state.pin && (
-              <p className="text-xs font-mono text-[#A6F0CF] pt-2">
+              <p className="text-xs font-mono text-[#C79347] pt-2">
                 [EPHEMERAL PIN COORD: X={state.pin.x.toFixed(2)}, Y={state.pin.y.toFixed(2)}]
               </p>
             )}
@@ -156,9 +156,9 @@ export function SuggestionForm({
           <button
             type="button"
             onClick={handleReset}
-            className="px-6 py-2.5 rounded-xl bg-[#25173B] hover:bg-[#352254] text-[#F4F0FA] border border-[#A6F0CF]/40 text-xs font-mono uppercase tracking-wider transition-colors inline-flex items-center gap-2 cursor-pointer shadow-sm"
+            className="px-6 py-2.5 rounded-xl bg-[#1C122B] hover:bg-[#271A3C] text-[#FAF5ED] border border-[#C79347]/30 text-xs font-mono uppercase tracking-wider transition-colors inline-flex items-center gap-2 cursor-pointer shadow-sm"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-[#A6F0CF]" />
+            <RefreshCw className="w-3.5 h-3.5 text-[#2BB5A8]" />
             <span>Submit Another Suggestion</span>
           </button>
         </div>
@@ -180,7 +180,7 @@ export function SuggestionForm({
 
           {/* 1. Category Selection Pills */}
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-[#A6F0CF] mb-2.5 font-bold">
+            <label className="block text-xs font-mono uppercase tracking-wider text-[#C79347] mb-2.5 font-bold">
               1. Select a Category · வகை
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
@@ -196,20 +196,20 @@ export function SuggestionForm({
                     aria-pressed={isSelected}
                     className={`rounded-xl p-3 text-left border transition-[border-color,background-color,box-shadow,transform] duration-150 cursor-pointer flex flex-col justify-between ${
                       isSelected
-                        ? "bg-[#25173B] border-[#A6F0CF] text-[#F4F0FA] shadow-[0_4px_20px_rgba(166,240,207,0.12)] -translate-y-0.5"
-                        : "bg-[#140C20] border-[rgba(125,96,166,0.25)] text-[#C4B7D7] hover:border-[#A6F0CF]/40 hover:text-[#F4F0FA]"
+                        ? "bg-[#1C122B] border-[#2BB5A8] text-[#FAF5ED] shadow-[0_4px_20px_rgba(43,181,168,0.15)] -translate-y-0.5"
+                        : "bg-[#1C122B]/70 border-[#C79347]/20 text-[#CBBBA8] hover:border-[#2BB5A8]/40 hover:text-[#FAF5ED]"
                     }`}
                   >
                     <Icon
                       className={`w-4 h-4 mb-2 ${
-                        isSelected ? "text-[#A6F0CF]" : "text-[#9B8EB3]"
+                        isSelected ? "text-[#2BB5A8]" : "text-[#CBBBA8]/60"
                       }`}
                     />
                     <div>
                       <span className="block text-xs font-mono font-bold leading-tight" {...(locale === "ta" ? { lang: "ta" } : {})}>
                         {locale === "ta" ? cat.labelTa : cat.labelEn}
                       </span>
-                      <span className="block text-[10px] text-[#9B8EB3] font-body mt-0.5">
+                      <span className="block text-[10px] text-[#CBBBA8]/70 font-body mt-0.5">
                         {cat.labelEn}
                       </span>
                     </div>
@@ -226,14 +226,14 @@ export function SuggestionForm({
             <div className="flex items-center justify-between mb-2">
               <label
                 htmlFor="suggestion-message"
-                className="text-xs font-mono uppercase tracking-wider text-[#A6F0CF] font-bold"
+                className="text-xs font-mono uppercase tracking-wider text-[#C79347] font-bold"
               >
                 2. Your Suggestion or Vision · யோசனை{" "}
-                <span className="text-[#F26BB5]">*</span>
+                <span className="text-[#E06D58]">*</span>
               </label>
               <span
                 className={`text-[11px] font-mono ${
-                  message.length > 2500 ? "text-rose-400 font-bold" : "text-[#9B8EB3]"
+                  message.length > 2500 ? "text-rose-400 font-bold" : "text-[#CBBBA8]/70"
                 }`}
               >
                 {message.length} / 2500 chars
@@ -247,7 +247,7 @@ export function SuggestionForm({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="e.g. A Tamil movie screening at Gateway Film Center, classical instrumental fusion jam on the Oval, career shadow nights with alumni in tech/healthcare, Pongal kolam contest..."
-              className="w-full px-4 py-3 bg-[#140C20] border border-[rgba(125,96,166,0.35)] focus:border-[#A6F0CF] rounded-xl text-[#F4F0FA] placeholder:text-[#9B8EB3]/50 text-sm outline-none transition-colors font-body leading-relaxed resize-y"
+              className="w-full px-4 py-3 bg-[#1C122B] border border-[#C79347]/30 focus:border-[#2BB5A8] rounded-xl text-[#FAF5ED] placeholder:text-[#CBBBA8]/40 text-sm outline-none transition-colors font-body leading-relaxed resize-y"
             />
           </div>
 
@@ -256,9 +256,9 @@ export function SuggestionForm({
             <div>
               <label
                 htmlFor="suggestion-name"
-                className="block text-xs font-mono uppercase tracking-wider text-[#C4B7D7] mb-1.5"
+                className="block text-xs font-mono uppercase tracking-wider text-[#CBBBA8] mb-1.5"
               >
-                Your Name <span className="text-[#9B8EB3] font-normal">(Optional · Anonymous is fine)</span>
+                Your Name <span className="text-[#CBBBA8]/60 font-normal">(Optional · Anonymous is fine)</span>
               </label>
               <input
                 id="suggestion-name"
@@ -267,16 +267,16 @@ export function SuggestionForm({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Maya Sundaram (or leave blank)"
-                className="w-full px-4 py-2.5 bg-[#140C20] border border-[rgba(125,96,166,0.35)] focus:border-[#A6F0CF] rounded-xl text-[#F4F0FA] placeholder:text-[#9B8EB3]/50 text-sm outline-none transition-colors font-body"
+                className="w-full px-4 py-2.5 bg-[#1C122B] border border-[#C79347]/30 focus:border-[#2BB5A8] rounded-xl text-[#FAF5ED] placeholder:text-[#CBBBA8]/40 text-sm outline-none transition-colors font-body"
               />
             </div>
 
             <div>
               <label
                 htmlFor="suggestion-email"
-                className="block text-xs font-mono uppercase tracking-wider text-[#C4B7D7] mb-1.5"
+                className="block text-xs font-mono uppercase tracking-wider text-[#CBBBA8] mb-1.5"
               >
-                Your Email <span className="text-[#9B8EB3] font-normal">(Optional · For board follow-up)</span>
+                Your Email <span className="text-[#CBBBA8]/60 font-normal">(Optional · For board follow-up)</span>
               </label>
               <input
                 id="suggestion-email"
@@ -285,7 +285,7 @@ export function SuggestionForm({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. sundaram.123@osu.edu"
-                className="w-full px-4 py-2.5 bg-[#140C20] border border-[rgba(125,96,166,0.35)] focus:border-[#A6F0CF] rounded-xl text-[#F4F0FA] placeholder:text-[#9B8EB3]/50 text-sm outline-none transition-colors font-body"
+                className="w-full px-4 py-2.5 bg-[#1C122B] border border-[#C79347]/30 focus:border-[#2BB5A8] rounded-xl text-[#FAF5ED] placeholder:text-[#CBBBA8]/40 text-sm outline-none transition-colors font-body"
               />
             </div>
           </div>

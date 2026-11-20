@@ -225,9 +225,9 @@ export const Navbar: React.FC = () => {
           href="/"
           onClick={handleBrandClick}
           aria-label="OSU Tamil Sangam Home"
-          className="group flex items-center gap-2.5 text-left shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] rounded-sm select-none pr-3"
+          className="group flex items-center gap-2.5 text-left shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8] rounded-sm select-none pr-3"
         >
-          <div className="relative w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-full p-[1.5px] bg-gradient-to-tr from-[#A6F0CF]/70 via-[#F5D061]/50 to-[#7D60A6]/70 group-hover:from-[#A6F0CF] group-hover:to-[#FFE082] transition-colors shadow-sm">
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-full p-[1.5px] bg-gradient-to-tr from-[#C79347]/70 via-[#2BB5A8]/50 to-[#5B2C86]/70 group-hover:from-[#C79347] group-hover:to-[#2BB5A8] transition-colors shadow-sm">
             <Image
               src="/emblem.svg"
               alt="The Ohio State University Tamil Sangam Official Seal"
@@ -238,13 +238,13 @@ export const Navbar: React.FC = () => {
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-serif font-bold text-sm sm:text-base tracking-tight text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors leading-tight">
+            <span className="font-serif font-bold text-sm sm:text-base tracking-tight text-[#FAF5ED] group-hover:text-[#C79347] transition-colors leading-tight">
               {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"}
             </span>
             <span
               lang="ta"
               style={{ letterSpacing: 0 }}
-              className="font-tamil text-[9px] text-[#A6F0CF]/80 group-hover:text-[#A6F0CF] transition-opacity mt-0.5 leading-none font-medium"
+              className="font-tamil text-[9px] text-[#C79347]/80 group-hover:text-[#C79347] transition-opacity mt-0.5 leading-none font-medium"
             >
               {locale === "ta" ? "The Ohio State University" : "ஒஹையோ மாநிலப் பல்கலைக்கழகம்"}
             </span>
@@ -268,27 +268,27 @@ export const Navbar: React.FC = () => {
                 aria-current={isActive ? "page" : undefined}
                 className={`group relative px-2.5 py-1.5 rounded-md text-xs xl:text-sm font-sans transition-[color,background-color] duration-150 flex items-center gap-1.5 ${
                   isActive
-                    ? "text-[#F4F0FA] font-semibold"
-                    : "text-[#C4B7D7] hover:text-[#F4F0FA] font-medium"
+                    ? "text-[#FAF5ED] font-semibold"
+                    : "text-[#CBBBA8] hover:text-[#FAF5ED] font-medium"
                 }`}
               >
                 <span>{locale === "ta" ? route.ta : route.en}</span>
 
                 {/* Subtle Status Indicator */}
                 {route.isNew && (
-                  <span className="font-mono text-[8px] font-bold uppercase tracking-wider px-1 py-[0.5px] rounded-xs bg-[#A6F0CF]/20 text-[#A6F0CF]">
+                  <span className="font-mono text-[8px] font-bold uppercase tracking-wider px-1 py-[0.5px] rounded-xs bg-[#C79347]/20 text-[#C79347]">
                     NEW
                   </span>
                 )}
                 {route.badge && !route.isNew && gamesUnsolved && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C79347] animate-pulse" />
                 )}
 
                 {/* Active indicator bar */}
                 {isActive && (
                   <motion.div
                     layoutId="navbar-active-indicator"
-                    className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-[#A6F0CF] shadow-[0_0_8px_#A6F0CF]"
+                    className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-[#2BB5A8] shadow-[0_0_8px_rgba(43,181,168,0.6)]"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -313,7 +313,7 @@ export const Navbar: React.FC = () => {
               <span>{locale === "ta" ? "மேலும்" : "More"}</span>
               <ChevronDown
                 className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                  isMoreOpen ? "rotate-180 text-[#A6F0CF]" : "text-[#C4B7D7] group-hover:text-[#F4F0FA]"
+                  isMoreOpen ? "rotate-180 text-[#2BB5A8]" : "text-[#CBBBA8] group-hover:text-[#FAF5ED]"
                 }`}
               />
 
@@ -335,13 +335,13 @@ export const Navbar: React.FC = () => {
                   exit={{ opacity: 0, y: 6, scale: 0.96 }}
                   transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
                   role="menu"
-                  className="absolute top-full right-0 mt-2 w-72 p-2 rounded-2xl bg-[#1A1028]/98 backdrop-blur-2xl border border-[rgba(125,96,166,0.35)] shadow-[0_16px_48px_rgba(0,0,0,0.6)] z-50 overflow-hidden"
+                  className="absolute top-full right-0 mt-2 w-72 p-2 rounded-2xl bg-[#1C122B]/98 backdrop-blur-2xl border border-[#C79347]/30 shadow-[0_16px_48px_rgba(0,0,0,0.6)] z-50 overflow-hidden"
                 >
-                  <div className="px-2.5 py-1.5 border-b border-[rgba(125,96,166,0.2)] mb-1 flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#A6F0CF] font-bold">
+                  <div className="px-2.5 py-1.5 border-b border-[#C79347]/20 mb-1 flex items-center justify-between">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#C79347] font-bold">
                       {locale === "ta" ? "கூடுதல் பக்கங்கள்" : "COMMUNITY & EXPLORE"}
                     </span>
-                    <span lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-[10px] text-[#C4B7D7]">
+                    <span lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-[10px] text-[#CBBBA8]">
                       {locale === "ta" ? "Explore" : "வழிகாட்டிகள்"}
                     </span>
                   </div>
@@ -358,34 +358,34 @@ export const Navbar: React.FC = () => {
                           role="menuitem"
                           className={`group flex items-start gap-3 p-2.5 rounded-xl transition-[background-color,border-color] ${
                             isActive
-                              ? "bg-[#25173B] border border-[#A6F0CF]/50 text-[#F4F0FA]"
-                              : "hover:bg-[#25173B]/70 border border-transparent text-[#C4B7D7] hover:text-[#F4F0FA]"
+                              ? "bg-[#271A3C] border border-[#C79347]/50 text-[#FAF5ED]"
+                              : "hover:bg-[#271A3C]/70 border border-transparent text-[#CBBBA8] hover:text-[#FAF5ED]"
                           }`}
                         >
                           <div
                             className={`p-2 rounded-lg shrink-0 mt-0.5 border ${
                               isActive
-                                ? "bg-[#140C20] border-[#A6F0CF]/60 text-[#A6F0CF]"
-                                : "bg-[#140C20]/80 border-[rgba(125,96,166,0.25)] text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:border-[#A6F0CF]/40"
+                                ? "bg-[#160E22] border-[#C79347]/60 text-[#C79347]"
+                                : "bg-[#160E22]/80 border-[#C79347]/20 text-[#CBBBA8] group-hover:text-[#2BB5A8] group-hover:border-[#2BB5A8]/40"
                             }`}
                           >
                             <Icon className="w-4 h-4" />
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center justify-between">
-                              <span className="font-sans text-xs font-semibold text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors">
+                              <span className="font-sans text-xs font-semibold text-[#FAF5ED] group-hover:text-[#2BB5A8] transition-colors">
                                 {locale === "ta" ? route.ta : route.en}
                               </span>
                               <span
                                 lang="ta"
                                 style={{ letterSpacing: 0 }}
-                                className="font-tamil text-[10px] text-[#A6F0CF]/75 ml-2 shrink-0"
+                                className="font-tamil text-[10px] text-[#C79347]/80 ml-2 shrink-0"
                               >
                                 {locale === "ta" ? route.en : route.ta}
                               </span>
                             </div>
                             {route.descriptionEn && (
-                              <p className="text-[11px] font-sans text-[#C4B7D7] mt-0.5 leading-snug line-clamp-1">
+                              <p className="text-[11px] font-sans text-[#CBBBA8] mt-0.5 leading-snug line-clamp-1">
                                 {locale === "ta" ? route.descriptionTa : route.descriptionEn}
                               </p>
                             )}
@@ -420,7 +420,7 @@ export const Navbar: React.FC = () => {
             onClick={toggleMobileMenu}
             aria-expanded={isMobileMenuOpen}
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-            className="lg:hidden inline-flex items-center justify-center p-2 rounded-md bg-[#25173B] border border-[rgba(125,96,166,0.35)] text-[#F4F0FA] hover:text-[#A6F0CF] hover:border-[#A6F0CF]/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0]"
+            className="lg:hidden inline-flex items-center justify-center p-2 rounded-md bg-[#271A3C] border border-[#C79347]/30 text-[#FAF5ED] hover:text-[#2BB5A8] hover:border-[#2BB5A8]/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8]"
           >
             {isMobileMenuOpen ? (
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -445,12 +445,12 @@ export const Navbar: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:hidden w-full max-w-7xl mx-auto mt-2 pt-3 pb-5 px-3 sm:px-6 bg-[#140C20]/98 backdrop-blur-2xl border-t border-b border-[#A6F0CF]/25 shadow-[0_16px_48px_rgba(0,0,0,0.6)]"
+            className="lg:hidden w-full max-w-7xl mx-auto mt-2 pt-3 pb-5 px-3 sm:px-6 bg-[#1C122B]/98 backdrop-blur-2xl border-t border-b border-[#C79347]/30 shadow-[0_16px_48px_rgba(0,0,0,0.6)]"
           >
             <div className="space-y-4">
               {/* Primary Navigation Grid */}
               <div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#A6F0CF] font-bold block mb-2 px-1">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#C79347] font-bold block mb-2 px-1">
                   {locale === "ta" ? "முக்கிய பக்கங்கள்" : "CORE & LEADERSHIP"}
                 </span>
                 <div className="grid grid-cols-2 gap-2">
@@ -463,14 +463,14 @@ export const Navbar: React.FC = () => {
                         onClick={handleLinkClick}
                         className={`flex flex-col p-3 rounded-xl border transition-[background-color,border-color] ${
                           isActive
-                            ? "bg-[#25173B] border-[#A6F0CF]/50 text-[#F4F0FA] shadow-[0_0_12px_rgba(166,240,207,0.15)]"
-                            : "bg-[#1d122d]/70 border-[rgba(125,96,166,0.2)] text-[#C4B7D7] hover:bg-[#25173B] hover:text-[#F4F0FA]"
+                            ? "bg-[#271A3C] border-[#2BB5A8]/50 text-[#FAF5ED] shadow-[0_0_12px_rgba(43,181,168,0.15)]"
+                            : "bg-[#160E22]/70 border-[#C79347]/15 text-[#CBBBA8] hover:bg-[#271A3C] hover:text-[#FAF5ED]"
                         }`}
                       >
                         <span className="font-sans text-xs sm:text-sm font-semibold flex items-center justify-between">
                           <span>{locale === "ta" ? route.ta : route.en}</span>
                           {route.isNew && (
-                            <span className="font-mono text-[8px] font-bold uppercase tracking-wider px-1 py-[0.5px] rounded-xs bg-[#A6F0CF]/20 text-[#A6F0CF]">
+                            <span className="font-mono text-[8px] font-bold uppercase tracking-wider px-1 py-[0.5px] rounded-xs bg-[#C79347]/20 text-[#C79347]">
                               NEW
                             </span>
                           )}
@@ -478,7 +478,7 @@ export const Navbar: React.FC = () => {
                         <span
                           lang="ta"
                           style={{ letterSpacing: 0 }}
-                          className="font-tamil text-[10px] text-[#A6F0CF]/80 mt-0.5"
+                          className="font-tamil text-[10px] text-[#C79347]/80 mt-0.5"
                         >
                           {locale === "ta" ? route.en : route.ta}
                         </span>
@@ -489,8 +489,8 @@ export const Navbar: React.FC = () => {
               </div>
 
               {/* Secondary Navigation Grid */}
-              <div className="pt-2 border-t border-[rgba(125,96,166,0.2)]">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#C4B7D7] font-bold block mb-2 px-1">
+              <div className="pt-2 border-t border-[#C79347]/20">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#CBBBA8] font-bold block mb-2 px-1">
                   {locale === "ta" ? "கூடுதல் வழிகாட்டிகள்" : "EXPLORE & ARCHIVES"}
                 </span>
                 <div className="grid grid-cols-2 gap-2">
@@ -503,8 +503,8 @@ export const Navbar: React.FC = () => {
                         onClick={handleLinkClick}
                         className={`flex flex-col p-2.5 rounded-xl border transition-[background-color,border-color] ${
                           isActive
-                            ? "bg-[#25173B] border-[#A6F0CF]/50 text-[#F4F0FA]"
-                            : "bg-[#160d23]/80 border-[rgba(125,96,166,0.15)] text-[#C4B7D7] hover:bg-[#25173B] hover:text-[#F4F0FA]"
+                            ? "bg-[#271A3C] border-[#C79347]/50 text-[#FAF5ED]"
+                            : "bg-[#160E22]/80 border-[#C79347]/15 text-[#CBBBA8] hover:bg-[#271A3C] hover:text-[#FAF5ED]"
                         }`}
                       >
                         <span className="font-sans text-xs font-medium flex items-center justify-between">
@@ -513,7 +513,7 @@ export const Navbar: React.FC = () => {
                         <span
                           lang="ta"
                           style={{ letterSpacing: 0 }}
-                          className="font-tamil text-[9px] text-[#C4B7D7] mt-0.5"
+                          className="font-tamil text-[9px] text-[#CBBBA8] mt-0.5"
                         >
                           {locale === "ta" ? route.en : route.ta}
                         </span>
@@ -524,11 +524,11 @@ export const Navbar: React.FC = () => {
               </div>
 
               {/* Mobile Actions: Join Sangam */}
-              <div className="pt-3 border-t border-[rgba(125,96,166,0.25)] flex flex-col gap-2">
+              <div className="pt-3 border-t border-[#C79347]/25 flex flex-col gap-2">
                 <Link
                   href="/join"
                   onClick={handleLinkClick}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#A6F0CF] text-[#140C20] font-sans font-bold text-xs uppercase tracking-wider hover:bg-[#7AE7B5] transition-colors shadow-sm"
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#0F766E] text-[#FAF5ED] font-sans font-bold text-xs uppercase tracking-wider hover:bg-[#0B5C56] transition-colors shadow-sm"
                 >
                   <span>{locale === "ta" ? "இணைந்திருங்கள்" : "Join the Hearth (Free Membership)"}</span>
                   <span>↗</span>

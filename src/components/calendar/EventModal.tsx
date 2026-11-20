@@ -133,7 +133,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
             className="relative w-full max-w-xl bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-3xl shadow-2xl overflow-hidden z-10 text-left max-h-[90vh] flex flex-col"
           >
             {/* Modal Header */}
-            <div className="relative px-6 sm:px-8 pt-7 pb-5 border-b border-[rgba(125,96,166,0.25)] bg-[#25173B]/60">
+            <div className="relative px-6 sm:px-8 pt-7 pb-5 border-b border-[#C79347]/20 bg-[#271A3C]">
               {/* Close Button */}
               <button
                 onClick={() => {
@@ -141,18 +141,18 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
                   onClose();
                 }}
                 aria-label={locale === "ta" ? "மூடு" : "Close event details"}
-                className="absolute top-4 right-4 w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-[#140C20]/5 hover:bg-[#A6F0CF] hover:text-[#140C20] text-[#F4F0FA] flex items-center justify-center transition-colors cursor-pointer"
+                className="absolute top-4 right-4 w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-[#1C122B] hover:bg-[#0F766E] hover:text-[#FAF5ED] text-[#FAF5ED] flex items-center justify-center transition-colors cursor-pointer border border-[#C79347]/30"
               >
                 <X className="w-5 h-5" />
               </button>
 
               <div className="pr-14">
-                <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#A6F0CF] block mb-1">
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#C79347] block mb-1">
                   OSU TAMIL SANGAM · GATHERING
                 </span>
                 <h2
                   id="calendar-modal-title"
-                  className="font-serif text-2xl sm:text-3xl font-bold text-[#F4F0FA] leading-snug"
+                  className="font-serif text-2xl sm:text-3xl font-bold text-[#FAF5ED] leading-snug"
                 >
                   {locale === "ta" && event.titleTa ? event.titleTa : event.titleEn}
                 </h2>
@@ -160,7 +160,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
                   <p
                     lang="ta"
                     style={{ letterSpacing: 0 }}
-                    className="font-tamil text-sm text-[#A6F0CF] font-medium mt-1"
+                    className="font-tamil text-sm text-[#C79347] font-medium mt-1"
                   >
                     {locale === "ta" ? event.titleEn : event.titleTa}
                   </p>
@@ -171,28 +171,28 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
             {/* Modal Scrollable Body */}
             <div data-lenis-prevent className="p-6 sm:p-8 space-y-6 overflow-y-auto overscroll-contain flex-1">
               {/* Telemetry Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 p-4 bg-[#25173B] rounded-2xl border border-[rgba(125,96,166,0.25)] text-xs font-sans text-[#C4B7D7]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 p-4 bg-[#271A3C] rounded-2xl border border-[#C79347]/20 text-xs font-sans text-[#CBBBA8]">
                 <div className="flex items-start gap-2.5">
-                  <Calendar className="w-4 h-4 text-[#A6F0CF] shrink-0 mt-0.5" />
+                  <Calendar className="w-4 h-4 text-[#2BB5A8] shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#C4B7D7]/80 block">Date</span>
-                    <span className="font-medium text-[#F4F0FA]">{dateDisplay}</span>
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#CBBBA8]/80 block">Date</span>
+                    <span className="font-medium text-[#FAF5ED]">{dateDisplay}</span>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-2.5">
-                  <Clock className="w-4 h-4 text-[#A6F0CF] shrink-0 mt-0.5" />
+                  <Clock className="w-4 h-4 text-[#2BB5A8] shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#C4B7D7]/80 block">Time</span>
-                    <span className="font-medium text-[#F4F0FA]">{timeDisplay}</span>
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#CBBBA8]/80 block">Time</span>
+                    <span className="font-medium text-[#FAF5ED]">{timeDisplay}</span>
                   </div>
                 </div>
 
-                <div className="sm:col-span-2 flex items-start gap-2.5 pt-2 border-t border-[rgba(125,96,166,0.25)]">
-                  <MapPin className="w-4 h-4 text-[#A6F0CF] shrink-0 mt-0.5" />
+                <div className="sm:col-span-2 flex items-start gap-2.5 pt-2 border-t border-[#C79347]/20">
+                  <MapPin className="w-4 h-4 text-[#2BB5A8] shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#C4B7D7]/80 block">Location</span>
-                    <span className="font-medium text-[#F4F0FA]">{event.location}</span>
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#CBBBA8]/80 block">Location</span>
+                    <span className="font-medium text-[#FAF5ED]">{event.location}</span>
                   </div>
                 </div>
               </div>
@@ -200,18 +200,18 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
               {/* Description */}
               {event.description && (
                 <div className="space-y-2">
-                  <h3 className="text-xs font-mono uppercase tracking-wider text-[#A6F0CF] font-bold">
+                  <h3 className="text-xs font-mono uppercase tracking-wider text-[#C79347] font-bold">
                     {locale === "ta" ? "நிகழ்வு விளக்கம்" : "About this gathering"}
                   </h3>
-                  <div className="font-sans text-sm text-[#C4B7D7] leading-relaxed whitespace-pre-line">
+                  <div className="font-sans text-sm text-[#CBBBA8] leading-relaxed whitespace-pre-line">
                     {event.description}
                   </div>
                 </div>
               )}
 
               {/* Free Admission Notice */}
-              <div className="flex items-center gap-2 p-3 bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-xl text-xs font-sans text-[#F4F0FA]">
-                <span className="w-2 h-2 rounded-full bg-[#55CCA2]" />
+              <div className="flex items-center gap-2 p-3 bg-[#1C122B] border border-[#C79347]/20 rounded-xl text-xs font-sans text-[#FAF5ED]">
+                <span className="w-2 h-2 rounded-full bg-[#2BB5A8]" />
                 <span className="font-medium">
                   {locale === "ta"
                     ? "அனைத்து மாணவர்களுக்கும் அனுமதி இலவசம் · உறுப்பினர் கட்டணம் இல்லை"
@@ -221,7 +221,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
             </div>
 
             {/* Modal Actions Footer */}
-            <div className="p-6 sm:px-8 border-t border-[rgba(125,96,166,0.25)] bg-[#140C20] flex flex-wrap items-center justify-between gap-3">
+            <div className="p-6 sm:px-8 border-t border-[#C79347]/20 bg-[#1C122B] flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-2">
                 {/* Add to Google Calendar */}
                 <a
@@ -229,7 +229,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => playWoodClick()}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#25173B] hover:bg-[#A6F0CF] hover:text-[#140C20] text-[#F4F0FA] text-xs font-sans font-medium transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#271A3C] hover:bg-[#0F766E] hover:text-[#FAF5ED] text-[#FAF5ED] text-xs font-sans font-medium transition-colors border border-[#C79347]/20"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   <span>Google Calendar</span>
@@ -240,9 +240,9 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
                   href={icsDownloadUrl}
                   download
                   onClick={() => playWoodClick()}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#140C20] hover:bg-[#25173B] text-[#F4F0FA] border border-[rgba(125,96,166,0.3)] text-xs font-sans font-medium transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#1C122B] hover:bg-[#271A3C] text-[#FAF5ED] border border-[#C79347]/20 text-xs font-sans font-medium transition-colors"
                 >
-                  <Download className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                  <Download className="w-3.5 h-3.5 text-[#2BB5A8]" />
                   <span>Apple / Outlook (.ics)</span>
                 </a>
               </div>
@@ -255,7 +255,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
                     playClick();
                     onClose();
                   }}
-                  className="inline-flex items-center gap-1.5 text-xs font-sans font-semibold text-[#A6F0CF] hover:text-[#F4F0FA] transition-colors uppercase tracking-wider"
+                  className="inline-flex items-center gap-1.5 text-xs font-sans font-semibold text-[#2BB5A8] hover:text-[#FAF5ED] transition-colors uppercase tracking-wider"
                 >
                   <span>{locale === "ta" ? "ஆவணம் பார்க்க" : "Open event dossier"}</span>
                   <ArrowRight className="w-3.5 h-3.5" />

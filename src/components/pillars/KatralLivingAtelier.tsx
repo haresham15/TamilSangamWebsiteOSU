@@ -181,10 +181,10 @@ export function KatralLivingAtelier() {
               key={phrase.id}
               className={`p-6 sm:p-7 rounded-2xl cursor-pointer transition-[border-color,background-color,box-shadow] duration-200 border flex flex-col justify-between ${
                 isSelected
-                  ? "bg-[#140C20] text-[#F4F0FA] border-[#A6F0CF]/60 shadow-xl"
-                  : "bg-[#140C20] text-[#F4F0FA] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/40 hover:bg-[#25173B]"
+                  ? "bg-[#1C122B] text-[#FAF5ED] border-[#2BB5A8] shadow-xl shadow-[#2BB5A8]/15"
+                  : "bg-[#1C122B] text-[#FAF5ED] border-[#C79347]/20 hover:border-[#2BB5A8]/40 hover:bg-[#271A3C]"
               }`}
-              spotlightColor={isSelected ? "rgba(166, 240, 207, 0.25)" : "rgba(242, 107, 181, 0.12)"}
+              spotlightColor={isSelected ? "rgba(43, 181, 168, 0.25)" : "rgba(199, 147, 71, 0.12)"}
               onClick={() => handlePronounce(phrase)}
             >
               <div className="space-y-4">
@@ -193,8 +193,8 @@ export function KatralLivingAtelier() {
                   <span
                     className={`text-[11px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
                       isSelected
-                        ? "bg-[#A6F0CF]/20 text-[#A6F0CF] border-[#A6F0CF]/40"
-                        : "bg-[#140C20]/5 text-[#C4B7D7] border-[rgba(125,96,166,0.25)]"
+                        ? "bg-[#2BB5A8]/20 text-[#2BB5A8] border-[#2BB5A8]/40"
+                        : "bg-[#1C122B]/5 text-[#CBBBA8] border-[#C79347]/20"
                     }`}
                   >
                     {phrase.tag}
@@ -205,13 +205,13 @@ export function KatralLivingAtelier() {
                     onClick={(e) => handlePronounce(phrase, e)}
                     className={`p-2 rounded-full transition-all duration-200 ${
                       isSelected
-                        ? "bg-[#140C20]/10 hover:bg-[#140C20]/20 text-[#F4F0FA]"
-                        : "bg-[#140C20]/5 hover:bg-[#140C20]/10 text-[#F4F0FA]"
-                    } ${isAudioPlaying ? "scale-110 ring-2 ring-[#A6F0CF]" : ""}`}
+                        ? "bg-[#1C122B]/10 hover:bg-[#1C122B]/20 text-[#FAF5ED]"
+                        : "bg-[#1C122B]/5 hover:bg-[#1C122B]/10 text-[#FAF5ED]"
+                    } ${isAudioPlaying ? "scale-110 ring-2 ring-[#2BB5A8]" : ""}`}
                     aria-label={`Listen to ${phrase.transliteration} pronunciation`}
                     title="Listen to audio pronunciation"
                   >
-                    <Volume2 className={`w-4 h-4 ${isAudioPlaying ? "animate-pulse text-[#A6F0CF]" : ""}`} />
+                    <Volume2 className={`w-4 h-4 ${isAudioPlaying ? "animate-pulse text-[#2BB5A8]" : ""}`} />
                   </button>
                 </div>
 
@@ -220,7 +220,7 @@ export function KatralLivingAtelier() {
                   <p
                     lang="ta"
                     className={`font-serif text-2xl sm:text-3xl font-semibold leading-relaxed tracking-normal ${
-                      isSelected ? "text-[#F4F0FA]" : "text-[#F4F0FA]"
+                      isSelected ? "text-[#FAF5ED]" : "text-[#FAF5ED]"
                     }`}
                     style={{ letterSpacing: 0 }}
                   >
@@ -228,7 +228,7 @@ export function KatralLivingAtelier() {
                   </p>
                   <p
                     className={`font-mono text-sm tracking-wide ${
-                      isSelected ? "text-[#A6F0CF]" : "text-[#A6F0CF]"
+                      isSelected ? "text-[#C79347]" : "text-[#C79347]"
                     }`}
                   >
                     {phrase.transliteration}
@@ -258,10 +258,10 @@ export function KatralLivingAtelier() {
 
               {/* Bottom Hint */}
               <div className="pt-4 border-t border-current/10 mt-4 flex items-center justify-between text-[11px] font-mono">
-                <span className={isSelected ? "text-[#C4B7D7]" : "text-[#C4B7D7]"}>
+                <span className={isSelected ? "text-[#CBBBA8]" : "text-[#CBBBA8]"}>
                   {isSelected ? "Active in memory" : "Tap to pronounce"}
                 </span>
-                <span className={isSelected ? "text-[#A6F0CF]" : "text-[#A6F0CF]"}>
+                <span className={isSelected ? "text-[#2BB5A8]" : "text-[#2BB5A8]"}>
                   {isAudioPlaying ? "Voicing..." : "Audio Ready ↗"}
                 </span>
               </div>
@@ -320,7 +320,7 @@ export function KatralLivingAtelier() {
                   href={`/ideas?category=NEW+INITIATIVE&pillar=katral&prompt=${encodeURIComponent(
                     track.prompt
                   )}`}
-                  className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-[#A6F0CF] hover:text-[#F4F0FA] transition-colors pt-3 border-t border-[#EADCC9]"
+                  className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-[#2BB5A8] hover:text-[#FAF5ED] transition-colors pt-3 border-t border-[#EADCC9]"
                 >
                   <span>Propose this workshop</span>
                   <ArrowRight className="w-3.5 h-3.5" />

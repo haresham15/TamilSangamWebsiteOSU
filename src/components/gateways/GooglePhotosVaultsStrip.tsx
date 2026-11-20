@@ -29,7 +29,7 @@ const VAULT_ALBUMS: VaultAlbum[] = [
     season: "Fall 2025 · Welcome Social",
     location: "South Oval Lawn",
     url: "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7",
-    accent: "#F26BB5",
+    accent: "#B84A39",
   },
   {
     num: "03",
@@ -38,7 +38,7 @@ const VAULT_ALBUMS: VaultAlbum[] = [
     season: "Spring 2026 · General Body",
     location: "Campus Hall / Ohio Union",
     url: "https://photos.app.goo.gl/PnkceBh19PqytYQ89",
-    accent: "#A6F0CF",
+    accent: "#2BB5A8",
   },
   {
     num: "04",
@@ -47,7 +47,7 @@ const VAULT_ALBUMS: VaultAlbum[] = [
     season: "Spring 2026 · Joint Carnival",
     location: "RPAC Plaza / South Oval",
     url: "https://photos.app.goo.gl/NBTxg98ppmd9uhWX9",
-    accent: "#55CCA2",
+    accent: "#C79347",
   },
   {
     num: "05",
@@ -56,7 +56,7 @@ const VAULT_ALBUMS: VaultAlbum[] = [
     season: "Autumn 2025 · Joint Social",
     location: "Ohio State Campus Spaces",
     url: "https://photos.app.goo.gl/QrUrPkvPQqQvz7H29",
-    accent: "#9B7BB8",
+    accent: "#5B2C86",
   },
 ];
 

@@ -58,20 +58,20 @@ export function EditorialPhotoCarousel() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[rgba(125,96,166,0.25)]">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="p-1 rounded-md bg-[#25173B] text-[#A6F0CF]">
+            <span className="p-1 rounded-md bg-[#271A3C] text-[#C79347]">
               <Camera className="w-4 h-4" />
             </span>
-            <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[#A6F0CF]">
+            <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[#C79347]">
               Living Photo Chronicle · நிழற்படத் தொகுப்பு
             </span>
           </div>
           <h2
             id="editorial-photo-carousel-heading"
-            className="text-3xl sm:text-4xl font-serif font-normal text-[#F4F0FA]"
+            className="text-3xl sm:text-4xl font-serif font-normal text-[#FAF5ED]"
           >
             Memories on the Banks of the Olentangy
           </h2>
-          <p className="text-sm font-sans text-[#C4B7D7] max-w-xl">
+          <p className="text-sm font-sans text-[#CBBBA8] max-w-xl">
             Candid captures from our welcome picnics, murder mystery game nights, student jam circles, and joint spring carnivals.
           </p>
         </div>
@@ -82,7 +82,7 @@ export function EditorialPhotoCarousel() {
             type="button"
             onClick={() => handleScroll("left")}
             aria-label="Scroll photo gallery left"
-            className="p-2.5 rounded-full border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] text-[#F4F0FA] hover:text-[#A6F0CF] bg-[#1A1028] hover:bg-[#25173B] transition-colors focus-visible:outline-2 focus-visible:outline-[#4FD6E0] cursor-pointer"
+            className="p-2.5 rounded-full border border-[#C79347]/30 hover:border-[#2BB5A8] text-[#FAF5ED] hover:text-[#2BB5A8] bg-[#1C122B] hover:bg-[#271A3C] transition-colors focus-visible:outline-2 focus-visible:outline-[#2BB5A8] cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -90,7 +90,7 @@ export function EditorialPhotoCarousel() {
             type="button"
             onClick={() => handleScroll("right")}
             aria-label="Scroll photo gallery right"
-            className="p-2.5 rounded-full border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] text-[#F4F0FA] hover:text-[#A6F0CF] bg-[#1A1028] hover:bg-[#25173B] transition-colors focus-visible:outline-2 focus-visible:outline-[#4FD6E0] cursor-pointer"
+            className="p-2.5 rounded-full border border-[#C79347]/30 hover:border-[#2BB5A8] text-[#FAF5ED] hover:text-[#2BB5A8] bg-[#1C122B] hover:bg-[#271A3C] transition-colors focus-visible:outline-2 focus-visible:outline-[#2BB5A8] cursor-pointer"
           >
             <ChevronRight className="w-4 h-4" />
           </button>

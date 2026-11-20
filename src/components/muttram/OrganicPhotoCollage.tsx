@@ -49,7 +49,7 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
               {/* Captions sitting naked directly on global background */}
               <div className="pt-5 space-y-1.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-sans font-semibold text-[#A6F0CF] tracking-widest uppercase block">
+                  <span className="text-xs font-sans font-semibold text-[#C79347] tracking-widest uppercase block">
                     {photos[0].subtitle}
                   </span>
                   <span className="text-stone-400">·</span>
@@ -57,10 +57,10 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
                     {photos[0].tag}
                   </span>
                 </div>
-                <h3 className="text-2xl font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors leading-snug">
+                <h3 className="text-2xl font-serif font-normal text-[#FAF5ED] group-hover:text-[#C79347] transition-colors leading-snug">
                   {photos[0].title}
                 </h3>
-                <p className="font-sans text-sm text-[#C4B7D7] leading-relaxed">
+                <p className="font-sans text-sm text-[#CBBBA8] leading-relaxed">
                   {photos[0].description}
                 </p>
               </div>
@@ -90,7 +90,7 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
               {/* Naked Captions on Global Background */}
               <div className="pt-5 space-y-1.5 max-w-xl">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-sans font-semibold text-[#A6F0CF] tracking-widest uppercase block">
+                  <span className="text-xs font-sans font-semibold text-[#C79347] tracking-widest uppercase block">
                     {photos[1].subtitle}
                   </span>
                   <span className="text-stone-400">·</span>
@@ -98,10 +98,10 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
                     {photos[1].tag}
                   </span>
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors leading-snug">
+                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#FAF5ED] group-hover:text-[#C79347] transition-colors leading-snug">
                   {photos[1].title}
                 </h3>
-                <p className="font-sans text-sm sm:text-base text-[#C4B7D7] leading-relaxed">
+                <p className="font-sans text-sm sm:text-base text-[#CBBBA8] leading-relaxed">
                   {photos[1].description}
                 </p>
               </div>
@@ -131,7 +131,7 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
               {/* Naked Captions */}
               <div className="sm:col-span-6 pt-4 sm:pt-2 space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-sans font-semibold text-[#A6F0CF] tracking-widest uppercase block">
+                  <span className="text-xs font-sans font-semibold text-[#C79347] tracking-widest uppercase block">
                     {photos[2].subtitle}
                   </span>
                   <span className="text-stone-400">·</span>
@@ -139,10 +139,10 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
                     {photos[2].tag}
                   </span>
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors leading-snug">
+                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#FAF5ED] group-hover:text-[#C79347] transition-colors leading-snug">
                   {photos[2].title}
                 </h3>
-                <p className="font-sans text-sm sm:text-base text-[#C4B7D7] leading-relaxed">
+                <p className="font-sans text-sm sm:text-base text-[#CBBBA8] leading-relaxed">
                   {photos[2].description}
                 </p>
               </div>

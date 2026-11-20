@@ -316,7 +316,7 @@ export function HomeClient() {
 
       {/* Semantic SSR Knowledge Entity for AI Bots & Search Engine Crawlers */}
       <header className="sr-only">
-        <h1>OSU Tamil Sangam · Official Tamil Cultural Student Organization at The Ohio State University</h1>
+        <p className="font-bold">OSU Tamil Sangam · Official Tamil Cultural Student Organization at The Ohio State University</p>
         <p>
           Welcome to OSU Tamil Sangam (ஒஹையோ மாநிலப் பல்கலைக்கழகத் தமிழ்ச் சங்கம்), the official student-led cultural organization serving students, scholars, and alumni at The Ohio State University in Columbus, Ohio.
           Founded in 2021 as a registered student organization with Ohio State Student Activities, Tamil Sangam is dedicated to cultivating an inclusive, welcoming home away from home.
@@ -338,7 +338,7 @@ export function HomeClient() {
       {/* Accessible Skip Link (PRD §7.11) */}
       <a
         href={staticHero ? "#flagship-gathering" : "#monolith"}
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#A6F0CF] focus:text-[#140C20] focus:font-space-mono focus:text-xs focus:font-bold focus:outline-none"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#0F766E] focus:text-[#FAF5ED] focus:font-space-mono focus:text-xs focus:font-bold focus:outline-none"
       >
         SKIP TO CONTENT &rarr;
       </a>
@@ -395,7 +395,7 @@ export function HomeClient() {
                       ? "Click to pause pronunciation · ஒலி வடிவத்தை நிறுத்தவும்"
                       : "Click quote to hear Tamil pronunciation · குறள் 81 ஒலி கேட்க"
                   }
-                  className="group cursor-pointer font-noto-serif-tamil text-[clamp(1.15rem,1.65vw,1.55rem)] text-[#FAFAFA] font-medium p-3 sm:p-4 rounded-xl transition-colors duration-200 hover:bg-white/[0.05] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0]"
+                  className="group cursor-pointer font-noto-serif-tamil text-[clamp(1.15rem,1.65vw,1.55rem)] text-[#FAFAFA] font-medium p-3 sm:p-4 rounded-xl transition-colors duration-200 hover:bg-white/[0.05] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8]"
                   style={{ letterSpacing: "0px" }}
                 >
                   <span className="block sm:whitespace-nowrap leading-[1.8] sm:leading-[1.9]">
@@ -476,9 +476,9 @@ export function HomeClient() {
                 <span className="font-space-mono text-[10px] text-[#C79347] tracking-widest uppercase block mb-1.5 font-semibold">
                   COMMUNITY CHARTER · OHIO STATE
                 </span>
-                <h1 className="text-[clamp(1.5rem,2.5vw,2.5rem)] font-display font-medium text-[#FAF5ED] leading-tight tracking-tight">
+                <h2 className="text-[clamp(1.5rem,2.5vw,2.5rem)] font-display font-medium text-[#FAF5ED] leading-tight tracking-tight">
                   Tamil Sangam at Ohio State
-                </h1>
+                </h2>
                 <p className="mt-1 text-xs sm:text-sm font-mono text-[#2BB5A8] tracking-wider uppercase font-medium">
                   Open Year-Round · No Language Requirement
                 </p>

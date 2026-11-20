@@ -88,10 +88,10 @@ export function SplitFlapMiniHeader({ onSearchFocus }: SplitFlapMiniHeaderProps)
           title="Scroll back to departure board"
         >
           {/* Status pip */}
-          <span className="w-2 h-2 rounded-full bg-[#55CCA2] animate-pulse shrink-0 hidden sm:inline-block" />
+          <span className="w-2 h-2 rounded-full bg-[#2BB5A8] animate-pulse shrink-0 hidden sm:inline-block" />
 
           {/* Mechanical Split-Flap Letter Tiles */}
-          <div className="flex items-center gap-[2px] sm:gap-[3px] p-1 bg-[#070504] border border-[#2b2017] shadow-inner group-hover:border-[#A6F0CF]/35 transition-colors">
+          <div className="flex items-center gap-[2px] sm:gap-[3px] p-1 bg-[#070504] border border-[#2b2017] shadow-inner group-hover:border-[#C79347]/35 transition-colors">
             {displayChars.map((char, i) => {
               const isCellFlipping = flippingIndices.has(i);
               return (
@@ -99,7 +99,7 @@ export function SplitFlapMiniHeader({ onSearchFocus }: SplitFlapMiniHeaderProps)
                   key={i}
                   className={`relative w-3.5 h-6 sm:w-4 sm:h-7 bg-[#140f0b] border border-[#261d15] flex flex-col items-center justify-center text-[#fbf7ee] font-mono text-[10px] sm:text-xs font-bold select-none overflow-hidden ${
                     i >= 18 ? "hidden md:flex" : ""
-                  } ${isCellFlipping ? "animate-pulse border-[#A6F0CF]/35" : ""}`}
+                  } ${isCellFlipping ? "animate-pulse border-[#C79347]/35" : ""}`}
                 >
                   {/* Top Half */}
                   <span className="leading-none text-center">
@@ -122,27 +122,27 @@ export function SplitFlapMiniHeader({ onSearchFocus }: SplitFlapMiniHeaderProps)
                 playClick();
                 onSearchFocus();
               }}
-              className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#17110c] hover:bg-[#231a12] border border-[#3b2b1d] hover:border-[#A6F0CF] text-[#ded4c5] hover:text-[#fbf7ee] text-[11px] transition-all"
+              className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#17110c] hover:bg-[#231a12] border border-[#3b2b1d] hover:border-[#2BB5A8] text-[#ded4c5] hover:text-[#fbf7ee] text-[11px] transition-all"
             >
-              <Search className="w-3 h-3 text-[#A6F0CF]" />
+              <Search className="w-3 h-3 text-[#2BB5A8]" />
               <span>SEARCH</span>
             </button>
           )}
 
           <button
             onClick={openNanbaChat}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#091510] hover:bg-[#11271e] border border-[#1b3d2f] hover:border-[#55CCA2] text-[#55CCA2] text-[11px] font-bold tracking-wider uppercase transition-all"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#091510] hover:bg-[#11271e] border border-[#1b3d2f] hover:border-[#2BB5A8] text-[#2BB5A8] text-[11px] font-bold tracking-wider uppercase transition-all"
           >
-            <Sparkles className="w-3 h-3 text-[#55CCA2]" />
+            <Sparkles className="w-3 h-3 text-[#2BB5A8]" />
             <span className="hidden sm:inline">ASK</span> NANBA
           </button>
 
           <button
             onClick={scrollToHero}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#1a140f] hover:bg-[#261d15] border border-[#3d2c18] hover:border-[#A6F0CF] text-[#A6F0CF] text-[11px] font-bold tracking-wider uppercase transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#1a140f] hover:bg-[#261d15] border border-[#3d2c18] hover:border-[#2BB5A8] text-[#2BB5A8] text-[11px] font-bold tracking-wider uppercase transition-all active:scale-[0.98]"
             title="Scroll to 3D Split-Flap Board"
           >
-            <ArrowUp className="w-3 h-3 text-[#A6F0CF]" />
+            <ArrowUp className="w-3 h-3 text-[#2BB5A8]" />
             <span>BOARD</span>
           </button>
         </div>

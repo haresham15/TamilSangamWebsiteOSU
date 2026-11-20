@@ -84,7 +84,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               href={SITE_CONFIG.groupMeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#A6F0CF] text-[#140C20] text-xs font-sans font-medium hover:bg-[#7AE7B5] transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0F766E] text-[#FAF5ED] text-xs font-sans font-medium hover:bg-[#0B5C56] transition-colors"
             >
               <MessageSquare className="w-3.5 h-3.5" />
               <span>Join GroupMe</span>

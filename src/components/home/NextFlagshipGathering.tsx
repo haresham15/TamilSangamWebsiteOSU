@@ -154,9 +154,9 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
                 <span className="font-mono text-xs uppercase tracking-widest text-[#C79347] font-medium shrink-0">
                   DATE
                 </span>
-                <span className="font-serif text-base sm:text-lg text-[#FAF5ED] tracking-wide sm:text-right">
+                <time className="font-serif text-base sm:text-lg text-[#FAF5ED] tracking-wide sm:text-right">
                   {displayDate}
-                </span>
+                </time>
               </div>
 
               <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 sm:gap-6">
@@ -177,14 +177,14 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
                 <span className="font-mono text-xs uppercase tracking-widest text-[#C79347] font-medium shrink-0">
                   VENUE
                 </span>
-                <span className="font-serif text-base sm:text-lg text-[#FAF5ED] tracking-wide sm:text-right">
+                <address className="not-italic font-serif text-base sm:text-lg text-[#FAF5ED] tracking-wide sm:text-right block sm:inline">
                   {venueName}
                   {venueAddress && (
                     <span className="block text-xs font-sans text-[#CBBBA8] tracking-normal mt-0.5">
                       {venueAddress}
                     </span>
                   )}
-                </span>
+                </address>
               </div>
 
               <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 sm:gap-6">

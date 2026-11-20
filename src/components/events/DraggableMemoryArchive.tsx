@@ -224,11 +224,11 @@ export function DraggableMemoryArchive() {
         }}
       >
         {/* Workspace Telemetry Markings */}
-        <div className="absolute top-3 left-4 text-[9px] text-[#A6F0CF]/60 tracking-widest uppercase pointer-events-none select-none">
+        <div className="absolute top-3 left-4 text-[9px] text-[#C79347]/80 tracking-widest uppercase pointer-events-none select-none">
           COLUMBUS CAMPUS MEMORIES // SOUTH OVAL & UNION
         </div>
         <div className="absolute top-3 right-4 text-[9px] text-white/50 tracking-widest uppercase pointer-events-none select-none flex items-center gap-1">
-          <Move className="w-3 h-3 text-[#55CCA2]" />
+          <Move className="w-3 h-3 text-[#2BB5A8]" />
           <span>DRAGGABLE POLAROIDS</span>
         </div>
         <div className="absolute bottom-3 left-4 text-[9px] text-white/30 tracking-widest uppercase pointer-events-none select-none">
@@ -266,7 +266,7 @@ export function DraggableMemoryArchive() {
                 className="object-cover pointer-events-none select-none"
                 draggable={false}
               />
-              <div className="absolute bottom-1 right-1.5 px-1.5 py-0.5 bg-[#140C20]/85 text-[8px] font-mono text-[#A6F0CF] tracking-wider uppercase pointer-events-none">
+              <div className="absolute bottom-1 right-1.5 px-1.5 py-0.5 bg-[#1C122B]/85 text-[8px] font-mono text-[#2BB5A8] tracking-wider uppercase pointer-events-none">
                 {item.date}
               </div>
             </div>

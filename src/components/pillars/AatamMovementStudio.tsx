@@ -83,14 +83,14 @@ export function AatamMovementStudio() {
     <div className="w-full space-y-10">
       {/* Studio Eyebrow & Description */}
       <div className="space-y-3 max-w-2xl">
-        <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#A6F0CF]">
-          <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-pulse" />
+        <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#C79347]">
+          <span className="w-2 h-2 rounded-full bg-[#2BB5A8] animate-pulse" />
           <span>Interactive Choreography Studio · நடனக் களங்கள்</span>
         </div>
-        <h3 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal leading-tight">
+        <h3 className="font-serif text-3xl sm:text-4xl text-[#FAF5ED] font-normal leading-tight">
           The Three Movement Archetypes
         </h3>
-        <p className="font-sans text-sm sm:text-base text-[#C4B7D7] leading-relaxed">
+        <p className="font-sans text-sm sm:text-base text-[#CBBBA8] leading-relaxed">
           Hover or tap any movement form to explore its rhythm profile, performance context, and how you can lead or participate in it for upcoming campus events.
         </p>
       </div>
@@ -109,25 +109,25 @@ export function AatamMovementStudio() {
               className="h-full"
             >
               <SpotlightCard
-                spotlightColor="rgba(166, 240, 207, 0.16)"
-                goldColor="rgba(242, 107, 181, 0.12)"
+                spotlightColor="rgba(43, 181, 168, 0.16)"
+                goldColor="rgba(199, 147, 71, 0.12)"
                 radius={360}
                 className={`h-full cursor-pointer transition-[border-color,background-color,box-shadow] duration-200 rounded-2xl p-6 sm:p-8 flex flex-col justify-between border ${
                   isSelected
-                    ? "bg-[#140C20] border-[#A6F0CF] shadow-xl shadow-[#F26BB5]/15"
-                    : "bg-[#140C20] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 shadow-sm"
+                    ? "bg-[#1C122B] border-[#2BB5A8] shadow-xl shadow-[#2BB5A8]/15"
+                    : "bg-[#1C122B] border-[#C79347]/20 hover:border-[#2BB5A8]/35 shadow-sm"
                 }`}
                 onClick={() => handleCardClick(movement.id)}
               >
                 <div className="space-y-6">
                   {/* Top Badge & Metric */}
-                  <div className="flex items-center justify-between gap-4 border-b border-[rgba(125,96,166,0.25)] pb-4">
-                    <span className="text-[11px] font-mono tracking-widest uppercase font-semibold text-[#A6F0CF]">
+                  <div className="flex items-center justify-between gap-4 border-b border-[#C79347]/20 pb-4">
+                    <span className="text-[11px] font-mono tracking-widest uppercase font-semibold text-[#C79347]">
                       {movement.bpm}
                     </span>
                     <span
                       lang="ta"
-                      className="text-xs font-tamil text-[#C4B7D7] font-medium"
+                      className="text-xs font-tamil text-[#CBBBA8] font-medium"
                       style={{ letterSpacing: 0 }}
                     >
                       {movement.tagTa}
@@ -136,24 +136,24 @@ export function AatamMovementStudio() {
 
                   {/* Icon & Title */}
                   <div className="space-y-2">
-                    <div className="w-10 h-10 rounded-full bg-[#F26BB5]/10 flex items-center justify-center text-[#A6F0CF] mb-3">
+                    <div className="w-10 h-10 rounded-full bg-[#B84A39]/10 flex items-center justify-center text-[#2BB5A8] mb-3">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <h4 className="font-serif text-2xl text-[#F4F0FA] font-normal leading-snug">
+                    <h4 className="font-serif text-2xl text-[#FAF5ED] font-normal leading-snug">
                       {movement.titleEn}
                     </h4>
-                    <p lang="ta" className="font-tamil text-base text-[#A6F0CF] font-medium leading-relaxed">
+                    <p lang="ta" className="font-tamil text-base text-[#C79347] font-medium leading-relaxed">
                       {movement.titleTa}
                     </p>
                   </div>
 
                   {/* Rhythm Sonic Bar */}
-                  <div className="p-3 rounded-lg bg-[#25173B]/60 border border-[rgba(125,96,166,0.25)] space-y-1">
-                    <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-[#C4B7D7]">
+                  <div className="p-3 rounded-lg bg-[#271A3C]/60 border border-[#C79347]/20 space-y-1">
+                    <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-[#CBBBA8]">
                       <span>Sonic Texture</span>
                       {isSelected && (
-                        <span className="flex items-center gap-1 text-[#A6F0CF]">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] animate-ping" />
+                        <span className="flex items-center gap-1 text-[#2BB5A8]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#2BB5A8] animate-ping" />
                           <span>Active Beat</span>
                         </span>
                       )}
@@ -187,7 +187,7 @@ export function AatamMovementStudio() {
                       e.stopPropagation();
                       audioLayer.playTapeClack();
                     }}
-                    className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider font-semibold text-[#A6F0CF] hover:text-[#9A3C1E] transition-colors"
+                    className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider font-semibold text-[#2BB5A8] hover:text-[#3ED0C2] transition-colors"
                   >
                     <span>Pitch This Movement</span>
                     <ArrowRight className="w-3.5 h-3.5" />

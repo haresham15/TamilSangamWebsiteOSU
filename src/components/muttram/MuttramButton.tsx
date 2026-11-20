@@ -38,16 +38,16 @@ export const MuttramButton: React.FC<MuttramButtonProps> = ({
 
   const variantStyles = {
     primary:
-      "bg-[#A6F0CF] text-[#140C20] font-medium shadow-md shadow-amber-900/10 hover:bg-[#7AE7B5] hover:shadow-lg hover:shadow-amber-900/15",
+      "bg-[#0F766E] text-[#FAF5ED] font-medium shadow-md shadow-stone-900/10 hover:bg-[#0B5C56] hover:shadow-lg hover:shadow-stone-900/15",
     secondary:
-      "bg-[#A6F0CF] text-[#140C20] font-medium shadow-md shadow-stone-900/10 hover:bg-[#7AE7B5] hover:shadow-lg hover:shadow-stone-900/15",
+      "bg-[#5B2C86] text-[#FAF5ED] font-medium shadow-md shadow-stone-900/10 hover:bg-[#48236A] hover:shadow-lg hover:shadow-stone-900/15",
     outline:
-      "border-2 border-[#A6F0CF]/35 text-[#A6F0CF] font-medium hover:border-[#A6F0CF] hover:bg-[#7AE7B5]/5",
+      "border-2 border-[#0F766E]/40 text-[#0F766E] font-medium hover:border-[#0F766E] hover:bg-[#E1F3F1]",
     ghost:
-      "text-[#F4F0FA] font-medium hover:bg-[#25173B]/5 hover:text-[#A6F0CF]",
+      "text-[#261A14] font-medium hover:bg-[#FAF6F0] hover:text-[#0F766E]",
   }[variant];
 
-  const baseStyles = `inline-flex items-center justify-center rounded-full font-sans transition-colors duration-200 select-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] focus-visible:ring-offset-2 ${sizeStyles} ${variantStyles} ${
+  const baseStyles = `inline-flex items-center justify-center rounded-full font-sans transition-colors duration-200 select-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8] focus-visible:ring-offset-2 ${sizeStyles} ${variantStyles} ${
     disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
   } ${className}`;
 

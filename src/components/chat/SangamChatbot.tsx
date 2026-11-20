@@ -295,10 +295,10 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
                     onClick={() => setIsEditorOpen(!isEditorOpen)}
                     title="Edit Knowledge Base"
                     aria-label="Toggle Knowledge Base Editor"
-                    className={`p-1.5 min-w-[36px] min-h-[36px] rounded-lg flex items-center justify-center border text-xs font-mono font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] transition-[background-color,border-color,color] duration-150 cursor-pointer ${
+                    className={`p-1.5 min-w-[36px] min-h-[36px] rounded-lg flex items-center justify-center border text-xs font-mono font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8] transition-[background-color,border-color,color] duration-150 cursor-pointer ${
                       isEditorOpen
-                        ? "bg-[#A6F0CF] text-[#140C20] border-[#A6F0CF]"
-                        : "bg-[#140C20] text-[#F4F0FA] border-[#A6F0CF]/35 hover:text-white hover:border-[#A6F0CF]"
+                        ? "bg-[#0F766E] text-[#FAF5ED] border-[#0F766E]"
+                        : "bg-[#1C122B] text-[#FAF5ED] border-[#C79347]/30 hover:text-white hover:border-[#2BB5A8]"
                     }`}
                   >
                     <Database className="w-3.5 h-3.5" />
@@ -306,7 +306,7 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
                   <button
                     onClick={handleClose}
                     aria-label="Close Chat"
-                    className="p-1.5 min-w-[36px] min-h-[36px] rounded-lg flex items-center justify-center bg-[#140C20] border border-[#A6F0CF]/35 text-[#F4F0FA]/80 hover:text-white hover:border-[#A6F0CF] transition-colors cursor-pointer"
+                    className="p-1.5 min-w-[36px] min-h-[36px] rounded-lg flex items-center justify-center bg-[#1C122B] border border-[#C79347]/30 text-[#FAF5ED]/80 hover:text-white hover:border-[#2BB5A8] transition-colors cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -324,13 +324,13 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
                 >
                   <div className="flex items-center justify-between mb-2.5">
                     <span className="font-mono text-[11px] font-bold text-[#F4F0FA] uppercase flex items-center gap-1.5">
-                      <PlusCircle className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                      <PlusCircle className="w-3.5 h-3.5 text-[#C79347]" />
                       Add Knowledge to AI Engine
                     </span>
                     <Link
                       href="/guide"
                       onClick={handleClose}
-                      className="text-[10px] font-mono text-[#A6F0CF] font-bold hover:underline flex items-center gap-0.5"
+                      className="text-[10px] font-mono text-[#2BB5A8] font-bold hover:underline flex items-center gap-0.5"
                     >
                       Open Full Guide & Manager →
                     </Link>
@@ -344,14 +344,14 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
                         value={newTitle}
                         onChange={(e) => setNewTitle(e.target.value)}
                         required
-                        className="w-full px-3 py-1.5 bg-[#1A1028] border border-[rgba(125,96,166,0.35)] rounded-lg text-xs text-[#F4F0FA] placeholder-[#C4B7D7]/60 focus:outline-none focus:border-[#A6F0CF] focus:ring-1 focus:ring-[#4FD6E0]"
+                        className="w-full px-3 py-1.5 bg-[#1C122B] border border-[#C79347]/30 rounded-lg text-xs text-[#FAF5ED] placeholder-[#CBBBA8]/60 focus:outline-none focus:border-[#2BB5A8] focus:ring-1 focus:ring-[#2BB5A8]"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <select
                         value={newCategory}
                         onChange={(e) => setNewCategory(e.target.value)}
-                        className="px-2.5 py-1.5 bg-[#1A1028] border border-[rgba(125,96,166,0.35)] rounded-lg text-xs text-[#F4F0FA] focus:outline-none focus:border-[#A6F0CF]"
+                        className="px-2.5 py-1.5 bg-[#1C122B] border border-[#C79347]/30 rounded-lg text-xs text-[#FAF5ED] focus:outline-none focus:border-[#2BB5A8]"
                       >
                         <option value="Events">Events</option>
                         <option value="Membership">Membership</option>
@@ -368,7 +368,7 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
                         aria-label="Fact Keywords"
                         value={newKeywords}
                         onChange={(e) => setNewKeywords(e.target.value)}
-                        className="px-2.5 py-1.5 bg-[#1A1028] border border-[rgba(125,96,166,0.35)] rounded-lg text-xs text-[#F4F0FA] placeholder-[#C4B7D7]/60 focus:outline-none focus:border-[#A6F0CF]"
+                        className="px-2.5 py-1.5 bg-[#1C122B] border border-[#C79347]/30 rounded-lg text-xs text-[#FAF5ED] placeholder-[#CBBBA8]/60 focus:outline-none focus:border-[#2BB5A8]"
                       />
                     </div>
                     <div>
@@ -381,13 +381,13 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
                         value={newContent}
                         onChange={(e) => setNewContent(e.target.value)}
                         required
-                        className="w-full px-3 py-1.5 bg-[#1A1028] border border-[rgba(125,96,166,0.35)] rounded-lg text-xs text-[#F4F0FA] placeholder-[#C4B7D7]/60 focus:outline-none focus:border-[#A6F0CF] focus:ring-1 focus:ring-[#4FD6E0]"
+                        className="w-full px-3 py-1.5 bg-[#1C122B] border border-[#C79347]/30 rounded-lg text-xs text-[#FAF5ED] placeholder-[#CBBBA8]/60 focus:outline-none focus:border-[#2BB5A8] focus:ring-1 focus:ring-[#2BB5A8]"
                       />
                     </div>
                     <button
                       type="submit"
                       disabled={editorStatus === "saving"}
-                      className="w-full py-2 bg-[#140C20] hover:bg-[#140C20] text-white border border-[#A6F0CF]/35 text-[11px] font-mono uppercase font-bold rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+                      className="w-full py-2 bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] border border-[#0F766E] text-[11px] font-mono uppercase font-bold rounded-lg transition-colors cursor-pointer disabled:opacity-50"
                     >
                       {editorStatus === "saving" ? "Indexing Entry..." : editorStatus === "success" ? "Saved to Knowledge Base!" : "Save & Index Fact"}
                     </button>
@@ -406,14 +406,14 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
                   }`}
                 >
                   {m.role === "user" ? (
-                    <div className="max-w-[85%] p-3.5 rounded-2xl rounded-br-xs bg-[#140C20] text-[#F4F0FA] border border-[#A6F0CF]/35 shadow-sm">
+                    <div className="max-w-[85%] p-3.5 rounded-2xl rounded-br-xs bg-[#271A3C] text-[#FAF5ED] border border-[#C79347]/30 shadow-sm">
                       <p className="text-xs leading-relaxed whitespace-pre-line font-body font-normal">
                         {m.content}
                       </p>
                     </div>
                   ) : (
                     <div className="flex items-start gap-2 max-w-[92%]">
-                      <div className="w-6 h-6 rounded-full bg-[#140C20] border border-[#A6F0CF]/35 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                      <div className="w-6 h-6 rounded-full bg-[#1C122B] border border-[#C79347]/30 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
                         <NanbaAvatar size={18} className="w-4.5 h-4.5" />
                       </div>
                       <div className="p-3.5 rounded-2xl rounded-tl-xs bg-[#1A1028] text-[#F4F0FA] border border-[rgba(125,96,166,0.35)] shadow-sm">
@@ -432,10 +432,10 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
                                 key={idx}
                                 href={cit.route}
                                 onClick={handleClose}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#25173B] hover:bg-[#140C20] border border-[#A6F0CF]/35 text-[10px] font-mono font-medium text-[#A6F0CF] hover:border-[#A6F0CF] transition-colors"
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#1C122B] hover:bg-[#271A3C] border border-[#C79347]/30 text-[10px] font-mono font-medium text-[#2BB5A8] hover:border-[#2BB5A8] transition-colors"
                               >
                                 <span>{cit.title}</span>
-                                <ArrowUpRight className="w-2.5 h-2.5 text-[#A6F0CF]" />
+                                <ArrowUpRight className="w-2.5 h-2.5 text-[#2BB5A8]" />
                               </Link>
                             ))}
                           </div>
@@ -448,14 +448,14 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
 
               {isLoading && (
                 <div className="flex items-start gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#140C20] border border-[#A6F0CF]/35 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-6 h-6 rounded-full bg-[#1C122B] border border-[#C79347]/30 flex items-center justify-center shrink-0 mt-0.5">
                     <NanbaAvatar size={18} className="w-4.5 h-4.5" animated />
                   </div>
                   <div className="p-3 bg-[#1A1028] border border-[rgba(125,96,166,0.35)] rounded-2xl rounded-tl-xs shadow-sm flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] animate-bounce" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] animate-bounce [animation-delay:0.2s]" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] animate-bounce [animation-delay:0.4s]" />
-                    <span className="text-[11px] font-mono text-[#C4B7D7] font-medium ml-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#2BB5A8] animate-bounce" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#2BB5A8] animate-bounce [animation-delay:0.2s]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#2BB5A8] animate-bounce [animation-delay:0.4s]" />
+                    <span className="text-[11px] font-mono text-[#CBBBA8] font-medium ml-1">
                       Nanba is consulting the archives...
                     </span>
                   </div>
@@ -471,7 +471,7 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(prompt)}
-                    className="whitespace-nowrap px-3 py-1.5 rounded-full bg-[#140C20] hover:bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/50 text-[10px] font-mono font-medium text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors shrink-0 shadow-2xs cursor-pointer"
+                    className="whitespace-nowrap px-3 py-1.5 rounded-full bg-[#1C122B] hover:bg-[#271A3C] border border-[#C79347]/30 hover:border-[#2BB5A8]/50 text-[10px] font-mono font-medium text-[#CBBBA8] hover:text-[#2BB5A8] transition-colors shrink-0 shadow-2xs cursor-pointer"
                   >
                     {prompt}
                   </button>

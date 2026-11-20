@@ -57,14 +57,14 @@ export const AgendaList: React.FC<AgendaListProps> = ({
   }, [events, selectedYearMonth, todayKey]);
 
   return (
-    <div className="w-full bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-3xl p-5 shadow-sm text-left space-y-6">
+    <div className="w-full bg-[#1C122B] border border-[#C79347]/30 rounded-3xl p-5 shadow-sm text-left space-y-6">
       {/* Month Navigation Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-[rgba(125,96,166,0.25)]">
+      <div className="flex items-center justify-between pb-4 border-b border-[#C79347]/20">
         <div>
-          <span className="font-mono text-[10px] uppercase tracking-wider text-[#A6F0CF] font-semibold block">
+          <span className="font-mono text-[10px] uppercase tracking-wider text-[#C79347] font-semibold block">
             MONTHLY AGENDA
           </span>
-          <h3 className="font-serif text-xl font-bold text-[#F4F0FA]">
+          <h3 className="font-serif text-xl font-bold text-[#FAF5ED]">
             {format(selectedMonth, "MMMM yyyy")}
           </h3>
         </div>
@@ -117,29 +117,29 @@ export const AgendaList: React.FC<AgendaListProps> = ({
                 audioLayer.playTapeClack();
                 onSelectEvent(evt);
               }}
-              className="w-full text-left p-4 rounded-2xl bg-[#25173B] hover:bg-[#352254] border border-[rgba(125,96,166,0.25)] transition-all cursor-pointer min-h-[56px] space-y-2"
+              className="w-full text-left p-4 rounded-2xl bg-[#271A3C] hover:bg-[#1C122B] border border-[#C79347]/20 transition-all cursor-pointer min-h-[56px] space-y-2"
             >
               <div className="flex items-center justify-between text-xs font-mono">
-                <span className="font-semibold text-[#A6F0CF]">
+                <span className="font-semibold text-[#C79347]">
                   {formatEventDateDisplay(evt.start)}
                 </span>
-                <span className="text-[#C4B7D7]">
+                <span className="text-[#CBBBA8]">
                   {formatEventTimeET(evt.start, evt.end, evt.allDay)}
                 </span>
               </div>
 
-              <h4 className="font-serif text-xl font-bold text-[#F4F0FA]">
+              <h4 className="font-serif text-xl font-bold text-[#FAF5ED]">
                 {locale === "ta" && evt.titleTa ? evt.titleTa : evt.titleEn}
               </h4>
 
               {evt.titleTa && (
-                <p lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-xs text-[#A6F0CF]">
+                <p lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-xs text-[#C79347]">
                   {locale === "ta" ? evt.titleEn : evt.titleTa}
                 </p>
               )}
 
-              <div className="flex items-center gap-1.5 text-xs font-sans text-[#C4B7D7] pt-1">
-                <MapPin className="w-3.5 h-3.5 text-[#A6F0CF] shrink-0" />
+              <div className="flex items-center gap-1.5 text-xs font-sans text-[#CBBBA8] pt-1">
+                <MapPin className="w-3.5 h-3.5 text-[#2BB5A8] shrink-0" />
                 <span className="truncate">{evt.location}</span>
               </div>
             </button>

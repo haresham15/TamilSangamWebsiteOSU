@@ -204,9 +204,9 @@
     "semantic_hash": ""
   },
   "src/app/about/page.tsx": {
-    "mtime": 1795151453.566931,
-    "seen": 1795151941.1644793,
-    "ast_hash": "9c7bae7092bf93ebc5563bfa381ea919",
+    "mtime": 1795152264.8879986,
+    "seen": 1795152315.1175506,
+    "ast_hash": "58d4bd7de777ad94d90258bead05c29b",
     "semantic_hash": ""
   },
   "src/app/actions/suggestion.ts": {
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "src/app/board/page.tsx": {
-    "mtime": 1795150816.3182383,
-    "seen": 1795151941.1736739,
-    "ast_hash": "9812a93c1ad6a9a9723827b0c883ea57",
+    "mtime": 1795152293.4716156,
+    "seen": 1795152315.1196458,
+    "ast_hash": "e97d4e3481585c507b25df36a851aece",
     "semantic_hash": ""
   },
   "src/app/error.tsx": {
@@ -390,9 +390,9 @@
     "semantic_hash": ""
   },
   "src/app/layout.tsx": {
-    "mtime": 1793907011.8387046,
-    "seen": 1794764505.0359616,
-    "ast_hash": "db7b127e26abd6b3ff472f9437bb5717",
+    "mtime": 1795152171.1287935,
+    "seen": 1795152315.1259165,
+    "ast_hash": "cb4c77d618dfc5e9e0eaad0acc673abe",
     "semantic_hash": ""
   },
   "src/app/links/layout.tsx": {
@@ -420,9 +420,9 @@
     "semantic_hash": ""
   },
   "src/app/page.tsx": {
-    "mtime": 1795149522.9181128,
-    "seen": 1795151941.1920521,
-    "ast_hash": "6d2ab0df4390508bad80a8ce3de63ae9",
+    "mtime": 1795152238.8528605,
+    "seen": 1795152315.1270556,
+    "ast_hash": "ced310bcae65618529102fa161757efb",
     "semantic_hash": ""
   },
   "src/app/privacy/page.tsx": {
@@ -1620,9 +1620,9 @@
     "semantic_hash": ""
   },
   "src/components/home/SilkHoverPillars.tsx": {
-    "mtime": 1795126572.9811676,
-    "seen": 1795141160.791842,
-    "ast_hash": "fa03cc4813767d806b3382359130553c",
+    "mtime": 1795152249.006897,
+    "seen": 1795152315.1802475,
+    "ast_hash": "7d615aef96259e86be7b577d5e7505ca",
     "semantic_hash": ""
   },
   "src/components/join/CampusEnvironment.tsx": {
@@ -2082,9 +2082,9 @@
     "semantic_hash": ""
   },
   "src/data/columbus-guide.ts": {
-    "mtime": 1793737822.7174785,
-    "seen": 1793830245.8442736,
-    "ast_hash": "9bf770257781dcfe6872a40985829e69",
+    "mtime": 1795152257.7491972,
+    "seen": 1795152315.201298,
+    "ast_hash": "7a96b29dfca28c16ced23f931ed425ed",
     "semantic_hash": ""
   },
   "src/data/constitution.ts": {
@@ -4266,9 +4266,9 @@
     "semantic_hash": ""
   },
   "src/components/games/SolluWordle.tsx": {
-    "mtime": 1795143482.6450279,
-    "seen": 1795143758.965903,
-    "ast_hash": "514132f21a4de61ac429f49b7b898873",
+    "mtime": 1795152306.14836,
+    "seen": 1795152315.1590123,
+    "ast_hash": "ee0e84c0571992b8c70fce11973bb5f3",
     "semantic_hash": ""
   },
   "src/components/games/ThodarpuConnections.tsx": {
@@ -4464,9 +4464,9 @@
     "semantic_hash": ""
   },
   "src/components/seo/JsonLd.tsx": {
-    "mtime": 1795126573.0186522,
-    "seen": 1795141160.798964,
-    "ast_hash": "33c888d1422770a8dd0fe4072eca0f85",
+    "mtime": 1795152114.7315307,
+    "seen": 1795152315.1900039,
+    "ast_hash": "5249518e9d356b3b22af887177cc9e31",
     "semantic_hash": ""
   },
   "src/components/suggestions/BlueprintScene3D.test.ts": {
@@ -4686,9 +4686,9 @@
     "semantic_hash": ""
   },
   "src/lib/seo.ts": {
-    "mtime": 1795126573.0576606,
-    "seen": 1795141160.8304386,
-    "ast_hash": "b3eb5da5e167b66d3e42af7d36836949",
+    "mtime": 1795152057.3841069,
+    "seen": 1795152315.2138486,
+    "ast_hash": "7c0432a728e6bd5c32ce7c41c7eb215e",
     "semantic_hash": ""
   },
   "src/lib/soundEngine.test.ts": {
@@ -8130,15 +8130,15 @@
     "semantic_hash": ""
   },
   "src/data/games/arasigalData.ts": {
-    "mtime": 1795144782.3239455,
-    "seen": 1795146081.6975563,
-    "ast_hash": "b8fa5cf4e13457db67aa97e6ed75dc2d",
+    "mtime": 1795151978.2106252,
+    "seen": 1795152315.2020955,
+    "ast_hash": "18b878ccb3ec743217e64ff37ff3bddb",
     "semantic_hash": ""
   },
   "src/data/games/districtsData.ts": {
-    "mtime": 1795145060.9226482,
-    "seen": 1795146081.6975603,
-    "ast_hash": "e10e2b86f3d1455d63fb38575e4f903e",
+    "mtime": 1795152221.6506085,
+    "seen": 1795152315.2020981,
+    "ast_hash": "7d7203219839476de4534e468755ebae",
     "semantic_hash": ""
   },
   "src/data/games/miniCrosswordData.ts": {
@@ -8160,9 +8160,9 @@
     "semantic_hash": ""
   },
   "src/data/games/quordleData.ts": {
-    "mtime": 1795144891.338476,
-    "seen": 1795146081.6975746,
-    "ast_hash": "188a51dce05deb63385520e15e23e9a3",
+    "mtime": 1795151942.5206656,
+    "seen": 1795152315.2024953,
+    "ast_hash": "98996ee2f38b76c6f4522ed61b8e2a4d",
     "semantic_hash": ""
   },
   "src/data/games/spellingBeeData.ts": {
@@ -8172,15 +8172,15 @@
     "semantic_hash": ""
   },
   "src/data/games/strandsData.ts": {
-    "mtime": 1795145214.6693704,
-    "seen": 1795146081.6975806,
-    "ast_hash": "9fc69892548b069993c2a9c94ac70fd3",
+    "mtime": 1795152199.813522,
+    "seen": 1795152315.2026389,
+    "ast_hash": "5b7d33560c8c68ffb72acf5d2c145163",
     "semantic_hash": ""
   },
   "src/data/games/tangoData.ts": {
-    "mtime": 1795144843.4090593,
-    "seen": 1795146081.6975842,
-    "ast_hash": "304b4299d4fc2439c3e8b5ea702457ed",
+    "mtime": 1795151993.5085433,
+    "seen": 1795152315.2026403,
+    "ast_hash": "75739e3547fc54f0aaa8ce56f03a69c9",
     "semantic_hash": ""
   },
   "src/data/games/thodarbuData.ts": {
@@ -8265,6 +8265,48 @@
     "mtime": 1795149256.3016033,
     "seen": 1795151941.3391738,
     "ast_hash": "3d6daa57679e1bb04d6a8e77178c5ed7",
+    "semantic_hash": ""
+  },
+  "src/app/HomeClient.tsx": {
+    "mtime": 1795152233.736655,
+    "seen": 1795152315.1173801,
+    "ast_hash": "cc8b484c9577f5c6bb82d2f709e19498",
+    "semantic_hash": ""
+  },
+  "src/app/about/AboutClient.tsx": {
+    "mtime": 1795152260.0880303,
+    "seen": 1795152315.117384,
+    "ast_hash": "43a0e43afa61aa4667e710ba3c00ff7b",
+    "semantic_hash": ""
+  },
+  "src/app/board/BoardClient.tsx": {
+    "mtime": 1795152285.8971987,
+    "seen": 1795152315.1195014,
+    "ast_hash": "cd313d3a89b20c7137c1331b6df8bd34",
+    "semantic_hash": ""
+  },
+  "src/app/events/[slug]/opengraph-image.tsx": {
+    "mtime": 1795152191.3567524,
+    "seen": 1795152315.1202374,
+    "ast_hash": "7c7e85ed057dc7e84223ba4eacfdcf30",
+    "semantic_hash": ""
+  },
+  "src/app/events/[slug]/twitter-image.tsx": {
+    "mtime": 1795152193.8968148,
+    "seen": 1795152315.1203628,
+    "ast_hash": "1cc2a8992926aa3032c62e2cd29b5f6e",
+    "semantic_hash": ""
+  },
+  "src/app/games/opengraph-image.tsx": {
+    "mtime": 1795152212.7810905,
+    "seen": 1795152315.1229124,
+    "ast_hash": "439d80ee62776cd9543963d45c428c69",
+    "semantic_hash": ""
+  },
+  "src/app/games/twitter-image.tsx": {
+    "mtime": 1795152215.829585,
+    "seen": 1795152315.1237576,
+    "ast_hash": "1cc2a8992926aa3032c62e2cd29b5f6e",
     "semantic_hash": ""
   }
 }
