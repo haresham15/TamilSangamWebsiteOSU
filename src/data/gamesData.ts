@@ -128,10 +128,10 @@ export const SOLLU_BIWEEKLY_EDITIONS: Record<string, SolluEdition> = {
     monthNameEn: "October 2026 · Part 1",
     monthNameTa: "ஐப்பசி 2026 · பகுதி 1",
     year: 2026,
-    tanglishWord: "KUTHU",
+    tanglishWord: "DOSA",
     tamilWord: "வணக்கம்",
     culturalContext:
-      "High-energy Tamil folk and cinema percussion dance rhythm featuring dappankuthu steps and celebration euphoria at OSU Tamil Sangam.",
+      "From morning hostel messes to grand courtyard feasts, the crisp golden dosa is the culinary heartbeat uniting Tamil mornings across generations.",
     aksharaKeyboard: [
       "வ", "ண", "க்", "க", "ம்",
       "த", "மி", "ழ்", "அ", "ன்",
@@ -140,14 +140,14 @@ export const SOLLU_BIWEEKLY_EDITIONS: Record<string, SolluEdition> = {
     ],
     aksharaCount: 5,
     tanglish: {
-      targetWord: "KUTHU",
-      tamilScript: "குத்து",
-      phonetic: "Kū-thū",
-      clue: "High-voltage street rhythm & signature folk dance step",
+      targetWord: "DOSA",
+      tamilScript: "தோசை",
+      phonetic: "Dō-sai",
+      clue: "Crisp golden tawa crepe & breakfast heartbeat of Tamil homes",
       meaningEn:
-        "High-energy folk dance rhythm of Tamil Nadu, featuring street beats, dappankuthu steps, and festival euphoria at OSU Tamil Sangam.",
+        "Crisp golden fermented rice-and-lentil crepe roasted on a cast-iron tawa, served with fresh coconut chutney and piping hot sambar.",
       meaningTa:
-        "தமிழ்நாட்டின் பாரம்பரிய தெருக்கூத்து மற்றும் உற்சாக மிகு துள்ளல் நடன இசை வடிவம்.",
+        "தோசைக்கல்லில் முறுகலாக சுடப்பட்டு தேங்காய் சட்னி, சாம்பாருடன் பரிமாறப்படும் பாரம்பரிய காலை உணவு.",
     },
     tamilAkshara: {
       targetWord: "வணக்கம்",
@@ -176,7 +176,7 @@ export const SOLLU_BIWEEKLY_EDITIONS: Record<string, SolluEdition> = {
     monthNameEn: "October 2026 · Part 2",
     monthNameTa: "ஐப்பசி 2026 · பகுதி 2",
     year: 2026,
-    tanglishWord: "DEEPA",
+    tanglishWord: "DEEPAM",
     tamilWord: "தீபாவளி",
     culturalContext:
       "The sacred earthen oil lamp lit across courtyards for Deepavali, dispelling darkness and welcoming light into every home.",
@@ -186,12 +186,12 @@ export const SOLLU_BIWEEKLY_EDITIONS: Record<string, SolluEdition> = {
     ],
     aksharaCount: 4,
     tanglish: {
-      targetWord: "DEEPA",
+      targetWord: "DEEPAM",
       tamilScript: "தீபம்",
-      phonetic: "Dhee-pa",
-      clue: "The sacred earthen lamp lit across courtyards for Deepavali",
+      phonetic: "Dhee-pam",
+      clue: "Auspicious terracotta oil lamp radiating light across the courtyard",
       meaningEn:
-        "Traditional oil lamp of baked clay or brass, radiating auspicious light and dispelling darkness during Deepavali gatherings.",
+        "Traditional terracotta or brass oil lamp with a cotton wick, lit during dusk and Deepavali to illuminate courtyards and invite auspicious warmth.",
       meaningTa:
         "இருள் நீக்கி நலம் அருளும் தீபாவளித் திருநாளின் மங்கள சுடர் விளக்கு.",
     },
@@ -266,24 +266,24 @@ export const SOLLU_BIWEEKLY_EDITIONS: Record<string, SolluEdition> = {
     monthNameEn: "November 2026 · Part 2",
     monthNameTa: "கார்த்திகை 2026 · பகுதி 2",
     year: 2026,
-    tanglishWord: "PAATU",
+    tanglishWord: "VAA",
     tamilWord: "செம்மொழி",
     culturalContext:
-      "A soulful melody and poetic lyric uniting campus acoustic jam sessions, Carnatic ragas, and Tamil cinema anthems.",
+      "The quintessential, open-hearted Tamil word of invitation and hospitality—'Vaa, ulla vaa!'—calling friends and kin into courtyard warmth.",
     aksharaKeyboard: [
       "செ", "ம்", "மொ", "ழி", "த", "மி", "ழ்", "பா", "ர", "ம்",
       "ப", "ரி", "ய", "ம்", "க", "வி", "தை", "நா", "டு", "நூ",
     ],
     aksharaCount: 4,
     tanglish: {
-      targetWord: "PAATU",
-      tamilScript: "பாட்டு",
-      phonetic: "Pā-tū",
-      clue: "A soulful melody, musical composition, or poetic verse",
+      targetWord: "VAA",
+      tamilScript: "வா",
+      phonetic: "Vā",
+      clue: "The timeless, warm Tamil welcome: 'Come, take a seat!'",
       meaningEn:
-        "Traditional song, lyric, or musical melody celebrating emotion, campus camaraderie, and Tamil acoustic artistry.",
+        "The quintessential, open-hearted Tamil word of invitation and hospitality ('Vaa!'), welcoming friends, kin, and newcomers into the circle.",
       meaningTa:
-        "இனிய இசையோடு கூடி மனதை மயக்கும் பாடல் அல்லது இசைக்கவிதை.",
+        "இன்முகத்தோடு விருந்தினரையும் நண்பர்களையும் அன்புடன் வரவேற்கும் தமிழரின் அழைப்புச் சொல்.",
     },
     tamilAkshara: {
       targetWord: "செம்மொழி",
@@ -356,24 +356,24 @@ export const SOLLU_BIWEEKLY_EDITIONS: Record<string, SolluEdition> = {
     monthNameEn: "December 2026 · Part 2",
     monthNameTa: "மார்கழி 2026 · பகுதி 2",
     year: 2026,
-    tanglishWord: "RAGAM",
+    tanglishWord: "ISAI",
     tamilWord: "மார்கழி",
     culturalContext:
-      "The melodic soul of Carnatic classical performance and the crisp winter month of morning music festivals.",
+      "The melodic soul of Tamil culture and the crisp winter month of morning sabhas, music festivals, and soulful singing.",
     aksharaKeyboard: [
       "மா", "ர்", "க", "ழி", "இ", "சை", "பா", "ட", "ல்", "தி",
       "ரு", "ப்", "பா", "வை", "கோ", "ல", "ம்", "கு", "ளி", "ர்",
     ],
     aksharaCount: 4,
     tanglish: {
-      targetWord: "RAGAM",
-      tamilScript: "ராகம்",
-      phonetic: "Rā-gam",
-      clue: "The melodic framework and soul of Carnatic classical performance",
+      targetWord: "ISAI",
+      tamilScript: "இசை",
+      phonetic: "I-sai",
+      clue: "Divine melody, raga, and the Margazhi winter music season",
       meaningEn:
-        "A melodic framework for Carnatic musical improvisation that evokes specific aesthetic emotions and festive delight.",
+        "The ancient soul of Tamil music, encompassing Carnatic ragas, devotional hymns, and early morning sabha melodies throughout Margazhi.",
       meaningTa:
-        "கர்நாடக இசையின் அடிப்படை மெல்லிசை வடிவம் மற்றும் மனநிலை வெளிப்பாடு.",
+        "மார்கழி மாத விடியல்களில் காற்றில் தவழும் கர்நாடக சங்கீதமும் ஆன்மீக மெல்லிசையும்.",
     },
     tamilAkshara: {
       targetWord: "மார்கழி",
@@ -444,7 +444,7 @@ export const SOLLU_BIWEEKLY_EDITIONS: Record<string, SolluEdition> = {
     monthNameEn: "January 2027 · Part 2",
     monthNameTa: "தை 2027 · பகுதி 2",
     year: 2027,
-    tanglishWord: "PONGA",
+    tanglishWord: "PONGAL",
     tamilWord: "பொங்கல்",
     culturalContext:
       "The exuberant cry 'Pongalo Pongal!' as milk boils over fresh terracotta pots, thanking the Sun, earth, and cattle during the harvest feast.",
@@ -454,14 +454,14 @@ export const SOLLU_BIWEEKLY_EDITIONS: Record<string, SolluEdition> = {
     ],
     aksharaCount: 4,
     tanglish: {
-      targetWord: "PONGA",
-      tamilScript: "பொங்க",
-      phonetic: "Pon-ga",
-      clue: "The joyful cry as fresh harvest milk boils over the new earthen pot!",
+      targetWord: "PONGAL",
+      tamilScript: "பொங்கல்",
+      phonetic: "Pon-gal",
+      clue: "The joyful harvest feast and overflowing sweet jaggery pot",
       meaningEn:
-        "'Pongalo Pongal!' — The ecstatic exclamation celebrating abundance, agricultural prosperity, and overflowing harvest grace.",
+        "'Pongalo Pongal!' — The exuberant cry celebrating cosmic abundance as fresh milk, new rice, and cardamom boil over terracotta pots.",
       meaningTa:
-        "'பொங்கலோ பொங்கல்!' — புதுப்பானையில் பால் பொங்கி வழியும்போது எழும் மகிழ்ச்சி முழக்கம்.",
+        "'பொங்கலோ பொங்கல்!' — புதுப்பானையில் பால் பொங்கி வழியும்போது எழும் மகிழ்ச்சி முழக்கம் மற்றும் அறுவடைத் திருநாள்.",
     },
     tamilAkshara: {
       targetWord: "பொங்கல்",

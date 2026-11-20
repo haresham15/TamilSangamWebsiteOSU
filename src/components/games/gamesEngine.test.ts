@@ -13,7 +13,7 @@ import {
   getUnlockCountdown,
   normalizeEditionId,
 } from "@/lib/gamesStorage";
-import { evaluateCameraRail, evaluateForegroundRig, evaluateFireball } from "@/components/games-hero/gamesRail";
+import { DESIGN_ASPECT, evaluateCameraRail, evaluateForegroundRig, evaluateFireball } from "@/components/games-hero/gamesRail";
 
 describe("Tamil Akshara Grapheme Tokenizer & Games Engine (D-11)", () => {
   it("correctly tokenizes compound Tamil grapheme clusters into single tiles", () => {
@@ -48,14 +48,19 @@ describe("Tamil Akshara Grapheme Tokenizer & Games Engine (D-11)", () => {
     expect(THODARPU_MONTHLY_EDITIONS["2026-12"].categories.length).toBe(4);
   });
 
-  it("contains 8 complete biweekly editions spanning Oct 2026 to Jan 2027", () => {
+  it("contains 8 complete biweekly editions spanning Oct 2026 to Jan 2027 with Tanglish words spanning 3-6 letters", () => {
     expect(BIWEEKLY_EDITION_IDS.length).toBe(8);
+    const lengths = new Set<number>();
     for (const id of BIWEEKLY_EDITION_IDS) {
       expect(SOLLU_BIWEEKLY_EDITIONS[id]).toBeDefined();
-      expect(SOLLU_BIWEEKLY_EDITIONS[id].tanglishWord.length).toBe(5);
+      const len = SOLLU_BIWEEKLY_EDITIONS[id].tanglishWord.length;
+      expect(len).toBeGreaterThanOrEqual(3);
+      expect(len).toBeLessThanOrEqual(6);
+      lengths.add(len);
       expect(THODARPU_BIWEEKLY_EDITIONS[id]).toBeDefined();
       expect(THODARPU_BIWEEKLY_EDITIONS[id].categories.length).toBe(4);
     }
+    expect(Array.from(lengths).sort()).toEqual([3, 4, 5, 6]);
   });
 
   it("correctly determines biweekly edition from calendar date", () => {
@@ -118,5 +123,45 @@ describe("Beach Blast Hero Camera Rail & Kinematics (D-01 to D-10)", () => {
     const blastCentre = evaluateFireball(0.72, 1);
     expect(blastCentre.radius).toBeGreaterThan(1.5);
     expect(blastCentre.brightness).toBeGreaterThan(0.2);
+  });
+});
+
+describe("fixed cinematic framing", () => {
+  it("keeps the camera completely fixed through impacts and the content handoff", () => {
+    for (const aspect of [DESIGN_ASPECT, 390 / 844]) {
+      const start = evaluateCameraRail(0, 0, aspect);
+      for (const p of [0.1, 0.42, 0.64, 0.65, 0.72, 0.85, 0.93, 1]) {
+        const state = evaluateCameraRail(p, 30, aspect);
+        expect(state.position.toArray()).toEqual(start.position.toArray());
+        expect(state.lookAt.toArray()).toEqual(start.lookAt.toArray());
+        expect(state.fov).toBe(start.fov);
+        expect(state.cameraShake).toBe(0);
+      }
+    }
+  });
+
+  it("settles the hand without a tremor or a final lens zoom", () => {
+    let previousRoll = Infinity;
+    for (let i = 0; i <= 100; i++) {
+      const roll = evaluateForegroundRig(0.5 + i / 1000).rotation.z;
+      expect(roll).toBeLessThanOrEqual(previousRoll + 1e-10);
+      previousRoll = roll;
+    }
+    const settled = evaluateForegroundRig(0.72);
+    for (const p of [0.85, 0.88, 0.9, 0.93, 1]) {
+      const hand = evaluateForegroundRig(p);
+      expect(hand.position.toArray()).toEqual(settled.position.toArray());
+      expect(hand.rotation.toArray()).toEqual(settled.rotation.toArray());
+    }
+    expect(evaluateForegroundRig(0.9).opacity).toBeLessThan(evaluateForegroundRig(0.85).opacity);
+    expect(evaluateForegroundRig(0.94).opacity).toBe(0);
+  });
+
+  it("starts and finishes the entrance with zero velocity", () => {
+    for (const [p, direction] of [[0.22, 1], [0.4, -1]]) {
+      const endpoint = evaluateForegroundRig(p).position;
+      const adjacent = evaluateForegroundRig(p + direction * 0.00001).position;
+      expect(endpoint.distanceTo(adjacent)).toBeLessThan(1e-8);
+    }
   });
 });

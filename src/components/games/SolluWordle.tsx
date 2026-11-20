@@ -302,6 +302,15 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
     ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "⌫"],
   ];
 
+  const tileSizeClass =
+    wordLength <= 3
+      ? "size-14 sm:size-17 text-2xl sm:text-3xl"
+      : wordLength === 4
+      ? "size-13 sm:size-16 text-xl sm:text-2xl"
+      : wordLength === 5
+      ? "size-12 sm:size-15 text-xl sm:text-2xl"
+      : "size-10 sm:size-13 text-lg sm:text-xl";
+
   return (
     <div className="w-full max-w-xl mx-auto flex flex-col items-center">
       {/* Mode Switcher Segmented Control */}
@@ -314,7 +323,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
               : "text-[#F4F0FA]/70 hover:text-[#F4F0FA]"
           }`}
         >
-          Tanglish & Cultural (5 Letters)
+          Tanglish & Cultural ({edition.tanglishWord.length} Letters)
         </button>
         <button
           onClick={() => handleModeChange("tamil")}
@@ -327,7 +336,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
           <span lang="ta" className="font-tamil">
             தமிழ் எழுத்து
           </span>{" "}
-          (Akshara Mode)
+          ({edition.aksharaCount} எழுத்து)
         </button>
       </div>
 
@@ -365,7 +374,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
               key={rowIdx}
               animate={isCurrent && shakeRow ? { x: [-8, 8, -6, 6, -3, 3, 0] } : {}}
               transition={{ duration: 0.4 }}
-              className="flex gap-2"
+              className="flex gap-1.5 sm:gap-2 justify-center"
             >
               {Array.from({ length: wordLength }).map((_, colIdx) => {
                 const char = rowTokens[colIdx] || "";
@@ -396,7 +405,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
                         ? { scale: [1, 1.12, 1], transition: { duration: 0.15 } }
                         : {}
                     }
-                    className={`size-13 sm:size-15 rounded-lg flex items-center justify-center font-bold text-xl sm:text-2xl transition-colors select-none ${bgClass}`}
+                    className={`${tileSizeClass} rounded-lg flex items-center justify-center font-bold transition-colors select-none ${bgClass}`}
                   >
                     <span lang={mode === "tamil" ? "ta" : undefined} className={mode === "tamil" ? "font-tamil" : "font-sans"}>
                       {char}
@@ -437,7 +446,9 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
             </div>
 
             <p className="text-sm text-[#F4F0FA]/85 mb-4 leading-relaxed font-sans">
-              {edition.culturalContext}
+              {mode === "tanglish" && edition.tanglish?.meaningEn
+                ? edition.tanglish.meaningEn
+                : edition.culturalContext}
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-[rgba(125,96,166,0.25)]">
