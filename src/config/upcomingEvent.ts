@@ -45,7 +45,7 @@ export const activeUpcomingEvent: FlagshipEventConfig = {
   title: "Namma Deepavali (TS × MS × KS)",
   tamilTitle: "நம்ம தீபாவளி",
   teaserQuote:
-    "Festival lights, sweet feasts, vibrant melodies, and campus celebration. Diwali 2026 with Tamil Sangam, Kannada Sangam, and Mallu Society is coming soon.",
+    "Festival lights, sweet feasts, live melodies, and campus celebration. Diwali 2026 with Tamil Sangam, Kannada Sangam, and Mallu Society is coming soon.",
   description:
     "Tamil Sangam, Kannada Sangam, and Mallu Society are hosting Diwali 2026 on November 15th! Sign up now for dance performances, cultural acts, and celebration.",
   telemetry: {
@@ -60,7 +60,7 @@ export const activeUpcomingEvent: FlagshipEventConfig = {
     altText: "Deepavali festival firecracker silhouette",
     aspectRatio: "portrait",
     dither: {
-      veilColor: "#A6F0CF", // Warm Festival Gold
+      veilColor: "#C79347", // Warm Festival Zari Gold
       shadowColor: "#1A1715", // Deep Espresso
       matrixSize: 8,
       grainScale: 2.5,

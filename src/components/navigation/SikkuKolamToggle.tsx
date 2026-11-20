@@ -37,9 +37,9 @@ export const SikkuKolamToggle: React.FC<SikkuKolamToggleProps> = ({
   className = "",
   isDarkHero = false,
 }) => {
-  const pulliOuterColor = isDarkHero ? "#4FD6E0" : "#A6F0CF";
-  const pulliCenterColor = isDarkHero ? "#A6F0CF" : "#4FD6E0";
-  const threadColor = isDarkHero ? "#F4F0FA" : "#FAF0FA";
+  const pulliOuterColor = isDarkHero ? "#2BB5A8" : "#C79347";
+  const pulliCenterColor = isDarkHero ? "#C79347" : "#2BB5A8";
+  const threadColor = isDarkHero ? "#FAF5ED" : "#FAF5ED";
 
   return (
     <motion.button
@@ -49,14 +49,14 @@ export const SikkuKolamToggle: React.FC<SikkuKolamToggleProps> = ({
       aria-label={isOpen ? "Close navigation menu" : "Open navigation menu (Sikku Kolam)"}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.94 }}
-      className={`group relative flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border transition-[border-color,background-color,box-shadow] duration-200 select-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] ${
+      className={`group relative flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border transition-[border-color,background-color,box-shadow] duration-200 select-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8] ${
         isOpen
           ? isDarkHero
-            ? "border-[#A6F0CF]/35 bg-[#A6F0CF]/20 text-[#F4F0FA] shadow-[0_0_12px_rgba(166,240,207,0.35)]"
-            : "border-[rgba(125,96,166,0.25)] bg-[#140C20] text-[#A6F0CF] shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
+            ? "border-[#C79347]/40 bg-[#C79347]/20 text-[#FAF5ED] shadow-[0_0_12px_rgba(199,147,71,0.3)]"
+            : "border-[rgba(212,163,106,0.35)] bg-[#1C122B] text-[#C79347] shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
           : isDarkHero
-          ? "border-[rgba(125,96,166,0.35)] bg-[#140C20]/60 hover:border-[#A6F0CF]/40 hover:bg-[#25173B]/80 text-[#F4F0FA]"
-          : "border-[rgba(125,96,166,0.25)] bg-[#25173B]/90 hover:border-[#A6F0CF]/35 hover:bg-[#352254] text-[#F4F0FA]"
+          ? "border-[rgba(212,163,106,0.35)] bg-[#1C122B]/70 hover:border-[#C79347]/60 hover:bg-[#25173B]/80 text-[#FAF5ED]"
+          : "border-[rgba(212,163,106,0.3)] bg-[#271A3C]/90 hover:border-[#C79347]/50 hover:bg-[#352254] text-[#FAF5ED]"
       } ${className}`}
     >
       <motion.svg

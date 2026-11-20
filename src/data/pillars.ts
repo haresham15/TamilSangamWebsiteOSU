@@ -82,7 +82,7 @@ const CULTURE_ARTS_PILLAR: PillarData = {
   openCallTitle: "Open Call: Musicians, Dancers & Cultural Leads",
   openCallDesc:
     "Have a song you want to jam, a track to choreograph, or a language workshop to facilitate? Step into our creative collective.",
-  accentColor: "#F26BB5", // Terracotta
+  accentColor: "#B84A39", // Terracotta / Kumkum
   ragaNote: "Sa (D4)",
   ragaHz: 293.66,
   ragaIndex: 0,
@@ -153,7 +153,7 @@ const COMMUNITY_BROTHERHOOD_PILLAR: PillarData = {
   openCallTitle: "Open Call: Social Coordinators & Welcoming Crew",
   openCallDesc:
     "Want to help welcome freshmen, coordinate lawn games, or host an authentic South Indian dining night? Join the event crew.",
-  accentColor: "#A6F0CF", // Warm Gold
+  accentColor: "#C79347", // Warm Zari Gold
   ragaNote: "Ga3 (F#4)",
   ragaHz: 369.99,
   ragaIndex: 2,
@@ -224,7 +224,7 @@ const IMPACT_INNOVATION_PILLAR: PillarData = {
   openCallTitle: "Open Call: Mentors, Speakers & Working Council",
   openCallDesc:
     "Are you a graduate student, researcher, alumnus, or professional? Want to share your journey or mentor undergraduates? Join our fireside circle.",
-  accentColor: "#55CCA2", // Mint Green
+  accentColor: "#2BB5A8", // Peacock Teal
   ragaNote: "Pa (A4)",
   ragaHz: 440.0,
   ragaIndex: 3,

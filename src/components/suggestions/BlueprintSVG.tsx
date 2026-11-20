@@ -86,10 +86,10 @@ export function BlueprintSVG({
             height="24"
             patternUnits="userSpaceOnUse"
           >
-            <circle cx="12" cy="12" r="1.2" fill="#A6F0CF" fillOpacity="0.25" />
+            <circle cx="12" cy="12" r="1.2" fill="#C79347" fillOpacity="0.25" />
             <path
               d="M12 4L20 12L12 20L4 12Z"
-              stroke="#7FB8D0"
+              stroke="#D4A36A"
               strokeWidth="0.4"
               strokeDasharray="1 3"
               strokeOpacity="0.25"
@@ -112,9 +112,9 @@ export function BlueprintSVG({
 
           {/* Golden Zari Dimension Line Gradient */}
           <linearGradient id="zari-gold" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#A6F0CF" stopOpacity="0.4" />
-            <stop offset="50%" stopColor="#FFD066" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#A6F0CF" stopOpacity="0.4" />
+            <stop offset="0%" stopColor="#C79347" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="#D4A36A" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#C79347" stopOpacity="0.4" />
           </linearGradient>
         </defs>
 

@@ -113,10 +113,10 @@ export function ViewfinderCursor() {
         className="pointer-events-none fixed top-0 left-0 z-[9999] will-change-transform opacity-0 select-none"
         style={{ transform: "translate3d(-100px, -100px, 0)" }}
       >
-        <div className="-translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#A6F0CF]" />
+        <div className="-translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#C79347]" />
       </div>
 
-      {/* 2. Trailing Terracotta Follower Ring (Physical Smooth Lerp) */}
+      {/* 2. Trailing Follower Ring (Physical Smooth Lerp) */}
       <div
         ref={ringPosRef}
         aria-hidden="true"
@@ -145,20 +145,20 @@ export function ViewfinderCursor() {
         .cursor-visual[data-state="default"] {
           width: 34px;
           height: 34px;
-          border: 1.5px solid rgba(166, 240, 207, 0.7);
-          background-color: rgba(166, 240, 207, 0.04);
+          border: 1.5px solid rgba(199, 147, 71, 0.7);
+          background-color: rgba(199, 147, 71, 0.05);
         }
         .cursor-visual[data-state="interactive"] {
           width: 48px;
           height: 48px;
-          border: 1.5px solid rgba(79, 214, 224, 0.9);
-          background-color: rgba(79, 214, 224, 0.12);
+          border: 1.5px solid rgba(43, 181, 168, 0.9);
+          background-color: rgba(43, 181, 168, 0.12);
         }
         .cursor-visual[data-state="card"] {
           width: 72px;
           height: 72px;
-          border: 1.5px solid rgba(242, 107, 181, 0.95);
-          background-color: rgba(20, 12, 32, 0.88);
+          border: 1.5px solid rgba(184, 74, 57, 0.95);
+          background-color: rgba(28, 18, 43, 0.88);
           backdrop-filter: blur(4px);
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
         }

@@ -203,7 +203,7 @@ export const Shutter = forwardRef<ShutterHandle, ShutterProps>(function Shutter(
       {/* Expanding Iris Golden Edge Ring */}
       <div
         ref={portalRingRef}
-        className="absolute rounded-full pointer-events-none border border-[#A6F0CF]/35 shadow-[0_0_35px_rgba(166,240,207,0.45),inset_0_0_20px_rgba(85,204,162,0.3)] will-change-transform"
+        className="absolute rounded-full pointer-events-none border border-[#C79347]/40 shadow-[0_0_35px_rgba(199,147,71,0.45),inset_0_0_20px_rgba(43,181,168,0.3)] will-change-transform"
         style={{
           left: "50%",
           top: "50%",

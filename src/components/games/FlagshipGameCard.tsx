@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Sparkles, X } from "lucide-react";
+import { ArrowRight, Sparkles, X, Landmark } from "lucide-react";
 
 export interface FlagshipGameCardProps {
   gameKey: "sollu" | "thodarpu" | "aazham";
@@ -187,8 +187,8 @@ export function FlagshipGameCard({
               {/* Original Mainstream Game Inspiration */}
               <div className="rounded-xl bg-[#140C20]/80 border border-[rgba(212,163,106,0.2)] p-3 mb-3">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[9px] font-mono uppercase tracking-widest text-[#CBBBA8]/80 font-bold flex items-center gap-1">
-                    <span>🏛️</span>
+                  <span className="text-[9px] font-mono uppercase tracking-widest text-[#CBBBA8]/80 font-bold flex items-center gap-1.5">
+                    <Landmark className="w-3 h-3 text-[#D4A36A]" />
                     <span>Original Game</span>
                   </span>
                   <span className="text-[10px] font-mono text-[#D4A36A] font-semibold">
@@ -204,15 +204,15 @@ export function FlagshipGameCard({
               </div>
 
               {/* Altered Tamil Cultural Transformation */}
-              <div className="rounded-xl bg-[#25173B]/90 border border-[#A6F0CF]/30 p-3 shadow-inner">
+              <div className="rounded-xl bg-[#25173B]/90 border border-[#2BB5A8]/30 p-3 shadow-inner">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[9px] font-mono uppercase tracking-widest text-[#A6F0CF] font-bold flex items-center gap-1">
-                    <span>🪷</span>
+                  <span className="text-[9px] font-mono uppercase tracking-widest text-[#2BB5A8] font-bold flex items-center gap-1.5">
+                    <Sparkles className="w-3 h-3 text-[#2BB5A8]" />
                     <span>Tamil Adaptation</span>
                   </span>
                   <span
                     lang="ta"
-                    className="text-[11px] font-sans text-[#A6F0CF]"
+                    className="text-[11px] font-sans text-[#2BB5A8]"
                     style={{ letterSpacing: 0 }}
                   >
                     {titleTa}

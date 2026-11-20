@@ -249,14 +249,14 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
                     <button
                       onClick={() => setIsModalOpen(false)}
                       aria-label="Close modal"
-                      className="absolute top-4 right-4 w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-black/60 hover:bg-[#A6F0CF] hover:text-[#140C20] text-white flex items-center justify-center backdrop-blur-sm transition-colors cursor-pointer"
+                      className="absolute top-4 right-4 w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-black/60 hover:bg-[#0F766E] hover:text-[#FAF5ED] text-white flex items-center justify-center backdrop-blur-sm transition-colors cursor-pointer"
                     >
                       <X className="w-5 h-5" />
                     </button>
 
                     {/* Badge Overlay */}
                     <div className="absolute top-4 left-4">
-                      <span className="text-[11px] font-mono font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-[#A6F0CF] text-[#140C20] shadow-md">
+                      <span className="text-[11px] font-mono font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-[#C79347] text-[#1C122B] shadow-md font-bold">
                         {locale === "ta" ? activeEvent.statusBadgeTa : activeEvent.statusBadgeEn}
                       </span>
                     </div>
@@ -265,40 +265,40 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
                   {/* Modal Body */}
                   <div className="p-6 sm:p-8 space-y-5 -mt-6 relative">
                     <div>
-                      <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#F4F0FA]">
+                      <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#FAF5ED]">
                         {locale === "ta" ? activeEvent.titleTa : activeEvent.titleEn}
                       </h3>
                       <p
                         lang="ta"
                         style={{ letterSpacing: 0 }}
-                        className="font-tamil text-sm text-[#A6F0CF] font-medium mt-0.5"
+                        className="font-tamil text-sm text-[#2BB5A8] font-medium mt-0.5"
                       >
                         {locale === "ta" ? activeEvent.titleEn : activeEvent.titleTa}
                       </p>
                     </div>
 
                     {/* Quick Info Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-3 border-y border-[rgba(125,96,166,0.25)] text-xs font-sans text-[#C4B7D7]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-3 border-y border-[rgba(212,163,106,0.25)] text-xs font-sans text-[#CBBBA8]">
                       <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-[#A6F0CF] shrink-0" />
-                        <span className="font-medium text-[#F4F0FA]">{activeEvent.date}</span>
+                        <Calendar className="w-4 h-4 text-[#2BB5A8] shrink-0" />
+                        <span className="font-medium text-[#FAF5ED]">{activeEvent.date}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-[#A6F0CF] shrink-0" />
+                        <Clock className="w-4 h-4 text-[#2BB5A8] shrink-0" />
                         <span>{activeEvent.time}</span>
                       </div>
                       <div className="sm:col-span-2 flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-[#A6F0CF] shrink-0" />
+                        <MapPin className="w-4 h-4 text-[#2BB5A8] shrink-0" />
                         <span>{activeEvent.location} · {activeEvent.venueAddress}</span>
                       </div>
                     </div>
 
                     {/* Full Description */}
                     <div className="space-y-2">
-                      <h4 className="text-xs font-mono uppercase tracking-wider text-[#A6F0CF] font-bold">
+                      <h4 className="text-xs font-mono uppercase tracking-wider text-[#C79347] font-bold">
                         {locale === "ta" ? "நிகழ்வு விளக்கம்" : "Event Chronicle"}
                       </h4>
-                      <p className="font-sans text-sm text-[#C4B7D7] leading-relaxed">
+                      <p className="font-sans text-sm text-[#CBBBA8] leading-relaxed">
                         {locale === "ta" ? activeEvent.descriptionTa : activeEvent.descriptionEn}
                       </p>
                     </div>
@@ -306,14 +306,14 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
                     {/* Schedule Teaser if available */}
                     {activeEvent.schedule && activeEvent.schedule.length > 0 && (
                       <div className="space-y-2">
-                        <h4 className="text-xs font-mono uppercase tracking-wider text-[#F4F0FA] font-semibold">
+                        <h4 className="text-xs font-mono uppercase tracking-wider text-[#FAF5ED] font-semibold">
                           {locale === "ta" ? "நிகழ்ச்சி நிரல்" : "Program Schedule"}
                         </h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-sans">
                           {activeEvent.schedule.slice(0, 4).map((slot, i) => (
-                            <div key={i} className="flex items-start gap-2 p-2 bg-[#25173B] rounded-lg">
-                              <span className="font-mono font-bold text-[#A6F0CF] text-[11px] shrink-0">{slot.time}</span>
-                              <span className="text-[#F4F0FA] line-clamp-1">{locale === "ta" ? slot.activityTa : slot.activityEn}</span>
+                            <div key={i} className="flex items-start gap-2 p-2 bg-[#1C122B] rounded-lg border border-[rgba(212,163,106,0.2)]">
+                              <span className="font-mono font-bold text-[#2BB5A8] text-[11px] shrink-0">{slot.time}</span>
+                              <span className="text-[#FAF5ED] line-clamp-1">{locale === "ta" ? slot.activityTa : slot.activityEn}</span>
                             </div>
                           ))}
                         </div>
@@ -321,8 +321,8 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
                     )}
 
                     {/* Modal Footer CTA */}
-                    <div className="pt-4 flex items-center justify-between gap-4 border-t border-[rgba(125,96,166,0.25)]">
-                      <span className="text-xs font-sans text-[#C4B7D7]">
+                    <div className="pt-4 flex items-center justify-between gap-4 border-t border-[rgba(212,163,106,0.25)]">
+                      <span className="text-xs font-sans text-[#CBBBA8]">
                         {activeEvent.price}
                       </span>
 
@@ -333,7 +333,7 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
                             playClick();
                             setIsModalOpen(false);
                           }}
-                          className="px-5 py-2.5 bg-[#A6F0CF] hover:bg-[#7AE7B5] text-[#140C20] font-sans font-semibold text-xs rounded-full shadow-md transition-colors"
+                          className="px-5 py-2.5 bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] font-sans font-semibold text-xs rounded-full shadow-md transition-colors"
                         >
                           {locale === "ta" ? "முழு நிகழ்வுப் பக்கம் செல்லவும்" : "Go to Full Event Page →"}
                         </Link>

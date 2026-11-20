@@ -604,7 +604,7 @@ export function SplitFlapBoard({ onHandleReady, reducedMotion = false }: SplitFl
   const trimGeo = useMemo(() => new THREE.BoxGeometry(boardWidth - 0.2, 0.6, 0.01), [boardWidth]);
   const trimMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#3d2c18", roughness: 0.4, metalness: 0.85 }), []);
   const ledGeo = useMemo(() => new THREE.CylinderGeometry(0.06, 0.06, 0.04, 16), []);
-  const ledAmberMat = useMemo(() => new THREE.MeshBasicMaterial({ color: "#A6F0CF" }), []);
+  const ledAmberMat = useMemo(() => new THREE.MeshBasicMaterial({ color: "#C79347" }), []);
   const ledGreenMat = useMemo(() => new THREE.MeshBasicMaterial({ color: "#4ade80" }), []);
   const railGeo = useMemo(() => new THREE.BoxGeometry(BOARD_COLS * STEP_X + 0.1, 0.01, 0.004), []);
   const railMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#1f1813", roughness: 0.8, metalness: 0.6 }), []);
