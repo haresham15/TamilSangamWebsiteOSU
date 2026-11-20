@@ -207,7 +207,7 @@ export const Navbar: React.FC = () => {
       ref={navRef}
       className={`fixed left-0 right-0 z-50 transition-[top,padding,background-color,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isDocked
-          ? "top-0 w-full bg-[#140C20]/95 backdrop-blur-xl border-b border-[#A6F0CF]/20 shadow-[0_4px_28px_rgba(0,0,0,0.5)] py-2.5 sm:py-3 px-4 sm:px-8"
+          ? "top-0 w-full bg-[rgba(28,18,43,0.92)] backdrop-blur-xl border-b border-[#C79347]/25 shadow-[0_4px_28px_rgba(0,0,0,0.45)] py-2.5 sm:py-3 px-4 sm:px-8"
           : "top-3 sm:top-4 w-full px-4 sm:px-8 pointer-events-none flex justify-center"
       }`}
     >
@@ -215,7 +215,7 @@ export const Navbar: React.FC = () => {
         className={`w-full flex items-center justify-between transition-[max-width,padding,background-color,border-color,border-radius,box-shadow] duration-300 ${
           isDocked
             ? "max-w-7xl mx-auto pointer-events-auto"
-            : "max-w-6xl mx-auto pointer-events-auto bg-[#140C20]/80 backdrop-blur-md rounded-lg border border-[rgba(125,96,166,0.25)] shadow-[0_8px_32px_rgba(0,0,0,0.4)] py-2 px-3 sm:px-5"
+            : "max-w-6xl mx-auto pointer-events-auto bg-[rgba(28,18,43,0.88)] backdrop-blur-md rounded-lg border border-[#C79347]/25 shadow-[0_8px_32px_rgba(0,0,0,0.35)] py-2 px-3 sm:px-5"
         }`}
       >
         {/* ======================================================================= */}
@@ -320,7 +320,7 @@ export const Navbar: React.FC = () => {
               {isSecondaryActive && (
                 <motion.div
                   layoutId="navbar-active-indicator"
-                  className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-[#A6F0CF] shadow-[0_0_8px_#A6F0CF]"
+                  className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-[#2BB5A8] shadow-[0_0_8px_rgba(43,181,168,0.6)]"
                   transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}
@@ -404,11 +404,11 @@ export const Navbar: React.FC = () => {
         {/* RIGHT: Primary Action CTA & Mobile Menu Trigger                         */}
         {/* ======================================================================= */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {/* Join CTA (Desktop) */}
+          {/* Join CTA (Desktop) - Peacock Teal per PRD §4.1 */}
           <Link
             href="/join"
             onClick={handleLinkClick}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#A6F0CF] text-[#140C20] hover:bg-[#7AE7B5] font-sans font-semibold text-xs tracking-wide transition-all shadow-[0_0_12px_rgba(166,240,207,0.3)] hover:shadow-[0_0_18px_rgba(166,240,207,0.5)] cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#0F766E] text-[#FAF5ED] hover:bg-[#0B5C56] font-sans font-semibold text-xs tracking-wide transition-all shadow-[0_0_12px_rgba(15,118,110,0.35)] hover:shadow-[0_0_16px_rgba(199,147,71,0.3)] hover:ring-1 hover:ring-[#C79347]/50 cursor-pointer"
           >
             <span>{locale === "ta" ? "இணைந்திருங்கள்" : "Join Sangam"}</span>
             <span className="text-[11px]">↗</span>

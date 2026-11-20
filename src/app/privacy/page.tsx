@@ -9,11 +9,11 @@ export const metadata: Metadata = buildRouteMetadata({
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-[100dvh] bg-surface-base px-5 py-28 text-ink-primary sm:px-8">
-      <article className="mx-auto max-w-3xl border-l-2 border-action-primary pl-6 sm:pl-10">
-        <p className="font-mono text-xs tracking-[0.16em] text-action-primary">OSU TAMIL SANGAM · PRIVACY NOTE</p>
-        <h1 className="mt-5 font-display text-[clamp(2.25rem,7vw,4.8rem)] leading-[0.94]">Anonymous FAQ popularity</h1>
-        <div className="mt-10 space-y-6 font-body text-base leading-8 text-ink-secondary">
+    <main className="min-h-[100dvh] bg-[#FAF6F0] px-5 pt-32 pb-28 text-[#261A14] sm:px-8">
+      <article className="mx-auto max-w-3xl border-l-2 border-[#9A6B3E] pl-6 sm:pl-10">
+        <p className="font-mono text-xs tracking-[0.16em] text-[#9A6B3E] font-semibold">OSU TAMIL SANGAM · PRIVACY NOTE</p>
+        <h1 className="mt-5 font-serif text-[clamp(2.25rem,7vw,4.8rem)] leading-[0.94] text-[#261A14]">Anonymous FAQ popularity</h1>
+        <div className="mt-10 space-y-6 font-sans text-base leading-8 text-[#5E4C40]">
           <p>
             When you intentionally open an FAQ, select it on the departure board, or submit a matching search, the site may add one anonymous aggregate count for that FAQ.
           </p>

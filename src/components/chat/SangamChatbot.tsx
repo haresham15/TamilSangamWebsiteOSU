@@ -252,10 +252,10 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
             whileTap={{ scale: 0.97 }}
             onClick={handleToggle}
             aria-label="Ask Nanba - OSU Tamil Sangam AI Assistant"
-            className="relative group bg-[#140C20]/92 text-[#F4F0FA] border border-[#A6F0CF]/35 backdrop-blur-md rounded-full px-4 py-2.5 text-xs font-medium tracking-[0.16em] uppercase shadow-lg hover:border-[#A6F0CF] hover:bg-[#140C20] flex items-center gap-2.5 transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0]"
+            className="relative group bg-[#1C122B]/95 text-[#FAF5ED] border border-[#C79347]/50 backdrop-blur-md rounded-full px-4 py-2.5 text-xs font-medium tracking-[0.16em] uppercase shadow-[0_8px_24px_rgba(0,0,0,0.5)] hover:border-[#C79347] hover:bg-[#271A3C] hover:shadow-[0_8px_28px_rgba(199,147,71,0.25)] flex items-center gap-2.5 transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C79347]"
           >
             <NanbaAvatar size={18} className="w-4.5 h-4.5 shrink-0 transition-transform group-hover:scale-110" />
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#F4F0FA]">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#FAF5ED]">
               Ask Nanba
             </span>
           </motion.button>
@@ -271,20 +271,20 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 30, scale: 0.96 }}
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] as const }}
-              className="fixed bottom-16 sm:bottom-20 right-3 sm:right-6 z-[100] w-[calc(100vw-24px)] sm:w-[420px] max-h-[min(85dvh,640px)] h-[min(75dvh,600px)] flex flex-col bg-[#140C20] border border-[#A6F0CF]/35 rounded-2xl shadow-[0_24px_64px_rgba(0,0,0,0.5)] overflow-hidden text-left"
+              className="fixed bottom-16 sm:bottom-20 right-3 sm:right-6 z-[100] w-[calc(100vw-24px)] sm:w-[420px] max-h-[min(85dvh,640px)] h-[min(75dvh,600px)] flex flex-col bg-[#1C122B] border border-[#C79347]/40 rounded-2xl shadow-[0_24px_64px_rgba(0,0,0,0.6)] overflow-hidden text-left"
             >
               {/* Header */}
-              <div className="p-3.5 bg-[#140C20] border-b border-[#A6F0CF]/35 flex items-center justify-between text-[#F4F0FA] shrink-0">
+              <div className="p-3.5 bg-[#1C122B] border-b border-[#C79347]/30 flex items-center justify-between text-[#FAF5ED] shrink-0">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-[#140C20] border border-[#A6F0CF]/35 flex items-center justify-center shrink-0 shadow-inner">
+                  <div className="w-8 h-8 rounded-full bg-[#271A3C] border border-[#C79347]/40 flex items-center justify-center shrink-0 shadow-inner">
                     <NanbaAvatar size={22} className="w-5.5 h-5.5" />
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold font-serif text-white tracking-tight flex items-center gap-1.5">
                       <span>Nanba</span>
-                      <span className="text-xs font-tamil text-[#A6F0CF] font-normal">(நண்பா)</span>
+                      <span className="text-xs font-tamil text-[#C79347] font-normal">(நண்பா)</span>
                     </h3>
-                    <p className="text-[10px] font-mono text-[#A6F0CF]/80">
+                    <p className="text-[10px] font-mono text-[#CBBBA8]">
                       Sangam Student Assistant
                     </p>
                   </div>
@@ -500,15 +500,15 @@ export const SangamChatbot: React.FC<SangamChatbotProps> = ({
                       : "Ask Nanba about events, joining, tickets, board..."
                   }
                   aria-label="Ask Nanba AI Assistant"
-                  className="flex-1 px-3.5 py-2.5 text-xs bg-[#1A1028] border border-[rgba(125,96,166,0.35)] rounded-xl text-[#F4F0FA] placeholder-[#C4B7D7]/60 focus:outline-none focus:border-[#A6F0CF] focus:ring-1 focus:ring-[#4FD6E0] font-body transition-colors"
+                  className="flex-1 px-3.5 py-2.5 text-xs bg-[#1C122B] border border-[#C79347]/30 rounded-xl text-[#FAF5ED] placeholder-[#CBBBA8]/60 focus:outline-none focus:border-[#C79347] focus:ring-1 focus:ring-[#0F766E] font-body transition-colors"
                 />
                 <button
                   type="submit"
                   disabled={!inputQuery.trim() || isLoading}
                   aria-label="Send message to Nanba"
-                  className="p-2.5 min-w-[42px] min-h-[42px] rounded-xl flex items-center justify-center bg-[#A6F0CF] hover:bg-[#A6F0CF] text-[#140C20] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] disabled:opacity-40 transition-all duration-150 cursor-pointer shadow-sm"
+                  className="p-2.5 min-w-[42px] min-h-[42px] rounded-xl flex items-center justify-center bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C79347] disabled:opacity-40 transition-all duration-150 cursor-pointer shadow-sm"
                 >
-                  <Send className="w-4 h-4 text-[#F4F0FA]" />
+                  <Send className="w-4 h-4 text-[#FAF5ED]" />
                 </button>
               </form>
             </div>

@@ -13,6 +13,7 @@ import { EventPhotoVault } from "./EventPhotoVault";
 import { VaultGateway } from "./VaultGateway";
 import { EditorialBackgroundCanvas } from "@/components/ui/EditorialBackgroundCanvas";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
+import { PathirikaiFormFrame } from "@/components/ui/PathirikaiFormFrame";
 
 interface EventDossierViewProps {
   event: SangamEvent;
@@ -73,26 +74,26 @@ END:VCALENDAR`;
   };
 
   return (
-    <article className="relative w-full min-h-screen bg-[#140C20] text-[#F4F0FA] font-sans selection:bg-[#A6F0CF]/20 overflow-hidden">
+    <article className="relative w-full min-h-screen bg-[#1C122B] text-[#FAF5ED] font-sans selection:bg-[#2BB5A8]/30 overflow-hidden">
       <EditorialBackgroundCanvas />
-      <main className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-32 pb-16">
+      <main className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-32 pb-28">
         {/* Navigation Breadcrumb (Minimal Typographic Link, No Pills) */}
         <nav aria-label="Breadcrumb" className="mb-14 flex items-center justify-between flex-wrap gap-4">
           <Link
             href="/events"
             onClick={playClick}
-            className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[#A6F0CF] hover:text-[#F4F0FA] transition-colors duration-200"
+            className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[#C79347] hover:text-[#FAF5ED] transition-colors duration-200"
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-[#A6F0CF]" />
+            <ArrowLeft className="w-3.5 h-3.5 text-[#C79347]" />
             <span>RETURN TO GATHERINGS REGISTER</span>
           </Link>
           {event.status === "upcoming" && (
             <Link
               href="/#flagship-gathering"
               onClick={playClick}
-              className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.15em] text-[#F4F0FA] bg-[#25173B] border border-[#A6F0CF]/40 hover:border-[#A6F0CF] px-3.5 py-1.5 rounded-full hover:text-[#A6F0CF] transition-colors"
+              className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.15em] text-[#FAF5ED] bg-[#271A3C] border border-[#C79347]/40 hover:border-[#C79347] px-3.5 py-1.5 rounded-full hover:text-[#C79347] transition-colors"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C79347]" />
               <span>HOME FLAGSHIP SHOWCASE ↗</span>
             </Link>
           )}
@@ -101,69 +102,69 @@ END:VCALENDAR`;
         {/* ============================================================ */}
         {/* HEADER SECTION: ReactBits SplitText & Broadsheet Colophon   */}
         {/* ============================================================ */}
-        <header className="border-b border-[rgba(125,96,166,0.25)] pb-16 mb-20">
+        <header className="border-b border-[#C79347]/30 pb-16 mb-20">
           {/* Metadata Flags (Naked typography with divider dots) */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono tracking-widest text-[#F4F0FA]/75 uppercase mb-6">
-            <span className="text-[#A6F0CF] font-semibold">{event.academicYear}</span>
-            <span className="text-[#F4F0FA]/30">/</span>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono tracking-widest text-[#FAF5ED]/75 uppercase mb-6">
+            <span className="text-[#C79347] font-semibold">{event.academicYear}</span>
+            <span className="text-[#FAF5ED]/30">/</span>
             <span>{event.tamilDate}</span>
             {event.status === "upcoming" && (
               <>
-                <span className="text-[#F4F0FA]/30">/</span>
-                <span className="text-[#55CCA2] font-semibold">UPCOMING GATHERING</span>
+                <span className="text-[#FAF5ED]/30">/</span>
+                <span className="text-[#2BB5A8] font-semibold">UPCOMING GATHERING</span>
               </>
             )}
           </div>
 
           {/* Primary Massive Event Title with ReactBits SplitText */}
-          <h1 lang={locale === "ta" ? "ta" : "en"} className={`text-5xl sm:text-7xl lg:text-8xl font-serif text-[#F4F0FA] mb-4 ${locale === "ta" ? "tracking-normal leading-relaxed" : "tracking-tight leading-[1.05]"}`}>
+          <h1 lang={locale === "ta" ? "ta" : "en"} className={`text-5xl sm:text-7xl lg:text-8xl font-serif text-[#FAF5ED] mb-4 ${locale === "ta" ? "tracking-normal leading-relaxed" : "tracking-tight leading-[1.05]"}`}>
             {reducedMotion || isLiteMode ? displayTitle : <SplitText text={displayTitle} />}
           </h1>
 
           {/* Bilingual Secondary Subheading */}
-          <p lang={locale === "ta" ? "en" : "ta"} className="text-xl sm:text-2xl font-serif text-[#F4F0FA]/75 italic leading-relaxed mb-8">
+          <p lang={locale === "ta" ? "en" : "ta"} className="text-xl sm:text-2xl font-serif text-[#D4A36A] italic leading-relaxed mb-8">
             {secondaryTitle}
           </p>
 
           {/* Editorial Tagline */}
-          <p lang={locale === "ta" ? "ta" : "en"} className="text-lg sm:text-xl text-[#F4F0FA] font-sans font-light max-w-3xl leading-relaxed mb-10">
+          <p lang={locale === "ta" ? "ta" : "en"} className="text-lg sm:text-xl text-[#FAF5ED]/90 font-sans font-light max-w-3xl leading-relaxed mb-10">
             {displayTagline}
           </p>
 
           {/* Fast Spec Bar (Zero cards: pure typographic table layout) */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-[rgba(125,96,166,0.25)] text-xs font-sans">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-[#C79347]/30 text-xs font-sans">
             <div>
-              <span className="block font-mono uppercase tracking-wider text-[#F4F0FA]/75 mb-1">
+              <span className="block font-mono uppercase tracking-wider text-[#CBBBA8] mb-1">
                 DATE
               </span>
-              <p className="font-medium text-[#F4F0FA] text-sm flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-[#A6F0CF]" />
+              <p className="font-medium text-[#FAF5ED] text-sm flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[#2BB5A8]" />
                 {event.date}
               </p>
             </div>
             <div>
-              <span className="block font-mono uppercase tracking-wider text-[#F4F0FA]/75 mb-1">
+              <span className="block font-mono uppercase tracking-wider text-[#CBBBA8] mb-1">
                 TIME
               </span>
-              <p className="font-medium text-[#F4F0FA] text-sm flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-[#A6F0CF]" />
+              <p className="font-medium text-[#FAF5ED] text-sm flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-[#2BB5A8]" />
                 {event.time}
               </p>
             </div>
             <div>
-              <span className="block font-mono uppercase tracking-wider text-[#F4F0FA]/75 mb-1">
+              <span className="block font-mono uppercase tracking-wider text-[#CBBBA8] mb-1">
                 LOCATION
               </span>
-              <p className="font-medium text-[#F4F0FA] text-sm flex items-start gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#A6F0CF] shrink-0 mt-0.5" />
+              <p className="font-medium text-[#FAF5ED] text-sm flex items-start gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-[#2BB5A8] shrink-0 mt-0.5" />
                 <span>{event.location}</span>
               </p>
             </div>
             <div>
-              <span className="block font-mono uppercase tracking-wider text-[#F4F0FA]/75 mb-1">
+              <span className="block font-mono uppercase tracking-wider text-[#CBBBA8] mb-1">
                 ADMISSION
               </span>
-              <p className="font-serif text-[#F4F0FA] text-base">{event.price}</p>
+              <p className="font-serif text-[#FAF5ED] text-base">{event.price}</p>
             </div>
           </div>
         </header>
@@ -174,19 +175,19 @@ END:VCALENDAR`;
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24 items-start">
           {/* Narrative Column */}
           <div className="lg:col-span-7 space-y-8">
-            <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-[#A6F0CF] font-semibold">
+            <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-[#C79347] font-semibold">
               OVERVIEW
             </h2>
-            <p lang={locale === "ta" ? "ta" : "en"} className="text-xl sm:text-2xl font-serif text-[#F4F0FA] leading-relaxed">
+            <p lang={locale === "ta" ? "ta" : "en"} className="text-xl sm:text-2xl font-serif text-[#FAF5ED] leading-relaxed">
               {displayDescription}
             </p>
 
             {/* Dress code & venue notes (Naked typographic callout) */}
-            <div className="pt-6 border-t border-[rgba(125,96,166,0.25)] space-y-4 text-sm text-[#F4F0FA]/75">
+            <div className="pt-6 border-t border-[#C79347]/30 space-y-4 text-sm text-[#CBBBA8]">
               <div className="flex items-start gap-3">
-                <Shirt className="w-4 h-4 text-[#A6F0CF] shrink-0 mt-0.5" />
+                <Shirt className="w-4 h-4 text-[#C79347] shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-mono text-xs uppercase tracking-wider text-[#F4F0FA] block font-medium">
+                  <span className="font-mono text-xs uppercase tracking-wider text-[#FAF5ED] block font-medium">
                     DRESS NOTE
                   </span>
                   <span>{locale === "ta" ? event.dressCodeTa : event.dressCodeEn}</span>
@@ -197,16 +198,16 @@ END:VCALENDAR`;
 
           {/* Schedule Column (Broadsheet Ledger Lines) */}
           <div className="lg:col-span-5 space-y-6">
-            <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-[#A6F0CF] font-semibold">
+            <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-[#C79347] font-semibold">
               TIMETABLE · நிரல்
             </h2>
-            <div className="divide-y divide-[rgba(125,96,166,0.25)] border-t border-b border-[rgba(125,96,166,0.25)]">
+            <div className="divide-y divide-[#C79347]/20 border-t border-b border-[#C79347]/30">
               {event.schedule.map((slot, idx) => (
                 <div key={idx} className="py-4 flex items-baseline justify-between gap-4">
-                  <span className="text-xs font-mono text-[#A6F0CF] font-semibold tracking-wider shrink-0 w-24">
+                  <span className="text-xs font-mono text-[#2BB5A8] font-semibold tracking-wider shrink-0 w-24">
                     {slot.time}
                   </span>
-                  <span className="text-sm font-sans text-[#F4F0FA] text-left flex-1">
+                  <span className="text-sm font-sans text-[#FAF5ED] text-left flex-1">
                     {locale === "ta" ? slot.activityTa : slot.activityEn}
                   </span>
                 </div>
@@ -218,9 +219,9 @@ END:VCALENDAR`;
               <button
                 type="button"
                 onClick={handleDownloadIcs}
-                className="inline-flex items-center gap-1.5 text-[#F4F0FA]/75 hover:text-[#A6F0CF] transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-[#FAF5ED]/80 hover:text-[#2BB5A8] transition-colors cursor-pointer"
               >
-                <Download className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                <Download className="w-3.5 h-3.5 text-[#2BB5A8]" />
                 <span>{downloadFeedback ? "CALENDAR ADDED ✓" : "SAVE TO CALENDAR (.ICS)"}</span>
               </button>
 
@@ -228,9 +229,9 @@ END:VCALENDAR`;
                 href={event.interestFormUrl || event.ticketUrl || "https://linktr.ee/osutamilsangam"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[#F4F0FA]/75 hover:text-[#A6F0CF] transition-colors"
+                className="inline-flex items-center gap-1.5 text-[#FAF5ED]/80 hover:text-[#2BB5A8] transition-colors"
               >
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#2BB5A8]" />
                 <span>{(event.interestFormUrl || event.ticketUrl) ? "SIGN UP / PERFORMANCE FORM ↗" : "OFFICIAL TICKETING / RSVP"}</span>
               </a>
 
@@ -238,9 +239,9 @@ END:VCALENDAR`;
                 <Link
                   href="/dance"
                   onClick={playClick}
-                  className="inline-flex items-center gap-1.5 text-[#A6F0CF] hover:text-[#F4F0FA] transition-colors"
+                  className="inline-flex items-center gap-1.5 text-[#2BB5A8] hover:text-[#FAF5ED] transition-colors"
                 >
-                  <Music2 className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                  <Music2 className="w-3.5 h-3.5 text-[#2BB5A8]" />
                   <span>DANCE / STAGE SIGN-UPS ↗</span>
                 </Link>
               )}
@@ -253,34 +254,13 @@ END:VCALENDAR`;
         {/* ============================================================ */}
         {event.slug === "namma-deepavali-2026" && (
           <section aria-label="Event Registration and Performance Sign-Up" className="mb-20">
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-5 border-b border-[rgba(125,96,166,0.25)] pb-3">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#A6F0CF]" />
-                <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-[#A6F0CF] font-semibold">
-                  OFFICIAL SIGN-UP &amp; REGISTRATION FORM · படிவம்
-                </h2>
-              </div>
-              <a
-                href={event.interestFormUrl || "https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-mono text-[#A6F0CF] hover:underline inline-flex items-center gap-1.5"
-              >
-                <span>Open in Tab</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </a>
-            </div>
-
-            <div className="w-full rounded-2xl bg-[#140C20] border-2 border-[#A6F0CF]/30 overflow-hidden shadow-[0_16px_48px_rgba(0,0,0,0.5)]">
-              <iframe
-                src="https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform?embedded=true"
-                title="Diwali 2026 - TS X MS X KS Sign-Up & Performance Registration"
-                className="w-full min-h-[640px] sm:min-h-[780px] border-0"
-                loading="lazy"
-              >
-                Loading registration form...
-              </iframe>
-            </div>
+            <PathirikaiFormFrame
+              titleEn="Official Sign-Up & Registration Form"
+              titleTa="நிகழ்வுப் பதிவு படிவம்"
+              formUrl={event.interestFormUrl || "https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform"}
+              embedSrc="https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform?embedded=true"
+              minHeight="720px"
+            />
           </section>
         )}
 

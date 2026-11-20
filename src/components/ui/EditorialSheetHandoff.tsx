@@ -13,13 +13,14 @@ export interface EditorialSheetHandoffProps {
   showBackgroundCanvas?: boolean;
   backgroundCanvasVariant?: "light" | "espresso";
   overlapHero?: boolean;
+  surface?: "sandstone" | "ivory" | "sangam-deep";
 }
 
 /**
  * EditorialSheetHandoff
  * AWWWARDS SOTD Architectural Sheet Over-Scroll Container.
  * Glides up physically over the pinned 3D hero stage (p = 0.84 -> 1.00)
- * with a 28px rounded top corner, warm ambient shadow, 1px brass hairline rule,
+ * with a 28px rounded top corner, warm ambient shadow, 1px antique zari rule,
  * and the tactile Living Chola Monograph & Pulli Architectural Background System.
  */
 export function EditorialSheetHandoff({
@@ -32,16 +33,24 @@ export function EditorialSheetHandoff({
   showBackgroundCanvas = true,
   backgroundCanvasVariant = "light",
   overlapHero = true,
+  surface = "sangam-deep",
 }: EditorialSheetHandoffProps) {
   const overlapStyles = overlapHero
-    ? "-mt-[10vh] md:-mt-[12vh] rounded-t-[28px] shadow-[0_-8px_36px_rgba(166,240,207,0.14),0_-24px_60px_rgba(18,13,11,0.55)] border-t border-[#A6F0CF]/50"
-    : "mt-0 border-t border-[#A6F0CF]/35 shadow-[0_-4px_24px_rgba(166,240,207,0.08)]";
+    ? "-mt-[10vh] md:-mt-[12vh] rounded-t-[28px] shadow-[0_-8px_36px_rgba(0,0,0,0.35),0_-24px_60px_rgba(28,18,43,0.65)] border-t border-[#C79347]/50"
+    : "mt-0 border-t border-[#C79347]/35 shadow-[0_-4px_24px_rgba(0,0,0,0.25)]";
+
+  const surfaceClasses =
+    surface === "sandstone"
+      ? "bg-[#F0E6D6] text-[#261A14]"
+      : surface === "ivory"
+      ? "bg-[#FAF6F0] text-[#261A14]"
+      : "bg-[#1C122B] text-[#FAF5ED]";
 
   return (
     <section
       id={id}
       data-editorial-sheet="true"
-      className={`relative z-20 w-full bg-[#140C20] text-[#F4F0FA] ${overlapStyles} ${overflowClass} ${className}`.trim()}
+      className={`relative z-20 w-full ${surfaceClasses} ${overlapStyles} ${overflowClass} ${className}`.trim()}
     >
       {/* Living Chola Monograph & Pulli Background Layer */}
       {showBackgroundCanvas && (

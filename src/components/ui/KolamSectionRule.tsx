@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 
 export interface KolamSectionRuleProps {
   className?: string;
-  variant?: "light" | "sandstone" | "espresso";
-  tone?: "light" | "sandstone" | "espresso";
+  variant?: "light" | "sandstone" | "espresso" | "gold" | "dark";
+  tone?: "light" | "sandstone" | "espresso" | "gold" | "dark";
   ornament?: React.ReactNode;
 }
 
@@ -23,20 +23,20 @@ export function KolamSectionRule({
   ornament,
 }: KolamSectionRuleProps) {
   const activeTone = variant || tone;
-  const isEspresso = activeTone === "espresso";
+  const isEspresso = activeTone === "espresso" || activeTone === "dark";
   const isSandstone = activeTone === "sandstone";
 
   const lineColor = isEspresso
-    ? "from-transparent via-[#A6F0CF]/45 to-transparent"
+    ? "from-transparent via-[rgba(212,163,106,0.40)] to-transparent"
     : isSandstone
-    ? "from-transparent via-[#A6F0CF]/40 to-transparent"
-    : "from-transparent via-[#A6F0CF]/35 to-transparent";
+    ? "from-transparent via-[rgba(154,107,62,0.35)] to-transparent"
+    : "from-transparent via-[rgba(199,147,71,0.30)] to-transparent";
 
   const ornamentColor = isEspresso
-    ? "text-[#A6F0CF] drop-shadow-[0_0_10px_rgba(166,240,207,0.55)]"
+    ? "text-[#D4A36A] drop-shadow-[0_0_8px_rgba(212,163,106,0.45)]"
     : isSandstone
-    ? "text-[#A6F0CF] drop-shadow-[0_0_10px_rgba(166,240,207,0.55)]"
-    : "text-[#A6F0CF] drop-shadow-[0_0_8px_rgba(166,240,207,0.45)]";
+    ? "text-[#9A6B3E] drop-shadow-[0_1px_4px_rgba(91,44,134,0.15)]"
+    : "text-[#C79347] drop-shadow-[0_1px_3px_rgba(199,147,71,0.25)]";
 
   return (
     <div

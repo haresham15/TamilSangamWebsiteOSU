@@ -14,7 +14,7 @@ interface WatermarkGlyphProps {
   /** Optional position shorthand (e.g. 'center', 'top-left', 'top-right', 'bottom-left', 'bottom-right') */
   position?: "left" | "center" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right" | string;
   /** Color theme for dark vs light page backgrounds */
-  theme?: "dark" | "light" | "mint";
+  theme?: "dark" | "light" | "mint" | "bronze" | "purple" | "zari";
   /** Typographic variant: 'tiro' for letterpress ancient authority or 'kavivanar' for manuscript handwriting */
   fontVariant?: "tiro" | "kavivanar";
 }
@@ -56,11 +56,17 @@ export const WatermarkGlyph = memo(function WatermarkGlyph({
       : "top-1/2 -translate-y-1/2";
 
   const colorClass =
-    theme === "mint"
-      ? "text-[#A6F0CF] drop-shadow-[0_0_24px_rgba(166,240,207,0.35)]"
+    theme === "bronze"
+      ? "text-[#9A6B3E]"
+      : theme === "purple"
+      ? "text-[#5B2C86]"
+      : theme === "zari"
+      ? "text-[#D4A36A]"
+      : theme === "mint"
+      ? "text-[#9A6B3E] drop-shadow-[0_0_12px_rgba(154,107,62,0.25)]"
       : theme === "light"
-      ? "text-[#A6F0CF]"
-      : "text-white mix-blend-plus-lighter";
+      ? "text-[#9A6B3E]"
+      : "text-[#FAF5ED] mix-blend-plus-lighter";
 
   return (
     <div

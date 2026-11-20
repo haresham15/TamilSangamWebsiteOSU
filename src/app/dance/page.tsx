@@ -42,8 +42,8 @@ export const metadata: Metadata = {
 
 export default function DancePage() {
   return (
-    <main className="relative min-h-screen bg-[#140C20] text-[#F4F0FA] pt-28 pb-20 selection:bg-[#A6F0CF]/20 overflow-x-hidden">
-      {/* Ambient Canvas with Mint auroras & Kolam geometry */}
+    <main className="relative min-h-screen bg-[#F0E6D6] text-[#261A14] pt-28 pb-28 selection:bg-[#0F766E]/20 overflow-x-hidden">
+      {/* Ambient Canvas with warm Kolam geometry */}
       <EditorialBackgroundCanvas />
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,9 +51,9 @@ export default function DancePage() {
         <nav aria-label="Breadcrumb" className="mb-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[#A6F0CF] hover:text-[#F4F0FA] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[#0F766E] hover:text-[#261A14] transition-colors"
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-[#A6F0CF]" />
+            <ArrowLeft className="w-3.5 h-3.5 text-[#0F766E]" />
             <span>RETURN TO HEARTH</span>
           </Link>
         </nav>

@@ -107,8 +107,8 @@ export function EditorialPhotoCarousel() {
           }}
           className={`px-3.5 py-1.5 rounded-full transition-colors shrink-0 cursor-pointer ${
             activeAlbumSlug === "all"
-              ? "bg-[#25173B] text-[#F4F0FA] font-semibold shadow-xs"
-              : "bg-[#25173B] text-[#C4B7D7] hover:bg-[#25173B] hover:text-[#F4F0FA]"
+              ? "bg-[#5B2C86] text-[#FAF5ED] font-semibold shadow-xs"
+              : "bg-[#271A3C] text-[#CBBBA8] border border-[rgba(212,163,106,0.24)] hover:text-[#FAF5ED]"
           }`}
         >
           All Memories ({GALLERY_ALBUMS.reduce((acc, a) => acc + a.photos.length, 0)})
@@ -125,8 +125,8 @@ export function EditorialPhotoCarousel() {
               }}
               className={`px-3.5 py-1.5 rounded-full transition-colors shrink-0 cursor-pointer ${
                 isSelected
-                  ? "bg-[#25173B] text-[#F4F0FA] font-semibold shadow-xs"
-                  : "bg-[#25173B] text-[#C4B7D7] hover:bg-[#25173B] hover:text-[#F4F0FA]"
+                  ? "bg-[#5B2C86] text-[#FAF5ED] font-semibold shadow-xs"
+                  : "bg-[#271A3C] text-[#CBBBA8] border border-[rgba(212,163,106,0.24)] hover:text-[#FAF5ED]"
               }`}
             >
               {album.titleEn.replace(/^TS\s*/, "")}
@@ -137,12 +137,12 @@ export function EditorialPhotoCarousel() {
 
       {/* Album Context Banner (If single album filtered) */}
       {activeAlbum && (
-        <div className="mt-2 mb-6 p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-sans text-[#F4F0FA]">
+        <div className="mt-2 mb-6 p-4 rounded-xl bg-[#271A3C] border border-[rgba(212,163,106,0.24)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-sans text-[#FAF5ED]">
           <div>
-            <span className="font-mono text-[#A6F0CF] uppercase tracking-wider block font-semibold text-[10px]">
+            <span className="font-mono text-[#C79347] uppercase tracking-wider block font-semibold text-[10px]">
               {activeAlbum.eventDate} · {activeAlbum.location}
             </span>
-            <p className="text-[#C4B7D7] mt-0.5 max-w-2xl">
+            <p className="text-[#CBBBA8] mt-0.5 max-w-2xl">
               {locale === "ta" ? activeAlbum.descriptionTa : activeAlbum.descriptionEn}
             </p>
           </div>
@@ -150,7 +150,7 @@ export function EditorialPhotoCarousel() {
             <Link
               href={`/events/${activeAlbum.eventSlug || activeAlbum.slug}#photo-vault`}
               onClick={playClick}
-              className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-[#A6F0CF] hover:text-[#55CCA2] border-b border-[#A6F0CF] pb-0.5 transition-colors"
+              className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-[#C79347] hover:text-[#FAF5ED] border-b border-[#C79347] pb-0.5 transition-colors"
             >
               <span>View Event Dossier &amp; Vault</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -160,7 +160,7 @@ export function EditorialPhotoCarousel() {
                 href={activeAlbum.googlePhotosUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 font-mono text-xs font-medium text-[#C4B7D7] hover:text-[#A6F0CF] transition-colors"
+                className="inline-flex items-center gap-1.5 font-mono text-xs font-medium text-[#CBBBA8] hover:text-[#C79347] transition-colors"
               >
                 <span>Google Vault</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -175,7 +175,7 @@ export function EditorialPhotoCarousel() {
         ref={scrollTrackRef}
         tabIndex={0}
         aria-label="Scrollable photo collection. Use left and right arrow keys to explore."
-        className="mt-6 flex gap-5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4FD6E0] rounded-xl"
+        className="mt-6 flex gap-5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C79347] rounded-xl"
         style={{ scrollbarWidth: "none" }}
       >
         {photos.map((photo, index) => {
@@ -196,7 +196,7 @@ export function EditorialPhotoCarousel() {
               role="button"
               tabIndex={0}
               aria-label={`View enlarged photo: ${photo.titleEn}`}
-              className="group relative flex-none w-[280px] sm:w-[340px] md:w-[380px] snap-start rounded-xl overflow-hidden bg-[#140C20] border border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35 hover:shadow-lg transition-[border-color,box-shadow] duration-200 cursor-pointer text-left focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+              className="group relative flex-none w-[280px] sm:w-[340px] md:w-[380px] snap-start rounded-xl overflow-hidden bg-[#271A3C] border border-[rgba(212,163,106,0.24)] hover:border-[#C79347]/50 hover:shadow-lg transition-[border-color,box-shadow] duration-200 cursor-pointer text-left focus-visible:outline-2 focus-visible:outline-[#C79347]"
             >
               {/* Aspect Ratio Locked Frame */}
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-200">
@@ -209,22 +209,22 @@ export function EditorialPhotoCarousel() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute bottom-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white bg-black/50 backdrop-blur-xs p-1.5 rounded-full">
-                  <Sparkles className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                  <Sparkles className="w-3.5 h-3.5 text-[#C79347]" />
                 </div>
               </div>
 
               {/* Photo Caption / Meta */}
               <div className="p-4 space-y-1">
-                <div className="flex items-center justify-between text-[11px] font-mono text-[#C4B7D7]">
+                <div className="flex items-center justify-between text-[11px] font-mono text-[#CBBBA8]">
                   <span>{photo.eventDate}</span>
-                  <span className="text-[#A6F0CF] uppercase tracking-wider font-semibold">
+                  <span className="text-[#C79347] uppercase tracking-wider font-semibold">
                     Plate {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <h3 className="text-base font-serif font-normal text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
+                <h3 className="text-base font-serif font-normal text-[#FAF5ED] group-hover:text-[#C79347] transition-colors truncate">
                   {locale === "ta" ? photo.titleTa : photo.titleEn}
                 </h3>
-                <p className="text-xs font-sans text-[#C4B7D7] line-clamp-2 leading-relaxed">
+                <p className="text-xs font-sans text-[#CBBBA8] line-clamp-2 leading-relaxed">
                   {locale === "ta" ? photo.captionTa : photo.captionEn}
                 </p>
               </div>

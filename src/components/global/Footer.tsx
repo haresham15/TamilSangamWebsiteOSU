@@ -140,21 +140,21 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
   const isHomePage = pathname === "/";
 
   return (
-    <footer className="relative bg-[#140C20] border-t border-[#A6F0CF]/30 overflow-hidden text-[#F4F0FA] shadow-[0_-8px_36px_rgba(166,240,207,0.06)]">
-      {/* Ambient Mint Background Blooms */}
+    <footer className="relative bg-[#1C122B] border-t border-[#C79347]/40 overflow-hidden text-[#FAF5ED] shadow-[0_-8px_36px_rgba(199,147,71,0.06)]">
+      {/* Ambient Warm Zari & Peacock Background Blooms */}
       <div
-        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_900px_450px_at_15%_100%,rgba(166,240,207,0.10),transparent_70%),radial-gradient(ellipse_700px_400px_at_85%_0%,rgba(79,214,224,0.07),transparent_70%)]"
+        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_900px_450px_at_15%_100%,rgba(199,147,71,0.07),transparent_70%),radial-gradient(ellipse_700px_400px_at_85%_0%,rgba(43,181,168,0.06),transparent_70%)]"
         aria-hidden="true"
       />
       {/* ========================================================================= */}
       {/* 1. TOP ROLLING CREDITS MARQUEE (Home Page End-Credits Only)                */}
       {/* ========================================================================= */}
       {isHomePage && (
-        <div className="relative w-full bg-[#140C20] border-b border-white/10 py-3 overflow-hidden select-none">
+        <div className="relative w-full bg-[#160E22] border-b border-[#C79347]/20 py-3 overflow-hidden select-none">
           {/* Infinite Running Marquee Film Credits */}
           <div className="relative flex overflow-x-hidden">
-            <div className="py-0.5 animate-[marquee-left_36s_linear_infinite] whitespace-nowrap flex items-center font-sans text-xs uppercase tracking-wider text-[#C4B7D7] font-medium">
-              <span className="mx-4 text-[#A6F0CF] font-semibold">★ EXECUTIVE PRODUCTION: OSU TAMIL SANGAM</span>
+            <div className="py-0.5 animate-[marquee-left_36s_linear_infinite] whitespace-nowrap flex items-center font-sans text-xs uppercase tracking-wider text-[#CBBBA8] font-medium">
+              <span className="mx-4 text-[#C79347] font-semibold">★ EXECUTIVE PRODUCTION: OSU TAMIL SANGAM</span>
               {CURRENT_BOARD.map((officer) => (
                 <React.Fragment key={officer.id}>
                   <span className="mx-4 text-white/30">·</span>
@@ -169,9 +169,9 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
 
             <div
               aria-hidden="true"
-              className="py-0.5 animate-[marquee-left_36s_linear_infinite] whitespace-nowrap flex items-center font-sans text-xs uppercase tracking-wider text-[#C4B7D7] font-medium"
+              className="py-0.5 animate-[marquee-left_36s_linear_infinite] whitespace-nowrap flex items-center font-sans text-xs uppercase tracking-wider text-[#CBBBA8] font-medium"
             >
-              <span className="mx-4 text-[#A6F0CF] font-semibold">★ EXECUTIVE PRODUCTION: OSU TAMIL SANGAM</span>
+              <span className="mx-4 text-[#C79347] font-semibold">★ EXECUTIVE PRODUCTION: OSU TAMIL SANGAM</span>
               {CURRENT_BOARD.map((officer) => (
                 <React.Fragment key={`dup-${officer.id}`}>
                   <span className="mx-4 text-white/30">·</span>
@@ -208,7 +208,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-white tracking-tight font-serif">{t("brand.name")}</h3>
-                  <p className="text-xs text-[#A6F0CF] font-mono uppercase tracking-wider font-semibold">
+                  <p className="text-xs text-[#C79347] font-mono uppercase tracking-wider font-semibold">
                     The Ohio State University · Columbus, OH
                   </p>
                 </div>
@@ -234,16 +234,16 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
                     <Link
                       href={linkHref}
                       onClick={playClick}
-                      className="inline-flex items-center gap-2 pb-1 border-b border-[#A6F0CF] text-xs font-sans text-white hover:text-[#A6F0CF] transition-colors group"
+                      className="inline-flex items-center gap-2 pb-1 border-b border-[#2BB5A8] text-xs font-sans text-white hover:text-[#2BB5A8] transition-colors group"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] animate-pulse" />
-                      <span className="text-[#A6F0CF] font-semibold uppercase tracking-wider font-mono">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#2BB5A8] animate-pulse" />
+                      <span className="text-[#2BB5A8] font-semibold uppercase tracking-wider font-mono">
                         {locale === "ta" ? "அடுத்த நிகழ்வு:" : "Next Event:"}
                       </span>
                       <span className="text-white/90 group-hover:text-white transition-colors">
                         {title} · {liveCalendarEvent.dateShort}
                       </span>
-                      <span className="text-[#A6F0CF] transition-transform group-hover:translate-x-1">→</span>
+                      <span className="text-[#2BB5A8] transition-transform group-hover:translate-x-1">→</span>
                     </Link>
                   </div>
                 );
@@ -255,16 +255,16 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
                     <Link
                       href={`/events/${nextFlagship.slug}`}
                       onClick={playClick}
-                      className="inline-flex items-center gap-2 pb-1 border-b border-[#A6F0CF] text-xs font-sans text-white hover:text-[#A6F0CF] transition-colors group"
+                      className="inline-flex items-center gap-2 pb-1 border-b border-[#2BB5A8] text-xs font-sans text-white hover:text-[#2BB5A8] transition-colors group"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] animate-pulse" />
-                      <span className="text-[#A6F0CF] font-semibold uppercase tracking-wider font-mono">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#2BB5A8] animate-pulse" />
+                      <span className="text-[#2BB5A8] font-semibold uppercase tracking-wider font-mono">
                         {locale === "ta" ? "அடுத்த நிகழ்வு:" : "Next Event:"}
                       </span>
                       <span className="text-white/90 group-hover:text-white transition-colors">
                         {locale === "ta" ? nextFlagship.titleTa : nextFlagship.titleEn}
                       </span>
-                      <span className="text-[#A6F0CF] transition-transform group-hover:translate-x-1">→</span>
+                      <span className="text-[#2BB5A8] transition-transform group-hover:translate-x-1">→</span>
                     </Link>
                   </div>
                 );
@@ -275,16 +275,16 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
                     href={SITE_CONFIG.groupMeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 pb-1 border-b border-[#A6F0CF] text-xs font-sans text-white hover:text-[#A6F0CF] transition-colors group"
+                    className="inline-flex items-center gap-2 pb-1 border-b border-[#2BB5A8] text-xs font-sans text-white hover:text-[#2BB5A8] transition-colors group"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] animate-pulse" />
-                    <span className="text-[#A6F0CF] font-semibold uppercase tracking-wider font-mono">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#2BB5A8] animate-pulse" />
+                    <span className="text-[#2BB5A8] font-semibold uppercase tracking-wider font-mono">
                       {locale === "ta" ? "அடுத்த நிகழ்வு:" : "Next Event:"}
                     </span>
                     <span className="text-white/90 group-hover:text-white transition-colors">
                       {locale === "ta" ? "அறிவிக்கப்படும் (TBA) · GroupMe-ல் இணைக" : "TBA · Join GroupMe for Date Drops"}
                     </span>
-                    <span className="text-[#A6F0CF] transition-transform group-hover:translate-x-1">→</span>
+                    <span className="text-[#2BB5A8] transition-transform group-hover:translate-x-1">→</span>
                   </a>
                 </div>
               );
@@ -295,7 +295,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
           <div className="lg:col-span-5 text-left relative lg:border-l lg:border-white/10 lg:pl-10 space-y-4">
             <div className="border-b border-white/10 pb-3 flex items-center justify-between">
               <h4 className="text-sm font-semibold text-white font-mono uppercase tracking-wider flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2BB5A8]" />
                 <span>{locale === "ta" ? "நிகழ்வு தகவல்கள் பெறுக" : "Stay in Sangam"}</span>
               </h4>
             </div>
@@ -308,8 +308,8 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
 
             {isSubscribed ? (
               <div className="py-4 border-t border-b border-white/10 text-white space-y-2.5">
-                <div className="flex items-center gap-2 text-[#A6F0CF] font-semibold text-xs font-mono uppercase tracking-wider">
-                  <CheckCircle2 className="w-4 h-4 shrink-0 text-[#A6F0CF]" />
+                <div className="flex items-center gap-2 text-[#2BB5A8] font-semibold text-xs font-mono uppercase tracking-wider">
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-[#2BB5A8]" />
                   <span>{activeIsBuckeye ? "Buckeye Verified · Connected" : "Subscribed · Welcome!"}</span>
                 </div>
                 <p className="text-xs text-white/90 font-sans leading-relaxed">
@@ -320,7 +320,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
                     href={SITE_CONFIG.groupMeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-sans text-[#A6F0CF] font-medium hover:underline"
+                    className="inline-flex items-center gap-1.5 text-xs font-sans text-[#2BB5A8] font-medium hover:underline"
                   >
                     <span>Join Student GroupMe</span>
                     <ExternalLink className="w-3 h-3" />
@@ -362,13 +362,13 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
                       autoComplete="email"
                       required
                       disabled={status === "loading"}
-                      className="w-full py-2.5 bg-transparent border-b border-white/20 text-white placeholder-white/40 text-xs outline-none focus:border-[#A6F0CF] transition-colors font-sans disabled:opacity-50"
+                      className="w-full py-2.5 bg-transparent border-b border-white/20 text-white placeholder-white/40 text-xs outline-none focus:border-[#2BB5A8] transition-colors font-sans disabled:opacity-50"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={status === "loading"}
-                    className="pb-2.5 border-b-2 border-[#A6F0CF] text-[#A6F0CF] hover:text-white hover:border-white font-semibold text-xs font-sans uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shrink-0 disabled:opacity-60 cursor-pointer"
+                    className="pb-2.5 border-b-2 border-[#2BB5A8] text-[#2BB5A8] hover:text-[#FAF5ED] hover:border-[#FAF5ED] font-semibold text-xs font-sans uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shrink-0 disabled:opacity-60 cursor-pointer"
                   >
                     {status === "loading" ? (
                       <>
@@ -394,7 +394,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
                 <div className="flex items-center justify-between text-[11px] font-sans text-white/50 pt-1">
                   <span>Open to all Buckeyes & friends · No Tamil required</span>
                   {subscriberCount && (
-                    <span className="text-[#A6F0CF] font-mono font-semibold">
+                    <span className="text-[#C79347] font-mono font-semibold">
                       {subscriberCount} in loop
                     </span>
                   )}
@@ -407,7 +407,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
         {/* Relocated Utilities Bar (Purged from Naked Header) */}
         <div className="pt-8 pb-4 border-b border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs font-sans">
           <div className="flex items-center gap-2 text-white/50 font-mono text-[11px] uppercase tracking-wider">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C79347]" />
             <span>{locale === "ta" ? "தள கருவிகள் & சூழல்" : "Quick Tools & Ambience"}</span>
           </div>
 
@@ -422,7 +422,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
                 className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/15 text-white/90 hover:text-white transition-colors flex items-center gap-2 cursor-pointer"
                 title="Search (⌘K)"
               >
-                <Search className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                <Search className="w-3.5 h-3.5 text-[#2BB5A8]" />
                 <span>{locale === "ta" ? "தேடல்" : "Search"}</span>
                 <kbd className="text-[10px] font-mono px-1 py-0.2 bg-white/10 rounded-xs text-white/60">⌘K</kbd>
               </button>
@@ -437,8 +437,8 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
               className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/15 text-white/90 hover:text-white transition-colors flex items-center gap-2 cursor-pointer"
               title="Toggle Language (EN / தமிழ்)"
             >
-              <Globe className="w-3.5 h-3.5 text-[#A6F0CF]" />
-              <span className="font-mono text-[11px] font-bold text-[#A6F0CF]">
+              <Globe className="w-3.5 h-3.5 text-[#C79347]" />
+              <span className="font-mono text-[11px] font-bold text-[#C79347]">
                 {locale === "en" ? "TA" : "EN"}
               </span>
               <span>{locale === "en" ? "தமிழ் பதிப்பு" : "English"}</span>
@@ -451,7 +451,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
               title={isSoundEnabled ? "Mute interactive audio" : "Enable interactive audio"}
             >
               {isSoundEnabled ? (
-                <Volume2 className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                <Volume2 className="w-3.5 h-3.5 text-[#2BB5A8]" />
               ) : (
                 <VolumeX className="w-3.5 h-3.5 text-white/40" />
               )}
@@ -474,23 +474,23 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
         {/* Links & Bottom Navigation Bar */}
         <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-white/70">
           <nav aria-label="Footer Navigation" className="flex flex-wrap items-center gap-6 font-sans font-medium">
-            <Link href="/" className="hover:text-[#A6F0CF] transition-colors">{t("nav.home")}</Link>
-            <Link href="/events" className="hover:text-[#A6F0CF] transition-colors">{t("nav.events")}</Link>
-            <Link href="/about" className="hover:text-[#A6F0CF] transition-colors">{t("nav.about")}</Link>
-            <Link href="/board" className="hover:text-[#A6F0CF] font-semibold transition-colors">{t("nav.board")}</Link>
-            <Link href="/links" className="hover:text-[#A6F0CF] transition-colors">{locale === "ta" ? "இணைப்புகள்" : "Links"}</Link>
-            <Link href="/guide" className="hover:text-[#A6F0CF] transition-colors">{locale === "ta" ? "வழிகாட்டி & கேள்வி-பதில்" : "Guide & FAQ"}</Link>
-            <Link href="/suggestions" className="hover:text-[#A6F0CF] transition-colors">{locale === "ta" ? "கருத்துகள்" : "Ideas"}</Link>
-            <Link href="/games" className="hover:text-[#A6F0CF] transition-colors inline-flex items-center gap-1.5">
+            <Link href="/" className="hover:text-[#2BB5A8] transition-colors">{t("nav.home")}</Link>
+            <Link href="/events" className="hover:text-[#2BB5A8] transition-colors">{t("nav.events")}</Link>
+            <Link href="/about" className="hover:text-[#2BB5A8] transition-colors">{t("nav.about")}</Link>
+            <Link href="/board" className="hover:text-[#2BB5A8] font-semibold transition-colors">{t("nav.board")}</Link>
+            <Link href="/links" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "இணைப்புகள்" : "Links"}</Link>
+            <Link href="/guide" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "வழிகாட்டி & கேள்வி-பதில்" : "Guide & FAQ"}</Link>
+            <Link href="/suggestions" className="hover:text-[#2BB5A8] transition-colors">{locale === "ta" ? "கருத்துகள்" : "Ideas"}</Link>
+            <Link href="/games" className="hover:text-[#2BB5A8] transition-colors inline-flex items-center gap-1.5">
               <span>{locale === "ta" ? "விளையாட்டு" : "Games"}</span>
-              <span className="font-mono text-[8.5px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full bg-[#A6F0CF]/20 text-[#A6F0CF] border border-[#A6F0CF]/35">
+              <span className="font-mono text-[8.5px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full bg-[#2BB5A8]/20 text-[#2BB5A8] border border-[#2BB5A8]/35">
                 {locale === "ta" ? "புதிது" : "NEW"}
               </span>
             </Link>
-            <Link href="/join" className="hover:text-[#A6F0CF] font-semibold text-[#A6F0CF] transition-colors">{t("nav.join")}</Link>
+            <Link href="/join" className="hover:text-[#3ED0C2] font-semibold text-[#2BB5A8] transition-colors">{t("nav.join")}</Link>
             <a 
               href={`mailto:${SITE_CONFIG.contactEmail}`}
-              className="text-white/80 hover:text-[#A6F0CF] transition-colors"
+              className="text-white/80 hover:text-[#2BB5A8] transition-colors"
             >
               Contact
             </a>
@@ -498,7 +498,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
               href={SITE_CONFIG.instagramUrl}
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-white/80 hover:text-[#A6F0CF] transition-colors"
+              className="text-white/80 hover:text-[#2BB5A8] transition-colors"
             >
               Instagram
             </a>
@@ -506,7 +506,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
               href={SITE_CONFIG.groupMeUrl}
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-white/80 hover:text-[#A6F0CF] transition-colors"
+              className="text-white/80 hover:text-[#2BB5A8] transition-colors"
             >
               GroupMe
             </a>
@@ -514,7 +514,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
               href={SITE_CONFIG.constitutionPdfPath} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-[#A6F0CF] font-semibold hover:underline transition-colors flex items-center gap-1.5"
+              className="text-[#C79347] font-semibold hover:underline transition-colors flex items-center gap-1.5"
             >
               <span>{locale === "ta" ? "சாசனம் (PDF)" : "Constitution"}</span>
               <ExternalLink className="w-3 h-3" />
@@ -523,11 +523,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSearch }) => {
 
           {/* 1-Hop Crawler Links for Event Dossiers */}
           <div className="w-full pt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[11px] font-mono text-white/50 border-t border-white/5">
-            <span className="text-[#A6F0CF]/80 uppercase tracking-wider text-[10px]">Campus Dossiers:</span>
-            <Link href="/events/yaar-andha-killer" className="hover:text-[#A6F0CF] transition-colors">Yaar Andha Killer?</Link>
-            <Link href="/events/berry-cute-picnic" className="hover:text-[#A6F0CF] transition-colors">Berry Cute Picnic</Link>
-            <Link href="/events/streetside-sapad" className="hover:text-[#A6F0CF] transition-colors">Streetside Sapad</Link>
-            <Link href="/events/namma-jathara" className="hover:text-[#A6F0CF] transition-colors">Namma Jathara Carnival</Link>
+            <span className="text-[#C79347]/80 uppercase tracking-wider text-[10px]">Campus Dossiers:</span>
+            <Link href="/events/yaar-andha-killer" className="hover:text-[#2BB5A8] transition-colors">Yaar Andha Killer?</Link>
+            <Link href="/events/berry-cute-picnic" className="hover:text-[#2BB5A8] transition-colors">Berry Cute Picnic</Link>
+            <Link href="/events/streetside-sapad" className="hover:text-[#2BB5A8] transition-colors">Streetside Sapad</Link>
+            <Link href="/events/namma-jathara" className="hover:text-[#2BB5A8] transition-colors">Namma Jathara Carnival</Link>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">

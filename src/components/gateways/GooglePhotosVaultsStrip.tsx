@@ -71,28 +71,28 @@ export function GooglePhotosVaultsStrip({ className = "", variant = "light" }: G
   return (
     <section
       aria-labelledby="google-photos-vaults-heading"
-      className={`w-full py-12 px-4 sm:px-6 md:px-8 rounded-2xl bg-[#25173B] border border-[rgba(125,96,166,0.25)] text-[#F4F0FA] ${className}`}
+      className={`w-full py-12 px-4 sm:px-6 md:px-8 rounded-2xl bg-[#1C122B] border border-[#C79347]/30 text-[#FAF5ED] shadow-xl ${className}`}
     >
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header Strip */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-6 border-current/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-6 border-[rgba(212,163,106,0.2)]">
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#A6F0CF]">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#C79347]">
               <Camera className="w-3.5 h-3.5" aria-hidden="true" />
               <span lang="ta">புகைப்படப் பெட்டகம் · Google Photos Vaults</span>
             </div>
             <h2
               id="google-photos-vaults-heading"
-              className="text-2xl sm:text-3xl lg:text-4xl font-serif font-normal tracking-tight"
+              className="text-2xl sm:text-3xl lg:text-4xl font-serif font-normal tracking-tight text-[#FAF5ED]"
             >
               All 5 Official Event Photo Vaults
             </h2>
-            <p className={`text-sm sm:text-base max-w-2xl font-sans ${isDark ? "text-stone-300" : "text-[#C4B7D7]"}`}>
+            <p className="text-sm sm:text-base max-w-2xl font-sans text-[#CBBBA8]">
               Uncompressed, high-resolution original albums direct from our camera rolls. View full-resolution candid shots, download memory reels, or browse every photo taken at our gatherings.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-stone-500">
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#C79347]">
             <span>5 Archives Live</span>
           </div>
         </div>
@@ -106,36 +106,36 @@ export function GooglePhotosVaultsStrip({ className = "", variant = "light" }: G
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Open Google Photos Vault for ${album.titleEn}`}
-              className="group relative flex flex-col justify-between p-5 rounded-xl border transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#4FD6E0] bg-[#1A1028] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/40 text-[#F4F0FA]"
+              className="group relative flex flex-col justify-between p-5 rounded-xl border transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#C79347] bg-[#271A3C] border-[rgba(212,163,106,0.24)] hover:border-[#C79347]/60 text-[#FAF5ED]"
             >
               {/* Top Accent Strip */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-semibold tracking-wider text-stone-400 group-hover:text-[#A6F0CF] transition-colors">
+                  <span className="text-xs font-mono font-semibold tracking-wider text-[#C79347]">
                     0{album.num}
                   </span>
                   <ExternalLink
-                    className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-[transform,opacity] duration-200"
+                    className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-[transform,opacity] duration-200 text-[#C79347]"
                     aria-hidden="true"
                   />
                 </div>
 
                 <div>
-                  <h3 className="font-serif text-lg font-medium leading-snug group-hover:text-[#A6F0CF] transition-colors">
+                  <h3 className="font-serif text-lg font-medium leading-snug group-hover:text-[#C79347] transition-colors text-[#FAF5ED]">
                     {album.titleEn}
                   </h3>
-                  <p lang="ta" className="text-xs font-tamil text-stone-500 mt-1 tracking-normal">
+                  <p lang="ta" className="text-xs font-tamil text-[#CBBBA8] mt-1 tracking-normal">
                     {album.titleTa}
                   </p>
                 </div>
               </div>
 
               {/* Bottom Meta */}
-              <div className="mt-6 pt-4 border-t border-current/10 space-y-1">
-                <p className={`text-xs font-sans ${isDark ? "text-stone-400" : "text-[#C4B7D7]"}`}>
+              <div className="mt-6 pt-4 border-t border-[rgba(212,163,106,0.2)] space-y-1">
+                <p className="text-xs font-sans text-[#CBBBA8]">
                   {album.season}
                 </p>
-                <div className="flex items-center justify-between text-xs font-mono font-medium text-[#A6F0CF]">
+                <div className="flex items-center justify-between text-xs font-mono font-medium text-[#C79347]">
                   <span>{album.location}</span>
                   <span className="underline decoration-dotted underline-offset-2">Open Album ↗</span>
                 </div>

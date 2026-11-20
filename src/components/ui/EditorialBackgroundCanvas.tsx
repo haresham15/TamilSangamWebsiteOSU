@@ -116,8 +116,8 @@ export function EditorialBackgroundCanvas({
   }, [reducedMotion, isLiteMode]);
 
   const isEspresso = variant === "espresso";
-  const hairlineColor = "rgba(166, 240, 207, 0.14)";
-  const dotColor = "rgba(166, 240, 207, 0.22)";
+  const hairlineColor = "rgba(212, 163, 106, 0.15)";
+  const dotColor = "rgba(212, 163, 106, 0.18)";
 
   return (
     <div
@@ -132,11 +132,11 @@ export function EditorialBackgroundCanvas({
       <div
         className="absolute inset-0 transition-opacity duration-700"
         style={{
-          background: `radial-gradient(750px circle at var(--mouse-x, 50%) var(--mouse-y, 30%), rgba(166, 240, 207, 0.16), rgba(79, 214, 224, 0.08) 35%, rgba(242, 107, 181, 0.05) 55%, transparent 75%),
-             radial-gradient(1000px ellipse at 50% 0%, rgba(166, 240, 207, 0.12), transparent 70%),
-             radial-gradient(900px ellipse at 85% 20%, rgba(166, 240, 207, 0.09), transparent 70%),
-             radial-gradient(900px ellipse at 15% 80%, rgba(79, 214, 224, 0.08), transparent 70%),
-             radial-gradient(1100px ellipse at 50% 100%, rgba(166, 240, 207, 0.07), transparent 75%)`,
+          background: `radial-gradient(750px circle at var(--mouse-x, 50%) var(--mouse-y, 30%), rgba(212, 163, 106, 0.14), rgba(199, 147, 71, 0.08) 35%, rgba(91, 44, 134, 0.06) 55%, transparent 75%),
+             radial-gradient(1000px ellipse at 50% 0%, rgba(212, 163, 106, 0.1), transparent 70%),
+             radial-gradient(900px ellipse at 85% 20%, rgba(199, 147, 71, 0.08), transparent 70%),
+             radial-gradient(900px ellipse at 15% 80%, rgba(91, 44, 134, 0.06), transparent 70%),
+             radial-gradient(1100px ellipse at 50% 100%, rgba(212, 163, 106, 0.08), transparent 75%)`,
         }}
       />
 
@@ -148,7 +148,7 @@ export function EditorialBackgroundCanvas({
         {[6, 28, 50, 72, 94].map((pos) => (
           <div
             key={pos}
-            className="absolute top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#A6F0CF]/15 to-transparent"
+            className="absolute top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#C79347]/15 to-transparent"
             style={{
               left: `${pos}%`,
             }}
@@ -176,10 +176,10 @@ export function EditorialBackgroundCanvas({
           4. SCROLL-LINKED GHOST SIKKU KOLAMS & CLASSICAL TAMIL WATERMARKS
           ========================================================================= */}
       {showKolamWatermarks && !isLiteMode && (
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden text-[#D4A36A]">
           {/* Kolam 1 (Top Left Margin) */}
           <div
-            className="absolute top-[8%] -left-36 sm:-left-48 w-[560px] h-[560px] transition-transform duration-100 ease-out will-change-transform opacity-75 drop-shadow-[0_0_20px_rgba(166,240,207,0.3)]"
+            className="absolute top-[8%] -left-36 sm:-left-48 w-[560px] h-[560px] transition-transform duration-100 ease-out will-change-transform opacity-75 drop-shadow-[0_0_20px_rgba(199,147,71,0.25)]"
             style={{
               transform: "rotate(var(--kolam-rot, 0deg))",
             }}
@@ -190,9 +190,9 @@ export function EditorialBackgroundCanvas({
           {/* Monumental Tamil Glyph 1: "அ" (Akaram - The Primordial Letter) */}
           <span
             lang="ta"
-            className="absolute top-[14%] right-[5%] font-serif font-light text-[18rem] md:text-[24rem] leading-none select-none pointer-events-none opacity-[0.09] text-transparent drop-shadow-[0_0_25px_rgba(166,240,207,0.25)]"
+            className="absolute top-[14%] right-[5%] font-serif font-light text-[18rem] md:text-[24rem] leading-none select-none pointer-events-none opacity-[0.09] text-transparent drop-shadow-[0_0_25px_rgba(199,147,71,0.2)]"
             style={{
-              WebkitTextStroke: "1.75px rgba(166, 240, 207, 0.65)",
+              WebkitTextStroke: "1.75px rgba(212, 163, 106, 0.45)",
             }}
           >
             அ
@@ -200,7 +200,7 @@ export function EditorialBackgroundCanvas({
 
           {/* Kolam 2 (Middle Right Margin) */}
           <div
-            className="absolute top-[42%] -right-36 sm:-right-48 w-[560px] h-[560px] transition-transform duration-100 ease-out will-change-transform opacity-75 drop-shadow-[0_0_20px_rgba(166,240,207,0.3)]"
+            className="absolute top-[42%] -right-36 sm:-right-48 w-[560px] h-[560px] transition-transform duration-100 ease-out will-change-transform opacity-75 drop-shadow-[0_0_20px_rgba(199,147,71,0.25)]"
             style={{
               transform: "rotate(var(--kolam-rot-rev, 0deg))",
             }}
@@ -211,9 +211,9 @@ export function EditorialBackgroundCanvas({
           {/* Monumental Tamil Glyph 2: "ழ" (Zha - The Soul of Tamil) */}
           <span
             lang="ta"
-            className="absolute top-[48%] left-[4%] font-serif font-light text-[18rem] md:text-[24rem] leading-none select-none pointer-events-none opacity-[0.09] text-transparent drop-shadow-[0_0_25px_rgba(166,240,207,0.25)]"
+            className="absolute top-[48%] left-[4%] font-serif font-light text-[18rem] md:text-[24rem] leading-none select-none pointer-events-none opacity-[0.09] text-transparent drop-shadow-[0_0_25px_rgba(199,147,71,0.2)]"
             style={{
-              WebkitTextStroke: "1.75px rgba(166, 240, 207, 0.65)",
+              WebkitTextStroke: "1.75px rgba(212, 163, 106, 0.45)",
             }}
           >
             ழ
@@ -221,7 +221,7 @@ export function EditorialBackgroundCanvas({
 
           {/* Kolam 3 (Lower Left Margin) */}
           <div
-            className="absolute top-[76%] -left-36 sm:-left-48 w-[560px] h-[560px] transition-transform duration-100 ease-out will-change-transform opacity-75 drop-shadow-[0_0_20px_rgba(166,240,207,0.3)]"
+            className="absolute top-[76%] -left-36 sm:-left-48 w-[560px] h-[560px] transition-transform duration-100 ease-out will-change-transform opacity-75 drop-shadow-[0_0_20px_rgba(199,147,71,0.25)]"
             style={{
               transform: "rotate(var(--kolam-rot, 0deg))",
             }}
@@ -232,9 +232,9 @@ export function EditorialBackgroundCanvas({
           {/* Monumental Tamil Glyph 3: "ம்" (Om / Pure Consonant Cadence) */}
           <span
             lang="ta"
-            className="absolute top-[82%] right-[5%] font-serif font-light text-[18rem] md:text-[24rem] leading-none select-none pointer-events-none opacity-[0.09] text-transparent drop-shadow-[0_0_25px_rgba(166,240,207,0.25)]"
+            className="absolute top-[82%] right-[5%] font-serif font-light text-[18rem] md:text-[24rem] leading-none select-none pointer-events-none opacity-[0.09] text-transparent drop-shadow-[0_0_25px_rgba(199,147,71,0.2)]"
             style={{
-              WebkitTextStroke: "1.75px rgba(166, 240, 207, 0.65)",
+              WebkitTextStroke: "1.75px rgba(212, 163, 106, 0.45)",
             }}
           >
             ம்
@@ -264,7 +264,7 @@ function SikkuKolamSvg() {
   return (
     <svg
       viewBox="0 0 560 560"
-      className="w-full h-full text-[#A6F0CF]"
+      className="w-full h-full text-current"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.1"

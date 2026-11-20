@@ -138,27 +138,27 @@ export function EventPhotoVault({
     <section
       id="photo-vault"
       aria-label="Curated Photographic Dossier and Lightbox"
-      className="mt-20 -mx-6 sm:-mx-10 lg:-mx-16 px-6 sm:px-10 lg:px-16 py-16 bg-[#25173B]/75 border-y border-[rgba(125,96,166,0.25)] shadow-[inset_0_2px_12px_rgba(0,0,0,0.2)] scroll-mt-24"
+      className="mt-20 -mx-6 sm:-mx-10 lg:-mx-16 px-6 sm:px-10 lg:px-16 py-16 bg-[#1C122B] border-y border-[#C79347]/30 shadow-2xl scroll-mt-24"
     >
       {/* Header bar with bilingual title and view switchers */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[rgba(125,96,166,0.25)] pb-5 mb-10 gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#C79347]/30 pb-5 mb-10 gap-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <Camera className="w-4 h-4 text-[#A6F0CF]" />
-            <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#A6F0CF] font-semibold">
+            <Camera className="w-4 h-4 text-[#C79347]" />
+            <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#C79347] font-semibold">
               CAMPUS PHOTO VAULT · ஆவணக் காப்பகம்
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-serif text-[#F4F0FA] flex items-baseline gap-3">
+          <h2 className="text-3xl sm:text-4xl font-serif text-[#FAF5ED] flex items-baseline gap-3">
             <span>{album ? (locale === "ta" ? album.titleTa : album.titleEn) : "Photographic Archive"}</span>
             <span
               lang="ta"
-              className="text-xl sm:text-2xl font-tamil text-[#F4F0FA]/50 font-normal"
+              className="text-xl sm:text-2xl font-tamil text-[#D4A36A] font-normal"
               style={{ letterSpacing: 0 }}
             >
               தொகுப்பு
             </span>
-            <span className="text-xs font-mono text-[#A6F0CF] font-semibold">
+            <span className="text-xs font-mono text-[#2BB5A8] font-semibold">
               ({album ? photos.length : randomizedScatter.length})
             </span>
           </h2>
@@ -167,7 +167,7 @@ export function EventPhotoVault({
         {/* View Controls & Google Photos Shortcut */}
         <div className="flex items-center gap-3 flex-wrap">
           {album && scatterPhotos.length > 0 && (
-            <div className="inline-flex rounded-lg border border-[rgba(125,96,166,0.35)] p-0.5 bg-[#140C20]">
+            <div className="inline-flex rounded-lg border border-[#C79347]/30 p-0.5 bg-[#271A3C]">
               <button
                 type="button"
                 onClick={() => {
@@ -176,8 +176,8 @@ export function EventPhotoVault({
                 }}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono uppercase tracking-wider rounded-md transition-colors cursor-pointer ${
                   viewMode === "curated"
-                    ? "bg-[#25173B] text-[#A6F0CF] font-bold"
-                    : "text-[#C4B7D7] hover:text-[#F4F0FA]"
+                    ? "bg-[#1C122B] text-[#2BB5A8] font-bold"
+                    : "text-[#CBBBA8] hover:text-[#FAF5ED]"
                 }`}
               >
                 <Grid3X3 className="w-3.5 h-3.5" />
@@ -191,8 +191,8 @@ export function EventPhotoVault({
                 }}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono uppercase tracking-wider rounded-md transition-colors cursor-pointer ${
                   viewMode === "scatter"
-                    ? "bg-[#25173B] text-[#A6F0CF] font-bold"
-                    : "text-[#C4B7D7] hover:text-[#F4F0FA]"
+                    ? "bg-[#1C122B] text-[#2BB5A8] font-bold"
+                    : "text-[#CBBBA8] hover:text-[#FAF5ED]"
                 }`}
               >
                 <Shuffle className="w-3.5 h-3.5" />
@@ -205,7 +205,7 @@ export function EventPhotoVault({
             <button
               type="button"
               onClick={shuffleScatter}
-              className="inline-flex min-h-9 items-center gap-2 px-3 py-1.5 border border-[#A6F0CF]/40 text-[#A6F0CF] hover:border-[#A6F0CF] font-mono text-xs tracking-wider rounded-lg hover:text-[#F4F0FA] transition-colors cursor-pointer"
+              className="inline-flex min-h-9 items-center gap-2 px-3 py-1.5 border border-[#C79347]/40 text-[#C79347] hover:border-[#C79347] font-mono text-xs tracking-wider rounded-lg hover:text-[#FAF5ED] transition-colors cursor-pointer"
             >
               <Shuffle className="w-3.5 h-3.5" />
               <span>SHUFFLE ARCHIVE</span>
@@ -217,7 +217,7 @@ export function EventPhotoVault({
               href={finalGooglePhotosUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider text-[#140C20] bg-[#A6F0CF] hover:bg-[#55CCA2] font-semibold rounded-lg transition-colors shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider text-[#1C122B] bg-[#2BB5A8] hover:bg-[#3ED0C2] font-semibold rounded-lg transition-colors shadow-sm"
             >
               <span>Full Google Photos Vault</span>
               <ExternalLink className="w-3.5 h-3.5" />
@@ -244,7 +244,7 @@ export function EventPhotoVault({
                   playClick();
                   setSelectedPhoto(heroPhoto);
                 }}
-                className="relative aspect-[16/9] sm:aspect-[21/9] w-full overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl group cursor-pointer transition-[box-shadow,transform] duration-200 bg-[#140C20] border border-[rgba(125,96,166,0.35)]"
+                className="relative aspect-[16/9] sm:aspect-[21/9] w-full overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl group cursor-pointer transition-[box-shadow,transform] duration-200 bg-[#271A3C] border border-[#C79347]/30"
               >
                 <GlyphMosaicImage
                   src={heroPhoto.imageUrl}
@@ -252,26 +252,26 @@ export function EventPhotoVault({
                   aspectRatio="aspect-[21/9]"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-[#140C20] via-[#140C20]/40 to-transparent flex flex-col justify-end p-6 sm:p-10 text-white">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1C122B] via-[#1C122B]/40 to-transparent flex flex-col justify-end p-6 sm:p-10 text-white">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#140C20]/80 border border-[#A6F0CF]/40 text-[10px] font-mono text-[#A6F0CF] uppercase tracking-wider">
-                      <Sparkles className="w-3 h-3 text-[#A6F0CF]" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1C122B]/80 border border-[#C79347]/40 text-[10px] font-mono text-[#C79347] uppercase tracking-wider">
+                      <Sparkles className="w-3 h-3 text-[#C79347]" />
                       FEATURED ARCHIVE
                     </span>
-                    <span className="p-2 rounded-full bg-[#140C20]/70 backdrop-blur-md text-[#F4F0FA] group-hover:bg-[#A6F0CF] group-hover:text-[#140C20] transition-colors">
+                    <span className="p-2 rounded-full bg-[#1C122B]/70 backdrop-blur-md text-[#FAF5ED] group-hover:bg-[#2BB5A8] group-hover:text-[#1C122B] transition-colors">
                       <Eye className="w-4 h-4" />
                     </span>
                   </div>
                   <h3
                     lang={locale === "ta" ? "ta" : "en"}
-                    className="text-xl sm:text-3xl font-serif text-[#F4F0FA] mb-1"
+                    className="text-xl sm:text-3xl font-serif text-[#FAF5ED] mb-1"
                     style={{ letterSpacing: locale === "ta" ? 0 : undefined }}
                   >
                     {locale === "ta" ? heroPhoto.titleTa : heroPhoto.titleEn}
                   </h3>
                   <p
                     lang={locale === "ta" ? "ta" : "en"}
-                    className="text-xs sm:text-sm text-[#C4B7D7] font-sans max-w-2xl line-clamp-2"
+                    className="text-xs sm:text-sm text-[#CBBBA8] font-sans max-w-2xl line-clamp-2"
                     style={{
                       letterSpacing: locale === "ta" ? 0 : undefined,
                       lineHeight: locale === "ta" ? 1.6 : undefined,
@@ -296,7 +296,7 @@ export function EventPhotoVault({
                     playClick();
                     setSelectedPhoto(photo);
                   }}
-                  className="relative aspect-[4/3] overflow-hidden rounded-xl group cursor-pointer bg-[#140C20] border border-[rgba(125,96,166,0.35)] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-[box-shadow,transform] duration-200 flex flex-col justify-between"
+                  className="relative aspect-[4/3] overflow-hidden rounded-xl group cursor-pointer bg-[#271A3C] border border-[#C79347]/20 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-[box-shadow,transform] duration-200 flex flex-col justify-between"
                 >
                   <GlyphMosaicImage
                     src={photo.imageUrl}
@@ -304,27 +304,27 @@ export function EventPhotoVault({
                     aspectRatio="aspect-[4/3]"
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#140C20] via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-4 text-white">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1C122B] via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-4 text-white">
                     <div className="flex items-center justify-end">
-                      <span className="p-1.5 rounded-full bg-[#140C20]/70 backdrop-blur-md text-[#F4F0FA] group-hover:bg-[#A6F0CF] group-hover:text-[#140C20] transition-colors">
+                      <span className="p-1.5 rounded-full bg-[#1C122B]/70 backdrop-blur-md text-[#FAF5ED] group-hover:bg-[#2BB5A8] group-hover:text-[#1C122B] transition-colors">
                         <Eye className="w-3.5 h-3.5" />
                       </span>
                     </div>
 
                     <div>
-                      <span className="text-[10px] font-mono text-[#A6F0CF] block mb-0.5 uppercase tracking-wider">
+                      <span className="text-[10px] font-mono text-[#C79347] block mb-0.5 uppercase tracking-wider">
                         {photo.eventDate}
                       </span>
                       <h4
                         lang={locale === "ta" ? "ta" : "en"}
-                        className="text-sm font-serif text-[#F4F0FA] truncate"
+                        className="text-sm font-serif text-[#FAF5ED] truncate"
                         style={{ letterSpacing: locale === "ta" ? 0 : undefined }}
                       >
                         {locale === "ta" ? photo.titleTa : photo.titleEn}
                       </h4>
                       <p
                         lang={locale === "ta" ? "ta" : "en"}
-                        className="text-[11px] text-[#C4B7D7] line-clamp-1 font-sans mt-0.5"
+                        className="text-[11px] text-[#CBBBA8] line-clamp-1 font-sans mt-0.5"
                         style={{
                           letterSpacing: locale === "ta" ? 0 : undefined,
                           lineHeight: locale === "ta" ? 1.6 : undefined,

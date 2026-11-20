@@ -95,7 +95,7 @@ function SubmitSuggestionButton() {
       <button
         type="submit"
         disabled={pending}
-        className="px-8 py-3.5 bg-[#A6F0CF] hover:bg-[#7AE7B5] text-[#140C20] font-mono text-xs font-bold uppercase tracking-wider rounded-xl transition-colors duration-150 flex items-center gap-2.5 shadow-md cursor-pointer disabled:opacity-50"
+        className="px-8 py-3.5 bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] font-mono text-xs font-bold uppercase tracking-wider rounded-xl transition-colors duration-150 flex items-center gap-2.5 shadow-md cursor-pointer disabled:opacity-50"
       >
         {pending ? (
           <>
@@ -219,10 +219,10 @@ export default function SuggestionsPage() {
         >
           <button
             onClick={scrollToForm}
-            className="flex items-center gap-2.5 whitespace-nowrap min-h-12 px-5 py-2.5 bg-[#140C20]/90 border border-[#A6F0CF]/35 text-[#F4F0FA] font-mono text-xs uppercase tracking-widest hover:border-[#A6F0CF] hover:bg-[#140C20] transition-all rounded-full shadow-lg backdrop-blur-md cursor-pointer"
+            className="flex items-center gap-2.5 whitespace-nowrap min-h-12 px-5 py-2.5 bg-[#1C122B]/95 border border-[#C79347]/40 text-[#FAF5ED] font-mono text-xs uppercase tracking-widest hover:border-[#C79347] hover:bg-[#1C122B] transition-all rounded-full shadow-lg backdrop-blur-md cursor-pointer"
           >
             <span>DISPATCH SUGGESTION</span>
-            <ArrowDown className="w-3.5 h-3.5 text-[#A6F0CF] animate-bounce" />
+            <ArrowDown className="w-3.5 h-3.5 text-[#C79347] animate-bounce" />
           </button>
         </div>
       </HeroScrollStage>
@@ -236,7 +236,8 @@ export default function SuggestionsPage() {
         id="the-ideas-form"
         badge="STUDENT PROPOSALS"
         sublabel="CAMPUS INITIATIVES"
-        className="text-[#F4F0FA]"
+        surface="sandstone"
+        className="text-[#261A14]"
       >
         <div ref={formSectionRef} className="w-full">
         <div className="w-full max-w-[1700px] mx-auto px-6 sm:px-10 lg:px-12 py-20 sm:py-28">
@@ -244,42 +245,42 @@ export default function SuggestionsPage() {
             
             {/* ===================================================================
                 THE ANCHOR (LEFT 4 COLUMNS): THE THINNAI
-                Warm Ivory sidebar, soft serif headers, proven track record card
+                Warm Sandstone sidebar, soft serif headers, proven track record card
                 =================================================================== */}
             <aside className="lg:col-span-4 lg:sticky lg:top-24 space-y-8 select-none">
               <div className="relative z-10 space-y-4">
-                <h2 className="text-4xl sm:text-5xl font-serif font-normal text-[#F4F0FA] leading-tight">
+                <h2 className="text-4xl sm:text-5xl font-serif font-normal text-[#261A14] leading-tight">
                   The Ideas Hearth
                 </h2>
-                <p className="text-sm font-tamil text-[#A6F0CF] tracking-normal font-medium" lang="ta">
+                <p className="text-sm font-tamil text-[#0F766E] tracking-normal font-medium" lang="ta">
                   {locale === "ta" ? "விருப்பங்கள் & வரைபடம்" : "கருத்துக்களம் · திட்டங்கள்"}
                 </p>
-                <p className="text-base font-sans text-[#C4B7D7] leading-relaxed">
+                <p className="text-base font-sans text-[#5E4C40] leading-relaxed">
                   Every festival, language circle, dinner gathering, and dance item began as an idea proposed by a student. Share yours directly with the executive board.
                 </p>
               </div>
 
               {/* Prior Community Initiatives: Compact Architectural Footnote Cards */}
               <div className="relative z-10 pt-4 space-y-3">
-                <span className="text-[11px] font-mono tracking-widest uppercase text-[#C4B7D7] block">
+                <span className="text-[11px] font-mono tracking-widest uppercase text-[#5E4C40] block font-semibold">
                   Past Proposals Realized
                 </span>
                 <div className="grid grid-cols-1 gap-2.5">
-                  <div className="p-3.5 rounded-xl bg-[#140C20] border border-[rgba(125,96,166,0.25)]/80">
+                  <div className="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] shadow-xs">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-mono font-semibold text-[#A6F0CF]">01</span>
-                      <span className="text-xs font-serif font-semibold text-[#F4F0FA]">Conversational Katral</span>
+                      <span className="text-[10px] font-mono font-semibold text-[#0F766E]">01</span>
+                      <span className="text-xs font-serif font-semibold text-[#261A14]">Conversational Katral</span>
                     </div>
-                    <p className="text-xs font-sans text-[#C4B7D7] leading-relaxed">
+                    <p className="text-xs font-sans text-[#5E4C40] leading-relaxed">
                       Bi-weekly sessions exploring everyday spoken Tamil and script fundamentals.
                     </p>
                   </div>
-                  <div className="p-3.5 rounded-xl bg-[#140C20] border border-[rgba(125,96,166,0.25)]/80">
+                  <div className="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] shadow-xs">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-mono font-semibold text-[#A6F0CF]">02</span>
-                      <span className="text-xs font-serif font-semibold text-[#F4F0FA]">Spring Cultural Carnival</span>
+                      <span className="text-[10px] font-mono font-semibold text-[#0F766E]">02</span>
+                      <span className="text-xs font-serif font-semibold text-[#261A14]">Spring Cultural Carnival</span>
                     </div>
-                    <p className="text-xs font-sans text-[#C4B7D7] leading-relaxed">
+                    <p className="text-xs font-sans text-[#5E4C40] leading-relaxed">
                       Inter-collegiate festival co-hosted on the South Oval with partner cultural orgs.
                     </p>
                   </div>
@@ -289,9 +290,9 @@ export default function SuggestionsPage() {
 
             {/* ===================================================================
                 THE FLOW (RIGHT 8 COLUMNS): CONVERSATIONAL PROPOSAL FORM
-                Warm, open, conversational inputs inside Warm Parchment Ledger Sheet
+                Warm, open, conversational inputs inside Cotton Card
                 =================================================================== */}
-            <main className="lg:col-span-8 bg-[#140C20] border border-[rgba(125,96,166,0.25)] shadow-[0_12px_40px_rgba(0,0,0,0.3)] rounded-sm p-6 sm:p-10">
+            <main className="lg:col-span-8 bg-[#FFFFFF] border border-[#DFD1BE] shadow-lg rounded-2xl p-6 sm:p-10 text-[#261A14]">
               <Suspense fallback={null}>
                 <SuggestionsSearchParamsSync
                   onCategory={setSelectedCategory}
@@ -319,17 +320,17 @@ export default function SuggestionsPage() {
 
                   {/* Incoming Pillar Context Banner */}
                   {incomingPillar && PILLARS_DATA[incomingPillar as PillarSlug] && (
-                    <div className="p-4 rounded-xl bg-[#140C20] border border-[#A6F0CF]/35 space-y-2.5">
+                    <div className="p-4 rounded-xl bg-[#FAF6F0] border border-[#C79347]/40 space-y-2.5">
                       <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
                         <div className="flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-pulse" />
-                          <span className="font-semibold text-[#F4F0FA]">
+                          <span className="w-2 h-2 rounded-full bg-[#0F766E] animate-pulse" />
+                          <span className="font-semibold text-[#261A14]">
                             Continuing from Pillar {PILLARS_DATA[incomingPillar as PillarSlug].number}: {PILLARS_DATA[incomingPillar as PillarSlug].titleEn} ({PILLARS_DATA[incomingPillar as PillarSlug].titleTa})
                           </span>
                         </div>
                         <Link
                           href={`/pillars/${incomingPillar}`}
-                          className="text-[#A6F0CF] hover:underline"
+                          className="text-[#0F766E] hover:underline"
                         >
                           View Pillar Blueprint ↗
                         </Link>
@@ -343,7 +344,7 @@ export default function SuggestionsPage() {
                               audioLayer.playTapeClack();
                               setMessage(pillarPrompt);
                             }}
-                            className="inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-[#F26BB5]/10 hover:bg-[#7AE7B5]/20 text-[#A6F0CF] border border-[#A6F0CF]/35 transition-colors"
+                            className="inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-[#E1F3F1] hover:bg-[#0F766E]/20 text-[#0F766E] border border-[#0F766E]/40 transition-colors"
                           >
                             <Sparkles className="w-3.5 h-3.5" />
                             <span>Insert Pillar Starter Template</span>
@@ -357,11 +358,11 @@ export default function SuggestionsPage() {
                   <div className="space-y-3">
                     <label 
                       htmlFor="terminal-message" 
-                      className="block font-sans text-sm font-semibold text-[#F4F0FA] tracking-wide"
+                      className="block font-sans text-sm font-semibold text-[#261A14] tracking-wide"
                     >
                       What is your campus proposal or idea? *
                     </label>
-                    <p className="text-xs font-sans text-[#C4B7D7]">
+                    <p className="text-xs font-sans text-[#5E4C40]">
                       Describe what you would love to see happen (e.g., midnight filter coffee sessions, board game night, music jamming).
                     </p>
                     <textarea
@@ -372,13 +373,13 @@ export default function SuggestionsPage() {
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder="e.g. Host a midnight Tamil filter coffee & study session at Thompson Library during finals..."
-                      className="w-full py-3 bg-transparent border-b border-[rgba(125,96,166,0.25)] text-[#F4F0FA] placeholder:text-[#C4B7D7] font-sans text-base outline-none focus:border-[#A6F0CF] transition-colors resize-none"
+                      className="w-full py-3 bg-transparent border-b border-[#DFD1BE] text-[#261A14] placeholder:text-[#5E4C40]/50 font-sans text-base outline-none focus:border-[#0F766E] transition-colors resize-none"
                     />
                   </div>
 
                   {/* Question 02: Category Selection */}
                   <div className="space-y-3">
-                    <span className="block font-sans text-sm font-semibold text-[#F4F0FA] tracking-wide">
+                    <span className="block font-sans text-sm font-semibold text-[#261A14] tracking-wide">
                       Select Proposal Category:
                     </span>
                     <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2">
@@ -392,8 +393,8 @@ export default function SuggestionsPage() {
                           }}
                           className={`pb-1 text-xs sm:text-sm font-sans uppercase tracking-widest font-medium transition-all cursor-pointer ${
                             selectedCategory === cat
-                              ? "text-[#A6F0CF] border-b-2 border-[#A6F0CF]"
-                              : "text-[#C4B7D7] hover:text-[#F4F0FA] border-b-2 border-transparent"
+                              ? "text-[#0F766E] border-b-2 border-[#0F766E] font-bold"
+                              : "text-[#5E4C40] hover:text-[#261A14] border-b-2 border-transparent"
                           }`}
                         >
                           {cat}
@@ -406,11 +407,11 @@ export default function SuggestionsPage() {
                   <div className="space-y-2">
                     <label 
                       htmlFor="terminal-user-name" 
-                      className="block font-sans text-sm font-semibold text-[#F4F0FA] tracking-wide"
+                      className="block font-sans text-sm font-semibold text-[#261A14] tracking-wide"
                     >
                       Your Name (Optional)
                     </label>
-                    <p className="text-xs font-sans text-[#C4B7D7]">
+                    <p className="text-xs font-sans text-[#5E4C40]">
                       Leave blank if you prefer to submit your idea anonymously.
                     </p>
                     <input
@@ -420,7 +421,7 @@ export default function SuggestionsPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Brutus Buckeye"
-                      className="w-full py-3 bg-transparent border-b border-[rgba(125,96,166,0.25)] text-[#F4F0FA] placeholder:text-[#C4B7D7] font-sans text-sm outline-none focus:border-[#A6F0CF] transition-colors"
+                      className="w-full py-3 bg-transparent border-b border-[#DFD1BE] text-[#261A14] placeholder:text-[#5E4C40]/50 font-sans text-sm outline-none focus:border-[#0F766E] transition-colors"
                     />
                   </div>
 
@@ -428,11 +429,11 @@ export default function SuggestionsPage() {
                   <div className="space-y-2">
                     <label 
                       htmlFor="terminal-user-email" 
-                      className="block font-sans text-sm font-semibold text-[#F4F0FA] tracking-wide"
+                      className="block font-sans text-sm font-semibold text-[#261A14] tracking-wide"
                     >
                       Your Buckeye Email (Optional)
                     </label>
-                    <p className="text-xs font-sans text-[#C4B7D7]">
+                    <p className="text-xs font-sans text-[#5E4C40]">
                       Only needed if you would like the board to follow up with updates on your suggestion.
                     </p>
                     <input
@@ -442,7 +443,7 @@ export default function SuggestionsPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="name.#@osu.edu"
-                      className="w-full py-3 bg-transparent border-b border-[rgba(125,96,166,0.25)] text-[#F4F0FA] placeholder:text-[#C4B7D7] font-sans text-sm outline-none focus:border-[#A6F0CF] transition-colors"
+                      className="w-full py-3 bg-transparent border-b border-[#DFD1BE] text-[#261A14] placeholder:text-[#5E4C40]/50 font-sans text-sm outline-none focus:border-[#0F766E] transition-colors"
                     />
                   </div>
 
@@ -454,10 +455,10 @@ export default function SuggestionsPage() {
                   )}
 
                   {/* Submit Button */}
-                  <div className="pt-6 border-t border-[rgba(125,96,166,0.25)] flex flex-wrap items-center justify-between gap-4">
+                  <div className="pt-6 border-t border-[#DFD1BE] flex flex-wrap items-center justify-between gap-4">
                     <SubmitSuggestionButton />
 
-                    <span className="font-sans text-xs text-[#C4B7D7]">
+                    <span className="font-sans text-xs text-[#5E4C40]">
                       Directly routed to the student executive board
                     </span>
                   </div>
@@ -466,27 +467,27 @@ export default function SuggestionsPage() {
               ) : (
                 /* Warm Confirmation State - Borderless */
                 <div className="py-8 space-y-6 select-none animate-in fade-in duration-500">
-                  <div className="inline-flex items-center gap-2 text-[#A6F0CF] font-mono text-xs font-semibold uppercase tracking-widest">
+                  <div className="inline-flex items-center gap-2 text-[#0F766E] font-mono text-xs font-semibold uppercase tracking-widest">
                     <Check className="w-4 h-4" />
                     <span>Proposal Received · கோரிக்கை ஏற்றுக்கொள்ளப்பட்டது</span>
                   </div>
 
-                  <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#F4F0FA] leading-tight">
+                  <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#261A14] leading-tight">
                     Idea Received by the Executive Board.
                   </h2>
 
-                  <div className="space-y-2.5 font-sans text-sm text-[#C4B7D7] border-t border-b border-[rgba(125,96,166,0.25)] py-6 max-w-xl">
+                  <div className="space-y-2.5 font-sans text-sm text-[#5E4C40] border-t border-b border-[#DFD1BE] py-6 max-w-xl">
                     <div className="flex justify-between">
-                      <span className="font-medium text-[#F4F0FA]">Category:</span>
-                      <span className="text-[#A6F0CF] font-semibold">{selectedCategory}</span>
+                      <span className="font-medium text-[#261A14]">Category:</span>
+                      <span className="text-[#0F766E] font-semibold">{selectedCategory}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="font-medium text-[#F4F0FA]">Next Step:</span>
-                      <span className="text-[#F4F0FA]">Reviewed at our upcoming executive meeting</span>
+                      <span className="font-medium text-[#261A14]">Next Step:</span>
+                      <span className="text-[#261A14]">Reviewed at our upcoming executive meeting</span>
                     </div>
                   </div>
 
-                  <p className="text-base text-[#C4B7D7] font-sans leading-relaxed max-w-xl">
+                  <p className="text-base text-[#5E4C40] font-sans leading-relaxed max-w-xl">
                     Thank you for helping shape our campus community. We review all student proposals at our regular officer meetings.
                   </p>
 
@@ -515,7 +516,7 @@ export default function SuggestionsPage() {
         {/* =========================================================================
             WARM ORGANIC ROUTING TO EXECUTIVE LEADERSHIP
             ========================================================================= */}
-        <div className="mt-16">
+        <div className="mt-16 pb-28">
           <OrganicRouteGateway
             primaryHref="/board"
             primaryLabel="Step into Board Roster"

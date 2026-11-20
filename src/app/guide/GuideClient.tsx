@@ -138,16 +138,17 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
       <EditorialSheetHandoff
         badge="COLUMBUS TAMIL SURVIVAL DIRECTORY"
         sublabel="STUDENT DIRECTORY & FAQ"
-        className="text-[#F4F0FA]"
+        surface="sandstone"
+        className="text-[#261A14]"
       >
-        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-20 sm:py-28">
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-20 sm:py-28 pb-28">
           
           {/* Top Breadcrumb: Bidirectional Link to About */}
           <div className="mb-8">
             <Link
               href="/about"
               onClick={playClick}
-              className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[#A6F0CF] hover:text-[#F4F0FA] transition-colors py-1.5 px-3.5 rounded-lg bg-[#25173B] hover:bg-[#25173B] focus-visible:outline-2 focus-visible:outline-[#4FD6E0]"
+              className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[#5B2C86] hover:text-[#261A14] transition-colors py-1.5 px-3.5 rounded-lg bg-[#FFFFFF] border border-[#DFD1BE] hover:bg-[#FAF6F0] focus-visible:outline-2 focus-visible:outline-[#5B2C86]"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>← Back to About</span>
@@ -189,8 +190,8 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
                     }}
                     className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium tracking-wide transition-all cursor-pointer ${
                       isSelected
-                        ? "bg-[#140C20] text-[#F4F0FA] shadow-sm font-semibold"
-                        : "bg-[#25173B] text-[#F4F0FA]/80 hover:bg-[#25173B] border border-[rgba(125,96,166,0.25)]"
+                        ? "bg-[#5B2C86] text-[#FAF5ED] shadow-xs font-semibold"
+                        : "bg-[#FFFFFF] text-[#261A14] hover:bg-[#FAF6F0] border border-[#DFD1BE]"
                     }`}
                   >
                     <Icon className="w-4 h-4 opacity-80" />
@@ -207,7 +208,7 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
               </label>
               <Search
                 aria-hidden="true"
-                className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A6F0CF]"
+                className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A6B3E]"
               />
               <input
                 id="directory-search"
@@ -215,7 +216,7 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search theaters, dosas, CABS..."
-                className="w-full pl-10 pr-4 py-2 bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-xl text-xs sm:text-sm outline-none focus:border-[#A6F0CF] focus:ring-1 focus:ring-[#A6F0CF] placeholder:text-[#F4F0FA]/50"
+                className="w-full pl-10 pr-4 py-2 bg-[#FFFFFF] border border-[#DFD1BE] rounded-xl text-xs sm:text-sm text-[#261A14] outline-none focus:border-[#5B2C86] focus:ring-1 focus:ring-[#5B2C86] placeholder:text-[#5E4C40]/60 shadow-xs"
               />
             </div>
           </div>
@@ -226,13 +227,13 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
           {selectedCategory !== "Club FAQs" && (
             <div className="mb-20">
               <div className="flex items-center justify-between mb-6">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] font-semibold">
+                <span className="font-mono text-xs uppercase tracking-widest text-[#9A6B3E] font-semibold">
                   Field Guide Recommendations ({filteredSpots.length} locations)
                 </span>
                 {selectedCategory !== "All Directory" && (
                   <button
                     onClick={() => setSelectedCategory("All Directory")}
-                    className="font-mono text-xs text-[#F4F0FA]/70 hover:text-[#A6F0CF] underline"
+                    className="font-mono text-xs text-[#5B2C86] hover:text-[#261A14] underline"
                   >
                     View All Categories
                   </button>
@@ -244,50 +245,50 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
                   {filteredSpots.map((spot) => (
                     <article
                       key={spot.id}
-                      className="bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-2xl p-6 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.35)] transition-all hover:-translate-y-0.5 group"
+                      className="bg-[#FFFFFF] border border-[#DFD1BE] rounded-2xl p-6 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-[#9A6B3E]/40 transition-all hover:-translate-y-0.5 group text-[#261A14]"
                     >
                       <div>
                         {/* Category & Campus Distance Badge */}
                         <div className="flex items-center justify-between gap-2 mb-3">
-                          <span className="font-mono text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-[#25173B] text-[#A6F0CF] border border-[#A6F0CF]/20">
+                          <span className="font-mono text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-[#F0E6D6] text-[#5B2C86] border border-[#DFD1BE]">
                             {spot.category}
                           </span>
-                          <span className="font-mono text-[11px] text-[#F4F0FA]/70">
+                          <span className="font-mono text-[11px] text-[#5E4C40]">
                             {spot.distanceFromCampus}
                           </span>
                         </div>
 
                         {/* Title & Tamil Translation */}
-                        <h3 className="text-xl font-serif font-bold text-[#F4F0FA] mb-0.5 group-hover:text-[#A6F0CF] transition-colors">
+                        <h3 className="text-xl font-serif font-bold text-[#261A14] mb-0.5 group-hover:text-[#5B2C86] transition-colors">
                           {spot.name}
                         </h3>
-                        <p lang="ta" className="font-tamil text-sm text-[#F4F0FA]/70 mb-3">
+                        <p lang="ta" className="font-tamil text-sm text-[#5E4C40] mb-3">
                           {spot.tamilName}
                         </p>
 
                         {/* Address */}
-                        <div className="flex items-start gap-1.5 text-xs text-[#F4F0FA]/80 font-sans mb-4">
-                          <MapPin className="w-3.5 h-3.5 text-[#A6F0CF] shrink-0 mt-0.5" />
+                        <div className="flex items-start gap-1.5 text-xs text-[#5E4C40] font-sans mb-4">
+                          <MapPin className="w-3.5 h-3.5 text-[#9A6B3E] shrink-0 mt-0.5" />
                           <span>{spot.address}</span>
                         </div>
 
                         {/* Description */}
-                        <p className="text-sm font-sans text-[#F4F0FA]/85 leading-relaxed mb-4">
+                        <p className="text-sm font-sans text-[#261A14] leading-relaxed mb-4">
                           {locale === "ta" ? spot.descriptionTa : spot.descriptionEn}
                         </p>
 
                         {/* Pro-Tip Box */}
-                        <div className="p-3 rounded-xl bg-[#25173B]/60 border border-[rgba(125,96,166,0.25)] mb-5 text-xs font-sans text-[#F4F0FA]/90">
-                          <span className="font-semibold text-[#A6F0CF] inline-flex items-center gap-1.5 mb-0.5">
-                            <Sparkles className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                        <div className="p-3 rounded-xl bg-[#F7EFE2] border border-[#DFD1BE] mb-5 text-xs font-sans text-[#261A14]">
+                          <span className="font-semibold text-[#9A6B3E] inline-flex items-center gap-1.5 mb-0.5">
+                            <Sparkles className="w-3.5 h-3.5 text-[#9A6B3E]" />
                             <span>Sangam Insider Tip:</span>
                           </span>
-                          <p>{locale === "ta" ? spot.recommendationTa : spot.recommendationEn}</p>
+                          <p className="text-[#5E4C40]">{locale === "ta" ? spot.recommendationTa : spot.recommendationEn}</p>
                         </div>
                       </div>
 
                       {/* Action Buttons */}
-                      <div className="pt-4 border-t border-[rgba(125,96,166,0.25)] flex flex-wrap items-center gap-2">
+                      <div className="pt-4 border-t border-[#DFD1BE] flex flex-wrap items-center gap-2">
                         {spot.actionUrl && (
                           <a
                             href={spot.actionUrl}
@@ -295,11 +296,11 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
                             rel="noopener noreferrer"
                             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                               spot.isCarpoolAction
-                                ? "bg-[#140C20] hover:bg-[#A6F0CF] hover:text-[#140C20] text-[#F4F0FA] shadow-sm"
-                                : "bg-[#25173B] hover:bg-[#25173B] text-[#F4F0FA] border border-[rgba(125,96,166,0.25)]"
+                                ? "bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] shadow-xs"
+                                : "bg-[#FFFFFF] hover:bg-[#FAF6F0] text-[#261A14] border border-[#DFD1BE]"
                             }`}
                           >
-                            {spot.isCarpoolAction && <Users className="w-3.5 h-3.5 text-emerald-400" />}
+                            {spot.isCarpoolAction && <Users className="w-3.5 h-3.5 text-[#FAF5ED]" />}
                             <span>{spot.actionLabel || "Visit Link"}</span>
                             <ExternalLink className="w-3 h-3 opacity-70" />
                           </a>
@@ -310,7 +311,7 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
                             href={spot.mapsUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-mono text-[#F4F0FA]/70 hover:text-[#A6F0CF] transition-colors"
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-mono text-[#5E4C40] hover:text-[#0F766E] transition-colors"
                           >
                             <span>Google Maps</span>
                             <ExternalLink className="w-3 h-3 opacity-60" />
@@ -321,15 +322,15 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
                   ))}
                 </div>
               ) : (
-                <div className="py-12 text-center bg-[#140C20] rounded-2xl border border-[rgba(125,96,166,0.25)] p-8">
-                  <p className="text-base font-serif mb-2">No survival directory spots match your search query.</p>
+                <div className="py-12 text-center bg-[#FFFFFF] rounded-2xl border border-[#DFD1BE] p-8 shadow-xs">
+                  <p className="text-base font-serif mb-2 text-[#261A14]">No survival directory spots match your search query.</p>
                   <button
                     type="button"
                     onClick={() => {
                       setSearchQuery("");
                       setSelectedCategory("All Directory");
                     }}
-                    className="font-mono text-xs underline text-[#A6F0CF]"
+                    className="font-mono text-xs underline text-[#5B2C86]"
                   >
                     Clear search filter
                   </button>
@@ -352,19 +353,19 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
             <div className="mt-8">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] font-semibold block">
+                  <span className="font-mono text-xs uppercase tracking-widest text-[#9A6B3E] font-semibold block">
                     Campus Life & Club Knowledge
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-serif text-[#F4F0FA] mt-1">
+                  <h2 className="text-2xl sm:text-3xl font-serif text-[#261A14] mt-1">
                     {locale === "ta" ? "அடிக்கடி கேட்கப்படும் கேள்விகள்" : "Frequently Asked Questions"}
                   </h2>
                 </div>
-                <span className="font-mono text-xs text-[#F4F0FA]/70">
+                <span className="font-mono text-xs text-[#5E4C40]">
                   {filteredFaqs.length} Q&As
                 </span>
               </div>
 
-              <div className="min-w-0 bg-[#140C20] border border-[rgba(125,96,166,0.25)] shadow-[0_12px_40px_rgba(0,0,0,0.3)] rounded-2xl p-6 sm:p-10">
+              <div className="min-w-0 bg-[#FFFFFF] border border-[#DFD1BE] shadow-xs rounded-2xl p-6 sm:p-10 text-[#261A14]">
                 {filteredFaqs.map((faq) => {
                   const isOpen = expandedFaqs.has(faq.id);
                   return (
@@ -373,7 +374,7 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
                       className={styles.faq}
                       onMouseEnter={() => handleInspectFaq(faq)}
                     >
-                      <p className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] mb-3">
+                      <p className="font-mono text-xs uppercase tracking-widest text-[#9A6B3E] mb-3">
                         {faq.category}
                       </p>
                       <h3>
@@ -396,14 +397,14 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
                           <span>
                             <span
                               lang={locale === "ta" ? "ta" : undefined}
-                              className="block text-xl sm:text-2xl font-serif leading-snug"
+                              className="block text-xl sm:text-2xl font-serif leading-snug text-[#261A14]"
                             >
                               {locale === "ta" ? faq.questionTa : faq.questionEn}
                             </span>
                             {locale !== "ta" && faq.questionTa && (
                               <span
                                 lang="ta"
-                                className="block font-tamil text-sm leading-relaxed mt-2 text-[#F4F0FA]/70"
+                                className="block font-tamil text-sm leading-relaxed mt-2 text-[#5E4C40]"
                               >
                                 {faq.questionTa}
                               </span>
@@ -424,7 +425,7 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
                         <div className={styles.answerInner}>
                           <p
                             lang={locale === "ta" ? "ta" : undefined}
-                            className="pt-4 pb-2 text-base sm:text-lg leading-loose text-[#F4F0FA]/80"
+                            className="pt-4 pb-2 text-base sm:text-lg leading-loose text-[#5E4C40]"
                           >
                             {locale === "ta" ? faq.answerTa : faq.answerEn}
                           </p>
@@ -436,10 +437,10 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
 
                 {filteredFaqs.length === 0 && (
                   <div className="py-12 space-y-4 text-center">
-                    <p className="text-xl font-serif">No questions found matching your search.</p>
+                    <p className="text-xl font-serif text-[#261A14]">No questions found matching your search.</p>
                     <button
                       type="button"
-                      className="min-h-12 underline text-[#A6F0CF]"
+                      className="min-h-12 underline text-[#5B2C86]"
                       onClick={() => {
                         setSearchQuery("");
                         setSelectedCategory("All Directory");

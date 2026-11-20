@@ -51,10 +51,10 @@ export const OrganicRouteGateway: React.FC<OrganicRouteGatewayProps> = ({
   const displayTamil = tamilTitle || (locale !== "ta" ? routeMeta.fallbackTitleTa : undefined);
 
   return (
-    <section className={`relative w-full border-t border-[#A6F0CF]/35 bg-[#140C20] text-[#F4F0FA] overflow-hidden select-none ${className}`}>
-      {/* Ambient Mint Backdrop Glow */}
+    <section className={`relative w-full border-t border-[#C79347]/35 bg-[#102830] text-[#FAF5ED] overflow-hidden select-none ${className}`}>
+      {/* Ambient Peacock Backdrop Glow */}
       <div
-        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_700px_350px_at_20%_50%,rgba(166,240,207,0.08),transparent_70%)]"
+        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_700px_350px_at_20%_50%,rgba(43,181,168,0.1),transparent_70%)]"
         aria-hidden="true"
       />
       <Link
@@ -62,35 +62,35 @@ export const OrganicRouteGateway: React.FC<OrganicRouteGatewayProps> = ({
         onClick={playClick}
         onMouseEnter={playWoodClick}
         aria-label={`Next Chapter: ${displayTitle}`}
-        className="group relative block w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#4FD6E0]"
+        className="group relative block w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#2BB5A8]"
       >
-        {/* Kinetic Terracotta Curtain Fill on Hover */}
+        {/* Kinetic Peacock Teal Curtain Fill on Hover */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-[#A6F0CF] origin-bottom sm:origin-left scale-y-0 sm:scale-y-100 sm:scale-x-0 group-hover:scale-y-100 sm:group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-0"
+          className="absolute inset-0 bg-[#0F766E] origin-bottom sm:origin-left scale-y-0 sm:scale-y-100 sm:scale-x-0 group-hover:scale-y-100 sm:group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-0"
         />
 
         {/* Content Container */}
-        <div className="relative z-10 w-full max-w-[1600px] mx-auto px-6 sm:px-12 py-10 sm:py-14 lg:py-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 transition-colors duration-400 group-hover:text-[#140C20]">
+        <div className="relative z-10 w-full max-w-[1600px] mx-auto px-6 sm:px-12 py-10 sm:py-14 lg:py-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 transition-colors duration-400 group-hover:text-[#FAF5ED]">
           
           {/* Left: Chapter Index */}
           <div className="flex items-center gap-3 shrink-0">
-            <span className="w-2 h-2 rounded-full bg-[#A6F0CF] group-hover:bg-[#A6F0CF] transition-colors duration-300" />
-            <span className="font-mono text-xs uppercase tracking-widest text-[#C4B7D7] group-hover:text-[#25173B] transition-colors duration-300">
+            <span className="w-2 h-2 rounded-full bg-[#C79347] group-hover:bg-[#FAF5ED] transition-colors duration-300" />
+            <span className="font-mono text-xs uppercase tracking-widest text-[#CBBBA8] group-hover:text-[#FAF5ED]/80 transition-colors duration-300">
               NEXT CHAPTER · {routeMeta.chapter}
             </span>
           </div>
 
           {/* Center: Editorial Serif Headline + Tamil Script */}
           <div className="flex-1 flex flex-col md:flex-row md:items-baseline gap-2 md:gap-5 min-w-0">
-            <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight leading-tight transition-transform duration-300 group-hover:translate-x-1">
+            <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight leading-tight transition-transform duration-300 group-hover:translate-x-1 text-[#FAF5ED]">
               {displayTitle}
             </h3>
             {displayTamil && (
               <span
                 lang="ta"
                 style={{ letterSpacing: 0 }}
-                className="font-tamil text-lg sm:text-xl text-[#A6F0CF] group-hover:text-[#25173B] transition-colors duration-300 shrink-0"
+                className="font-tamil text-lg sm:text-xl text-[#2BB5A8] group-hover:text-[#FAF5ED] transition-colors duration-300 shrink-0"
               >
                 {displayTamil}
               </span>
@@ -99,11 +99,11 @@ export const OrganicRouteGateway: React.FC<OrganicRouteGatewayProps> = ({
 
           {/* Right: Action Label + Magnetic Circular Arrow */}
           <div className="flex items-center gap-4 shrink-0 self-end md:self-center">
-            <span className="hidden sm:inline-block font-mono text-xs uppercase tracking-wider text-[#C4B7D7] group-hover:text-[#25173B] transition-colors duration-300">
+            <span className="hidden sm:inline-block font-mono text-xs uppercase tracking-wider text-[#CBBBA8] group-hover:text-[#FAF5ED] transition-colors duration-300">
               {primaryLabel}
             </span>
             <Magnet magnetStrength={2.5} maxOffset={10}>
-              <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border border-[rgba(125,96,166,0.3)] group-hover:border-[#A6F0CF]/50 flex items-center justify-center bg-[#25173B] group-hover:bg-[#140C20] text-[#F4F0FA] group-hover:text-[#A6F0CF] shadow-sm group-hover:shadow-lg group-hover:scale-105 transition-[background-color,border-color,color,box-shadow,transform] duration-200">
+              <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border border-[rgba(212,163,106,0.3)] group-hover:border-[#C79347] flex items-center justify-center bg-[#173640] group-hover:bg-[#102830] text-[#FAF5ED] group-hover:text-[#2BB5A8] shadow-sm group-hover:shadow-lg group-hover:scale-105 transition-[background-color,border-color,color,box-shadow,transform] duration-200">
                 <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </div>
             </Magnet>

@@ -29,11 +29,11 @@ export function DailyGauntletStrip() {
     : null;
 
   return (
-    <div className="w-full mb-10 p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-[#1B112B] via-[#201533] to-[#1B112B] border-2 border-[rgba(166,240,207,0.35)] shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
+    <div className="w-full mb-10 p-5 sm:p-6 rounded-3xl bg-[#271A3C] border-2 border-[#C79347]/40 shadow-xl text-[#FAF5ED]">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
         {/* Left: Gauntlet Title & Segmented Arc */}
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#25173B] border border-[rgba(166,240,207,0.4)] text-[#A6F0CF] flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(166,240,207,0.15)]">
+          <div className="w-12 h-12 rounded-2xl bg-[#1C122B] border border-[#C79347]/40 text-[#C79347] flex items-center justify-center shrink-0 shadow-sm">
             {isGauntletComplete ? (
               <CheckCircle2 className="w-6 h-6 text-[#10B981]" />
             ) : (
@@ -43,16 +43,16 @@ export function DailyGauntletStrip() {
 
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#A6F0CF] font-bold">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#C79347] font-bold">
                 DAILY GAUNTLET
               </span>
-              <span className="text-[10px] font-mono text-[#C4B7D7]/60">·</span>
-              <span lang="ta" className="text-xs text-[#E5B869]" style={{ letterSpacing: 0 }}>
+              <span className="text-[10px] font-mono text-[#CBBBA8]/60">·</span>
+              <span lang="ta" className="text-xs text-[#D4A36A]" style={{ letterSpacing: 0 }}>
                 தினசரி களஞ்சியம்
               </span>
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-serif font-medium text-[#F4F0FA] mt-0.5">
+            <h3 className="text-xl sm:text-2xl font-serif font-medium text-[#FAF5ED] mt-0.5">
               {solvedCount} of {totalGames} Solved Today
             </h3>
           </div>
@@ -61,18 +61,18 @@ export function DailyGauntletStrip() {
         {/* Middle: Progress Bar with 12 Segments */}
         <div className="w-full md:w-64 flex flex-col gap-1.5">
           <div className="flex items-center justify-between text-[11px] font-mono">
-            <span className="text-[#C4B7D7]">Gauntlet Completion</span>
-            <span className="text-[#A6F0CF] font-bold">{pct}%</span>
+            <span className="text-[#CBBBA8]">Gauntlet Completion</span>
+            <span className="text-[#C79347] font-bold">{pct}%</span>
           </div>
 
-          <div className="grid grid-cols-12 gap-1 h-2 rounded-full overflow-hidden bg-[#140C20]">
+          <div className="grid grid-cols-12 gap-1 h-2 rounded-full overflow-hidden bg-[#1C122B]">
             {Array.from({ length: totalGames }).map((_, idx) => (
               <div
                 key={idx}
                 className={`h-full transition-all duration-300 ${
                   idx < solvedCount
-                    ? "bg-[#A6F0CF] shadow-[0_0_8px_#A6F0CF]"
-                    : "bg-[#25173B]"
+                    ? "bg-[#C79347] shadow-[0_0_8px_#C79347]"
+                    : "bg-[#1C122B]/60"
                 }`}
               />
             ))}
@@ -84,13 +84,13 @@ export function DailyGauntletStrip() {
           {nextGameMeta ? (
             <Link
               href={`/games/${nextGameMeta.slug}`}
-              className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#A6F0CF] text-[#140C20] font-medium text-xs font-mono uppercase tracking-wider hover:bg-[#bbf4dc] transition-all shadow-[0_0_20px_rgba(166,240,207,0.2)] group"
+              className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#0F766E] text-[#FAF5ED] font-medium text-xs font-mono uppercase tracking-wider hover:bg-[#0B5C56] transition-all shadow-xs group"
             >
               <span>Play Next: {nextGameMeta.titleEn}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </Link>
           ) : (
-            <div className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#10B981]/20 border border-[#10B981]/40 text-[#A6F0CF] text-xs font-mono font-bold">
+            <div className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#10B981]/20 border border-[#10B981]/40 text-[#FAF5ED] text-xs font-mono font-bold">
               <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
               <span>All 12 Solved! Daily Master</span>
             </div>

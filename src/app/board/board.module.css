@@ -8,16 +8,17 @@
 .bezel {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  border-top: 1px solid rgba(166, 240, 207, 0.35);
-  background: var(--color-surface);
-  color: var(--color-ink);
+  border-top: 1px solid var(--border-warm, #DFD1BE);
+  border-bottom: 1px solid var(--border-warm, #DFD1BE);
+  background: var(--bg-sandstone, #F0E6D6);
+  color: var(--color-ink, #261A14);
   padding: 1.5rem max(1.5rem, calc((100vw - 76rem) / 2));
   gap: 1rem;
 }
 
 .bezel > div { display: flex; flex-direction: column-reverse; }
-.bezel dt { font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; line-height: 1.6; color: var(--color-ink-muted); }
-.bezel dd { font-family: var(--font-serif); font-size: clamp(1.6rem, 4vw, 3rem); color: var(--color-accent); }
+.bezel dt { font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; line-height: 1.6; color: var(--ink-umber, #5E4C40); font-weight: 600; }
+.bezel dd { font-family: var(--font-serif); font-size: clamp(1.6rem, 4vw, 3rem); color: var(--accent-bronze, #9A6B3E); }
 
 /* Sticky Desktop Dossier */
 .portrait {

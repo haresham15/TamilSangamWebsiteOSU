@@ -216,9 +216,10 @@ export default function JoinPage() {
         id="membership-form"
         badge="STUDENT FELLOWSHIP"
         sublabel="GUESTBOOK REGISTRATION"
-        className="text-[#F4F0FA]"
+        surface="sandstone"
+        className="text-[#261A14]"
       >
-        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-20 sm:py-28">
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-20 sm:py-28 pb-28">
           
           {/* Centered Airy Header */}
           <CourtyardHeader
@@ -232,17 +233,17 @@ export default function JoinPage() {
               "FIND YOUR FIT" INTERACTIVE ROUTER
               4-Button Quick-Selector Routing Instantly to Form Tracks
               ========================================================================= */}
-          <div className="my-10 bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-2xl p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
+          <div className="my-10 bg-[#FFFFFF] border border-[#DFD1BE] rounded-2xl p-6 sm:p-8 shadow-xs text-[#261A14]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
               <div>
-                <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] font-semibold block">
+                <span className="font-mono text-xs uppercase tracking-widest text-[#9A6B3E] font-semibold block">
                   Find Your Fit · உங்கள் பாதை
                 </span>
-                <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#F4F0FA] mt-0.5">
+                <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#261A14] mt-0.5">
                   How would you like to plug into Tamil Sangam?
                 </h2>
               </div>
-              <span className="font-mono text-xs text-[#F4F0FA]/60 hidden sm:inline-block">
+              <span className="font-mono text-xs text-[#5E4C40] hidden sm:inline-block">
                 Click any track to focus the form ↓
               </span>
             </div>
@@ -257,23 +258,23 @@ export default function JoinPage() {
                     onClick={() => handleSelectTrack(opt.id)}
                     className={`text-left p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between min-h-[110px] group ${
                       isSelected
-                        ? "bg-[#140C20] text-[#F4F0FA] border-[rgba(125,96,166,0.25)] shadow-md -translate-y-0.5"
-                        : "bg-[#25173B]/70 hover:bg-[#25173B] text-[#F4F0FA] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/40"
+                        ? "bg-[#5B2C86] text-[#FAF5ED] border-[#5B2C86] shadow-sm -translate-y-0.5"
+                        : "bg-[#FAF6F0] hover:bg-[#F0E6D6] text-[#261A14] border-[#DFD1BE] hover:border-[#9A6B3E]/40"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2 mb-2">
-                      <div className={`p-2 rounded-lg transition-colors ${isSelected ? "bg-[#A6F0CF]/20 text-[#A6F0CF]" : "bg-white/5 text-[#C4B7D7] group-hover:text-[#A6F0CF]"}`}><opt.icon className="w-5 h-5" /></div>
+                      <div className={`p-2 rounded-lg transition-colors ${isSelected ? "bg-[#FAF5ED]/20 text-[#FAF5ED]" : "bg-[#F0E6D6] text-[#5B2C86] group-hover:text-[#5B2C86]"}`}><opt.icon className="w-5 h-5" /></div>
                       {isSelected && (
-                        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-white/10 px-2 py-0.5 rounded-full">
+                        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#FAF5ED] bg-[#FAF5ED]/20 px-2 py-0.5 rounded-full">
                           Active Track
                         </span>
                       )}
                     </div>
                     <div>
-                      <h3 className={`font-serif text-base font-semibold leading-snug ${isSelected ? "text-[#F4F0FA]" : "text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors"}`}>
+                      <h3 className={`font-serif text-base font-semibold leading-snug ${isSelected ? "text-[#FAF5ED]" : "text-[#261A14] group-hover:text-[#5B2C86] transition-colors"}`}>
                         {opt.label}
                       </h3>
-                      <p className={`text-[11px] font-sans mt-1 leading-normal ${isSelected ? "text-[#C4B7D7]" : "text-[#F4F0FA]/70"}`}>
+                      <p className={`text-[11px] font-sans mt-1 leading-normal ${isSelected ? "text-[#FAF5ED]/80" : "text-[#5E4C40]"}`}>
                         {opt.tagline}
                       </p>
                     </div>
@@ -295,12 +296,12 @@ export default function JoinPage() {
               <form
                 id="membership-form-inputs"
                 onSubmit={handleSubmit}
-                className={`${styles.form} space-y-12 bg-[#140C20] border border-[rgba(125,96,166,0.25)] shadow-[0_12px_40px_rgba(0,0,0,0.3)] rounded-2xl p-6 sm:p-10`}
+                className={`${styles.form} space-y-12 bg-[#FFFFFF] border border-[#DFD1BE] shadow-xs rounded-2xl p-6 sm:p-10 text-[#261A14]`}
               >
                 {incomingPillar && (
-                  <div className="p-4 rounded-xl bg-[#25173B]/60 border border-[#A6F0CF]/30 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                  <div className="p-4 rounded-xl bg-[#F0E6D6] border border-[#DFD1BE] flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-[#261A14]">
                     <div className="flex items-center gap-2">
-                      <span className="text-[#F4F0FA] font-medium">
+                      <span className="text-[#261A14] font-medium">
                         Continuing from Pillar: Pre-selected{" "}
                         {membershipType === "performer"
                           ? "Dance & Music"
@@ -314,7 +315,7 @@ export default function JoinPage() {
                     </div>
                     <Link
                       href={`/pillars/${incomingPillar}`}
-                      className="text-[#A6F0CF] hover:underline"
+                      className="text-[#5B2C86] font-semibold hover:underline"
                     >
                       View {incomingPillar.toUpperCase()} Pillar ↗
                     </Link>
@@ -323,21 +324,21 @@ export default function JoinPage() {
 
                 {/* Performer Dance Form Gateway */}
                 {membershipType === "performer" && (
-                  <div className="p-4 rounded-xl bg-[#25173B] border border-[#A6F0CF]/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                  <div className="p-4 rounded-xl bg-[#FAF6F0] border border-[#DFD1BE] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                     <div className="flex items-center gap-2.5">
-                      <Music2 className="w-5 h-5 text-[#A6F0CF] shrink-0" />
+                      <Music2 className="w-5 h-5 text-[#B84A39] shrink-0" />
                       <div>
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-[#A6F0CF] font-bold block">
+                        <span className="font-mono text-[10px] uppercase tracking-wider text-[#B84A39] font-bold block">
                           Dance Troupe &amp; Stage Performance Sign-Ups
                         </span>
-                        <p className="font-serif text-sm text-[#F4F0FA]">
+                        <p className="font-serif text-sm text-[#261A14]">
                           Looking to join Kuthu, Gaana, or fusion choreography?
                         </p>
                       </div>
                     </div>
                     <Link
                       href="/dance"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#A6F0CF] text-[#140C20] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#7AE7B5] transition-all shrink-0"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0F766E] text-[#FAF5ED] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#0B5C56] transition-all shrink-0 shadow-xs"
                     >
                       <span>Dance Form Space</span>
                       <Sparkles className="w-3.5 h-3.5" />
@@ -346,12 +347,12 @@ export default function JoinPage() {
                 )}
 
                 {/* Selected Track Ribbon */}
-                <div className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-[#25173B]/40 border border-[rgba(125,96,166,0.25)]">
+                <div className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-[#F0E6D6] border border-[#DFD1BE]">
                   <div className="flex items-center gap-2 text-xs font-sans">
-                    <Sparkles className="size-4 text-[#A6F0CF] shrink-0" />
-                    <span className="text-[#F4F0FA]">
+                    <Sparkles className="size-4 text-[#9A6B3E] shrink-0" />
+                    <span className="text-[#261A14]">
                       Selected track:{" "}
-                      <strong className="text-[#A6F0CF] font-semibold">
+                      <strong className="text-[#5B2C86] font-semibold">
                         {fitOptions.find((o) => o.id === membershipType)?.label}
                       </strong>
                     </span>
@@ -362,7 +363,7 @@ export default function JoinPage() {
                       e.preventDefault();
                       window.scrollTo({ top: 400, behavior: "smooth" });
                     }}
-                    className="text-[11px] font-mono text-[#F4F0FA]/70 hover:text-[#A6F0CF] underline"
+                    className="text-[11px] font-mono text-[#5B2C86] hover:text-[#261A14] underline"
                   >
                     Change Track ↑
                   </a>
@@ -404,10 +405,10 @@ export default function JoinPage() {
                 {/* Prompt: Buckeye Role Selector (OSU-Wide Community) */}
                 <div className="space-y-4">
                   <div>
-                    <span className="text-xl sm:text-2xl font-serif font-normal text-[#F4F0FA] block">
+                    <span className="text-xl sm:text-2xl font-serif font-normal text-[#261A14] block">
                       What is your role at Ohio State?
                     </span>
-                    <span className="text-sm font-sans text-[#F4F0FA]/80 block mt-1">
+                    <span className="text-sm font-sans text-[#5E4C40] block mt-1">
                       Tamil Sangam is an OSU-wide community uniting undergraduates, graduate researchers, faculty, and alumni.
                     </span>
                   </div>
@@ -447,20 +448,20 @@ export default function JoinPage() {
                           }}
                           className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
                             isSelected
-                              ? "border-[#A6F0CF] bg-[#25173B]/50 shadow-sm"
-                              : "border-[rgba(125,96,166,0.25)] hover:border-[rgba(125,96,166,0.4)] bg-transparent"
+                              ? "border-[#5B2C86] bg-[#5B2C86]/10 shadow-xs"
+                              : "border-[#DFD1BE] hover:border-[#9A6B3E]/40 bg-[#FAF6F0]"
                           }`}
                         >
                           <span
                             className={`text-base font-serif font-medium block ${
                               isSelected
-                                ? "text-[#A6F0CF] font-semibold"
-                                : "text-[#F4F0FA]"
+                                ? "text-[#5B2C86] font-semibold"
+                                : "text-[#261A14]"
                             }`}
                           >
                             {role.label}
                           </span>
-                          <p className="text-xs font-sans text-[#F4F0FA]/70 mt-0.5">
+                          <p className="text-xs font-sans text-[#5E4C40] mt-0.5">
                             {role.desc}
                           </p>
                         </button>
@@ -472,10 +473,10 @@ export default function JoinPage() {
                 {/* Prompt 04: "Find Your Fit" Track Selector Inside Form */}
                 <div className="space-y-4">
                   <div>
-                    <span className="text-xl sm:text-2xl font-serif font-normal text-[#F4F0FA] block">
+                    <span className="text-xl sm:text-2xl font-serif font-normal text-[#261A14] block">
                       Involvement Track
                     </span>
-                    <span className="text-sm font-sans text-[#F4F0FA]/80 block mt-1">
+                    <span className="text-sm font-sans text-[#5E4C40] block mt-1">
                       Choose your primary focus (you can always participate in multiple tracks).
                     </span>
                   </div>
@@ -493,23 +494,23 @@ export default function JoinPage() {
                           }}
                           className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
                             isSelected
-                              ? "border-[#A6F0CF] bg-[#25173B]/60 shadow-sm"
-                              : "border-[rgba(125,96,166,0.25)] hover:border-[rgba(125,96,166,0.4)] bg-transparent"
+                              ? "border-[#5B2C86] bg-[#5B2C86]/10 shadow-xs"
+                              : "border-[#DFD1BE] hover:border-[#9A6B3E]/40 bg-[#FAF6F0]"
                           }`}
                         >
                           <div className="flex items-center gap-2 mb-1">
-                            <opt.icon className={`w-4 h-4 ${isSelected ? "text-[#A6F0CF]" : "text-[#C4B7D7]"}`} />
+                            <opt.icon className={`w-4 h-4 ${isSelected ? "text-[#5B2C86]" : "text-[#9A6B3E]"}`} />
                             <span
                               className={`text-base font-serif font-medium ${
                                 isSelected
-                                  ? "text-[#A6F0CF] font-semibold"
-                                  : "text-[#F4F0FA]"
+                                  ? "text-[#5B2C86] font-semibold"
+                                  : "text-[#261A14]"
                               }`}
                             >
                               {opt.label}
                             </span>
                           </div>
-                          <p className="text-xs font-sans text-[#F4F0FA]/70">
+                          <p className="text-xs font-sans text-[#5E4C40]">
                             {opt.tagline}
                           </p>
                         </button>
@@ -531,19 +532,19 @@ export default function JoinPage() {
                 />
 
                 {/* Monthly Sangam Dispatch Opt-In Checkbox */}
-                <div className="p-4 rounded-xl border border-[rgba(125,96,166,0.25)] bg-[#25173B]/20 space-y-2">
+                <div className="p-4 rounded-xl border border-[#DFD1BE] bg-[#F7EFE2] space-y-2">
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={monthlyDispatchOptIn}
                       onChange={(e) => setMonthlyDispatchOptIn(e.target.checked)}
-                      className="mt-1 w-4 h-4 rounded border-[rgba(125,96,166,0.35)] text-[#A6F0CF] focus:ring-[#A6F0CF]"
+                      className="mt-1 w-4 h-4 rounded border-[#DFD1BE] text-[#0F766E] focus:ring-[#0F766E]"
                     />
-                    <div className="text-xs font-sans text-[#F4F0FA]/90">
-                      <span className="font-semibold block text-sm text-[#F4F0FA]">
+                    <div className="text-xs font-sans text-[#261A14]">
+                      <span className="font-semibold block text-sm text-[#261A14]">
                         Send me the Monthly Sangam Dispatch
                       </span>
-                      <span className="leading-relaxed block mt-0.5">
+                      <span className="leading-relaxed block mt-0.5 text-[#5E4C40]">
                         A concise monthly roundup of Tamil community news, Columbus movie releases, playlist drops, and campus events. Zero spam, unsubscribe anytime.
                       </span>
                     </div>
@@ -561,12 +562,12 @@ export default function JoinPage() {
                 )}
 
                 {/* Submit Action */}
-                <div className="pt-8 border-t border-[rgba(125,96,166,0.25)] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div className="pt-8 border-t border-[#DFD1BE] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                   <Magnet magnetStrength={2} maxOffset={8}>
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="font-serif text-2xl sm:text-3xl font-normal text-[#A6F0CF] hover:text-[#4FD6E0] border-b-2 border-[#A6F0CF] hover:border-[#4FD6E0] pb-1 transition-colors self-start cursor-pointer disabled:opacity-50"
+                      className="font-serif text-2xl sm:text-3xl font-normal text-[#0F766E] hover:text-[#0B5C56] border-b-2 border-[#0F766E] hover:border-[#0B5C56] pb-1 transition-colors self-start cursor-pointer disabled:opacity-50"
                     >
                       {isSubmitting ? (
                         <span className="flex items-center gap-2 text-lg">
@@ -579,27 +580,27 @@ export default function JoinPage() {
                     </button>
                   </Magnet>
 
-                  <p className="text-xs font-sans text-[#F4F0FA]/80">
+                  <p className="text-xs font-sans text-[#5E4C40]">
                     The Ohio State University · Recognized Student Organization · 100% Free
                   </p>
                 </div>
               </form>
             ) : (
               /* Warm Celebration Confirmation (Unboxed) */
-              <div className="text-center space-y-6 py-16 max-w-xl mx-auto select-none animate-in fade-in duration-500">
-                <span className="font-sans text-xs uppercase tracking-widest text-[#A6F0CF] font-semibold block">
+              <div className="text-center space-y-6 py-16 max-w-xl mx-auto select-none animate-in fade-in duration-500 text-[#261A14]">
+                <span className="font-sans text-xs uppercase tracking-widest text-[#0F766E] font-semibold block">
                   Guestbook Signed Successfully
                 </span>
 
-                <h2 className="text-3xl sm:text-5xl font-serif text-[#F4F0FA]">
+                <h2 className="text-3xl sm:text-5xl font-serif text-[#261A14]">
                   Welcome to the Family, {name}!
                 </h2>
 
-                <p className="font-tamil text-xl text-[#A6F0CF]" lang="ta">
+                <p className="font-tamil text-xl text-[#0F766E]" lang="ta">
                   வணக்கம் மற்றும் மனமார்ந்த நல்வரவு!
                 </p>
 
-                <p className="text-base sm:text-lg text-[#F4F0FA]/80 font-sans leading-relaxed">
+                <p className="text-base sm:text-lg text-[#5E4C40] font-sans leading-relaxed">
                   You are officially plugged into the Tamil Sangam hearth at Ohio State as a{" "}
                   <strong>{fitOptions.find((o) => o.id === membershipType)?.label}</strong>. We will send you updates on upcoming Oval picnics, rehearsal calls, and banquet feasts.
                 </p>
@@ -610,14 +611,14 @@ export default function JoinPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={playClick}
-                    className="font-semibold text-[#A6F0CF] border-b-2 border-[#A6F0CF] pb-1 hover:text-[#4FD6E0] hover:border-[#4FD6E0] transition-colors"
+                    className="font-semibold text-[#0F766E] border-b-2 border-[#0F766E] pb-1 hover:text-[#0B5C56] hover:border-[#0B5C56] transition-colors"
                   >
                     Join the Student GroupMe ↗
                   </a>
                   <Link
                     href="/events"
                     onClick={playClick}
-                    className="font-medium text-[#F4F0FA]/80 hover:text-[#F4F0FA] border-b border-[rgba(125,96,166,0.25)] pb-1 hover:border-[#A6F0CF] transition-colors"
+                    className="font-medium text-[#5E4C40] hover:text-[#261A14] border-b border-[#DFD1BE] pb-1 hover:border-[#0F766E] transition-colors"
                   >
                     Explore Upcoming Events →
                   </Link>
@@ -625,7 +626,7 @@ export default function JoinPage() {
               </div>
             )}
 
-            <StarBorder className="w-full" color="#A6F0CF" trailColor="#F26BB5">
+            <StarBorder className="w-full" color="#C79347" trailColor="#D4A36A">
               <aside
                 className={styles.pass}
                 aria-label="Live membership pass"

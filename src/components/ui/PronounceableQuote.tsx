@@ -8,7 +8,7 @@ import { useTamilSpeech } from "@/lib/tamilSpeech";
 export interface ThirukkuralAudioButtonProps {
   tamilText: string;
   label?: string;
-  tone?: "gold" | "light" | "dark";
+  tone?: "gold" | "light" | "dark" | "sandstone" | "bronze";
   size?: "sm" | "md" | "lg";
   showLabel?: boolean;
   className?: string;
@@ -42,17 +42,23 @@ export function ThirukkuralAudioButton({
     }
   };
 
-  // Subtle, curated OKLCH-aligned tone variants
+  // Subtle, curated OKLCH/Courtyard-aligned tone variants
   const toneClasses = {
     gold: speaking
-      ? "bg-[#A6F0CF]/25 text-[#A6F0CF] border-[#A6F0CF]/35 shadow-[0_0_12px_rgba(166,240,207,0.35)] ring-1 ring-[#A6F0CF]/50"
-      : "bg-[#A6F0CF]/10 text-[#A6F0CF]/85 border-[#A6F0CF]/35 hover:bg-[#A6F0CF]/20 hover:border-[#A6F0CF]/35 hover:text-[#A6F0CF] shadow-sm",
+      ? "bg-[#C79347]/25 text-[#C79347] border-[#C79347]/50 shadow-[0_0_12px_rgba(199,147,71,0.35)] ring-1 ring-[#C79347]/50"
+      : "bg-[#C79347]/10 text-[#C79347] border-[#C79347]/35 hover:bg-[#C79347]/20 hover:border-[#C79347]/50 shadow-sm",
     light: speaking
-      ? "bg-[#F26BB5]/25 text-[#A6F0CF] border-[#A6F0CF]/35 shadow-[0_0_10px_rgba(242,107,181,0.3)] ring-1 ring-[#F26BB5]/50"
-      : "bg-[#F26BB5]/10 text-[#A6F0CF]/85 border-[#A6F0CF]/35 hover:bg-[#7AE7B5]/20 hover:border-[#A6F0CF]/35 hover:text-[#944426] shadow-sm",
+      ? "bg-[#0F766E]/20 text-[#0F766E] border-[#0F766E]/40 shadow-[0_0_10px_rgba(15,118,110,0.25)] ring-1 ring-[#0F766E]/50"
+      : "bg-[#0F766E]/10 text-[#0F766E] border-[#0F766E]/30 hover:bg-[#0F766E]/20 hover:border-[#0F766E]/50 shadow-sm",
+    sandstone: speaking
+      ? "bg-[#9A6B3E]/20 text-[#9A6B3E] border-[#9A6B3E]/40 shadow-[0_0_10px_rgba(154,107,62,0.25)] ring-1 ring-[#9A6B3E]/50"
+      : "bg-[#9A6B3E]/10 text-[#9A6B3E] border-[#9A6B3E]/30 hover:bg-[#9A6B3E]/20 hover:border-[#9A6B3E]/50 shadow-sm",
+    bronze: speaking
+      ? "bg-[#D4A36A]/25 text-[#D4A36A] border-[#D4A36A]/50 shadow-[0_0_12px_rgba(212,163,106,0.35)] ring-1 ring-[#D4A36A]/50"
+      : "bg-[#D4A36A]/10 text-[#D4A36A] border-[#D4A36A]/35 hover:bg-[#D4A36A]/20 hover:border-[#D4A36A]/50 shadow-sm",
     dark: speaking
-      ? "bg-amber-400/25 text-amber-300 border-amber-400/70 shadow-[0_0_12px_rgba(245,158,11,0.35)] ring-1 ring-amber-400/50"
-      : "bg-white/[0.08] text-stone-200 border-white/20 hover:bg-white/[0.16] hover:border-white/40 hover:text-white shadow-sm",
+      ? "bg-[#C79347]/25 text-[#FAF5ED] border-[#C79347]/70 shadow-[0_0_12px_rgba(199,147,71,0.35)] ring-1 ring-[#C79347]/50"
+      : "bg-white/[0.08] text-[#CBBBA8] border-white/20 hover:bg-white/[0.16] hover:border-white/40 hover:text-[#FAF5ED] shadow-sm",
   }[tone];
 
   // Sizing: compact circular buttons by default, pill if label requested
@@ -125,7 +131,7 @@ export interface PronounceableQuoteProps {
   className?: string;
   showWaveBadge?: boolean;
   badgePosition?: "top" | "bottom" | "inline" | "beside" | "corner";
-  tone?: "dark" | "light" | "gold";
+  tone?: "dark" | "light" | "gold" | "sandstone" | "bronze";
   as?: "div" | "blockquote" | "span";
 }
 

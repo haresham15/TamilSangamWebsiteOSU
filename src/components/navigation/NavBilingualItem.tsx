@@ -79,26 +79,20 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
           {/* Route Tags */}
           {route.isNextEvent ? (
             <span
-              className="inline-flex items-center gap-1 font-mono text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full transition-all bg-[#A6F0CF]/20 text-[#A6F0CF] border border-[#A6F0CF]/50 shadow-[0_0_8px_rgba(166,240,207,0.4)]"
+              className="inline-flex items-center gap-1 font-mono text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full transition-all bg-[#0F766E]/25 text-[#2BB5A8] border border-[#2BB5A8]/50 shadow-[0_0_8px_rgba(43,181,168,0.4)]"
             >
               <span
-                className="size-1 rounded-full bg-[#A6F0CF] animate-ping"
+                className="size-1 rounded-full bg-[#2BB5A8] animate-ping"
                 aria-hidden="true"
               />
               <span>{locale === "ta" ? "அடுத்தது" : "NEXT"}</span>
             </span>
           ) : route.isNew ? (
             <span
-              className={`inline-flex items-center gap-1 font-mono text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full transition-all ${
-                isDarkHero
-                  ? "bg-[#A6F0CF]/25 text-[#A6F0CF] border border-[#A6F0CF]/35 shadow-[0_0_8px_rgba(166,240,207,0.4)]"
-                  : "bg-[#F26BB5]/12 text-[#A6F0CF] border border-[#A6F0CF]/35 shadow-[0_0_6px_rgba(242,107,181,0.25)]"
-              }`}
+              className="inline-flex items-center gap-1 font-mono text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full transition-all bg-[#C79347]/20 text-[#C79347] border border-[#C79347]/40 shadow-[0_0_6px_rgba(199,147,71,0.3)]"
             >
               <span
-                className={`size-1 rounded-full ${
-                  isDarkHero ? "bg-[#F5DE88]" : "bg-[#A6F0CF]"
-                } animate-pulse`}
+                className="size-1 rounded-full bg-[#C79347] animate-pulse"
                 aria-hidden="true"
               />
               <span>{locale === "ta" ? "புதிது" : "NEW"}</span>
@@ -107,7 +101,7 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
             route.badge &&
             gamesUnsolved && (
               <span
-                className="size-[5px] rounded-full bg-[#A6F0CF] ring-1 ring-[#140C20] shadow-[0_0_4px_#A6F0CF] animate-pulse"
+                className="size-[5px] rounded-full bg-[#C79347] ring-1 ring-[#1C122B] shadow-[0_0_4px_#C79347] animate-pulse"
                 aria-hidden="true"
               />
             )

@@ -134,21 +134,21 @@ export function GamesHub() {
         {/* ---------------------------------------------------------------- */}
         {/* 1. EDITORIAL MASTHEAD WITH BIWEEKLY CADENCE                      */}
         {/* ---------------------------------------------------------------- */}
-        <header className="border-b-2 border-[rgba(125,96,166,0.25)] pb-6 mb-8 select-none">
+        <header className="border-b-2 border-[rgba(212,163,106,0.25)] pb-6 mb-8 select-none">
           {/* Top Line: Cadence Badge, Edition Dates & Actions */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[rgba(125,96,166,0.25)] text-xs font-mono uppercase tracking-widest text-[#F4F0FA]/70">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[rgba(212,163,106,0.2)] text-xs font-mono uppercase tracking-widest text-[#CBBBA8]">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#25173B] border border-[rgba(125,96,166,0.4)] text-[#A6F0CF] text-[11px] font-bold">
-                <Sparkles className="size-3 text-[#A6F0CF]" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#271A3C] border border-[rgba(212,163,106,0.3)] text-[#C79347] text-[11px] font-bold">
+                <Sparkles className="size-3 text-[#C79347]" />
                 <span>BIWEEKLY CADENCE · இருவாரப் புதிர்</span>
               </span>
 
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#F4F0FA]">
-                <Calendar className="size-3.5 text-[#A6F0CF]" />
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#FAF5ED]">
+                <Calendar className="size-3.5 text-[#C79347]" />
                 <span>
                   {currentEditionMeta.editionNo} · {currentEditionMeta.periodEn}
                 </span>
-                <span lang="ta" className="font-tamil text-[#A6F0CF] text-xs">
+                <span lang="ta" className="font-tamil text-[#C79347] text-xs">
                   ({currentEditionMeta.periodTa})
                 </span>
               </div>
@@ -157,17 +157,17 @@ export function GamesHub() {
             <div className="flex items-center gap-5 text-xs font-sans">
               <button
                 onClick={() => setIsHelpOpen(true)}
-                className="flex items-center gap-1.5 text-[#F4F0FA]/75 hover:text-[#A6F0CF] font-semibold transition-colors"
+                className="flex items-center gap-1.5 text-[#CBBBA8] hover:text-[#C79347] font-semibold transition-colors"
               >
-                <HelpCircle className="size-3.5 text-[#A6F0CF]" />
+                <HelpCircle className="size-3.5 text-[#C79347]" />
                 <span>Rules · வழிகாட்டி</span>
               </button>
 
               <button
                 onClick={handleShareHub}
-                className="flex items-center gap-1.5 text-[#F4F0FA]/75 hover:text-[#A6F0CF] font-semibold transition-colors"
+                className="flex items-center gap-1.5 text-[#CBBBA8] hover:text-[#C79347] font-semibold transition-colors"
               >
-                {copiedHub ? <Check className="size-3.5 text-emerald-600" /> : <Share2 className="size-3.5" />}
+                {copiedHub ? <Check className="size-3.5 text-emerald-400" /> : <Share2 className="size-3.5 text-[#C79347]" />}
                 <span>{copiedHub ? "Copied Link!" : "Share · பகிர்"}</span>
               </button>
             </div>
@@ -175,16 +175,16 @@ export function GamesHub() {
 
           {/* Central Newspaper Masthead Title */}
           <div className="pt-6 text-center">
-            <h2 className="font-serif text-4xl sm:text-6xl font-normal text-[#F4F0FA] tracking-tight mb-2">
+            <h2 className="font-serif text-4xl sm:text-6xl font-normal text-[#FAF5ED] tracking-tight mb-2">
               The Sangam Arcade
             </h2>
             <p
               lang="ta"
-              className="font-tamil text-xl sm:text-2xl text-[#A6F0CF] font-medium tracking-wide mb-3"
+              className="font-tamil text-xl sm:text-2xl text-[#C79347] font-medium tracking-wide mb-3"
             >
               களஞ்சியம் · இருவாரத் தமிழ்ப் புதிர்கள்
             </p>
-            <p className="font-sans text-xs sm:text-sm text-[#F4F0FA]/75 max-w-xl mx-auto leading-relaxed">
+            <p className="font-sans text-xs sm:text-sm text-[#CBBBA8] max-w-xl mx-auto leading-relaxed">
               New York Times-grade biweekly cultural puzzles rooted in Tamil heritage, cinema, and campus life. New editions release on the 1st and 15th of every month.
             </p>
           </div>
@@ -195,14 +195,14 @@ export function GamesHub() {
         {/* ---------------------------------------------------------------- */}
         <nav aria-label="Biweekly Editions" className="mb-8">
           <div className="flex items-center justify-between pb-2 mb-3">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#F4F0FA]/70">
-              <span className="font-bold text-[#A6F0CF]">SELECT EDITION</span>
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#CBBBA8]">
+              <span className="font-bold text-[#C79347]">SELECT EDITION</span>
               <span>·</span>
               <span>பதிப்பைத் தேர்ந்தெடுக்கவும்</span>
             </div>
 
             {nextUnlock && (
-              <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-mono text-[#A6F0CF]">
+              <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-mono text-[#C79347]">
                 <Clock className="size-3" />
                 <span>Next drop in {nextUnlock.days}d {nextUnlock.hours}h</span>
               </div>
@@ -210,7 +210,7 @@ export function GamesHub() {
           </div>
 
           {/* Horizontal Scrollable Edition Strip */}
-          <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-[rgba(125,96,166,0.3)]">
+          <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-[rgba(212,163,106,0.3)]">
             {BIWEEKLY_EDITION_IDS.map((edId) => {
               const meta = SOLLU_BIWEEKLY_EDITIONS[edId];
               const unlocked = isEditionUnlocked(edId);
@@ -224,10 +224,10 @@ export function GamesHub() {
                   onClick={() => selectEdition(edId)}
                   className={`group relative shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono transition-all duration-200 border ${
                     isSelected
-                      ? "bg-[#25173B] border-[#A6F0CF] text-[#F4F0FA] shadow-[0_0_15px_rgba(166,240,207,0.12)]"
+                      ? "bg-[#5B2C86] border-[#C79347] text-[#FAF5ED] shadow-[0_0_15px_rgba(199,147,71,0.2)]"
                       : unlocked
-                      ? "bg-[#140C20] border-[rgba(125,96,166,0.3)] hover:border-[#A6F0CF]/60 text-[#F4F0FA]/75 hover:text-[#F4F0FA]"
-                      : "bg-[#140C20]/50 border-[rgba(125,96,166,0.15)] text-[#F4F0FA]/40 hover:border-[rgba(125,96,166,0.35)]"
+                      ? "bg-[#271A3C] border-[rgba(212,163,106,0.24)] hover:border-[#C79347]/60 text-[#CBBBA8] hover:text-[#FAF5ED]"
+                      : "bg-[#1C122B]/50 border-[rgba(212,163,106,0.15)] text-[#CBBBA8]/40 hover:border-[rgba(212,163,106,0.35)]"
                   }`}
                 >
                   {/* Status Indicator */}
@@ -235,13 +235,13 @@ export function GamesHub() {
                     <Check className="size-3.5 text-emerald-400 shrink-0" />
                   ) : isLive ? (
                     <span className="relative flex size-2 shrink-0">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#A6F0CF] opacity-75" />
-                      <span className="relative inline-flex rounded-full size-2 bg-[#A6F0CF]" />
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C79347] opacity-75" />
+                      <span className="relative inline-flex rounded-full size-2 bg-[#C79347]" />
                     </span>
                   ) : !unlocked ? (
-                    <Lock className="size-3 text-[#F4F0FA]/40 shrink-0" />
+                    <Lock className="size-3 text-[#CBBBA8]/40 shrink-0" />
                   ) : (
-                    <span className="size-1.5 rounded-full bg-[#C4B7D7]/40 shrink-0" />
+                    <span className="size-1.5 rounded-full bg-[#CBBBA8]/40 shrink-0" />
                   )}
 
                   {/* Edition Tag & Dates */}
@@ -249,12 +249,12 @@ export function GamesHub() {
                     <div className="flex items-center gap-1.5">
                       <span className="font-bold">{meta.editionNo}</span>
                       {isLive && (
-                        <span className="text-[9px] px-1 rounded bg-[#A6F0CF]/20 text-[#A6F0CF] font-bold">
+                        <span className="text-[9px] px-1 rounded bg-[#C79347]/20 text-[#C79347] font-bold">
                           LIVE
                         </span>
                       )}
                     </div>
-                    <span className="text-[10px] text-[#F4F0FA]/60 block whitespace-nowrap">
+                    <span className="text-[10px] text-[#CBBBA8]/70 block whitespace-nowrap">
                       {meta.periodEn.split(",")[0]}
                     </span>
                   </div>
@@ -273,13 +273,13 @@ export function GamesHub() {
           /* ============================================================== */
           <div className="w-full">
             {/* Edition Context Banner */}
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#25173B]/70 border border-[rgba(125,96,166,0.35)] mb-6 text-xs font-mono">
+            <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#271A3C] border border-[rgba(212,163,106,0.24)] mb-6 text-xs font-mono text-[#FAF5ED]">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-[#A6F0CF]">
+                <span className="font-bold text-[#C79347]">
                   {currentEditionMeta.editionNo}: {currentEditionMeta.periodEn}
                 </span>
-                <span className="text-[#F4F0FA]/40 hidden sm:inline">|</span>
-                <span lang="ta" className="font-tamil text-[#C4B7D7] hidden sm:inline">
+                <span className="text-white/40 hidden sm:inline">|</span>
+                <span lang="ta" className="font-tamil text-[#CBBBA8] hidden sm:inline">
                   {currentEditionMeta.periodTa}
                 </span>
               </div>
@@ -292,15 +292,15 @@ export function GamesHub() {
                       <span>Edition Solved!</span>
                     </span>
                   ) : isCurrentLive ? (
-                    <span className="inline-flex items-center gap-1.5 text-[#A6F0CF] font-bold">
-                      <Flame className="size-3.5 text-[#A6F0CF]" />
+                    <span className="inline-flex items-center gap-1.5 text-[#C79347] font-bold">
+                      <Flame className="size-3.5 text-[#C79347]" />
                       <span>Current Biweekly Window</span>
                     </span>
                   ) : (
-                    <span className="text-[#C4B7D7]">Archive Edition</span>
+                    <span className="text-[#CBBBA8]">Archive Edition</span>
                   )
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-[#F4F0FA]/60">
+                  <span className="inline-flex items-center gap-1 text-[#CBBBA8]/60">
                     <Lock className="size-3" />
                     <span>Locked (Unlocks in {countdown.days}d {countdown.hours}h)</span>
                   </span>
@@ -315,19 +315,19 @@ export function GamesHub() {
             {/* CATEGORY 1: LOGIC & GEOMETRY · தர்க்கம் & வடிவியல்               */}
             {/* ============================================================== */}
             <div className="mb-14">
-              <div className="flex items-baseline justify-between pb-3 mb-6 border-b border-[rgba(125,96,166,0.3)]">
+              <div className="flex items-baseline justify-between pb-3 mb-6 border-b border-[rgba(212,163,106,0.2)]">
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#A6F0CF] font-bold block mb-1">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#C79347] font-bold block mb-1">
                     SECTION 01 · தர்க்க விளையாட்டுகள்
                   </span>
-                  <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA]">
+                  <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#FAF5ED]">
                     Logic & Geometry
-                    <span lang="ta" className="text-sm sm:text-base font-sans text-[#E5B869] font-normal ml-2" style={{ letterSpacing: 0 }}>
+                    <span lang="ta" className="text-sm sm:text-base font-sans text-[#D4A36A] font-normal ml-2" style={{ letterSpacing: 0 }}>
                       (புதிர் & கணிதம்)
                     </span>
                   </h3>
                 </div>
-                <span className="text-xs font-mono text-[#C4B7D7]/70 hidden sm:inline">
+                <span className="text-xs font-mono text-[#CBBBA8]/70 hidden sm:inline">
                   Deterministic Daily Grids
                 </span>
               </div>
@@ -343,19 +343,19 @@ export function GamesHub() {
             {/* CATEGORY 2: WORDS & CULTURE · சொல் & பண்பாடு                   */}
             {/* ============================================================== */}
             <div className="mb-14">
-              <div className="flex items-baseline justify-between pb-3 mb-6 border-b border-[rgba(125,96,166,0.3)]">
+              <div className="flex items-baseline justify-between pb-3 mb-6 border-b border-[rgba(212,163,106,0.2)]">
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#A6F0CF] font-bold block mb-1">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#C79347] font-bold block mb-1">
                     SECTION 02 · சொல் புதிர்கள்
                   </span>
-                  <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA]">
+                  <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#FAF5ED]">
                     Words & Culture
-                    <span lang="ta" className="text-sm sm:text-base font-sans text-[#E5B869] font-normal ml-2" style={{ letterSpacing: 0 }}>
+                    <span lang="ta" className="text-sm sm:text-base font-sans text-[#D4A36A] font-normal ml-2" style={{ letterSpacing: 0 }}>
                       (சொல் & பண்பாடு)
                     </span>
                   </h3>
                 </div>
-                <span className="text-xs font-mono text-[#C4B7D7]/70 hidden sm:inline">
+                <span className="text-xs font-mono text-[#CBBBA8]/70 hidden sm:inline">
                   Tamil & Tanglish Lexicon
                 </span>
               </div>
@@ -367,22 +367,22 @@ export function GamesHub() {
                   whileHover={{ y: -5 }}
                   transition={{ type: "spring", stiffness: 350, damping: 25 }}
                   onClick={() => selectGame("sollu")}
-                  className="cursor-pointer group relative bg-[#1B112B] rounded-2xl border-2 border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF] p-5 flex flex-col justify-between shadow-lg transition-all duration-200"
+                  className="cursor-pointer group relative bg-[#271A3C] rounded-2xl border-2 border-[rgba(212,163,106,0.24)] hover:border-[#C79347] p-5 flex flex-col justify-between shadow-lg transition-all duration-200 text-[#FAF5ED]"
                 >
                   <div>
-                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(125,96,166,0.2)]">
-                      <span className="font-mono text-xs uppercase tracking-wider text-[#A6F0CF]">
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(212,163,106,0.2)]">
+                      <span className="font-mono text-xs uppercase tracking-wider text-[#C79347]">
                         The Cultural Wordle
                       </span>
-                      <span className="font-mono text-[10px] text-[#A6F0CF] font-bold px-2 py-0.5 rounded-full bg-[#A6F0CF]/15 border border-[#A6F0CF]/30">
+                      <span className="font-mono text-[10px] text-[#C79347] font-bold px-2 py-0.5 rounded-full bg-[#C79347]/15 border border-[#C79347]/30">
                         BIWEEKLY
                       </span>
                     </div>
 
-                    <h4 className="font-serif text-2xl text-[#F4F0FA] font-medium tracking-tight mb-1">
-                      Sollu · <span lang="ta" className="text-[#A6F0CF]" style={{ letterSpacing: 0 }}>சொல்லு</span>
+                    <h4 className="font-serif text-2xl text-[#FAF5ED] font-medium tracking-tight mb-1">
+                      Sollu · <span lang="ta" className="text-[#C79347]" style={{ letterSpacing: 0 }}>சொல்லு</span>
                     </h4>
-                    <p className="font-sans text-xs text-[#C4B7D7] leading-relaxed mb-3">
+                    <p className="font-sans text-xs text-[#CBBBA8] leading-relaxed mb-3">
                       Guess the secret 5-letter cultural word in 6 attempts. Featuring Tanglish cinema and classical Tamil Akshara editions.
                     </p>
                   </div>
@@ -391,7 +391,7 @@ export function GamesHub() {
                     <SolluThumbnail />
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-[rgba(125,96,166,0.2)] flex items-center justify-between text-xs font-mono text-[#A6F0CF]">
+                  <div className="mt-4 pt-3 border-t border-[rgba(212,163,106,0.2)] flex items-center justify-between text-xs font-mono text-[#C79347]">
                     <span>Play Edition {currentEditionMeta.editionNo}</span>
                     <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -402,22 +402,22 @@ export function GamesHub() {
                   whileHover={{ y: -5 }}
                   transition={{ type: "spring", stiffness: 350, damping: 25 }}
                   onClick={() => selectGame("thodarpu")}
-                  className="cursor-pointer group relative bg-[#1B112B] rounded-2xl border-2 border-[rgba(125,96,166,0.35)] hover:border-[#4FD6E0] p-5 flex flex-col justify-between shadow-lg transition-all duration-200"
+                  className="cursor-pointer group relative bg-[#271A3C] rounded-2xl border-2 border-[rgba(212,163,106,0.24)] hover:border-[#2BB5A8] p-5 flex flex-col justify-between shadow-lg transition-all duration-200 text-[#FAF5ED]"
                 >
                   <div>
-                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(125,96,166,0.2)]">
-                      <span className="font-mono text-xs uppercase tracking-wider text-[#4FD6E0]">
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(212,163,106,0.2)]">
+                      <span className="font-mono text-xs uppercase tracking-wider text-[#2BB5A8]">
                         Cultural Connections
                       </span>
-                      <span className="font-mono text-[10px] text-[#4FD6E0] font-bold px-2 py-0.5 rounded-full bg-[#4FD6E0]/15 border border-[#4FD6E0]/30">
+                      <span className="font-mono text-[10px] text-[#2BB5A8] font-bold px-2 py-0.5 rounded-full bg-[#2BB5A8]/15 border border-[#2BB5A8]/30">
                         BIWEEKLY
                       </span>
                     </div>
 
-                    <h4 className="font-serif text-2xl text-[#F4F0FA] font-medium tracking-tight mb-1">
-                      Thodarbu · <span lang="ta" className="text-[#4FD6E0]" style={{ letterSpacing: 0 }}>தொடர்பு</span>
+                    <h4 className="font-serif text-2xl text-[#FAF5ED] font-medium tracking-tight mb-1">
+                      Thodarbu · <span lang="ta" className="text-[#2BB5A8]" style={{ letterSpacing: 0 }}>தொடர்பு</span>
                     </h4>
-                    <p className="font-sans text-xs text-[#C4B7D7] leading-relaxed mb-3">
+                    <p className="font-sans text-xs text-[#CBBBA8] leading-relaxed mb-3">
                       Find four groups of four culturally connected items across cinema lore, Carnatic ragas, and traditions.
                     </p>
                   </div>
@@ -426,7 +426,7 @@ export function GamesHub() {
                     <ThodarpuThumbnail />
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-[rgba(125,96,166,0.2)] flex items-center justify-between text-xs font-mono text-[#4FD6E0]">
+                  <div className="mt-4 pt-3 border-t border-[rgba(212,163,106,0.2)] flex items-center justify-between text-xs font-mono text-[#2BB5A8]">
                     <span>Play Edition {currentEditionMeta.editionNo}</span>
                     <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -437,22 +437,22 @@ export function GamesHub() {
                   whileHover={{ y: -5 }}
                   transition={{ type: "spring", stiffness: 350, damping: 25 }}
                   onClick={() => selectGame("aazham")}
-                  className="cursor-pointer group relative bg-[#1B112B] rounded-2xl border-2 border-[rgba(125,96,166,0.35)] hover:border-[#38BDF8] p-5 flex flex-col justify-between shadow-lg transition-all duration-200"
+                  className="cursor-pointer group relative bg-[#271A3C] rounded-2xl border-2 border-[rgba(212,163,106,0.24)] hover:border-[#C79347] p-5 flex flex-col justify-between shadow-lg transition-all duration-200 text-[#FAF5ED]"
                 >
                   <div>
-                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(125,96,166,0.2)]">
-                      <span className="font-mono text-xs uppercase tracking-wider text-[#38BDF8]">
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(212,163,106,0.2)]">
+                      <span className="font-mono text-xs uppercase tracking-wider text-[#C79347]">
                         Rarest-Answer Trivia
                       </span>
-                      <span className="font-mono text-[10px] text-[#38BDF8] font-bold px-2 py-0.5 rounded-full bg-[#38BDF8]/15 border border-[#38BDF8]/30">
+                      <span className="font-mono text-[10px] text-[#C79347] font-bold px-2 py-0.5 rounded-full bg-[#C79347]/15 border border-[#C79347]/30">
                         7,000m DIVE
                       </span>
                     </div>
 
-                    <h4 className="font-serif text-2xl text-[#F4F0FA] font-medium tracking-tight mb-1">
-                      Aazham · <span lang="ta" className="text-[#38BDF8]" style={{ letterSpacing: 0 }}>ஆழம்</span>
+                    <h4 className="font-serif text-2xl text-[#FAF5ED] font-medium tracking-tight mb-1">
+                      Aazham · <span lang="ta" className="text-[#C79347]" style={{ letterSpacing: 0 }}>ஆழம்</span>
                     </h4>
-                    <p className="font-sans text-xs text-[#C4B7D7] leading-relaxed mb-3">
+                    <p className="font-sans text-xs text-[#CBBBA8] leading-relaxed mb-3">
                       7 cultural prompts under 25s. The rarest answer sinks you deeper toward the ancient Kumari Kandam seabed.
                     </p>
                   </div>
@@ -461,7 +461,7 @@ export function GamesHub() {
                     <AazhamThumbnail />
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-[rgba(125,96,166,0.2)] flex items-center justify-between text-xs font-mono text-[#38BDF8]">
+                  <div className="mt-4 pt-3 border-t border-[rgba(212,163,106,0.2)] flex items-center justify-between text-xs font-mono text-[#C79347]">
                     <span>Dive 7,000m</span>
                     <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
                   </div>

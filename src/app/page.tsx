@@ -32,6 +32,7 @@ import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { NextFlagshipGathering } from "@/components/home/NextFlagshipGathering";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
 import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
+import { KorvaiDivider } from "@/components/ui/CulturalDividers";
 import { EventJsonLd } from "@/components/seo/JsonLd";
 import { useTamilSpeech } from "@/lib/tamilSpeech";
 import { ThirukkuralAudioButton } from "@/components/ui/PronounceableQuote";
@@ -633,36 +634,36 @@ export default function HomePage() {
           ========================================================================= */}
       <EditorialSheetHandoff id="flagship-gathering" badge="CAMPUS HEARTH" sublabel="COLUMBUS, OH" overlapHero={false}>
 
-        {/* Puranaanuru 192 Sunlit Wisdom Banner */}
-        <div className="relative bg-[#25173B] border-y border-[#A6F0CF]/25 py-6 px-6 text-center select-none overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.25)]">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(166,240,207,0.12),transparent_70%)]" aria-hidden="true" />
-          <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 font-sans text-xs text-[#C4B7D7]">
-            <span lang="ta" style={{ letterSpacing: 0 }} className="text-base font-serif font-bold text-[#A6F0CF]">
+        {/* Puranaanuru 192 Sunlit Wisdom Banner: --bg-sangam-deep (#1C122B) with Zari Korvai border (PRD §5.01) */}
+        <div className="relative bg-[#1C122B] py-6 px-6 text-center select-none overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.35)]">
+          <KorvaiDivider tone="gold" className="mb-4" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(199,147,71,0.1),transparent_70%)]" aria-hidden="true" />
+          <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 font-sans text-xs text-[#CBBBA8]">
+            <span lang="ta" style={{ letterSpacing: 0 }} className="text-base font-serif font-bold text-[#C79347]">
               யாதும் ஊரே யாவரும் கேளிர்
             </span>
-            <span className="hidden sm:inline text-[#A6F0CF]/40">·</span>
-            <span className="font-serif italic text-base text-[#F4F0FA]">
+            <span className="hidden sm:inline text-[#C79347]/40">·</span>
+            <span className="font-serif italic text-base text-[#FAF5ED]">
               &ldquo;To us all towns are home, everyone our kin.&rdquo;
             </span>
-            <span className="hidden md:inline text-[#A6F0CF]/40">·</span>
-            <span className="text-[#A6F0CF] tracking-widest uppercase text-[11px] font-semibold">
+            <span className="hidden md:inline text-[#C79347]/40">·</span>
+            <span className="text-[#C79347] tracking-widest uppercase text-[11px] font-semibold">
               Kaniyan Poongundranar · Puranaanuru 192
             </span>
           </div>
+          <KorvaiDivider tone="gold" className="mt-4" />
         </div>
 
-        <KolamSectionRule tone="sandstone" />
-
-        {/* 1. Quick-Action Command Strip: Immediate visibility into upcoming gathering & actions */}
-        <div className="relative bg-[#140C20] border-b border-[#A6F0CF]/30 py-3.5 px-6 bg-[radial-gradient(ellipse_at_top,rgba(166,240,207,0.06),transparent_80%)]">
+        {/* 1. Quick-Action Command Strip: --bg-sandstone (Warm sunlit contrast break, PRD §5.01) */}
+        <div className="relative bg-[#F0E6D6] border-b border-[#DFD1BE] py-3.5 px-6 text-[#261A14]">
           <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-pulse" />
-              <span className="font-semibold text-[#F4F0FA] uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-[#0F766E] animate-pulse" />
+              <span className="font-semibold text-[#261A14] uppercase tracking-wider">
                 Upcoming Flagship Gathering
               </span>
-              <span className="hidden sm:inline text-[#C4B7D7]">·</span>
-              <span className="hidden sm:inline text-[#C4B7D7]">
+              <span className="hidden sm:inline text-[#5E4C40]">·</span>
+              <span className="hidden sm:inline text-[#5E4C40]">
                 Free Admission · All Buckeyes Welcome
               </span>
             </div>
@@ -670,15 +671,15 @@ export default function HomePage() {
               <Link
                 href="/events"
                 onClick={playClick}
-                className="font-semibold text-[#A6F0CF] hover:text-[#F4F0FA] transition-colors border-b border-[#A6F0CF] pb-0.5"
+                className="font-semibold text-[#0F766E] hover:text-[#0B5C56] transition-colors border-b border-[#0F766E] pb-0.5"
               >
                 View Event Schedule →
               </Link>
-              <span className="text-[#C4B7D7]">|</span>
+              <span className="text-[#DFD1BE]">|</span>
               <Link
                 href="/join"
                 onClick={playClick}
-                className="font-semibold text-[#F4F0FA] hover:text-[#A6F0CF] transition-colors"
+                className="font-semibold text-[#261A14] hover:text-[#0F766E] transition-colors"
               >
                 Sign Guestbook →
               </Link>
@@ -687,60 +688,68 @@ export default function HomePage() {
         </div>
 
         {/* =========================================================================
-            FEATURED NEXT EVENT: DYNAMIC FLAGSHIP EVENT ENGINE
+            FEATURED NEXT EVENT: DYNAMIC FLAGSHIP EVENT ENGINE (Warm Sandstone Band)
             ========================================================================= */}
-        <NextFlagshipGathering />
+        <div className="bg-[#F0E6D6] texture-khadi">
+          <NextFlagshipGathering />
+        </div>
 
         <KolamSectionRule tone="light" />
 
-        {/* 2. The 3 Core Pillars: Clean 3-Column Layout */}
-        <SilkHoverPillars />
+        {/* 2. The 3 Core Pillars: Clean 3-Column Layout on --bg-ivory (PRD §5.01) */}
+        <div className="bg-[#FAF6F0] texture-khadi text-[#261A14]">
+          <SilkHoverPillars />
+        </div>
 
         <KolamSectionRule tone="sandstone" />
 
-        {/* 3. Direct Join / Involvement CTA: Streamlined Entry to /join and /links */}
-        <OrganicRouteGateway
-          eyebrow="Student Fellowship & Social Hub"
-          tamilEyebrow="இணைவு"
-          title="A Warm Hearth on the Banks of the Olentangy"
-          tamilTitle="ஓலண்டாஞ்சி நதிக்கரையில் ஒரு பாசமிகு திண்ணை"
-          description="Whether you crave authentic home-cooked flavors, want to dance, or simply want to find friendly faces on campus, our community is 100% free with zero dues."
-          primaryHref="/join"
-          primaryLabel="Sign the Free Guestbook"
-          secondaryHref="/links"
-          secondaryLabel="Open Bio Links & Socials"
-        />
+        {/* 3. Direct Join / Involvement CTA: Closing Anchor on --bg-peacock-deep (PRD §5.01) */}
+        <div className="bg-[#102830] texture-silk text-[#FAF5ED]">
+          <OrganicRouteGateway
+            eyebrow="Student Fellowship & Social Hub"
+            tamilEyebrow="இணைவு"
+            title="A Warm Hearth on the Banks of the Olentangy"
+            tamilTitle="ஓலண்டாஞ்சி நதிக்கரையில் ஒரு பாசமிகு திண்ணை"
+            description="Whether you crave authentic home-cooked flavors, want to dance, or simply want to find friendly faces on campus, our community is 100% free with zero dues."
+            primaryHref="/join"
+            primaryLabel="Sign the Free Guestbook"
+            secondaryHref="/links"
+            secondaryLabel="Open Bio Links & Socials"
+          />
+        </div>
 
-        <KolamSectionRule tone="light" />
+        <KolamSectionRule tone="sandstone" />
 
         {/* =========================================================================
-            COMMUNITY KINSHIP PROOF STRIP (Zero Bounding Boxes, 1px Grounding Line)
+            COMMUNITY KINSHIP PROOF STRIP (Warm Sandstone Band, PRD §5.01)
             ========================================================================= */}
-        <section className="py-24 sm:py-32 px-6 sm:px-12 max-w-[1600px] mx-auto">
-          <div className="border-t border-b border-[rgba(125,96,166,0.25)] py-16 sm:py-24 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 text-left">
-            <div className="relative space-y-3">
-              <motion.span aria-hidden="true" className="absolute -left-6 top-0 hidden h-full w-px origin-top bg-[#A6F0CF]/30 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
-              <span className="font-serif tabular-nums text-5xl sm:text-6xl font-light text-[#A6F0CF] block"><span aria-hidden="true"><CountUp to={120} />+</span><span className="sr-only">120+</span></span>
-              <span className="font-sans text-xs uppercase tracking-widest text-[#F4F0FA] block font-semibold">Buckeyes & Community</span>
-              <p className="text-sm text-[#C4B7D7] font-sans leading-relaxed">
-                Undergraduate and graduate students from every college, alumni, and friends across Columbus.
-              </p>
-            </div>
-            <div className="relative space-y-3">
-              <motion.span aria-hidden="true" className="absolute -left-6 top-0 hidden h-full w-px origin-top bg-[#A6F0CF]/30 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
-              <span className="font-serif text-5xl sm:text-6xl font-light text-[#A6F0CF] block"><span aria-hidden="true">0<CountUp to={4} />+</span><span className="sr-only">04+</span></span>
-              <span className="font-sans text-xs uppercase tracking-widest text-[#F4F0FA] block font-semibold">Years of Kinship</span>
-              <p className="text-sm text-[#C4B7D7] font-sans leading-relaxed">
-                Informally founded in 2021; chartered as a recognized student organization at Ohio State in 2024.
-              </p>
-            </div>
-            <div className="relative space-y-3">
-              <motion.span aria-hidden="true" className="absolute -left-6 top-0 hidden h-full w-px origin-top bg-[#A6F0CF]/30 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
-              <span className="font-serif text-5xl sm:text-6xl font-light text-[#F4F0FA] block"><span aria-hidden="true"><CountUp to={100} />%</span><span className="sr-only">100%</span></span>
-              <span className="font-sans text-xs uppercase tracking-widest text-[#F4F0FA] block font-semibold">Zero Dues · Open Hearth</span>
-              <p className="text-sm text-[#C4B7D7] font-sans leading-relaxed">
-                Membership is completely voluntary and free. No language test. No attendance quotas to participate.
-              </p>
+        <section className="bg-[#F0E6D6] texture-khadi text-[#261A14] py-24 sm:py-32 px-6 sm:px-12 w-full">
+          <div className="max-w-[1600px] mx-auto">
+            <div className="border-t border-b border-[#DFD1BE] py-16 sm:py-24 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 text-left">
+              <div className="relative space-y-3">
+                <motion.span aria-hidden="true" className="absolute -left-6 top-0 hidden h-full w-px origin-top bg-[#9A6B3E]/40 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
+                <span className="font-serif tabular-nums text-5xl sm:text-6xl font-light text-[#9A6B3E] block"><span aria-hidden="true"><CountUp to={120} />+</span><span className="sr-only">120+</span></span>
+                <span className="font-sans text-xs uppercase tracking-widest text-[#261A14] block font-semibold">Buckeyes & Community</span>
+                <p className="text-sm text-[#5E4C40] font-sans leading-relaxed">
+                  Undergraduate and graduate students from every college, alumni, and friends across Columbus.
+                </p>
+              </div>
+              <div className="relative space-y-3">
+                <motion.span aria-hidden="true" className="absolute -left-6 top-0 hidden h-full w-px origin-top bg-[#9A6B3E]/40 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
+                <span className="font-serif text-5xl sm:text-6xl font-light text-[#9A6B3E] block"><span aria-hidden="true">0<CountUp to={4} />+</span><span className="sr-only">04+</span></span>
+                <span className="font-sans text-xs uppercase tracking-widest text-[#261A14] block font-semibold">Years of Kinship</span>
+                <p className="text-sm text-[#5E4C40] font-sans leading-relaxed">
+                  Informally founded in 2021; chartered as a recognized student organization at Ohio State in 2024.
+                </p>
+              </div>
+              <div className="relative space-y-3">
+                <motion.span aria-hidden="true" className="absolute -left-6 top-0 hidden h-full w-px origin-top bg-[#9A6B3E]/40 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
+                <span className="font-serif text-5xl sm:text-6xl font-light text-[#261A14] block"><span aria-hidden="true"><CountUp to={100} />%</span><span className="sr-only">100%</span></span>
+                <span className="font-sans text-xs uppercase tracking-widest text-[#261A14] block font-semibold">Zero Dues · Open Hearth</span>
+                <p className="text-sm text-[#5E4C40] font-sans leading-relaxed">
+                  Membership is completely voluntary and free. No language test. No attendance quotas to participate.
+                </p>
+              </div>
             </div>
           </div>
         </section>

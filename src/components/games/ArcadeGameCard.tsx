@@ -37,7 +37,7 @@ export function ArcadeGameCard({ meta }: ArcadeGameCardProps) {
   }, [meta.slug, dailyDate]);
 
   const renderGlyph = () => {
-    const props = { className: "w-6 h-6 text-[#A6F0CF]" };
+    const props = { className: "w-6 h-6 text-[#C79347]" };
     switch (meta.slug) {
       case "kolam-path":
         return <KolamKnotGlyph {...props} />;
@@ -83,16 +83,16 @@ export function ArcadeGameCard({ meta }: ArcadeGameCardProps) {
       <motion.article
         whileHover={{ y: -5 }}
         transition={{ type: "spring", stiffness: 350, damping: 25 }}
-        className={`h-full rounded-2xl bg-[#1B112B] border-2 p-5 flex flex-col justify-between shadow-lg transition-all duration-200 ${
+        className={`h-full rounded-2xl bg-[#271A3C] border-2 p-5 flex flex-col justify-between shadow-lg transition-all duration-200 text-[#FAF5ED] ${
           isSolved
             ? "border-[#10B981]/40 shadow-[0_4px_20px_rgba(16,185,129,0.08)]"
-            : "border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/70 hover:shadow-[0_8px_25px_rgba(166,240,207,0.1)]"
+            : "border-[rgba(212,163,106,0.24)] hover:border-[#C79347]/70 hover:shadow-[0_8px_25px_rgba(199,147,71,0.12)]"
         }`}
       >
         <div>
           {/* Top Row: Glyph & Status Badge */}
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(125,96,166,0.2)]">
-            <div className="p-2.5 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.3)] shadow-inner">
+          <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(212,163,106,0.2)]">
+            <div className="p-2.5 rounded-xl bg-[#1C122B] border border-[rgba(212,163,106,0.3)] shadow-inner">
               {renderGlyph()}
             </div>
 
@@ -110,7 +110,7 @@ export function ArcadeGameCard({ meta }: ArcadeGameCardProps) {
                 <span>IN PROGRESS</span>
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#25173B] border border-[rgba(166,240,207,0.3)] text-[#A6F0CF] group-hover:bg-[#A6F0CF] group-hover:text-[#140C20] transition-colors">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#1C122B] border border-[#C79347]/40 text-[#C79347] group-hover:bg-[#C79347] group-hover:text-[#1C122B] transition-colors">
                 <Play className="w-3 h-3 fill-current" />
                 <span>PLAY</span>
               </span>
@@ -118,18 +118,18 @@ export function ArcadeGameCard({ meta }: ArcadeGameCardProps) {
           </div>
 
           {/* Eyebrow: Duration & Tag */}
-          <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-[#C4B7D7]/70 mb-1">
+          <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-[#CBBBA8] mb-1">
             <span>{meta.estimatedMinutes} MINS</span>
             <span>·</span>
-            <span className="text-[#A6F0CF] font-bold">{meta.tagEn}</span>
+            <span className="text-[#C79347] font-bold">{meta.tagEn}</span>
           </div>
 
           {/* Titles */}
-          <h4 className="text-xl font-serif font-medium text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors flex items-baseline gap-2">
+          <h4 className="text-xl font-serif font-medium text-[#FAF5ED] group-hover:text-[#C79347] transition-colors flex items-baseline gap-2">
             <span>{meta.titleEn}</span>
             <span
               lang="ta"
-              className="text-xs font-sans text-[#E5B869] font-normal"
+              className="text-xs font-sans text-[#D4A36A] font-normal"
               style={{ letterSpacing: 0 }}
             >
               {meta.titleTa}
@@ -137,13 +137,13 @@ export function ArcadeGameCard({ meta }: ArcadeGameCardProps) {
           </h4>
 
           {/* Description */}
-          <p className="text-xs text-[#C4B7D7] mt-1.5 leading-relaxed font-sans line-clamp-2">
+          <p className="text-xs text-[#CBBBA8] mt-1.5 leading-relaxed font-sans line-clamp-2">
             {meta.description}
           </p>
         </div>
 
         {/* Footer Link Action */}
-        <div className="mt-4 pt-3 border-t border-[rgba(125,96,166,0.2)] flex items-center justify-between text-xs font-mono text-[#A6F0CF]">
+        <div className="mt-4 pt-3 border-t border-[rgba(212,163,106,0.2)] flex items-center justify-between text-xs font-mono text-[#C79347]">
           <span className="group-hover:underline">Play Daily Drop</span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
         </div>

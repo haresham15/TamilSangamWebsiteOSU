@@ -126,23 +126,57 @@ html.sangam-fallback #guide-station-hero section { min-height: 100dvh !important
   --color-surface-hero-about: #140C20;
 
   /* Courtyard & Brown/Tan Replacements -> Logo Palette */
-  --color-warm-ivory: #F4F0FA;
-  --color-sunbaked-sand: #25173B;
-  --color-charcoal-espresso: #140C20;
-  --color-espresso-muted: #9B8EB3;
-  --color-turmeric-gold: #A6F0CF;
-  --color-turmeric-gold-hover: #7AE7B5;
-  --color-terracotta-earth: #352254;
-  --color-terracotta-earth-hover: #452C6D;
+  --color-warm-ivory: #FAF6F0;
+  --color-sunbaked-sand: #F0E6D6;
+  --color-charcoal-espresso: #261A14;
+  --color-espresso-muted: #5E4C40;
+  --color-turmeric-gold: #C79347;
+  --color-turmeric-gold-hover: #D4A36A;
+  --color-terracotta-earth: #B84A39;
+  --color-terracotta-earth-hover: #9A6B3E;
 
-  --color-surface-courtyard: #140C20;
-  --color-surface-sand: #1A1028;
-  --color-text-courtyard: #F4F0FA;
-  --color-text-courtyard-muted: #C4B7D7;
+  --color-surface-courtyard: #FAF6F0;
+  --color-surface-sand: #F0E6D6;
+  --color-text-courtyard: #261A14;
+  --color-text-courtyard-muted: #5E4C40;
 
-  --color-paper: #140C20;
-  --color-hero-indigo: #140C20;
-  --color-hero-espresso: #140C20;
+  --color-paper: #FAF6F0;
+  --color-hero-indigo: #1C122B;
+  --color-hero-espresso: #261A14;
+
+  /* =========================================================================
+     Master Kanchipuram Courtyard & Temple Stone Token System (PRD §2.1)
+     ========================================================================= */
+  --color-bg-ivory: #FAF6F0;
+  --color-bg-sandstone: #F0E6D6;
+  --color-surface-card-light: #FFFFFF;
+  --color-surface-card-parchment: #F7EFE2;
+  --color-bg-sangam-deep: #1C122B;
+  --color-surface-card-dark: #271A3C;
+  --color-bg-peacock-deep: #102830;
+  --color-surface-card-peacock: #173640;
+
+  --color-brand-purple: #5B2C86;
+  --color-brand-purple-soft: #EFE8F7;
+  --color-brand-teal: #0F766E;
+  --color-brand-teal-dark: #2BB5A8;
+  --color-brand-teal-hover: #0B5C56;
+  --color-brand-teal-hover-dark: #3ED0C2;
+  --color-brand-teal-soft: #E1F3F1;
+
+  --color-accent-bronze: #9A6B3E;
+  --color-accent-bronze-dark: #D4A36A;
+  --color-accent-zari: #C79347;
+  --color-accent-kumkum: #B84A39;
+  --color-accent-kumkum-dark: #E06D58;
+
+  --color-ink-earth: #261A14;
+  --color-ink-umber: #5E4C40;
+  --color-ink-alabaster: #FAF5ED;
+  --color-ink-sand: #CBBBA8;
+
+  --color-border-warm: #DFD1BE;
+  --color-border-zari-muted: rgba(212, 163, 106, 0.24);
   /* Lifted golden-hour hero surfaces (home, about, guide). The Three.js scene constants
      mirror these: thresholdStone.ts HERO_SCENE_BG, GopuramArtScene SKY, station palette fog. */
   --color-dusk-umber: oklch(37.7% 0.046 47.4);
@@ -1085,21 +1119,47 @@ body {
   mask-composite: intersect;
 }
 
-/* Blueprint Grid Node Crosshair Marker (+) */
+/* Blueprint Grid Node Crosshair Marker (+) - Retired in Cultural Refinement (PRD §4.1) */
 .blueprint-node {
   position: relative;
 }
-.blueprint-node::before {
-  content: "+";
-  position: absolute;
-  top: -8px;
-  left: -5px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 1;
-  color: oklch(0.78 0.16 168 / 0.7);
-  pointer-events: none;
-  z-index: 10;
+
+/* ========================================================================= */
+/* KANCHIPURAM COURTYARD TEXTURES & PATHIRIKAI FRAMING (PRD §4.1)            */
+/* ========================================================================= */
+
+.card-pathirikai {
+  box-shadow: inset 0 0 0 4px transparent, inset 0 0 0 5px rgba(212, 163, 106, 0.22);
+}
+
+.shimmer-sandstone {
+  background: linear-gradient(
+    90deg,
+    #E7DAC6 0%,
+    #F3EBE0 50%,
+    #E7DAC6 100%
+  );
+  background-size: 200% 100%;
+  animation: sandstoneShimmer 2.2s infinite ease-in-out;
+}
+
+@keyframes sandstoneShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Procedural khadi cotton paper grain overlay (3-4% opacity) */
+.texture-khadi {
+  background-image: radial-gradient(rgba(154, 107, 62, 0.04) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+/* Procedural silk cross-weave overlay (3-5% opacity) */
+.texture-silk {
+  background-image: 
+    linear-gradient(0deg, rgba(212, 163, 106, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212, 163, 106, 0.03) 1px, transparent 1px);
+  background-size: 6px 6px;
 }
 
 /* ========================================================================= */

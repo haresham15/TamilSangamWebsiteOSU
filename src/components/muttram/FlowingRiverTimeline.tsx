@@ -13,12 +13,16 @@ export interface TimelineMilestone {
 export interface FlowingRiverTimelineProps {
   milestones: TimelineMilestone[];
   locale?: string;
+  variant?: "light" | "dark";
 }
 
 export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
   milestones,
   locale = "en",
+  variant = "dark",
 }) => {
+  const isLight = variant === "light";
+
   return (
     <div className="relative w-full max-w-5xl mx-auto py-12 select-none">
       {/* Central River Spine (Curving SVG River) */}
@@ -48,9 +52,9 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
           />
           <defs>
             <linearGradient id="river-gradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#4FD6E0" stopOpacity="0.4" />
-              <stop offset="50%" stopColor="#F26BB5" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#A6F0CF" stopOpacity="0.4" />
+              <stop offset="0%" stopColor="#C79347" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="#2BB5A8" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#D4A36A" stopOpacity="0.8" />
             </linearGradient>
           </defs>
         </svg>
@@ -69,8 +73,14 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
               } gap-8 md:gap-16`}
             >
               {/* Stepping Stone River Node (Center on md+, left on mobile) */}
-              <div className="absolute left-6 md:left-1/2 top-4 -translate-x-1/2 flex items-center justify-center w-7 h-7 rounded-full bg-[#140C20] border-2 border-[#A6F0CF] shadow-md shadow-stone-900/10 z-10">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#A6F0CF]" />
+              <div
+                className={`absolute left-6 md:left-1/2 top-4 -translate-x-1/2 flex items-center justify-center w-7 h-7 rounded-full border-2 shadow-md z-10 ${
+                  isLight
+                    ? "bg-[#FFFFFF] border-[#C79347] shadow-[#9A6B3E]/10"
+                    : "bg-[#1C122B] border-[#C79347] shadow-black/30"
+                }`}
+              >
+                <span className="w-2.5 h-2.5 rounded-full bg-[#C79347]" />
               </div>
 
               {/* Content Block (Unbound by boxes) */}
@@ -81,24 +91,38 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
               >
                 {/* Year Typography */}
                 <div className="mb-2">
-                  <span className="text-5xl sm:text-7xl font-serif font-light text-[#A6F0CF] tracking-tight block">
+                  <span
+                    className={`text-5xl sm:text-7xl font-serif font-light tracking-tight block ${
+                      isLight ? "text-[#9A6B3E]" : "text-[#C79347]"
+                    }`}
+                  >
                     {item.year}
                   </span>
                   <span
                     lang="ta"
-                    className="font-tamil text-sm text-[#A6F0CF] font-medium tracking-wide block"
+                    className={`font-tamil text-sm font-medium tracking-wide block ${
+                      isLight ? "text-[#0F766E]" : "text-[#2BB5A8]"
+                    }`}
                   >
                     {item.titleTa}
                   </span>
                 </div>
 
                 {/* Milestone Title */}
-                <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA] leading-snug mb-3">
+                <h3
+                  className={`text-2xl sm:text-3xl font-serif font-normal leading-snug mb-3 ${
+                    isLight ? "text-[#261A14]" : "text-[#FAF5ED]"
+                  }`}
+                >
                   {item.titleEn}
                 </h3>
 
                 {/* Story Description */}
-                <p className="font-sans text-base sm:text-lg text-[#C4B7D7] leading-relaxed">
+                <p
+                  className={`font-sans text-base sm:text-lg leading-relaxed ${
+                    isLight ? "text-[#5E4C40]" : "text-[#CBBBA8]"
+                  }`}
+                >
                   {locale === "ta" ? item.descriptionTa : item.descriptionEn}
                 </p>
               </div>
