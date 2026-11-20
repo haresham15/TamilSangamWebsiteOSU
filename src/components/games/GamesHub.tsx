@@ -22,6 +22,9 @@ import { AazhamGame } from "./aazham/AazhamGame";
 import { SolluThumbnail } from "./SolluThumbnail";
 import { ThodarpuThumbnail } from "./ThodarpuThumbnail";
 import { AazhamThumbnail } from "./AazhamThumbnail";
+import { DailyGauntletStrip } from "./DailyGauntletStrip";
+import { ArcadeGameCard } from "./ArcadeGameCard";
+import { ARCADE_GAMES_CATALOG } from "@/lib/games/storage";
 import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import {
   SOLLU_BIWEEKLY_EDITIONS,
@@ -305,138 +308,200 @@ export function GamesHub() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* CARD 1: 01 SOLLU · சொல்லு */}
-              <motion.article
-                whileHover={{ y: -6 }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                onClick={() => selectGame("sollu")}
-                className="cursor-pointer group relative bg-[#140C20] rounded-2xl border-2 border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] p-6 flex flex-col justify-between shadow-xs hover:shadow-xl transition-[border-color,box-shadow] duration-200"
-              >
-                {/* Editorial Header */}
+            {/* Daily Gauntlet Completion Strip */}
+            <DailyGauntletStrip />
+
+            {/* ============================================================== */}
+            {/* CATEGORY 1: LOGIC & GEOMETRY · தர்க்கம் & வடிவியல்               */}
+            {/* ============================================================== */}
+            <div className="mb-14">
+              <div className="flex items-baseline justify-between pb-3 mb-6 border-b border-[rgba(125,96,166,0.3)]">
                 <div>
-                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[rgba(125,96,166,0.25)]">
-                    <span className="font-mono text-xs uppercase tracking-wider text-[#A6F0CF]">
-                      The Cultural Wordle
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#A6F0CF] font-bold block mb-1">
+                    SECTION 01 · தர்க்க விளையாட்டுகள்
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA]">
+                    Logic & Geometry
+                    <span lang="ta" className="text-sm sm:text-base font-sans text-[#E5B869] font-normal ml-2" style={{ letterSpacing: 0 }}>
+                      (புதிர் & கணிதம்)
                     </span>
-                    <span className="font-mono text-[11px] text-[#F4F0FA]/55 uppercase tracking-wider">
-                      Biweekly Edition
+                  </h3>
+                </div>
+                <span className="text-xs font-mono text-[#C4B7D7]/70 hidden sm:inline">
+                  Deterministic Daily Grids
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {ARCADE_GAMES_CATALOG.filter((g) => g.category === "logic").map((game) => (
+                  <ArcadeGameCard key={game.slug} meta={game} />
+                ))}
+              </div>
+            </div>
+
+            {/* ============================================================== */}
+            {/* CATEGORY 2: WORDS & CULTURE · சொல் & பண்பாடு                   */}
+            {/* ============================================================== */}
+            <div className="mb-14">
+              <div className="flex items-baseline justify-between pb-3 mb-6 border-b border-[rgba(125,96,166,0.3)]">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#A6F0CF] font-bold block mb-1">
+                    SECTION 02 · சொல் புதிர்கள்
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA]">
+                    Words & Culture
+                    <span lang="ta" className="text-sm sm:text-base font-sans text-[#E5B869] font-normal ml-2" style={{ letterSpacing: 0 }}>
+                      (சொல் & பண்பாடு)
                     </span>
+                  </h3>
+                </div>
+                <span className="text-xs font-mono text-[#C4B7D7]/70 hidden sm:inline">
+                  Tamil & Tanglish Lexicon
+                </span>
+              </div>
+
+              {/* Biweekly Flagship Originals (Sollu, Thodarbu, Aazham) */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                {/* CARD 1: 01 SOLLU · சொல்லு */}
+                <motion.article
+                  whileHover={{ y: -5 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                  onClick={() => selectGame("sollu")}
+                  className="cursor-pointer group relative bg-[#1B112B] rounded-2xl border-2 border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF] p-5 flex flex-col justify-between shadow-lg transition-all duration-200"
+                >
+                  <div>
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(125,96,166,0.2)]">
+                      <span className="font-mono text-xs uppercase tracking-wider text-[#A6F0CF]">
+                        The Cultural Wordle
+                      </span>
+                      <span className="font-mono text-[10px] text-[#A6F0CF] font-bold px-2 py-0.5 rounded-full bg-[#A6F0CF]/15 border border-[#A6F0CF]/30">
+                        BIWEEKLY
+                      </span>
+                    </div>
+
+                    <h4 className="font-serif text-2xl text-[#F4F0FA] font-medium tracking-tight mb-1">
+                      Sollu · <span lang="ta" className="text-[#A6F0CF]" style={{ letterSpacing: 0 }}>சொல்லு</span>
+                    </h4>
+                    <p className="font-sans text-xs text-[#C4B7D7] leading-relaxed mb-3">
+                      Guess the secret 5-letter cultural word in 6 attempts. Featuring Tanglish cinema and classical Tamil Akshara editions.
+                    </p>
                   </div>
 
-                  <h3 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal tracking-tight mb-2">
-                    Sollu · <span lang="ta" className="font-tamil font-semibold text-[#A6F0CF]">சொல்லு</span>
-                  </h3>
-                  <p className="font-sans text-xs sm:text-sm text-[#F4F0FA]/75 leading-relaxed mb-4">
-                    Guess the secret 5-letter cultural word in 6 attempts. Featuring Tanglish cinema and classical Tamil Akshara editions.
-                  </p>
-                </div>
-
-                {/* Bespoke Thumbnail */}
-                <div className="my-2">
-                  <SolluThumbnail />
-                </div>
-
-                {/* Editorial Action Footer */}
-                <div className="mt-6 pt-4 border-t border-[rgba(125,96,166,0.25)] flex items-center justify-between text-sm font-sans font-medium text-[#F4F0FA]">
-                  <span className="flex items-center gap-1.5 group-hover:text-[#A6F0CF] transition-colors">
-                    <span>Play Sollu</span>
-                    <span lang="ta" className="font-tamil text-xs text-[#A6F0CF]">(சொல்லு)</span>
-                  </span>
-                  <span className="flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#A6F0CF] group-hover:translate-x-1 transition-transform">
-                    <span>Start Game</span>
-                    <ArrowRight className="size-3.5" aria-hidden="true" />
-                  </span>
-                </div>
-              </motion.article>
-
-              {/* CARD 2: 02 THODARPU · தொடர்பு */}
-              <motion.article
-                whileHover={{ y: -6 }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                onClick={() => selectGame("thodarpu")}
-                className="cursor-pointer group relative bg-[#140C20] rounded-2xl border-2 border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] p-6 flex flex-col justify-between shadow-xs hover:shadow-xl transition-[border-color,box-shadow] duration-200"
-              >
-                {/* Editorial Header */}
-                <div>
-                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[rgba(125,96,166,0.25)]">
-                    <span className="font-mono text-xs uppercase tracking-wider text-[#4FD6E0]">
-                      Cultural Connections
-                    </span>
-                    <span className="font-mono text-[11px] text-[#F4F0FA]/55 uppercase tracking-wider">
-                      Biweekly Edition
-                    </span>
+                  <div className="my-1">
+                    <SolluThumbnail />
                   </div>
 
-                  <h3 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal tracking-tight mb-2">
-                    Thodarpu · <span lang="ta" className="font-tamil font-semibold text-[#4FD6E0]">தொடர்பு</span>
-                  </h3>
-                  <p className="font-sans text-xs sm:text-sm text-[#F4F0FA]/75 leading-relaxed mb-4">
-                    Find four groups of four culturally connected items across cinema lore, Carnatic ragas, and traditions.
-                  </p>
-                </div>
+                  <div className="mt-4 pt-3 border-t border-[rgba(125,96,166,0.2)] flex items-center justify-between text-xs font-mono text-[#A6F0CF]">
+                    <span>Play Edition {currentEditionMeta.editionNo}</span>
+                    <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </motion.article>
 
-                {/* Bespoke Thumbnail */}
-                <div className="my-2">
-                  <ThodarpuThumbnail />
-                </div>
+                {/* CARD 2: 02 THODARPU CONNECTIONS · தொடர்பு */}
+                <motion.article
+                  whileHover={{ y: -5 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                  onClick={() => selectGame("thodarpu")}
+                  className="cursor-pointer group relative bg-[#1B112B] rounded-2xl border-2 border-[rgba(125,96,166,0.35)] hover:border-[#4FD6E0] p-5 flex flex-col justify-between shadow-lg transition-all duration-200"
+                >
+                  <div>
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(125,96,166,0.2)]">
+                      <span className="font-mono text-xs uppercase tracking-wider text-[#4FD6E0]">
+                        Cultural Connections
+                      </span>
+                      <span className="font-mono text-[10px] text-[#4FD6E0] font-bold px-2 py-0.5 rounded-full bg-[#4FD6E0]/15 border border-[#4FD6E0]/30">
+                        BIWEEKLY
+                      </span>
+                    </div>
 
-                {/* Editorial Action Footer */}
-                <div className="mt-6 pt-4 border-t border-[rgba(125,96,166,0.25)] flex items-center justify-between text-sm font-sans font-medium text-[#F4F0FA]">
-                  <span className="flex items-center gap-1.5 group-hover:text-[#4FD6E0] transition-colors">
-                    <span>Play Thodarpu</span>
-                    <span lang="ta" className="font-tamil text-xs text-[#4FD6E0]">(தொடர்பு)</span>
-                  </span>
-                  <span className="flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#4FD6E0] group-hover:translate-x-1 transition-transform">
-                    <span>Start Game</span>
-                    <ArrowRight className="size-3.5" aria-hidden="true" />
-                  </span>
-                </div>
-              </motion.article>
-
-              {/* CARD 3: 03 AAZHAM · ஆழம் */}
-              <motion.article
-                whileHover={{ y: -6 }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                onClick={() => selectGame("aazham")}
-                className="cursor-pointer group relative bg-[#140C20] rounded-2xl border-2 border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF] p-6 flex flex-col justify-between shadow-xs hover:shadow-xl transition-[border-color,box-shadow] duration-200"
-              >
-                {/* Editorial Header */}
-                <div>
-                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[rgba(125,96,166,0.25)]">
-                    <span className="font-mono text-xs uppercase tracking-wider text-[#38BDF8]">
-                      Rarest-Answer Trivia
-                    </span>
-                    <span className="font-mono text-[11px] text-[#A6F0CF] font-bold uppercase tracking-wider">
-                      7,000m Dive
-                    </span>
+                    <h4 className="font-serif text-2xl text-[#F4F0FA] font-medium tracking-tight mb-1">
+                      Thodarbu · <span lang="ta" className="text-[#4FD6E0]" style={{ letterSpacing: 0 }}>தொடர்பு</span>
+                    </h4>
+                    <p className="font-sans text-xs text-[#C4B7D7] leading-relaxed mb-3">
+                      Find four groups of four culturally connected items across cinema lore, Carnatic ragas, and traditions.
+                    </p>
                   </div>
 
-                  <h3 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal tracking-tight mb-2">
-                    Aazham · <span lang="ta" className="font-tamil font-semibold text-[#38BDF8]">ஆழம்</span>
+                  <div className="my-1">
+                    <ThodarpuThumbnail />
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-[rgba(125,96,166,0.2)] flex items-center justify-between text-xs font-mono text-[#4FD6E0]">
+                    <span>Play Edition {currentEditionMeta.editionNo}</span>
+                    <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </motion.article>
+
+                {/* CARD 3: 03 AAZHAM · ஆழம் */}
+                <motion.article
+                  whileHover={{ y: -5 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                  onClick={() => selectGame("aazham")}
+                  className="cursor-pointer group relative bg-[#1B112B] rounded-2xl border-2 border-[rgba(125,96,166,0.35)] hover:border-[#38BDF8] p-5 flex flex-col justify-between shadow-lg transition-all duration-200"
+                >
+                  <div>
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(125,96,166,0.2)]">
+                      <span className="font-mono text-xs uppercase tracking-wider text-[#38BDF8]">
+                        Rarest-Answer Trivia
+                      </span>
+                      <span className="font-mono text-[10px] text-[#38BDF8] font-bold px-2 py-0.5 rounded-full bg-[#38BDF8]/15 border border-[#38BDF8]/30">
+                        7,000m DIVE
+                      </span>
+                    </div>
+
+                    <h4 className="font-serif text-2xl text-[#F4F0FA] font-medium tracking-tight mb-1">
+                      Aazham · <span lang="ta" className="text-[#38BDF8]" style={{ letterSpacing: 0 }}>ஆழம்</span>
+                    </h4>
+                    <p className="font-sans text-xs text-[#C4B7D7] leading-relaxed mb-3">
+                      7 cultural prompts under 25s. The rarest answer sinks you deeper toward the ancient Kumari Kandam seabed.
+                    </p>
+                  </div>
+
+                  <div className="my-1">
+                    <AazhamThumbnail />
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-[rgba(125,96,166,0.2)] flex items-center justify-between text-xs font-mono text-[#38BDF8]">
+                    <span>Dive 7,000m</span>
+                    <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </motion.article>
+              </div>
+
+              {/* Daily Word Puzzles Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+                {ARCADE_GAMES_CATALOG.filter((g) => g.category === "words").map((game) => (
+                  <ArcadeGameCard key={game.slug} meta={game} />
+                ))}
+              </div>
+            </div>
+
+            {/* ============================================================== */}
+            {/* CATEGORY 3: KOLLYWOOD & GEOGRAPHY · திரை & நிலவியல்            */}
+            {/* ============================================================== */}
+            <div className="mb-10">
+              <div className="flex items-baseline justify-between pb-3 mb-6 border-b border-[rgba(125,96,166,0.3)]">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#A6F0CF] font-bold block mb-1">
+                    SECTION 03 · சினிமா & நிலவியல்
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-serif font-normal text-[#F4F0FA]">
+                    Kollywood & Geography
+                    <span lang="ta" className="text-sm sm:text-base font-sans text-[#E5B869] font-normal ml-2" style={{ letterSpacing: 0 }}>
+                      (திரை & தமிழகம்)
+                    </span>
                   </h3>
-                  <p className="font-sans text-xs sm:text-sm text-[#F4F0FA]/75 leading-relaxed mb-4">
-                    7 cultural prompts under 25s. The rarest answer sinks you deeper toward the ancient Kumari Kandam seabed.
-                  </p>
                 </div>
+                <span className="text-xs font-mono text-[#C4B7D7]/70 hidden sm:inline">
+                  38 Districts & Kollywood Classics
+                </span>
+              </div>
 
-                {/* Bespoke Thumbnail */}
-                <div className="my-2">
-                  <AazhamThumbnail />
-                </div>
-
-                {/* Editorial Action Footer */}
-                <div className="mt-6 pt-4 border-t border-[rgba(125,96,166,0.25)] flex items-center justify-between text-sm font-sans font-medium text-[#F4F0FA]">
-                  <span className="flex items-center gap-1.5 group-hover:text-[#38BDF8] transition-colors">
-                    <span>Play Aazham</span>
-                    <span lang="ta" className="font-tamil text-xs text-[#38BDF8]">(ஆழம்)</span>
-                  </span>
-                  <span className="flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#A6F0CF] group-hover:translate-x-1 transition-transform">
-                    <span>Start Game</span>
-                    <ArrowRight className="size-3.5" aria-hidden="true" />
-                  </span>
-                </div>
-              </motion.article>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                {ARCADE_GAMES_CATALOG.filter((g) => g.category === "kollywood").map((game) => (
+                  <ArcadeGameCard key={game.slug} meta={game} />
+                ))}
+              </div>
             </div>
           </div>
         ) : (

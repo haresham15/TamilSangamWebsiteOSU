@@ -4,8 +4,9 @@
 // array behind the stage is the key and the only shadow caster; the performer stands in
 // silhouette on a riveted steel drum, the crowd fills the floor as layered silhouettes
 // with phone torches defocused into bokeh, spark gerbs fire from the deck, and haze holds
-// the light so the planes separate. Light hierarchy: backlight (key/rim) ≫ stage top
-// light > two sweeping heads > cool fill.
+// the light so the planes separate. The Sangam coin turns on a small plinth at centre stage,
+// polished gold lit by a truss spot and a warm front key, with the backlight as its rim.
+// Light hierarchy: backlight (key/rim) ≫ coin spots > two sweeping heads > cool fill.
 import React, { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
@@ -15,18 +16,18 @@ import { useDisposeOnUnmount } from "@/gl/dispose";
 import { ContactShadows, type ContactSpot } from "@/gl/art/ContactShadow";
 import { DustMotes, HazeLayer, LightShaft } from "@/gl/art/Atmosphere";
 import type { Vec3 } from "@/gl/art/geometry";
-import { Performer } from "../Performer";
+import { SangamLogo3D } from "../SangamLogo3D";
 import { PhoneTorches, type TorchSpot } from "../PhoneTorches";
 import { Backlight } from "./Backlight";
 import { ArenaCrowd } from "./ArenaCrowd";
 import { SparkFountains } from "./SparkFountains";
-import { HangingEmblem } from "./HangingEmblem";
 import {
   BACKLIGHT,
   BAY_Z,
   COLUMN_X,
   DECK_Y,
-  EMBLEM_POS,
+  COIN_POS,
+  COIN_RADIUS,
   LAMP_TILT,
   STAGE_RADIUS,
   TRUSS_LAMPS,
@@ -49,7 +50,7 @@ import {
 
 export type ForgeQuality = 0 | 1 | 2;
 
-// Back corners of the deck: the fountains rise beside the performer, above the crowd's heads.
+// Back corners of the deck: the fountains rise beside the coin, above the crowd's heads.
 const GERBS: Vec3[] = [
   [-2.0, DECK_Y, -1.1],
   [2.0, DECK_Y, -1.1],
@@ -125,8 +126,8 @@ export function ForgeArena({ quality }: { quality: ForgeQuality }) {
     const spots: ContactSpot[] = [{ position: [0, 0, 0], size: [(STAGE_RADIUS + 0.6) * 2.2, (STAGE_RADIUS + 0.6) * 2.2], opacity: 0.75 }];
     for (const z of BAY_Z) for (const x of [-COLUMN_X, COLUMN_X]) spots.push({ position: [x, 0, z], size: [1.3, 1.1], opacity: 0.7 });
     for (const sx of [-1, 1]) spots.push({ position: [BACKLIGHT[0] + sx * 2.07, 0, BACKLIGHT[2] - 0.2], size: [1.1, 1.0], opacity: 0.7 });
-    // The performer's feet on the deck, and a dark footprint under every member of the crowd.
-    spots.push({ position: [0, DECK_Y, 0], size: [0.95, 0.85], opacity: 0.9 });
+    // The coin's plinth on the deck, and a dark footprint under every member of the crowd.
+    spots.push({ position: [0, DECK_Y + 0.12, 0], size: [1.2, 0.7], opacity: 0.7 });
     // One soft pool per three people (they overlap anyway); every-member decals cost real overdraw.
     crowd.forEach((s, i) => {
       if (i % 3 === 0) spots.push({ position: [s.x, 0, s.z], size: [1.6 * s.scale, 1.1 * s.scale], opacity: 0.55 });
@@ -163,6 +164,11 @@ export function ForgeArena({ quality }: { quality: ForgeQuality }) {
           <planeGeometry args={[20, 3]} />
           <meshBasicMaterial color={[0.12, 0.06, 0.03]} toneMapped={false} side={THREE.DoubleSide} />
         </mesh>
+        {/* Warm wash so the polished gold reflects warmth, not the cold roof. */}
+        <mesh position={[0, 4, 10]}>
+          <planeGeometry args={[8, 3]} />
+          <meshBasicMaterial color={[0.6, 0.5, 0.22]} toneMapped={false} side={THREE.DoubleSide} />
+        </mesh>
       </BakedEnvironment>
 
       {/* Light hierarchy */}
@@ -170,14 +176,16 @@ export function ForgeArena({ quality }: { quality: ForgeQuality }) {
       <Backlight shadowMapSize={shadowMapSize} />
       <spotLight
         position={[0, TRUSS_Y - 0.6, TRUSS_Z + 0.3]}
-        target-position={[0, DECK_Y, 0]}
+        target-position={COIN_POS}
         color="#ffcf90"
-        intensity={30}
+        intensity={40}
         angle={0.36}
         penumbra={0.85}
         decay={2}
         userData={{ gradeRole: "rim" }}
       />
+      {/* Front key on the coin face (untagged: the grade's tier-B tint leaves it alone). */}
+      <spotLight position={[0, 5.2, 7.5]} target-position={COIN_POS} color="#fff0c4" intensity={55} angle={0.16} penumbra={0.6} decay={2} />
       {quality < 2 && <SweepingBeam source={[-4.9, TRUSS_Y - 0.3, TRUSS_Z]} phase={0} />}
       {quality < 2 && <SweepingBeam source={[4.9, TRUSS_Y - 0.3, TRUSS_Z]} phase={1.7} />}
 
@@ -194,8 +202,7 @@ export function ForgeArena({ quality }: { quality: ForgeQuality }) {
       {TRUSS_LAMPS.map((p, i) => (
         <mesh key={i} geometry={geometries.lens} material={materials.lens} position={p} rotation={[LAMP_TILT, 0, 0]} />
       ))}
-      <Backlit />
-      <HangingEmblem position={EMBLEM_POS} spotFrom={[0, TRUSS_Y - 0.2, TRUSS_Z - 0.4]} />
+      <SangamLogo3D variant="stage" position={COIN_POS} radius={COIN_RADIUS} />
 
       {/* Audience */}
       <ArenaCrowd slots={crowd} />
@@ -214,15 +221,5 @@ export function ForgeArena({ quality }: { quality: ForgeQuality }) {
         <LightShaft key={i} from={[x, y - 0.05, z]} to={[x * 0.3, DECK_Y, -0.3]} width={0.42} spread={3.6} color="#ffc27a" intensity={0.3} />
       ))}
     </>
-  );
-}
-
-/** The performer, dark, with the backlight catching the outline. */
-function Backlit() {
-  return (
-    <Performer
-      position={[0, DECK_Y, 0]}
-      backlit={{ color: "#ffb15c", lightPosition: BACKLIGHT, strength: 3.2 }}
-    />
   );
 }

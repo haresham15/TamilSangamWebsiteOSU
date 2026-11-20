@@ -111,3 +111,70 @@ export function evaluateFireball(p: number, index: number) {
     flash: active ? 12 * Math.exp(-age / 0.04) : 0,
   };
 }
+
+/** Offline blast lights (scripts/render-games-hybrid.py): colour (1, .22, .025) at (impact x, 1.5, -30). */
+export const BLAST_LIGHT_RGB = [1, 0.22, 0.025] as const;
+export const BLAST_LIGHT_Y = 1.5;
+export const BLAST_LIGHT_Z = -30;
+/** Converts the script's point-light watts to three.js units (the sun's 2.5 strength renders as 2.5π). */
+export const BLAST_LIGHT_GAIN = 2 * Math.PI;
+
+/** Blender point-light watts of blast `index` at p: a 24 kW flash plus a 9 kW glow. */
+export function blastWatts(p: number, index: number): number {
+  const blast = FIREBALLS[index];
+  if (p < blast.hit) return 0;
+  const age = (p - blast.hit) / 0.2;
+  return 24000 * Math.exp(-age / 0.035) + 9000 * Math.exp(-age * 2.8);
+}
+
+interface Vec3Out { x: number; y: number; z: number }
+
+/**
+ * Directional irradiance from all three blasts at point `at` (three.js light intensity units).
+ * Writes the energy-weighted unit direction from `at` toward the blasts into `outDirection` when given.
+ */
+export function blastEnergy(p: number, at: Vec3Out, outDirection?: Vec3Out): number {
+  let irradiance = 0;
+  let dx = 0;
+  let dy = 0;
+  let dz = 0;
+  for (let index = 0; index < FIREBALLS.length; index++) {
+    const watts = blastWatts(p, index);
+    if (watts === 0) continue;
+    const sx = FIREBALLS[index].x - at.x;
+    const sy = BLAST_LIGHT_Y - at.y;
+    const sz = BLAST_LIGHT_Z - at.z;
+    const lengthSq = sx * sx + sy * sy + sz * sz;
+    const energy = (BLAST_LIGHT_GAIN * watts) / (4 * Math.PI * lengthSq);
+    const inv = energy / Math.sqrt(lengthSq);
+    dx += sx * inv;
+    dy += sy * inv;
+    dz += sz * inv;
+    irradiance += energy;
+  }
+  if (outDirection) {
+    const length = Math.hypot(dx, dy, dz);
+    outDirection.x = length > 0 ? dx / length : 0;
+    outDirection.y = length > 0 ? dy / length : 0;
+    outDirection.z = length > 0 ? dz / length : 0;
+  }
+  return irradiance;
+}
+
+export interface FireballThermal {
+  /** 1 while hot, then exp(-(age - .48) · 4.8). */
+  cooling: number;
+  /** Peak blackbody temperature (K) of the hottest noise: 2200 + 3300 · cooling. */
+  temperature: number;
+  /** Volume emission gain (60 / 8 · cooling). */
+  heatGain: number;
+}
+
+/** Fireball cooling for blast age = (p - hit) / .2 (py:571-573). */
+export function fireballThermal(age: number, out: FireballThermal = { cooling: 0, temperature: 0, heatGain: 0 }): FireballThermal {
+  const cooling = Math.exp(-Math.max(0, age - 0.48) * 4.8);
+  out.cooling = cooling;
+  out.temperature = 2200 + 3300 * cooling;
+  out.heatGain = (60 / 8) * cooling;
+  return out;
+}

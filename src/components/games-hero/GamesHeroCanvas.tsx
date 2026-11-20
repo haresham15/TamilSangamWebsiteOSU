@@ -7,21 +7,16 @@ import { useRenderMode } from "@/components/providers/useRenderMode";
 import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 import { useLenis } from "@/components/providers/MotionProvider";
 import { registerSystem } from "@/engine/masterTick";
-import { GamesFocusScene } from "./GamesFocusScene";
+import { GamesFocusScene, gamesBeachQuality } from "./GamesFocusScene";
 import { gamesDiagnosticsEnabled, type GamesRenderDiagnostics } from "./compositor/GamesRenderDiagnostics";
 import { getDebugScrollProgress } from "./gamesRail";
 import { getGamesExitOpacity, mapGamesScrollProgress } from "./gamesScroll";
-import { HYBRID_MANIFEST_URL, HYBRID_POSTERS, HybridFrameCache, disposeForeground, loadForeground, mediaUrl, nearestSample, parseHybridManifest, type DecodedPlate, type HybridManifest, type HybridSample } from "./hybridMedia";
+import { disposeForeground, loadForeground } from "./handAsset";
+import { GAMES_POSTERS, posterBeatAt, posterUrl } from "./gamesPosters";
 import { useBootStore } from "@/engine/bootStore";
 import styles from "./gamesHero.module.css";
 
-const beats = [
-  { title: "The standoff" },
-  { title: "A closer look" },
-  { title: "Beach blast" },
-  { title: "The Sangam Arcade" },
-];
-const beatAt = (p: number) => p < 0.22 ? 0 : p < 0.52 ? 1 : p < 0.85 ? 2 : 3;
+const beatAt = posterBeatAt;
 
 export function GamesHeroCanvas() {
   const runway = useRef<HTMLElement>(null);
@@ -29,45 +24,49 @@ export function GamesHeroCanvas() {
   const frame = useRef<HTMLDivElement>(null);
   const intro = useRef<HTMLDivElement>(null);
   const wash = useRef<HTMLDivElement>(null);
-  const [plate, setPlate] = useState<DecodedPlate | null>(null);
   const [hand, setHand] = useState<Group | null>(null);
   const [loaded, setLoaded] = useState(false);
-  const [manifest, setManifest] = useState<HybridManifest | null>(null);
   const [failed, setFailed] = useState(false);
   const [exited, setExited] = useState(false);
-  const cache = useRef<HybridFrameCache | null>(null);
   const [portrait, setPortrait] = useState(() => (typeof window !== "undefined" ? window.matchMedia("(aspect-ratio < 13/10)").matches : false));
   const [hidden, setHidden] = useState(() => (typeof document !== "undefined" ? document.hidden : false));
-  const [drawnIndex, setDrawnIndex] = useState<number | null>(null);
+  const [drawn, setDrawn] = useState(false);
+  const drawnProgress = useRef<number | null>(null);
   const heroReady = useRef(false);
   const diagnostics = useRef<GamesRenderDiagnostics | null>(null);
-  const onReady = useCallback((index: number) => { heroReady.current = true; setDrawnIndex(index); }, []);
+  /** Per composite: the drawn progress goes straight to the DOM; React state changes once, on the first draw. */
+  const onReady = useCallback((progress: number) => {
+    heroReady.current = true;
+    drawnProgress.current = progress;
+    const text = progress.toFixed(3);
+    if (stage.current && stage.current.dataset.mediaProgress !== text) stage.current.dataset.mediaProgress = text;
+    setDrawn(true);
+  }, []);
   const lenis = useLenis();
-  const { mode } = useRenderMode();
+  const { mode, qualityLevel } = useRenderMode();
+  // Fixed at mount, as the Events hero does: the beach is built per quality and is not rebuilt mid-scroll.
+  const [quality] = useState(() => gamesBeachQuality(mode, qualityLevel));
   const debug = useMemo(() => getDebugScrollProgress(), []);
   const [cover] = useState(() => isHeroCinematicEnabled("games"));
   const [coldSkip] = useState(() => (typeof window !== "undefined" ? window.location.hash === "#arcade" : false));
   // Static (reduced motion, Lite, Tier C), a cold #arcade visit or a media failure: poster only.
-  // Portrait animates (commit a3b687c added portrait optics); it only picks the portrait plates.
+  // Portrait animates with its own optics; its posters are the portrait stills.
   const staticMode = mode === "static" || coldSkip || failed;
   // React state changes only when the beat changes; per-tick progress lives in refs and data-* attributes.
   const [beat, setBeat] = useState(() => beatAt(debug ?? 0));
   const [still, setStill] = useState(0);
   const progressRef = useRef(debug ?? 0);
   const beatRef = useRef(beat);
-  const sampleRef = useRef(-1);
-  const samplesRef = useRef<HybridSample[] | null>(null);
   const pastHeroRef = useRef(false);
   const exitedRef = useRef(false);
   const staticRef = useRef(staticMode);
   const skipping = useRef(false);
   const [inView, setInView] = useState(true);
   const active = !staticMode && !exited && inView;
-  const ready = active && loaded && drawnIndex === plate?.index;
-  const displayed = hand && plate ? plate.sample.p : 0;
+  const ready = active && loaded && drawn && Boolean(hand);
   const posterIndex = staticMode ? still : exited ? 3 : beat;
 
-  /** Writes per-tick progress to the DOM; touches React state only on a beat or nearest-sample change. */
+  /** Writes per-tick progress to the DOM; touches React state only on a beat change. */
   const applyProgress = useCallback((value: number) => {
     progressRef.current = value;
     const element = stage.current;
@@ -85,13 +84,12 @@ export function GamesHeroCanvas() {
       beatRef.current = nextBeat;
       setBeat(nextBeat);
     }
-    const samples = samplesRef.current;
-    const index = samples ? nearestSample(samples, value) : -1;
-    if (index !== sampleRef.current) {
-      sampleRef.current = index;
-      cache.current?.request(value, debug !== null && value === debug);
-    }
-  }, [debug]);
+  }, []);
+
+  // data-media-progress is written by onReady per composite, outside React's render.
+  useLayoutEffect(() => {
+    if (stage.current && !stage.current.dataset.mediaProgress) stage.current.dataset.mediaProgress = "0.000";
+  }, []);
 
   useLayoutEffect(() => {
     staticRef.current = staticMode;
@@ -109,7 +107,6 @@ export function GamesHeroCanvas() {
     const target = document.getElementById("arcade");
     if (!target) return;
     skipping.current = true;
-    cache.current?.dispose();
     exitedRef.current = true;
     setExited(true);
     applyProgress(1);
@@ -211,7 +208,6 @@ export function GamesHeroCanvas() {
     if (!active) return;
     const controller = new AbortController();
     let foreground: Group | null = null;
-    let frames: HybridFrameCache | null = null;
     let live = true;
     const fallback = () => { if (live) setFailed(true); };
     heroReady.current = false;
@@ -227,29 +223,15 @@ export function GamesHeroCanvas() {
     queueMicrotask(() => {
       if (!live) return;
       setLoaded(false);
-      setDrawnIndex(null);
-      setPlate(null);
+      setDrawn(false);
       setHand(null);
     });
-    fetch(HYBRID_MANIFEST_URL, { signal: controller.signal })
-      .then(response => { if (!response.ok) throw new Error("Hybrid manifest unavailable"); return response.json(); })
-      .then(async value => {
-        const data = parseHybridManifest(value);
-        if (debug !== null && !data.samples.some(sample => sample.p === debug)) throw new Error("Exact debug sample unavailable");
-        if (!live) return;
-        setManifest(data);
-        frames = new HybridFrameCache(data.samples, next => {
-          if (!live) return;
-          setPlate(next);
-        }, fallback);
-        cache.current = frames;
-        samplesRef.current = data.samples;
-        sampleRef.current = nearestSample(data.samples, progressRef.current);
-        frames.setActive(!document.hidden);
-        frames.request(progressRef.current, debug !== null && progressRef.current === debug);
-        foreground = await loadForeground(data.foreground, controller.signal);
-        if (!live) { disposeForeground(foreground); foreground = null; return; }
-        setHand(foreground);
+    // The beach is built in-process; the hand is the only download.
+    loadForeground(controller.signal)
+      .then(group => {
+        foreground = group;
+        if (!live) { disposeForeground(group); foreground = null; return; }
+        setHand(group);
         setLoaded(true);
       }).catch(() => { if (!controller.signal.aborted) fallback(); });
     return () => {
@@ -257,17 +239,11 @@ export function GamesHeroCanvas() {
       clearTimeout(deadline);
       document.removeEventListener("visibilitychange", updateDeadline);
       controller.abort();
-      frames?.dispose();
-      if (cache.current === frames) cache.current = null;
       if (foreground) disposeForeground(foreground);
-      queueMicrotask(() => { if (!cache.current) setLoaded(false); });
+      queueMicrotask(() => setLoaded(false));
     };
   }, [active, debug]);
 
-  useEffect(() => { cache.current?.setActive(!hidden); }, [hidden]);
-  useEffect(() => {
-    if (active && !hidden) cache.current?.request(progressRef.current, debug !== null && progressRef.current === debug);
-  }, [active, hidden, debug]);
   useEffect(() => {
     if (!gamesDiagnosticsEnabled) return;
     const host = window as unknown as { __gamesHero?: { setProgress: (p: number) => void; getProgress: () => number; getState: () => unknown } };
@@ -275,30 +251,28 @@ export function GamesHeroCanvas() {
       setProgress: (p) => {
         if (!Number.isFinite(p)) return;
         applyProgress(Math.max(0, Math.min(1, p)));
-        cache.current?.request(progressRef.current);
       },
       getProgress: () => progressRef.current,
-      getState: () => ({ cache: cache.current?.stats ?? null, drawnIndex, displayed, loaded, handReady: Boolean(hand), hidden, active, revision: manifest?.revision ?? null,
-        diagnostics: diagnostics.current?.snapshot(performance.now()) ?? null,
-        transferBytes: manifest ? { sequence: manifest.samples.reduce((sum, sample) => sum + sample.bytes, 0), foreground: manifest.foreground.bytes } : null }),
+      getState: () => ({ realtime: true, quality, drawn, displayed: drawnProgress.current, loaded, handReady: Boolean(hand), hidden, active,
+        diagnostics: diagnostics.current?.snapshot(performance.now()) ?? null }),
     };
     return () => { delete host.__gamesHero; };
-  }, [drawnIndex, displayed, loaded, hand, hidden, active, manifest, applyProgress]);
+  }, [quality, drawn, loaded, hand, hidden, active, applyProgress]);
 
   // Scroll updates keep the scene mounted; its frame callbacks read the continuous progress ref.
-  const scene = useMemo(() => active && loaded && hand && plate && <SceneView index={2} visible={!hidden} className={styles.view}>
-    <Suspense fallback={null}><GamesFocusScene progressRef={progressRef} plate={plate} hand={hand} stageRef={frame} onReady={onReady} diagnosticsRef={diagnostics} /></Suspense>
-  </SceneView>, [active, loaded, hand, plate, hidden, onReady]);
+  const scene = useMemo(() => active && loaded && hand && <SceneView index={2} visible={!hidden} className={styles.view}>
+    <Suspense fallback={null}><GamesFocusScene progressRef={progressRef} hand={hand} quality={quality} frozen={debug !== null} stageRef={frame} onReady={onReady} diagnosticsRef={diagnostics} /></Suspense>
+  </SceneView>, [active, loaded, hand, hidden, onReady, quality, debug]);
 
   return (
     <section ref={runway} className={styles.runway} data-static={staticMode || debug !== null} data-cover={cover} aria-label="Beach Blast">
-      <div ref={stage} className={styles.stage} data-hero-canvas="games" data-media-progress={displayed.toFixed(3)} data-frame={plate?.index ?? ""} data-asset-revision={manifest?.revision ?? ""} data-media-state={staticMode ? "static" : ready && hand && plate ? "ready" : "loading"}>
+      <div ref={stage} className={styles.stage} data-hero-canvas="games" data-media-state={staticMode ? "static" : ready ? "ready" : "loading"}>
         <a href="#arcade" className={styles.skip} onClick={(event) => { event.preventDefault(); skip(); }}>
           Skip to Arcade <span aria-hidden="true">↓</span>
         </a>
-        <div ref={frame} className={styles.frame} data-ready={drawnIndex !== null && active && loaded && Boolean(hand && plate)} data-hybrid={!staticMode} role="img" aria-label="A pair of black glasses frames three distant explosions on a sunlit beach before opening into The Sangam Arcade.">
+        <div ref={frame} className={styles.frame} data-ready={ready} data-realtime={!staticMode} role="img" aria-label="A pair of black glasses frames three distant explosions on a sunlit beach before opening into The Sangam Arcade.">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className={styles.poster} src={manifest ? mediaUrl(manifest.posters[portrait ? "portrait" : "landscape"][posterIndex]) : `/media/games-hybrid/v1/posters/${portrait ? "portrait-" : ""}${HYBRID_POSTERS[posterIndex]}.webp`} alt="" width={1912} height={800} fetchPriority="high" />
+          <img className={styles.poster} src={posterUrl(posterIndex, portrait)} alt="" width={1912} height={800} fetchPriority="high" />
           {scene}
         </div>
         <div className={styles.overlays}>
@@ -309,7 +283,7 @@ export function GamesHeroCanvas() {
           {staticMode && (
             <div className={styles.caption}>
               <div className={styles.stills} aria-label="Beach Blast stills">
-                {beats.map((item, index) => (
+                {GAMES_POSTERS.map((item, index) => (
                   <button key={item.title} type="button" aria-label={`Show ${item.title}`} aria-pressed={still === index} onClick={() => setStill(index)}>
                     {index + 1}
                   </button>

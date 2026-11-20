@@ -39,7 +39,7 @@ import { CANOPY, COACH, HALL, PLATFORM, SODIUM_LAMPS, SODIUM_LAMP_Y, SODIUM_LAMP
 import { Crowd } from "./Crowd";
 import { RainField, SplashRings } from "./RainField";
 
-export const STATION_ART_FOG = "#0e1620";
+export const STATION_ART_FOG = "#4e4452";
 const SODIUM = "#ffaa52";
 
 function useInstances(ref: React.RefObject<THREE.InstancedMesh | null>, transforms: Transform[]) {
@@ -54,15 +54,15 @@ function StationEnvironment() {
     <BakedEnvironment resolution={128}>
       <mesh position={[0, 40, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <planeGeometry args={[120, 120]} />
-        <meshBasicMaterial color={[0.035, 0.06, 0.1]} side={THREE.DoubleSide} />
+        <meshBasicMaterial color={[0.45, 0.32, 0.30]} side={THREE.DoubleSide} />
       </mesh>
       <mesh position={[0, 10, -40]}>
         <planeGeometry args={[90, 30]} />
-        <meshBasicMaterial color={[0.16, 0.25, 0.38]} side={THREE.DoubleSide} />
+        <meshBasicMaterial color={[1.4, 0.8, 0.45]} side={THREE.DoubleSide} />
       </mesh>
       <mesh position={[0, 6, 40]} rotation={[0, Math.PI, 0]}>
         <planeGeometry args={[90, 20]} />
-        <meshBasicMaterial color={[0.13, 0.19, 0.29]} side={THREE.DoubleSide} />
+        <meshBasicMaterial color={[0.35, 0.26, 0.26]} side={THREE.DoubleSide} />
       </mesh>
       {SODIUM_LAMPS.map((l) => (
         <mesh key={l.x} position={[l.x, SODIUM_LAMP_Y + 0.1, SODIUM_LAMP_Z]} rotation={[Math.PI / 2, 0, 0]}>
@@ -76,7 +76,7 @@ function StationEnvironment() {
       </mesh>
       <mesh position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[120, 120]} />
-        <meshBasicMaterial color={[0.01, 0.012, 0.016]} side={THREE.DoubleSide} />
+        <meshBasicMaterial color={[0.06, 0.045, 0.04]} side={THREE.DoubleSide} />
       </mesh>
     </BakedEnvironment>
   );
@@ -95,13 +95,14 @@ export function StationLights() {
 
   return (
     <>
-      <hemisphereLight args={["#4a72a3", "#07090c", 0.55]} userData={{ gradeRole: "fill" }} />
-      <directionalLight position={[-8, 20, -24]} intensity={0.9} color="#86aee0" userData={{ gradeRole: "rim" }} />
+      <hemisphereLight args={["#d9a88a", "#3a3038", 1.0]} userData={{ gradeRole: "fill" }} />
+      <directionalLight position={[-8, 20, -24]} intensity={1.4} color="#ffc8a0" userData={{ gradeRole: "rim" }} />
+      <directionalLight position={[-14, 6, -24]} intensity={1.6} color="#ffb070" userData={{ gradeRole: "key" }} />
       {SODIUM_LAMPS.filter((l) => l.lit).map((l) => (
         <pointLight
           key={l.x}
           position={[l.x, SODIUM_LAMP_Y - 0.08, SODIUM_LAMP_Z]}
-          intensity={36}
+          intensity={48}
           color={SODIUM}
           decay={2}
           userData={{ gradeRole: "key" }}

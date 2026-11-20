@@ -5,49 +5,53 @@ import { createPortal, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useTier } from "@/components/providers/TierProvider";
 import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
+import { qualityGovernor, renderScaleFor } from "@/engine/qualityGovernor";
 import { EyeglassHandRig } from "./EyeglassHandRig";
-import { projectWorldToScreen } from "./camera/projectionMath";
-import { DESIGN_ASPECT, FIREBALLS, evaluateCameraRail, evaluateFireball, evaluateForegroundRig, heroProjection } from "./gamesRail";
-import type { DecodedPlate } from "./hybridMedia";
-import { gamesDiagnosticsEnabled, GamesGpuTimer, GamesRenderDiagnostics } from "./compositor/GamesRenderDiagnostics";
+import { BeachWorld, type BeachQuality } from "./beach/BeachWorld";
+import { BlastFX } from "./beach/BlastFX";
+import { DESIGN_ASPECT, FIREBALLS, blastEnergy, evaluateCameraRail, evaluateFireball, evaluateForegroundRig, heroProjection } from "./gamesRail";
+import { gamesDiagnosticsEnabled, GamesGpuTimer, GamesRenderDiagnostics, type GamesStage } from "./compositor/GamesRenderDiagnostics";
 
 import {
   createLayeredFocusTargets,
   disposeLayeredFocusTargets,
 } from "./compositor/LayeredFocusCompositor";
 
-/** Plate view transform: Blender AgX at -0.7 EV ("Medium High Contrast" approximated by a log-space power). */
+/** View transform: Blender AgX at -0.7 EV ("Medium High Contrast" approximated by a log-space power). */
 const LOOK_EXPOSURE = 2 ** -0.7;
 const LOOK_POWER = 1.15;
-/** Display-referred grain peak shared by plate and live layers (keeps the neutral-ramp gate within 3 levels). */
+/** Display-referred grain peak shared by both layers. */
 const LOOK_GRAIN = 2 / 255;
 /** The offline sun (scripts/render-games-hybrid.py): position (12, 24, 14), strength 2.5. Blender's strength
- *  renders a facing white diffuse surface at 1.0 per unit; three's Lambert divides by π, hence the factor. */
+ *  renders a facing white diffuse surface at 1.0 per unit; three's Lambert divides by π, hence the factor.
+ *  BeachWorld's sun uses the same direction and intensity. */
 const SUN_DIRECTION = new THREE.Vector3(12, 24, 14).normalize();
 const SUN_INTENSITY = 2.5 * Math.PI;
-/** Offline blast lights: colour (1, .22, .025), 24 kW flash + 9 kW glow at (x, 1.5, -30); volumes roughly double it. */
+/** Offline blast lights: colour (1, .22, .025); the hand receives their full (unscaled) energy. */
 const BLAST_COLOR = new THREE.Color().setRGB(1, 0.22, 0.025);
-const BLAST_GAIN = 2 * Math.PI;
-const PLATE_OPTICS = heroProjection(DESIGN_ASPECT);
-/** Share of the plate's black floor given to the near-camera layer (veiling glare reaches it; haze mostly not). */
-const PLATE_BLACK_SHARE = 0.35;
-/** The plates' black floor, display-linear: mean of the darkest 3% of a 64×27 thumbnail, measured offline on
- *  the p .10 (in focus) and p .42 (baked defocus) frames. Interpolated by baked focus; no per-plate readback. */
-const PLATE_BLACK_SHARP = new THREE.Color().setRGB(0.074, 0.071, 0.064);
-const PLATE_BLACK_SOFT = new THREE.Color().setRGB(0.086, 0.082, 0.074);
-/** Desktop cover-crop: the poster's CSS object-position (75%) and the compositor share this crop anchor. */
+/** Desktop cover-crop: the poster's CSS object-position (75%) and both cameras share this crop anchor. */
 const COVER_ANCHOR = 0.75;
+/**
+ * Per quality (0 best): background resolution scale and MSAA. Every level keeps 2× MSAA: 4× on the HalfFloat
+ * target pushed an integrated GPU (Iris Xe) past the 20 ms p95 budget, and the composite's FXAA fallback
+ * re-evaluates the whole composite nine times per pixel, which cost far more than 2× MSAA on phones (tiled
+ * GPUs resolve MSAA on chip) and stalled software renderers for seconds per frame.
+ */
+const BACKGROUND_SCALE = [0.85, 0.75, 0.55] as const;
+const BACKGROUND_SAMPLES = [2, 2, 2] as const;
+/** Background re-renders forced after mount so BeachWorld's held sun shadow is drawn (it warms up 3 frames). */
+const SHADOW_WARMUP_FRAMES = 4;
 
 /**
- * Daylight probe built from the plate's own sky, horizon and sand, so acetate reflects the scene it sits in.
- * An equirect data texture: the renderer prefilters it itself inside the foreground pass (a PMREM baked
- * from React render time came out black on the shared canvas).
+ * Daylight probe for the hand and acetate: the beach's sky, horizon and sand as an equirect data texture
+ * (the renderer prefilters it itself inside the foreground pass; a PMREM baked from React render time came
+ * out black on the shared canvas).
  */
-function createPlateProbe() {
+function createDaylightProbe() {
   const width = 128;
   const height = 64;
   const data = new Float32Array(width * height * 4);
-  // Scene-linear radiance in the offline sun's units (pre -0.7 EV), matched to plate sky/horizon/sand values.
+  // Scene-linear radiance in the offline sun's units (pre -0.7 EV), matched to the beach's sky/horizon/sand.
   const zenith = new THREE.Color("#b4c4da").multiplyScalar(1.9);
   const horizon = new THREE.Color("#ece5da").multiplyScalar(2.2);
   const shore = new THREE.Color("#c8baa6").multiplyScalar(0.9);
@@ -69,21 +73,46 @@ function createPlateProbe() {
   return texture;
 }
 
+/**
+ * Beach quality from the render mode, fixed by the caller at mount (as the Events hero does): rebuilding the
+ * beach mid-scroll would itself cause a hitch. 0 desktop Tier A · 1 Tier B · 2 mobile.
+ */
+export function gamesBeachQuality(mode: "static" | "B" | "A", qualityLevel: number): BeachQuality {
+  const mobile = typeof window !== "undefined" && window.matchMedia("(pointer: coarse), (max-width: 767px)").matches;
+  if (mobile) return 2;
+  if (mode === "B") return Math.max(1, Math.min(qualityLevel, 2)) as BeachQuality;
+  return Math.min(qualityLevel, 2) as BeachQuality;
+}
+
+/** CPU rasterisers (SwiftShader, llvmpipe, WARP) cannot fill a full-resolution HDR beach; they get quality 2. */
+function isSoftwareRenderer(gl: THREE.WebGLRenderer) {
+  const context = gl.getContext();
+  const info = context.getExtension("WEBGL_debug_renderer_info");
+  const name = String(context.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : context.RENDERER) ?? "");
+  return /swiftshader|llvmpipe|softpipe|software|basic render/i.test(name);
+}
+
 interface GamesFocusSceneProps {
   progressRef: RefObject<number>;
-  plate: DecodedPlate;
   hand: THREE.Group;
+  /** Fixed for the life of the scene (see gamesBeachQuality). */
+  quality: BeachQuality;
+  /** Holds ambient motion (sea, palms, grain) so a fixed progress renders identical frames (?debug). */
+  frozen?: boolean;
   stageRef?: RefObject<HTMLElement | null>;
-  onReady?: (index: number) => void;
+  /** Called after each visible composite with the progress it drew. */
+  onReady?: (progress: number) => void;
   diagnosticsRef?: RefObject<GamesRenderDiagnostics | null>;
 }
 
-export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, diagnosticsRef }: GamesFocusSceneProps) {
+export function GamesFocusScene({ progressRef, hand, quality: requestedQuality, frozen = false, stageRef, onReady, diagnosticsRef }: GamesFocusSceneProps) {
   const lastDraw = useRef("");
   const visibleDraw = useRef(false);
+  const drawnProgress = useRef(0);
   const compositeStart = useRef(0);
-  const uploadedVersion = useRef(-1);
+  const warmup = useRef(SHADOW_WARMUP_FRAMES);
   const gl = useThree((state) => state.gl);
+  const quality = useMemo<BeachQuality>(() => isSoftwareRenderer(gl) ? 2 : requestedQuality, [gl, requestedQuality]);
   const size = useThree((state) => state.size);
   const tier = useTier();
   const cinematic = useMemo(() => isHeroCinematicEnabled("games"), []);
@@ -100,22 +129,16 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
       if (diagnosticsRef?.current === diagnostics) diagnosticsRef.current = null;
     };
   }, [diagnostics, diagnosticsRef, gpuTimer]);
-  const plateTexture = useMemo(() => {
-    const texture = new THREE.Texture();
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.generateMipmaps = false;
-    texture.minFilter = THREE.LinearFilter;
-    return texture;
-  }, []);
-  useEffect(() => () => plateTexture.dispose(), [plateTexture]);
 
   const resources = useMemo(() => {
-    const targets = createLayeredFocusTargets(gl, tier as "A" | "B" | "C");
+    const targets = createLayeredFocusTargets(gl, tier as "A" | "B" | "C", BACKGROUND_SAMPLES[quality]);
     const foregroundScene = new THREE.Scene();
+    // BeachWorld sets this scene's fog and environment while mounted; the sky dome covers the clear colour.
+    const backgroundScene = new THREE.Scene();
     let environment: THREE.WebGLRenderTarget | null = null;
     let probe: THREE.DataTexture | null = null;
     if (cinematic) {
-      probe = createPlateProbe();
+      probe = createDaylightProbe();
     } else {
       // Small daylight reflection probe; matches the offline sun direction without shipping an HDRI.
       const generator = new THREE.PMREMGenerator(gl);
@@ -133,7 +156,7 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
     }
     foregroundScene.environment = probe ?? environment!.texture;
     foregroundScene.environmentIntensity = 1;
-    // One shadow caster: the offline sun, framed tightly on the rig so fingers shade the temple they pinch.
+    // One shadow caster per layer: here the sun, framed tightly on the rig so fingers shade the temple they pinch.
     const key = new THREE.DirectionalLight(new THREE.Color("#fff3e6"), SUN_INTENSITY);
     const fire = new THREE.DirectionalLight(BLAST_COLOR, 0);
     if (cinematic) {
@@ -147,23 +170,27 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
     }
     targets.compositeMaterial.uniforms.uSkyReflection.value.set("#c9d3de");
     const foregroundCamera = new THREE.PerspectiveCamera(34, 2.39, 0.01, 2);
+    // The beach runs ~370 m out and its sky dome sits at the far plane.
+    const backgroundCamera = new THREE.PerspectiveCamera(34, 2.39, 0.3, 600);
     return {
       ...targets,
       foregroundScene,
+      backgroundScene,
       environment,
       probe,
       key,
       fire,
       fireDirection: new THREE.Vector3(),
-      fireStep: new THREE.Vector3(),
+      heatPoint: new THREE.Vector3(),
       skyColor: new THREE.Color("#BFE6EA"),
       groundColor: new THREE.Color("#B7A389"),
       foregroundCamera,
+      backgroundCamera,
       savedViewport: new THREE.Vector4(),
       savedScissor: new THREE.Vector4(),
       savedClearColor: new THREE.Color(),
     };
-  }, [gl, tier, cinematic]);
+  }, [gl, tier, cinematic, quality]);
 
   useEffect(() => () => {
     disposeLayeredFocusTargets(resources);
@@ -173,7 +200,10 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
     resources.key.dispose();
     resources.fire.dispose();
   }, [resources]);
-  useEffect(() => { lastDraw.current = ""; }, [resources, plateTexture]);
+  useEffect(() => {
+    lastDraw.current = "";
+    warmup.current = SHADOW_WARMUP_FRAMES;
+  }, [resources]);
   const measureForegroundMemory = () => {
     if (!diagnostics) return;
     const arrays = new Set<ArrayBufferView>();
@@ -201,7 +231,7 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
 
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.05);
-    // Every pass below is a pure function of progress and the displayed plate; dt only rejects a non-finite clock.
+    // Every pass below is a pure function of progress (plus BeachWorld's own sea/palm clock, held when frozen).
     if (!Number.isFinite(dt)) return;
     const scrollP = progressRef.current;
     visibleDraw.current = false;
@@ -212,62 +242,45 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
     const height = rect?.height ?? size.height;
     if (width <= 0 || height <= 0) return;
     visibleDraw.current = true;
+    drawnProgress.current = scrollP;
     gpuTimer?.poll();
     const viewAspect = height > 0 ? width / height : DESIGN_ASPECT;
     const isPortrait = viewAspect < 1.3;
     const optics = heroProjection(viewAspect);
     const rig = evaluateForegroundRig(scrollP, viewAspect);
-    // A held pose reuses its foreground/mask/blur passes until its plate or optics change.
-    const drawKey = `${resources.foreground.texture.uuid}:${plate.index}:${rig.position.toArray()}:${rig.rotation.toArray()}:${rig.opacity}:${scrollP >= 0.58}:${width}:${height}:${gl.getPixelRatio()}`;
-    if (lastDraw.current === drawKey) return;
-    // Fixed-size plates reuse Three's texture storage; only the pixels change.
-    if (plateTexture.image !== plate.image) {
-      plateTexture.image = plate.image;
-      plateTexture.needsUpdate = true;
-    }
-
-    const rail = evaluateCameraRail(plate.sample.p, 0, viewAspect);
+    const rail = evaluateCameraRail(scrollP, 0, viewAspect);
     const foregroundOpacity = rig.opacity;
     const cropHalf = 0.5 * Math.min(1, viewAspect / DESIGN_ASPECT);
     const cropCenter = cinematic && !isPortrait ? COVER_ANCHOR + 2 * cropHalf * (0.5 - COVER_ANCHOR) : 0.5;
 
     const r = resources;
-    r.foregroundCamera.position.set(optics.cameraX, 1.65, 6);
-    r.foregroundCamera.rotation.set(0, 0, 0);
-    r.foregroundCamera.fov = optics.fovDeg;
-    for (const camera of [r.foregroundCamera]) {
+    // One lens for both layers: same position, FOV, horizon shift and cover-crop shift.
+    for (const camera of [r.foregroundCamera, r.backgroundCamera]) {
+      camera.position.set(optics.cameraX, 1.65, 6);
+      camera.rotation.set(0, 0, 0);
+      camera.fov = optics.fovDeg;
       camera.aspect = viewAspect;
       camera.updateProjectionMatrix();
       camera.projectionMatrix.elements[9] = -rail.lensShift;
-      // Desktop cover-crop (1.3 ≤ aspect < 2.39): the plate keeps its vertical FOV and is cropped sideways
-      // around cropCenter; shift the live camera's frustum by the same amount so registration holds.
+      // Desktop cover-crop (1.3 ≤ aspect < 2.39): keep the vertical FOV and crop sideways around cropCenter.
       if (cinematic && !isPortrait && viewAspect < DESIGN_ASPECT) camera.projectionMatrix.elements[8] = (cropCenter - 0.5) / cropHalf;
       camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+      camera.updateMatrixWorld();
     }
 
+    let fireIntensity = 0;
     if (cinematic) {
       // Key follows the rig so its tight shadow frustum stays on the glasses; direction is the offline sun's.
       r.key.target.position.copy(rig.position);
       r.key.position.copy(rig.position).addScaledVector(SUN_DIRECTION, 0.7);
       r.key.target.updateMatrixWorld();
-      // Blast light from the displayed plate's fireballs, using the offline light energy and colour.
-      const direction = r.fireDirection.set(0, 0, 0);
-      let irradiance = 0;
-      for (let index = 0; index < FIREBALLS.length; index++) {
-        const blast = FIREBALLS[index];
-        if (plate.sample.p < blast.hit) continue;
-        const age = (plate.sample.p - blast.hit) / 0.2;
-        const watts = 24000 * Math.exp(-age / 0.035) + 9000 * Math.exp(-age * 2.8);
-        const step = r.fireStep.set(blast.x, 1.5, -30).sub(rig.position);
-        const energy = BLAST_GAIN * watts / (4 * Math.PI * step.lengthSq());
-        direction.addScaledVector(step.normalize(), energy);
-        irradiance += energy;
-      }
-      r.fire.intensity = irradiance;
-      r.fire.visible = irradiance > 0.002;
-      if (irradiance > 0) {
+      // The blasts light the hand with their full offline energy (the beach's point light is scaled separately).
+      fireIntensity = blastEnergy(scrollP, rig.position, r.fireDirection);
+      r.fire.intensity = fireIntensity;
+      r.fire.visible = fireIntensity > 0.002;
+      if (fireIntensity > 0) {
         r.fire.target.position.copy(rig.position);
-        r.fire.position.copy(rig.position).add(direction.normalize());
+        r.fire.position.copy(rig.position).add(r.fireDirection);
         r.fire.target.updateMatrixWorld();
       }
     }
@@ -282,7 +295,17 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
       const h = Math.max(1, Math.round(targetHeight * scale));
       if (target.width !== w || target.height !== h) target.setSize(w, h);
     };
-    if (foregroundOpacity > 0) {
+    // The adaptive governor's measured step lowers the live background's resolution without a rebuild (held under ?debug).
+    const backgroundScale = BACKGROUND_SCALE[quality] * (frozen ? 1 : renderScaleFor(qualityGovernor.getLevel()));
+    resize(r.background, backgroundScale);
+    // Bokeh resolution follows the radius: wide blur runs at quarter size so bilinear taps overlap (no ghost copies).
+    const bokehScale = rail.backgroundBokeh > 8 ? 0.25 : 0.5;
+    resize(r.backgroundBlur, bokehScale);
+    resize(r.backgroundBlurScratch, bokehScale);
+    // A held pose reuses its foreground/mask/blur passes until the rig, its light, focus or optics change.
+    const drawKey = `${r.foreground.texture.uuid}:${rig.position.toArray()}:${rig.rotation.toArray()}:${rig.opacity}:${rail.foregroundBlur}:${fireIntensity.toPrecision(4)}:${width}:${height}:${gl.getPixelRatio()}`;
+    const foregroundStale = lastDraw.current !== drawKey;
+    if (foregroundStale && foregroundOpacity > 0) {
       // Tier A defocuses from a full-resolution layer (not 3/4) so the out-of-focus hand keeps a clean edge.
       resize(r.foreground, rail.foregroundBlur > 0 && !(cinematic && tier === "A") ? 0.75 : 1);
       resize(r.mask, 0.25);
@@ -298,13 +321,13 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
     const oldXrEnabled = gl.xr.enabled;
     const oldOverride = r.foregroundScene.overrideMaterial;
     const oldShadowAuto = gl.shadowMap.autoUpdate;
+    const oldShadowNeedsUpdate = gl.shadowMap.needsUpdate;
     const oldLayers = r.foregroundCamera.layers.mask;
     gl.getViewport(r.savedViewport);
     gl.getScissor(r.savedScissor);
     gl.getClearColor(r.savedClearColor);
 
-    const draw = (target: THREE.WebGLRenderTarget, scene: THREE.Scene, camera: THREE.Camera,
-      pass: "foreground" | "mask" | "foregroundBlurX" | "foregroundBlurY" | "maskBlurX" | "maskBlurY") => {
+    const draw = (target: THREE.WebGLRenderTarget, scene: THREE.Scene, camera: THREE.Camera, pass: GamesStage) => {
       const start = diagnostics ? performance.now() : 0;
       gpuTimer?.begin(pass);
       try {
@@ -316,20 +339,20 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
         diagnostics?.record(pass, "cpu", performance.now() - start);
       }
     };
-    const blur = (source: THREE.WebGLRenderTarget, destination: THREE.WebGLRenderTarget,
-      radius: number) => {
+    /** Separable blur: X into `scratch`, Y back into `source` (its pixels are consumed; next frame redraws it). */
+    const blur = (source: THREE.WebGLRenderTarget, scratch: THREE.WebGLRenderTarget, radius: number,
+      clamp: number, passes: [GamesStage, GamesStage]) => {
       if (radius <= 0) return source.texture;
       const uniforms = r.blurMaterial.uniforms;
       uniforms.uSource.value = source.texture;
-      // Highlight clamp only on the colour layer's first pass (scene-linear units; the mask is 0-1).
-      uniforms.uClamp.value = cinematic && destination === r.foregroundBlur ? 1.6 : 0;
+      // Highlight clamp only on the first pass (scene-linear units).
+      uniforms.uClamp.value = clamp;
       uniforms.uRadius.value.set(radius / 1440, 0);
-      draw(destination, r.passScene, r.passCamera, destination === r.foregroundBlur ? "foregroundBlurX" : "maskBlurX");
-      // Reuse the original target after its pixels have been consumed; next frame redraws it.
-      uniforms.uSource.value = destination.texture;
+      draw(scratch, r.passScene, r.passCamera, passes[0]);
+      uniforms.uSource.value = scratch.texture;
       uniforms.uClamp.value = 0;
       uniforms.uRadius.value.set(0, radius * viewAspect / 1440);
-      draw(source, r.passScene, r.passCamera, destination === r.foregroundBlur ? "foregroundBlurY" : "maskBlurY");
+      draw(source, r.passScene, r.passCamera, passes[1]);
       return source.texture;
     };
 
@@ -338,70 +361,93 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
       gl.xr.enabled = false;
       gl.setScissorTest(false);
       gl.setClearColor(0x000000, 0);
-      if (uploadedVersion.current !== plateTexture.version) {
-        const start = diagnostics ? performance.now() : 0;
-        gpuTimer?.begin("upload");
-        try { gl.initTexture(plateTexture); }
-        finally { gpuTimer?.end(); diagnostics?.record("upload", "cpu", performance.now() - start); }
-        uploadedVersion.current = plateTexture.version;
+      gl.shadowMap.autoUpdate = false;
+
+      // Live beach, every visible frame. Its sun shadow is held per light; let the renderer's shadow pass run
+      // for the first frames so BeachWorld's warm-up draws it.
+      gl.shadowMap.needsUpdate = warmup.current > 0;
+      if (warmup.current > 0) warmup.current--;
+      draw(r.background, r.backgroundScene, r.backgroundCamera, "background");
+      gl.shadowMap.needsUpdate = false;
+      // Uniform bokeh: the beach sits 25–64 m out while focus pulls to 0.36 m, so blur varies <3% across it.
+      // Two separable iterations (radius, then 0.8 × radius) give a smooth, wide kernel from the 9-tap pass.
+      let background = r.background.texture;
+      if (rail.backgroundBokeh > 0) {
+        const uniforms = r.blurMaterial.uniforms;
+        uniforms.uClamp.value = 0;
+        let source = r.background.texture;
+        for (const radius of [rail.backgroundBokeh, rail.backgroundBokeh * 0.8]) {
+          uniforms.uSource.value = source;
+          uniforms.uRadius.value.set(radius / 1440, 0);
+          draw(r.backgroundBlurScratch, r.passScene, r.passCamera, "backgroundBlurX");
+          uniforms.uSource.value = r.backgroundBlurScratch.texture;
+          uniforms.uRadius.value.set(0, radius * viewAspect / 1440);
+          draw(r.backgroundBlur, r.passScene, r.passCamera, "backgroundBlurY");
+          source = r.backgroundBlur.texture;
+        }
+        background = source;
       }
-      if (foregroundOpacity > 0 || lastDraw.current === "") {
+
+      if (foregroundStale && (foregroundOpacity > 0 || lastDraw.current === "")) {
         // The rig's shadow map renders once, with the colour pass; never again for the mask pass.
-        const shadowPending = gl.shadowMap.needsUpdate;
-        gl.shadowMap.autoUpdate = false;
         gl.shadowMap.needsUpdate = cinematic;
         draw(r.foreground, r.foregroundScene, r.foregroundCamera, "foreground");
         gl.shadowMap.needsUpdate = false;
         r.foregroundCamera.layers.set(2);
         r.foregroundScene.overrideMaterial = r.maskMaterial;
         draw(r.mask, r.foregroundScene, r.foregroundCamera, "mask");
-        gl.shadowMap.needsUpdate = shadowPending;
         r.foregroundScene.overrideMaterial = oldOverride;
         r.foregroundCamera.layers.mask = oldLayers;
       }
 
       const uniforms = r.compositeMaterial.uniforms;
-      // WebGL sRGB texture sampling decodes baked display color; never blur or tone-map the plate again.
-      if (uniforms.uBackground) uniforms.uBackground.value = plateTexture;
-      if (uniforms.uForeground) uniforms.uForeground.value = foregroundOpacity > 0
-        ? blur(r.foreground, r.foregroundBlur, rail.foregroundBlur) : r.foreground.texture;
-      if (uniforms.uLensMask) uniforms.uLensMask.value = foregroundOpacity > 0
-        ? blur(r.mask, r.maskBlur, rail.foregroundBlur) : r.mask.texture;
-      if (uniforms.uForegroundOpacity) uniforms.uForegroundOpacity.value = foregroundOpacity;
-      if (uniforms.uLensPop) uniforms.uLensPop.value = THREE.MathUtils.smoothstep(plate.sample.p, 0.52, 0.64);
-      if (uniforms.uTexel) uniforms.uTexel.value.set(1 / targetWidth, 1 / targetHeight);
-      if (uniforms.toneMappingExposure) uniforms.toneMappingExposure.value = gl.toneMappingExposure;
-      if (uniforms.uAspect) uniforms.uAspect.value = viewAspect;
-      if (uniforms.uTextureAspect) uniforms.uTextureAspect.value = DESIGN_ASPECT;
-      if (uniforms.uBgCenterX) uniforms.uBgCenterX.value = isPortrait ? 0.70 : cropCenter;
+      uniforms.uBackground.value = background;
+      uniforms.uBackgroundLinear.value = 1;
+      if (foregroundStale) {
+        uniforms.uForeground.value = foregroundOpacity > 0
+          ? blur(r.foreground, r.foregroundBlur, rail.foregroundBlur, cinematic ? 1.6 : 0, ["foregroundBlurX", "foregroundBlurY"]) : r.foreground.texture;
+        uniforms.uLensMask.value = foregroundOpacity > 0
+          ? blur(r.mask, r.maskBlur, rail.foregroundBlur, 0, ["maskBlurX", "maskBlurY"]) : r.mask.texture;
+      }
+      uniforms.uForegroundOpacity.value = foregroundOpacity;
+      uniforms.uLensPop.value = THREE.MathUtils.smoothstep(scrollP, 0.52, 0.64);
+      uniforms.uTexel.value.set(1 / targetWidth, 1 / targetHeight);
+      uniforms.toneMappingExposure.value = cinematic ? LOOK_EXPOSURE : gl.toneMappingExposure;
+      uniforms.uAspect.value = viewAspect;
+      // The background is rendered through the same lens as the view: no texture crop.
+      uniforms.uTextureAspect.value = 0;
+      uniforms.uBgCenterX.value = 0.5;
       uniforms.uLook.value = cinematic ? 1 : 0;
+      uniforms.uLookPower.value = cinematic ? LOOK_POWER : 1;
       if (cinematic) {
-        uniforms.toneMappingExposure.value = LOOK_EXPOSURE;
-        uniforms.uLookPower.value = LOOK_POWER;
         uniforms.uGrain.value = LOOK_GRAIN;
-        uniforms.uGrainSeed.value = plate.index;
-        uniforms.uPlateBlack.value.copy(PLATE_BLACK_SHARP).lerp(PLATE_BLACK_SOFT, rail.backgroundBokeh / 24).multiplyScalar(PLATE_BLACK_SHARE);
+        uniforms.uGrainSeed.value = Math.round(scrollP * 400);
         uniforms.uFgSoft.value = rail.foregroundBlur > 0 ? 0 : 0.55;
-        uniforms.uHeatPhase.value = plate.sample.p * 60;
+        uniforms.uHeatPhase.value = scrollP * 60;
         const heat = uniforms.uHeat.value as THREE.Vector4[];
         for (let index = 0; index < FIREBALLS.length; index++) {
           const blast = FIREBALLS[index];
-          const state = evaluateFireball(plate.sample.p, index);
-          if (plate.sample.p < blast.hit) { heat[index].set(0, 0, 1, 0); continue; }
-          // Plate UV (y up) of the fire body; haze rises from there over the trees and sky.
-          const base = projectWorldToScreen({ x: blast.x, y: state.height + state.radius * 0.35, z: -30 }, PLATE_OPTICS);
-          const halfWidth = Math.max(0.01, state.radius / (base.d * PLATE_OPTICS.tanH));
-          heat[index].set(base.u, 1 - base.v, halfWidth, THREE.MathUtils.smoothstep(state.age, 0, 0.05) * (0.35 + 0.65 * Math.exp(-1.4 * state.age)));
+          if (scrollP < blast.hit) { heat[index].set(0, 0, 1, 0); continue; }
+          const state = evaluateFireball(scrollP, index);
+          // Screen UV (y up) of the fire body through the live lens; haze rises from there over the trees and sky.
+          const base = r.heatPoint.set(blast.x, state.height + state.radius * 0.35, -30).project(r.backgroundCamera);
+          const u = 0.5 * (base.x + 1);
+          const v = 0.5 * (base.y + 1);
+          const edge = r.heatPoint.set(blast.x + state.radius, state.height + state.radius * 0.35, -30).project(r.backgroundCamera);
+          const halfWidth = Math.max(0.01, Math.abs(edge.x + 1 - 2 * u));
+          heat[index].set(u, v, halfWidth, THREE.MathUtils.smoothstep(state.age, 0, 0.05) * (0.35 + 0.65 * Math.exp(-1.4 * state.age)));
         }
       }
       if (diagnostics) {
         if (!diagnostics.memory.foregroundGeometryBufferBytes) measureForegroundMemory();
-        const targets = [r.foreground, r.mask, r.foregroundBlur, r.maskBlur];
-        diagnostics.memory = { ...diagnostics.memory, plateTextureId: plateTexture.uuid,
-          plateTextureBytes: plate.image.width * plate.image.height * 4,
+        const targets = [r.background, r.backgroundBlur, r.backgroundBlurScratch, r.foreground, r.mask, r.foregroundBlur, r.maskBlur];
+        diagnostics.memory = { ...diagnostics.memory,
+          backgroundTargetBytes: r.background.width * r.background.height * (r.hdr ? 8 : 4),
+          backgroundQuality: quality,
           targetColorBytes: targets.reduce((sum, target) => sum + target.width * target.height * (target.texture.type === THREE.HalfFloatType ? 8 : 4), 0),
-          depthAttachmentBytes: r.foreground.width * r.foreground.height * 4,
-          multisampleAttachmentBytes: r.foreground.width * r.foreground.height * r.foreground.samples * ((r.hdr ? 8 : 4) + 4),
+          depthAttachmentBytes: (r.foreground.width * r.foreground.height + r.background.width * r.background.height) * 4,
+          multisampleAttachmentBytes: r.foreground.width * r.foreground.height * r.foreground.samples * ((r.hdr ? 8 : 4) + 4)
+            + r.background.width * r.background.height * r.background.samples * ((r.hdr ? 8 : 4) + 4),
           sharedRendererTextures: gl.info.memory.textures, sharedRendererGeometries: gl.info.memory.geometries,
           qualification: "RGBA storage estimates exclude driver/browser overhead and shared resources; renderer counts are not byte totals" };
       }
@@ -417,16 +463,21 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
       gl.autoClear = oldAutoClear;
       gl.xr.enabled = oldXrEnabled;
       gl.shadowMap.autoUpdate = oldShadowAuto;
+      gl.shadowMap.needsUpdate = oldShadowNeedsUpdate;
     }
   }, 1.5);
 
   return (
     <>
       {createPortal(<>
+        <BeachWorld quality={quality} frozen={frozen} />
+        <BlastFX progressRef={progressRef} quality={quality} />
+      </>, resources.backgroundScene, { camera: resources.backgroundCamera })}
+      {createPortal(<>
         {!cinematic && <>
           <hemisphereLight args={[resources.skyColor, resources.groundColor, 1.2]} />
           <directionalLight position={[12, 24, 14]} intensity={2.5} />
-          <pointLight position={[0.43, 2.9, 4.5]} color="orange" intensity={Math.max(...FIREBALLS.map((_, index) => evaluateFireball(plate.sample.p, index).flash)) * 0.12} distance={4} />
+          <LegacyBlastLight progressRef={progressRef} />
         </>}
         <EyeglassHandRig progressRef={progressRef} hand={hand} cinematic={cinematic} />
       </>, resources.foregroundScene, { camera: resources.foregroundCamera })}
@@ -437,11 +488,25 @@ export function GamesFocusScene({ progressRef, plate, hand, stageRef, onReady, d
           gpuTimer?.begin("composite");
         }} onAfterRender={() => {
           if (!visibleDraw.current || document.hidden) return;
+          const drawn = drawnProgress.current;
           gpuTimer?.end();
           diagnostics?.record("composite", "cpu", performance.now() - compositeStart.current);
-          diagnostics?.complete(performance.now(), plate.index, progressRef.current, plate.sample.p);
-          onReady?.(plate.index);
+          diagnostics?.complete(performance.now(), Math.round(drawn * 1000), progressRef.current, drawn);
+          onReady?.(drawn);
         }} />
     </>
   );
+}
+
+/** Legacy (?cinematic_games=0) orange fill on the hand, driven by the brightest blast flash. */
+function LegacyBlastLight({ progressRef }: { progressRef: RefObject<number> }) {
+  const light = useRef<THREE.PointLight>(null);
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (!light.current || dt < 0) return;
+    let flash = 0;
+    for (let index = 0; index < FIREBALLS.length; index++) flash = Math.max(flash, evaluateFireball(progressRef.current, index).flash);
+    light.current.intensity = flash * 0.12;
+  });
+  return <pointLight ref={light} position={[0.43, 2.9, 4.5]} color="orange" intensity={0} distance={4} />;
 }

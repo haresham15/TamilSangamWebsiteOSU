@@ -3,7 +3,7 @@
  * Keep Three.js color literals centralized here; JSX only consumes named roles.
  */
 export const guideStationPalette = {
-  fog: "#0A0F14",
+  fog: "#463E4C",
   haze: "#14283A",
   hazeBright: "#2A4A63",
   coach: "#1B334B", // Rich Prussian Blue-Teal (never pitch-black!)
@@ -21,5 +21,5 @@ export const guideStationPalette = {
   rim: "#68A8E8", // Cool blue-hour moonlight rim
 } as const;
 
-export const GUIDE_STATION_FOG_DENSITY = 0.018;
+export const GUIDE_STATION_FOG_DENSITY = 0.014;
 

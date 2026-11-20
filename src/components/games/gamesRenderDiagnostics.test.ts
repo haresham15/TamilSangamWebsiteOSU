@@ -26,12 +26,12 @@ it("focus kernel gives the proposed soft edge width at the existing 18px radius"
 });
 
 describe("visible composite diagnostics", () => {
-  it("counts completed composites, separates plate advancement and expires idle FPS", () => {
+  it("counts completed composites, separates scene advancement and expires idle FPS", () => {
     const diagnostics = new GamesRenderDiagnostics();
     for (let i = 0; i < 60; i++) diagnostics.complete(i * 1000 / 60, 4, i / 100, 0.1);
     const moving = diagnostics.snapshot(1000);
     expect(moving.completedComposites).toBe(60);
-    expect(moving.plateAdvances).toBe(1);
+    expect(moving.progressAdvances).toBe(1);
     expect(moving.compositesLastSecond).toBe(59);
     expect(moving.lastDraw).toMatchObject({ index: 4, requested: 0.59, displayed: 0.1 });
     expect(diagnostics.snapshot(2200).compositesLastSecond).toBe(0);
@@ -41,11 +41,16 @@ describe("visible composite diagnostics", () => {
     const diagnostics = new GamesRenderDiagnostics();
     for (let i = 0; i < 300; i++) diagnostics.record("foreground", "cpu", i);
     diagnostics.record("composite", "gpu", 2);
+    diagnostics.record("background", "cpu", 1);
+    diagnostics.record("backgroundBlurX", "gpu", 0.5);
     const stages = diagnostics.snapshot(0).stages;
     expect(stages.foreground.cpu).toMatchObject({ count: 300, retained: 180, lastMs: 299, maxMs: 299 });
     expect(stages.foreground.cpu.p95Ms).toBe(290);
     expect(stages.composite.gpu).toMatchObject({ count: 1, lastMs: 2 });
     expect(stages.composite.cpu).toBeUndefined();
+    expect(stages.background.cpu).toMatchObject({ count: 1, lastMs: 1 });
+    expect(stages.backgroundBlurX.gpu).toMatchObject({ count: 1, lastMs: 0.5 });
+    expect(stages.upload).toBeUndefined();
   });
 
   it("bounds completed timestamps without truncating lifetime totals", () => {
@@ -53,7 +58,7 @@ describe("visible composite diagnostics", () => {
     for (let i = 0; i < 1000; i++) diagnostics.complete(i / 2, i, 0, 0);
     const state = diagnostics.snapshot(500);
     expect(state.completedComposites).toBe(1000);
-    expect(state.plateAdvances).toBe(1000);
+    expect(state.progressAdvances).toBe(1000);
     expect(state.compositeTimes).toHaveLength(512);
     expect(state.compositeTimes.at(-1)).toBe(499.5);
     state.compositeTimes.pop();

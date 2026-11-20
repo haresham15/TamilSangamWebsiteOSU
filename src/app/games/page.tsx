@@ -21,7 +21,7 @@ export default function GamesPage() {
     <div id="games-page" className="w-full text-left bg-transparent">
       {/* Semantic SSR H1 for Search Engine Crawlers & Screen Readers */}
       <h1 className="sr-only">
-        The Sangam Arcade | Biweekly Tamil Wordle (Sollu) & Connections (Thodarpu) at The Ohio State University
+        The Sangam Daily Arcade | 12 Daily Tamil & Tanglish Puzzles, Wordle (Sollu), Kolam Path, Arasigal & Connections at The Ohio State University
       </h1>
 
       {/* Beach Blast scroll sequence */}

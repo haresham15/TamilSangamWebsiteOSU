@@ -14,7 +14,6 @@ import { useRenderMode } from "@/components/providers/useRenderMode";
 import { useShadowUpdates } from "@/gl/shadows";
 import { SceneLighting } from "./SceneLighting";
 import { MinimalPlatform } from "./MinimalPlatform";
-import { Performer } from "./Performer";
 import { SangamLogo3D } from "./SangamLogo3D";
 import { VolumetricCones } from "./VolumetricCones";
 import { LeoCameraRig } from "./LeoCameraRig";
@@ -23,6 +22,9 @@ import { DustCloud } from "./DustCloud";
 import { LeoFactoryEnvironment } from "./LeoFactoryEnvironment";
 import { JumpingCrowdSilhouettes } from "./JumpingCrowdSilhouettes";
 import { ForgeArena, type ForgeQuality } from "./art/ForgeArena";
+
+// Legacy-only: kept lazy so cinematic mode never fetches the performer GLB.
+const Performer = React.lazy(() => import("./Performer").then((m) => ({ default: m.Performer })));
 
 /**
  * Catches errors thrown inside the View. drei's View renders its children in the shared
@@ -64,7 +66,9 @@ function LegacyConcertScene({ progressRef }: { progressRef: React.RefObject<numb
       <DustCloud />
       <SceneLighting />
       <MinimalPlatform />
-      <Performer />
+      <React.Suspense fallback={null}>
+        <Performer />
+      </React.Suspense>
       <SangamLogo3D progressRef={progressRef} />
       <spotLight position={[0, 4.5, -2.5]} color="#4FD6E0" intensity={35} angle={0.45} penumbra={0.6} />
       <JumpingCrowdSilhouettes />

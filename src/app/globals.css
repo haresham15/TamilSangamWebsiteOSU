@@ -107,15 +107,15 @@ html.sangam-fallback #guide-station-hero section { min-height: 100dvh !important
   --color-text-muted: #9B8EB3;
 
   /* Guide Hero tokens mapped to logo palette */
-  --color-station-fog: #140C20;
-  --color-station-haze: #25173B;
-  --color-station-haze-bright: #352254;
-  --color-station-coach: #1A1028;
-  --color-station-coach-edge: #452C6D;
+  --color-station-fog: #4E4452;
+  --color-station-haze: #6A5060;
+  --color-station-haze-bright: #A8786C;
+  --color-station-coach: #2E2634;
+  --color-station-coach-edge: #6A5468;
   --color-station-coach-band: #C4B7D7;
-  --color-station-platform: #140C20;
-  --color-station-practical: #A6F0CF;
-  --color-station-rim: #4FD6E0;
+  --color-station-platform: #3A3038;
+  --color-station-practical: #FFC88A;
+  --color-station-rim: #FFB070;
 
   /* Hero-to-Content DTCG Transitions (Logo Violet & Mint Ground) */
   --color-surface-hero-join: #140C20;
@@ -143,6 +143,16 @@ html.sangam-fallback #guide-station-hero section { min-height: 100dvh !important
   --color-paper: #140C20;
   --color-hero-indigo: #140C20;
   --color-hero-espresso: #140C20;
+  /* Lifted golden-hour hero surfaces (home, about, guide). The Three.js scene constants
+     mirror these: thresholdStone.ts HERO_SCENE_BG, GopuramArtScene SKY, station palette fog. */
+  --color-dusk-umber: oklch(37.7% 0.046 47.4);
+  --color-dusk-mauve: oklch(34.9% 0.064 295.3);
+  --color-dusk-plum: oklch(40.2% 0.026 316.3);
+  --color-dusk-cocoa: oklch(23.7% 0.028 41.4);
+  --color-hero-dusk-home: var(--color-dusk-umber);
+  --color-hero-dusk-about: var(--color-dusk-mauve);
+  --color-hero-dusk-guide: var(--color-dusk-plum);
+  --color-hero-dusk-scrim: var(--color-dusk-cocoa);
   --color-hearth-espresso: #F4F0FA;
   --color-hearth-terracotta: #A6F0CF;
   --color-hearth-sand: #25173B;

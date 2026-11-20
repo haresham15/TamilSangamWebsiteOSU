@@ -748,8 +748,8 @@ export function StationScene({
         />
       ) : (
         <>
-          <hemisphereLight args={[guideStationPalette.rim, guideStationPalette.fog, 0.55]} />
-          <directionalLight position={[2.0, 6.0, 5.0]} intensity={1.8} color="#6CA6D8" />
+          <hemisphereLight args={["#d9a88a", guideStationPalette.fog, 1.0]} />
+          <directionalLight position={[2.0, 6.0, 5.0]} intensity={1.8} color="#ffb070" />
           <directionalLight position={[-6.0, 10.0, 8.0]} intensity={0.65} color={guideStationPalette.rim} />
           {[-3.2, 3.2].map((x) => (
             <group key={x} position={[x, 4.0, 3.5]} name={`PlatformLamp_${x}`}>
@@ -761,7 +761,7 @@ export function StationScene({
                 <sphereGeometry args={[0.1, 16, 16]} />
                 <meshBasicMaterial color="#7CB8F8" toneMapped={false} />
               </mesh>
-              <pointLight color="#5B9BD5" intensity={55} distance={16} decay={1.8} />
+              <pointLight color="#ffaa52" intensity={70} distance={16} decay={1.8} />
             </group>
           ))}
           <WetPlatform />

@@ -844,14 +844,14 @@
       "crowdAtlasFar": "/events/crowd-atlas-far.png",
       "activeSilhouette": "/images/themes/firecracker.png",
       "gamesHybridPosters": {
-        "establishing": "/media/games-hybrid/v1/posters/establishing.webp",
-        "closeup": "/media/games-hybrid/v1/posters/closeup.webp",
-        "blast": "/media/games-hybrid/v1/posters/blast.webp",
-        "exit": "/media/games-hybrid/v1/posters/exit.webp",
-        "portraitEstablishing": "/media/games-hybrid/v1/posters/portrait-establishing.webp",
-        "portraitCloseup": "/media/games-hybrid/v1/posters/portrait-closeup.webp",
-        "portraitBlast": "/media/games-hybrid/v1/posters/portrait-blast.webp",
-        "portraitExit": "/media/games-hybrid/v1/posters/portrait-exit.webp"
+        "establishing": "/games/posters/establishing.webp",
+        "closeup": "/games/posters/closeup.webp",
+        "blast": "/games/posters/blast.webp",
+        "exit": "/games/posters/exit.webp",
+        "portraitEstablishing": "/games/posters/portrait-establishing.webp",
+        "portraitCloseup": "/games/posters/portrait-closeup.webp",
+        "portraitBlast": "/games/posters/portrait-blast.webp",
+        "portraitExit": "/games/posters/portrait-exit.webp"
       },
       "games3DModel": "/models/games/hand-grip.glb",
       "performer3DModel": "/models/performer.glb"

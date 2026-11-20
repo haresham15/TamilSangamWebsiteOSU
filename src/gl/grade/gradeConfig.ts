@@ -20,7 +20,12 @@ export interface HeroGradeProfile {
    * ΔE2000 9.6 from the ungraded look even with no LUT, failing the brand-swatch gate.
    */
   toneMapping: GradeToneMapping;
-  /** Pre-tonemap exposure; 1.05 matches GlobalCanvas toneMappingExposure for ungraded parity. */
+  /**
+   * Pre-tonemap exposure; 1.05 matches GlobalCanvas toneMappingExposure for ungraded parity.
+   * Keep it at 1.05 on every profile: the identity-LUT parity gate in scripts/test-color-pipeline.mjs
+   * fails on any exposure change. The lifted golden-hour heroes (home, about, guide) get their
+   * brightness from scene light, fog and background, plus a lighter vignette and LUT 0.20.
+   */
   exposure: number;
   lutPath: string;
   lutSize: number;
@@ -75,15 +80,15 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
     exposure: 1.05,
     lutPath: "/luts/heritage-33.png",
     lutSize: 33,
-    lutOpacity: 0.30,
-    bloom: { luminanceThreshold: 0.82, intensity: 0.55, mipmapBlur: true },
-    vignette: { offset: 0.35, darkness: 0.42 },
-    grain: { opacity: 0.035 },
+    lutOpacity: 0.20,
+    bloom: { luminanceThreshold: 0.78, intensity: 0.60, mipmapBlur: true },
+    vignette: { offset: 0.45, darkness: 0.22 },
+    grain: { opacity: 0.030 },
     tierBFallback: {
       keyLightTint: "#FFD9B0",
-      fillLightTint: "#352254",
-      fogTint: "#140C20",
-      exposureBias: 1.05,
+      fillLightTint: "#8A5A48",
+      fogTint: "#3A2418",
+      exposureBias: 1.2,
     },
   },
   "leo-forge": {
@@ -107,15 +112,15 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
     exposure: 1.05,
     lutPath: "/luts/heritage-33.png",
     lutSize: 33,
-    lutOpacity: 0.31,
-    bloom: { luminanceThreshold: 0.80, intensity: 0.50, mipmapBlur: true },
-    vignette: { offset: 0.36, darkness: 0.44 },
-    grain: { opacity: 0.038 },
+    lutOpacity: 0.20,
+    bloom: { luminanceThreshold: 0.76, intensity: 0.58, mipmapBlur: true },
+    vignette: { offset: 0.45, darkness: 0.24 },
+    grain: { opacity: 0.032 },
     tierBFallback: {
-      keyLightTint: "#C7F7E1",
-      fillLightTint: "#352254",
-      fogTint: "#140C20",
-      exposureBias: 1.0,
+      keyLightTint: "#FFC890",
+      fillLightTint: "#8A6070",
+      fogTint: "#4A3040",
+      exposureBias: 1.2,
     },
   },
   "darbar-torch": {
@@ -157,15 +162,15 @@ export const HERO_GRADE_PROFILES: Record<HeroGradeProfileName, HeroGradeProfile>
     exposure: 1.05,
     lutPath: "/luts/heritage-33.png",
     lutSize: 33,
-    lutOpacity: 0.33,
+    lutOpacity: 0.20,
     bloom: { luminanceThreshold: 0.74, intensity: 0.62, mipmapBlur: true },
-    vignette: { offset: 0.33, darkness: 0.46 },
-    grain: { opacity: 0.045 },
+    vignette: { offset: 0.42, darkness: 0.26 },
+    grain: { opacity: 0.038 },
     tierBFallback: {
-      keyLightTint: "#4FD6E0",
-      fillLightTint: "#25173B",
-      fogTint: "#140C20",
-      exposureBias: 1.0,
+      keyLightTint: "#FFB870",
+      fillLightTint: "#6A5A70",
+      fogTint: "#3A3040",
+      exposureBias: 1.15,
     },
   },
   "kaththi-blueprint": {

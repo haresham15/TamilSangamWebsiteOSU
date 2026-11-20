@@ -1,14 +1,15 @@
 export const gamesDiagnosticsEnabled = process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_VERCEL_ENV === "preview";
 
-type Stage = "upload" | "foreground" | "mask" | "foregroundBlurX" | "foregroundBlurY" | "maskBlurX" | "maskBlurY" | "composite";
+export type GamesStage = "background" | "backgroundBlurX" | "backgroundBlurY" | "foreground" | "mask" | "foregroundBlurX" | "foregroundBlurY" | "maskBlurX" | "maskBlurY" | "composite";
 type Clock = "cpu" | "gpu";
 
 export class GamesRenderDiagnostics {
   private frames: number[] = [];
   private completedComposites = 0;
-  private plateAdvances = 0;
+  /** Composites whose drawn progress key differs from the previous one (the scene advanced). */
+  private progressAdvances = 0;
   private lastDraw: { at: number; index: number; requested: number; displayed: number } | null = null;
-  private stages: Partial<Record<Stage, Partial<Record<Clock, { count: number; values: number[] }>>>> = {};
+  private stages: Partial<Record<GamesStage, Partial<Record<Clock, { count: number; values: number[] }>>>> = {};
   private summarizedAt = -Infinity;
   private stageSummary: Record<string, Record<string, { count: number; retained: number; lastMs: number | undefined; p95Ms: number; maxMs: number | undefined }>> = {};
   memory: Record<string, number | string> = {};
@@ -16,14 +17,14 @@ export class GamesRenderDiagnostics {
 
   complete(at: number, index: number, requested: number, displayed: number) {
     this.completedComposites++;
-    if (this.lastDraw?.index !== index) this.plateAdvances++;
+    if (this.lastDraw?.index !== index) this.progressAdvances++;
     this.lastDraw = { at, index, requested, displayed };
     this.frames.push(at);
     while (this.frames.length && this.frames[0] <= at - 1000) this.frames.shift();
     if (this.frames.length > 512) this.frames.shift();
   }
 
-  record(stage: Stage, clock: Clock, ms: number) {
+  record(stage: GamesStage, clock: Clock, ms: number) {
     const clocks = this.stages[stage] ??= {};
     const samples = clocks[clock] ??= { count: 0, values: [] };
     samples.count++;
@@ -42,7 +43,7 @@ export class GamesRenderDiagnostics {
       })),
       ]));
     }
-    return { completedComposites: this.completedComposites, plateAdvances: this.plateAdvances,
+    return { completedComposites: this.completedComposites, progressAdvances: this.progressAdvances,
       compositesLastSecond: this.frames.filter(at => at > now - 1000).length,
       compositeTimes: [...this.frames], lastDraw: this.lastDraw, stages: this.stageSummary, memory: this.memory, gpu: this.gpu,
       timing: "CPU submission and asynchronous GPU elapsed milliseconds; not presentation timestamps" };
@@ -53,8 +54,8 @@ interface TimerExtension { TIME_ELAPSED_EXT: number; GPU_DISJOINT_EXT: number }
 
 export class GamesGpuTimer {
   private extension: TimerExtension | null;
-  private pending: { query: WebGLQuery; stage: Stage }[] = [];
-  private active: { query: WebGLQuery; stage: Stage } | null = null;
+  private pending: { query: WebGLQuery; stage: GamesStage }[] = [];
+  private active: { query: WebGLQuery; stage: GamesStage } | null = null;
 
   constructor(private gl: WebGL2RenderingContext, private diagnostics: GamesRenderDiagnostics) {
     this.extension = gl.getExtension("EXT_disjoint_timer_query_webgl2");
@@ -73,7 +74,7 @@ export class GamesGpuTimer {
     });
   }
 
-  begin(stage: Stage) {
+  begin(stage: GamesStage) {
     const extension = this.extension;
     if (!extension || this.active || this.pending.length >= 32 || this.gl.getQuery(extension.TIME_ELAPSED_EXT, this.gl.CURRENT_QUERY)) return;
     const query = this.gl.createQuery();

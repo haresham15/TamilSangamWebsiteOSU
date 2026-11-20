@@ -2,8 +2,8 @@ import * as THREE from "three";
 import { createSurfaceMaterial } from "@/gl/art/surface";
 import { WREATH_CY, WREATH_R_IN } from "./flowMath";
 
-/** Darkest value of the home scene: warm espresso. Canvas clear, fog and stone fade share it. */
-export const HERO_SCENE_BG = "#140d09";
+/** Darkest value of the home scene: lifted umber (golden hour). Canvas clear, fog and stone fade share it. */
+export const HERO_SCENE_BG = "#563a2c";
 
 /**
  * The swept threshold stone the kolam is drawn on (home hero, cinematic path).

@@ -24,6 +24,10 @@ export const BAY_Z = [-8.5, -3.5, 1.5, 6.5, 11.5];
 export const COLUMN_X = 11;
 /** Medallion centre: hung on one cable from the roof truss above the backlight. */
 export const EMBLEM_POS: Vec3 = [0, 6.6, -3.5];
+/** The spinning Sangam coin on its plinth: the stage centrepiece. */
+export const COIN_RADIUS = 1.1;
+export const PLINTH_H = 0.14;
+export const COIN_POS: Vec3 = [0, DECK_Y + PLINTH_H + COIN_RADIUS, 0];
 export const ROOF_Y = 10.2;
 
 type Quality = 0 | 1 | 2;
@@ -280,8 +284,6 @@ export function buildSteelwork(quality: Quality = 0) {
     parts.push(...roofTruss(z, quality));
   }
   parts.push(...purlins(), ...lightingTruss(), ...backlightGantry());
-  // The emblem's cable.
-  parts.push(pipe(new THREE.Vector3(EMBLEM_POS[0], EMBLEM_POS[1] + 0.74, EMBLEM_POS[2]), new THREE.Vector3(EMBLEM_POS[0], ROOF_Y, EMBLEM_POS[2]), 0.012, 5));
   const g = mergeParts(parts);
   return bakeVertexAO(g, { cavity: 1, edges: 1, ground: { y: 0, height: 1.2, strength: 0.6 }, smooth: 0 });
 }
@@ -308,7 +310,21 @@ export function buildStageDrum(quality: Quality = 0) {
     ],
     { radialSegments: 72, capped: false }
   );
-  const parts: Part[] = [{ geometry: drum }];
+  const D = DECK_Y;
+  // Small turned plinth the coin stands on.
+  const plinth = latheProfile(
+    [
+      [0.5, D],
+      [0.5, D + 0.03],
+      [0.44, D + 0.05],
+      [0.3, D + 0.09],
+      [0.32, D + 0.115],
+      [0.26, PLINTH_H + D],
+      [0, PLINTH_H + D],
+    ],
+    { radialSegments: 48, capped: false }
+  );
+  const parts: Part[] = [{ geometry: drum }, { geometry: plinth }];
   const ribs = 24;
   for (let i = 0; i < ribs; i++) {
     const a = (i / ribs) * Math.PI * 2;

@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: ["/", "/llms.txt", "/llms-full.txt", "/sitemap.xml", "/feed.xml"],
-        disallow: ["/api/", "/guide/lab", "/home/lab", "/spike"],
+        disallow: ["/api/", "/guide/lab", "/home/lab", "/games/lab", "/spike"],
       },
       {
         userAgent: [
@@ -29,7 +29,7 @@ export default function robots(): MetadataRoute.Robots {
           "Meta-ExternalAgent",
         ],
         allow: ["/", "/llms.txt", "/llms-full.txt", "/sitemap.xml"],
-        disallow: ["/api/", "/guide/lab", "/home/lab", "/spike"],
+        disallow: ["/api/", "/guide/lab", "/home/lab", "/games/lab", "/spike"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

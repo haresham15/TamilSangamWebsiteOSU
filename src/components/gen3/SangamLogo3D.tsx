@@ -55,9 +55,29 @@ function createBrushedCoinTexture(): THREE.CanvasTexture {
 
 interface SangamLogo3DProps {
   progressRef?: React.RefObject<number>;
+  /** Group origin (legacy default floats at 3.65 m). */
+  position?: [number, number, number];
+  /** Coin radius in metres; the legacy geometry is built at 2.5 and scaled. */
+  radius?: number;
+  /** "legacy": the floating coin with rings and its own lights. "stage": coin only, lit by the scene. */
+  variant?: "legacy" | "stage";
+  castShadow?: boolean;
 }
 
-export function SangamLogo3D({ progressRef }: SangamLogo3DProps = {}) {
+const LEGACY_RADIUS = 2.5;
+
+export function SangamLogo3D({
+  progressRef,
+  position = [0, 3.65, 0],
+  radius = LEGACY_RADIUS,
+  variant = "legacy",
+  castShadow,
+}: SangamLogo3DProps = {}) {
+  const stage = variant === "stage";
+  const casts = castShadow ?? !stage;
+  const scale = radius / LEGACY_RADIUS;
+  const baseY = position[1];
+  const bob = stage ? 0.04 : 0.12;
   const groupRef = useRef<THREE.Group>(null);
   const ring1Ref = useRef<THREE.Group>(null);
   const ring2Ref = useRef<THREE.Group>(null);
@@ -93,7 +113,23 @@ export function SangamLogo3D({ progressRef }: SangamLogo3DProps = {}) {
     orbitalRing1Material,
     orbitalRing2Material,
   } = useMemo(() => {
-    const face = new THREE.MeshPhysicalMaterial({
+    const face = stage
+      ? new THREE.MeshPhysicalMaterial({
+          // Self-lit gold: the texture is also the emissive map so the lettering stays legible
+          // when the coin turns edge-on to the key light.
+          color: new THREE.Color(1.8, 1.9, 0.9), // lifts the bronze field toward polished gold
+          roughness: 0.28,
+          metalness: 0.6,
+          clearcoat: 0.5,
+          clearcoatRoughness: 0.2,
+          map: logoTexture,
+          bumpMap: bumpTexture,
+          bumpScale: 0.025,
+          emissive: new THREE.Color(2.2, 2.3, 0.9), // rebalances the bronze texture toward Kanchipuram gold
+          emissiveMap: logoTexture,
+          emissiveIntensity: 1.3,
+        })
+      : new THREE.MeshPhysicalMaterial({
       color: "#ffffff", // Pure white multiplier so SVG gold and bronze colors render with full fidelity
       roughness: 0.18,
       metalness: 0.85,
@@ -108,7 +144,7 @@ export function SangamLogo3D({ progressRef }: SangamLogo3DProps = {}) {
     });
 
     const edge = new THREE.MeshPhysicalMaterial({
-      color: "#995815", // Warm burnished gold-bronze rim (harmonizes with Leo sodium vapor)
+      color: stage ? "#e3bc3c" : "#995815", // Warm burnished gold-bronze rim (harmonizes with Leo sodium vapor)
       roughness: 0.2,
       metalness: 0.95,
       clearcoat: 0.85,
@@ -148,7 +184,7 @@ export function SangamLogo3D({ progressRef }: SangamLogo3DProps = {}) {
       orbitalRing1Material: ring1,
       orbitalRing2Material: ring2,
     };
-  }, [logoTexture, bumpTexture]);
+  }, [logoTexture, bumpTexture, stage]);
 
   // Dispose materials and bump texture on unmount
   useEffect(() => {
@@ -180,7 +216,7 @@ export function SangamLogo3D({ progressRef }: SangamLogo3DProps = {}) {
 
     if (groupRef.current) {
       // Gentle floating levitation centered at Y = 3.65m (bottom of coin at 1.15m, hovering well clear of the platform)
-      groupRef.current.position.y = 3.65 + Math.sin(time * 1.5) * 0.12;
+      groupRef.current.position.y = baseY + Math.sin(time * 1.5) * bob;
       
       // Majestic horizontal coin spin around vertical Y-axis (stays upright + smooth kinetic scroll boost)
       groupRef.current.rotation.y += dt * 0.45 + kinetics.smoothVelocity * 0.08;
@@ -191,19 +227,55 @@ export function SangamLogo3D({ progressRef }: SangamLogo3DProps = {}) {
 
     // Independent smooth celestial orbit for the outer rings (encircling the coin equatorially high above the ground)
     if (ring1Ref.current) {
-      ring1Ref.current.position.y = 3.65 + Math.sin(time * 1.5) * 0.12;
+      ring1Ref.current.position.y = baseY + Math.sin(time * 1.5) * 0.12;
       ring1Ref.current.rotation.y += dt * 0.25 + kinetics.smoothVelocity * 0.04;
       ring1Ref.current.rotation.x = Math.sin(time * 0.5) * 0.16 + 0.28;
       ring1Ref.current.rotation.z = Math.cos(time * 0.4) * 0.12;
     }
 
     if (ring2Ref.current) {
-      ring2Ref.current.position.y = 3.65 + Math.sin(time * 1.5) * 0.12;
+      ring2Ref.current.position.y = baseY + Math.sin(time * 1.5) * 0.12;
       ring2Ref.current.rotation.y -= dt * 0.2 - kinetics.smoothVelocity * 0.03;
       ring2Ref.current.rotation.x = Math.cos(time * 0.45) * 0.18 - 0.26;
       ring2Ref.current.rotation.z = Math.sin(time * 0.38) * 0.15 + 0.12;
     }
   });
+
+  const segs = stage ? { cyl: 96, face: 64, bezel: 96 } : { cyl: 256, face: 128, bezel: 256 };
+  const coin = (
+      <group ref={groupRef} position={position} scale={scale}>
+        {/* Main Medallion Cylinder Rim: 256 radial segments & 12 height segments for an ultra-smooth edge */}
+        <mesh rotation={[Math.PI / 2, 0, 0]} castShadow={casts} receiveShadow>
+          <cylinderGeometry args={[2.5, 2.5, 0.36, segs.cyl, stage ? 1 : 12]} />
+          <primitive object={edgeMaterial} attach="material" />
+        </mesh>
+
+        {/* Front Face: Planar CircleGeometry ensures zero UV distortion, perfect horizontal alignment and right-side-up text */}
+        <mesh position={[0, 0, 0.181]} castShadow={casts} receiveShadow>
+          <circleGeometry args={[2.48, segs.face]} />
+          <primitive object={faceMaterial} attach="material" />
+        </mesh>
+
+        {/* Back Face: Planar CircleGeometry rotated 180 deg around Y so it is also right-side-up and horizontal */}
+        <mesh position={[0, 0, -0.181]} rotation={[0, Math.PI, 0]} castShadow={casts} receiveShadow>
+          <circleGeometry args={[2.48, segs.face]} />
+          <primitive object={faceMaterial} attach="material" />
+        </mesh>
+
+        {/* Decorative Temple Gold Beveled Fillet Rings rounding off the cylinder edges */}
+        <mesh position={[0, 0, 0.18]}>
+          <torusGeometry args={[2.485, 0.03, stage ? 12 : 32, segs.bezel]} />
+          <primitive object={rimBezelMaterial} attach="material" />
+        </mesh>
+
+        <mesh position={[0, 0, -0.18]}>
+          <torusGeometry args={[2.485, 0.03, stage ? 12 : 32, segs.bezel]} />
+          <primitive object={rimBezelMaterial} attach="material" />
+        </mesh>
+      </group>
+  );
+
+  if (stage) return coin;
 
   return (
     <>
@@ -273,14 +345,14 @@ export function SangamLogo3D({ progressRef }: SangamLogo3DProps = {}) {
       />
 
       {/* 3. Outer Celestial Orbital Rings: Precessing gracefully around the coin equatorially */}
-      <group ref={ring1Ref} position={[0, 3.65, 0]}>
+      <group ref={ring1Ref} position={position}>
         <mesh rotation={[Math.PI / 2, 0, 0]} castShadow receiveShadow>
           <torusGeometry args={[3.35, 0.04, 24, 256]} />
           <primitive object={orbitalRing1Material} attach="material" />
         </mesh>
       </group>
 
-      <group ref={ring2Ref} position={[0, 3.65, 0]}>
+      <group ref={ring2Ref} position={position}>
         <mesh rotation={[Math.PI / 2, 0, 0]} castShadow receiveShadow>
           <torusGeometry args={[3.85, 0.034, 24, 256]} />
           <primitive object={orbitalRing2Material} attach="material" />
@@ -288,38 +360,7 @@ export function SangamLogo3D({ progressRef }: SangamLogo3DProps = {}) {
       </group>
 
       {/* 4. Floating Medallion Group */}
-      <group ref={groupRef} position={[0, 3.65, 0]}>
-        {/* Main Medallion Cylinder Rim: 256 radial segments & 12 height segments for an ultra-smooth edge */}
-        <mesh rotation={[Math.PI / 2, 0, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[2.5, 2.5, 0.36, 256, 12]} />
-          <primitive object={edgeMaterial} attach="material" />
-        </mesh>
-
-        {/* Front Face: Planar CircleGeometry ensures zero UV distortion, perfect horizontal alignment and right-side-up text */}
-        <mesh position={[0, 0, 0.181]} castShadow receiveShadow>
-          <circleGeometry args={[2.48, 128]} />
-          <primitive object={faceMaterial} attach="material" />
-        </mesh>
-
-        {/* Back Face: Planar CircleGeometry rotated 180 deg around Y so it is also right-side-up and horizontal */}
-        <mesh position={[0, 0, -0.181]} rotation={[0, Math.PI, 0]} castShadow receiveShadow>
-          <circleGeometry args={[2.48, 128]} />
-          <primitive object={faceMaterial} attach="material" />
-        </mesh>
-
-        {/* Decorative Temple Gold Beveled Fillet Rings rounding off the cylinder edges */}
-        {/* Front face beveled edge (coplanar with front face at z = 0.18) */}
-        <mesh position={[0, 0, 0.18]}>
-          <torusGeometry args={[2.485, 0.03, 32, 256]} />
-          <primitive object={rimBezelMaterial} attach="material" />
-        </mesh>
-
-        {/* Back face beveled edge (coplanar with back face at z = -0.18) */}
-        <mesh position={[0, 0, -0.18]}>
-          <torusGeometry args={[2.485, 0.03, 32, 256]} />
-          <primitive object={rimBezelMaterial} attach="material" />
-        </mesh>
-      </group>
+      {coin}
     </>
   );
 }

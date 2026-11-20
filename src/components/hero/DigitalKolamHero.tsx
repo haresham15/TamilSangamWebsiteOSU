@@ -670,7 +670,7 @@ function TubeKolam({ isMobile, tier }: { isMobile: boolean; tier: string }) {
  * and the subtle scroll hint.
  */
 // Intro surround colour (warm espresso, same as the scene's darkest value).
-const INTRO_MATTE = "#140d09";
+const INTRO_MATTE = HERO_SCENE_BG;
 
 function ScrollExpandIntroOverlay() {
   const frameRef = useRef<HTMLDivElement>(null);
@@ -726,7 +726,7 @@ function ScrollExpandIntroOverlay() {
           // scrolling the intro never repaints a full-screen gradient.
           if (frameRef.current.dataset.matte !== String(isMobile)) {
             frameRef.current.dataset.matte = String(isMobile);
-            frameRef.current.style.background = `radial-gradient(ellipse ${startW * 0.78}vw ${startH * 0.78}vh at 50% 50%, ${INTRO_MATTE}00 0%, ${INTRO_MATTE}00 42%, ${INTRO_MATTE}c7 78%, ${INTRO_MATTE}f5 100%)`;
+            frameRef.current.style.background = `radial-gradient(ellipse ${startW * 0.78}vw ${startH * 0.78}vh at 50% 50%, ${INTRO_MATTE}00 0%, ${INTRO_MATTE}00 42%, ${INTRO_MATTE}a6 78%, ${INTRO_MATTE}e0 100%)`;
           }
           frameRef.current.style.transform = `scale(${w / startW}, ${h / startH})`;
           frameRef.current.style.opacity = `${borderOpacity}`;
@@ -777,7 +777,7 @@ function ScrollExpandIntroOverlay() {
         ref={frameRef}
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse 26vw 33vh at 50% 50%, ${INTRO_MATTE}00 0%, ${INTRO_MATTE}00 42%, ${INTRO_MATTE}c7 78%, ${INTRO_MATTE}f5 100%)`,
+          background: `radial-gradient(ellipse 26vw 33vh at 50% 50%, ${INTRO_MATTE}00 0%, ${INTRO_MATTE}00 42%, ${INTRO_MATTE}a6 78%, ${INTRO_MATTE}e0 100%)`,
           willChange: "transform, opacity",
         }}
       />
@@ -1034,7 +1034,7 @@ function ThresholdStage({ mode }: { mode: "A" | "B" }) {
     if (rigRef.current) rigRef.current.position.set(0, camY, 0);
     // Depth falloff across the tilted stone; scaled so the far-back mobile framing is not drowned.
     const fog = state.scene.fog as THREE.FogExp2 | null;
-    if (fog && "density" in fog) fog.density = 0.48 / heroCamDist(p, camZ, aspect);
+    if (fog && "density" in fog) fog.density = 0.36 / heroCamDist(p, camZ, aspect);
 
     // Visible stretch of stone for the tilted camera: near edge (bottom of frame) to far edge (top).
     const halfFov = THREE.MathUtils.degToRad(cam.fov * 0.5);
@@ -1092,15 +1092,15 @@ function ThresholdStage({ mode }: { mode: "A" | "B" }) {
     <>
       <BakedEnvironment resolution={128}>
         {/* Dawn sky through the doorway (matches the key), a cool open sky, dark ground bounce */}
-        <Lightformer form="rect" intensity={2.2} color="#ffcf9e" position={[-6, 5, 4]} scale={[7, 4, 1]} target={[0, 0, 0]} />
-        <Lightformer form="rect" intensity={0.5} color="#8fa6d6" position={[5, 4, 6]} scale={[8, 6, 1]} target={[0, 0, 0]} />
-        <Lightformer form="rect" intensity={0.25} color="#3a2a1c" position={[0, -6, 2]} scale={[12, 4, 1]} target={[0, 0, 0]} />
+        <Lightformer form="rect" intensity={3.4} color="#ffc58a" position={[-6, 5, 4]} scale={[7, 4, 1]} target={[0, 0, 0]} />
+        <Lightformer form="rect" intensity={0.6} color="#e0a8a0" position={[5, 4, 6]} scale={[8, 6, 1]} target={[0, 0, 0]} />
+        <Lightformer form="rect" intensity={0.5} color="#7a5236" position={[0, -6, 2]} scale={[12, 4, 1]} target={[0, 0, 0]} />
         {/* Lit stone all around at low angle: what the bevels mirror (else they read as black outlines) */}
-        <Lightformer form="rect" intensity={0.55} color="#c9b49a" position={[-8, 0, 1]} scale={[3, 14, 1]} target={[0, 0, 0]} />
-        <Lightformer form="rect" intensity={0.45} color="#c9b49a" position={[0, -8, 1]} scale={[14, 3, 1]} target={[0, 0, 0]} />
-        <Lightformer form="rect" intensity={0.3} color="#9fb0cf" position={[8, 2, 1]} scale={[3, 14, 1]} target={[0, 0, 0]} />
+        <Lightformer form="rect" intensity={0.9} color="#c9b49a" position={[-8, 0, 1]} scale={[3, 14, 1]} target={[0, 0, 0]} />
+        <Lightformer form="rect" intensity={0.75} color="#c9b49a" position={[0, -8, 1]} scale={[14, 3, 1]} target={[0, 0, 0]} />
+        <Lightformer form="rect" intensity={0.4} color="#e6b8a0" position={[8, 2, 1]} scale={[3, 14, 1]} target={[0, 0, 0]} />
         {/* Open sky over the threshold: what a face lying on the stone mirrors */}
-        <Lightformer form="rect" intensity={0.7} color="#d9cbb6" position={[0, 0, 8]} scale={[10, 10, 1]} target={[0, 0, 0]} />
+        <Lightformer form="rect" intensity={1.1} color="#f0d2b0" position={[0, 0, 8]} scale={[10, 10, 1]} target={[0, 0, 0]} />
       </BakedEnvironment>
 
       <group ref={rigRef}>
@@ -1109,8 +1109,8 @@ function ThresholdStage({ mode }: { mode: "A" | "B" }) {
           ref={keyRef}
           position={[KEY_OFFSET.x, KEY_OFFSET.y, KEY_OFFSET.z]}
           target={keyTarget}
-          color="#ffc890"
-          intensity={3.1}
+          color="#ffb877"
+          intensity={5.2}
           castShadow
           shadow-mapSize={[shadowSize, shadowSize]}
           shadow-bias={-0.0003}
@@ -1131,7 +1131,7 @@ function ThresholdStage({ mode }: { mode: "A" | "B" }) {
           size={[11, 7, 2.4]}
           count={mode === "A" ? 34 : 16}
           color="#ffd59e"
-          intensity={0.28}
+          intensity={0.22}
           pointSize={22}
           drift={[0.01, 0.006, 0]}
           seed={11}
@@ -1140,7 +1140,7 @@ function ThresholdStage({ mode }: { mode: "A" | "B" }) {
       {/* Dim warm-sand fill from the open side (sky = +Z, toward the camera).
           Key and fill are not tagged gradeRole: the kolam-hearth Tier-B fallback lerps the key
           toward mint and the fill toward purple, which turns this stone olive. */}
-      <hemisphereLight args={["#a08467", "#2b1c12", 0.5]} position={[0, 0, 1]} />
+      <hemisphereLight args={["#e8b48a", "#5a3a28", 1.1]} position={[0, 0, 1]} />
 
       <mesh geometry={floorGeometry} material={stone.material} position={[0, -6, THRESHOLD_FLOOR_Z]} receiveShadow />
     </>

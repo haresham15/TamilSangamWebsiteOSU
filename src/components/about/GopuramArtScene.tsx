@@ -47,8 +47,8 @@ import {
 
 /** Low sun from the right, a little in front of the facades: it rakes across every moulding. */
 const SUN_DIR = new THREE.Vector3(1, 0.45, 0.32).normalize().toArray() as [number, number, number];
-const SKY = { zenith: "#140c24", mid: "#3a2c52", horizon: "#8a5a48", sun: "#ffb27a" };
-const FOG = "#4a3f57";
+const SKY = { zenith: "#3d3358", mid: "#9a6a84", horizon: "#f0a070", sun: "#ffc890" };
+const FOG = "#8a6a72";
 
 interface SceneProps {
   scrollProgressRef: React.RefObject<number>;
@@ -122,10 +122,10 @@ function DuskSky() {
 function DuskEnvironment() {
   return (
     <BakedEnvironment resolution={128}>
-      <Lightformer form="rect" intensity={5} color="#ffb27a" scale={[10, 3, 1]} position={[9, 1.5, 1]} target={[0, 0, 0]} />
-      <Lightformer form="rect" intensity={1.2} color="#5c5a9a" scale={[16, 16, 1]} position={[0, 9, 0]} target={[0, 0, 0]} />
-      <Lightformer form="rect" intensity={0.35} color="#9fd8c8" scale={[8, 4, 1]} position={[-8, 3, -4]} target={[0, 0, 0]} />
-      <Lightformer form="rect" intensity={0.25} color="#3a2418" scale={[16, 6, 1]} position={[0, -7, 0]} target={[0, 0, 0]} />
+      <Lightformer form="rect" intensity={6} color="#ffc890" scale={[10, 3, 1]} position={[9, 1.5, 1]} target={[0, 0, 0]} />
+      <Lightformer form="rect" intensity={1.6} color="#b090b8" scale={[16, 16, 1]} position={[0, 9, 0]} target={[0, 0, 0]} />
+      <Lightformer form="rect" intensity={0.4} color="#e8c0a0" scale={[8, 4, 1]} position={[-8, 3, -4]} target={[0, 0, 0]} />
+      <Lightformer form="rect" intensity={0.5} color="#7a5238" scale={[16, 6, 1]} position={[0, -7, 0]} target={[0, 0, 0]} />
     </BakedEnvironment>
   );
 }
@@ -190,16 +190,16 @@ function TempleLight({ shadowSize, ready }: { shadowSize: number; ready: boolean
     <>
       <directionalLight
         ref={key}
-        color="#ffc48a"
-        intensity={6.2}
+        color="#ffbf7a"
+        intensity={8.5}
         castShadow={shadowSize > 0}
         shadow-mapSize={[shadowSize || 1, shadowSize || 1]}
         shadow-bias={-0.0004}
         shadow-normalBias={0.04}
         userData={{ gradeRole: "key" }}
       />
-      <hemisphereLight args={["#6b78a8", "#1a1210", 0.3]} userData={{ gradeRole: "fill" }} />
-      <directionalLight position={[-30, 30, -60]} color="#b8b0e0" intensity={0.45} userData={{ gradeRole: "rim" }} />
+      <hemisphereLight args={["#c9a0b0", "#5a4030", 0.85]} userData={{ gradeRole: "fill" }} />
+      <directionalLight position={[-30, 30, -60]} color="#f0c0b0" intensity={0.7} userData={{ gradeRole: "rim" }} />
       {shadowSize > 0 && <ShadowRefresh onReady={onReady} />}
     </>
   );
@@ -437,8 +437,8 @@ function IncenseAir({ full }: { full: boolean }) {
     <>
       {Array.from({ length: TALA_COUNT }, (_, i) => (
         <React.Fragment key={i}>
-          <HazeLayer position={[0, talaY(i) + 3.6, talaZ(i) - 5]} size={[16, 7.5]} color="#d0a070" intensity={0.1} />
-          {full && <HazeLayer position={[0.8, talaY(i) + 1.3, talaZ(i) + 5]} size={[16, 3.4]} color="#c09078" intensity={0.06} />}
+          <HazeLayer position={[0, talaY(i) + 3.6, talaZ(i) - 5]} size={[16, 7.5]} color="#f0c090" intensity={0.13} />
+          {full && <HazeLayer position={[0.8, talaY(i) + 1.3, talaZ(i) + 5]} size={[16, 3.4]} color="#e0b090" intensity={0.08} />}
         </React.Fragment>
       ))}
     </>
@@ -454,7 +454,7 @@ export function GopuramArtScene({ scrollProgressRef, isMobile, mode, qualityLeve
       <GopuramWarmup />
       <AscentCamera scrollProgressRef={scrollProgressRef} isMobile={isMobile} fov={isMobile ? 62 : 48} />
       <color attach="background" args={[SKY.zenith]} />
-      <fogExp2 attach="fog" args={[FOG, 0.011]} />
+      <fogExp2 attach="fog" args={[FOG, 0.008]} />
       <DuskSky />
       <DuskEnvironment />
       <TempleLight shadowSize={shadowSize} ready={ready} />

@@ -298,7 +298,7 @@ function GopuramScene({
       {/* Reading scrim: copy sits over the left pier on desktop and the terrace on mobile. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-sangam-purple-dark/85 via-sangam-purple-dark/35 to-transparent lg:bg-gradient-to-r lg:from-sangam-purple-dark/90 lg:via-sangam-purple-dark/60 lg:via-40% lg:to-transparent lg:to-70%"
+        className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-hero-dusk-scrim/70 via-hero-dusk-scrim/25 to-transparent lg:bg-gradient-to-r lg:from-hero-dusk-scrim/75 lg:via-hero-dusk-scrim/40 lg:via-40% lg:to-transparent lg:to-70%"
       />
 
       {/* 5 Sacred Ring Floating Titles */}

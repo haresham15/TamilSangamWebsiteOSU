@@ -352,7 +352,7 @@ export default function HomePage() {
         ref={pinnedWrapperRef}
         data-hero-pinned="home"
         id="act-i-viewport-wrapper"
-        className={`relative w-full bg-hero-espresso ${staticHero ? "h-dvh" : "h-[420dvh]"}`}
+        className={`relative w-full bg-hero-dusk-home ${staticHero ? "h-dvh" : "h-[420dvh]"}`}
       >
         {/* Pinned 100dvh Viewport Container */}
         <div
@@ -409,7 +409,7 @@ export default function HomePage() {
               {/* Tier 2: Translation (SplitText word-by-word cascade) */}
               <p
                 ref={kuralEnglishRef}
-                className="font-space-mono text-xs sm:text-sm text-white/85 max-w-lg mt-6 sm:mt-7 leading-relaxed sm:leading-loose tracking-wide max-sm:[text-shadow:0_0_6px_#140d09,0_0_14px_#140d09,0_0_2px_#140d09]"
+                className="font-space-mono text-xs sm:text-sm text-white/85 max-w-lg mt-6 sm:mt-7 leading-relaxed sm:leading-loose tracking-wide [text-shadow:0_0_6px_#2A1A14,0_0_14px_#2A1A14,0_0_2px_#2A1A14]"
               >
                 &ldquo;The entire virtue of establishing a home is to welcome guests with an open heart and extend generosity.&rdquo;
               </p>
@@ -417,7 +417,7 @@ export default function HomePage() {
               {/* Tier 3: Clean, unboxed monospace line with subtle audio button (§MASTER DIRECTIVE) */}
               <div
                 ref={kuralMetaRef}
-                className="mt-5 sm:mt-6 flex items-center justify-center gap-2.5 font-space-mono text-[10px] sm:text-[11px] text-[#A6F0CF]/85 tracking-[0.22em] uppercase pointer-events-auto max-sm:[text-shadow:0_0_6px_#140d09,0_0_14px_#140d09,0_0_2px_#140d09]"
+                className="mt-5 sm:mt-6 flex items-center justify-center gap-2.5 font-space-mono text-[10px] sm:text-[11px] text-[#A6F0CF]/85 tracking-[0.22em] uppercase pointer-events-auto [text-shadow:0_0_6px_#2A1A14,0_0_14px_#2A1A14,0_0_2px_#2A1A14]"
               >
                 <span>THIRUKKURAL 81 · விருந்தோம்பல்</span>
                 <ThirukkuralAudioButton

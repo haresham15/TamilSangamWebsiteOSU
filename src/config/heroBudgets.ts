@@ -77,7 +77,7 @@ export const HERO_BUDGETS: Record<string, HeroBudget> = {
     callsPeak: 80,
     trianglesPeak: null,
     textureMb: 128,
-    source: "games-hero-hybrid-cinematic-prd.md §10 (draws <80 target, graphics <128 MiB)",
+    source: "games-hero-hybrid-cinematic-prd.md §10, real-time beach (draws <80 target, graphics <128 MiB)",
   },
   events: {
     route: "/events",

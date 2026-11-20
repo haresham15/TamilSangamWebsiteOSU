@@ -37,6 +37,8 @@ export const blurFragment = /* glsl */ `
 export const compositeFragment = /* glsl */ `
   #include <tonemapping_pars_fragment>
   uniform sampler2D uBackground;
+  // 1 = scene-linear HDR background (the live beach) graded here with gamesAgX; 0 = display-referred texture.
+  uniform float uBackgroundLinear;
   uniform sampler2D uForeground;
   uniform sampler2D uLensMask;
   uniform float uForegroundOpacity;
@@ -54,7 +56,6 @@ export const compositeFragment = /* glsl */ `
   uniform vec4 uHeat[3];
   uniform float uHeatPhase;
   uniform vec3 uSkyReflection;
-  uniform vec3 uPlateBlack;
   uniform float uFgSoft;
   varying vec2 vUv;
 
@@ -72,8 +73,8 @@ export const compositeFragment = /* glsl */ `
       mix(gamesHash(i + vec2(0.0, 1.0)), gamesHash(i + vec2(1.0, 1.0)), f.x), f.y);
   }
 
-  // Blender's AgX (the plates' view transform) with a log-space power standing in for its
-  // "Medium High Contrast" look, so live skin and acetate roll off like the baked frames.
+  // Blender's AgX (the offline renders' view transform) with a log-space power standing in for its
+  // "Medium High Contrast" look; one transform for the live beach, skin and acetate.
   vec3 gamesAgX(vec3 color) {
     const mat3 inset = mat3(
       vec3(0.856627153315983, 0.137318972929847, 0.11189821299995),
@@ -97,7 +98,7 @@ export const compositeFragment = /* glsl */ `
     return clamp(color, 0.0, 1.0);
   }
 
-  // Heat haze above each blast: a scroll-driven refraction of the plate, never a blur.
+  // Heat haze above each blast: a scroll-driven refraction of the background, never a blur.
   vec2 heatOffset(vec2 bgUv) {
     vec2 offset = vec2(0.0);
     for (int i = 0; i < 3; i++) {
@@ -128,9 +129,10 @@ export const compositeFragment = /* glsl */ `
     if (uLook > 0.5) bgUv = clamp(bgUv + heatOffset(bgUv), 0.0, 1.0);
     float lensRaw = texture2D(uLensMask, uv).r * uForegroundOpacity;
     vec3 background = texture2D(uBackground, bgUv).rgb;
+    if (uBackgroundLinear > 0.5) background = gamesAgX(background);
     vec4 foreground = texture2D(uForeground, uv);
     if (uLook > 0.5 && uFgSoft > 0.0) {
-      // Match the plate's optical softness (Blender's 1.5 px pixel filter, WebP) on an in-focus layer.
+      // A touch of optical softness on the in-focus layer so the hand sits in the same lens as the beach.
       vec2 o = uTexel * uFgSoft;
       foreground = foreground * 0.4 + 0.15 * (texture2D(uForeground, uv + vec2(o.x, o.y)) + texture2D(uForeground, uv - vec2(o.x, o.y))
         + texture2D(uForeground, uv + vec2(o.x, -o.y)) + texture2D(uForeground, uv - vec2(o.x, -o.y)));
@@ -139,8 +141,6 @@ export const compositeFragment = /* glsl */ `
     if (foreground.a > 0.00001) {
       vec3 straight = foreground.rgb / foreground.a;
       vec3 graded = uLook > 0.5 ? gamesAgX(straight) : ACESFilmicToneMapping(straight);
-      // Same air as the plate: lift live blacks to the displayed plate's own black floor.
-      if (uLook > 0.5) graded = uPlateBlack + graded * (1.0 - uPlateBlack);
       foreground.rgb = graded * foreground.a;
     } else {
       foreground.rgb = vec3(0.0);
@@ -153,8 +153,8 @@ export const compositeFragment = /* glsl */ `
     lensColor *= vec3(1.015, 1.005, 0.99);
     background = mix(background, lensColor, lens);
     if (uLook > 0.5 && lensRaw > 0.002) {
-      // Coated glass: a faint reflection of the plate's own sky, brighter toward the top of the frame.
-      // (Edge refraction from the quarter-resolution aperture mask stair-stepped the plate; left out.)
+      // Coated glass: a faint reflection of the sky, brighter toward the top of the frame.
+      // (Edge refraction from the quarter-resolution aperture mask stair-stepped the background; left out.)
       vec3 sky = mix(uSkyReflection * 0.82, uSkyReflection * 1.08, smoothstep(0.2, 0.95, uv.y));
       float sheen = (0.08 + 0.07 * smoothstep(0.35, 1.0, uv.y)) * lensRaw;
       background = mix(background, sky, sheen);
@@ -186,8 +186,8 @@ export const compositeFragment = /* glsl */ `
     gl_FragColor = vec4(color, 1.0);
     #include <colorspace_fragment>
     if (uLook > 0.5) {
-      // One shared, display-referred grain over plate and live layers: peak ±uGrain, densest in midtones.
-      // Reseeded only when the plate changes, so a paused frame stays still.
+      // One shared, display-referred grain over both layers: peak ±uGrain, densest in midtones.
+      // Reseeded from scroll progress, so a paused frame stays still.
       vec2 cell = floor(gl_FragCoord.xy / 1.3) + uGrainSeed * 37.0;
       float grain = gamesHash(cell) + gamesHash(cell + 71.7) - 1.0;
       float luma = dot(gl_FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
@@ -198,6 +198,11 @@ export const compositeFragment = /* glsl */ `
 
 export interface LayeredFocusTargets {
   hdr: boolean;
+  /** Live beach, scene-linear HDR (HalfFloat when float colour buffers are renderable), with depth. */
+  background: THREE.WebGLRenderTarget;
+  /** Reduced-resolution ping-pong pair for the separable background bokeh (result lands in backgroundBlur). */
+  backgroundBlur: THREE.WebGLRenderTarget;
+  backgroundBlurScratch: THREE.WebGLRenderTarget;
   foreground: THREE.WebGLRenderTarget;
   mask: THREE.WebGLRenderTarget;
   foregroundBlur: THREE.WebGLRenderTarget;
@@ -212,7 +217,9 @@ export interface LayeredFocusTargets {
 
 export function createLayeredFocusTargets(
   gl: THREE.WebGLRenderer,
-  tier: "A" | "B" | "C" = "A"
+  tier: "A" | "B" | "C" = "A",
+  /** MSAA samples for the background layer (0 → the composite runs FXAA instead). */
+  backgroundSamples = 0
 ): LayeredFocusTargets {
   const hdr = gl.extensions.has("EXT_color_buffer_float");
   const type = hdr ? THREE.HalfFloatType : THREE.UnsignedByteType;
@@ -224,6 +231,11 @@ export function createLayeredFocusTargets(
       minFilter: THREE.LinearFilter,
       magFilter: THREE.LinearFilter,
     });
+
+  const background = makeTarget(true);
+  background.samples = Math.min(backgroundSamples, gl.capabilities.maxSamples);
+  const backgroundBlur = makeTarget();
+  const backgroundBlurScratch = makeTarget();
 
   const foreground = makeTarget(true);
   foreground.samples = tier === "C" ? 0 : Math.min(2, gl.capabilities.maxSamples);
@@ -256,13 +268,14 @@ export function createLayeredFocusTargets(
     toneMapped: false,
     uniforms: {
       toneMappingExposure: { value: gl.toneMappingExposure },
-      uBackground: { value: null },
+      uBackground: { value: background.texture },
+      uBackgroundLinear: { value: 1 },
       uForeground: { value: foreground.texture },
       uLensMask: { value: mask.texture },
       uForegroundOpacity: { value: 0 },
       uLensPop: { value: 0 },
       uTexel: { value: new THREE.Vector2(1, 1) },
-      uFxaa: { value: foreground.samples > 0 ? 0 : 1 },
+      uFxaa: { value: foreground.samples > 0 && background.samples > 0 ? 0 : 1 },
       uAspect: { value: 2.39 },
       uTextureAspect: { value: 2.39 },
       uBgCenterX: { value: 0.5 },
@@ -273,7 +286,6 @@ export function createLayeredFocusTargets(
       uHeat: { value: [new THREE.Vector4(), new THREE.Vector4(), new THREE.Vector4()] },
       uHeatPhase: { value: 0 },
       uSkyReflection: { value: new THREE.Color() },
-      uPlateBlack: { value: new THREE.Color(0, 0, 0) },
       uFgSoft: { value: 0 },
     },
   });
@@ -287,6 +299,9 @@ export function createLayeredFocusTargets(
 
   return {
     hdr,
+    background,
+    backgroundBlur,
+    backgroundBlurScratch,
     foreground,
     mask,
     foregroundBlur,
@@ -301,6 +316,9 @@ export function createLayeredFocusTargets(
 }
 
 export function disposeLayeredFocusTargets(targets: LayeredFocusTargets): void {
+  targets.background.dispose();
+  targets.backgroundBlur.dispose();
+  targets.backgroundBlurScratch.dispose();
   targets.foreground.dispose();
   targets.mask.dispose();
   targets.foregroundBlur.dispose();

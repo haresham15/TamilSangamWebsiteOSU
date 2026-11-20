@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import * as THREE from "three";
-import { AISLE_FROM_Z, AISLE_HALF_WIDTH, DECK_Y, STAGE_RADIUS, buildStageDrum, buildSteelwork, buildWalls, layoutCrowd } from "./forgeGeometry";
+import { AISLE_FROM_Z, AISLE_HALF_WIDTH, DECK_Y, PLINTH_H, STAGE_RADIUS, buildStageDrum, buildSteelwork, buildWalls, layoutCrowd } from "./forgeGeometry";
 
 function allFinite(g: THREE.BufferGeometry) {
   const a = g.attributes.position.array as Float32Array;
@@ -27,7 +27,8 @@ describe("Events forge arena geometry", () => {
     g.computeBoundingBox();
     const box = g.boundingBox!;
     expect(allFinite(g)).toBe(true);
-    expect(box.max.y).toBeCloseTo(DECK_Y, 1);
+    // The deck plus the coin's plinth.
+    expect(box.max.y).toBeCloseTo(DECK_Y + PLINTH_H, 2);
     expect(box.max.x).toBeLessThan(STAGE_RADIUS + 0.5);
     g.dispose();
   });
