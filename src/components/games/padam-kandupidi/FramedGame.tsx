@@ -31,6 +31,7 @@ export function FramedGame() {
   );
 
   const [activeFrame, setActiveFrame] = useState<number>(1); // 1 to 6
+  const [maxUnlockedFrame, setMaxUnlockedFrame] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [guesses, setGuesses] = useState<Array<{ text: string; status: "wrong" | "skipped" | "correct" }>>([]);
@@ -45,11 +46,13 @@ export function FramedGame() {
         if (rec.status === "won") setIsWon(true);
         if (rec.status === "lost") setIsLost(true);
         setActiveFrame(6);
+        setMaxUnlockedFrame(6);
         return;
       }
     }
 
     setActiveFrame(1);
+    setMaxUnlockedFrame(1);
     setGuesses([]);
     setIsWon(false);
     setIsLost(false);
@@ -75,6 +78,7 @@ export function FramedGame() {
       setGuesses((prev) => [...prev, { text: movie.title, status: "correct" }]);
       setIsWon(true);
       setActiveFrame(6);
+      setMaxUnlockedFrame(6);
       arcadeAudio.playVictoryArpeggio();
       if (!isPractice) {
         updateDailyGameRecord(
@@ -104,10 +108,14 @@ export function FramedGame() {
   };
 
   const advanceFrame = () => {
-    if (activeFrame < 6) {
-      setActiveFrame((f) => f + 1);
+    if (maxUnlockedFrame < 6) {
+      const next = maxUnlockedFrame + 1;
+      setMaxUnlockedFrame(next);
+      setActiveFrame(next);
     } else {
       setIsLost(true);
+      setActiveFrame(6);
+      setMaxUnlockedFrame(6);
       if (!isPractice) {
         updateDailyGameRecord(
           "padam-kandupidi",
@@ -174,20 +182,30 @@ export function FramedGame() {
       }}
     >
       <div className="w-full max-w-md mx-auto flex flex-col items-center">
-        {/* Frame Number Tabs */}
+        {/* Frame Number Tabs (Clickable to review past clues) */}
         <div className="flex gap-1.5 w-full mb-3 justify-center">
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <div
-              key={idx}
-              className={`h-2 flex-1 rounded-full transition-all ${
-                idx + 1 === activeFrame
-                  ? "bg-[#A6F0CF] shadow-[0_0_8px_#A6F0CF]"
-                  : idx + 1 < activeFrame
-                  ? "bg-[#E5B869]"
-                  : "bg-[#25173B]"
-              }`}
-            />
-          ))}
+          {Array.from({ length: 6 }).map((_, idx) => {
+            const frameNum = idx + 1;
+            const isUnlocked = frameNum <= maxUnlockedFrame || isWon || isLost;
+            const isCurrent = frameNum === activeFrame;
+
+            return (
+              <button
+                key={idx}
+                type="button"
+                disabled={!isUnlocked}
+                onClick={() => isUnlocked && setActiveFrame(frameNum)}
+                className={`h-2.5 flex-1 rounded-full transition-all cursor-pointer ${
+                  isCurrent
+                    ? "bg-[#A6F0CF] shadow-[0_0_8px_#A6F0CF]"
+                    : isUnlocked
+                    ? "bg-[#E5B869] hover:bg-[#fde047]"
+                    : "bg-[#25173B] cursor-not-allowed opacity-40"
+                }`}
+                title={`Frame ${frameNum}${isUnlocked ? " (View Clue)" : " (Locked)"}`}
+              />
+            );
+          })}
         </div>
 
         {/* Current Active Clue Frame Card */}
@@ -321,6 +339,12 @@ export function FramedGame() {
                   setIsDropdownOpen(true);
                 }}
                 onFocus={() => setIsDropdownOpen(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && filteredMovies.length > 0) {
+                    e.preventDefault();
+                    handleSelectMovie(filteredMovies[0]);
+                  }
+                }}
                 placeholder="Guess movie (e.g. Vikram, Master, Baasha)..."
                 className="flex-1 px-4 py-3 rounded-xl bg-[#1A1228] border border-[rgba(125,96,166,0.4)] text-[#F4F0FA] placeholder-[#C4B7D7]/40 text-sm focus:outline-none focus:border-[#A6F0CF] transition-colors"
               />

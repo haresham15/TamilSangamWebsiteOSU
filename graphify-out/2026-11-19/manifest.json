@@ -432,9 +432,9 @@
     "semantic_hash": ""
   },
   "src/app/robots.ts": {
-    "mtime": 1793829907.466552,
-    "seen": 1793830245.8313286,
-    "ast_hash": "b3e017c0ae14a931082393bea6a7a806",
+    "mtime": 1795146026.7803416,
+    "seen": 1795146081.4383137,
+    "ast_hash": "80ead008fe5ebebde356982f2e472b02",
     "semantic_hash": ""
   },
   "src/app/sitemap.ts": {
@@ -4032,9 +4032,9 @@
     "semantic_hash": ""
   },
   "src/app/games/page.tsx": {
-    "mtime": 1794718967.3718803,
-    "seen": 1794764505.025849,
-    "ast_hash": "a9af26219f12b0687efb267995849971",
+    "mtime": 1795145677.4976544,
+    "seen": 1795146081.3957307,
+    "ast_hash": "903f7557bd99c5464dc692bfa1d6fb69",
     "semantic_hash": ""
   },
   "src/app/home/lab/layout.tsx": {
@@ -4212,9 +4212,9 @@
     "semantic_hash": ""
   },
   "src/components/games-hero/GamesFocusScene.tsx": {
-    "mtime": 1795143251.7321439,
-    "seen": 1795143758.9532304,
-    "ast_hash": "57613e1298a09f728fd008bedfb71265",
+    "mtime": 1795144344.1563137,
+    "seen": 1795146081.5252347,
+    "ast_hash": "1c7d830470074790148a8e471f66cf8a",
     "semantic_hash": ""
   },
   "src/components/games-hero/GamesHeroCanvas.tsx": {
@@ -4254,9 +4254,9 @@
     "semantic_hash": ""
   },
   "src/components/games/GamesHub.tsx": {
-    "mtime": 1795126572.9266815,
-    "seen": 1795141160.7737265,
-    "ast_hash": "fa7ad2ef98cd9ee27d310e5c5460c578",
+    "mtime": 1795145658.9014754,
+    "seen": 1795146081.5378761,
+    "ast_hash": "3f5b9dea7281f8c268ea6cf2b2a92274",
     "semantic_hash": ""
   },
   "src/components/games/SolluThumbnail.tsx": {
@@ -7932,15 +7932,309 @@
     "semantic_hash": ""
   },
   "tests/games-hero.spec.ts": {
-    "mtime": 1795143520.8441815,
-    "seen": 1795143759.3059142,
-    "ast_hash": "224adc20d5f79fa1096480e0e4b42047",
+    "mtime": 1795143921.1671755,
+    "seen": 1795146081.7348542,
+    "ast_hash": "47374f23bcb5e5403051aef844a99375",
     "semantic_hash": ""
   },
-  "playwright.gpu.tmp.config.ts": {
-    "mtime": 1795143606.218534,
-    "seen": 1795143758.6632257,
-    "ast_hash": "9dfee976095d00f5302fbb2d4355e9c4",
+  "src/app/api/games/paadal/[trackId]/route.ts": {
+    "mtime": 1795144647.6704469,
+    "seen": 1795146081.3702953,
+    "ast_hash": "55e86728407d332b8f5ffe2193a7b035",
+    "semantic_hash": ""
+  },
+  "src/app/games/arasigal/page.tsx": {
+    "mtime": 1795144827.827936,
+    "seen": 1795146081.3883653,
+    "ast_hash": "fbcf854ebd1207e034c0b460da010a23",
+    "semantic_hash": ""
+  },
+  "src/app/games/en-puthir/page.tsx": {
+    "mtime": 1795144975.410738,
+    "seen": 1795146081.38837,
+    "ast_hash": "255f0c5e77667d312ed804682cad349b",
+    "semantic_hash": ""
+  },
+  "src/app/games/ezhuthu-theni/page.tsx": {
+    "mtime": 1795145140.6451085,
+    "seen": 1795146081.3883724,
+    "ast_hash": "7034115b45360eefa8553def218b4e78",
+    "semantic_hash": ""
+  },
+  "src/app/games/irattaichinnam/page.tsx": {
+    "mtime": 1795144878.914096,
+    "seen": 1795146081.3883753,
+    "ast_hash": "2197467222872b12d96999e9f3b6e555",
+    "semantic_hash": ""
+  },
+  "src/app/games/kolam-path/page.tsx": {
+    "mtime": 1795144763.9430537,
+    "seen": 1795146081.388378,
+    "ast_hash": "e13f406350d86f7ca5a8c9c61dd63271",
+    "semantic_hash": ""
+  },
+  "src/app/games/kurukkezhuthu/page.tsx": {
+    "mtime": 1795145195.6435962,
+    "seen": 1795146081.3883815,
+    "ast_hash": "41f2d0a9c4bbf0d9863fe5a6c147f42c",
+    "semantic_hash": ""
+  },
+  "src/app/games/naanku-sorkal/page.tsx": {
+    "mtime": 1795144925.9137383,
+    "seen": 1795146081.3957093,
+    "ast_hash": "c81671914b97135ab6eac1f96c075b1a",
+    "semantic_hash": ""
+  },
+  "src/app/games/oor-kandupidi/page.tsx": {
+    "mtime": 1795145092.4145596,
+    "seen": 1795146081.395716,
+    "ast_hash": "b97e34a298c8b3143fbb4ed3c53244d3",
+    "semantic_hash": ""
+  },
+  "src/app/games/paadal-kandupidi/page.tsx": {
+    "mtime": 1795145299.9460104,
+    "seen": 1795146081.39572,
+    "ast_hash": "de38763effed4fea00d35da46123279b",
+    "semantic_hash": ""
+  },
+  "src/app/games/padam-kandupidi/page.tsx": {
+    "mtime": 1795145362.6820624,
+    "seen": 1795146081.3957243,
+    "ast_hash": "6f8c1f1efdc0c37d6f91a4f518d15531",
+    "semantic_hash": ""
+  },
+  "src/app/games/sol-vettai/page.tsx": {
+    "mtime": 1795145247.2914758,
+    "seen": 1795146081.3957362,
+    "ast_hash": "6ed3b28b35f15607baad9d70c2c4e6e4",
+    "semantic_hash": ""
+  },
+  "src/app/games/thodarbu/page.tsx": {
+    "mtime": 1795145024.7377527,
+    "seen": 1795146081.3957417,
+    "ast_hash": "06ba1da8b09afe2d830b7d30feb614a1",
+    "semantic_hash": ""
+  },
+  "src/components/games/ArcadeGameCard.tsx": {
+    "mtime": 1795145440.264513,
+    "seen": 1795146081.537864,
+    "ast_hash": "e1855fbdf8c0ca084706a7235d78b584",
+    "semantic_hash": ""
+  },
+  "src/components/games/ArcadeGlyphs.tsx": {
+    "mtime": 1795145413.3850403,
+    "seen": 1795146081.537868,
+    "ast_hash": "9ab312e01e4d5bb7d722bb281c9975e6",
+    "semantic_hash": ""
+  },
+  "src/components/games/DailyGauntletStrip.tsx": {
+    "mtime": 1795145393.0267663,
+    "seen": 1795146081.5378711,
+    "ast_hash": "a808b1c1962bddce26ffe8a33b813a67",
+    "semantic_hash": ""
+  },
+  "src/components/games/arasigal/ArasigalGame.tsx": {
+    "mtime": 1795144824.3738284,
+    "seen": 1795146081.552573,
+    "ast_hash": "85005baeb1ec9b6764b9b05c118e6a3a",
+    "semantic_hash": ""
+  },
+  "src/components/games/en-puthir/EnPuthirGame.tsx": {
+    "mtime": 1795144970.5391598,
+    "seen": 1795146081.5529146,
+    "ast_hash": "3a9ad7132523118adcf9533e49948829",
+    "semantic_hash": ""
+  },
+  "src/components/games/ezhuthu-theni/SpellingBeeGame.tsx": {
+    "mtime": 1795145136.6341105,
+    "seen": 1795146081.552918,
+    "ast_hash": "86fcfa871372ce9ec65dc5b1be08cf63",
+    "semantic_hash": ""
+  },
+  "src/components/games/irattaichinnam/TangoGame.tsx": {
+    "mtime": 1795144873.4582837,
+    "seen": 1795146081.5838284,
+    "ast_hash": "f198b2dfc35c078b39f5174eb8012c5e",
+    "semantic_hash": ""
+  },
+  "src/components/games/kolam-path/KolamPathGame.tsx": {
+    "mtime": 1795144758.326467,
+    "seen": 1795146081.5838351,
+    "ast_hash": "2bb6f0018c7de0e606614b9733923a0a",
+    "semantic_hash": ""
+  },
+  "src/components/games/kurukkezhuthu/MiniCrosswordGame.tsx": {
+    "mtime": 1795145191.8446982,
+    "seen": 1795146081.5838397,
+    "ast_hash": "333cab9867b932a2cd0b2bbb0cc2887b",
+    "semantic_hash": ""
+  },
+  "src/components/games/naanku-sorkal/QuordleGame.tsx": {
+    "mtime": 1795144922.357329,
+    "seen": 1795146081.584405,
+    "ast_hash": "096e5362aac493e07c1b52737c794d6e",
+    "semantic_hash": ""
+  },
+  "src/components/games/oor-kandupidi/WorldleGame.tsx": {
+    "mtime": 1795145088.9033885,
+    "seen": 1795146081.58441,
+    "ast_hash": "29de057ae53d65a925a54e777245b127",
+    "semantic_hash": ""
+  },
+  "src/components/games/paadal-kandupidi/HeardleGame.tsx": {
+    "mtime": 1795145294.8562505,
+    "seen": 1795146081.5844133,
+    "ast_hash": "514329207ee0369b04c05d215f0c992c",
+    "semantic_hash": ""
+  },
+  "src/components/games/padam-kandupidi/FramedGame.tsx": {
+    "mtime": 1795145358.2380147,
+    "seen": 1795146081.584416,
+    "ast_hash": "3a1216d77f7fb07e545ab8f2733e88f6",
+    "semantic_hash": ""
+  },
+  "src/components/games/shared/GameDrawer.tsx": {
+    "mtime": 1795144678.5660603,
+    "seen": 1795146081.5844188,
+    "ast_hash": "81530293935bf7f8bfa50e0731e63b06",
+    "semantic_hash": ""
+  },
+  "src/components/games/shared/GameShell.tsx": {
+    "mtime": 1795144699.1110177,
+    "seen": 1795146081.5844219,
+    "ast_hash": "f5bf7c52d08b21bba3d3cfcfbfcf6bea",
+    "semantic_hash": ""
+  },
+  "src/components/games/shared/HowToPlayModal.tsx": {
+    "mtime": 1795144661.5298493,
+    "seen": 1795146081.5844254,
+    "ast_hash": "3bbd9479d0d0c6fdf29557343e2b5963",
+    "semantic_hash": ""
+  },
+  "src/components/games/shared/VirtualKeyboard.tsx": {
+    "mtime": 1795144711.5364254,
+    "seen": 1795146081.5844293,
+    "ast_hash": "7c8ba48b7df3d94c66950ab26e20ac9f",
+    "semantic_hash": ""
+  },
+  "src/components/games/sol-vettai/StrandsGame.tsx": {
+    "mtime": 1795145243.1257303,
+    "seen": 1795146081.584433,
+    "ast_hash": "904f54ac61878ccc8db2b47634fa2f5b",
+    "semantic_hash": ""
+  },
+  "src/components/games/thodarbu/ThodarbuGame.tsx": {
+    "mtime": 1795145020.6682832,
+    "seen": 1795146081.5844367,
+    "ast_hash": "a7d560e4adfe85a245146d1fffa84f9b",
+    "semantic_hash": ""
+  },
+  "src/data/games/arasigalData.ts": {
+    "mtime": 1795144782.3239455,
+    "seen": 1795146081.6975563,
+    "ast_hash": "b8fa5cf4e13457db67aa97e6ed75dc2d",
+    "semantic_hash": ""
+  },
+  "src/data/games/districtsData.ts": {
+    "mtime": 1795145060.9226482,
+    "seen": 1795146081.6975603,
+    "ast_hash": "e10e2b86f3d1455d63fb38575e4f903e",
+    "semantic_hash": ""
+  },
+  "src/data/games/miniCrosswordData.ts": {
+    "mtime": 1795145159.7029932,
+    "seen": 1795146081.697564,
+    "ast_hash": "3a455e0b9e5d2f79bf4ae1b26160e516",
+    "semantic_hash": ""
+  },
+  "src/data/games/paadalData.ts": {
+    "mtime": 1795145263.8354895,
+    "seen": 1795146081.6975675,
+    "ast_hash": "542c3840fb2ddf9cb514c55557998f8b",
+    "semantic_hash": ""
+  },
+  "src/data/games/padamData.ts": {
+    "mtime": 1795145329.18653,
+    "seen": 1795146081.6975715,
+    "ast_hash": "1f898f9ba8eff1b7942aa9bed0d63b91",
+    "semantic_hash": ""
+  },
+  "src/data/games/quordleData.ts": {
+    "mtime": 1795144891.338476,
+    "seen": 1795146081.6975746,
+    "ast_hash": "188a51dce05deb63385520e15e23e9a3",
+    "semantic_hash": ""
+  },
+  "src/data/games/spellingBeeData.ts": {
+    "mtime": 1795145108.4953072,
+    "seen": 1795146081.6975777,
+    "ast_hash": "e80c902005fc112bb4ef7657258a42b6",
+    "semantic_hash": ""
+  },
+  "src/data/games/strandsData.ts": {
+    "mtime": 1795145214.6693704,
+    "seen": 1795146081.6975806,
+    "ast_hash": "9fc69892548b069993c2a9c94ac70fd3",
+    "semantic_hash": ""
+  },
+  "src/data/games/tangoData.ts": {
+    "mtime": 1795144843.4090593,
+    "seen": 1795146081.6975842,
+    "ast_hash": "304b4299d4fc2439c3e8b5ea702457ed",
+    "semantic_hash": ""
+  },
+  "src/data/games/thodarbuData.ts": {
+    "mtime": 1795144996.027617,
+    "seen": 1795146081.6975873,
+    "ast_hash": "eafdda909dcaf54d6bc21354fe0c474b",
+    "semantic_hash": ""
+  },
+  "src/lib/games/audio.ts": {
+    "mtime": 1795144602.6349638,
+    "seen": 1795146081.722198,
+    "ast_hash": "89e1142d6260c425c3dcd2f9d3405764",
+    "semantic_hash": ""
+  },
+  "src/lib/games/generators/kolamGenerator.ts": {
+    "mtime": 1795144728.7863264,
+    "seen": 1795146081.7222388,
+    "ast_hash": "4a675789c0c854ce8a7974d2eb79c77c",
+    "semantic_hash": ""
+  },
+  "src/lib/games/generators/nerdleGenerator.ts": {
+    "mtime": 1795144942.0797653,
+    "seen": 1795146081.7222424,
+    "ast_hash": "ae3c68e9586a8e475a86c3514c93d134",
+    "semantic_hash": ""
+  },
+  "src/lib/games/graphemes.ts": {
+    "mtime": 1795144572.3410506,
+    "seen": 1795146081.7222455,
+    "ast_hash": "97fe7210bf66b60b64664936c3322815",
+    "semantic_hash": ""
+  },
+  "src/lib/games/seed.ts": {
+    "mtime": 1795144563.1225088,
+    "seen": 1795146081.7222486,
+    "ast_hash": "130d0179f9d186dc814155ff079cd771",
+    "semantic_hash": ""
+  },
+  "src/lib/games/share.ts": {
+    "mtime": 1795144640.442523,
+    "seen": 1795146081.7222514,
+    "ast_hash": "b9bedf41afdc3953889545694d68713f",
+    "semantic_hash": ""
+  },
+  "src/lib/games/storage.ts": {
+    "mtime": 1795144629.0235229,
+    "seen": 1795146081.7222545,
+    "ast_hash": "81837dc8e52f5cd49206a63957a70eec",
+    "semantic_hash": ""
+  },
+  "src/lib/games/tanglish.ts": {
+    "mtime": 1795145969.3063478,
+    "seen": 1795146081.7222571,
+    "ast_hash": "f465b3eeaa08c29baa510a2b846b05bc",
     "semantic_hash": ""
   }
 }

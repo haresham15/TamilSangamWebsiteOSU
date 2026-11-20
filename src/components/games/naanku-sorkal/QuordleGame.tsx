@@ -224,6 +224,16 @@ export function QuordleGame() {
     arcadeAudio.playSuccessChime();
   };
 
+  // Auto-switch mobile tab to next unsolved board
+  useEffect(() => {
+    if (boardsState[activeTab]?.isSolved) {
+      const nextUnsolved = boardsState.findIndex((b) => !b.isSolved);
+      if (nextUnsolved !== -1) {
+        setActiveTab(nextUnsolved);
+      }
+    }
+  }, [boardsState, activeTab]);
+
   // Physical keyboard support
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -238,7 +248,7 @@ export function QuordleGame() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  });
+  }, [handleEnter, handleDelete, handleChar]);
 
   const getTileBg = (evalStatus: LetterEval) => {
     switch (evalStatus) {

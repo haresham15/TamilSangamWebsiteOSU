@@ -31,6 +31,7 @@ export function ThodarbuGame() {
 
   const [revealedCount, setRevealedCount] = useState<number>(1);
   const [guessInput, setGuessInput] = useState<string>("");
+  const [pastGuesses, setPastGuesses] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isWon, setIsWon] = useState(false);
   const [isLost, setIsLost] = useState(false);
@@ -52,6 +53,7 @@ export function ThodarbuGame() {
 
     setRevealedCount(1);
     setGuessInput("");
+    setPastGuesses([]);
     setErrorMessage(null);
     setIsWon(false);
     setIsLost(false);
@@ -123,6 +125,7 @@ export function ThodarbuGame() {
         );
       }
     } else {
+      setPastGuesses((prev) => [...prev, trimmed]);
       arcadeAudio.playErrorThud();
       setErrorMessage("Not quite! Try another connection or reveal the next clue.");
       // If not yet at 5 clues, reveal next clue on wrong guess
@@ -259,6 +262,23 @@ export function ThodarbuGame() {
                 ({puzzle.tamilAnswer})
               </span>
             </h3>
+          </div>
+        )}
+
+        {/* Past Incorrect Guesses */}
+        {pastGuesses.length > 0 && !isWon && !isLost && (
+          <div className="flex flex-wrap gap-1.5 justify-center mb-3">
+            <span className="text-[10px] font-mono uppercase text-[#C4B7D7]/60 self-center mr-1">
+              Tried:
+            </span>
+            {pastGuesses.map((g, idx) => (
+              <span
+                key={idx}
+                className="px-2.5 py-0.5 rounded-full bg-red-950/40 border border-red-500/30 text-red-300 text-xs font-serif line-through"
+              >
+                {g}
+              </span>
+            ))}
           </div>
         )}
 

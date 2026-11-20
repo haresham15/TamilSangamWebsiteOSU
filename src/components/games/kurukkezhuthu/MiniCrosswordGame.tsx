@@ -15,6 +15,7 @@ import {
 } from "@/lib/games/storage";
 import { generateShareCard } from "@/lib/games/share";
 import { arcadeAudio } from "@/lib/games/audio";
+import { VirtualKeyboard } from "../shared/VirtualKeyboard";
 import { Check, Eye, HelpCircle } from "lucide-react";
 
 export function MiniCrosswordGame() {
@@ -232,7 +233,7 @@ export function MiniCrosswordGame() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  });
+  }, [direction, selectedCell, solutionGrid, isWon, handleDelete, handleKeyInput]);
 
   const handleRevealLetter = () => {
     const { r, c } = selectedCell;
@@ -395,6 +396,16 @@ export function MiniCrosswordGame() {
           >
             <Eye className="w-3.5 h-3.5" /> Reveal Letter
           </button>
+        </div>
+
+        {/* Virtual Keyboard for Mobile and Desktop */}
+        <div className="w-full mb-5">
+          <VirtualKeyboard
+            onChar={handleKeyInput}
+            onDelete={handleDelete}
+            onEnter={() => setDirection((d) => (d === "across" ? "down" : "across"))}
+            disabled={isWon}
+          />
         </div>
 
         {/* Clues Summary List */}

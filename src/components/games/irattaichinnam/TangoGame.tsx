@@ -169,21 +169,37 @@ export function TangoGame() {
     return violations;
   }, [board, puzzle]);
 
-  // Check win condition
+  // Check win condition directly on candidate board
   const checkWin = useCallback(
     (currentBoard: CellVal[][]) => {
-      // Must be completely filled
+      // 1. Must be completely filled
       for (let r = 0; r < 6; r++) {
         for (let c = 0; c < 6; c++) {
           if (!currentBoard[r][c]) return false;
         }
       }
 
-      if (threeInARowViolations.size > 0 || constraintViolations.size > 0) {
-        return false;
+      // 2. No 3 in a row horizontally
+      for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 4; c++) {
+          const v1 = currentBoard[r][c];
+          const v2 = currentBoard[r][c + 1];
+          const v3 = currentBoard[r][c + 2];
+          if (v1 && v1 === v2 && v2 === v3) return false;
+        }
       }
 
-      // Check all rows have 3S, 3M and all cols have 3S, 3M
+      // 3. No 3 in a row vertically
+      for (let c = 0; c < 6; c++) {
+        for (let r = 0; r < 4; r++) {
+          const v1 = currentBoard[r][c];
+          const v2 = currentBoard[r + 1][c];
+          const v3 = currentBoard[r + 2][c];
+          if (v1 && v1 === v2 && v2 === v3) return false;
+        }
+      }
+
+      // 4. Equal 3S and 3M in every row and col
       for (let i = 0; i < 6; i++) {
         let rS = 0;
         let rM = 0;
@@ -198,9 +214,28 @@ export function TangoGame() {
         if (rS !== 3 || rM !== 3 || cS !== 3 || cM !== 3) return false;
       }
 
+      // 5. Constraints
+      for (const hc of puzzle.horizontalConstraints) {
+        const v1 = currentBoard[hc.r][hc.c];
+        const v2 = currentBoard[hc.r][hc.c + 1];
+        if (v1 && v2) {
+          if (hc.type === "=" && v1 !== v2) return false;
+          if (hc.type === "x" && v1 === v2) return false;
+        }
+      }
+
+      for (const vc of puzzle.verticalConstraints) {
+        const v1 = currentBoard[vc.r][vc.c];
+        const v2 = currentBoard[vc.r + 1][vc.c];
+        if (v1 && v2) {
+          if (vc.type === "=" && v1 !== v2) return false;
+          if (vc.type === "x" && v1 === v2) return false;
+        }
+      }
+
       return true;
     },
-    [threeInARowViolations, constraintViolations]
+    [puzzle]
   );
 
   const handleCellClick = (r: number, c: number) => {

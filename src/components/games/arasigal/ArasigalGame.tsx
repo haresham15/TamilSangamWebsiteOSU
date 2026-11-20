@@ -1,7 +1,7 @@
 // src/components/games/arasigal/ArasigalGame.tsx
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { GameShell } from "../shared/GameShell";
 import {
   getArasigalPuzzle,
@@ -42,6 +42,7 @@ export function ArasigalGame() {
   const [timerActive, setTimerActive] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragAction, setDragAction] = useState<CellMark | null>(null);
+  const boardRef = useRef<HTMLDivElement>(null);
 
   // Initialize or load record
   useEffect(() => {
@@ -199,21 +200,47 @@ export function ArasigalGame() {
     const curr = board[r][c];
     if (curr === "empty") {
       setDragAction("cross");
-      handleCellClick(r, c);
     } else {
       setDragAction(null);
     }
+    handleCellClick(r, c);
   };
 
   const handlePointerEnter = (r: number, c: number) => {
     if (!isDragging || isWon || dragAction !== "cross") return;
     if (board[r][c] === "empty") {
       setBoard((prev) => {
+        if (prev[r][c] !== "empty") return prev;
         const next = prev.map((row) => [...row]);
         next[r][c] = "cross";
         return next;
       });
       arcadeAudio.playClick(420);
+    }
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging || isWon || dragAction !== "cross" || !boardRef.current) return;
+    const rect = boardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const cellWidth = rect.width / puzzle.gridSize;
+    const cellHeight = rect.height / puzzle.gridSize;
+
+    const col = Math.floor(x / cellWidth);
+    const row = Math.floor(y / cellHeight);
+
+    if (row >= 0 && row < puzzle.gridSize && col >= 0 && col < puzzle.gridSize) {
+      if (board[row][col] === "empty") {
+        setBoard((prev) => {
+          if (prev[row][col] !== "empty") return prev;
+          const next = prev.map((r) => [...r]);
+          next[row][col] = "cross";
+          return next;
+        });
+        arcadeAudio.playClick(420);
+      }
     }
   };
 
@@ -302,6 +329,8 @@ export function ArasigalGame() {
 
         {/* Arasigal Board */}
         <div
+          ref={boardRef}
+          onPointerMove={handlePointerMove}
           onPointerUp={() => setIsDragging(false)}
           onPointerLeave={() => setIsDragging(false)}
           style={{ touchAction: "none" }}

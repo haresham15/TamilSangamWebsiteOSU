@@ -197,7 +197,7 @@ export function EnPuthirGame() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  });
+  }, [handleEnter, handleDelete, handleChar]);
 
   const getTileBg = (evalStatus: TileEval) => {
     switch (evalStatus) {

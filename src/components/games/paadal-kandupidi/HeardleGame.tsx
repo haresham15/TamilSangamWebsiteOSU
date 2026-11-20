@@ -48,6 +48,14 @@ export function HeardleGame() {
   // Fetch preview URL from route handler
   useEffect(() => {
     let active = true;
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    setAudioUrl(null);
+    setIsPlaying(false);
+    setPlaybackProgress(0);
+
     fetch(`/api/games/paadal/${targetTrack.trackId}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
@@ -350,6 +358,12 @@ export function HeardleGame() {
                   setErrorMessage(null);
                 }}
                 onFocus={() => setIsDropdownOpen(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && filteredTracks.length > 0) {
+                    e.preventDefault();
+                    handleSelectTrack(filteredTracks[0]);
+                  }
+                }}
                 placeholder="Search song or movie..."
                 className="flex-1 px-4 py-3 rounded-xl bg-[#1A1228] border border-[rgba(125,96,166,0.4)] text-[#F4F0FA] placeholder-[#C4B7D7]/40 text-sm focus:outline-none focus:border-[#A6F0CF] transition-colors"
               />

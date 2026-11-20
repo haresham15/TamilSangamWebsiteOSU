@@ -178,6 +178,9 @@ export function KolamPathGame() {
       // Snap back to this cell
       setPlayerPath((prev) => prev.slice(0, existingIndex + 1));
       arcadeAudio.playClick(440);
+    } else {
+      // Direct click/tap to advance step
+      handleCellEnter(r, c);
     }
     setIsDragging(true);
   };
@@ -373,6 +376,17 @@ export function KolamPathGame() {
               strokeLinejoin="round"
               strokeDasharray={isWon ? "none" : "none"}
             />
+            {/* Active Chalk Tip Glow */}
+            {playerPath.length > 0 && !isWon && (
+              <circle
+                cx={(playerPath[playerPath.length - 1].col + 0.5) * (100 / puzzle.gridSize)}
+                cy={(playerPath[playerPath.length - 1].row + 0.5) * (100 / puzzle.gridSize)}
+                r="3.5"
+                fill="#A6F0CF"
+                stroke="#FFFFFF"
+                strokeWidth="1"
+              />
+            )}
           </svg>
         </div>
 

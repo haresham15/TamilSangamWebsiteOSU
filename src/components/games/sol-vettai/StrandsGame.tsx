@@ -119,6 +119,23 @@ export function StrandsGame() {
     }
   };
 
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging || isWon || !boardRef.current) return;
+    const rect = boardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const cellWidth = rect.width / 6;
+    const cellHeight = rect.height / 8;
+
+    const col = Math.floor(x / cellWidth);
+    const row = Math.floor(y / cellHeight);
+
+    if (row >= 0 && row < 8 && col >= 0 && col < 6) {
+      handlePointerEnter(row, col);
+    }
+  };
+
   const handlePointerUp = useCallback(() => {
     if (!isDragging || isWon) return;
     setIsDragging(false);
@@ -178,6 +195,17 @@ export function StrandsGame() {
     const s = sec % 60;
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
+
+  const selectionPolyline = useMemo(() => {
+    if (selectedCells.length < 1) return "";
+    return selectedCells
+      .map((p) => {
+        const x = (p.c + 0.5) * (100 / 6);
+        const y = (p.r + 0.5) * (100 / 8);
+        return `${x},${y}`;
+      })
+      .join(" ");
+  }, [selectedCells]);
 
   const shareCard = useMemo(() => {
     return generateShareCard({
@@ -252,51 +280,73 @@ export function StrandsGame() {
         {/* 6x8 Board Grid */}
         <div
           ref={boardRef}
+          onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerUp}
           style={{ touchAction: "none" }}
-          className="w-full aspect-[6/8] p-2 rounded-2xl bg-[#140C20] border-2 border-[rgba(125,96,166,0.5)] shadow-2xl grid grid-cols-6 grid-rows-8 gap-1.5 select-none mb-3"
+          className="relative w-full aspect-[6/8] p-2 rounded-2xl bg-[#140C20] border-2 border-[rgba(125,96,166,0.5)] shadow-2xl select-none mb-3 overflow-hidden"
         >
-          {puzzle.grid.map((row, r) =>
-            row.map((letter, c) => {
-              const key = `${r},${c}`;
-              const foundType = cellColorMap.get(key);
-              const isSelected = selectedCells.some(
-                (p) => p.r === r && p.c === c
-              );
-              const isHinted = highlightedHintCells.some(
-                (p) => p.r === r && p.c === c
-              );
-
-              let tileStyle =
-                "bg-[#1E142E] text-[#F4F0FA] border-[rgba(125,96,166,0.3)] hover:bg-[#25173B]";
-
-              if (foundType === "spangram") {
-                tileStyle =
-                  "bg-[#E5B869] text-[#140C20] font-black border-[#FDE047] shadow-[0_0_12px_rgba(229,184,105,0.4)]";
-              } else if (foundType === "theme") {
-                tileStyle =
-                  "bg-[#38BDF8] text-[#0A0612] font-black border-[#7DD3FC] shadow-[0_0_12px_rgba(56,189,248,0.3)]";
-              } else if (isSelected) {
-                tileStyle =
-                  "bg-[#A6F0CF] text-[#140C20] font-bold border-[#34D399] scale-95 shadow-[0_0_10px_#A6F0CF]";
-              } else if (isHinted) {
-                tileStyle =
-                  "bg-[#341F50] text-[#E5B869] border-[#E5B869] animate-pulse";
-              }
-
-              return (
-                <div
-                  key={key}
-                  onPointerDown={() => handlePointerDown(r, c)}
-                  onPointerEnter={() => handlePointerEnter(r, c)}
-                  className={`rounded-xl flex items-center justify-center font-mono font-bold text-sm sm:text-base border transition-all cursor-pointer ${tileStyle}`}
-                >
-                  {letter}
-                </div>
-              );
-            })
+          {/* Active SVG Selection Trace */}
+          {selectedCells.length > 1 && (
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none z-10"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+            >
+              <polyline
+                points={selectionPolyline}
+                fill="none"
+                stroke="#A6F0CF"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                opacity="0.8"
+              />
+            </svg>
           )}
+
+          <div className="w-full h-full grid grid-cols-6 grid-rows-8 gap-1.5">
+            {puzzle.grid.map((row, r) =>
+              row.map((letter, c) => {
+                const key = `${r},${c}`;
+                const foundType = cellColorMap.get(key);
+                const isSelected = selectedCells.some(
+                  (p) => p.r === r && p.c === c
+                );
+                const isHinted = highlightedHintCells.some(
+                  (p) => p.r === r && p.c === c
+                );
+
+                let tileStyle =
+                  "bg-[#1E142E] text-[#F4F0FA] border-[rgba(125,96,166,0.3)] hover:bg-[#25173B]";
+
+                if (foundType === "spangram") {
+                  tileStyle =
+                    "bg-[#E5B869] text-[#140C20] font-black border-[#FDE047] shadow-[0_0_12px_rgba(229,184,105,0.4)]";
+                } else if (foundType === "theme") {
+                  tileStyle =
+                    "bg-[#38BDF8] text-[#0A0612] font-black border-[#7DD3FC] shadow-[0_0_12px_rgba(56,189,248,0.3)]";
+                } else if (isSelected) {
+                  tileStyle =
+                    "bg-[#A6F0CF] text-[#140C20] font-bold border-[#34D399] scale-95 shadow-[0_0_10px_#A6F0CF]";
+                } else if (isHinted) {
+                  tileStyle =
+                    "bg-[#341F50] text-[#E5B869] border-[#E5B869] animate-pulse";
+                }
+
+                return (
+                  <div
+                    key={key}
+                    onPointerDown={() => handlePointerDown(r, c)}
+                    onPointerEnter={() => handlePointerEnter(r, c)}
+                    className={`rounded-xl flex items-center justify-center font-mono font-bold text-sm sm:text-base border transition-all cursor-pointer ${tileStyle}`}
+                  >
+                    {letter}
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
 
         {/* Bottom Toolbar: Hint Button & Words Counter */}

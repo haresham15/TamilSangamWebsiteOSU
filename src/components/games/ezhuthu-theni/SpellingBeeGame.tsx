@@ -159,6 +159,7 @@ export function SpellingBeeGame() {
       } else if (e.key === "Backspace") {
         handleDelete();
       } else if (e.key === " ") {
+        e.preventDefault();
         handleShuffle();
       } else {
         const upper = e.key.toUpperCase();
@@ -172,7 +173,7 @@ export function SpellingBeeGame() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  });
+  }, [honeycomb, currentInput, foundWords]);
 
   const isComplete = currentScore >= maxScore * 0.7; // Scholar threshold
 
