@@ -9,6 +9,7 @@ export interface ArcadeStorageSchemaV1 {
     highContrastTiles: boolean;
     culturalHintsEnabled: boolean;
   };
+  solluStats?: SolluStats;
   sollu: Record<
     string, // key = `${editionId}:${mode}` e.g. "2026-10-A:tanglish"
     {
@@ -209,4 +210,63 @@ export function getEditionSolvedCount(editionId: string): number {
 /** Count all editions where both games were solved */
 export function getAllTimeEditionsCompleted(): number {
   return BIWEEKLY_EDITIONS_LIST.filter((ed) => isEditionComplete(ed)).length;
+}
+
+export interface SolluStats {
+  played: number;
+  won: number;
+  currentStreak: number;
+  maxStreak: number;
+  guessDistribution: Record<1 | 2 | 3 | 4 | 5 | 6, number>;
+}
+
+export function getSolluStats(): SolluStats {
+  const store = getArcadeStorage();
+  if (store.solluStats) return store.solluStats;
+
+  // Derive stats from existing sollu history if available
+  let played = 0;
+  let won = 0;
+  const dist: Record<1 | 2 | 3 | 4 | 5 | 6, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+
+  for (const entry of Object.values(store.sollu)) {
+    if (entry.status === "won" || entry.status === "lost") {
+      played++;
+      if (entry.status === "won") {
+        won++;
+        const gCount = Math.min(6, Math.max(1, entry.guesses.length)) as 1 | 2 | 3 | 4 | 5 | 6;
+        dist[gCount] = (dist[gCount] || 0) + 1;
+      }
+    }
+  }
+
+  return {
+    played,
+    won,
+    currentStreak: won > 0 ? 1 : 0,
+    maxStreak: won > 0 ? 1 : 0,
+    guessDistribution: dist,
+  };
+}
+
+export function recordSolluGameResult(isWon: boolean, numGuesses: number): SolluStats {
+  const store = getArcadeStorage();
+  const stats = getSolluStats();
+
+  stats.played += 1;
+  if (isWon) {
+    stats.won += 1;
+    stats.currentStreak += 1;
+    if (stats.currentStreak > stats.maxStreak) {
+      stats.maxStreak = stats.currentStreak;
+    }
+    const bucket = Math.min(6, Math.max(1, numGuesses)) as 1 | 2 | 3 | 4 | 5 | 6;
+    stats.guessDistribution[bucket] = (stats.guessDistribution[bucket] || 0) + 1;
+  } else {
+    stats.currentStreak = 0;
+  }
+
+  store.solluStats = stats;
+  saveArcadeStorage(store);
+  return stats;
 }

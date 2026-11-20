@@ -3,29 +3,63 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Copy, Check, RotateCcw } from "lucide-react";
-import { soundEngine } from "@/lib/soundEngine";
 import {
+  Copy,
+  Check,
+  RotateCcw,
+  Volume2,
+  VolumeX,
+  Lightbulb,
+  BarChart2,
+  Share2,
+  Sparkles,
+  Flame,
+  Trophy,
+  X,
+} from "lucide-react";
+import { soundEngine } from "@/lib/soundEngine";
+import { speakTamil, isSpeechSupported, stopTamilSpeech } from "@/lib/tamilSpeech";
+import {
+  SOLLU_BIWEEKLY_EDITIONS,
   SOLLU_MONTHLY_EDITIONS,
   TANG_ENGLISH_VALID_DICTIONARY,
   splitTamilAksharas,
   type SolluEdition,
 } from "@/data/gamesData";
-import { getArcadeStorage, saveArcadeStorage } from "@/lib/gamesStorage";
+import {
+  getArcadeStorage,
+  saveArcadeStorage,
+  getSolluStats,
+  recordSolluGameResult,
+  type SolluStats,
+} from "@/lib/gamesStorage";
 
 interface SolluWordleProps {
-  editionKey: string; // "2026-10" | "2026-11" | "2026-12"
+  editionKey: string; // e.g. "2026-10-A", "2027-01-A", "2026-10"
   onSolved?: () => void;
 }
 
 type TileStatus = "correct" | "present" | "absent" | "empty";
 
+const VICTORY_APPRAISALS: Record<number, { ta: string; en: string; icon: string }> = {
+  1: { ta: "ஒரு நொடியில்!", en: "First-Try Legend!", icon: "🌟" },
+  2: { ta: "அசாத்திய புத்திசாலி!", en: "Pure Genius!", icon: "🏆" },
+  3: { ta: "அருமை!", en: "Magnificent Play!", icon: "🎯" },
+  4: { ta: "கெத்து!", en: "Solid & Stylish!", icon: "⚡" },
+  5: { ta: "அப்பாடா தப்பிச்சீங்க!", en: "Clutch Save!", icon: "😌" },
+  6: { ta: "கடைசி வினாடி வெற்றி!", en: "Buzzer Beater!", icon: "🔥" },
+};
+
 export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
   const edition: SolluEdition = useMemo(() => {
-    return SOLLU_MONTHLY_EDITIONS[editionKey] || SOLLU_MONTHLY_EDITIONS["2026-10"];
+    return (
+      SOLLU_BIWEEKLY_EDITIONS[editionKey] ||
+      SOLLU_MONTHLY_EDITIONS[editionKey] ||
+      SOLLU_BIWEEKLY_EDITIONS["2026-10-A"]
+    );
   }, [editionKey]);
 
-  // Mode: "tanglish" (5-letter English letters) vs "tamil" (Tamil script Aksharas)
+  // Mode: "tanglish" (3-7 letter Roman letters) vs "tamil" (Tamil script Aksharas)
   const [mode, setMode] = useState<"tanglish" | "tamil">(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -60,9 +94,14 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
     const saved = store.sollu[`${editionKey}:${mode}`];
     return saved?.status === "won" ? "won" : saved?.status === "lost" ? "lost" : "playing";
   });
+
   const [shakeRow, setShakeRow] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [copiedShare, setCopiedShare] = useState<boolean>(false);
+  const [isHintOpen, setIsHintOpen] = useState<boolean>(false);
+  const [isStatsOpen, setIsStatsOpen] = useState<boolean>(false);
+  const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
+  const [stats, setStats] = useState<SolluStats>(() => getSolluStats());
 
   const handleModeChange = (newMode: "tanglish" | "tamil") => {
     if (newMode === mode) return;
@@ -169,10 +208,11 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
     const currentTokens = getTokens(currentGuess);
     if (currentTokens.length !== wordLength) {
       setShakeRow(true);
+      soundEngine.playParaiThump(70);
       setErrorMessage(
         mode === "tanglish"
-          ? `Word must have ${wordLength} letters`
-          : `${wordLength} எழுத்துக்கள் தேவை`
+          ? `இன்னும் ${wordLength - currentTokens.length} எழுத்து தேவை · ${wordLength} letters needed`
+          : `இன்னும் ${wordLength - currentTokens.length} எழுத்து தேவை · ${wordLength} எழுத்துக்கள் தேவை`
       );
       setTimeout(() => setShakeRow(false), 500);
       return;
@@ -183,10 +223,20 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
       const upper = currentGuess.toUpperCase();
       if (!TANG_ENGLISH_VALID_DICTIONARY.has(upper) && upper !== targetWord) {
         setShakeRow(true);
-        setErrorMessage("Not in Tamil/English word list");
+        soundEngine.playParaiThump(80);
+        setErrorMessage("அடடே! சொல்லகராதியில் இல்லை · Not in word list");
         setTimeout(() => setShakeRow(false), 600);
         return;
       }
+    }
+
+    // Check duplicate guess
+    if (guesses.includes(currentGuess)) {
+      setShakeRow(true);
+      soundEngine.playParaiThump(75);
+      setErrorMessage("ஏற்கனவே சொல்லியாச்சு! · Already guessed!");
+      setTimeout(() => setShakeRow(false), 500);
+      return;
     }
 
     // Play ascending Raga Mohanam sound for row reveal
@@ -216,8 +266,10 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
     // Win condition
     if (isWon) {
       setGameStatus("won");
+      const updatedStats = recordSolluGameResult(true, nextGuesses.length);
+      setStats(updatedStats);
       setTimeout(() => {
-        soundEngine.playBellChime();
+        soundEngine.playTempleChime();
         onSolved?.();
       }, wordLength * 110 + 200);
       return;
@@ -226,6 +278,8 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
     // Loss condition
     if (isLost) {
       setGameStatus("lost");
+      const updatedStats = recordSolluGameResult(false, nextGuesses.length);
+      setStats(updatedStats);
     }
   }, [
     gameStatus,
@@ -255,7 +309,6 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
           handleSubmit();
         }
       } else {
-        // In Tamil mode, handle Enter and Backspace
         if (e.key === "Backspace") {
           handleBackspace();
         } else if (e.key === "Enter") {
@@ -268,31 +321,74 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [mode, handleKey, handleBackspace, handleSubmit]);
 
-  // Copy GroupMe spoiler-free share grid
+  // Build spoiler-free share text
+  const buildShareText = useCallback(
+    (format: "whatsapp" | "generic"): string => {
+      const rows = guesses.map((g) => {
+        const statuses = evaluateGuess(g);
+        return statuses
+          .map((s) => {
+            if (s === "correct") return "🟩";
+            if (s === "present") return "🟨";
+            return "⬛";
+          })
+          .join("");
+      });
+
+      const score = gameStatus === "won" ? `${guesses.length}/${maxGuesses}` : `X/${maxGuesses}`;
+      const modeLabel = mode === "tanglish" ? "Tanglish" : "தமிழ்";
+      const appraisal =
+        gameStatus === "won"
+          ? VICTORY_APPRAISALS[guesses.length]?.ta || "வெற்றி!"
+          : "அடுத்த முறை!";
+
+      if (format === "whatsapp") {
+        return `*சொல்லு · Sollu ${edition.editionNo}* (${modeLabel} · ${edition.periodEn || edition.monthEn})\n*${appraisal}* · மதிப்பெண்: ${score}\n\n${rows.join(
+          "\n"
+        )}\n\nவிளையாட: https://tamil-sangam-website-osu.vercel.app/games`;
+      }
+
+      return `OSU Tamil Sangam · Sollu ${edition.editionNo} (${edition.periodEn || edition.monthEn} · ${modeLabel}) ✦\n${appraisal} · Score: ${score}\n\n${rows.join(
+        "\n"
+      )}\n\nPlay: https://tamil-sangam-website-osu.vercel.app/games`;
+    },
+    [guesses, evaluateGuess, gameStatus, maxGuesses, mode, edition]
+  );
+
+  // Copy share grid to clipboard
   const copyShareGrid = () => {
-    const rows = guesses.map((g) => {
-      const statuses = evaluateGuess(g);
-      return statuses
-        .map((s) => {
-          if (s === "correct") return "🟩";
-          if (s === "present") return "🟨";
-          return "⬛";
-        })
-        .join("");
-    });
-
-    const score = gameStatus === "won" ? `${guesses.length}/${maxGuesses}` : `X/${maxGuesses}`;
-    const modeLabel = mode === "tanglish" ? "Tanglish" : "தமிழ்";
-    const text = `OSU Tamil Sangam · Sollu ${edition.editionNo} (${edition.periodEn || edition.monthEn} · ${modeLabel}) ✦\nScore: ${score}\n\n${rows.join(
-      "\n"
-    )}\n\nPlay: https://tamil-sangam-website-osu.vercel.app/games`;
-
+    const text = buildShareText("generic");
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(text).then(() => {
         setCopiedShare(true);
         setTimeout(() => setCopiedShare(false), 2400);
       });
     }
+  };
+
+  // Direct 1-tap WhatsApp Share
+  const handleWhatsAppShare = () => {
+    const text = buildShareText("whatsapp");
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+    if (typeof window !== "undefined") {
+      window.open(waUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  // Audio pronunciation
+  const handleListenPronunciation = () => {
+    if (isPlayingAudio) {
+      stopTamilSpeech();
+      setIsPlayingAudio(false);
+      return;
+    }
+    setIsPlayingAudio(true);
+    speakTamil(edition.tamilWord, {
+      playChime: true,
+      rate: 0.82,
+      onEnd: () => setIsPlayingAudio(false),
+      onError: () => setIsPlayingAudio(false),
+    });
   };
 
   // English QWERTY keyboard layout
@@ -313,61 +409,207 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
       ? "size-10 sm:size-13 text-lg sm:text-xl"
       : "size-9 sm:size-12 text-base sm:text-lg";
 
+  const winAppraisal = gameStatus === "won" ? VICTORY_APPRAISALS[guesses.length] : null;
+
   return (
-    <div className="w-full max-w-xl mx-auto flex flex-col items-center">
-      {/* Mode Switcher Segmented Control */}
-      <div className="flex items-center gap-1.5 mb-6 p-1 bg-[#25173B] rounded-xl border border-[rgba(125,96,166,0.25)]">
-        <button
-          onClick={() => handleModeChange("tanglish")}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-            mode === "tanglish"
-              ? "bg-[#140C20] text-[#F4F0FA] shadow-xs"
-              : "text-[#F4F0FA]/70 hover:text-[#F4F0FA]"
-          }`}
-        >
-          Tanglish & Cultural ({edition.tanglishWord.length} Letters)
-        </button>
-        <button
-          onClick={() => handleModeChange("tamil")}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-            mode === "tamil"
-              ? "bg-[#140C20] text-[#F4F0FA] shadow-xs"
-              : "text-[#F4F0FA]/70 hover:text-[#F4F0FA]"
-          }`}
-        >
-          <span lang="ta" className="font-tamil">
-            தமிழ் எழுத்து
-          </span>{" "}
-          ({edition.aksharaCount} எழுத்து)
-        </button>
+    <div className="w-full max-w-xl mx-auto flex flex-col items-center select-none">
+      {/* Top Utility Controls Bar: Mode Switcher, Clue Button, Stats Button */}
+      <div className="w-full flex items-center justify-between gap-2 mb-4">
+        {/* Mode Switcher Segmented Control */}
+        <div className="flex items-center gap-1 p-1 bg-[#25173B] rounded-xl border border-[rgba(125,96,166,0.3)] shadow-xs">
+          <button
+            onClick={() => handleModeChange("tanglish")}
+            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all ${
+              mode === "tanglish"
+                ? "bg-[#140C20] text-[#A6F0CF] shadow-xs border border-[#A6F0CF]/30"
+                : "text-[#F4F0FA]/70 hover:text-[#F4F0FA]"
+            }`}
+          >
+            Tanglish ({edition.tanglishWord.length}L)
+          </button>
+          <button
+            onClick={() => handleModeChange("tamil")}
+            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all ${
+              mode === "tamil"
+                ? "bg-[#140C20] text-[#A6F0CF] shadow-xs border border-[#A6F0CF]/30"
+                : "text-[#F4F0FA]/70 hover:text-[#F4F0FA]"
+            }`}
+          >
+            <span lang="ta" className="font-tamil">
+              தமிழ்
+            </span>{" "}
+            ({edition.aksharaCount} எழுத்து)
+          </button>
+        </div>
+
+        {/* Action Pills: Cultural Clue & Player Stats */}
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setIsHintOpen((prev) => !prev)}
+            className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all ${
+              isHintOpen
+                ? "bg-[#D49B27]/20 border-[#D49B27] text-[#D49B27]"
+                : "bg-[#25173B] border-[rgba(125,96,166,0.3)] text-[#F4F0FA]/80 hover:text-[#D49B27] hover:border-[#D49B27]/50"
+            }`}
+            title="Cultural Clue · குறிப்பு"
+          >
+            <Lightbulb className="size-3.5" />
+            <span className="hidden sm:inline">குறிப்பு ·</span>
+            <span>Clue</span>
+          </button>
+
+          <button
+            onClick={() => setIsStatsOpen((prev) => !prev)}
+            className={`flex items-center gap-1 p-2 sm:px-3 sm:py-1.5 rounded-xl text-xs font-medium border transition-all ${
+              isStatsOpen
+                ? "bg-[#A6F0CF]/20 border-[#A6F0CF] text-[#A6F0CF]"
+                : "bg-[#25173B] border-[rgba(125,96,166,0.3)] text-[#F4F0FA]/80 hover:text-[#A6F0CF] hover:border-[#A6F0CF]/50"
+            }`}
+            title="Statistics · புள்ளிவிவரங்கள்"
+          >
+            <BarChart2 className="size-3.5" />
+            <span className="hidden sm:inline">Stats</span>
+          </button>
+        </div>
       </div>
+
+      {/* Expandable Cultural Clue Card */}
+      <AnimatePresence>
+        {isHintOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, y: -6 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -6 }}
+            className="w-full overflow-hidden mb-4"
+          >
+            <div className="p-3.5 rounded-xl bg-[#25173B]/90 border border-[#D49B27]/50 shadow-md">
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-[#D49B27] font-bold flex items-center gap-1">
+                  <Lightbulb className="size-3 text-[#D49B27]" />
+                  CULTURAL HINT · சொல்லின் குறிப்பு
+                </span>
+                <button
+                  onClick={() => setIsHintOpen(false)}
+                  className="text-[#F4F0FA]/50 hover:text-[#F4F0FA] p-0.5"
+                >
+                  <X className="size-3.5" />
+                </button>
+              </div>
+              <p className="text-xs sm:text-sm text-[#F4F0FA] font-sans leading-relaxed">
+                {mode === "tanglish"
+                  ? edition.tanglish?.clue || edition.culturalContext
+                  : edition.tamilAkshara?.clue || edition.culturalContext}
+              </p>
+              {edition.tanglish?.phonetic && (
+                <div className="mt-1 text-[11px] font-mono text-[#A6F0CF]/80">
+                  Phonetic: <span className="font-sans font-medium text-[#F4F0FA]">{edition.tanglish.phonetic}</span>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Stats Modal Drawer */}
+      <AnimatePresence>
+        {isStatsOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, y: -6 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -6 }}
+            className="w-full overflow-hidden mb-4"
+          >
+            <div className="p-4 rounded-2xl bg-[#1C122C] border border-[#A6F0CF]/40 shadow-xl">
+              <div className="flex items-center justify-between mb-3">
+                <span className="font-mono text-[11px] uppercase tracking-wider text-[#A6F0CF] font-bold flex items-center gap-1.5">
+                  <Trophy className="size-3.5 text-[#A6F0CF]" />
+                  SOLLU PERFORMANCE · புள்ளிவிவரங்கள்
+                </span>
+                <button
+                  onClick={() => setIsStatsOpen(false)}
+                  className="text-[#F4F0FA]/60 hover:text-[#F4F0FA] p-0.5"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
+
+              {/* 4 Stats Cards Grid */}
+              <div className="grid grid-cols-4 gap-2 mb-4 text-center">
+                <div className="p-2 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.25)]">
+                  <div className="text-xl font-bold font-mono text-[#F4F0FA]">{stats.played}</div>
+                  <div className="text-[10px] text-[#C4B7D7] font-sans">ஆடியவை</div>
+                </div>
+                <div className="p-2 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.25)]">
+                  <div className="text-xl font-bold font-mono text-[#A6F0CF]">
+                    {stats.played > 0 ? Math.round((stats.won / stats.played) * 100) : 0}%
+                  </div>
+                  <div className="text-[10px] text-[#C4B7D7] font-sans">வெற்றி %</div>
+                </div>
+                <div className="p-2 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.25)]">
+                  <div className="text-xl font-bold font-mono text-[#D49B27] flex items-center justify-center gap-1">
+                    {stats.currentStreak}
+                    <Flame className="size-3.5 text-[#D49B27]" />
+                  </div>
+                  <div className="text-[10px] text-[#C4B7D7] font-sans">தொடர்</div>
+                </div>
+                <div className="p-2 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.25)]">
+                  <div className="text-xl font-bold font-mono text-[#F4F0FA]">{stats.maxStreak}</div>
+                  <div className="text-[10px] text-[#C4B7D7] font-sans">அதிகபட்சம்</div>
+                </div>
+              </div>
+
+              {/* Guess Distribution Bars */}
+              <div className="space-y-1">
+                <div className="text-[10px] font-mono text-[#C4B7D7] mb-1">GUESS DISTRIBUTION · வாய்ப்புகள்</div>
+                {[1, 2, 3, 4, 5, 6].map((num) => {
+                  const count = stats.guessDistribution[num as 1 | 2 | 3 | 4 | 5 | 6] || 0;
+                  const maxCount = Math.max(1, ...Object.values(stats.guessDistribution));
+                  const pct = Math.max(8, Math.round((count / maxCount) * 100));
+
+                  return (
+                    <div key={num} className="flex items-center gap-2 text-xs font-mono">
+                      <span className="w-3 text-right text-[#C4B7D7]">{num}</span>
+                      <div className="flex-1 bg-[#25173B] rounded-sm overflow-hidden h-4">
+                        <div
+                          style={{ width: `${pct}%` }}
+                          className={`h-full flex items-center justify-end px-1.5 text-[10px] font-bold ${
+                            count > 0 ? "bg-[#2D8A68] text-white" : "bg-transparent text-[#C4B7D7]/40"
+                          }`}
+                        >
+                          {count}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Error Message Toast */}
       <div className="h-7 mb-2">
         <AnimatePresence>
           {errorMessage && (
             <motion.div
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              className="bg-[#A6F0CF] text-[#140C20] px-3 py-1 rounded-md text-xs font-medium shadow-md"
+              initial={{ opacity: 0, y: -4, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -4, scale: 0.95 }}
+              className="bg-[#A6F0CF] text-[#140C20] px-3.5 py-1 rounded-full text-xs font-semibold shadow-md flex items-center gap-1.5"
             >
-              {errorMessage}
+              <span>{errorMessage}</span>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* 5x6 or Nx6 Tile Grid */}
-      <div className="grid gap-2 mb-8">
+      {/* Nx6 Tile Grid (Strictly wordLength columns) */}
+      <div className="grid gap-2 mb-6">
         {Array.from({ length: maxGuesses }).map((_, rowIdx) => {
           const isSubmitted = rowIdx < guesses.length;
           const isCurrent = rowIdx === guesses.length;
-          const rowWord = isSubmitted
-            ? guesses[rowIdx]
-            : isCurrent
-            ? currentGuess
-            : "";
+          const rowWord = isSubmitted ? guesses[rowIdx] : isCurrent ? currentGuess : "";
           const rowTokens = getTokens(rowWord);
           const statuses = isSubmitted ? evaluateGuess(rowWord) : [];
 
@@ -384,13 +626,13 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
 
                 let bgClass = "bg-[#140C20] border-2 border-[rgba(125,96,166,0.25)] text-[#F4F0FA]";
                 if (status === "correct") {
-                  bgClass = "bg-[#2D8A68] border-2 border-[#2D8A68] text-[#F4F0FA]";
+                  bgClass = "bg-[#2D8A68] border-2 border-[#3EAA82] text-white shadow-[0_0_12px_rgba(45,138,104,0.4)]";
                 } else if (status === "present") {
-                  bgClass = "bg-[#D49B27] border-2 border-[#D49B27] text-[#F4F0FA]";
+                  bgClass = "bg-[#D49B27] border-2 border-[#E8B342] text-white shadow-[0_0_12px_rgba(212,155,39,0.35)]";
                 } else if (status === "absent") {
-                  bgClass = "bg-[#25173B] border-2 border-[rgba(125,96,166,0.35)] text-[#C4B7D7]";
+                  bgClass = "bg-[#25173B]/90 border-2 border-[rgba(125,96,166,0.35)] text-[#C4B7D7]/60";
                 } else if (char) {
-                  bgClass = "bg-[#140C20] border-2 border-[rgba(125,96,166,0.25)] text-[#F4F0FA] scale-[1.04]";
+                  bgClass = "bg-[#1C122C] border-2 border-[#A6F0CF]/60 text-[#F4F0FA] scale-[1.04]";
                 }
 
                 return (
@@ -404,12 +646,15 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
                             transition: { delay: colIdx * 0.11, duration: 0.45 },
                           }
                         : char
-                        ? { scale: [1, 1.12, 1], transition: { duration: 0.15 } }
+                        ? { scale: [1, 1.15, 1], transition: { duration: 0.15 } }
                         : {}
                     }
-                    className={`${tileSizeClass} rounded-lg flex items-center justify-center font-bold transition-colors select-none ${bgClass}`}
+                    className={`${tileSizeClass} rounded-xl flex items-center justify-center font-bold transition-colors select-none ${bgClass}`}
                   >
-                    <span lang={mode === "tamil" ? "ta" : undefined} className={mode === "tamil" ? "font-tamil" : "font-sans"}>
+                    <span
+                      lang={mode === "tamil" ? "ta" : undefined}
+                      className={mode === "tamil" ? "font-tamil" : "font-sans"}
+                    >
                       {char}
                     </span>
                   </motion.div>
@@ -424,94 +669,146 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
       <AnimatePresence>
         {gameStatus !== "playing" && (
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 16 }}
-            className="w-full bg-[#25173B] border-2 border-[#A6F0CF]/35 rounded-2xl p-6 mb-8 shadow-xl"
+            initial={{ opacity: 0, y: 16, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.98 }}
+            className="w-full bg-[#201332] border-2 border-[#A6F0CF]/50 rounded-2xl p-6 mb-8 shadow-2xl relative overflow-hidden"
           >
+            {/* Celebratory Sparkle Particles Effect */}
+            {gameStatus === "won" && (
+              <div className="absolute top-0 right-0 p-3 pointer-events-none opacity-40">
+                <Sparkles className="size-16 text-[#A6F0CF] animate-pulse" />
+              </div>
+            )}
+
+            {/* Appraisal Header */}
             <div className="flex items-center justify-between mb-3">
-              <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] font-bold">
-                {gameStatus === "won" ? "SOLVED · அருமை!" : "REVEALED · விடை"}
+              <span className="font-mono text-xs uppercase tracking-widest text-[#A6F0CF] font-bold flex items-center gap-1.5">
+                {gameStatus === "won" ? (
+                  <>
+                    <span>{winAppraisal?.icon}</span>
+                    <span>{winAppraisal?.ta} · SOLVED!</span>
+                  </>
+                ) : (
+                  <span>விடை · REVEALED</span>
+                )}
               </span>
               <span className="text-xs font-mono text-[#F4F0FA]/60">
                 {edition.monthEn} {edition.year}
               </span>
             </div>
 
-            <div className="flex items-baseline gap-3 mb-2">
-              <h3 className="text-2xl font-serif text-[#F4F0FA] font-bold">
+            {/* Bilingual Target Word & Pronunciation Listen Button */}
+            <div className="flex flex-wrap items-baseline gap-3 mb-3">
+              <h3 className="text-3xl font-serif text-[#F4F0FA] font-bold tracking-tight">
                 {edition.tanglishWord}
               </h3>
               <span lang="ta" className="text-2xl font-tamil text-[#A6F0CF] font-semibold">
                 {edition.tamilWord}
               </span>
+
+              {/* Audio Pronunciation Button */}
+              {isSpeechSupported() && (
+                <button
+                  onClick={handleListenPronunciation}
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-mono font-medium transition-all ${
+                    isPlayingAudio
+                      ? "bg-[#A6F0CF] text-[#140C20]"
+                      : "bg-[#2E1B46] hover:bg-[#3E255F] text-[#A6F0CF] border border-[#A6F0CF]/30"
+                  }`}
+                  title="Listen to Tamil pronunciation"
+                >
+                  <Volume2 className={`size-3.5 ${isPlayingAudio ? "animate-pulse" : ""}`} />
+                  <span>{isPlayingAudio ? "ஒலிக்கிறது..." : "ஒலி வடிவம் · Listen"}</span>
+                </button>
+              )}
             </div>
 
-            <p className="text-sm text-[#F4F0FA]/85 mb-4 leading-relaxed font-sans">
+            {/* Cultural Narrative Explanation */}
+            <p className="text-sm text-[#F4F0FA]/90 mb-4 leading-relaxed font-sans">
               {mode === "tanglish" && edition.tanglish?.meaningEn
                 ? edition.tanglish.meaningEn
                 : edition.culturalContext}
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-[rgba(125,96,166,0.25)]">
+            {/* Social Share & Action Bar */}
+            <div className="flex flex-wrap items-center gap-2.5 pt-4 border-t border-[rgba(125,96,166,0.3)]">
+              {/* WhatsApp 1-Click Share Button */}
+              <button
+                onClick={handleWhatsAppShare}
+                className="flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20BA5A] text-[#0B1E13] px-4 py-2 rounded-full text-xs font-bold transition-all shadow-md active:scale-95"
+              >
+                <Share2 className="size-3.5" />
+                <span>WhatsApp-ல் பகிர்</span>
+              </button>
+
+              {/* Copy Grid Button for GroupMe / Instagram */}
               <button
                 onClick={copyShareGrid}
-                className="flex items-center gap-2 bg-[#140C20] hover:bg-[#A6F0CF] text-[#140C20] px-4 py-2.5 rounded-full text-xs font-semibold transition-colors shadow-md"
+                className="flex items-center gap-1.5 bg-[#A6F0CF] hover:bg-[#85E2B8] text-[#140C20] px-4 py-2 rounded-full text-xs font-bold transition-all shadow-md active:scale-95"
               >
                 {copiedShare ? (
                   <>
-                    <Check className="size-4 text-emerald-400" />
-                    <span>Copied to Clipboard!</span>
+                    <Check className="size-3.5 text-emerald-900" />
+                    <span>Copied Score!</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="size-4" />
-                    <span>Copy Score for GroupMe/IG</span>
+                    <Copy className="size-3.5" />
+                    <span>Copy Grid (GroupMe/IG)</span>
                   </>
                 )}
+              </button>
+
+              {/* Play Again / Mode Switch */}
+              <button
+                onClick={() => {
+                  setGuesses([]);
+                  setCurrentGuess("");
+                  setGameStatus("playing");
+                  setErrorMessage(null);
+                }}
+                className="flex items-center gap-1 text-xs font-mono text-[#F4F0FA]/70 hover:text-[#F4F0FA] px-3 py-2 rounded-lg bg-[#25173B] border border-[rgba(125,96,166,0.25)] hover:bg-[#341F50] transition-colors"
+              >
+                <RotateCcw className="size-3.5" />
+                <span>Play Again</span>
               </button>
 
               <a
                 href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-mono text-[#F4F0FA]/80 hover:text-[#A6F0CF] underline underline-offset-4 px-2 py-1 transition-colors"
+                className="inline-flex items-center gap-1 text-xs font-mono text-[#F4F0FA]/60 hover:text-[#A6F0CF] underline underline-offset-4 px-2 py-1 transition-colors ml-auto"
               >
-                Post in OSU TS GroupMe ↗
+                OSU TS GroupMe ↗
               </a>
-
-              <button
-                onClick={() => {
-                  setGuesses([]);
-                  setCurrentGuess("");
-                  setGameStatus("playing");
-                }}
-                className="flex items-center gap-1.5 text-xs font-mono text-[#F4F0FA]/70 hover:text-[#F4F0FA] px-3 py-2"
-              >
-                <RotateCcw className="size-3.5" />
-                <span>Play Again</span>
-              </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Virtual Keyboard */}
+      {/* Virtual Keyboard (High-Contrast Courtyard Palette) */}
       {mode === "tanglish" ? (
         <div className="w-full flex flex-col gap-1.5 select-none">
           {qwertyRows.map((row, rIdx) => (
-            <div key={rIdx} className="flex justify-center gap-1.5 w-full">
+            <div key={rIdx} className="flex justify-center gap-1 sm:gap-1.5 w-full">
               {row.map((key) => {
                 const isAction = key === "ENTER" || key === "⌫";
                 const status = keyboardLetterStatuses[key];
 
-                let bgClass = "bg-[#E6DCCE] hover:bg-[#DDD2C2] text-[#F4F0FA]";
+                let bgClass =
+                  "bg-[#25173B] hover:bg-[#341F50] text-[#F4F0FA] border border-[rgba(125,96,166,0.35)] shadow-xs";
                 if (status === "correct") {
-                  bgClass = "bg-[#2D8A68] text-[#F4F0FA]";
+                  bgClass =
+                    "bg-[#2D8A68] hover:bg-[#359B76] text-white border border-[#3EAA82] font-bold shadow-[0_0_12px_rgba(45,138,104,0.4)]";
                 } else if (status === "present") {
-                  bgClass = "bg-[#D49B27] text-[#F4F0FA]";
+                  bgClass =
+                    "bg-[#D49B27] hover:bg-[#E2A932] text-white border border-[#E8B342] font-bold shadow-[0_0_12px_rgba(212,155,39,0.35)]";
                 } else if (status === "absent") {
-                  bgClass = "bg-[#25173B]/80 text-[#C4B7D7]";
+                  bgClass = "bg-[#140C20]/80 text-[#C4B7D7]/40 border border-transparent";
+                } else if (isAction) {
+                  bgClass =
+                    "bg-[#382158] hover:bg-[#4D2D7A] text-[#A6F0CF] border border-[#A6F0CF]/30 shadow-xs font-bold";
                 }
 
                 return (
@@ -522,8 +819,8 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
                       else if (key === "⌫") handleBackspace();
                       else handleKey(key);
                     }}
-                    className={`h-12 rounded-md font-bold text-xs sm:text-sm transition-colors active:scale-95 ${
-                      isAction ? "px-3 sm:px-4 bg-[#D9CEC0]" : "flex-1 max-w-[42px]"
+                    className={`h-12 rounded-lg font-bold text-xs sm:text-sm transition-all active:scale-95 ${
+                      isAction ? "px-2.5 sm:px-4 text-[11px] sm:text-xs" : "flex-1 max-w-[42px]"
                     } ${bgClass}`}
                   >
                     {key}
@@ -535,24 +832,31 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
         </div>
       ) : (
         /* Tamil Akshara On-Screen Keyboard */
-        <div className="w-full bg-[#25173B] p-4 rounded-xl border border-[rgba(125,96,166,0.25)] select-none">
-          <p className="text-xs font-mono text-[#F4F0FA]/60 text-center mb-3">
+        <div className="w-full bg-[#201332] p-4 rounded-2xl border border-[rgba(125,96,166,0.3)] select-none shadow-lg">
+          <p className="text-xs font-mono text-[#F4F0FA]/70 text-center mb-3">
             Click syllables to build word · எழுத்துக்களைத் தேர்ந்தெடுக்கவும்:
           </p>
-          <div className="flex flex-wrap justify-center gap-2 mb-3">
+          <div className="flex flex-wrap justify-center gap-2 mb-4">
             {edition.aksharaKeyboard.map((akshara: string) => {
               const status = keyboardLetterStatuses[akshara];
-              let bgClass = "bg-[#140C20] hover:bg-[#EBE2D5] text-[#F4F0FA] border border-[rgba(125,96,166,0.25)]";
-              if (status === "correct") bgClass = "bg-[#2D8A68] text-[#F4F0FA]";
-              else if (status === "present") bgClass = "bg-[#D49B27] text-[#F4F0FA]";
-              else if (status === "absent") bgClass = "bg-[#25173B]/80 text-[#C4B7D7]";
+              let bgClass =
+                "bg-[#1C122C] hover:bg-[#2D1B47] text-[#F4F0FA] border border-[rgba(125,96,166,0.35)] shadow-xs";
+              if (status === "correct") {
+                bgClass =
+                  "bg-[#2D8A68] text-white border border-[#3EAA82] font-bold shadow-[0_0_12px_rgba(45,138,104,0.4)]";
+              } else if (status === "present") {
+                bgClass =
+                  "bg-[#D49B27] text-white border border-[#E8B342] font-bold shadow-[0_0_12px_rgba(212,155,39,0.35)]";
+              } else if (status === "absent") {
+                bgClass = "bg-[#140C20]/80 text-[#C4B7D7]/40 border border-transparent";
+              }
 
               return (
                 <button
                   key={akshara}
                   onClick={() => handleKey(akshara)}
                   lang="ta"
-                  className={`size-11 sm:size-12 rounded-lg font-tamil font-bold text-base sm:text-lg shadow-xs active:scale-95 transition-all ${bgClass}`}
+                  className={`size-11 sm:size-12 rounded-xl font-tamil font-bold text-base sm:text-lg shadow-xs active:scale-95 transition-all ${bgClass}`}
                 >
                   {akshara}
                 </button>
@@ -563,13 +867,13 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
           <div className="flex justify-center gap-3">
             <button
               onClick={handleBackspace}
-              className="px-5 py-2.5 rounded-lg bg-[#E6DCCE] hover:bg-[#DDD2C2] text-[#F4F0FA] font-mono text-xs font-bold active:scale-95"
+              className="px-5 py-2.5 rounded-xl bg-[#2E1B46] hover:bg-[#3D235D] text-[#C4B7D7] border border-[rgba(125,96,166,0.3)] font-mono text-xs font-bold active:scale-95 transition-colors"
             >
               ⌫ நீக்கு (BACK)
             </button>
             <button
               onClick={handleSubmit}
-              className="px-6 py-2.5 rounded-lg bg-[#140C20] hover:bg-[#A6F0CF] text-[#140C20] font-mono text-xs font-bold active:scale-95 shadow-sm"
+              className="px-6 py-2.5 rounded-xl bg-[#A6F0CF] hover:bg-[#85E2B8] text-[#140C20] font-mono text-xs font-bold active:scale-95 transition-colors shadow-[0_0_16px_rgba(166,240,207,0.3)]"
             >
               சரிபார் (SUBMIT) ↵
             </button>
