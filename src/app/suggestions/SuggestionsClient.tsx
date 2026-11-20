@@ -204,7 +204,7 @@ export function SuggestionsClient() {
           <h1 className="font-serif text-4xl sm:text-6xl text-[#F4F0FA] font-normal tracking-tight leading-none mb-2">
             The Blueprint Hearth <span className="sr-only">— Propose a Campus Event | OSU Tamil Sangam at The Ohio State University</span>
           </h1>
-          <p lang="ta" className="font-tamil text-lg sm:text-xl text-[#A6F0CF]/85 leading-relaxed font-medium">
+          <p lang="ta" className="font-tamil text-lg sm:text-xl text-[#C79347] leading-relaxed font-medium">
             கருத்துக்களம் · திட்டங்கள்
           </p>
           <p className="font-body text-xs sm:text-sm text-[#C4B7D7] mt-2 max-w-md leading-relaxed hidden sm:block">

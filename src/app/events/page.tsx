@@ -37,6 +37,10 @@ export default async function EventsPage() {
       <BreadcrumbJsonLd items={breadcrumbs} />
       <EventsCollectionJsonLd />
       <CalendarEventJsonLd events={calendarData.events} />
+      {/* Semantic SSR H1 for Search Engine Crawlers & Screen Readers */}
+      <h1 className="sr-only">
+        Campus Events, Cultural Festivals &amp; Celebrations | OSU Tamil Sangam at The Ohio State University
+      </h1>
       <Suspense fallback={<HeroKolamLoader route="/events" />}>
         <EventsClientView initialCalendarData={calendarData} />
       </Suspense>

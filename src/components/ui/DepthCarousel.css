@@ -20,7 +20,7 @@
 }
 
 .depth-carousel:focus-visible {
-  outline: 2px solid #4FD6E0;
+  outline: 2px solid #2BB5A8;
   outline-offset: 4px;
   border-radius: 16px;
 }
@@ -37,19 +37,19 @@
   left: 50%;
   transform-origin: center center;
   overflow: hidden;
-  background: #140C20;
+  background: #1C122B;
   box-shadow:
     0 24px 48px -12px rgba(0, 0, 0, 0.45),
     0 8px 20px -6px rgba(0, 0, 0, 0.3);
   will-change: transform, opacity, filter;
   cursor: pointer;
   transform: translate(-50%, -50%);
-  border: 1px solid rgba(125, 96, 166, 0.25);
+  border: 1px solid rgba(212, 163, 106, 0.25);
   transition: border-color 0.2s ease;
 }
 
 .depth-carousel__card:hover {
-  border-color: rgba(166, 240, 207, 0.4);
+  border-color: rgba(43, 181, 168, 0.6);
 }
 
 .depth-carousel__img {
@@ -78,12 +78,12 @@
   height: 44px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(125, 96, 166, 0.35);
+  border: 1px solid rgba(212, 163, 106, 0.35);
   border-radius: 999px;
-  background: rgba(37, 23, 59, 0.92);
+  background: rgba(28, 18, 43, 0.92);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  color: #F4F0FA;
+  color: #FAF5ED;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   cursor: pointer;
   transition:
@@ -94,9 +94,9 @@
 }
 
 .depth-carousel__arrow:hover {
-  background: #A6F0CF;
-  border-color: #A6F0CF;
-  color: #140C20;
+  background: #0F766E;
+  border-color: #2BB5A8;
+  color: #FAF5ED;
   transform: translateY(-50%) scale(1.05);
 }
 
@@ -138,7 +138,7 @@
 
 .depth-carousel__dot.is-active {
   width: 20px;
-  background: #A6F0CF;
+  background: #2BB5A8;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -101,7 +101,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                     className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#25173B] transition-colors text-left"
                   >
                     <span className="flex items-center gap-2">
-                      <Search className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                      <Search className="w-3.5 h-3.5 text-[#2BB5A8]" />
                       <span className="font-medium">{t("control.search")}</span>
                     </span>
                     <kbd className="text-[10px] font-mono px-1.5 py-0.5 bg-[#25173B]/5 border border-[rgba(125,96,166,0.25)] text-[#C4B7D7]">
@@ -119,12 +119,12 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                   className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-[#25173B] transition-colors text-left"
                 >
                   <span className="flex items-center gap-2">
-                    <Globe className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                    <Globe className="w-3.5 h-3.5 text-[#2BB5A8]" />
                     <span className="font-medium">
                       {locale === "en" ? "தமிழ் பதிப்பு" : "English Version"}
                     </span>
                   </span>
-                  <span className="text-[11px] font-mono font-bold text-[#A6F0CF]">
+                  <span className="text-[11px] font-mono font-bold text-[#C79347]">
                     {locale === "en" ? "TA" : "EN"}
                   </span>
                 </button>
@@ -138,7 +138,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                 >
                   <span className="flex items-center gap-2">
                     {isSoundEnabled ? (
-                      <Volume2 className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                      <Volume2 className="w-3.5 h-3.5 text-[#2BB5A8]" />
                     ) : (
                       <VolumeX className="w-3.5 h-3.5 text-[#C4B7D7]" />
                     )}
@@ -148,7 +148,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                   </span>
                   <span
                     className={`w-2 h-2 rounded-full ${
-                      isSoundEnabled ? "bg-[#A6F0CF]" : "bg-[#25173B]/20"
+                      isSoundEnabled ? "bg-[#2BB5A8]" : "bg-[#25173B]/20"
                     }`}
                   />
                 </button>
@@ -205,7 +205,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                         />
                         <span>{locale === "ta" ? tMeta.nameTa : tMeta.nameEn}</span>
                       </span>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-[#A6F0CF]" />}
+                      {isSelected && <Check className="w-3.5 h-3.5 text-[#2BB5A8]" />}
                     </button>
                   );
                 })}
@@ -217,7 +217,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
                       resetToLiveTime();
                       setIsTinaiSubmenuOpen(false);
                     }}
-                    className="w-full mt-2 pt-2 border-t border-[rgba(125,96,166,0.25)] text-center text-[10px] font-mono text-[#A6F0CF] hover:underline"
+                    className="w-full mt-2 pt-2 border-t border-[rgba(125,96,166,0.25)] text-center text-[10px] font-mono text-[#2BB5A8] hover:underline"
                   >
                     {locale === "ta" ? "நேரடி நேரத்திற்கு மீட்டமை" : "Reset to Live Clock"}
                   </button>
@@ -236,7 +236,7 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
         }}
         aria-label="Toggle Sangam Utilities Drawer"
         aria-expanded={isOpen}
-        className="group relative flex items-center justify-center w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-[#140C20] border border-[rgba(125,96,166,0.25)] shadow-[0_4px_16px_rgba(0,0,0,0.35)] text-[#F4F0FA] hover:text-[#A6F0CF] hover:border-[#A6F0CF]/35 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+        className="group relative flex items-center justify-center w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-[#1C122B] border border-[#C79347]/30 shadow-[0_4px_16px_rgba(0,0,0,0.35)] text-[#FAF5ED] hover:text-[#C79347] hover:border-[#2BB5A8]/50 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
       >
         <SlidersHorizontal className="w-4 h-4 transition-transform group-hover:rotate-45" />
         {/* Active tint dot */}

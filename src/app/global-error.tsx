@@ -31,13 +31,13 @@ export default function GlobalError({
           <div style={{ marginTop: "24px", display: "flex", gap: "12px", flexWrap: "wrap" }}>
             <button
               onClick={() => reset()}
-              style={{ padding: "10px 18px", background: "#250d38", color: "#ffffff", border: "2px solid #55CCA2", cursor: "pointer", fontWeight: "bold", fontSize: "12px", textTransform: "uppercase" }}
+              style={{ padding: "10px 18px", background: "#0F766E", color: "#ffffff", border: "2px solid #2BB5A8", cursor: "pointer", fontWeight: "bold", fontSize: "12px", textTransform: "uppercase" }}
             >
               Reload Application
             </button>
             <Link
               href="/"
-              style={{ padding: "10px 18px", background: "#140C20", color: "#A6F0CF", border: "2px solid #A6F0CF", textDecoration: "none", fontWeight: "bold", fontSize: "12px", textTransform: "uppercase", display: "inline-block" }}
+              style={{ padding: "10px 18px", background: "#1C122B", color: "#FAF5ED", border: "2px solid #C79347", textDecoration: "none", fontWeight: "bold", fontSize: "12px", textTransform: "uppercase", display: "inline-block" }}
             >
               Go to Home
             </Link>

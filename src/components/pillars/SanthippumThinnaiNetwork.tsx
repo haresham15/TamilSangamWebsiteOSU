@@ -151,7 +151,7 @@ export function SanthippumThinnaiNetwork() {
                 }}
               >
                 <div className="space-y-5">
-                  <div className="w-10 h-10 rounded-full bg-[#55CCA2]/15 flex items-center justify-center text-[#A6F0CF]">
+                  <div className="w-10 h-10 rounded-full bg-[#2BB5A8]/15 flex items-center justify-center text-[#2BB5A8]">
                     <Icon className="w-5 h-5" />
                   </div>
 

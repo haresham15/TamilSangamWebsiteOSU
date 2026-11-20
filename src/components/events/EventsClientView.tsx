@@ -186,10 +186,9 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
           ref={heroOverlayRef}
           className="absolute inset-0 z-10 flex flex-col justify-end px-6 pb-20 text-[#F4F0FA] pointer-events-none transition-transform will-change-[transform,opacity]"
         >
-          <h1 className="font-display text-5xl sm:text-8xl">
+          <div role="heading" aria-level={2} className="font-display text-5xl sm:text-8xl">
             {locale === "ta" ? "நிகழ்வுகள்" : "Together, in celebration."}
-            <span className="sr-only"> — Campus Events &amp; Festivals | OSU Tamil Sangam at The Ohio State University</span>
-          </h1>
+          </div>
           <a href="#gatherings-river" className="pointer-events-auto mt-6 inline-flex min-h-12 items-center underline w-fit">Explore the gatherings</a>
         </div>
       </HeroScrollStage>

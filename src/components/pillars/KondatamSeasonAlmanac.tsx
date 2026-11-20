@@ -98,20 +98,20 @@ export function KondatamSeasonAlmanac() {
   return (
     <div className="w-full space-y-10">
       <div className="space-y-3 max-w-2xl">
-        <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#A6F0CF]">
-          <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-pulse" />
+        <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#C79347]">
+          <span className="w-2 h-2 rounded-full bg-[#2BB5A8] animate-pulse" />
           <span>The Buckeye Almanac · பருவகாலத் திருவிழாக்கள்</span>
         </div>
-        <h3 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal leading-tight">
+        <h3 className="font-serif text-3xl sm:text-4xl text-[#FAF5ED] font-normal leading-tight">
           Four Seasons of Celebration on Columbus Turf
         </h3>
-        <p className="font-sans text-sm sm:text-base text-[#C4B7D7] leading-relaxed">
+        <p className="font-sans text-sm sm:text-base text-[#CBBBA8] leading-relaxed">
           Select a season to view how we translate Tamil seasonal harvest rites and cultural galas to Ohio State, and discover how you can co-design our upcoming celebrations.
         </p>
       </div>
 
       {/* Season Segmented Tab Bar */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 border-b border-[rgba(125,96,166,0.25)] pb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 border-b border-[#C79347]/20 pb-4">
         {SEASONS.map((season) => {
           const isSelected = selectedSeason === season.id;
           const Icon = season.icon;
@@ -124,23 +124,23 @@ export function KondatamSeasonAlmanac() {
               }}
               className={`p-4 rounded-xl text-left transition-[border-color,background-color,box-shadow] duration-200 border cursor-pointer ${
                 isSelected
-                  ? "bg-[#140C20] border-[#A6F0CF] shadow-md shadow-[#A6F0CF]/15"
-                  : "bg-[#140C20] border-transparent hover:border-[rgba(125,96,166,0.25)]"
+                  ? "bg-[#1C122B] border-[#2BB5A8] shadow-md shadow-[#2BB5A8]/15"
+                  : "bg-[#1C122B] border-transparent hover:border-[#C79347]/20"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-mono tracking-widest uppercase text-[#C4B7D7]">
+                <span className="text-[10px] font-mono tracking-widest uppercase text-[#CBBBA8]">
                   {season.monthRange}
                 </span>
                 <Icon
                   className="w-4 h-4"
-                  style={{ color: isSelected ? season.accentHex : "#C4B7D7" }}
+                  style={{ color: isSelected ? season.accentHex : "#CBBBA8" }}
                 />
               </div>
-              <span className="font-serif text-lg font-medium text-[#F4F0FA] block">
+              <span className="font-serif text-lg font-medium text-[#FAF5ED] block">
                 {season.seasonEn}
               </span>
-              <span lang="ta" className="font-tamil text-xs text-[#A6F0CF] block mt-0.5">
+              <span lang="ta" className="font-tamil text-xs text-[#C79347] block mt-0.5">
                 {season.seasonTa}
               </span>
             </button>
@@ -150,22 +150,22 @@ export function KondatamSeasonAlmanac() {
 
       {/* Expanded Season Dossier Card */}
       <SpotlightCard
-        spotlightColor="rgba(166, 240, 207, 0.14)"
-        goldColor="rgba(242, 107, 181, 0.1)"
+        spotlightColor="rgba(43, 181, 168, 0.14)"
+        goldColor="rgba(199, 147, 71, 0.1)"
         radius={420}
-        className="p-8 sm:p-12 rounded-3xl bg-[#140C20] border border-[rgba(125,96,166,0.25)] shadow-xl space-y-8"
+        className="p-8 sm:p-12 rounded-3xl bg-[#1C122B] border border-[#C79347]/20 shadow-xl space-y-8"
       >
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-[rgba(125,96,166,0.25)] pb-6">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-[#C79347]/20 pb-6">
           <div className="space-y-1">
             <div className="flex items-center gap-3">
-              <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider bg-[#25173B] text-[#F4F0FA]">
+              <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider bg-[#271A3C] text-[#FAF5ED]">
                 {activeSeason.tamilMonth}
               </span>
-              <span className="text-xs font-mono text-[#C4B7D7] uppercase tracking-widest">
+              <span className="text-xs font-mono text-[#CBBBA8] uppercase tracking-widest">
                 {activeSeason.monthRange}
               </span>
             </div>
-            <h4 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal pt-1">
+            <h4 className="font-serif text-3xl sm:text-4xl text-[#FAF5ED] font-normal pt-1">
               {activeSeason.flagshipEvent}
             </h4>
           </div>
@@ -173,7 +173,7 @@ export function KondatamSeasonAlmanac() {
           <Link
             href={`/ideas?category=EVENT+IDEA&pillar=kondatam&prompt=${encodeURIComponent(activeSeason.prompt)}`}
             onClick={() => audioLayer.playTapeClack()}
-            className="px-6 py-3 bg-[#A6F0CF] text-[#140C20] font-sans text-xs font-semibold uppercase tracking-wider rounded-full hover:bg-[#7AE7B5] hover:text-[#140C20] transition-all flex items-center gap-2 w-fit shadow-md cursor-pointer"
+            className="px-6 py-3 bg-[#0F766E] text-[#FAF5ED] font-sans text-xs font-semibold uppercase tracking-wider rounded-full hover:bg-[#0B5C56] transition-all flex items-center gap-2 w-fit shadow-md cursor-pointer"
           >
             <span>Pitch an Idea for this Season</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -183,15 +183,15 @@ export function KondatamSeasonAlmanac() {
         {/* 2-Column Culinary & Activities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Culinary Highlights */}
-          <div className="space-y-4 p-6 rounded-2xl bg-[#140C20] border border-[rgba(125,96,166,0.25)]">
-            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#A6F0CF]">
+          <div className="space-y-4 p-6 rounded-2xl bg-[#1C122B] border border-[#C79347]/20">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#C79347]">
               <Utensils className="w-4 h-4" />
               <span>Seasonal Culinary Traditions</span>
             </div>
             <ul className="space-y-2.5">
               {activeSeason.culinaryTraditions.map((item, i) => (
-                <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm font-sans text-[#C4B7D7]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] shrink-0 mt-2" />
+                <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm font-sans text-[#CBBBA8]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C79347] shrink-0 mt-2" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -199,15 +199,15 @@ export function KondatamSeasonAlmanac() {
           </div>
 
           {/* Activities & Cultural Rites */}
-          <div className="space-y-4 p-6 rounded-2xl bg-[#140C20] border border-[rgba(125,96,166,0.25)]">
-            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#A6F0CF]">
+          <div className="space-y-4 p-6 rounded-2xl bg-[#1C122B] border border-[#C79347]/20">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#C79347]">
               <Sparkles className="w-4 h-4" />
               <span>Celebration Elements & Rites</span>
             </div>
             <ul className="space-y-2.5">
               {activeSeason.activities.map((item, i) => (
-                <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm font-sans text-[#C4B7D7]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#A6F0CF] shrink-0 mt-2" />
+                <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm font-sans text-[#CBBBA8]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C79347] shrink-0 mt-2" />
                   <span>{item}</span>
                 </li>
               ))}

@@ -25,7 +25,7 @@ interface Spark {
  */
 export function ClickSpark({
   children,
-  sparkColor = "#A6F0CF",
+  sparkColor = "#C79347",
   sparkCount = 8,
   sparkRadius = 18,
   duration = 420,

@@ -91,7 +91,7 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
           <Link
             href="/events"
             onClick={playClick}
-            className="font-semibold text-sm font-sans text-[#A6F0CF] border-b-2 border-[#A6F0CF] pb-1 hover:border-[#A6F0CF] hover:text-[#A6F0CF] transition-colors cursor-pointer inline-flex items-center gap-1.5"
+            className="font-semibold text-sm font-sans text-[#2BB5A8] border-b-2 border-[#2BB5A8] pb-1 hover:border-[#C79347] hover:text-[#C79347] transition-colors cursor-pointer inline-flex items-center gap-1.5"
           >
             <span>{locale === "ta" ? "அனைத்து நிகழ்வுகளும் →" : "Explore All Events →"}</span>
           </Link>
@@ -118,46 +118,46 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
               >
                 {/* Clean Editorial Eyebrow */}
                 <div className="flex items-center justify-between text-xs font-mono">
-                  <span className="uppercase tracking-widest text-[#A6F0CF] font-semibold">
+                  <span className="uppercase tracking-widest text-[#C79347] font-semibold">
                     {locale === "ta" ? activeEvent.statusBadgeTa : activeEvent.statusBadgeEn} · {activeEvent.academicYear}
                   </span>
-                  <span className="font-semibold text-[#C4B7D7]/60 tracking-wider">
+                  <span className="font-semibold text-[#CBBBA8]/60 tracking-wider">
                     0{activeIndex + 1} / 0{recentEvents.length}
                   </span>
                 </div>
 
                 {/* Event Titles */}
                 <div className="space-y-1.5">
-                  <h3 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal leading-tight tracking-tight">
+                  <h3 className="font-serif text-3xl sm:text-4xl text-[#FAF5ED] font-normal leading-tight tracking-tight">
                     {locale === "ta" ? activeEvent.titleTa : activeEvent.titleEn}
                   </h3>
                   <p
                     lang="ta"
                     style={{ letterSpacing: 0 }}
-                    className="font-serif text-base sm:text-lg text-[#A6F0CF] font-normal"
+                    className="font-serif text-base sm:text-lg text-[#2BB5A8] font-normal"
                   >
                     {locale === "ta" ? activeEvent.titleEn : activeEvent.titleTa}
                   </p>
                 </div>
 
                 {/* Logistics Bar (Clean Bordered Hairlines) */}
-                <div className="py-3.5 border-t border-b border-[rgba(125,96,166,0.25)] flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono text-[#C4B7D7]">
+                <div className="py-3.5 border-t border-b border-[rgba(212,163,106,0.25)] flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono text-[#CBBBA8]">
                   <div className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-[#A6F0CF]" />
-                    <span className="font-semibold text-[#F4F0FA]">{activeEvent.date}</span>
+                    <Calendar className="w-3.5 h-3.5 text-[#2BB5A8]" />
+                    <span className="font-semibold text-[#FAF5ED]">{activeEvent.date}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                    <Clock className="w-3.5 h-3.5 text-[#2BB5A8]" />
                     <span>{activeEvent.time}</span>
                   </div>
                   <div className="flex items-center gap-1.5 w-full sm:w-auto">
-                    <MapPin className="w-3.5 h-3.5 text-[#A6F0CF]" />
+                    <MapPin className="w-3.5 h-3.5 text-[#2BB5A8]" />
                     <span className="line-clamp-1">{activeEvent.location}</span>
                   </div>
                 </div>
 
                 {/* Event Description */}
-                <p className="font-sans text-base text-[#C4B7D7] leading-relaxed">
+                <p className="font-sans text-base text-[#CBBBA8] leading-relaxed">
                   {locale === "ta" ? activeEvent.descriptionTa : activeEvent.descriptionEn}
                 </p>
 
@@ -166,7 +166,7 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
                   <Link
                     href={`/events/${activeEvent.slug}`}
                     onClick={playClick}
-                    className="group inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-wider text-[#A6F0CF] hover:text-[#F4F0FA] transition-colors border-b border-[#A6F0CF]/35 pb-0.5"
+                    className="group inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-wider text-[#2BB5A8] hover:text-[#FAF5ED] transition-colors border-b border-[#2BB5A8]/35 pb-0.5"
                   >
                     <span>{locale === "ta" ? "முழு விபரம் அறிவீர்" : "Explore Gathering"}</span>
                     <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />

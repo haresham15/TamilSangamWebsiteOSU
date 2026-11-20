@@ -490,7 +490,7 @@ export const DepthCarousel: React.FC<DepthCarouselProps> = ({
             {/* In-Card Title Teaser */}
             <div className="absolute bottom-4 left-4 right-4 z-10 text-left pointer-events-none">
               {item.badge && (
-                <span className="block text-[10px] font-mono font-semibold uppercase tracking-widest text-[#A6F0CF] mb-1">
+                <span className="block text-[10px] font-mono font-semibold uppercase tracking-widest text-[#C79347] mb-1">
                   {item.badge}
                 </span>
               )}

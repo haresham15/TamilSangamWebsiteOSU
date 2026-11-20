@@ -99,28 +99,28 @@ export function PaatamSonicJamDeck() {
       {/* =========================================================================
           INTERACTIVE RAGA MOHANAM ACOUSTIC STRINGS FRETBOARD
           ========================================================================= */}
-      <div className="p-6 sm:p-10 rounded-2xl bg-[#140C20] border border-[#A6F0CF]/35 text-[#F4F0FA] space-y-8 shadow-2xl relative overflow-hidden">
+      <div className="p-6 sm:p-10 rounded-2xl bg-[#1C122B] border border-[#C79347]/30 text-[#FAF5ED] space-y-8 shadow-2xl relative overflow-hidden">
         {/* Ambient Warm Fret Glow */}
-        <div className="absolute top-0 right-0 w-80 h-80 bg-[radial-gradient(circle_at_top_right,rgba(166,240,207,0.12),transparent_70%)] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-80 h-80 bg-[radial-gradient(circle_at_top_right,rgba(199,147,71,0.12),transparent_70%)] pointer-events-none" />
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#A6F0CF]/35 pb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#C79347]/20 pb-6">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#A6F0CF]">
-              <span className="w-2 h-2 rounded-full bg-[#A6F0CF] animate-ping" />
+            <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#C79347]">
+              <span className="w-2 h-2 rounded-full bg-[#2BB5A8] animate-ping" />
               <span>Interactive Raga Mohanam Acoustic Deck · வீணை மற்றும் கிட்டார் நரம்புகள்</span>
             </div>
-            <h4 className="font-serif text-2xl sm:text-3xl font-normal text-[#F4F0FA]">
+            <h4 className="font-serif text-2xl sm:text-3xl font-normal text-[#FAF5ED]">
               Strum the 6 Strings of Mohanam
             </h4>
           </div>
 
           <StarBorder
-            color="#A6F0CF" trailColor="#F26BB5"
+            color="#C79347" trailColor="#D4A36A"
           >
             <button
               type="button"
               onClick={handleStrumChord}
-              className="px-5 py-2.5 bg-[#140C20] text-[#A6F0CF] hover:text-[#F4F0FA] text-xs font-mono uppercase tracking-wider font-semibold rounded-full cursor-pointer transition-colors"
+              className="px-5 py-2.5 bg-[#1C122B] text-[#C79347] hover:text-[#FAF5ED] text-xs font-mono uppercase tracking-wider font-semibold rounded-full cursor-pointer transition-colors"
             >
               Strum Vaaranam Chord ♪
             </button>
@@ -139,9 +139,9 @@ export function PaatamSonicJamDeck() {
                 className="group relative flex items-center gap-4 p-2 rounded-lg hover:bg-white/[0.04] cursor-pointer transition-colors"
               >
                 {/* Note Badge */}
-                <div className="w-20 shrink-0 font-mono text-xs flex items-center justify-between text-[#A6F0CF]/80 group-hover:text-[#A6F0CF]">
+                <div className="w-20 shrink-0 font-mono text-xs flex items-center justify-between text-[#C79347]/80 group-hover:text-[#C79347]">
                   <span className="font-bold">{str.note}</span>
-                  <span className="text-[10px] text-[#C4B7D7]">{str.pitch}</span>
+                  <span className="text-[10px] text-[#CBBBA8]">{str.pitch}</span>
                 </div>
 
                 {/* Physical Wire String Line */}
@@ -149,14 +149,14 @@ export function PaatamSonicJamDeck() {
                   <div
                     className={`w-full transition-all duration-150 ${
                       isPlaying
-                        ? "h-[3px] bg-[#F39C12] shadow-[0_0_12px_#F39C12]"
-                        : "h-[1.5px] bg-[#A6F0CF]/40 group-hover:bg-[#A6F0CF] group-hover:h-[2px]"
+                        ? "h-[3px] bg-[#2BB5A8] shadow-[0_0_12px_#2BB5A8]"
+                        : "h-[1.5px] bg-[#C79347]/40 group-hover:bg-[#C79347] group-hover:h-[2px]"
                     }`}
                   />
                 </div>
 
                 {/* Frequency & Pluck Action */}
-                <span className="shrink-0 text-[11px] font-mono text-[#C4B7D7] group-hover:text-[#A6F0CF] w-16 text-right">
+                <span className="shrink-0 text-[11px] font-mono text-[#CBBBA8] group-hover:text-[#2BB5A8] w-16 text-right">
                   {str.hz}
                 </span>
               </div>
@@ -190,13 +190,13 @@ export function PaatamSonicJamDeck() {
             return (
               <SpotlightCard
                 key={era.id}
-                spotlightColor="rgba(166, 240, 207, 0.14)"
-                goldColor="rgba(242, 107, 181, 0.10)"
+                spotlightColor="rgba(43, 181, 168, 0.14)"
+                goldColor="rgba(199, 147, 71, 0.10)"
                 radius={380}
                 className={`p-6 sm:p-8 rounded-2xl border transition-[border-color,background-color,box-shadow] duration-200 flex flex-col justify-between ${
                   isSelected
-                    ? "bg-[#140C20] border-[#A6F0CF] shadow-lg shadow-[#A6F0CF]/15"
-                    : "bg-[#140C20] border-[rgba(125,96,166,0.25)] hover:border-[#A6F0CF]/35"
+                    ? "bg-[#1C122B] border-[#2BB5A8] shadow-lg shadow-[#2BB5A8]/15"
+                    : "bg-[#1C122B] border-[#C79347]/20 hover:border-[#2BB5A8]/35"
                 }`}
                 onClick={() => {
                   setActiveEra(era.id);
@@ -204,36 +204,36 @@ export function PaatamSonicJamDeck() {
                 }}
               >
                 <div className="space-y-5">
-                  <div className="flex items-center justify-between gap-4 border-b border-[rgba(125,96,166,0.25)] pb-4">
-                    <span className="text-[11px] font-mono tracking-widest uppercase font-semibold text-[#C4B7D7]">
+                  <div className="flex items-center justify-between gap-4 border-b border-[#C79347]/20 pb-4">
+                    <span className="text-[11px] font-mono tracking-widest uppercase font-semibold text-[#CBBBA8]">
                       {era.era}
                     </span>
-                    <Icon className="w-5 h-5 text-[#A6F0CF]" />
+                    <Icon className="w-5 h-5 text-[#2BB5A8]" />
                   </div>
 
                   <div className="space-y-1">
-                    <h4 className="font-serif text-2xl text-[#F4F0FA] font-normal">
+                    <h4 className="font-serif text-2xl text-[#FAF5ED] font-normal">
                       {era.nameEn}
                     </h4>
-                    <p lang="ta" className="font-tamil text-base text-[#A6F0CF] font-medium leading-relaxed">
+                    <p lang="ta" className="font-tamil text-base text-[#C79347] font-medium leading-relaxed">
                       {era.nameTa}
                     </p>
                   </div>
 
-                  <p className="font-sans text-xs sm:text-sm text-[#C4B7D7] leading-relaxed">
+                  <p className="font-sans text-xs sm:text-sm text-[#CBBBA8] leading-relaxed">
                     {era.tagline}
                   </p>
 
                   {/* Representative Track Pills */}
                   <div className="space-y-1.5 pt-2">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#C4B7D7] block">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#CBBBA8] block">
                       Inspirational Anthems:
                     </span>
                     <div className="flex flex-wrap gap-1.5">
                       {era.highlights.map((track) => (
                         <span
                           key={track}
-                          className="px-2.5 py-1 rounded-full text-[11px] font-mono bg-[#25173B] text-[#F4F0FA] border border-[rgba(125,96,166,0.25)]"
+                          className="px-2.5 py-1 rounded-full text-[11px] font-mono bg-[#271A3C] text-[#FAF5ED] border border-[#C79347]/20"
                         >
                           {track}
                         </span>
@@ -242,21 +242,21 @@ export function PaatamSonicJamDeck() {
                   </div>
 
                   {/* Campus Blueprint Box */}
-                  <div className="p-3.5 rounded-xl bg-[#25173B]/70 border border-[rgba(125,96,166,0.25)] space-y-1">
-                    <span className="text-[10px] font-mono uppercase tracking-widest font-bold text-[#F4F0FA] block">
+                  <div className="p-3.5 rounded-xl bg-[#271A3C]/70 border border-[#C79347]/20 space-y-1">
+                    <span className="text-[10px] font-mono uppercase tracking-widest font-bold text-[#FAF5ED] block">
                       Campus Blueprint 2026–2027:
                     </span>
-                    <p className="text-xs font-sans text-[#C4B7D7] leading-relaxed">
+                    <p className="text-xs font-sans text-[#CBBBA8] leading-relaxed">
                       {era.blueprintVision}
                     </p>
                   </div>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-[rgba(125,96,166,0.25)]">
+                <div className="pt-6 mt-6 border-t border-[#C79347]/20">
                   <Link
                     href={`/ideas?category=EVENT+IDEA&pillar=paatam&prompt=${encodeURIComponent(era.prompt)}`}
                     onClick={() => audioLayer.playTapeClack()}
-                    className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider font-semibold text-[#A6F0CF] hover:text-[#F4F0FA] transition-colors"
+                    className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider font-semibold text-[#2BB5A8] hover:text-[#FAF5ED] transition-colors"
                   >
                     <span>Pitch a Jam Concept</span>
                     <ArrowRight className="w-3.5 h-3.5" />

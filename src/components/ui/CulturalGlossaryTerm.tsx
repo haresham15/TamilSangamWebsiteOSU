@@ -185,14 +185,14 @@ export function CulturalGlossaryTerm({
       role="button"
       aria-haspopup="dialog"
       aria-expanded={isOpen}
-      className={`group/term relative inline-block cursor-help border-b border-dashed border-[#A6F0CF]/35 hover:border-[#A6F0CF] hover:text-[#A6F0CF] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#4FD6E0] transition-colors ${className}`}
+      className={`group/term relative inline-block cursor-help border-b border-dashed border-[#C79347]/50 hover:border-[#C79347] hover:text-[#C79347] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#2BB5A8] transition-colors ${className}`}
     >
       <span className="font-semibold">{children || data.term}</span>
 
       {/* Diegetic Amber Indicator Dot */}
-      <span className="inline-block w-1 h-1 rounded-full bg-[#A6F0CF] ml-0.5 align-top opacity-70 group-hover/term:opacity-100 group-hover/term:scale-125 transition-all" />
+      <span className="inline-block w-1 h-1 rounded-full bg-[#C79347] ml-0.5 align-top opacity-70 group-hover/term:opacity-100 group-hover/term:scale-125 transition-all" />
 
-      {/* Floating Glassmorphic Cultural Discovery Card */}
+      {/* Floating Cultural Discovery Card */}
       <AnimatePresence>
         {isOpen && (
           <motion.span
@@ -207,48 +207,48 @@ export function CulturalGlossaryTerm({
           >
             {/* Top Pointer Caret when position is bottom */}
             {position === "bottom" && (
-              <span className="block w-3 h-3 bg-[#1c1008] border-l border-t border-[#A6F0CF]/35 rotate-45 mx-auto -mb-1.5 shadow-md relative z-10" />
+              <span className="block w-3 h-3 bg-[#1C122B] border-l border-t border-[rgba(212,163,106,0.35)] rotate-45 mx-auto -mb-1.5 shadow-md relative z-10" />
             )}
 
-            <span className="block p-4 rounded-xl bg-[#1c1008]/96 backdrop-blur-xl border border-[#A6F0CF]/35 shadow-[0_12px_36px_rgba(0,0,0,0.85),0_0_30px_rgba(255,184,77,0.2)] text-[#faf5ed] font-body relative overflow-hidden">
-              {/* Subtle Kuthuvilakku Amber Glow Spill */}
-              <span className="absolute -top-12 -right-12 w-28 h-28 rounded-full bg-[#A6F0CF]/15 blur-2xl pointer-events-none" />
+            <span className="block p-4 rounded-xl bg-[#1C122B]/98 backdrop-blur-xl border border-[rgba(212,163,106,0.35)] shadow-[0_12px_36px_rgba(0,0,0,0.85),0_0_24px_rgba(199,147,71,0.15)] text-[#FAF5ED] font-body relative overflow-hidden">
+              {/* Subtle Zari Amber Glow Spill */}
+              <span className="absolute -top-12 -right-12 w-28 h-28 rounded-full bg-[#C79347]/15 blur-2xl pointer-events-none" />
 
               {/* Header: Term, Tamil Script, & Category */}
-              <span className="flex items-start justify-between gap-2 border-b border-[#A6F0CF]/35 pb-2.5 mb-2.5">
+              <span className="flex items-start justify-between gap-2 border-b border-[rgba(212,163,106,0.25)] pb-2.5 mb-2.5">
                 <span>
-                  <span className="block text-base font-bold font-display text-white leading-tight">
+                  <span className="block text-base font-bold font-serif text-[#FAF5ED] leading-tight">
                     {data.term}
                   </span>
-                  <span className="block text-xs font-tamil font-semibold text-[#A6F0CF] mt-0.5">
-                    {data.tamil} · <span className="font-mono text-[11px] text-amber-200/80">{data.phonetic}</span>
+                  <span className="block text-xs font-tamil font-semibold text-[#2BB5A8] mt-0.5" lang="ta">
+                    {data.tamil} · <span className="font-mono text-[11px] text-[#CBBBA8]">{data.phonetic}</span>
                   </span>
                 </span>
 
-                <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase tracking-wider bg-[#A6F0CF]/20 border border-[#A6F0CF]/35 text-[#FFD700] shrink-0">
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase tracking-wider bg-[#C79347]/15 border border-[#C79347]/30 text-[#C79347] shrink-0 font-semibold">
                   {data.category}
                 </span>
               </span>
 
               {/* Core Definition */}
-              <span className="block text-xs text-slate-200 leading-relaxed mb-2 font-body">
+              <span className="block text-xs text-[#FAF5ED]/90 leading-relaxed mb-2 font-sans">
                 {data.definitionEn}
               </span>
 
-              <span className="block text-[11px] text-amber-100/75 leading-relaxed font-tamil mb-2.5 border-t border-white/5 pt-1.5">
+              <span className="block text-[11px] text-[#CBBBA8] leading-relaxed font-tamil mb-2.5 border-t border-[rgba(212,163,106,0.15)] pt-1.5" lang="ta">
                 {data.definitionTa}
               </span>
 
               {/* Cultural Significance Footer */}
-              <span className="flex items-center gap-1.5 text-[10px] text-amber-300/90 font-mono border-t border-[#A6F0CF]/35 pt-2">
-                <Sparkles className="w-3 h-3 text-[#A6F0CF] shrink-0" />
+              <span className="flex items-center gap-1.5 text-[10px] text-[#C79347] font-mono border-t border-[rgba(212,163,106,0.25)] pt-2">
+                <Sparkles className="w-3 h-3 text-[#C79347] shrink-0" />
                 <span className="line-clamp-2">{data.significance}</span>
               </span>
             </span>
 
             {/* Downward Pointer Caret with Filigree Tint */}
             {position === "top" && (
-              <span className="block w-3 h-3 bg-[#1c1008] border-r border-b border-[#A6F0CF]/35 rotate-45 mx-auto -mt-1.5 shadow-md relative z-10" />
+              <span className="block w-3 h-3 bg-[#1C122B] border-r border-b border-[rgba(212,163,106,0.35)] rotate-45 mx-auto -mt-1.5 shadow-md relative z-10" />
             )}
           </motion.span>
         )}

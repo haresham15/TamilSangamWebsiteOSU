@@ -91,8 +91,8 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
       aria-label="Quick tools dock"
       className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none pointer-events-auto"
     >
-      <StarBorder className="rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.35)]" color="#A6F0CF" trailColor="#4FD6E0" thickness={1}>
-        <div className="bg-[#140C20] text-[#F4F0FA] border border-[rgba(125,96,166,0.25)] backdrop-blur-md rounded-xl h-10 px-3 sm:px-4 flex items-center gap-2.5 sm:gap-3 transition-[background-color,border-color] duration-200">
+      <StarBorder className="rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.35)]" color="#C79347" trailColor="#2BB5A8" thickness={1}>
+        <div className="bg-[#1C122B] text-[#FAF5ED] border border-[#C79347]/30 backdrop-blur-md rounded-xl h-10 px-3 sm:px-4 flex items-center gap-2.5 sm:gap-3 transition-[background-color,border-color] duration-200">
         {/* 1. Ask Nanba Trigger */}
         <button
           type="button"
@@ -102,7 +102,7 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
           }}
           aria-label="Ask Nanba - OSU Tamil Sangam AI Assistant"
           aria-expanded={isChatOpen}
-          className="group flex items-center gap-2 text-xs font-mono font-medium tracking-wide text-[#F4F0FA] hover:text-[#A6F0CF] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#4FD6E0] rounded-md py-1 pr-1"
+          className="group flex items-center gap-2 text-xs font-mono font-medium tracking-wide text-[#FAF5ED] hover:text-[#C79347] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2BB5A8] rounded-md py-1 pr-1"
         >
           <NanbaAvatar size={18} className="w-[18px] h-[18px] shrink-0 transition-transform duration-200 group-hover:scale-115" />
           <span className="text-[11px] sm:text-xs">
@@ -119,8 +119,8 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
           onClick={toggleSound}
           aria-label={isSoundEnabled ? "Mute interactive audio" : "Enable interactive audio"}
           title={isSoundEnabled ? "Mute sound" : "Unmute sound"}
-          className={`flex items-center justify-center w-7 h-7 rounded-full hover:bg-white/10 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#4FD6E0] ${
-            isSoundEnabled ? "text-[#A6F0CF]" : "text-[#C4B7D7] hover:text-[#F4F0FA]"
+          className={`flex items-center justify-center w-7 h-7 rounded-full hover:bg-white/10 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2BB5A8] ${
+            isSoundEnabled ? "text-[#2BB5A8]" : "text-[#CBBBA8] hover:text-[#FAF5ED]"
           }`}
         >
           {isSoundEnabled ? (
@@ -142,7 +142,7 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
           }}
           aria-label="Open command search"
           title="Search (⌘K)"
-          className="flex items-center gap-1.5 text-[11px] font-mono text-[#C4B7D7] hover:text-white transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#4FD6E0] rounded-full py-1 pl-1"
+          className="flex items-center gap-1.5 text-[11px] font-mono text-[#CBBBA8] hover:text-white transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2BB5A8] rounded-full py-1 pl-1"
         >
           <Search className="w-3 h-3 text-[#C4B7D7]" />
           <span className="hidden sm:inline-block px-1.5 py-0.5 rounded-sm bg-white/10 text-[10px] tracking-wide font-semibold text-[#C4B7D7]">

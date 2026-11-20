@@ -168,7 +168,7 @@ export function NleTimelineLightbox({
         {/* Left: System Status & Coordinates */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#55CCA2] inline-block animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#2BB5A8] inline-block animate-pulse" />
             <span className="font-bold text-white tracking-widest hidden sm:inline">
               DAVINCI RESOLVE STUDIO // COLOR & EDIT
             </span>
@@ -177,14 +177,14 @@ export function NleTimelineLightbox({
             </span>
           </div>
           <span className="text-white/20 hidden md:inline">|</span>
-          <span className="text-[#A6F0CF]/75 text-[10px] hidden md:inline">
+          <span className="text-[#C79347] text-[10px] hidden md:inline">
             LAT 40.0067° N · LON 83.0305° W [COLUMBUS, OH]
           </span>
         </div>
 
         {/* Center: Running 24FPS Timecode Clock */}
         <div className="flex items-center gap-3">
-          <div className="px-3 py-1 bg-black border border-white/20 text-[#55CCA2] font-mono text-xs sm:text-sm font-bold tracking-widest shadow-inner">
+          <div className="px-3 py-1 bg-black border border-white/20 text-[#2BB5A8] font-mono text-xs sm:text-sm font-bold tracking-widest shadow-inner">
             TC: {timecodeStr}
           </div>
           <span className="text-[10px] text-white/50 hidden lg:inline">
@@ -238,7 +238,7 @@ export function NleTimelineLightbox({
 
         {/* Corner Telemetry: Bottom-Left Metadata Badge */}
         <div className="absolute bottom-4 left-4 max-w-lg bg-black/85 backdrop-blur-md p-3 sm:p-4 border border-white/15 text-left pointer-events-auto">
-          <div className="text-[9px] text-[#A6F0CF] tracking-widest uppercase mb-1">
+          <div className="text-[9px] text-[#C79347] tracking-widest uppercase mb-1">
             CAM REEL 01 · {photo.eventDate} · SHOT BY {photo.photographer}
           </div>
           <h3 className="text-base sm:text-xl font-bold font-display text-white tracking-tight leading-snug">
@@ -251,7 +251,7 @@ export function NleTimelineLightbox({
             {photo.tags.map((t) => (
               <span
                 key={t}
-                className="px-1.5 py-0.5 border border-white/15 bg-white/5 text-[9px] text-[#55CCA2] uppercase"
+                className="px-1.5 py-0.5 border border-white/15 bg-white/5 text-[9px] text-[#2BB5A8] uppercase"
               >
                 #{t}
               </span>
@@ -267,7 +267,7 @@ export function NleTimelineLightbox({
             rel="noopener noreferrer"
             onMouseEnter={() => audioLayer.playTapeClack(0.3)}
             data-cursor="bracket"
-            className="px-2.5 py-1 text-[10px] text-[#55CCA2] hover:bg-[#55CCA2]/20 border border-[#55CCA2]/40 uppercase tracking-wider flex items-center gap-1 transition-colors"
+            className="px-2.5 py-1 text-[10px] text-[#2BB5A8] hover:bg-[#2BB5A8]/20 border border-[#2BB5A8]/40 uppercase tracking-wider flex items-center gap-1 transition-colors"
           >
             <Maximize2 className="w-3 h-3" />
             <span>FULL RES</span>
@@ -296,7 +296,7 @@ export function NleTimelineLightbox({
         {/* Timeline Header Strip */}
         <div className="flex items-center justify-between text-[10px] text-white/40 pb-1.5 tracking-wider">
           <div className="flex items-center gap-2">
-            <span className="text-[#A6F0CF] font-bold">TRACK V1</span>
+            <span className="text-[#C79347] font-bold">TRACK V1</span>
             <span>TIMELINE SCRUBBER (CLICK & DRAG TO SCRUB)</span>
           </div>
           <div className="flex items-center gap-3">

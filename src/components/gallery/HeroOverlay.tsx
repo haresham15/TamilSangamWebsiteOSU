@@ -10,7 +10,7 @@ export function HeroOverlay() {
       {/* 1. Accessible Skip Link */}
       <a
         href="#gallery-vault-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-[#250d38] text-[#FAF6EE] px-4 py-2 font-mono text-xs border border-[#A6F0CF] pointer-events-auto"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-[#1C122B] text-[#FAF5ED] px-4 py-2 font-mono text-xs border border-[#2BB5A8] pointer-events-auto"
       >
         {locale === "ta" ? "ஆல்பங்களுக்குச் செல்" : "Skip to albums"}
       </a>
