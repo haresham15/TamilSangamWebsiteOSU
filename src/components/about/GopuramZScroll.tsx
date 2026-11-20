@@ -205,7 +205,7 @@ function RingModalCard({
         {/* Narrative Description */}
         <p
           lang={locale === "ta" ? "ta" : "en"}
-          className={`text-sm sm:text-base text-sangam-lilac leading-relaxed font-sans max-w-lg pt-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] ${
+          className={`text-sm sm:text-base text-sangam-cream leading-relaxed font-sans max-w-lg pt-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] ${
             locale === "ta" ? "font-tamil" : ""
           }`}
         >
@@ -298,7 +298,7 @@ function GopuramScene({
       {/* Reading scrim: copy sits over the left pier on desktop and the terrace on mobile. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-hero-dusk-scrim/70 via-hero-dusk-scrim/25 to-transparent lg:bg-gradient-to-r lg:from-hero-dusk-scrim/75 lg:via-hero-dusk-scrim/40 lg:via-40% lg:to-transparent lg:to-70%"
+        className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-hero-dusk-scrim/70 via-hero-dusk-scrim/25 to-transparent lg:bg-gradient-to-r lg:from-hero-dusk-scrim/85 lg:via-hero-dusk-scrim/60 lg:via-45% lg:to-transparent lg:to-75%"
       />
 
       {/* 5 Sacred Ring Floating Titles */}
@@ -333,6 +333,7 @@ function StaticSpread({ locale }: { locale: string }) {
   );
   const [first, ...rest] = TIERS;
   return (
+    <div className="bg-gradient-to-b from-hero-dusk-about to-hero-dusk-scrim">
     <div className="relative z-10 mx-auto grid min-h-dvh max-w-6xl content-center gap-10 px-6 pb-10 pt-28 sm:px-12 lg:grid-cols-[1fr_1.15fr] lg:gap-16 lg:pb-8 lg:pt-24">
       <div className="space-y-4 self-center">
         {label(0, first)}
@@ -355,6 +356,7 @@ function StaticSpread({ locale }: { locale: string }) {
           </li>
         ))}
       </ol>
+    </div>
     </div>
   );
 }

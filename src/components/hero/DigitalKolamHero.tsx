@@ -483,6 +483,7 @@ function PowderKolam({ isMobile, tier }: { isMobile: boolean; tier: string }) {
     const fov = (state.camera as THREE.PerspectiveCamera).fov;
     built.shared.uPointScale.value =
       (0.012 * state.size.height * state.viewport.dpr) / (2 * Math.tan(THREE.MathUtils.degToRad(fov * 0.5)));
+    built.shared.uDepthDim.value.z = 0.3; // lifted ground: keep distant kolam lines readable
     if (containerRef.current) {
       // Portal push-through (Act II → III): the wreath opens radially past the frustum.
       const pushT = heroPushT(p);
@@ -788,7 +789,7 @@ function ScrollExpandIntroOverlay() {
         className="absolute top-0 left-0 right-0 pt-20 sm:pt-24 text-center transition-opacity"
         style={{ willChange: "opacity, transform" }}
       >
-        <span className="block font-space-mono text-[9px] sm:text-xs tracking-[0.26em] text-[#A6F0CF]/90 uppercase">
+        <span className="block font-space-mono text-[9px] sm:text-xs tracking-[0.26em] text-[#D4FFEA] uppercase [text-shadow:0_0_6px_#2A1A14,0_0_14px_#2A1A14]">
           THE OHIO STATE UNIVERSITY
         </span>
         <h1 className="font-anek-tamil text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] mt-1 sm:mt-1.5">
@@ -803,7 +804,7 @@ function ScrollExpandIntroOverlay() {
         className="absolute bottom-16 sm:bottom-8 left-0 right-0 text-center px-4 transition-opacity"
         style={{ willChange: "opacity, transform" }}
       >
-        <p className="font-space-mono text-[11px] sm:text-xs tracking-[0.22em] text-sangam-cream uppercase drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]">
+        <p className="font-space-mono text-[11px] sm:text-xs tracking-[0.22em] text-[#FFF6E6] uppercase [text-shadow:0_0_6px_#2A1A14,0_0_14px_#2A1A14]">
           SCROLL TO ENTER ·{" "}
           <span lang="ta" className="tracking-normal normal-case">
             கீழே உருட்டவும்
@@ -1141,6 +1142,8 @@ function ThresholdStage({ mode }: { mode: "A" | "B" }) {
           Key and fill are not tagged gradeRole: the kolam-hearth Tier-B fallback lerps the key
           toward mint and the fill toward purple, which turns this stone olive. */}
       <hemisphereLight args={["#e8b48a", "#5a3a28", 1.1]} position={[0, 0, 1]} />
+      {/* Golden-hour pool: warm glow centred on the glyph, falling off toward the frame edges. */}
+      <pointLight position={[0, 0.4, 3.2]} color="#ffb060" intensity={26} distance={11} decay={2} />
 
       <mesh geometry={floorGeometry} material={stone.material} position={[0, -6, THRESHOLD_FLOOR_Z]} receiveShadow />
     </>

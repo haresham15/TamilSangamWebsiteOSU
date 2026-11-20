@@ -69,7 +69,7 @@ const STREAK_COLOR = /* glsl */ `
 /** Painted coach steel: vertex-coloured finishes, edge wear, grime, wet rain runs. */
 export function createCoachMaterial() {
   const material = withSurfaceDetail(
-    new THREE.MeshStandardMaterial({ color: "#ffffff", vertexColors: true, roughness: 0.46, metalness: 0.12, envMapIntensity: 1.7 }),
+    new THREE.MeshStandardMaterial({ color: "#ffffff", vertexColors: true, roughness: 0.46, metalness: 0.12, envMapIntensity: 2.2 }),
     {
       scale: 6,
       albedoVariation: 0.14,
@@ -186,8 +186,8 @@ export function createSkyMaterial() {
   return new THREE.ShaderMaterial({
     uniforms: {
       uZenith: { value: new THREE.Color("#5a4a6a") },
-      uMid: { value: new THREE.Color("#a8708a") },
-      uHorizon: { value: new THREE.Color("#f0a070") },
+      uMid: { value: new THREE.Color("#8a6482") },
+      uHorizon: { value: new THREE.Color("#e89878") },
       uGlow: { value: new THREE.Color("#ffc080") },
       uGain: { value: 1.0 },
     },

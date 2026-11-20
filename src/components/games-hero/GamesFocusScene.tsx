@@ -92,6 +92,19 @@ function isSoftwareRenderer(gl: THREE.WebGLRenderer) {
   return /swiftshader|llvmpipe|softpipe|software|basic render/i.test(name);
 }
 
+/** Same lens for every layer: locked position, FOV, horizon lens shift (elements[9]) and cover-crop shift (elements[8]). */
+function poseCamera(camera: THREE.PerspectiveCamera, cameraX: number, fovDeg: number, aspect: number, lensShift: number, cropShift: number) {
+  camera.position.set(cameraX, 1.65, 6);
+  camera.rotation.set(0, 0, 0);
+  camera.fov = fovDeg;
+  camera.aspect = aspect;
+  camera.updateProjectionMatrix();
+  camera.projectionMatrix.elements[9] = -lensShift;
+  if (cropShift !== 0) camera.projectionMatrix.elements[8] = cropShift;
+  camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+  camera.updateMatrixWorld();
+}
+
 interface GamesFocusSceneProps {
   progressRef: RefObject<number>;
   hand: THREE.Group;
@@ -102,11 +115,12 @@ interface GamesFocusSceneProps {
   stageRef?: RefObject<HTMLElement | null>;
   /** Called after each visible composite with the progress it drew. */
   onReady?: (progress: number) => void;
+  /** Called once if this GPU cannot render the HDR background (no renderable float colour buffers). */
+  onUnsupported?: () => void;
   diagnosticsRef?: RefObject<GamesRenderDiagnostics | null>;
 }
 
-export function GamesFocusScene({ progressRef, hand, quality: requestedQuality, frozen = false, stageRef, onReady, diagnosticsRef }: GamesFocusSceneProps) {
-  const lastDraw = useRef("");
+export function GamesFocusScene({ progressRef, hand, quality: requestedQuality, frozen = false, stageRef, onReady, onUnsupported, diagnosticsRef }: GamesFocusSceneProps) {
   const visibleDraw = useRef(false);
   const drawnProgress = useRef(0);
   const compositeStart = useRef(0);
@@ -200,10 +214,60 @@ export function GamesFocusScene({ progressRef, hand, quality: requestedQuality, 
     resources.key.dispose();
     resources.fire.dispose();
   }, [resources]);
+  // Per-frame state lives in these preallocated objects (no allocation in the frame loop).
+  const pose = useMemo(() => ({ visible: false, width: 1, height: 1, viewAspect: DESIGN_ASPECT }), []);
+  const frame = useMemo(() => ({ targetWidth: 1, targetHeight: 1, viewAspect: DESIGN_ASPECT }), []);
+  const cache = useMemo(() => ({
+    background: { texture: null as THREE.Texture | null, p: NaN, width: 0, height: 0, scale: 0, pixelRatio: 0 },
+    foreground: { valid: false, px: 0, py: 0, pz: 0, rx: 0, ry: 0, rz: 0, opacity: 0, blur: 0, fire: 0, width: 0, height: 0, pixelRatio: 0 },
+  }), []);
+  const passes = useMemo(() => {
+    const draw = (target: THREE.WebGLRenderTarget, scene: THREE.Scene, camera: THREE.Camera, pass: GamesStage) => {
+      const start = diagnostics ? performance.now() : 0;
+      gpuTimer?.begin(pass);
+      try {
+        gl.setRenderTarget(target);
+        gl.clear(true, true, true);
+        gl.render(scene, camera);
+      } finally {
+        gpuTimer?.end();
+        diagnostics?.record(pass, "cpu", performance.now() - start);
+      }
+    };
+    return {
+      draw,
+      resize(target: THREE.WebGLRenderTarget, scale: number) {
+        const w = Math.max(1, Math.round(frame.targetWidth * scale));
+        const h = Math.max(1, Math.round(frame.targetHeight * scale));
+        if (target.width !== w || target.height !== h) target.setSize(w, h);
+      },
+      /** Separable blur: X into `scratch`, Y back into `source` (its pixels are consumed; the next stale frame redraws it). */
+      blur(source: THREE.WebGLRenderTarget, scratch: THREE.WebGLRenderTarget, radius: number, clamp: number, passX: GamesStage, passY: GamesStage) {
+        if (radius <= 0) return source.texture;
+        const uniforms = resources.blurMaterial.uniforms;
+        uniforms.uSource.value = source.texture;
+        // Highlight clamp only on the first pass (scene-linear units).
+        uniforms.uClamp.value = clamp;
+        uniforms.uRadius.value.set(radius / 1440, 0);
+        draw(scratch, resources.passScene, resources.passCamera, passX);
+        uniforms.uSource.value = scratch.texture;
+        uniforms.uClamp.value = 0;
+        uniforms.uRadius.value.set(0, radius * frame.viewAspect / 1440);
+        draw(source, resources.passScene, resources.passCamera, passY);
+        return source.texture;
+      },
+    };
+  }, [gl, resources, diagnostics, gpuTimer, frame]);
   useEffect(() => {
-    lastDraw.current = "";
+    cache.foreground.valid = false;
+    cache.background.texture = null;
     warmup.current = SHADOW_WARMUP_FRAMES;
-  }, [resources]);
+  }, [resources, cache]);
+  // Without renderable float colour buffers the beach would clip at 1.0 before gamesAgX (grey, banded sky):
+  // hand over to the poster stills instead.
+  useEffect(() => {
+    if (!resources.hdr) onUnsupported?.();
+  }, [resources, onUnsupported]);
   const measureForegroundMemory = () => {
     if (!diagnostics) return;
     const arrays = new Set<ArrayBufferView>();
@@ -229,44 +293,48 @@ export function GamesFocusScene({ progressRef, hand, quality: requestedQuality, 
       environmentTextureBytes: Math.round(imageBytes(resources.environment?.texture ?? resources.probe!) * (resources.probe ? 4 : 1)) };
   };
 
+  // Lens pose runs before BeachWorld/BlastFX (priority 0), so their billboards and sorting see this frame's camera.
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    if (!Number.isFinite(dt)) return;
+    pose.visible = false;
+    if (document.hidden || !resources.hdr) return;
+    const rect = stageRef?.current?.getBoundingClientRect();
+    if (rect && (rect.bottom <= 0 || rect.top >= window.innerHeight || rect.width <= 0)) return;
+    const width = rect?.width ?? size.width;
+    const height = rect?.height ?? size.height;
+    if (width <= 0 || height <= 0) return;
+    const viewAspect = width / height;
+    const isPortrait = viewAspect < 1.3;
+    const optics = heroProjection(viewAspect);
+    const cropHalf = 0.5 * Math.min(1, viewAspect / DESIGN_ASPECT);
+    const cropCenter = cinematic && !isPortrait ? COVER_ANCHOR + 2 * cropHalf * (0.5 - COVER_ANCHOR) : 0.5;
+    // Desktop cover-crop (1.3 ≤ aspect < 2.39): keep the vertical FOV and crop sideways around cropCenter.
+    const cropShift = cinematic && !isPortrait && viewAspect < DESIGN_ASPECT ? (cropCenter - 0.5) / cropHalf : 0;
+    // One lens for both layers: same position, FOV, horizon shift and cover-crop shift.
+    poseCamera(resources.foregroundCamera, optics.cameraX, optics.fovDeg, viewAspect, optics.lensShift, cropShift);
+    poseCamera(resources.backgroundCamera, optics.cameraX, optics.fovDeg, viewAspect, optics.lensShift, cropShift);
+    pose.visible = true;
+    pose.width = width;
+    pose.height = height;
+    pose.viewAspect = viewAspect;
+  }, -1);
+
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.05);
     // Every pass below is a pure function of progress (plus BeachWorld's own sea/palm clock, held when frozen).
     if (!Number.isFinite(dt)) return;
     const scrollP = progressRef.current;
     visibleDraw.current = false;
-    if (document.hidden) return;
-    const rect = stageRef?.current?.getBoundingClientRect();
-    if (rect && (rect.bottom <= 0 || rect.top >= window.innerHeight || rect.width <= 0)) return;
-    const width = rect?.width ?? size.width;
-    const height = rect?.height ?? size.height;
-    if (width <= 0 || height <= 0) return;
+    if (!pose.visible || document.hidden) return;
+    const { width, height, viewAspect } = pose;
     visibleDraw.current = true;
     drawnProgress.current = scrollP;
     gpuTimer?.poll();
-    const viewAspect = height > 0 ? width / height : DESIGN_ASPECT;
-    const isPortrait = viewAspect < 1.3;
-    const optics = heroProjection(viewAspect);
     const rig = evaluateForegroundRig(scrollP, viewAspect);
     const rail = evaluateCameraRail(scrollP, 0, viewAspect);
     const foregroundOpacity = rig.opacity;
-    const cropHalf = 0.5 * Math.min(1, viewAspect / DESIGN_ASPECT);
-    const cropCenter = cinematic && !isPortrait ? COVER_ANCHOR + 2 * cropHalf * (0.5 - COVER_ANCHOR) : 0.5;
-
     const r = resources;
-    // One lens for both layers: same position, FOV, horizon shift and cover-crop shift.
-    for (const camera of [r.foregroundCamera, r.backgroundCamera]) {
-      camera.position.set(optics.cameraX, 1.65, 6);
-      camera.rotation.set(0, 0, 0);
-      camera.fov = optics.fovDeg;
-      camera.aspect = viewAspect;
-      camera.updateProjectionMatrix();
-      camera.projectionMatrix.elements[9] = -rail.lensShift;
-      // Desktop cover-crop (1.3 ≤ aspect < 2.39): keep the vertical FOV and crop sideways around cropCenter.
-      if (cinematic && !isPortrait && viewAspect < DESIGN_ASPECT) camera.projectionMatrix.elements[8] = (cropCenter - 0.5) / cropHalf;
-      camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
-      camera.updateMatrixWorld();
-    }
 
     let fireIntensity = 0;
     if (cinematic) {
@@ -286,30 +354,35 @@ export function GamesFocusScene({ progressRef, hand, quality: requestedQuality, 
     }
 
     const maxWidth = tier === "A" ? 1600 : 1120;
-    const resolution = Math.min(gl.getPixelRatio(), tier === "A" ? 1.25 : 1, maxWidth / width, 900 / height);
-    const targetWidth = Math.max(1, Math.round(width * resolution));
-    const targetHeight = Math.max(1, Math.round(height * resolution));
-    const blurScale = tier === "C" ? 0.25 : 0.5;
-    const resize = (target: THREE.WebGLRenderTarget, scale = 1) => {
-      const w = Math.max(1, Math.round(targetWidth * scale));
-      const h = Math.max(1, Math.round(targetHeight * scale));
-      if (target.width !== w || target.height !== h) target.setSize(w, h);
-    };
+    const pixelRatio = gl.getPixelRatio();
+    const resolution = Math.min(pixelRatio, tier === "A" ? 1.25 : 1, maxWidth / width, 900 / height);
+    frame.targetWidth = Math.max(1, Math.round(width * resolution));
+    frame.targetHeight = Math.max(1, Math.round(height * resolution));
+    frame.viewAspect = viewAspect;
     // The adaptive governor's measured step lowers the live background's resolution without a rebuild (held under ?debug).
     const backgroundScale = BACKGROUND_SCALE[quality] * (frozen ? 1 : renderScaleFor(qualityGovernor.getLevel()));
-    resize(r.background, backgroundScale);
+    passes.resize(r.background, backgroundScale);
     // Bokeh resolution follows the radius: wide blur runs at quarter size so bilinear taps overlap (no ghost copies).
     const bokehScale = rail.backgroundBokeh > 8 ? 0.25 : 0.5;
-    resize(r.backgroundBlur, bokehScale);
-    resize(r.backgroundBlurScratch, bokehScale);
+    passes.resize(r.backgroundBlur, bokehScale);
+    passes.resize(r.backgroundBlurScratch, bokehScale);
+    // The beach only moves on its own at q0 (sea, palms); otherwise a held progress reuses the graded-in background.
+    const bg = cache.background;
+    const backgroundStale = (quality === 0 && !frozen) || warmup.current > 0 || bg.texture === null || bg.p !== scrollP
+      || bg.width !== width || bg.height !== height || bg.scale !== backgroundScale || bg.pixelRatio !== pixelRatio;
     // A held pose reuses its foreground/mask/blur passes until the rig, its light, focus or optics change.
-    const drawKey = `${r.foreground.texture.uuid}:${rig.position.toArray()}:${rig.rotation.toArray()}:${rig.opacity}:${rail.foregroundBlur}:${fireIntensity.toPrecision(4)}:${width}:${height}:${gl.getPixelRatio()}`;
-    const foregroundStale = lastDraw.current !== drawKey;
+    const fg = cache.foreground;
+    const foregroundStale = !fg.valid || fg.px !== rig.position.x || fg.py !== rig.position.y || fg.pz !== rig.position.z
+      || fg.rx !== rig.rotation.x || fg.ry !== rig.rotation.y || fg.rz !== rig.rotation.z || fg.opacity !== rig.opacity
+      || fg.blur !== rail.foregroundBlur || Math.abs(fg.fire - fireIntensity) > 1e-4 * Math.max(Math.abs(fireIntensity), 1e-6)
+      || fg.width !== width || fg.height !== height || fg.pixelRatio !== pixelRatio;
     if (foregroundStale && foregroundOpacity > 0) {
       // Tier A defocuses from a full-resolution layer (not 3/4) so the out-of-focus hand keeps a clean edge.
-      resize(r.foreground, rail.foregroundBlur > 0 && !(cinematic && tier === "A") ? 0.75 : 1);
-      resize(r.mask, 0.25);
-      for (const target of [r.foregroundBlur, r.maskBlur]) resize(target, blurScale);
+      passes.resize(r.foreground, rail.foregroundBlur > 0 && !(cinematic && tier === "A") ? 0.75 : 1);
+      passes.resize(r.mask, 0.25);
+      const blurScale = tier === "C" ? 0.25 : 0.5;
+      passes.resize(r.foregroundBlur, blurScale);
+      passes.resize(r.maskBlur, blurScale);
     }
 
     const oldTarget = gl.getRenderTarget();
@@ -327,35 +400,6 @@ export function GamesFocusScene({ progressRef, hand, quality: requestedQuality, 
     gl.getScissor(r.savedScissor);
     gl.getClearColor(r.savedClearColor);
 
-    const draw = (target: THREE.WebGLRenderTarget, scene: THREE.Scene, camera: THREE.Camera, pass: GamesStage) => {
-      const start = diagnostics ? performance.now() : 0;
-      gpuTimer?.begin(pass);
-      try {
-        gl.setRenderTarget(target);
-        gl.clear(true, true, true);
-        gl.render(scene, camera);
-      } finally {
-        gpuTimer?.end();
-        diagnostics?.record(pass, "cpu", performance.now() - start);
-      }
-    };
-    /** Separable blur: X into `scratch`, Y back into `source` (its pixels are consumed; next frame redraws it). */
-    const blur = (source: THREE.WebGLRenderTarget, scratch: THREE.WebGLRenderTarget, radius: number,
-      clamp: number, passes: [GamesStage, GamesStage]) => {
-      if (radius <= 0) return source.texture;
-      const uniforms = r.blurMaterial.uniforms;
-      uniforms.uSource.value = source.texture;
-      // Highlight clamp only on the first pass (scene-linear units).
-      uniforms.uClamp.value = clamp;
-      uniforms.uRadius.value.set(radius / 1440, 0);
-      draw(scratch, r.passScene, r.passCamera, passes[0]);
-      uniforms.uSource.value = scratch.texture;
-      uniforms.uClamp.value = 0;
-      uniforms.uRadius.value.set(0, radius * viewAspect / 1440);
-      draw(source, r.passScene, r.passCamera, passes[1]);
-      return source.texture;
-    };
-
     try {
       gl.autoClear = false;
       gl.xr.enabled = false;
@@ -363,55 +407,71 @@ export function GamesFocusScene({ progressRef, hand, quality: requestedQuality, 
       gl.setClearColor(0x000000, 0);
       gl.shadowMap.autoUpdate = false;
 
-      // Live beach, every visible frame. Its sun shadow is held per light; let the renderer's shadow pass run
-      // for the first frames so BeachWorld's warm-up draws it.
-      gl.shadowMap.needsUpdate = warmup.current > 0;
-      if (warmup.current > 0) warmup.current--;
-      draw(r.background, r.backgroundScene, r.backgroundCamera, "background");
-      gl.shadowMap.needsUpdate = false;
-      // Uniform bokeh: the beach sits 25–64 m out while focus pulls to 0.36 m, so blur varies <3% across it.
-      // Two separable iterations (radius, then 0.8 × radius) give a smooth, wide kernel from the 9-tap pass.
-      let background = r.background.texture;
-      if (rail.backgroundBokeh > 0) {
-        const uniforms = r.blurMaterial.uniforms;
-        uniforms.uClamp.value = 0;
+      if (backgroundStale) {
+        // Live beach. Its sun shadow is held per light; let the renderer's shadow pass run for the first frames
+        // so BeachWorld's warm-up draws it.
+        gl.shadowMap.needsUpdate = warmup.current > 0;
+        if (warmup.current > 0) warmup.current--;
+        passes.draw(r.background, r.backgroundScene, r.backgroundCamera, "background");
+        gl.shadowMap.needsUpdate = false;
+        // Uniform bokeh: the beach sits 25–64 m out while focus pulls to 0.36 m, so blur varies <3% across it.
+        // Two separable iterations (radius, then 0.8 × radius) give a smooth, wide kernel from the 9-tap pass.
         let source = r.background.texture;
-        for (const radius of [rail.backgroundBokeh, rail.backgroundBokeh * 0.8]) {
-          uniforms.uSource.value = source;
-          uniforms.uRadius.value.set(radius / 1440, 0);
-          draw(r.backgroundBlurScratch, r.passScene, r.passCamera, "backgroundBlurX");
-          uniforms.uSource.value = r.backgroundBlurScratch.texture;
-          uniforms.uRadius.value.set(0, radius * viewAspect / 1440);
-          draw(r.backgroundBlur, r.passScene, r.passCamera, "backgroundBlurY");
-          source = r.backgroundBlur.texture;
+        if (rail.backgroundBokeh > 0) {
+          const uniforms = r.blurMaterial.uniforms;
+          uniforms.uClamp.value = 0;
+          for (let iteration = 0; iteration < 2; iteration++) {
+            const radius = rail.backgroundBokeh * (iteration === 0 ? 1 : 0.8);
+            uniforms.uSource.value = source;
+            uniforms.uRadius.value.set(radius / 1440, 0);
+            passes.draw(r.backgroundBlurScratch, r.passScene, r.passCamera, "backgroundBlurX");
+            uniforms.uSource.value = r.backgroundBlurScratch.texture;
+            uniforms.uRadius.value.set(0, radius * viewAspect / 1440);
+            passes.draw(r.backgroundBlur, r.passScene, r.passCamera, "backgroundBlurY");
+            source = r.backgroundBlur.texture;
+          }
         }
-        background = source;
+        bg.texture = source;
+        bg.p = scrollP;
+        bg.width = width;
+        bg.height = height;
+        bg.scale = backgroundScale;
+        bg.pixelRatio = pixelRatio;
       }
 
-      if (foregroundStale && (foregroundOpacity > 0 || lastDraw.current === "")) {
+      if (foregroundStale && (foregroundOpacity > 0 || !fg.valid)) {
         // The rig's shadow map renders once, with the colour pass; never again for the mask pass.
         gl.shadowMap.needsUpdate = cinematic;
-        draw(r.foreground, r.foregroundScene, r.foregroundCamera, "foreground");
+        passes.draw(r.foreground, r.foregroundScene, r.foregroundCamera, "foreground");
         gl.shadowMap.needsUpdate = false;
         r.foregroundCamera.layers.set(2);
         r.foregroundScene.overrideMaterial = r.maskMaterial;
-        draw(r.mask, r.foregroundScene, r.foregroundCamera, "mask");
+        passes.draw(r.mask, r.foregroundScene, r.foregroundCamera, "mask");
         r.foregroundScene.overrideMaterial = oldOverride;
         r.foregroundCamera.layers.mask = oldLayers;
       }
 
       const uniforms = r.compositeMaterial.uniforms;
-      uniforms.uBackground.value = background;
+      uniforms.uBackground.value = bg.texture;
       uniforms.uBackgroundLinear.value = 1;
       if (foregroundStale) {
         uniforms.uForeground.value = foregroundOpacity > 0
-          ? blur(r.foreground, r.foregroundBlur, rail.foregroundBlur, cinematic ? 1.6 : 0, ["foregroundBlurX", "foregroundBlurY"]) : r.foreground.texture;
+          ? passes.blur(r.foreground, r.foregroundBlur, rail.foregroundBlur, cinematic ? 1.6 : 0, "foregroundBlurX", "foregroundBlurY") : r.foreground.texture;
         uniforms.uLensMask.value = foregroundOpacity > 0
-          ? blur(r.mask, r.maskBlur, rail.foregroundBlur, 0, ["maskBlurX", "maskBlurY"]) : r.mask.texture;
+          ? passes.blur(r.mask, r.maskBlur, rail.foregroundBlur, 0, "maskBlurX", "maskBlurY") : r.mask.texture;
+        fg.valid = true;
+        fg.px = rig.position.x; fg.py = rig.position.y; fg.pz = rig.position.z;
+        fg.rx = rig.rotation.x; fg.ry = rig.rotation.y; fg.rz = rig.rotation.z;
+        fg.opacity = rig.opacity;
+        fg.blur = rail.foregroundBlur;
+        fg.fire = fireIntensity;
+        fg.width = width;
+        fg.height = height;
+        fg.pixelRatio = pixelRatio;
       }
       uniforms.uForegroundOpacity.value = foregroundOpacity;
       uniforms.uLensPop.value = THREE.MathUtils.smoothstep(scrollP, 0.52, 0.64);
-      uniforms.uTexel.value.set(1 / targetWidth, 1 / targetHeight);
+      uniforms.uTexel.value.set(1 / frame.targetWidth, 1 / frame.targetHeight);
       uniforms.toneMappingExposure.value = cinematic ? LOOK_EXPOSURE : gl.toneMappingExposure;
       uniforms.uAspect.value = viewAspect;
       // The background is rendered through the same lens as the view: no texture crop.
@@ -451,7 +511,6 @@ export function GamesFocusScene({ progressRef, hand, quality: requestedQuality, 
           sharedRendererTextures: gl.info.memory.textures, sharedRendererGeometries: gl.info.memory.geometries,
           qualification: "RGBA storage estimates exclude driver/browser overhead and shared resources; renderer counts are not byte totals" };
       }
-      lastDraw.current = drawKey;
     } finally {
       r.foregroundScene.overrideMaterial = oldOverride;
       r.foregroundCamera.layers.mask = oldLayers;

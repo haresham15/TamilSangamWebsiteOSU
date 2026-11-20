@@ -95,8 +95,9 @@ export function StationLights() {
 
   return (
     <>
-      <hemisphereLight args={["#d9a88a", "#3a3038", 1.0]} userData={{ gradeRole: "fill" }} />
+      <hemisphereLight args={["#e0b090", "#5a4a50", 1.5]} userData={{ gradeRole: "fill" }} />
       <directionalLight position={[-8, 20, -24]} intensity={1.4} color="#ffc8a0" userData={{ gradeRole: "rim" }} />
+      <directionalLight position={[6, 4, 14]} intensity={1.3} color="#ffbe8a" />
       <directionalLight position={[-14, 6, -24]} intensity={1.6} color="#ffb070" userData={{ gradeRole: "key" }} />
       {SODIUM_LAMPS.filter((l) => l.lit).map((l) => (
         <pointLight

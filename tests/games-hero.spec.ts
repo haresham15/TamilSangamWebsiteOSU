@@ -118,7 +118,7 @@ test("skip bypasses a stalled hand download before its timeout", async ({ page }
   await page.getByRole("link", { name: "Skip to Arcade" }).focus();
   await page.keyboard.press("Enter");
   await expect(page.locator("#arcade")).toBeFocused({ timeout: 2000 });
-  await expect(page.getByText("Play Sollu", { exact: true })).toBeVisible();
+  await expect(page.locator("#games-hub-sheet")).toBeVisible();
 });
 
 test("real-time hero renders the live beach and never requests the retired plates", async ({ page }) => {
@@ -200,7 +200,7 @@ test("five reverse cycles and a ten-second pause keep renderer memory bounded", 
   await expect(page.locator(hero)).toHaveAttribute("data-media-progress", "0.100");
 });
 
-test("held poses reuse foreground passes while the live background keeps compositing", async ({ page }) => {
+test("held poses reuse foreground passes; a frozen background renders only when progress changes", async ({ page }) => {
   test.setTimeout(90000);
   await page.setViewportSize({ width: 1200, height: 600 });
   await openGames(page, "/games?debug=0.46");
@@ -211,8 +211,14 @@ test("held poses reuse foreground passes while the live background keeps composi
   for (let step = 0; step < 12; step++) await showProgress(page, step % 2 ? 0.44 : 0.48);
   const after = await heroState(page);
   expect(after!.diagnostics!.stages.foreground.cpu?.count).toBe(before!.diagnostics!.stages.foreground.cpu?.count);
-  expect(after!.diagnostics!.stages.background.cpu!.count).toBeGreaterThan(before!.diagnostics!.stages.background.cpu!.count + 10);
-  expect(after!.diagnostics!.completedComposites).toBeGreaterThan(before!.diagnostics!.completedComposites + 10);
+  // ?debug freezes the sea and palms, so the beach re-renders once per progress change (12), never per frame.
+  const backgroundRenders = after!.diagnostics!.stages.background.cpu!.count - before!.diagnostics!.stages.background.cpu!.count;
+  expect(backgroundRenders).toBeGreaterThanOrEqual(12);
+  expect(backgroundRenders).toBeLessThanOrEqual(13);
+  expect(after!.diagnostics!.completedComposites).toBeGreaterThan(before!.diagnostics!.completedComposites + 24);
+  // Held progress: compositing continues, the background is reused.
+  await expect.poll(async () => (await heroState(page))!.diagnostics!.completedComposites).toBeGreaterThan(after!.diagnostics!.completedComposites + 20);
+  expect((await heroState(page))!.diagnostics!.stages.background.cpu!.count).toBe(after!.diagnostics!.stages.background.cpu!.count);
   await showProgress(page, 0.30);
   expect((await heroState(page))!.diagnostics!.stages.foreground.cpu!.count).toBeGreaterThan(after!.diagnostics!.stages.foreground.cpu!.count!);
 });
@@ -285,14 +291,15 @@ test("arcade follows normal document flow and ordinary scrolling", async ({ page
   await page.mouse.wheel(0, layout.arcadeTop);
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
   await expect.poll(() => arcade.evaluate(element => element.getBoundingClientRect().top)).toBeLessThan(800);
-  // Card actions follow GamesHub's heading and media; continue ordinary wheel input through that content.
+  // The hub's first action follows its heading and media; continue ordinary wheel input through that content.
+  const action = page.locator("#games-hub-sheet").getByRole("button").first();
   for (let wheel = 0; wheel < 4; wheel++) {
-    const button = await page.getByText("Play Sollu", { exact: true }).boundingBox();
+    const button = await action.boundingBox();
     if (button && button.y < 800 && button.y + button.height > 0) break;
     await page.mouse.wheel(0, 600);
     await page.waitForTimeout(500);
   }
-  await expect(page.getByText("Play Sollu", { exact: true })).toBeInViewport();
+  await expect(action).toBeInViewport();
   expect(await page.evaluate(() => document.activeElement?.id)).not.toBe("arcade");
 });
 

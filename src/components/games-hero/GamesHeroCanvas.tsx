@@ -42,6 +42,8 @@ export function GamesHeroCanvas() {
     if (stage.current && stage.current.dataset.mediaProgress !== text) stage.current.dataset.mediaProgress = text;
     setDrawn(true);
   }, []);
+  /** No HDR render targets on this GPU: the poster stills, as for any other media failure. */
+  const onUnsupported = useCallback(() => setFailed(true), []);
   const lenis = useLenis();
   const { mode, qualityLevel } = useRenderMode();
   // Fixed at mount, as the Events hero does: the beach is built per quality and is not rebuilt mid-scroll.
@@ -261,8 +263,8 @@ export function GamesHeroCanvas() {
 
   // Scroll updates keep the scene mounted; its frame callbacks read the continuous progress ref.
   const scene = useMemo(() => active && loaded && hand && <SceneView index={2} visible={!hidden} className={styles.view}>
-    <Suspense fallback={null}><GamesFocusScene progressRef={progressRef} hand={hand} quality={quality} frozen={debug !== null} stageRef={frame} onReady={onReady} diagnosticsRef={diagnostics} /></Suspense>
-  </SceneView>, [active, loaded, hand, hidden, onReady, quality, debug]);
+    <Suspense fallback={null}><GamesFocusScene progressRef={progressRef} hand={hand} quality={quality} frozen={debug !== null} stageRef={frame} onReady={onReady} onUnsupported={onUnsupported} diagnosticsRef={diagnostics} /></Suspense>
+  </SceneView>, [active, loaded, hand, hidden, onReady, onUnsupported, quality, debug]);
 
   return (
     <section ref={runway} className={styles.runway} data-static={staticMode || debug !== null} data-cover={cover} aria-label="Beach Blast">
