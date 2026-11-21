@@ -1,149 +1,17 @@
 import React from "react";
-import Link from "next/link";
-import { ExternalLink, Camera } from "lucide-react";
+import { PhotoVaultArchive, type PhotoVaultArchiveProps } from "@/components/gallery/PhotoVaultArchive";
 
-interface VaultAlbum {
-  num: string;
-  titleEn: string;
-  titleTa: string;
-  season: string;
-  location: string;
-  url: string;
-  accent: string;
-}
-
-const VAULT_ALBUMS: VaultAlbum[] = [
-  {
-    num: "01",
-    titleEn: 'TS "Yaar Andha Killer?" Mystery',
-    titleTa: "யார் அந்த கில்லர்? மர்ம இரவு",
-    season: "Fall 2026 · Murder Mystery",
-    location: "Houston Grove Room, Ohio Union",
-    url: "https://photos.app.goo.gl/k2Kg17MX4nriMbnw7",
-    accent: "#E07A5F",
-  },
-  {
-    num: "02",
-    titleEn: 'TS "A Berry Cute Picnic"',
-    titleTa: "பெர்ரி க்யூட் பிக்னிக்",
-    season: "Fall 2025 · Welcome Social",
-    location: "South Oval Lawn",
-    url: "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7",
-    accent: "#B84A39",
-  },
-  {
-    num: "03",
-    titleEn: "TS Streetside Sapad & Game Night",
-    titleTa: "தெருவோரச் சாப்பாடு & விளையாட்டு",
-    season: "Spring 2026 · General Body",
-    location: "Campus Hall / Ohio Union",
-    url: "https://photos.app.goo.gl/PnkceBh19PqytYQ89",
-    accent: "#2BB5A8",
-  },
-  {
-    num: "04",
-    titleEn: "TS x TT: Namma Jathara Carnival",
-    titleTa: "நம்ம ஜாதரா வசந்தத் திருவிழா",
-    season: "Spring 2026 · Joint Carnival",
-    location: "RPAC Plaza / South Oval",
-    url: "https://photos.app.goo.gl/NBTxg98ppmd9uhWX9",
-    accent: "#C79347",
-  },
-  {
-    num: "05",
-    titleEn: "TS x TT Autumn Gathering",
-    titleTa: "இலையுதிர் சங்கமம்",
-    season: "Autumn 2025 · Joint Social",
-    location: "Ohio State Campus Spaces",
-    url: "https://photos.app.goo.gl/QrUrPkvPQqQvz7H29",
-    accent: "#5B2C86",
-  },
-];
-
-interface GooglePhotosVaultsStripProps {
-  className?: string;
+export interface GooglePhotosVaultsStripProps extends PhotoVaultArchiveProps {
+  /** Kept for backwards API compatibility. */
   variant?: "dark" | "light";
 }
 
-export function GooglePhotosVaultsStrip({ className = "", variant = "light" }: GooglePhotosVaultsStripProps) {
-  const isDark = variant === "dark";
-
-  return (
-    <section
-      aria-labelledby="google-photos-vaults-heading"
-      className={`w-full py-12 px-4 sm:px-6 md:px-8 rounded-2xl bg-[#1C122B] border border-[#C79347]/30 text-[#FAF5ED] shadow-xl ${className}`}
-    >
-      <div className="max-w-6xl mx-auto space-y-8">
-        {/* Header Strip */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-6 border-[rgba(212,163,106,0.2)]">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#C79347]">
-              <Camera className="w-3.5 h-3.5" aria-hidden="true" />
-              <span lang="ta">புகைப்படப் பெட்டகம் · Google Photos Vaults</span>
-            </div>
-            <h2
-              id="google-photos-vaults-heading"
-              className="text-2xl sm:text-3xl lg:text-4xl font-serif font-normal tracking-tight text-[#FAF5ED]"
-            >
-              All 5 Official Event Photo Vaults
-            </h2>
-            <p className="text-sm sm:text-base max-w-2xl font-sans text-[#CBBBA8]">
-              Uncompressed, high-resolution original albums direct from our camera rolls. View full-resolution candid shots, download memory reels, or browse every photo taken at our gatherings.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#C79347]">
-            <span>5 Archives Live</span>
-          </div>
-        </div>
-
-        {/* 5-Card Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-          {VAULT_ALBUMS.map((album) => (
-            <a
-              key={album.num}
-              href={album.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Open Google Photos Vault for ${album.titleEn}`}
-              className="group relative flex flex-col justify-between p-5 rounded-xl border transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#C79347] bg-[#271A3C] border-[rgba(212,163,106,0.24)] hover:border-[#C79347]/60 text-[#FAF5ED]"
-            >
-              {/* Top Accent Strip */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-semibold tracking-wider text-[#C79347]">
-                    0{album.num}
-                  </span>
-                  <ExternalLink
-                    className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-[transform,opacity] duration-200 text-[#C79347]"
-                    aria-hidden="true"
-                  />
-                </div>
-
-                <div>
-                  <h3 className="font-serif text-lg font-medium leading-snug group-hover:text-[#C79347] transition-colors text-[#FAF5ED]">
-                    {album.titleEn}
-                  </h3>
-                  <p lang="ta" className="text-xs font-tamil text-[#CBBBA8] mt-1 tracking-normal">
-                    {album.titleTa}
-                  </p>
-                </div>
-              </div>
-
-              {/* Bottom Meta */}
-              <div className="mt-6 pt-4 border-t border-[rgba(212,163,106,0.2)] space-y-1">
-                <p className="text-xs font-sans text-[#CBBBA8]">
-                  {album.season}
-                </p>
-                <div className="flex items-center justify-between text-xs font-mono font-medium text-[#C79347]">
-                  <span>{album.location}</span>
-                  <span className="underline decoration-dotted underline-offset-2">Open Album ↗</span>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+/**
+ * Cultural Photo Vaults Archive.
+ * Renders the bespoke two-tier Google Photos Vaults:
+ * - Tier 1: "Latest Drops" 3 tactile photo-studio print packets.
+ * - Tier 2: "The Complete Sangam Vault" 35mm year ledger.
+ */
+export function GooglePhotosVaultsStrip({ className = "", id, ...props }: GooglePhotosVaultsStripProps) {
+  return <PhotoVaultArchive className={className} id={id} {...props} />;
 }

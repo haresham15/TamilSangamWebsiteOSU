@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_CONFIG } from "@/data/siteConfig";
 
 /**
  * Single Source of Truth (SSOT) for SEO, Canonical URLs, and OpenGraph configuration
@@ -55,9 +56,9 @@ export const SEO_ENTITY = {
   languages: ["en", "ta"],
   memberOf: "Ohio State Student Activities",
   socials: [
-    "https://www.instagram.com/tamilsangam.osu/",
+    SITE_CONFIG.instagramUrl,
     "https://www.tiktok.com/@osutamilsangam",
-    "https://web.groupme.com/join_group/83424812/BeBIRg7f",
+    SITE_CONFIG.groupMeUrl,
     "https://activities.osu.edu/involvement/student_organizations/find_a_student_org/?i=Tamil+Sangam",
     "https://github.com/haresham15/TamilSangamWebsiteOSU",
   ],

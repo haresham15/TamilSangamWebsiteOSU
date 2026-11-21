@@ -88,7 +88,7 @@ export function SplitFlapMiniHeader({ onSearchFocus }: SplitFlapMiniHeaderProps)
           title="Scroll back to departure board"
         >
           {/* Status pip */}
-          <span className="w-2 h-2 rounded-full bg-[#2BB5A8] animate-pulse shrink-0 hidden sm:inline-block" />
+          <span className="w-2 h-2 rounded-full bg-[#2BB5A8] shrink-0 hidden sm:inline-block" />
 
           {/* Mechanical Split-Flap Letter Tiles */}
           <div className="flex items-center gap-[2px] sm:gap-[3px] p-1 bg-[#070504] border border-[#2b2017] shadow-inner group-hover:border-[#C79347]/35 transition-colors">

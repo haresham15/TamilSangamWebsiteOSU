@@ -1,3 +1,4 @@
+import { SITE_CONFIG } from "@/data/siteConfig";
 export interface SangamEvent {
   slug: string;
   titleEn: string;
@@ -95,7 +96,7 @@ export const EVENTS: SangamEvent[] = [
     posterImage: "/events/yaar-andha-killer/killer-01.jpg",
     hoverImage: "/events/yaar-andha-killer/killer-02.jpg",
     albumSlug: "yaar-andha-killer",
-    googlePhotosUrl: "https://photos.app.goo.gl/k2Kg17MX4nriMbnw7",
+    googlePhotosUrl: SITE_CONFIG.googlePhotosAlbums.album1,
     tags: ["halloween", "mystery", "free-food", "costume", "games", "social"],
   },
   {
@@ -128,7 +129,7 @@ export const EVENTS: SangamEvent[] = [
     posterImage: "/events/berry-cute-picnic/picnic-01.jpg",
     hoverImage: "/events/berry-cute-picnic/picnic-07.jpg",
     albumSlug: "berry-cute-picnic",
-    googlePhotosUrl: "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7",
+    googlePhotosUrl: SITE_CONFIG.googlePhotosAlbums.album2,
     tags: ["picnic", "oval", "free-food", "social", "casual", "games", "biryani"],
   },
   {
@@ -161,7 +162,7 @@ export const EVENTS: SangamEvent[] = [
     posterImage: "/events/streetside-sapad/picnic-01.jpg",
     hoverImage: "/events/streetside-sapad/picnic-07.jpg",
     albumSlug: "streetside-sapad",
-    googlePhotosUrl: "https://photos.app.goo.gl/PnkceBh19PqytYQ89",
+    googlePhotosUrl: SITE_CONFIG.googlePhotosAlbums.album3,
     tags: ["food", "sapad", "biryani", "games", "trivia", "social", "casual"],
   },
   {
@@ -194,7 +195,7 @@ export const EVENTS: SangamEvent[] = [
     posterImage: "/events/namma-jathara/picnic-01.jpg",
     hoverImage: "/events/namma-jathara/picnic-07.jpg",
     albumSlug: "namma-jathara",
-    googlePhotosUrl: "https://photos.app.goo.gl/NBTxg98ppmd9uhWX9",
+    googlePhotosUrl: SITE_CONFIG.googlePhotosAlbums.album4,
     tags: ["carnival", "games", "collab", "outdoor", "free", "social", "biryani"],
   },
   {
@@ -227,7 +228,7 @@ export const EVENTS: SangamEvent[] = [
     posterImage: "/events/berry-cute-picnic/picnic-01.jpg",
     hoverImage: "/events/berry-cute-picnic/picnic-07.jpg",
     albumSlug: "ts-x-tt-event",
-    googlePhotosUrl: "https://photos.app.goo.gl/QrUrPkvPQqQvz7H29",
+    googlePhotosUrl: SITE_CONFIG.googlePhotosAlbums.album5,
     tags: ["gathering", "games", "collab", "trivia", "biryani", "free-food", "social"],
   },
 ];

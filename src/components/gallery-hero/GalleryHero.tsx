@@ -114,7 +114,7 @@ export function GalleryHero() {
           aria-live="polite"
           className="pointer-events-none fixed top-24 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 rounded-full border border-[#A6F0CF]/35 bg-[#120B16]/95 px-6 py-2.5 shadow-[0_0_45px_rgba(166,240,207,0.65)] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-300"
         >
-          <span className="h-2.5 w-2.5 rounded-full bg-[#A6F0CF] animate-ping" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#A6F0CF]" />
           <p className="font-mono text-xs text-[#F4F0FA] tracking-wide flex items-center">
             <span lang="ta" className="font-tamil text-sm text-[#A6F0CF] font-medium mr-2 tracking-normal">
               நெஞ்சுக்குள் பெய்திடும்

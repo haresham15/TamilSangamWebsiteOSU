@@ -52,9 +52,9 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
           />
           <defs>
             <linearGradient id="river-gradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#C79347" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#2BB5A8" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#D4A36A" stopOpacity="0.8" />
+              <stop offset="0%" style={{ stopColor: "var(--color-accent-zari)" }} stopOpacity="0.8" />
+              <stop offset="50%" style={{ stopColor: "var(--color-brand-teal-dark)" }} stopOpacity="0.8" />
+              <stop offset="100%" style={{ stopColor: "var(--color-accent-bronze-dark)" }} stopOpacity="0.8" />
             </linearGradient>
           </defs>
         </svg>
@@ -76,11 +76,11 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
               <div
                 className={`absolute left-6 md:left-1/2 top-4 -translate-x-1/2 flex items-center justify-center w-7 h-7 rounded-full border-2 shadow-md z-10 ${
                   isLight
-                    ? "bg-[#FFFFFF] border-[#C79347] shadow-[#9A6B3E]/10"
-                    : "bg-[#1C122B] border-[#C79347] shadow-black/30"
+                    ? "bg-surface-card-light border-accent-zari shadow-accent-bronze/10"
+                    : "bg-bg-sangam-deep border-accent-zari shadow-black/30"
                 }`}
               >
-                <span className="w-2.5 h-2.5 rounded-full bg-[#C79347]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-accent-zari" />
               </div>
 
               {/* Content Block (Unbound by boxes) */}
@@ -93,7 +93,7 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
                 <div className="mb-2">
                   <span
                     className={`text-5xl sm:text-7xl font-serif font-light tracking-tight block ${
-                      isLight ? "text-[#9A6B3E]" : "text-[#C79347]"
+                      isLight ? "text-accent-bronze" : "text-accent-zari"
                     }`}
                   >
                     {item.year}
@@ -101,7 +101,7 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
                   <span
                     lang="ta"
                     className={`font-tamil text-sm font-medium tracking-wide block ${
-                      isLight ? "text-[#0F766E]" : "text-[#2BB5A8]"
+                      isLight ? "text-brand-teal" : "text-brand-teal-dark"
                     }`}
                   >
                     {item.titleTa}
@@ -111,7 +111,7 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
                 {/* Milestone Title */}
                 <h3
                   className={`text-2xl sm:text-3xl font-serif font-normal leading-snug mb-3 ${
-                    isLight ? "text-[#261A14]" : "text-[#FAF5ED]"
+                    isLight ? "text-ink-earth" : "text-ink-alabaster"
                   }`}
                 >
                   {item.titleEn}
@@ -120,7 +120,7 @@ export const FlowingRiverTimeline: React.FC<FlowingRiverTimelineProps> = ({
                 {/* Story Description */}
                 <p
                   className={`font-sans text-base sm:text-lg leading-relaxed ${
-                    isLight ? "text-[#5E4C40]" : "text-[#CBBBA8]"
+                    isLight ? "text-ink-umber" : "text-ink-sand"
                   }`}
                 >
                   {locale === "ta" ? item.descriptionTa : item.descriptionEn}

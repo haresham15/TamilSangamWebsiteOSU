@@ -25,8 +25,9 @@ const PRINT_PROFILES = [
 
 /**
  * ReactBits Parallax Scatter component.
- * Magazine spread on Royal Violet (#140C20) with 0px border-radius,
- * zero shadows, zero card frames, and differential parallax column drift.
+ * Magazine spread with 0px border-radius, zero card frames and differential
+ * parallax column drift. Each print opens the lightbox through a native button
+ * overlay, so it works by keyboard as well as pointer.
  */
 export function ParallaxScatter({ photos, eventTitle }: ParallaxScatterProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -58,6 +59,7 @@ export function ParallaxScatter({ photos, eventTitle }: ParallaxScatterProps) {
 
   const renderPhotoItem = (photoSrc: string, globalIndex: number) => {
     const profile = PRINT_PROFILES[globalIndex % PRINT_PROFILES.length];
+    const plate = String(globalIndex + 1).padStart(2, "0");
 
     return (
       <motion.figure
@@ -65,8 +67,7 @@ export function ParallaxScatter({ photos, eventTitle }: ParallaxScatterProps) {
         data-dossier-photo={photoSrc}
         layout={shouldReduceMotion ? false : "position"}
         layoutId={`dossier-print-${photoSrc}`}
-        onClick={() => setLightboxIndex(globalIndex)}
-        className={`group relative flex flex-col ${profile.widthClass} mb-16 sm:mb-24 lg:mb-32 cursor-pointer`}
+        className={`group relative flex flex-col ${profile.widthClass} mb-16 sm:mb-24 lg:mb-32`}
         animate={{ rotate: shouldReduceMotion ? 0 : profile.tilt }}
         whileHover={shouldReduceMotion ? undefined : { rotate: 0, scale: 1.02 }}
         transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 230, damping: 27 }}
@@ -77,7 +78,7 @@ export function ParallaxScatter({ photos, eventTitle }: ParallaxScatterProps) {
         >
           <Image
             src={photoSrc}
-            alt={`${eventTitle} — Document ${String(globalIndex + 1).padStart(2, "0")}`}
+            alt={`${eventTitle} — Document ${plate}`}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover rounded-none transition-transform duration-500 group-hover:scale-105"
@@ -85,11 +86,22 @@ export function ParallaxScatter({ photos, eventTitle }: ParallaxScatterProps) {
         </div>
 
         {/* Minimal Colophon Caption */}
-        <figcaption className="mt-2 flex items-baseline justify-end text-[11px] font-mono tracking-widest text-[#FAF5ED]/75 uppercase">
-          <span className="text-[10px] text-[#2BB5A8] opacity-0 group-hover:opacity-100 transition-opacity">
-            INSPECT ↗
+        <figcaption className="mt-2 flex items-baseline justify-end text-[11px] font-sans font-semibold tracking-[0.14em] text-ink-alabaster/75 uppercase">
+          <span
+            aria-hidden="true"
+            className="text-[11px] text-brand-teal-dark opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
+          >
+            Inspect ↗
           </span>
         </figcaption>
+
+        {/* Native activation target over the print (keeps figure>div for the vault's matte overrides) */}
+        <button
+          type="button"
+          onClick={() => setLightboxIndex(globalIndex)}
+          aria-label={`View enlarged photo: ${eventTitle}, document ${plate}`}
+          className="absolute inset-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2"
+        />
       </motion.figure>
     );
   };

@@ -13,6 +13,7 @@ import { FAQS } from "@/data/faq";
 import { getSynonymMatches } from "@/data/searchSynonyms";
 import { Search, Calendar, Users, Image as ImageIcon, HelpCircle, ArrowRight, X, Sparkles, BookOpen, Gamepad2 } from "lucide-react";
 import { NanbaAvatar } from "@/components/chat/NanbaAvatar";
+import { SITE_CONFIG } from "@/data/siteConfig";
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -47,19 +48,19 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
   const items = useMemo<SearchItem[]>(
     () => [
       // Core Pages
-      { id: "p-home", category: "Page", title: "Home / முகப்பு", subtitle: "Official Emblem & Flagship Highlights", href: "/", icon: <Sparkles className="w-4 h-4 text-[#55CCA2]" /> },
-      { id: "p-events", category: "Page", title: "Events / நிகழ்வுகள்", subtitle: "Upcoming festivals & Ticket drops", href: "/events", icon: <Calendar className="w-4 h-4 text-[#f59e0b]" /> },
-      { id: "p-about", category: "Page", title: "About / எங்களைப் பற்றி", subtitle: "Mission, Constitution, History & FAQ", href: "/about", icon: <Sparkles className="w-4 h-4 text-[#55CCA2]" /> },
-      { id: "p-board", category: "Page", title: "Board / குழு", subtitle: "Executive leadership & committee chairs", href: "/board", icon: <Users className="w-4 h-4 text-[#a855f7]" /> },
-      { id: "p-games", category: "Page", title: "The Sangam Arcade / விளையாட்டு", subtitle: "Monthly Tamil Wordle (Sollu) & Connections (Thodarpu)", href: "/games", icon: <Gamepad2 className="w-4 h-4 text-[#2BB5A8]" /> },
-      { id: "p-sollu", category: "Page", title: "Sollu / சொல்லு", subtitle: "Monthly Tamil Wordle · Tanglish & தமிழ் Akshara puzzle", href: "/games?game=sollu", icon: <Gamepad2 className="w-4 h-4 text-[#2E6F4E]" /> },
-      { id: "p-thodarpu", category: "Page", title: "Thodarpu / தொடர்பு", subtitle: "Monthly Tamil Connections · 16 Cultural Tiles puzzle", href: "/games?game=thodarpu", icon: <Gamepad2 className="w-4 h-4 text-[#B24A25]" /> },
+      { id: "p-home", category: "Page", title: "Home / முகப்பு", subtitle: "Official Emblem & Flagship Highlights", href: "/", icon: <Sparkles className="w-4 h-4 text-brand-teal-dark" /> },
+      { id: "p-events", category: "Page", title: "Events / நிகழ்வுகள்", subtitle: "Upcoming festivals & Ticket drops", href: "/events", icon: <Calendar className="w-4 h-4 text-accent-zari" /> },
+      { id: "p-about", category: "Page", title: "About / எங்களைப் பற்றி", subtitle: "Mission, Constitution, History & FAQ", href: "/about", icon: <Sparkles className="w-4 h-4 text-brand-teal-dark" /> },
+      { id: "p-board", category: "Page", title: "Board / குழு", subtitle: "Executive leadership & committee chairs", href: "/board", icon: <Users className="w-4 h-4 text-brand-lavender" /> },
+      { id: "p-games", category: "Page", title: "The Sangam Arcade / விளையாட்டு", subtitle: "Monthly Tamil Wordle (Sollu) & Connections (Thodarpu)", href: "/games", icon: <Gamepad2 className="w-4 h-4 text-brand-teal-dark" /> },
+      { id: "p-sollu", category: "Page", title: "Sollu / சொல்லு", subtitle: "Monthly Tamil Wordle · Tanglish & தமிழ் Akshara puzzle", href: "/games?game=sollu", icon: <Gamepad2 className="w-4 h-4 text-brand-teal-dark" /> },
+      { id: "p-thodarpu", category: "Page", title: "Thodarpu / தொடர்பு", subtitle: "Monthly Tamil Connections · 16 Cultural Tiles puzzle", href: "/games?game=thodarpu", icon: <Gamepad2 className="w-4 h-4 text-accent-kumkum-dark" /> },
       { id: "p-nanba", category: "Page", title: "Ask Nanba / நண்பா (AI Guide)", subtitle: "Chat with Nanba or search verified club knowledge", href: "/guide", icon: <NanbaAvatar size={16} className="w-4 h-4 shrink-0" /> },
-      { id: "p-join", category: "Page", title: "Join / இணைந்திடுங்கள்", subtitle: "Guestbook & free student membership", href: "/join", icon: <Users className="w-4 h-4 text-[#10b981]" /> },
-      { id: "p-groupme", category: "Page", title: "GroupMe Campus Chat / பிரதான அரட்டை", subtitle: "Join our active student campus chat", href: "https://web.groupme.com/join_group/83424812/BeBIRg7f", icon: <Users className="w-4 h-4 text-[#10b981]" /> },
-      { id: "p-instagram", category: "Page", title: "Instagram (@tamilsangam.osu)", subtitle: "Official announcements, photo drops & reels", href: "https://www.instagram.com/tamilsangam.osu/", icon: <Sparkles className="w-4 h-4 text-[#e1306c]" /> },
-      { id: "p-suggestions", category: "Page", title: "Suggestions & Ideas / கருத்துக்களம்", subtitle: "Campus ideas, playlists & initiatives", href: "/suggestions", icon: <Sparkles className="w-4 h-4 text-[#FFC526]" /> },
-      { id: "p-links", category: "Page", title: "Quick Links (Bio Hub)", subtitle: "Mobile link-in-bio & social links", href: "/links", icon: <ArrowRight className="w-4 h-4 text-[#55CCA2]" /> },
+      { id: "p-join", category: "Page", title: "Join / இணைந்திடுங்கள்", subtitle: "Guestbook & free student membership", href: "/join", icon: <Users className="w-4 h-4 text-brand-teal-dark" /> },
+      { id: "p-groupme", category: "Page", title: "GroupMe Campus Chat / பிரதான அரட்டை", subtitle: "Join our active student campus chat", href: SITE_CONFIG.groupMeUrl, icon: <Users className="w-4 h-4 text-brand-teal-dark" /> },
+      { id: "p-instagram", category: "Page", title: "Instagram (@tamilsangam.osu)", subtitle: "Official announcements, photo drops & reels", href: SITE_CONFIG.instagramUrl, icon: <Sparkles className="w-4 h-4 text-accent-kumkum-dark" /> },
+      { id: "p-suggestions", category: "Page", title: "Suggestions & Ideas / கருத்துக்களம்", subtitle: "Campus ideas, playlists & initiatives", href: "/suggestions", icon: <Sparkles className="w-4 h-4 text-accent-zari" /> },
+      { id: "p-links", category: "Page", title: "Quick Links (Bio Hub)", subtitle: "Mobile link-in-bio & social links", href: "/links", icon: <ArrowRight className="w-4 h-4 text-brand-teal-dark" /> },
 
       // Events
       ...EVENTS.map((e) => ({
@@ -68,7 +69,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         title: `${e.titleEn} (${e.titleTa})`,
         subtitle: `${e.date} · ${e.location}`,
         href: `/events/${e.slug}`,
-        icon: <Calendar className="w-4 h-4 text-[#f2b705]" />,
+        icon: <Calendar className="w-4 h-4 text-accent-zari" />,
       })),
 
       // Board Members
@@ -78,7 +79,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         title: `${b.nameEn} (${b.nameTa})`,
         subtitle: `${b.roleEn} · ${b.committeeEn}`,
         href: `/board`,
-        icon: <Users className="w-4 h-4 text-[#6b8e4e]" />,
+        icon: <Users className="w-4 h-4 text-accent-bronze-dark" />,
       })),
 
       // Subcommittee Members
@@ -98,7 +99,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         title: `${a.titleEn} (${a.titleTa})`,
         subtitle: `${a.photoCount} photos · ${a.academicYear}`,
         href: `/events/${a.eventSlug || a.slug}#photo-vault`,
-        icon: <ImageIcon className="w-4 h-4 text-[#0b7a75]" />,
+        icon: <ImageIcon className="w-4 h-4 text-brand-teal-dark" />,
       })),
 
       // FAQs
@@ -108,7 +109,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         title: `${f.questionEn}`,
         subtitle: f.answerEn.slice(0, 75) + "...",
         href: "/about#faq",
-        icon: <HelpCircle className="w-4 h-4 text-[#8b5cf6]" />,
+        icon: <HelpCircle className="w-4 h-4 text-brand-lavender" />,
       })),
     ],
     []
@@ -187,22 +188,19 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
 
   return createPortal(
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Search site command palette"
       onClick={onClose}
-      className="fixed inset-0 z-[100] flex items-start justify-center pt-16 sm:pt-20 p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+      className="fixed inset-0 z-[100] flex items-start justify-center pt-16 sm:pt-20 p-4 bg-bg-sangam-deep/80 backdrop-blur-md animate-fadeIn"
     >
       <div 
         role="dialog"
         aria-modal="true"
         aria-label="Search and command palette"
-        className="box-ticket w-full max-w-[min(92vw,680px)] max-h-[min(85dvh,720px)] flex flex-col bg-[#160d26] border-2 border-[#55CCA2] shadow-[8px_8px_0px_#55CCA2] overflow-hidden text-left"
+        className="box-ticket w-full max-w-[min(92vw,680px)] max-h-[min(85dvh,720px)] flex flex-col bg-bg-sangam-deep border-2 border-accent-zari/60 shadow-[8px_8px_0px_rgba(199,147,71,0.35)] overflow-hidden text-left"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input Bar */}
-        <div className="flex items-center px-6 py-4 border-b-2 border-white/10 gap-3 shrink-0">
-          <Search className="w-5 h-5 text-[#55CCA2]" />
+        <div className="flex items-center px-6 py-4 border-b-2 border-border-zari-muted gap-3 shrink-0">
+          <Search className="w-5 h-5 text-brand-teal-dark" aria-hidden="true" />
           <input
             ref={inputRef}
             id="command-palette-input"
@@ -234,18 +232,18 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
             }}
             placeholder={locale === "ta" ? "நிகழ்வுகள், குழு, பக்கங்கள் தேடுங்கள்..." : "Search events, people, pages, or FAQs..."}
             aria-label="Search query"
-            className="w-full bg-transparent text-white placeholder-slate-400 text-sm sm:text-base outline-none font-mono"
+            className="w-full bg-transparent text-ink-alabaster placeholder:text-ink-sand/70 text-sm sm:text-base outline-none font-sans"
           />
           {query && (
             <button
               onClick={() => setQuery("")}
               aria-label="Clear search input"
-              className="text-slate-400 hover:text-white p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55CCA2]"
+              className="text-ink-sand hover:text-ink-alabaster p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark"
             >
               <X className="w-4 h-4" />
             </button>
           )}
-          <span className="hidden sm:inline-block px-2 py-0.5 border border-white/20 text-[10px] font-mono bg-white/10 text-slate-300">
+          <span className="hidden sm:inline-block px-2 py-0.5 border border-border-zari-muted text-[10px] font-mono bg-white/10 text-ink-sand">
             ESC
           </span>
         </div>
@@ -259,9 +257,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
           className="flex-1 max-h-[60vh] overflow-y-auto overscroll-contain p-2 space-y-1"
         >
           {filteredItems.length === 0 ? (
-            <div className="py-12 text-center text-slate-400">
+            <div className="py-12 text-center text-ink-sand">
               <p className="text-sm">{locale === "ta" ? "எந்த முடிவுகளும் கிடைக்கவில்லை" : "No matching results found."}</p>
-              <p className="text-xs text-slate-500 mt-1 font-mono">Try searching &apos;diwali&apos;, &apos;dance&apos;, or &apos;board&apos;</p>
+              <p className="text-xs text-ink-sand/80 mt-1 font-sans">Try searching &apos;diwali&apos;, &apos;dance&apos;, or &apos;board&apos;</p>
             </div>
           ) : (
             filteredItems.map((item: SearchItem, idx: number) => {
@@ -274,24 +272,24 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                   onClick={() => handleSelect(item)}
                   onMouseEnter={() => setSelectedIndex(idx)}
                   className={`flex items-center justify-between px-4 py-3 cursor-pointer border-2 transition-[background-color,border-color,box-shadow,color] duration-150 ease-out ${
-                    isSelected ? "bg-[#250d38] border-[#55CCA2] shadow-[3px_3px_0px_#55CCA2] text-white" : "border-transparent text-white/90 hover:bg-white/5"
+                    isSelected ? "bg-surface-card-dark border-brand-lavender shadow-[3px_3px_0px_var(--color-brand-lavender)] text-ink-alabaster" : "border-transparent text-ink-alabaster/90 hover:bg-white/5"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 flex items-center justify-center border border-white/20 bg-black/40 shrink-0 text-[#55CCA2]">
+                    <div className="w-8 h-8 flex items-center justify-center border border-border-zari-muted bg-bg-sangam-deep/60 shrink-0 text-brand-teal-dark">
                       {item.icon}
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold truncate text-white">{item.title}</span>
-                        <span className="text-[10px] font-mono text-slate-400 shrink-0">
+                        <span className="text-sm font-semibold truncate text-ink-alabaster">{item.title}</span>
+                        <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.14em] text-ink-sand shrink-0">
                           {item.category}
                         </span>
                       </div>
-                      <p className="text-xs text-purple-200/80 truncate mt-0.5">{item.subtitle}</p>
+                      <p className="text-xs text-brand-lavender/80 truncate mt-0.5">{item.subtitle}</p>
                     </div>
                   </div>
-                  <ArrowRight className={`w-4 h-4 shrink-0 transition-opacity ${isSelected ? "opacity-100 text-[#55CCA2]" : "opacity-0"}`} />
+                  <ArrowRight className={`w-4 h-4 shrink-0 transition-opacity ${isSelected ? "opacity-100 text-brand-teal-dark" : "opacity-0"}`} />
                 </div>
               );
             })
@@ -299,13 +297,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         </div>
 
         {/* Footer shortcuts */}
-        <div className="px-6 py-3 border-t border-white/10 bg-black/60 flex items-center justify-between text-[11px] text-slate-200 font-mono shrink-0">
+        <div className="px-6 py-3 border-t border-border-zari-muted bg-surface-card-dark flex items-center justify-between text-[11px] text-ink-sand font-mono shrink-0">
           <div className="flex items-center gap-3">
             <span>↑↓ Navigate</span>
             <span>↵ Select</span>
             <span>ESC Close</span>
           </div>
-          <span className="text-[#55CCA2] font-bold">OSU Tamil Sangam</span>
+          <span className="font-sans text-brand-teal-dark font-bold">OSU Tamil Sangam</span>
         </div>
       </div>
     </div>,

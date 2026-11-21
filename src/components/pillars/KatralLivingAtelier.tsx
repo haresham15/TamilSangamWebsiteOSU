@@ -159,7 +159,7 @@ export function KatralLivingAtelier() {
       {/* Atelier Eyebrow & Intro */}
       <div className="space-y-3 max-w-2xl">
         <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#B5A642]">
-          <span className="w-2 h-2 rounded-full bg-[#B5A642] animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-[#B5A642]" />
           <span>The Living Atelier · கற்றல் அரங்கம்</span>
         </div>
         <h3 className="font-serif text-3xl sm:text-4xl text-[#F4F0FA] font-normal leading-tight">

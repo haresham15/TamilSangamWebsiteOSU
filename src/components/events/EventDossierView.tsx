@@ -4,16 +4,21 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Download, Calendar, Clock, MapPin, Shirt, Music2 } from "lucide-react";
 import type { SangamEvent } from "@/data/events";
+import { GALLERY_ALBUMS } from "@/data/gallery";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { useReducedMotion } from "framer-motion";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { SplitText } from "./SplitText";
 import { EventPhotoVault } from "./EventPhotoVault";
-import { VaultGateway } from "./VaultGateway";
+import { VaultCta } from "./VaultCta";
 import { EditorialBackgroundCanvas } from "@/components/ui/EditorialBackgroundCanvas";
-import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
+import { CulturalSection } from "@/components/ui/CulturalSection";
+import { CulturalCard } from "@/components/ui/CulturalCard";
 import { PathirikaiFormFrame } from "@/components/ui/PathirikaiFormFrame";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
+import { SITE_CONFIG } from "@/data/siteConfig";
 
 interface EventDossierViewProps {
   event: SangamEvent;
@@ -21,13 +26,10 @@ interface EventDossierViewProps {
 }
 
 /**
- * The Muttram Aesthetic Event Dossier View.
- * Strict Safeguards:
- * 1. Zero Cards: No floating boxes, no drop shadows, no pill buttons.
- * 2. Raw negative space, Royal Violet (#140C20) background, Off-White (#F4F0FA) typography.
- * 3. ReactBits SplitText header entrance.
- * 4. ReactBits ParallaxScatter for randomized 5-8 local photos with 0px radius.
- * 5. ReactBits VaultGateway magnetic proximity footer handoff.
+ * Event dossier (/events/[slug]).
+ * Sangam-deep hero header (frozen), then courtyard bands:
+ * ivory overview + timetable, sandstone registration (when present),
+ * the photo archive (alternating light band), and the peacock VaultCta.
  */
 export function EventDossierView({ event, photos }: EventDossierViewProps) {
   const { locale } = useLocale();
@@ -40,6 +42,11 @@ export function EventDossierView({ event, photos }: EventDossierViewProps) {
   const secondaryTitle = locale === "ta" ? event.titleEn : event.titleTa;
   const displayTagline = locale === "ta" ? event.taglineTa : event.taglineEn;
   const displayDescription = locale === "ta" ? event.descriptionTa : event.descriptionEn;
+  const hasRegistration = event.slug === "namma-deepavali-2026";
+  const vaultUrl =
+    GALLERY_ALBUMS.find((a) => a.eventSlug === event.slug || a.slug === event.slug)?.googlePhotosUrl ||
+    event.googlePhotosUrl ||
+    SITE_CONFIG.googlePhotosAlbums.album2;
 
   const handleDownloadIcs = () => {
     try {
@@ -74,27 +81,27 @@ END:VCALENDAR`;
   };
 
   return (
-    <article className="relative w-full min-h-screen bg-[#1C122B] text-[#FAF5ED] font-sans selection:bg-[#2BB5A8]/30 overflow-hidden">
+    <article className="relative w-full overflow-x-clip bg-bg-sangam-deep font-sans text-ink-alabaster selection:bg-brand-teal-dark/30">
       <EditorialBackgroundCanvas />
-      <main className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-32 pb-28">
-        {/* Navigation Breadcrumb (Minimal Typographic Link, No Pills) */}
-        <nav aria-label="Breadcrumb" className="mb-14 flex items-center justify-between flex-wrap gap-4">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-32">
+        {/* Breadcrumb */}
+        <nav aria-label="Breadcrumb" className="mb-14 flex flex-wrap items-center justify-between gap-4">
           <Link
             href="/events"
             onClick={playClick}
-            className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[#C79347] hover:text-[#FAF5ED] transition-colors duration-200"
+            className="inline-flex min-h-12 items-center gap-2 font-sans text-xs font-semibold uppercase tracking-[0.14em] text-accent-zari transition-colors duration-200 hover:text-ink-alabaster focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark"
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-[#C79347]" />
-            <span>RETURN TO GATHERINGS REGISTER</span>
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            <span>Return to gatherings register</span>
           </Link>
           {event.status === "upcoming" && (
             <Link
               href="/#flagship-gathering"
               onClick={playClick}
-              className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.15em] text-[#FAF5ED] bg-[#271A3C] border border-[#C79347]/40 hover:border-[#C79347] px-3.5 py-1.5 rounded-full hover:text-[#C79347] transition-colors"
+              className="inline-flex min-h-12 items-center gap-2 rounded-full border border-border-zari-muted px-4 font-sans text-xs font-semibold uppercase tracking-[0.14em] text-ink-alabaster transition-colors hover:border-accent-zari hover:text-accent-zari focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C79347]" />
-              <span>HOME FLAGSHIP SHOWCASE ↗</span>
+              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-accent-zari" />
+              <span>Home flagship showcase ↗</span>
             </Link>
           )}
         </nav>
@@ -168,122 +175,134 @@ END:VCALENDAR`;
             </div>
           </div>
         </header>
+      </div>
 
-        {/* ============================================================ */}
-        {/* EDITORIAL ESSAY & SCHEDULE (Naked Typography, Zero Cards)    */}
-        {/* ============================================================ */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24 items-start">
-          {/* Narrative Column */}
-          <div className="lg:col-span-7 space-y-8">
-            <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-[#C79347] font-semibold">
-              OVERVIEW
+      {/* ============================================================ */}
+      {/* BAND 1 · IVORY (recipe A): overview beside a white timetable  */}
+      {/* ============================================================ */}
+      <CulturalSection variant="ivory" aria-labelledby="dossier-overview-heading">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-20 sm:px-10 sm:py-28 md:grid-cols-12">
+          <div className="space-y-6 self-start md:sticky md:top-28 md:col-span-5">
+            <h2 id="dossier-overview-heading">
+              <Eyebrow>Overview</Eyebrow>
             </h2>
-            <p lang={locale === "ta" ? "ta" : "en"} className="text-xl sm:text-2xl font-serif text-[#FAF5ED] leading-relaxed">
+            <p
+              lang={locale === "ta" ? "ta" : "en"}
+              className={`text-xl text-ink-earth sm:text-2xl ${locale === "ta" ? "font-tamil leading-[1.7]" : "font-serif leading-relaxed"}`}
+            >
               {displayDescription}
             </p>
 
-            {/* Dress code & venue notes (Naked typographic callout) */}
-            <div className="pt-6 border-t border-[#C79347]/30 space-y-4 text-sm text-[#CBBBA8]">
-              <div className="flex items-start gap-3">
-                <Shirt className="w-4 h-4 text-[#C79347] shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-mono text-xs uppercase tracking-wider text-[#FAF5ED] block font-medium">
-                    DRESS NOTE
-                  </span>
-                  <span>{locale === "ta" ? event.dressCodeTa : event.dressCodeEn}</span>
-                </div>
+            <div className="flex items-start gap-3 border-t border-border-warm pt-6">
+              <Shirt className="mt-0.5 h-4 w-4 shrink-0 text-brand-purple" aria-hidden="true" />
+              <div>
+                <p className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-ink-earth">Dress note</p>
+                <p
+                  lang={locale === "ta" ? "ta" : "en"}
+                  className={`mt-1 text-sm text-ink-umber ${locale === "ta" ? "font-tamil leading-[1.6]" : "font-sans leading-relaxed"}`}
+                >
+                  {locale === "ta" ? event.dressCodeTa : event.dressCodeEn}
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Schedule Column (Broadsheet Ledger Lines) */}
-          <div className="lg:col-span-5 space-y-6">
-            <h2 className="text-xs font-mono uppercase tracking-[0.25em] text-[#C79347] font-semibold">
-              TIMETABLE · நிரல்
-            </h2>
-            <div className="divide-y divide-[#C79347]/20 border-t border-b border-[#C79347]/30">
-              {event.schedule.map((slot, idx) => (
-                <div key={idx} className="py-4 flex items-baseline justify-between gap-4">
-                  <span className="text-xs font-mono text-[#2BB5A8] font-semibold tracking-wider shrink-0 w-24">
-                    {slot.time}
-                  </span>
-                  <span className="text-sm font-sans text-[#FAF5ED] text-left flex-1">
-                    {locale === "ta" ? slot.activityTa : slot.activityEn}
-                  </span>
-                </div>
-              ))}
-            </div>
+          <div className="md:col-span-7">
+            <CulturalCard variant="light" topStripe="purple" className="p-6 sm:p-9">
+              <h3 className="flex flex-wrap items-baseline gap-x-3 font-serif text-2xl font-normal text-ink-earth sm:text-3xl">
+                Timetable
+                <span lang="ta" className="font-tamil text-lg leading-[1.6] text-brand-purple">
+                  நிரல்
+                </span>
+              </h3>
 
-            {/* Calendar & External Action Links (Naked text anchors) */}
-            <div className="pt-4 flex flex-wrap items-center gap-6 text-xs font-mono uppercase tracking-wider">
-              <button
-                type="button"
-                onClick={handleDownloadIcs}
-                className="inline-flex items-center gap-1.5 text-[#FAF5ED]/80 hover:text-[#2BB5A8] transition-colors cursor-pointer"
-              >
-                <Download className="w-3.5 h-3.5 text-[#2BB5A8]" />
-                <span>{downloadFeedback ? "CALENDAR ADDED ✓" : "SAVE TO CALENDAR (.ICS)"}</span>
-              </button>
+              <ol className="mt-6 divide-y divide-border-warm border-y border-border-warm">
+                {event.schedule.map((slot, idx) => (
+                  <li key={idx} className="grid grid-cols-[6.5rem_1fr] items-baseline gap-4 py-4 sm:grid-cols-[8rem_1fr]">
+                    <span className="font-sans text-sm font-semibold tabular-nums text-brand-purple">{slot.time}</span>
+                    <span
+                      lang={locale === "ta" ? "ta" : "en"}
+                      className={`text-base text-ink-earth ${locale === "ta" ? "font-tamil leading-[1.6]" : "font-sans"}`}
+                    >
+                      {locale === "ta" ? slot.activityTa : slot.activityEn}
+                    </span>
+                  </li>
+                ))}
+              </ol>
 
-              <a
-                href={event.interestFormUrl || event.ticketUrl || "https://linktr.ee/osutamilsangam"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[#FAF5ED]/80 hover:text-[#2BB5A8] transition-colors"
-              >
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#2BB5A8]" />
-                <span>{(event.interestFormUrl || event.ticketUrl) ? "SIGN UP / PERFORMANCE FORM ↗" : "OFFICIAL TICKETING / RSVP"}</span>
-              </a>
-
-              {event.status === "upcoming" && (
-                <Link
-                  href="/dance"
-                  onClick={playClick}
-                  className="inline-flex items-center gap-1.5 text-[#2BB5A8] hover:text-[#FAF5ED] transition-colors"
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <MuttramButton
+                  href={event.interestFormUrl || event.ticketUrl || "https://linktr.ee/osutamilsangam"}
+                  external
+                  icon={<ArrowUpRight className="h-4 w-4" aria-hidden="true" />}
                 >
-                  <Music2 className="w-3.5 h-3.5 text-[#2BB5A8]" />
-                  <span>DANCE / STAGE SIGN-UPS ↗</span>
-                </Link>
-              )}
+                  {(event.interestFormUrl || event.ticketUrl) ? "Sign up / performance form" : "Official ticketing / RSVP"}
+                </MuttramButton>
+                <MuttramButton
+                  variant="secondary"
+                  onClick={handleDownloadIcs}
+                  icon={<Download className="h-4 w-4" aria-hidden="true" />}
+                >
+                  {downloadFeedback ? "Calendar added ✓" : "Save to calendar (.ics)"}
+                </MuttramButton>
+                {event.status === "upcoming" && (
+                  <Link
+                    href="/dance"
+                    onClick={playClick}
+                    className="inline-flex min-h-12 items-center gap-1.5 px-2 font-sans text-sm font-semibold text-brand-teal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
+                  >
+                    <Music2 className="h-4 w-4" aria-hidden="true" />
+                    Dance / stage sign-ups ↗
+                  </Link>
+                )}
+              </div>
+              <p role="status" className="sr-only">
+                {downloadFeedback ? "Event saved to your calendar file." : ""}
+              </p>
+            </CulturalCard>
+          </div>
+        </div>
+      </CulturalSection>
+
+      {/* ============================================================ */}
+      {/* BAND 2 · SANDSTONE: live Google Form registration (if any)   */}
+      {/* ============================================================ */}
+      {hasRegistration && (
+        <CulturalSection variant="sandstone" aria-labelledby="dossier-registration-heading">
+          <div className="mx-auto max-w-7xl px-6 py-20 sm:px-10 sm:py-28">
+            <div className="mb-10 space-y-3">
+              <Eyebrow tamil="நிகழ்வுப் பதிவு">Registration</Eyebrow>
+              <h2 id="dossier-registration-heading" className="font-serif text-3xl font-normal tracking-tight text-ink-earth sm:text-4xl">
+                Sign up and register
+              </h2>
+            </div>
+            <div className="max-w-4xl">
+              <PathirikaiFormFrame
+                titleEn="Official Sign-Up & Registration Form"
+                titleTa="நிகழ்வுப் பதிவு படிவம்"
+                formUrl={event.interestFormUrl || "https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform"}
+                embedSrc="https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform?embedded=true"
+                minHeight="720px"
+              />
             </div>
           </div>
-        </section>
+        </CulturalSection>
+      )}
 
-        {/* ============================================================ */}
-        {/* LIVE GOOGLE FORM SIGN-UP EMBED (For Namma Deepavali)        */}
-        {/* ============================================================ */}
-        {event.slug === "namma-deepavali-2026" && (
-          <section aria-label="Event Registration and Performance Sign-Up" className="mb-20">
-            <PathirikaiFormFrame
-              titleEn="Official Sign-Up & Registration Form"
-              titleTa="நிகழ்வுப் பதிவு படிவம்"
-              formUrl={event.interestFormUrl || "https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform"}
-              embedSrc="https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform?embedded=true"
-              minHeight="720px"
-            />
-          </section>
-        )}
+      {/* ============================================================ */}
+      {/* BAND 3 · ARCHIVE: alternates with the band above it          */}
+      {/* ============================================================ */}
+      <EventPhotoVault
+        eventSlug={event.slug}
+        eventTitle={event.titleEn}
+        scatterPhotos={photos}
+        surface={hasRegistration ? "ivory" : "sandstone"}
+      />
 
-        {/* ============================================================ */}
-        {/* EDITORIAL PHOTO VAULT & LIGHTBOX (Consolidated Gallery)     */}
-        {/* ============================================================ */}
-        <EventPhotoVault
-          eventSlug={event.slug}
-          eventTitle={event.titleEn}
-          scatterPhotos={photos}
-          googlePhotosUrl={event.googlePhotosUrl}
-        />
-
-        <KolamSectionRule tone="sandstone" />
-
-        {/* ============================================================ */}
-        {/* PHASE 3: THE VAULT DOOR (ReactBits Magnetic Proximity)       */}
-        {/* ============================================================ */}
-        <VaultGateway
-          googlePhotosUrl={event.googlePhotosUrl || "https://photos.app.goo.gl/XUS5MJz4vFRSefJa7"}
-          totalPhotosCount={300}
-        />
-      </main>
+      {/* ============================================================ */}
+      {/* BAND 4 · PEACOCK: the page's single Google Photos CTA        */}
+      {/* ============================================================ */}
+      <VaultCta googlePhotosUrl={vaultUrl} totalPhotosCount={300} />
     </article>
   );
 }

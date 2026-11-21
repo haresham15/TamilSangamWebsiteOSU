@@ -61,7 +61,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
         <SubscribePopover subscribeUrl={subscribeUrl} webcalUrl={webcalUrl} />
 
         {isMock && (
-          <span className="font-mono text-[10px] uppercase tracking-wider px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+          <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] px-3 py-1 rounded-full bg-accent-zari/15 text-ink-earth border border-accent-zari/50">
             Dev Mock Mode (No API Key Required)
           </span>
         )}
@@ -69,12 +69,12 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
       {/* Error Banner if Google API is down */}
       {initialError && !isMock && (
-        <div className="p-6 bg-amber-50 border border-amber-200/80 rounded-2xl text-left space-y-3">
-          <div className="flex items-center gap-2 text-amber-800 font-serif font-semibold text-base">
-            <AlertCircle className="w-5 h-5 text-amber-700" />
+        <div className="p-6 bg-surface-card-parchment border border-border-warm border-l-[3px] border-l-brand-purple rounded-2xl text-left space-y-3">
+          <div className="flex items-center gap-2 text-ink-earth font-serif font-semibold text-base">
+            <AlertCircle className="w-5 h-5 text-brand-purple" aria-hidden="true" />
             <span>Calendar is taking a nap. Try again soon.</span>
           </div>
-          <p className="text-xs font-sans text-amber-900 leading-relaxed">
+          <p lang={locale === "ta" ? "ta" : undefined} className="text-sm font-sans text-ink-umber leading-relaxed">
             {locale === "ta"
               ? "கூகிள் நாட்காட்டி தற்போது இணைப்பில் இல்லை. புதிய நிகழ்வுகளுக்கு எமது GroupMe அல்லது Instagram பக்கத்தைப் பார்க்கவும்."
               : "Google Calendar connection is temporarily unavailable. Check the student GroupMe or follow our Instagram for real-time announcements."}
@@ -84,16 +84,16 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               href={SITE_CONFIG.groupMeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0F766E] text-[#FAF5ED] text-xs font-sans font-medium hover:bg-[#0B5C56] transition-colors"
+              className="inline-flex min-h-12 items-center gap-1.5 px-4 rounded-full bg-brand-teal text-ink-alabaster text-sm font-sans font-medium hover:bg-brand-teal-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2"
             >
-              <MessageSquare className="w-3.5 h-3.5" />
+              <MessageSquare className="w-4 h-4" aria-hidden="true" />
               <span>Join GroupMe</span>
             </a>
             <a
               href={SITE_CONFIG.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-200 text-[#F4F0FA] text-xs font-sans font-medium hover:bg-stone-300 transition-colors"
+              className="inline-flex min-h-12 items-center gap-1.5 px-4 rounded-full border border-brand-purple/45 text-brand-purple text-sm font-sans font-medium hover:bg-brand-purple-soft hover:border-brand-purple transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2"
             >
               <span>Instagram</span>
             </a>

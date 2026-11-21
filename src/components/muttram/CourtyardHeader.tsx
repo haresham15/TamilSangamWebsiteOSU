@@ -3,6 +3,7 @@
 import React from "react";
 
 import { SplitText, BlurText } from "@/components/ui/react-bits";
+import { Eyebrow } from "./Eyebrow";
 
 export interface CourtyardHeaderProps {
   eyebrow?: string;
@@ -13,6 +14,10 @@ export interface CourtyardHeaderProps {
   className?: string;
   action?: React.ReactNode;
   dark?: boolean;
+  /** Overrides `dark` when the header sits on the peacock band (lavender eyebrow). */
+  tone?: "light" | "dark" | "peacock";
+  /** id for the h2, so the parent section can use aria-labelledby. */
+  titleId?: string;
 }
 
 export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
@@ -24,10 +29,13 @@ export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
   className = "",
   action,
   dark = false,
+  tone,
+  titleId,
 }) => {
+  const resolvedTone = tone ?? (dark ? "dark" : "light");
+  const onDark = resolvedTone !== "light";
   const isCenter = align === "center";
-  // Enforce strict 2-Element Header Rule: suppress eyebrow if Tamil subtitle exists
-  const showEyebrow = Boolean(eyebrow && !tamilTitle);
+  const showEyebrow = Boolean(eyebrow);
 
   return (
     <div
@@ -44,20 +52,18 @@ export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
       >
         <div className="space-y-3">
           {showEyebrow && (
-            <span className={`font-sans text-xs tracking-widest uppercase font-semibold block ${dark ? "text-[#C79347]" : "text-[#9A6B3E]"}`}>
-              {eyebrow}
-            </span>
+            <Eyebrow tone={resolvedTone}>{eyebrow}</Eyebrow>
           )}
 
           <div className="space-y-1">
-            <h2 className={`text-3xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight leading-[1.12] ${dark ? "text-[#FAF5ED]" : "text-[#261A14]"}`}>
+            <h2 id={titleId} className={`text-3xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight leading-[1.12] ${onDark ? "text-ink-alabaster" : "text-ink-earth"}`}>
               <SplitText text={title} splitType="words" effect="rise" mask />
             </h2>
 
             {tamilTitle && (
               <p
                 lang="ta"
-                className={`font-tamil text-lg sm:text-2xl font-light ${dark ? "text-[#CBBBA8]" : "text-[#5E4C40]"}`}
+                className={`font-tamil text-lg sm:text-2xl font-light leading-[1.6] ${onDark ? "text-ink-sand" : "text-brand-purple"}`}
               >
                 <BlurText text={tamilTitle} animateBy="words" />
               </p>
@@ -66,7 +72,7 @@ export const CourtyardHeader: React.FC<CourtyardHeaderProps> = ({
 
           {description && (
             <p
-              className={`font-sans text-base sm:text-lg leading-relaxed max-w-2xl pt-2 ${dark ? "text-[#CBBBA8]" : "text-[#5E4C40]"} ${
+              className={`font-sans text-base sm:text-lg leading-relaxed max-w-2xl pt-2 ${onDark ? "text-ink-sand" : "text-ink-umber"} ${
                 isCenter ? "mx-auto" : ""
               }`}
             >

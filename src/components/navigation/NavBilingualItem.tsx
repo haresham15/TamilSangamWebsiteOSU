@@ -52,14 +52,14 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
             ? `${locale === "ta" ? route.ta : route.en}, new puzzles available`
             : undefined
         }
-        className={`relative flex flex-col items-center justify-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8] rounded-full px-2.5 py-1 transition-all duration-200 ${
+        className={`relative flex flex-col items-center justify-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark rounded-full px-2.5 py-1 transition-all duration-200 ${
           isActive
             ? isDarkHero
               ? "bg-white/[0.12] border border-white/10 shadow-xs"
-              : "bg-[#25173B] border border-[rgba(125,96,166,0.25)] shadow-xs"
+              : "bg-surface-card-dark border border-border-zari-muted shadow-xs"
             : isDarkHero
             ? "hover:bg-white/[0.08]"
-            : "hover:bg-[#25173B]/[0.05]"
+            : "hover:bg-surface-card-dark/[0.05]"
         }`}
       >
         {/* Primary Navigation Text */}
@@ -67,11 +67,11 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
           className={`font-sans text-[12px] xl:text-[13px] leading-tight tracking-tight whitespace-nowrap transition-colors duration-200 inline-flex items-center gap-1.5 ${
             isDarkHero
               ? isActive
-                ? "font-semibold text-[#F4F0FA]"
-                : "font-medium text-[#C4B7D7] group-hover:text-white"
+                ? "font-semibold text-ink-alabaster"
+                : "font-medium text-ink-sand group-hover:text-ink-alabaster"
               : isActive
-              ? "font-semibold text-[#F4F0FA]"
-              : "font-medium text-[#F4F0FA] group-hover:text-[#F4F0FA]"
+              ? "font-semibold text-ink-alabaster"
+              : "font-medium text-ink-alabaster group-hover:text-ink-alabaster"
           }`}
         >
           {locale === "ta" ? route.ta : route.en}
@@ -79,20 +79,20 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
           {/* Route Tags */}
           {route.isNextEvent ? (
             <span
-              className="inline-flex items-center gap-1 font-mono text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full transition-all bg-[#0F766E]/25 text-[#2BB5A8] border border-[#2BB5A8]/50 shadow-[0_0_8px_rgba(43,181,168,0.4)]"
+              className="inline-flex items-center gap-1 font-sans text-[7.5px] xl:text-[8px] font-semibold uppercase tracking-[0.14em] px-1.5 py-[1px] rounded-full transition-all bg-brand-teal/25 text-brand-teal-dark border border-brand-teal-dark/50"
             >
               <span
-                className="size-1 rounded-full bg-[#2BB5A8] animate-ping"
+                className="size-1 rounded-full bg-brand-teal-dark"
                 aria-hidden="true"
               />
               <span>{locale === "ta" ? "அடுத்தது" : "NEXT"}</span>
             </span>
           ) : route.isNew ? (
             <span
-              className="inline-flex items-center gap-1 font-mono text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-full transition-all bg-[#C79347]/20 text-[#C79347] border border-[#C79347]/40 shadow-[0_0_6px_rgba(199,147,71,0.3)]"
+              className="inline-flex items-center gap-1 font-sans text-[7.5px] xl:text-[8px] font-semibold uppercase tracking-[0.14em] px-1.5 py-[1px] rounded-full transition-all bg-accent-zari/20 text-accent-zari border border-accent-zari/40"
             >
               <span
-                className="size-1 rounded-full bg-[#C79347] animate-pulse"
+                className="size-1 rounded-full bg-accent-zari"
                 aria-hidden="true"
               />
               <span>{locale === "ta" ? "புதிது" : "NEW"}</span>
@@ -101,7 +101,7 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
             route.badge &&
             gamesUnsolved && (
               <span
-                className="size-[5px] rounded-full bg-[#C79347] ring-1 ring-[#1C122B] shadow-[0_0_4px_#C79347] animate-pulse"
+                className="size-[5px] rounded-full bg-accent-zari ring-1 ring-bg-sangam-deep"
                 aria-hidden="true"
               />
             )
@@ -115,11 +115,11 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
           className={`font-tamil text-[9px] xl:text-[9.5px] leading-none mt-0.5 whitespace-nowrap transition-all duration-200 pointer-events-none ${
             isDarkHero
               ? isActive
-                ? "text-[#2BB5A8] font-semibold opacity-100"
-                : "text-[#2BB5A8]/75 font-medium opacity-75"
+                ? "text-brand-teal-dark font-semibold opacity-100"
+                : "text-brand-teal-dark/75 font-medium opacity-75"
               : isActive
-              ? "text-[#2BB5A8] font-semibold opacity-100"
-              : "text-[#2BB5A8] font-medium opacity-80"
+              ? "text-brand-teal-dark font-semibold opacity-100"
+              : "text-brand-teal-dark font-medium opacity-80"
           }`}
         >
           {locale === "ta" ? route.en : route.ta}

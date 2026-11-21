@@ -1,4 +1,7 @@
 import { CalendarEvent } from "./types";
+import { EVENTS } from "@/data/events";
+
+const diwali = EVENTS.find((e) => e.slug === "namma-deepavali-2026")!;
 
 /**
  * Dev-friendly mock events when Google Calendar credentials are not configured.
@@ -23,10 +26,11 @@ export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
   {
     id: "mock-namma-deepavali-2026",
     slug: "namma-deepavali-2026",
-    titleEn: "Diwali 2026 - TS X MS X KS",
-    titleTa: "நம்ம தீபாவளி · TS × MS × KS",
-    description: "Tamil Sangam, Kannada Sangam, and Mallu Society are hosting an event on November 15th! Sign up for dance performances and celebration.\nslug: namma-deepavali-2026",
-    location: "Ohio Union (Archie Griffin Ballroom)",
+    titleEn: diwali.titleEn,
+    titleTa: diwali.titleTa,
+    description: `${diwali.taglineEn}
+slug: ${diwali.slug}`,
+    location: diwali.location,
     allDay: false,
     start: "2026-11-15T18:00:00-05:00",
     end: "2026-11-15T22:00:00-05:00",
@@ -36,7 +40,7 @@ export const MOCK_CALENDAR_EVENTS: CalendarEvent[] = [
   {
     id: "mock-streetside-sapad-2026",
     slug: "streetside-sapad",
-    titleEn: "Streetside Sapad Night",
+    titleEn: EVENTS.find((e) => e.slug === "streetside-sapad")?.titleEn ?? "Streetside Sapad Night",
     titleTa: "தெருவோரச் சாப்பாடு திருவிழா",
     description:
       "Hot biryani, samosas, Indian snacks, cold drinks, Kahoot trivia, and casual dinner with friends on campus. Meet new Buckeyes and enjoy authentic food.",

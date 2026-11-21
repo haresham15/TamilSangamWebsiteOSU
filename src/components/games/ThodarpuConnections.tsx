@@ -12,6 +12,7 @@ import {
   type ThodarpuTile,
 } from "@/data/gamesData";
 import { getArcadeStorage, saveArcadeStorage } from "@/lib/gamesStorage";
+import { SITE_CONFIG } from "@/data/siteConfig";
 
 interface ThodarpuConnectionsProps {
   editionKey: string; // "2026-10" | "2026-11" | "2026-12"
@@ -467,7 +468,7 @@ export function ThodarpuConnections({ editionKey, onSolved }: ThodarpuConnection
             </button>
 
             <a
-              href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
+              href={SITE_CONFIG.groupMeUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs font-mono text-[#F4F0FA]/80 hover:text-[#A6F0CF] underline underline-offset-4 px-2 py-1 transition-colors"

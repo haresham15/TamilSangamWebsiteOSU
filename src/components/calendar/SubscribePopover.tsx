@@ -70,25 +70,29 @@ export const SubscribePopover: React.FC<SubscribePopoverProps> = ({
           playClick();
           setIsOpen(!isOpen);
         }}
-        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1C122B] hover:bg-[#271A3C] text-[#FAF5ED] border border-[#C79347]/30 hover:border-[#2BB5A8] text-xs font-sans font-medium transition-all shadow-sm cursor-pointer min-h-[44px]"
+        className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-surface-card-light hover:bg-brand-purple-soft text-brand-purple border border-brand-purple/40 hover:border-brand-purple text-sm font-sans font-medium transition-colors cursor-pointer min-h-12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-ivory"
       >
-        <CalendarPlus className="w-4 h-4 text-[#2BB5A8]" />
-        <span>
+        <CalendarPlus className="w-4 h-4 text-brand-teal" aria-hidden="true" />
+        <span lang={locale === "ta" ? "ta" : undefined}>
           {locale === "ta"
             ? "நாட்காட்டியைப் பின்தொடர்"
             : "Subscribe to the Sangam calendar"}
         </span>
-        <ChevronDown className={`w-3.5 h-3.5 text-[#CBBBA8] transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown aria-hidden="true" className={`w-3.5 h-3.5 text-ink-umber transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {/* Popover Card */}
       {isOpen && (
-        <div className="absolute right-0 sm:right-auto sm:left-0 mt-2 w-80 bg-[#1C122B] border border-[#C79347]/30 rounded-2xl shadow-xl z-50 p-4 text-left space-y-3 animate-in fade-in zoom-in-95 duration-150">
-          <div className="border-b border-[#C79347]/20 pb-2">
-            <h4 className="font-serif text-sm font-semibold text-[#FAF5ED]">
+        <div
+          role="dialog"
+          aria-label={locale === "ta" ? "நேரலை நாட்காட்டி சந்தா" : "Live Calendar Sync"}
+          className="absolute right-0 sm:right-auto sm:left-0 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-surface-card-light border border-border-warm rounded-2xl shadow-[0_16px_40px_rgba(91,44,134,0.14)] z-50 p-4 text-left space-y-3 animate-in fade-in zoom-in-95 duration-150"
+        >
+          <div className="border-b border-border-warm pb-2">
+            <h4 lang={locale === "ta" ? "ta" : undefined} className="font-serif text-base font-semibold text-ink-earth">
               {locale === "ta" ? "நேரலை நாட்காட்டி சந்தா" : "Live Calendar Sync"}
             </h4>
-            <p className="text-[11px] font-sans text-[#CBBBA8] mt-0.5 leading-snug">
+            <p lang={locale === "ta" ? "ta" : undefined} className="text-xs font-sans text-ink-umber mt-0.5 leading-[1.6]">
               {locale === "ta"
                 ? "ஒருமுறை இணைந்தால் அனைத்து புதிய நிகழ்வுகளும் உங்கள் நாட்காட்டியில் தானாக வந்து சேரும்."
                 : "Subscribe once and all new events and updates sync directly to your personal phone or laptop calendar."}
@@ -105,18 +109,18 @@ export const SubscribePopover: React.FC<SubscribePopoverProps> = ({
                 playWoodClick();
                 setIsOpen(false);
               }}
-              className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#271A3C] text-[#FAF5ED] transition-colors group text-xs font-sans"
+              className="flex min-h-12 items-center justify-between p-2.5 rounded-xl hover:bg-brand-purple-soft text-ink-earth transition-colors group text-sm font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
             >
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200/60 flex items-center justify-center text-blue-600 font-semibold text-xs">
+                <div aria-hidden="true" className="w-7 h-7 rounded-lg bg-brand-purple-soft border border-border-warm flex items-center justify-center text-brand-purple font-semibold text-xs">
                   G
                 </div>
                 <div>
                   <span className="font-medium block">Google Calendar</span>
-                  <span className="text-[10px] text-[#CBBBA8]">One-tap web add</span>
+                  <span className="text-[11px] text-ink-umber">One-tap web add</span>
                 </div>
               </div>
-              <ExternalLink className="w-3.5 h-3.5 text-[#CBBBA8] group-hover:text-[#2BB5A8]" />
+              <ExternalLink aria-hidden="true" className="w-3.5 h-3.5 text-ink-umber group-hover:text-brand-teal" />
             </a>
 
             {/* 2. Apple / Outlook (webcal) */}
@@ -126,29 +130,29 @@ export const SubscribePopover: React.FC<SubscribePopoverProps> = ({
                 playWoodClick();
                 setIsOpen(false);
               }}
-              className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#271A3C] text-[#FAF5ED] transition-colors group text-xs font-sans"
+              className="flex min-h-12 items-center justify-between p-2.5 rounded-xl hover:bg-brand-purple-soft text-ink-earth transition-colors group text-sm font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
             >
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-[#1C122B]">
+                <div aria-hidden="true" className="w-7 h-7 rounded-lg bg-bg-sandstone border border-border-warm flex items-center justify-center text-ink-earth">
                   <Calendar className="w-3.5 h-3.5" />
                 </div>
                 <div>
                   <span className="font-medium block">Apple & Outlook</span>
-                  <span className="text-[10px] text-[#CBBBA8]">Direct webcal protocol</span>
+                  <span className="text-[11px] text-ink-umber">Direct webcal protocol</span>
                 </div>
               </div>
-              <ExternalLink className="w-3.5 h-3.5 text-[#CBBBA8] group-hover:text-[#2BB5A8]" />
+              <ExternalLink aria-hidden="true" className="w-3.5 h-3.5 text-ink-umber group-hover:text-brand-teal" />
             </a>
 
             {/* 3. Copy Link */}
             <button
               type="button"
               onClick={handleCopyLink}
-              className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-[#271A3C] text-[#FAF5ED] transition-colors group text-xs font-sans cursor-pointer"
+              className="w-full min-h-12 flex items-center justify-between p-2.5 rounded-xl hover:bg-brand-purple-soft text-ink-earth transition-colors group text-sm font-sans cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
             >
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-[#271A3C] border border-[#C79347]/30 flex items-center justify-center text-[#2BB5A8]">
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                <div aria-hidden="true" className="w-7 h-7 rounded-lg bg-brand-teal-soft border border-border-warm flex items-center justify-center text-brand-teal">
+                  {copied ? <Check className="w-3.5 h-3.5 text-brand-teal" /> : <Copy className="w-3.5 h-3.5" />}
                 </div>
                 <div>
                   <span className="font-medium block">
@@ -160,10 +164,10 @@ export const SubscribePopover: React.FC<SubscribePopoverProps> = ({
                       ? "iCal இணைப்பை நகலெடு"
                       : "Copy iCal Link"}
                   </span>
-                  <span className="text-[10px] text-[#C4B7D7]">Standard RFC 5545 feed</span>
+                  <span className="text-[11px] text-ink-umber">Standard RFC 5545 feed</span>
                 </div>
               </div>
-              {copied && <span className="text-[10px] font-mono text-emerald-600 font-semibold">COPIED</span>}
+              {copied && <span className="text-[11px] font-sans uppercase tracking-[0.14em] text-brand-teal font-semibold">Copied</span>}
             </button>
           </div>
         </div>

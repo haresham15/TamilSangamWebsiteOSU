@@ -3,6 +3,7 @@
 
 import React, { useRef, useEffect } from "react";
 import Image from "next/image";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Draggable } from "gsap/Draggable";
@@ -187,15 +188,15 @@ export function DraggableMemoryArchive() {
   }, []);
 
   return (
-    <div className="w-full text-left font-mono">
+    <div className="w-full text-left font-sans">
       {/* Console Metadata Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 mb-4 border-b border-[#250d38]/20 gap-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 mb-4 border-b border-border-warm gap-3">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#87500e]">
-            <span className="w-2 h-2 bg-[#55CCA2] inline-block" />
-            <span>CAMPUS MEMORY DESK · புகைப்பட நினைவுகள்</span>
+          <div className="flex items-center gap-2">
+            <span aria-hidden="true" className="w-2 h-2 bg-brand-teal inline-block" />
+            <Eyebrow tamil="புகைப்பட நினைவுகள்">Campus Memory Desk</Eyebrow>
           </div>
-          <p className="text-[11px] text-[#250d38]/70 font-sans">
+          <p className="text-[11px] text-ink-umber font-sans">
             Rifle through, move, and explore polaroids from our outdoor lawn picnics and cultural celebrations.
           </p>
         </div>
@@ -205,9 +206,9 @@ export function DraggableMemoryArchive() {
           onClick={dealCards}
           onMouseEnter={() => audioLayer.playTapeClack(0.4)}
           data-cursor="bracket"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-[#250d38]/40 bg-[#FAF6EE] hover:bg-[#250d38] hover:text-white text-[#250d38] text-[10px] font-mono uppercase tracking-wider transition-colors cursor-pointer select-none"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-brand-purple/40 bg-surface-card-light hover:bg-brand-purple-soft hover:border-brand-purple text-brand-purple text-[10px] font-sans font-semibold uppercase tracking-[0.14em] transition-colors cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2"
         >
-          <RotateCcw className="w-3 h-3" />
+          <RotateCcw className="w-3 h-3" aria-hidden="true" />
           <span>Reset Desk</span>
         </button>
       </div>
@@ -215,26 +216,26 @@ export function DraggableMemoryArchive() {
       {/* Physics Workspace Canvas */}
       <div
         ref={containerRef}
-        className="relative w-full h-[580px] sm:h-[660px] lg:h-[720px] bg-[#1a110a] border border-[#B5A642]/30 overflow-hidden select-none"
+        className="relative w-full h-[580px] sm:h-[660px] lg:h-[720px] bg-hero-espresso border border-accent-zari/30 overflow-hidden select-none"
         style={{
           backgroundImage:
-            "radial-gradient(#3a2717 1px, transparent 1px), radial-gradient(#2c1c0f 1px, #140d07 1px)",
+            "radial-gradient(var(--color-dusk-umber) 1px, transparent 1px), radial-gradient(var(--color-dusk-cocoa) 1px, var(--color-hero-espresso) 1px)",
           backgroundSize: "28px 28px",
           backgroundPosition: "0 0, 14px 14px",
         }}
       >
         {/* Workspace Telemetry Markings */}
-        <div className="absolute top-3 left-4 text-[9px] text-[#C79347]/80 tracking-widest uppercase pointer-events-none select-none">
+        <div className="absolute top-3 left-4 text-[9px] text-accent-zari/80 tracking-widest uppercase pointer-events-none select-none">
           COLUMBUS CAMPUS MEMORIES // SOUTH OVAL & UNION
         </div>
-        <div className="absolute top-3 right-4 text-[9px] text-white/50 tracking-widest uppercase pointer-events-none select-none flex items-center gap-1">
-          <Move className="w-3 h-3 text-[#2BB5A8]" />
+        <div className="absolute top-3 right-4 text-[9px] text-ink-alabaster/50 tracking-widest uppercase pointer-events-none select-none flex items-center gap-1">
+          <Move className="w-3 h-3 text-brand-teal-dark" />
           <span>DRAGGABLE POLAROIDS</span>
         </div>
-        <div className="absolute bottom-3 left-4 text-[9px] text-white/30 tracking-widest uppercase pointer-events-none select-none">
+        <div className="absolute bottom-3 left-4 text-[9px] text-ink-alabaster/30 tracking-widest uppercase pointer-events-none select-none">
           LAT 40.0067° N · LON 83.0305° W
         </div>
-        <div className="absolute bottom-3 right-4 text-[9px] text-white/30 tracking-widest uppercase pointer-events-none select-none">
+        <div className="absolute bottom-3 right-4 text-[9px] text-ink-alabaster/30 tracking-widest uppercase pointer-events-none select-none">
           OSU TAMIL SANGAM ARCHIVE
         </div>
 
@@ -251,13 +252,13 @@ export function DraggableMemoryArchive() {
               top: `${item.initialY}%`,
               zIndex: index + 1,
             }}
-            className="absolute w-56 sm:w-64 bg-[#FAF6EE] p-3 pb-5 border border-[#25173B]/20 shadow-[0_12px_24px_rgba(0,0,0,0.35)] cursor-grab active:cursor-grabbing transform-gpu transition-shadow"
+            className="absolute w-56 sm:w-64 bg-bg-ivory p-3 pb-5 border border-border-warm shadow-[0_12px_24px_rgba(0,0,0,0.35)] cursor-grab active:cursor-grabbing transform-gpu transition-shadow"
           >
             {/* Top Tape Strip */}
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-14 h-4 bg-amber-100/75 border border-amber-300/40 rotate-1 shadow-sm pointer-events-none" />
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-14 h-4 bg-bg-sandstone/75 border border-accent-zari/40 rotate-1 shadow-sm pointer-events-none" />
 
             {/* Polaroid Photo Box */}
-            <div className="relative w-full h-44 sm:h-52 bg-[#140C20] border border-[rgba(125,96,166,0.2)] overflow-hidden mb-3">
+            <div className="relative w-full h-44 sm:h-52 bg-bg-sangam-deep border border-border-zari-muted overflow-hidden mb-3">
               <Image
                 src={item.imageUrl}
                 alt={`${item.titleEn} — OSU Tamil Sangam campus memories at The Ohio State University`}
@@ -266,7 +267,7 @@ export function DraggableMemoryArchive() {
                 className="object-cover pointer-events-none select-none"
                 draggable={false}
               />
-              <div className="absolute bottom-1 right-1.5 px-1.5 py-0.5 bg-[#1C122B]/85 text-[8px] font-mono text-[#2BB5A8] tracking-wider uppercase pointer-events-none">
+              <div className="absolute bottom-1 right-1.5 px-1.5 py-0.5 bg-bg-sangam-deep/85 text-[8px] font-sans font-semibold text-brand-teal-dark tracking-[0.14em] uppercase pointer-events-none">
                 {item.date}
               </div>
             </div>
@@ -276,13 +277,13 @@ export function DraggableMemoryArchive() {
               <p
                 lang="ta"
                 style={{ letterSpacing: 0 }}
-                className="text-xs font-noto-serif-tamil text-[#2a1205] font-bold leading-tight line-clamp-1"
+                className="text-xs font-noto-serif-tamil text-ink-earth font-bold leading-tight line-clamp-1"
               >
                 {item.titleTa}
               </p>
-              <div className="flex items-center justify-between text-[10px] text-[#6b4728] font-mono pt-0.5 border-t border-[#6b4728]/20">
+              <div className="flex items-center justify-between text-[10px] text-ink-umber font-sans pt-0.5 border-t border-border-warm">
                 <span className="truncate pr-1">{item.titleEn}</span>
-                <span className="shrink-0 text-[8px] text-[#87500e] font-bold">{item.location}</span>
+                <span className="shrink-0 text-[8px] text-ink-umber font-bold">{item.location}</span>
               </div>
             </div>
           </div>

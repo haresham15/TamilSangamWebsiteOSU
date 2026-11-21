@@ -13,7 +13,7 @@ export interface EditorialSheetHandoffProps {
   showBackgroundCanvas?: boolean;
   backgroundCanvasVariant?: "light" | "espresso";
   overlapHero?: boolean;
-  surface?: "sandstone" | "ivory" | "sangam-deep";
+  surface?: "sandstone" | "ivory" | "sangam-deep" | "peacock-deep";
 }
 
 /**
@@ -31,20 +31,20 @@ export function EditorialSheetHandoff({
   className = "",
   overflowClass = "overflow-x-clip",
   showBackgroundCanvas = true,
-  backgroundCanvasVariant = "light",
+  backgroundCanvasVariant,
   overlapHero = true,
   surface = "sangam-deep",
 }: EditorialSheetHandoffProps) {
   const overlapStyles = overlapHero
-    ? "-mt-[10vh] md:-mt-[12vh] rounded-t-[28px] shadow-[0_-8px_36px_rgba(0,0,0,0.35),0_-24px_60px_rgba(28,18,43,0.65)] border-t border-[#C79347]/50"
-    : "mt-0 border-t border-[#C79347]/35 shadow-[0_-4px_24px_rgba(0,0,0,0.25)]";
+    ? "-mt-[10vh] md:-mt-[12vh] rounded-t-[28px] shadow-[0_-8px_36px_rgba(0,0,0,0.35),0_-24px_60px_rgba(28,18,43,0.65)] border-t border-accent-zari/50"
+    : "mt-0 border-t border-accent-zari/35 shadow-[0_-4px_24px_rgba(0,0,0,0.25)]";
 
-  const surfaceClasses =
-    surface === "sandstone"
-      ? "bg-[#F0E6D6] text-[#261A14]"
-      : surface === "ivory"
-      ? "bg-[#FAF6F0] text-[#261A14]"
-      : "bg-[#1C122B] text-[#FAF5ED]";
+  const surfaceClasses = {
+    sandstone: "bg-bg-sandstone text-ink-earth texture-khadi",
+    ivory: "bg-bg-ivory text-ink-earth texture-khadi",
+    "sangam-deep": "bg-bg-sangam-deep text-ink-alabaster texture-silk",
+    "peacock-deep": "bg-bg-peacock-deep text-ink-alabaster texture-silk",
+  }[surface];
 
   return (
     <section
@@ -54,7 +54,9 @@ export function EditorialSheetHandoff({
     >
       {/* Living Chola Monograph & Pulli Background Layer */}
       {showBackgroundCanvas && (
-        <EditorialBackgroundCanvas variant={backgroundCanvasVariant} />
+        <EditorialBackgroundCanvas
+          variant={backgroundCanvasVariant ?? (surface === "sangam-deep" || surface === "peacock-deep" ? "espresso" : "light")}
+        />
       )}
 
       {/* Foreground Content Layer */}

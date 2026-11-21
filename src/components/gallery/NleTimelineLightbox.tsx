@@ -168,7 +168,7 @@ export function NleTimelineLightbox({
         {/* Left: System Status & Coordinates */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#2BB5A8] inline-block animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#2BB5A8] inline-block" />
             <span className="font-bold text-white tracking-widest hidden sm:inline">
               DAVINCI RESOLVE STUDIO // COLOR & EDIT
             </span>

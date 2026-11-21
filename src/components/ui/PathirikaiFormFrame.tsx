@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowUpRight, Sparkles } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 export interface PathirikaiFormFrameProps {
   titleEn: string;
@@ -14,11 +14,11 @@ export interface PathirikaiFormFrameProps {
 
 /**
  * PathirikaiFormFrame Primitive (PRD §6.3)
- * Elegant, culturally grounded frame for embedded Google Forms:
- * - Sits cleanly inside a crisp #FFFFFF card on warm Sandstone surfaces.
- * - Topped with a Royal Sangam Deep header bar with Zari Gold title and external link.
- * - Shows an animated sandstone shimmer skeleton (#E7DAC6) until the iframe loads,
- *   completely eradicating jarring empty dark voids.
+ * Culturally grounded frame for embedded Google Forms:
+ * - A white card that sits on warm ivory/sandstone bands.
+ * - A sangam-deep header bar with a zari title and an "Open in new tab" link.
+ * - A warm sandstone shimmer skeleton (form-field silhouettes) until the iframe loads,
+ *   so the embed never shows as an empty dark box.
  */
 export function PathirikaiFormFrame({
   titleEn,
@@ -33,61 +33,57 @@ export function PathirikaiFormFrame({
   return (
     <div
       data-pathirikai-form-frame="true"
-      className={`w-full rounded-2xl bg-white border border-[#DFD1BE] shadow-[0_16px_48px_rgba(38,26,20,0.08)] overflow-hidden ${className}`.trim()}
+      className={`w-full overflow-hidden rounded-2xl border border-border-warm bg-surface-card-light shadow-[0_16px_48px_rgba(91,44,134,0.09)] ${className}`.trim()}
     >
-      {/* Header Bar in Royal Sangam Deep with Zari Gold Accents */}
-      <div className="bg-[#1C122B] px-5 py-4 border-b border-[#C79347]/30 flex flex-wrap items-center justify-between gap-3 text-white">
-        <div className="flex items-center gap-2.5">
-          <span className="p-1.5 rounded-lg bg-[#271A3C] text-[#C79347] border border-[#C79347]/30">
-            <Sparkles className="w-4 h-4" />
-          </span>
-          <div>
-            <h3 className="text-sm sm:text-base font-serif font-medium text-[#FAF5ED] tracking-wide flex items-center gap-2">
-              <span>{titleEn}</span>
-              {titleTa && (
-                <span lang="ta" style={{ letterSpacing: 0 }} className="text-xs text-[#C79347] font-normal font-serif">
-                  ({titleTa})
-                </span>
-              )}
-            </h3>
-            <span className="text-[10px] font-mono tracking-wider text-[#CBBBA8] uppercase">
-              Official Buckeye Registration Portal
+      {/* Header bar: sangam-deep with zari title */}
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-accent-zari/30 bg-bg-sangam-deep px-5 py-3 sm:px-6">
+        <h3 className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5 py-1 font-serif text-sm font-normal text-accent-zari sm:text-base">
+          <span>{titleEn}</span>
+          {titleTa && (
+            <span lang="ta" className="font-tamil text-sm leading-[1.6] tracking-normal text-ink-sand">
+              {titleTa}
             </span>
-          </div>
-        </div>
+          )}
+        </h3>
 
         <a
           href={formUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] text-xs font-mono font-medium tracking-wider transition-colors shadow-sm"
+          className="inline-flex min-h-12 shrink-0 items-center gap-1.5 rounded-full px-2 font-sans text-sm font-semibold text-brand-teal-dark underline-offset-4 transition-colors hover:text-brand-teal-hover-dark hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark"
         >
-          <span>Open in Tab</span>
-          <ArrowUpRight className="w-3.5 h-3.5" />
+          <span>Open in new tab</span>
+          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          <span className="sr-only">(opens in a new tab)</span>
         </a>
       </div>
 
-      {/* Frame Container with Shimmer Loading State */}
-      <div className="relative w-full overflow-hidden bg-[#FAF6F0]" style={{ minHeight }}>
+      {/* Frame container with sandstone shimmer skeleton */}
+      <div className="relative w-full overflow-hidden bg-bg-ivory" style={{ minHeight }}>
         {!isLoaded && (
-          <div
-            className="absolute inset-0 w-full h-full shimmer-sandstone flex flex-col items-center justify-center p-8 text-center"
-            aria-live="polite"
-          >
-            <div className="w-8 h-8 rounded-full border-2 border-[#9A6B3E] border-t-transparent animate-spin mb-3" />
-            <p className="font-serif text-sm text-[#5E4C40]">
-              Loading Official Registration Form...
+          <div className="absolute inset-0 flex flex-col gap-6 p-6 sm:p-10" role="status" aria-live="polite">
+            <span className="sr-only">Loading the registration form…</span>
+            <div aria-hidden="true" className="space-y-3">
+              <div className="shimmer-sandstone h-7 w-2/3 rounded-md" />
+              <div className="shimmer-sandstone h-3.5 w-11/12 rounded" />
+              <div className="shimmer-sandstone h-3.5 w-4/5 rounded" />
+            </div>
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} aria-hidden="true" className="space-y-3 border-t border-border-warm pt-6">
+                <div className="shimmer-sandstone h-4 w-2/5 rounded" />
+                <div className="shimmer-sandstone h-10 w-full rounded-lg" />
+              </div>
+            ))}
+            <p aria-hidden="true" className="font-sans text-xs text-ink-umber">
+              Loading the Google Form…
             </p>
-            <span className="text-[11px] font-mono text-[#9A6B3E] mt-1">
-              Connects directly to secure Google Forms
-            </span>
           </div>
         )}
 
         <iframe
           src={embedSrc}
           title={titleEn}
-          className="w-full h-full border-0 transition-opacity duration-300"
+          className="h-full w-full border-0 transition-opacity duration-300"
           style={{ minHeight, opacity: isLoaded ? 1 : 0 }}
           onLoad={() => setIsLoaded(true)}
           loading="lazy"

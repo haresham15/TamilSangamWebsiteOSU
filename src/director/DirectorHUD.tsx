@@ -153,7 +153,7 @@ export function DirectorHUD() {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-[#00ff41]/30 pb-2">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#00ff41] animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-[#00ff41]" />
               <Terminal className="w-4 h-4 text-[#00ff41]" />
               <span className="font-bold tracking-wider text-[11px] text-white">
                 DIRECTOR VIEWPORT

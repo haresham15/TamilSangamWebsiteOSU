@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { BookOpen, RefreshCw, Quote } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { PronounceableQuote } from "@/components/ui/PronounceableQuote";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
 
 interface KuralItem {
   number: number;
@@ -102,6 +104,10 @@ interface ThirukkuralExplorerProps {
   variant?: "dark" | "light";
 }
 
+/**
+ * ThirukkuralExplorer — unboxed band content (recipe A header + recipe C pull-quote).
+ * The parent supplies the surface (a CulturalSection); this renders no card of its own.
+ */
 export function ThirukkuralExplorer({
   className = "",
   variant = "light",
@@ -115,128 +121,93 @@ export function ThirukkuralExplorer({
     setIndex((prev) => (prev + 1) % KURAL_COLLECTION.length);
   };
 
+  const ink = isDark ? "text-ink-alabaster" : "text-ink-earth";
+  const muted = isDark ? "text-ink-sand" : "text-ink-umber";
+  const numeral = isDark ? "text-brand-lavender" : "text-brand-purple";
+
   return (
     <section
       aria-labelledby="thirukkural-explorer-heading"
-      className={`relative w-full overflow-hidden rounded-2xl p-6 sm:p-8 md:p-10 border transition-all ${
-        isDark
-          ? "bg-[#1C122B] border-[#C79347]/30 text-[#FAF5ED] shadow-xl"
-          : "bg-[#FFFFFF] border-[#DFD1BE] text-[#261A14] shadow-md"
-      } ${className}`}
+      className={`relative w-full grid grid-cols-1 md:grid-cols-12 gap-10 ${className}`.trim()}
     >
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Editorial Header Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-4 border-current/10 text-xs font-mono tracking-wider uppercase">
-          <div className={`flex items-center gap-2 ${isDark ? "text-[#2BB5A8]" : "text-[#0F766E]"}`}>
-            <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Living Wisdom</span>
-          </div>
-
-          <div className={isDark ? "text-[#CBBBA8]" : "text-[#5E4C40]"}>
-            <span lang="ta">குறள் {current.number} · {current.chapterTa}</span>
-          </div>
-        </div>
-
-        {/* Couplet Monument Box */}
-        <div
-          className={`relative py-6 px-4 sm:px-8 rounded-xl border space-y-6 text-center ${
-            isDark
-              ? "bg-[#271A3C] border-[#C79347]/20"
-              : "bg-[#FAF6F0] border-[#DFD1BE]"
-          }`}
+      {/* Header column */}
+      <div className="md:col-span-4 md:sticky md:top-28 self-start space-y-4">
+        <Eyebrow tone={isDark ? "dark" : "light"}>Thirukkural</Eyebrow>
+        <h2
+          id="thirukkural-explorer-heading"
+          className={`font-serif text-3xl sm:text-5xl font-normal leading-[1.12] tracking-tight ${ink}`}
         >
-          <Quote
-            className={`w-8 h-8 mx-auto ${isDark ? "text-[#C79347]/40" : "text-[#9A6B3E]/40"}`}
-            aria-hidden="true"
-          />
+          Living Wisdom
+        </h2>
+        <p className={`font-sans text-base leading-relaxed max-w-sm ${muted}`}>
+          In the works: collectible Kural meal-ticket cards and bite-sized Tamil moments woven into our biryani nights.
+        </p>
+      </div>
 
-          {/* 2-line Tamil Couplet (Click to Pronounce with cute button next to it) */}
+      {/* Pull-quote column (recipe C) */}
+      <div className="md:col-span-8 space-y-8">
+        <p className={`flex flex-wrap items-baseline gap-x-3 gap-y-1 ${muted}`}>
+          <span className={`font-serif text-4xl leading-none ${numeral}`}>{current.number}</span>
+          <span lang="ta" className="font-tamil text-base leading-[1.6] tracking-normal">
+            குறள் {current.number} · {current.chapterTa}
+          </span>
+          <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em]">{current.chapterEn}</span>
+        </p>
+
+        <figure
+          aria-live="polite"
+          className={`relative border-l-2 pl-6 sm:pl-10 space-y-6 ${isDark ? "border-accent-zari" : "border-accent-bronze"}`}
+        >
+          <span
+            aria-hidden="true"
+            className={`pointer-events-none absolute -top-10 left-3 sm:left-5 select-none font-serif text-[7rem] leading-none ${
+              isDark ? "text-accent-zari/25" : "text-accent-bronze/25"
+            }`}
+          >
+            &ldquo;
+          </span>
+
+          {/* Tamil couplet first */}
           <PronounceableQuote
             tamilText={`${current.line1Ta} ${current.line2Ta}`}
             label={`Thirukkural ${current.number}. Click to listen to pronunciation.`}
             tone={isDark ? "gold" : "sandstone"}
             badgePosition="corner"
-            className={`p-3 sm:p-4 rounded-xl transition-colors ${
-              isDark ? "hover:bg-white/5" : "hover:bg-black/5"
-            }`}
+            className="relative block pr-12 py-2"
           >
-            <div className="space-y-1">
-              <p
-                lang="ta"
-                className={`text-xl sm:text-2xl md:text-3xl font-tamil font-medium tracking-normal leading-relaxed ${
-                  isDark ? "text-[#FAF5ED]" : "text-[#261A14]"
-                }`}
-              >
+            <blockquote>
+              <p lang="ta" className={`font-tamil text-2xl sm:text-3xl md:text-4xl font-medium leading-[1.6] tracking-normal ${ink}`}>
                 {current.line1Ta}
               </p>
-              <p
-                lang="ta"
-                className={`text-xl sm:text-2xl md:text-3xl font-tamil font-medium tracking-normal leading-relaxed ${
-                  isDark ? "text-[#FAF5ED]" : "text-[#261A14]"
-                }`}
-              >
+              <p lang="ta" className={`font-tamil text-2xl sm:text-3xl md:text-4xl font-medium leading-[1.6] tracking-normal ${ink}`}>
                 {current.line2Ta}
               </p>
-            </div>
+            </blockquote>
           </PronounceableQuote>
 
-          {/* Transliteration */}
-          <p
-            className={`text-xs sm:text-sm font-mono italic max-w-xl mx-auto ${
-              isDark ? "text-[#CBBBA8]" : "text-[#5E4C40]"
-            }`}
-          >
-            &ldquo;{current.transliteration}&rdquo;
-          </p>
-
-          {/* Modern Takeaway */}
-          <div
-            className={`p-4 rounded-xl border max-w-2xl mx-auto ${
-              isDark
-                ? "bg-[#1C122B] border-[#C79347]/30"
-                : "bg-[#F7EFE2] border-[#DFD1BE]"
-            }`}
-          >
-            <span
-              className={`block text-[11px] font-mono font-bold uppercase tracking-wider mb-1 ${
-                isDark ? "text-[#2BB5A8]" : "text-[#0F766E]"
-              }`}
-            >
-              Campus &amp; Life Takeaway (Zero Preachiness):
-            </span>
-            <p
-              className={`text-sm sm:text-base font-serif font-normal leading-relaxed ${
-                isDark ? "text-[#FAF5ED]" : "text-[#261A14]"
-              }`}
-            >
-              {current.collegeTakeaway}
+          <figcaption className="space-y-5">
+            <p className={`font-sans text-sm sm:text-base italic leading-relaxed max-w-2xl ${muted}`}>
+              &ldquo;{current.transliteration}&rdquo;
             </p>
-          </div>
-        </div>
+            <div className={`space-y-2 border-t pt-5 max-w-2xl ${isDark ? "border-border-zari-muted" : "border-border-warm"}`}>
+              <Eyebrow tone={isDark ? "dark" : "light"} as="p">
+                Campus &amp; life takeaway
+              </Eyebrow>
+              <p className={`font-serif text-xl sm:text-2xl font-normal leading-relaxed ${ink}`}>
+                {current.collegeTakeaway}
+              </p>
+            </div>
+          </figcaption>
+        </figure>
 
-        {/* Control Footer */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-current/10">
-          <p
-            className={`text-xs font-sans italic text-center sm:text-left ${
-              isDark ? "text-[#CBBBA8]" : "text-[#5E4C40]"
-            }`}
-          >
-            Incubating Idea: Collectible Kural meal-ticket cards &amp; bite-sized Tamil cultural moments woven naturally into our biryani nights.
-          </p>
-
-          <button
-            type="button"
-            onClick={handleNext}
-            className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-mono text-xs font-semibold uppercase tracking-wider transition-all active:scale-95 focus:outline-none focus:ring-2 ${
-              isDark
-                ? "bg-[#2BB5A8] text-[#1C122B] hover:bg-[#3ED0C2] focus:ring-[#2BB5A8]"
-                : "bg-[#0F766E] text-[#FAF5ED] hover:bg-[#0B5C56] focus:ring-[#0F766E]"
-            }`}
-          >
-            <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Draw Another Kural ↻</span>
-          </button>
-        </div>
+        <MuttramButton
+          variant="primary"
+          onDark={isDark}
+          onClick={handleNext}
+          icon={<RefreshCw className="w-4 h-4" aria-hidden="true" />}
+        >
+          Draw another kural
+        </MuttramButton>
       </div>
     </section>
   );

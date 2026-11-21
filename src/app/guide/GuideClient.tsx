@@ -13,13 +13,17 @@ import type { RankedFaq } from "@/lib/faq-engagement/contracts";
 import { audioLayer } from "@/utils/audioLayer";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
-import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
+import { CulturalSection } from "@/components/ui/CulturalSection";
+import { CulturalCard } from "@/components/ui/CulturalCard";
+import { FaqAccordion } from "@/components/faq/FaqAccordion";
+import { useFaqSearch } from "@/components/faq/useFaqSearch";
 import {
-  Plus,
   Search,
   ArrowLeft,
+  ArrowRight,
   MapPin,
-  ExternalLink,
   Users,
   Compass,
   Film,
@@ -27,9 +31,12 @@ import {
   GraduationCap,
   HelpCircle,
   Sparkles,
+  X,
   type LucideIcon,
 } from "lucide-react";
-import styles from "./guide.module.css";
+
+const DEFAULT_OPEN_FAQS = [FAQS[0].id];
+const FAQ_TEASER_LIMIT = 5;
 
 export interface GuideClientProps {
   initialPopularRanking?: RankedFaq[];
@@ -48,7 +55,6 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
 
   const [selectedCategory, setSelectedCategory] = useState<GuideFilterCategory>("All Directory");
   const [searchQuery, setSearchQuery] = useState("");
-  const [expandedFaqs, setExpandedFaqs] = useState<Set<string>>(() => new Set([FAQS[0].id]));
 
   const filterCategories: { id: GuideFilterCategory; label: string; icon: LucideIcon }[] = [
     { id: "All Directory", label: "All Survival Spots", icon: Compass },
@@ -103,19 +109,20 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
     );
   });
 
-  // Filter FAQs
+  // Filter FAQs (shared matcher with /faq)
   const showFaqs = selectedCategory === "All Directory" || selectedCategory === "Club FAQs";
-  const filteredFaqs = FAQS.filter((faq) => {
-    if (!showFaqs) return false;
-    const q = searchQuery.toLowerCase().trim();
-    if (!q) return true;
+  const showDirectory = selectedCategory !== "Club FAQs";
+  const matchingFaqs = useFaqSearch(FAQS, searchQuery);
+  const filteredFaqs = showFaqs ? matchingFaqs : [];
+  // The teaser shows five; the dedicated "Sangam FAQs" filter shows every match.
+  const faqLimit = selectedCategory === "Club FAQs" ? undefined : FAQ_TEASER_LIMIT;
+  const shownFaqCount = faqLimit ? Math.min(faqLimit, filteredFaqs.length) : filteredFaqs.length;
+  const activeQuery = searchQuery.trim();
 
-    return (
-      faq.questionEn.toLowerCase().includes(q) ||
-      faq.answerEn.toLowerCase().includes(q) ||
-      faq.tags.some((t) => t.toLowerCase().includes(q))
-    );
-  });
+  const resetFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("All Directory");
+  };
 
   return (
     <div className="w-full bg-transparent min-h-screen text-left overflow-x-clip">
@@ -131,31 +138,25 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
       </div>
 
       {/* =========================================================================
-          THE COLUMBUS TAMIL SURVIVAL DIRECTORY & OPEN BOOK
-          Royal Violet (#140C20), Raised Surface (#25173B), Off-White (#F4F0FA)
-          Glides up over the station hero runway (p = 0.88 -> 1.00)
+          CONTENT SHEET: glides up over the station hero runway.
+          S header + filters → I directory → S FAQ teaser → P closer
           ========================================================================= */}
       <EditorialSheetHandoff
         badge="COLUMBUS TAMIL SURVIVAL DIRECTORY"
         sublabel="STUDENT DIRECTORY & FAQ"
         surface="sandstone"
-        className="text-[#261A14]"
       >
-        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-20 sm:py-28 pb-28">
-          
-          {/* Top Breadcrumb: Bidirectional Link to About */}
-          <div className="mb-8">
-            <Link
-              href="/about"
-              onClick={playClick}
-              className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[#5B2C86] hover:text-[#261A14] transition-colors py-1.5 px-3.5 rounded-lg bg-[#FFFFFF] border border-[#DFD1BE] hover:bg-[#FAF6F0] focus-visible:outline-2 focus-visible:outline-[#5B2C86]"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>← Back to About</span>
-            </Link>
-          </div>
+        {/* 1. S — Header + category filters + search */}
+        <div className="mx-auto max-w-7xl px-6 sm:px-10 py-20 sm:py-28">
+          <Link
+            href="/about"
+            onClick={playClick}
+            className="mb-8 inline-flex min-h-12 items-center gap-2 rounded-full font-sans text-sm font-semibold text-brand-teal hover:underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-sandstone"
+          >
+            <ArrowLeft aria-hidden="true" className="size-4" />
+            <span>Back to About</span>
+          </Link>
 
-          {/* Centered Airy Header */}
           <CourtyardHeader
             align="left"
             eyebrow="The Columbus Survival Directory"
@@ -172,279 +173,253 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
             description="A curated field guide for incoming freshmen, transfer students, and out-of-state Buckeyes. Find FDFS Tamil movie theaters, authentic South Indian filter coffee & dosas, campus study sanctuaries, and 24/7 student resources."
           />
 
-          {/* Navigation Bar & Category Filter Pills */}
-          <div className="mt-8 mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-2" role="tablist" aria-label="Directory categories">
-              {filterCategories.map((cat) => {
-                const Icon = cat.icon;
-                const isSelected = selectedCategory === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={isSelected}
-                    onClick={() => {
-                      playClick();
-                      setSelectedCategory(cat.id);
-                    }}
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium tracking-wide transition-all cursor-pointer ${
-                      isSelected
-                        ? "bg-[#5B2C86] text-[#FAF5ED] shadow-xs font-semibold"
-                        : "bg-[#FFFFFF] text-[#261A14] hover:bg-[#FAF6F0] border border-[#DFD1BE]"
-                    }`}
-                  >
-                    <Icon className="w-4 h-4 opacity-80" />
-                    <span>{cat.label}</span>
-                  </button>
-                );
-              })}
+          <div className="grid gap-6 md:grid-cols-12 md:items-end md:gap-10">
+            <div className="md:col-span-8">
+              <Eyebrow as="p" className="mb-3">Browse the directory</Eyebrow>
+              <div role="group" aria-label="Directory categories" className="flex flex-wrap gap-2">
+                {filterCategories.map((cat) => {
+                  const Icon = cat.icon;
+                  const isSelected = selectedCategory === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      aria-pressed={isSelected}
+                      onClick={() => {
+                        playClick();
+                        setSelectedCategory(cat.id);
+                      }}
+                      className={`inline-flex min-h-12 items-center gap-2 rounded-full border px-4 font-sans text-sm transition-colors duration-200 motion-reduce:transition-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-sandstone ${
+                        isSelected
+                          ? "border-brand-purple bg-brand-purple font-semibold text-ink-alabaster shadow-[0_6px_18px_rgba(91,44,134,0.18)]"
+                          : "border-border-warm bg-surface-card-light font-medium text-ink-earth hover:border-brand-purple/50 hover:text-brand-purple"
+                      }`}
+                    >
+                      <Icon aria-hidden="true" className="size-4 opacity-80" />
+                      <span>{cat.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Search Input */}
-            <div className="relative w-full md:w-80">
-              <label htmlFor="directory-search" className="sr-only">
+            <div className="md:col-span-4">
+              <label
+                htmlFor="directory-search"
+                className="mb-3 block font-sans text-xs font-semibold uppercase tracking-[0.14em] text-brand-purple"
+              >
                 Search spots and questions
               </label>
-              <Search
-                aria-hidden="true"
-                className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A6B3E]"
-              />
-              <input
-                id="directory-search"
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search theaters, dosas, CABS..."
-                className="w-full pl-10 pr-4 py-2 bg-[#FFFFFF] border border-[#DFD1BE] rounded-xl text-xs sm:text-sm text-[#261A14] outline-none focus:border-[#5B2C86] focus:ring-1 focus:ring-[#5B2C86] placeholder:text-[#5E4C40]/60 shadow-xs"
-              />
+              <div className="relative">
+                <Search
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-accent-bronze"
+                />
+                <input
+                  id="directory-search"
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search theaters, dosas, CABS..."
+                  className="min-h-12 w-full rounded-full border border-border-warm bg-surface-card-light pl-11 pr-4 font-sans text-sm text-ink-earth placeholder:text-ink-umber/70 outline-none focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/30"
+                />
+              </div>
             </div>
           </div>
 
-          {/* =========================================================================
-              1. COLUMBUS SURVIVAL DIRECTORY CARDS GRID
-              ========================================================================= */}
-          {selectedCategory !== "Club FAQs" && (
-            <div className="mb-20">
-              <div className="flex items-center justify-between mb-6">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#9A6B3E] font-semibold">
-                  Field Guide Recommendations ({filteredSpots.length} locations)
-                </span>
+          {activeQuery && (
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                aria-label={`Clear search for “${activeQuery}”`}
+                className="inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-teal-soft px-4 font-sans text-sm font-semibold text-brand-teal hover:bg-brand-teal-soft/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-sandstone"
+              >
+                <span>Search: “{activeQuery}”</span>
+                <X aria-hidden="true" className="size-4" />
+              </button>
+              <p className="font-sans text-sm text-ink-umber" aria-live="polite">
+                {showDirectory ? `${filteredSpots.length} spots` : null}
+                {showDirectory && showFaqs ? " · " : null}
+                {showFaqs ? `${filteredFaqs.length} questions` : null}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* 2. I — Columbus directory (recipe A: sticky header left, spot cards right) */}
+        {showDirectory && (
+          <CulturalSection variant="ivory" divider="korvai" aria-labelledby="guide-directory-title">
+            <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 sm:px-10 sm:py-28 md:grid-cols-12">
+              <div className="self-start md:col-span-4 md:sticky md:top-28">
+                <Eyebrow as="p">Field Guide Recommendations</Eyebrow>
+                <h2
+                  id="guide-directory-title"
+                  className="mt-3 font-serif text-3xl sm:text-4xl leading-[1.15] tracking-tight text-ink-earth"
+                >
+                  {filterCategories.find((c) => c.id === selectedCategory)?.label ?? "All Survival Spots"}
+                </h2>
+                <p className="mt-3 font-sans text-sm text-ink-umber">
+                  <span className="font-serif text-lg tabular-nums text-brand-purple">{filteredSpots.length}</span>{" "}
+                  {filteredSpots.length === 1 ? "location" : "locations"}
+                </p>
                 {selectedCategory !== "All Directory" && (
                   <button
+                    type="button"
                     onClick={() => setSelectedCategory("All Directory")}
-                    className="font-mono text-xs text-[#5B2C86] hover:text-[#261A14] underline"
+                    className="mt-4 inline-flex min-h-12 items-center font-sans text-sm font-semibold text-brand-teal hover:underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-ivory"
                   >
-                    View All Categories
+                    View all categories
                   </button>
                 )}
               </div>
 
-              {filteredSpots.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredSpots.map((spot) => (
-                    <article
-                      key={spot.id}
-                      className="bg-[#FFFFFF] border border-[#DFD1BE] rounded-2xl p-6 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-[#9A6B3E]/40 transition-all hover:-translate-y-0.5 group text-[#261A14]"
-                    >
-                      <div>
-                        {/* Category & Campus Distance Badge */}
-                        <div className="flex items-center justify-between gap-2 mb-3">
-                          <span className="font-mono text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-[#F0E6D6] text-[#5B2C86] border border-[#DFD1BE]">
-                            {spot.category}
-                          </span>
-                          <span className="font-mono text-[11px] text-[#5E4C40]">
-                            {spot.distanceFromCampus}
-                          </span>
-                        </div>
-
-                        {/* Title & Tamil Translation */}
-                        <h3 className="text-xl font-serif font-bold text-[#261A14] mb-0.5 group-hover:text-[#5B2C86] transition-colors">
-                          {spot.name}
-                        </h3>
-                        <p lang="ta" className="font-tamil text-sm text-[#5E4C40] mb-3">
-                          {spot.tamilName}
-                        </p>
-
-                        {/* Address */}
-                        <div className="flex items-start gap-1.5 text-xs text-[#5E4C40] font-sans mb-4">
-                          <MapPin className="w-3.5 h-3.5 text-[#9A6B3E] shrink-0 mt-0.5" />
-                          <span>{spot.address}</span>
-                        </div>
-
-                        {/* Description */}
-                        <p className="text-sm font-sans text-[#261A14] leading-relaxed mb-4">
-                          {locale === "ta" ? spot.descriptionTa : spot.descriptionEn}
-                        </p>
-
-                        {/* Pro-Tip Box */}
-                        <div className="p-3 rounded-xl bg-[#F7EFE2] border border-[#DFD1BE] mb-5 text-xs font-sans text-[#261A14]">
-                          <span className="font-semibold text-[#9A6B3E] inline-flex items-center gap-1.5 mb-0.5">
-                            <Sparkles className="w-3.5 h-3.5 text-[#9A6B3E]" />
-                            <span>Sangam Insider Tip:</span>
-                          </span>
-                          <p className="text-[#5E4C40]">{locale === "ta" ? spot.recommendationTa : spot.recommendationEn}</p>
-                        </div>
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="pt-4 border-t border-[#DFD1BE] flex flex-wrap items-center gap-2">
-                        {spot.actionUrl && (
-                          <a
-                            href={spot.actionUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                              spot.isCarpoolAction
-                                ? "bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] shadow-xs"
-                                : "bg-[#FFFFFF] hover:bg-[#FAF6F0] text-[#261A14] border border-[#DFD1BE]"
-                            }`}
-                          >
-                            {spot.isCarpoolAction && <Users className="w-3.5 h-3.5 text-[#FAF5ED]" />}
-                            <span>{spot.actionLabel || "Visit Link"}</span>
-                            <ExternalLink className="w-3 h-3 opacity-70" />
-                          </a>
-                        )}
-
-                        {spot.mapsUrl && (
-                          <a
-                            href={spot.mapsUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-mono text-[#5E4C40] hover:text-[#0F766E] transition-colors"
-                          >
-                            <span>Google Maps</span>
-                            <ExternalLink className="w-3 h-3 opacity-60" />
-                          </a>
-                        )}
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              ) : (
-                <div className="py-12 text-center bg-[#FFFFFF] rounded-2xl border border-[#DFD1BE] p-8 shadow-xs">
-                  <p className="text-base font-serif mb-2 text-[#261A14]">No survival directory spots match your search query.</p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery("");
-                      setSelectedCategory("All Directory");
-                    }}
-                    className="font-mono text-xs underline text-[#5B2C86]"
-                  >
-                    Clear search filter
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Section Divider */}
-          {selectedCategory === "All Directory" && (
-            <div className="my-16">
-              <KolamSectionRule tone="sandstone" />
-            </div>
-          )}
-
-          {/* =========================================================================
-              2. SANGAM FAQ ACCORDION (THE OPEN BOOK)
-              ========================================================================= */}
-          {showFaqs && (
-            <div className="mt-8">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <span className="font-mono text-xs uppercase tracking-widest text-[#9A6B3E] font-semibold block">
-                    Campus Life & Club Knowledge
-                  </span>
-                  <h2 className="text-2xl sm:text-3xl font-serif text-[#261A14] mt-1">
-                    {locale === "ta" ? "அடிக்கடி கேட்கப்படும் கேள்விகள்" : "Frequently Asked Questions"}
-                  </h2>
-                </div>
-                <span className="font-mono text-xs text-[#5E4C40]">
-                  {filteredFaqs.length} Q&As
-                </span>
-              </div>
-
-              <div className="min-w-0 bg-[#FFFFFF] border border-[#DFD1BE] shadow-xs rounded-2xl p-6 sm:p-10 text-[#261A14]">
-                {filteredFaqs.map((faq) => {
-                  const isOpen = expandedFaqs.has(faq.id);
-                  return (
-                    <article
-                      key={faq.id}
-                      className={styles.faq}
-                      onMouseEnter={() => handleInspectFaq(faq)}
-                    >
-                      <p className="font-mono text-xs uppercase tracking-widest text-[#9A6B3E] mb-3">
-                        {faq.category}
-                      </p>
-                      <h3>
-                        <button
-                          type="button"
-                          id={faq.id + "-question"}
-                          aria-expanded={isOpen}
-                          aria-controls={faq.id + "-answer"}
-                          className={styles.question}
-                          onClick={() => {
-                            handleInspectFaq(faq);
-                            setExpandedFaqs((current) => {
-                              const next = new Set(current);
-                              if (next.has(faq.id)) next.delete(faq.id);
-                              else next.add(faq.id);
-                              return next;
-                            });
-                          }}
-                        >
-                          <span>
-                            <span
-                              lang={locale === "ta" ? "ta" : undefined}
-                              className="block text-xl sm:text-2xl font-serif leading-snug text-[#261A14]"
-                            >
-                              {locale === "ta" ? faq.questionTa : faq.questionEn}
-                            </span>
-                            {locale !== "ta" && faq.questionTa && (
-                              <span
-                                lang="ta"
-                                className="block font-tamil text-sm leading-relaxed mt-2 text-[#5E4C40]"
-                              >
-                                {faq.questionTa}
-                              </span>
-                            )}
-                          </span>
-                          <Plus aria-hidden="true" className={styles.plus} />
-                        </button>
-                      </h3>
-                      <div
-                        id={faq.id + "-answer"}
-                        role="region"
-                        aria-labelledby={faq.id + "-question"}
-                        aria-hidden={!isOpen}
-                        inert={!isOpen}
-                        className={styles.answer}
-                        data-open={isOpen}
+              <div className="md:col-span-8">
+                {filteredSpots.length > 0 ? (
+                  <ul role="list" className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                    {filteredSpots.map((spot) => (
+                      <CulturalCard
+                        key={spot.id}
+                        as="li"
+                        variant="light"
+                        className="flex flex-col p-6 sm:p-7"
                       >
-                        <div className={styles.answerInner}>
+                        <article className="flex h-full flex-col">
+                          <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                            <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-brand-purple">
+                              {spot.category}
+                            </span>
+                            <span className="font-sans text-xs text-ink-umber">{spot.distanceFromCampus}</span>
+                          </div>
+
+                          <h3 className="font-serif text-xl sm:text-2xl leading-snug text-ink-earth">{spot.name}</h3>
+                          <p lang="ta" className="mt-1 font-tamil text-sm leading-[1.6] text-brand-purple">
+                            {spot.tamilName}
+                          </p>
+
+                          <p className="mt-4 flex items-start gap-2 font-sans text-sm text-ink-umber">
+                            <MapPin aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-accent-bronze" />
+                            <span>{spot.address}</span>
+                          </p>
+
                           <p
                             lang={locale === "ta" ? "ta" : undefined}
-                            className="pt-4 pb-2 text-base sm:text-lg leading-loose text-[#5E4C40]"
+                            className={`mt-4 text-base text-ink-umber ${
+                              locale === "ta" ? "font-tamil leading-[1.8]" : "font-sans leading-relaxed"
+                            }`}
                           >
-                            {locale === "ta" ? faq.answerTa : faq.answerEn}
+                            {locale === "ta" ? spot.descriptionTa : spot.descriptionEn}
                           </p>
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
 
-                {filteredFaqs.length === 0 && (
-                  <div className="py-12 space-y-4 text-center">
-                    <p className="text-xl font-serif text-[#261A14]">No questions found matching your search.</p>
+                          <div className="mt-5 rounded-xl bg-surface-card-parchment p-4">
+                            <p className="flex items-center gap-2 font-sans text-sm font-semibold text-ink-earth">
+                              <Sparkles aria-hidden="true" className="size-4 text-accent-bronze" />
+                              <span>Sangam Insider Tip</span>
+                            </p>
+                            <p
+                              lang={locale === "ta" ? "ta" : undefined}
+                              className={`mt-1.5 text-sm text-ink-umber ${
+                                locale === "ta" ? "font-tamil leading-[1.8]" : "font-sans leading-relaxed"
+                              }`}
+                            >
+                              {locale === "ta" ? spot.recommendationTa : spot.recommendationEn}
+                            </p>
+                          </div>
+
+                          <div className="mt-auto flex flex-wrap items-center gap-3 pt-6">
+                            {spot.mapsUrl && (
+                              <a
+                                href={spot.mapsUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`Open Google Maps pin for ${spot.name} (opens in a new tab)`}
+                                className="inline-flex min-h-12 items-center gap-1.5 font-sans text-sm font-semibold text-brand-teal underline decoration-brand-teal/30 underline-offset-4 transition-colors hover:decoration-brand-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2"
+                              >
+                                <MapPin aria-hidden="true" className="size-4" />
+                                Open Google Maps pin
+                              </a>
+                            )}
+                            {spot.actionUrl && (
+                              <MuttramButton
+                                href={spot.actionUrl}
+                                external
+                                variant="secondary"
+                                icon={spot.isCarpoolAction ? <Users aria-hidden="true" className="size-4" /> : undefined}
+                                ariaLabel={`${spot.actionLabel || "Visit Link"} (opens in a new tab)`}
+                              >
+                                {spot.actionLabel || "Visit Link"}
+                              </MuttramButton>
+                            )}
+                          </div>
+                        </article>
+                      </CulturalCard>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="py-8">
+                    <p className="font-serif text-2xl text-ink-earth">No survival directory spots match your search.</p>
                     <button
                       type="button"
-                      className="min-h-12 underline text-[#5B2C86]"
-                      onClick={() => {
-                        setSearchQuery("");
-                        setSelectedCategory("All Directory");
-                      }}
+                      onClick={resetFilters}
+                      className="mt-3 inline-flex min-h-12 items-center font-sans text-sm font-semibold text-brand-teal hover:underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-ivory"
+                    >
+                      Clear search filter
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </CulturalSection>
+        )}
+
+        {/* 3. S — FAQ teaser (recipe B ledger) */}
+        {showFaqs && (
+          <CulturalSection
+            variant={showDirectory ? "sandstone" : "ivory"}
+            divider="lotus"
+            aria-labelledby="guide-faq-title"
+          >
+            <div className="mx-auto max-w-7xl px-6 py-20 sm:px-10 sm:py-28">
+              <CourtyardHeader
+                align="left"
+                titleId="guide-faq-title"
+                eyebrow="Campus Life & Club Knowledge"
+                title={locale === "ta" ? "அடிக்கடி கேட்கப்படும் கேள்விகள்" : "Frequently Asked Questions"}
+                tamilTitle={locale !== "ta" ? "அடிக்கடி கேட்கப்படும் கேள்விகள்" : undefined}
+                action={
+                  <div className="flex flex-col items-start gap-1 sm:items-end">
+                    <span className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-ink-umber">
+                      {shownFaqCount} of {filteredFaqs.length} Q&amp;As
+                    </span>
+                    <Link
+                      href="/faq"
+                      onClick={playClick}
+                      className="inline-flex min-h-12 items-center gap-2 font-sans text-base font-semibold text-brand-teal hover:underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-sandstone"
+                    >
+                      <span>All questions</span>
+                      <ArrowRight aria-hidden="true" className="size-4" />
+                    </Link>
+                  </div>
+                }
+              />
+
+              <div className="lg:ml-[calc(100%/12)] lg:max-w-[calc(100%*10/12)]">
+                <FaqAccordion
+                  items={filteredFaqs}
+                  limit={faqLimit}
+                  idPrefix="guide-faq"
+                  tone="light"
+                  defaultOpenIds={DEFAULT_OPEN_FAQS}
+                  onInspect={handleInspectFaq}
+                />
+
+                {filteredFaqs.length === 0 && (
+                  <div className="border-t border-border-warm py-10">
+                    <p className="font-serif text-2xl text-ink-earth">No questions found matching your search.</p>
+                    <button
+                      type="button"
+                      onClick={resetFilters}
+                      className="mt-3 inline-flex min-h-12 items-center font-sans text-sm font-semibold text-brand-teal hover:underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-sandstone"
                     >
                       Reset search filters
                     </button>
@@ -452,24 +427,19 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
                 )}
               </div>
             </div>
-          )}
+          </CulturalSection>
+        )}
 
-          <div className="mt-20 sm:mt-28">
-            <KolamSectionRule tone="sandstone" />
-          </div>
-
-          {/* Borderless Organic Transportation to Suggestions */}
-          <div className="mt-16 sm:mt-24">
-            <OrganicRouteGateway
-              primaryHref="/suggestions"
-              primaryLabel="Step into Suggestions"
-              eyebrow="Have a Spot or Question We Missed? · அடுத்த வாசல்"
-              title="Transmit a Columbus Discovery or Question"
-              tamilTitle="உங்கள் சிந்தனையை பகிருங்கள்"
-              description="Know a great new South Indian eatery in Columbus or have a campus navigation tip? Transmit it directly to our executive team."
-            />
-          </div>
-        </div>
+        {/* 4. P — the one closer */}
+        <OrganicRouteGateway
+          className="pb-24 md:pb-0"
+          primaryHref="/suggestions"
+          primaryLabel="Step into Suggestions"
+          eyebrow="Have a Spot or Question We Missed? · அடுத்த வாசல்"
+          title="Transmit a Columbus Discovery or Question"
+          tamilTitle="உங்கள் சிந்தனையை பகிருங்கள்"
+          description="Know a great new South Indian eatery in Columbus or have a campus navigation tip? Transmit it directly to our executive team."
+        />
       </EditorialSheetHandoff>
     </div>
   );

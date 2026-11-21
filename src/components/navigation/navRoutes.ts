@@ -17,14 +17,22 @@ export interface NavRoute {
 export const PRIMARY_NAV_ROUTES: NavRoute[] = [
   { href: "/", en: "Home", ta: "முகப்பு" },
   { href: "/events", en: "Events", ta: "நிகழ்வுகள்" },
+  {
+    href: "/events/namma-deepavali-2026",
+    en: "Next Event",
+    ta: "அடுத்த நிகழ்வு",
+    isNextEvent: true,
+    badge: true,
+  },
   { href: "/about", en: "About", ta: "அறிமுகம்" },
   { href: "/board", en: "Board", ta: "அவை" },
-  { href: "/links", en: "Linktree", ta: "இணைப்புகள்" },
-  { href: "/games", en: "Games", ta: "விளையாட்டு", isNew: true, badge: true },
+  { href: "/gallery", en: "Gallery", ta: "படங்கள்" },
+  { href: "/games", en: "Games", ta: "விளையாட்டு", badge: true },
+  { href: "/links", en: "Links", ta: "இணைப்புகள்" },
 ];
 
 /**
- * Secondary pages accessible via the More dropdown/drawer.
+ * Secondary pages accessible via navigation or sitemap.
  * Guide, Suggestions, FAQ.
  */
 export const SECONDARY_NAV_ROUTES: NavRoute[] = [

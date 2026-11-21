@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useState, useMemo, useSyncExternalStore } from "react";
-import { createPortal } from "react-dom";
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, MapPin, Clock, ArrowRight, X } from "lucide-react";
+import { Calendar, MapPin, Clock, ArrowRight } from "lucide-react";
 import { EVENTS, SangamEvent } from "@/data/events";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { DepthCarousel, DepthCarouselItem } from "@/components/ui/DepthCarousel";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
-import { useModalScrollLock } from "@/hooks/useModalScrollLock";
+import { DialogShell } from "@/components/ui/DialogShell";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
 
 interface EventsDepthShowcaseProps {
   className?: string;
@@ -30,31 +31,6 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useModalScrollLock(isModalOpen, () => setIsModalOpen(false));
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  );
-
-  // Keyboard Escape listener & body scroll lock for modal
-  React.useEffect(() => {
-    if (!isModalOpen) return;
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIsModalOpen(false);
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [isModalOpen]);
 
   const activeEvent: SangamEvent = recentEvents[activeIndex] || recentEvents[0];
 
@@ -208,144 +184,113 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. EXPANDABLE EVENT DESCRIPTION MODAL (PORTALED TO DOCUMENT.BODY)         */}
+      {/* 3. EXPANDABLE EVENT DESCRIPTION MODAL (DialogShell)                       */}
       {/* ========================================================================= */}
-      {mounted &&
-        createPortal(
-          <AnimatePresence>
-            {isModalOpen && (
-              <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-                {/* Backdrop */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => setIsModalOpen(false)}
-                  className="absolute inset-0 bg-[#140C20]/70 backdrop-blur-md cursor-pointer"
-                />
+      <DialogShell
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        tone="dark"
+        size="lg"
+        ariaLabel={locale === "ta" ? activeEvent.titleTa : activeEvent.titleEn}
+        closeLabel="Close modal"
+      >
+        {/* Modal Header Banner Image */}
+        <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-bg-sangam-deep">
+          <Image
+            src={activeEvent.posterImage || activeEvent.hoverImage}
+            alt={`${activeEvent.titleEn} — OSU Tamil Sangam campus event at The Ohio State University`}
+            fill
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="object-cover brightness-90"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-bg-sangam-deep via-transparent to-bg-sangam-deep/40" />
 
-                {/* Modal Dialog Card */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.94, y: 16 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.94, y: 16 }}
-                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                  data-lenis-prevent
-                  className="relative w-full max-w-2xl bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-3xl shadow-2xl overflow-hidden z-10 text-left max-h-[85vh] overflow-y-auto overscroll-contain"
-                >
-                  {/* Modal Header Banner Image */}
-                  <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-[#140C20]">
-                    <Image
-                      src={activeEvent.posterImage || activeEvent.hoverImage}
-                      alt={`${activeEvent.titleEn} — OSU Tamil Sangam campus event at The Ohio State University`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 672px"
-                      className="object-cover brightness-90"
-                      priority
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#140C20] via-transparent to-black/40" />
+          {/* Badge Overlay */}
+          <div className="absolute top-4 left-4">
+            <span className="text-[11px] font-sans font-semibold uppercase tracking-[0.14em] px-3 py-1 rounded-full bg-accent-zari text-ink-earth shadow-md">
+              {locale === "ta" ? activeEvent.statusBadgeTa : activeEvent.statusBadgeEn}
+            </span>
+          </div>
+        </div>
 
-                    {/* Close Button */}
-                    <button
-                      onClick={() => setIsModalOpen(false)}
-                      aria-label="Close modal"
-                      className="absolute top-4 right-4 w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-black/60 hover:bg-[#0F766E] hover:text-[#FAF5ED] text-white flex items-center justify-center backdrop-blur-sm transition-colors cursor-pointer"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
+        {/* Modal Body */}
+        <div className="p-6 sm:p-8 space-y-5 -mt-6 relative text-left">
+          <div>
+            <h3 className="font-serif text-2xl sm:text-3xl font-bold text-ink-alabaster">
+              {locale === "ta" ? activeEvent.titleTa : activeEvent.titleEn}
+            </h3>
+            <p
+              lang="ta"
+              style={{ letterSpacing: 0 }}
+              className="font-tamil text-sm leading-[1.6] text-brand-lavender font-medium mt-0.5"
+            >
+              {locale === "ta" ? activeEvent.titleEn : activeEvent.titleTa}
+            </p>
+          </div>
 
-                    {/* Badge Overlay */}
-                    <div className="absolute top-4 left-4">
-                      <span className="text-[11px] font-mono font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-[#C79347] text-[#1C122B] shadow-md font-bold">
-                        {locale === "ta" ? activeEvent.statusBadgeTa : activeEvent.statusBadgeEn}
-                      </span>
-                    </div>
-                  </div>
+          {/* Quick Info Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-3 border-y border-border-zari-muted text-xs font-sans text-ink-sand">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-brand-teal-dark shrink-0" aria-hidden="true" />
+              <span className="font-medium text-ink-alabaster">{activeEvent.date}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-brand-teal-dark shrink-0" aria-hidden="true" />
+              <span>{activeEvent.time}</span>
+            </div>
+            <div className="sm:col-span-2 flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-brand-teal-dark shrink-0" aria-hidden="true" />
+              <span>{activeEvent.location} · {activeEvent.venueAddress}</span>
+            </div>
+          </div>
 
-                  {/* Modal Body */}
-                  <div className="p-6 sm:p-8 space-y-5 -mt-6 relative">
-                    <div>
-                      <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#FAF5ED]">
-                        {locale === "ta" ? activeEvent.titleTa : activeEvent.titleEn}
-                      </h3>
-                      <p
-                        lang="ta"
-                        style={{ letterSpacing: 0 }}
-                        className="font-tamil text-sm text-[#2BB5A8] font-medium mt-0.5"
-                      >
-                        {locale === "ta" ? activeEvent.titleEn : activeEvent.titleTa}
-                      </p>
-                    </div>
+          {/* Full Description */}
+          <div className="space-y-2">
+            <Eyebrow tone="dark" as="p">
+              {locale === "ta" ? "நிகழ்வு விளக்கம்" : "Event Chronicle"}
+            </Eyebrow>
+            <p className="font-sans text-sm text-ink-sand leading-relaxed">
+              {locale === "ta" ? activeEvent.descriptionTa : activeEvent.descriptionEn}
+            </p>
+          </div>
 
-                    {/* Quick Info Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-3 border-y border-[rgba(212,163,106,0.25)] text-xs font-sans text-[#CBBBA8]">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-[#2BB5A8] shrink-0" />
-                        <span className="font-medium text-[#FAF5ED]">{activeEvent.date}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-[#2BB5A8] shrink-0" />
-                        <span>{activeEvent.time}</span>
-                      </div>
-                      <div className="sm:col-span-2 flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-[#2BB5A8] shrink-0" />
-                        <span>{activeEvent.location} · {activeEvent.venueAddress}</span>
-                      </div>
-                    </div>
+          {/* Schedule Teaser if available */}
+          {activeEvent.schedule && activeEvent.schedule.length > 0 && (
+            <div className="space-y-2">
+              <Eyebrow tone="dark" as="p">
+                {locale === "ta" ? "நிகழ்ச்சி நிரல்" : "Program Schedule"}
+              </Eyebrow>
+              <ul className="divide-y divide-border-zari-muted text-xs font-sans">
+                {activeEvent.schedule.slice(0, 4).map((slot, i) => (
+                  <li key={i} className="flex items-start gap-3 py-2">
+                    <span className="font-sans font-semibold tabular-nums text-brand-teal-dark text-[11px] shrink-0">{slot.time}</span>
+                    <span className="text-ink-alabaster line-clamp-1">{locale === "ta" ? slot.activityTa : slot.activityEn}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-                    {/* Full Description */}
-                    <div className="space-y-2">
-                      <h4 className="text-xs font-mono uppercase tracking-wider text-[#C79347] font-bold">
-                        {locale === "ta" ? "நிகழ்வு விளக்கம்" : "Event Chronicle"}
-                      </h4>
-                      <p className="font-sans text-sm text-[#CBBBA8] leading-relaxed">
-                        {locale === "ta" ? activeEvent.descriptionTa : activeEvent.descriptionEn}
-                      </p>
-                    </div>
+          {/* Modal Footer CTA */}
+          <div className="pt-4 flex items-center justify-between gap-4 border-t border-border-zari-muted">
+            <span className="text-xs font-sans text-ink-sand">{activeEvent.price}</span>
 
-                    {/* Schedule Teaser if available */}
-                    {activeEvent.schedule && activeEvent.schedule.length > 0 && (
-                      <div className="space-y-2">
-                        <h4 className="text-xs font-mono uppercase tracking-wider text-[#FAF5ED] font-semibold">
-                          {locale === "ta" ? "நிகழ்ச்சி நிரல்" : "Program Schedule"}
-                        </h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-sans">
-                          {activeEvent.schedule.slice(0, 4).map((slot, i) => (
-                            <div key={i} className="flex items-start gap-2 p-2 bg-[#1C122B] rounded-lg border border-[rgba(212,163,106,0.2)]">
-                              <span className="font-mono font-bold text-[#2BB5A8] text-[11px] shrink-0">{slot.time}</span>
-                              <span className="text-[#FAF5ED] line-clamp-1">{locale === "ta" ? slot.activityTa : slot.activityEn}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Modal Footer CTA */}
-                    <div className="pt-4 flex items-center justify-between gap-4 border-t border-[rgba(212,163,106,0.25)]">
-                      <span className="text-xs font-sans text-[#CBBBA8]">
-                        {activeEvent.price}
-                      </span>
-
-                      <div className="flex items-center gap-2">
-                        <Link
-                          href={`/events/${activeEvent.slug}`}
-                          onClick={() => {
-                            playClick();
-                            setIsModalOpen(false);
-                          }}
-                          className="px-5 py-2.5 bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] font-sans font-semibold text-xs rounded-full shadow-md transition-colors"
-                        >
-                          {locale === "ta" ? "முழு நிகழ்வுப் பக்கம் செல்லவும்" : "Go to Full Event Page →"}
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>,
-          document.body
-        )}
+            <MuttramButton
+              href={`/events/${activeEvent.slug}`}
+              onClick={() => {
+                playClick();
+                setIsModalOpen(false);
+              }}
+              variant="primary"
+              size="md"
+              onDark
+            >
+              {locale === "ta" ? "முழு நிகழ்வுப் பக்கம் செல்லவும்" : "Go to Full Event Page →"}
+            </MuttramButton>
+          </div>
+        </div>
+      </DialogShell>
     </section>
   );
 };

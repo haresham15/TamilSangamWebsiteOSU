@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import React from "react";
 import Link from "next/link";
-import { X, Calendar, Clock, MapPin, Download, ExternalLink, ArrowRight } from "lucide-react";
-import { useModalScrollLock } from "@/hooks/useModalScrollLock";
+import { Calendar, Clock, MapPin, Download, ExternalLink, ArrowRight } from "lucide-react";
 import { CalendarEvent } from "@/lib/calendar/types";
 import { formatEventDateDisplay, formatEventTimeET } from "@/lib/calendar/parse";
 import { buildGoogleCalendarUrl } from "@/lib/calendar/ics";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
+import { DialogShell } from "@/components/ui/DialogShell";
 
 interface EventModalProps {
   event: CalendarEvent | null;
@@ -20,252 +18,108 @@ interface EventModalProps {
 export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
   const { locale } = useLocale();
   const { playClick, playWoodClick } = useAudio();
-  const reducedMotion = useReducedMotion();
-  const modalRef = useRef<HTMLDivElement>(null);
-  const previouslyFocusedElement = useRef<HTMLElement | null>(null);
 
-  useModalScrollLock(Boolean(event), onClose);
-
-  // Store trigger element on open and restore on close
-  useEffect(() => {
-    if (event) {
-      previouslyFocusedElement.current = document.activeElement as HTMLElement;
-      // Lock body scroll
-      const originalOverflow = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-
-      // Focus first focusable element inside modal
-      const timer = setTimeout(() => {
-        if (modalRef.current) {
-          const focusable = modalRef.current.querySelectorAll<HTMLElement>(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          );
-          if (focusable.length > 0) {
-            focusable[0].focus();
-          }
-        }
-      }, 50);
-
-      return () => {
-        document.body.style.overflow = originalOverflow;
-        clearTimeout(timer);
-        if (previouslyFocusedElement.current) {
-          previouslyFocusedElement.current.focus();
-        }
-      };
-    }
-  }, [event]);
-
-  // Handle Escape key and focus trap
-  useEffect(() => {
-    if (!event) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-        return;
-      }
-
-      if (e.key === "Tab" && modalRef.current) {
-        const focusables = modalRef.current.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        );
-        if (focusables.length === 0) return;
-
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-
-        if (e.shiftKey) {
-          if (document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [event, onClose]);
-
-  if (typeof document === "undefined") return null;
+  const close = () => {
+    playClick();
+    onClose();
+  };
 
   const dateDisplay = event ? formatEventDateDisplay(event.start) : "";
   const timeDisplay = event ? formatEventTimeET(event.start, event.end, event.allDay) : "";
   const googleCalendarUrl = event ? buildGoogleCalendarUrl(event) : "#";
   const icsDownloadUrl = event ? `/api/events/${encodeURIComponent(event.id)}/ics` : "#";
 
-  return createPortal(
-    <AnimatePresence>
+  const title = event ? (locale === "ta" && event.titleTa ? event.titleTa : event.titleEn) : "";
+  const altTitle = event?.titleTa ? (locale === "ta" ? event.titleEn : event.titleTa) : undefined;
+
+  const facts = event
+    ? [
+        { icon: Calendar, label: locale === "ta" ? "தேதி" : "Date", value: dateDisplay },
+        { icon: Clock, label: locale === "ta" ? "நேரம்" : "Time", value: timeDisplay },
+        { icon: MapPin, label: locale === "ta" ? "இடம்" : "Location", value: event.location },
+      ]
+    : [];
+
+  return (
+    <DialogShell
+      open={Boolean(event)}
+      onClose={close}
+      tone="ivory"
+      size="md"
+      eyebrow="Gathering"
+      title={title}
+      tamilTitle={locale === "ta" ? undefined : altTitle}
+      closeLabel={locale === "ta" ? "மூடு" : "Close event details"}
+    >
       {event && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="calendar-modal-title"
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
-        >
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reducedMotion ? 0 : 0.2 }}
-            onClick={() => {
-              playClick();
-              onClose();
-            }}
-            className="absolute inset-0 bg-[#140C20]/70 backdrop-blur-md cursor-pointer"
-          />
+        <>
+          <div className="space-y-6 px-5 py-6 sm:px-7">
+            {/* Facts ledger (unboxed) */}
+            <dl className="divide-y divide-border-warm border-y border-border-warm">
+              {facts.map(({ icon: Icon, label, value }) => (
+                <div key={label} className="flex items-start gap-3 py-3">
+                  <Icon className="mt-0.5 h-4 w-4 shrink-0 text-brand-purple" aria-hidden="true" />
+                  <dt className="w-20 shrink-0 font-sans text-xs font-semibold uppercase tracking-[0.14em] text-ink-umber">
+                    {label}
+                  </dt>
+                  <dd className="font-sans text-sm font-medium text-ink-earth">{value}</dd>
+                </div>
+              ))}
+            </dl>
 
-          {/* Modal Dialog Card */}
-          <motion.div
-            ref={modalRef}
-            initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.95, y: reducedMotion ? 0 : 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: reducedMotion ? 1 : 0.95, y: reducedMotion ? 0 : 16 }}
-            transition={{ duration: reducedMotion ? 0 : 0.24, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-xl bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-3xl shadow-2xl overflow-hidden z-10 text-left max-h-[90vh] flex flex-col"
-          >
-            {/* Modal Header */}
-            <div className="relative px-6 sm:px-8 pt-7 pb-5 border-b border-[#C79347]/20 bg-[#271A3C]">
-              {/* Close Button */}
-              <button
-                onClick={() => {
-                  playClick();
-                  onClose();
-                }}
-                aria-label={locale === "ta" ? "மூடு" : "Close event details"}
-                className="absolute top-4 right-4 w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-[#1C122B] hover:bg-[#0F766E] hover:text-[#FAF5ED] text-[#FAF5ED] flex items-center justify-center transition-colors cursor-pointer border border-[#C79347]/30"
+            {event.description && (
+              <div className="space-y-2">
+                <h3 className="font-serif text-lg text-ink-earth">
+                  {locale === "ta" ? "நிகழ்வு விளக்கம்" : "About this gathering"}
+                </h3>
+                <p className="whitespace-pre-line font-sans text-sm leading-relaxed text-ink-umber">{event.description}</p>
+              </div>
+            )}
+
+            <p className="flex items-center gap-2 font-sans text-sm text-ink-umber">
+              <span aria-hidden="true" className="h-2 w-2 rotate-45 bg-brand-teal" />
+              {locale === "ta"
+                ? "அனைத்து மாணவர்களுக்கும் அனுமதி இலவசம் · உறுப்பினர் கட்டணம் இல்லை"
+                : "Free admission for all students · No RSVP or ticket required to attend"}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border-warm bg-bg-sandstone/50 px-5 py-4 sm:px-7">
+            <div className="flex flex-wrap items-center gap-2">
+              <a
+                href={googleCalendarUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => playWoodClick()}
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-brand-teal px-4 py-2 font-sans text-sm font-medium text-ink-alabaster transition-colors hover:bg-brand-teal-hover"
               >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="pr-14">
-                <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#C79347] block mb-1">
-                  OSU TAMIL SANGAM · GATHERING
-                </span>
-                <h2
-                  id="calendar-modal-title"
-                  className="font-serif text-2xl sm:text-3xl font-bold text-[#FAF5ED] leading-snug"
-                >
-                  {locale === "ta" && event.titleTa ? event.titleTa : event.titleEn}
-                </h2>
-                {event.titleTa && (
-                  <p
-                    lang="ta"
-                    style={{ letterSpacing: 0 }}
-                    className="font-tamil text-sm text-[#C79347] font-medium mt-1"
-                  >
-                    {locale === "ta" ? event.titleEn : event.titleTa}
-                  </p>
-                )}
-              </div>
+                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Google Calendar</span>
+              </a>
+              <a
+                href={icsDownloadUrl}
+                download
+                onClick={() => playWoodClick()}
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-brand-purple/45 px-4 py-2 font-sans text-sm font-medium text-brand-purple transition-colors hover:bg-brand-purple-soft"
+              >
+                <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Apple / Outlook (.ics)</span>
+              </a>
             </div>
 
-            {/* Modal Scrollable Body */}
-            <div data-lenis-prevent className="p-6 sm:p-8 space-y-6 overflow-y-auto overscroll-contain flex-1">
-              {/* Telemetry Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 p-4 bg-[#271A3C] rounded-2xl border border-[#C79347]/20 text-xs font-sans text-[#CBBBA8]">
-                <div className="flex items-start gap-2.5">
-                  <Calendar className="w-4 h-4 text-[#2BB5A8] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#CBBBA8]/80 block">Date</span>
-                    <span className="font-medium text-[#FAF5ED]">{dateDisplay}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5">
-                  <Clock className="w-4 h-4 text-[#2BB5A8] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#CBBBA8]/80 block">Time</span>
-                    <span className="font-medium text-[#FAF5ED]">{timeDisplay}</span>
-                  </div>
-                </div>
-
-                <div className="sm:col-span-2 flex items-start gap-2.5 pt-2 border-t border-[#C79347]/20">
-                  <MapPin className="w-4 h-4 text-[#2BB5A8] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#CBBBA8]/80 block">Location</span>
-                    <span className="font-medium text-[#FAF5ED]">{event.location}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Description */}
-              {event.description && (
-                <div className="space-y-2">
-                  <h3 className="text-xs font-mono uppercase tracking-wider text-[#C79347] font-bold">
-                    {locale === "ta" ? "நிகழ்வு விளக்கம்" : "About this gathering"}
-                  </h3>
-                  <div className="font-sans text-sm text-[#CBBBA8] leading-relaxed whitespace-pre-line">
-                    {event.description}
-                  </div>
-                </div>
-              )}
-
-              {/* Free Admission Notice */}
-              <div className="flex items-center gap-2 p-3 bg-[#1C122B] border border-[#C79347]/20 rounded-xl text-xs font-sans text-[#FAF5ED]">
-                <span className="w-2 h-2 rounded-full bg-[#2BB5A8]" />
-                <span className="font-medium">
-                  {locale === "ta"
-                    ? "அனைத்து மாணவர்களுக்கும் அனுமதி இலவசம் · உறுப்பினர் கட்டணம் இல்லை"
-                    : "Free admission for all students · No RSVP or ticket required to attend"}
-                </span>
-              </div>
-            </div>
-
-            {/* Modal Actions Footer */}
-            <div className="p-6 sm:px-8 border-t border-[#C79347]/20 bg-[#1C122B] flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-2">
-                {/* Add to Google Calendar */}
-                <a
-                  href={googleCalendarUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => playWoodClick()}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#271A3C] hover:bg-[#0F766E] hover:text-[#FAF5ED] text-[#FAF5ED] text-xs font-sans font-medium transition-colors border border-[#C79347]/20"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  <span>Google Calendar</span>
-                </a>
-
-                {/* Download .ics */}
-                <a
-                  href={icsDownloadUrl}
-                  download
-                  onClick={() => playWoodClick()}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#1C122B] hover:bg-[#271A3C] text-[#FAF5ED] border border-[#C79347]/20 text-xs font-sans font-medium transition-colors"
-                >
-                  <Download className="w-3.5 h-3.5 text-[#2BB5A8]" />
-                  <span>Apple / Outlook (.ics)</span>
-                </a>
-              </div>
-
-              {/* Open Event Dossier Link (only if slug exists) */}
-              {event.slug && (
-                <Link
-                  href={`/events/${event.slug}`}
-                  onClick={() => {
-                    playClick();
-                    onClose();
-                  }}
-                  className="inline-flex items-center gap-1.5 text-xs font-sans font-semibold text-[#2BB5A8] hover:text-[#FAF5ED] transition-colors uppercase tracking-wider"
-                >
-                  <span>{locale === "ta" ? "ஆவணம் பார்க்க" : "Open event dossier"}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              )}
-            </div>
-          </motion.div>
-        </div>
+            {event.slug && (
+              <Link
+                href={`/events/${event.slug}`}
+                onClick={close}
+                className="inline-flex min-h-11 items-center gap-1.5 font-sans text-sm font-semibold text-brand-teal underline-offset-4 transition-colors hover:underline"
+              >
+                <span>{locale === "ta" ? "ஆவணம் பார்க்க" : "Open event page"}</span>
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </Link>
+            )}
+          </div>
+        </>
       )}
-    </AnimatePresence>,
-    document.body
+    </DialogShell>
   );
 };

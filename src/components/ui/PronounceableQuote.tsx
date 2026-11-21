@@ -100,7 +100,7 @@ export function ThirukkuralAudioButton({
     >
       {speaking ? (
         <>
-          <VolumeX className={`${iconSizes} text-current shrink-0 animate-pulse`} aria-hidden="true" />
+          <VolumeX className={`${iconSizes} text-current shrink-0`} aria-hidden="true" />
           {showLabel && (
             <span className="shrink-0 font-medium tracking-wide">
               நிறுத்து <span className="opacity-75">· Stop</span>

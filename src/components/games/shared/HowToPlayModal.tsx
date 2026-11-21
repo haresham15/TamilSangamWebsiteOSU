@@ -2,8 +2,8 @@
 "use client";
 
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
+import { DialogShell } from "@/components/ui/DialogShell";
 
 interface HowToPlayModalProps {
   isOpen: boolean;
@@ -24,40 +24,17 @@ export function HowToPlayModal({
   tips,
   culturalNote,
 }: HowToPlayModalProps) {
-  if (!isOpen) return null;
-
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0A0612]/80 backdrop-blur-md">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-md max-h-[85vh] overflow-y-auto rounded-2xl bg-[#1A1228] border border-[rgba(125,96,166,0.35)] shadow-2xl p-6 text-[#F4F0FA]"
-        >
-          {/* Header */}
-          <div className="flex items-start justify-between pb-4 border-b border-[rgba(125,96,166,0.2)]">
-            <div>
-              <span className="text-[11px] font-mono tracking-widest uppercase text-[#A6F0CF]">
-                HOW TO PLAY
-              </span>
-              <h2 className="text-xl font-serif font-medium text-[#F4F0FA] flex items-center gap-2 mt-0.5">
-                {titleEn}
-                <span lang="ta" className="text-sm font-sans text-[#E5B869] font-normal" style={{ letterSpacing: 0 }}>
-                  ({titleTa})
-                </span>
-              </h2>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-lg text-[#C4B7D7] hover:text-[#F4F0FA] hover:bg-[#25173B] transition-colors"
-              aria-label="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
+    <DialogShell
+      open={isOpen}
+      onClose={onClose}
+      tone="dark"
+      size="sm"
+      eyebrow="How to play"
+      title={titleEn}
+      tamilTitle={titleTa}
+      bodyClassName="px-6 pb-6"
+    >
           {/* Rules List */}
           <div className="mt-4 space-y-3">
             <h3 className="text-xs font-mono uppercase tracking-wider text-[#C4B7D7]">
@@ -112,8 +89,6 @@ export function HowToPlayModal({
           >
             Got It · தொடங்கு
           </button>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+    </DialogShell>
   );
 }

@@ -18,6 +18,7 @@ import { getNewYorkDateKey, formatEventTimeET } from "@/lib/calendar/parse";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { audioLayer } from "@/utils/audioLayer";
+import { DialogShell } from "@/components/ui/DialogShell";
 
 interface MonthGridProps {
   events: CalendarEvent[];
@@ -37,22 +38,21 @@ const WEEKDAYS = [
 ];
 
 /**
- * Infer cultural pillar accent color based on title or description keywords.
+ * Infer cultural pillar accent from title or description keywords.
+ * Chips stay teal (event = action); the dot carries the pillar hint.
  */
 function getEventPillarColor(event: CalendarEvent): { bg: string; text: string; dot: string } {
   const combined = `${event.titleEn} ${event.titleTa ?? ""} ${event.description}`.toLowerCase();
+  const chip = { bg: "bg-brand-teal-soft", text: "text-brand-teal-hover" };
 
   if (combined.includes("aatam") || combined.includes("dance") || combined.includes("kuthu") || combined.includes("garba")) {
-    return { bg: "bg-emerald-50", text: "text-emerald-800", dot: "bg-emerald-500" };
+    return { ...chip, dot: "bg-brand-purple" };
   }
   if (combined.includes("paatam") || combined.includes("music") || combined.includes("jam") || combined.includes("acoustic") || combined.includes("sing")) {
-    return { bg: "bg-amber-50", text: "text-amber-900", dot: "bg-[#C79347]" };
-  }
-  if (combined.includes("kondatam") || combined.includes("sapad") || combined.includes("food") || combined.includes("feast") || combined.includes("pongal") || combined.includes("diwali") || combined.includes("picnic") || combined.includes("carnival")) {
-    return { bg: "bg-orange-50", text: "text-[#C79347]", dot: "bg-[#2BB5A8]" };
+    return { ...chip, dot: "bg-accent-zari" };
   }
 
-  return { bg: "bg-[#1C122B]", text: "text-[#FAF5ED]", dot: "bg-[#2BB5A8]" };
+  return { ...chip, dot: "bg-brand-teal" };
 }
 
 export const MonthGrid: React.FC<MonthGridProps> = ({
@@ -129,56 +129,59 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
 
   // State for day popover when > 2 events
   const [dayPopover, setDayPopover] = useState<{ dayKey: string; events: CalendarEvent[] } | null>(null);
+  // Last day the visitor opened (chip, keyboard or "+N more"); shown with the purple-soft fill.
+  const [selectedDayKey, setSelectedDayKey] = useState<string | null>(null);
+
+  const navButton =
+    "w-12 h-12 rounded-full border border-border-warm bg-surface-card-light text-ink-earth hover:border-brand-teal hover:text-brand-teal flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-ivory";
 
   return (
-    <div className="w-full bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-3xl p-6 sm:p-8 shadow-sm text-left">
+    <div className="w-full text-left">
       {/* Month Navigation Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-5 border-b border-[rgba(125,96,166,0.25)]">
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-5 border-b border-border-warm">
         <div className="flex items-center gap-3">
-          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#F4F0FA]">
+          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-ink-earth">
             {format(selectedMonth, "MMMM yyyy")}
           </h3>
           <button
             type="button"
             onClick={handleToday}
-            className="px-3 py-1 text-xs font-mono font-medium rounded-full border border-[#C79347]/20 hover:border-[#2BB5A8] text-[#CBBBA8] hover:text-[#FAF5ED] transition-colors cursor-pointer"
+            className="min-h-12 px-4 text-xs font-sans font-semibold uppercase tracking-[0.14em] rounded-full border border-brand-purple/40 text-brand-purple hover:bg-brand-purple-soft hover:border-brand-purple transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-ivory"
           >
-            {locale === "ta" ? "இன்று" : "Today"}
+            {locale === "ta" ? (
+              <span lang="ta" className="font-tamil normal-case tracking-normal leading-[1.6]">இன்று</span>
+            ) : (
+              "Today"
+            )}
           </button>
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={handlePrevMonth}
-            aria-label="Previous month"
-            className="w-9 h-9 rounded-full border border-[#C79347]/20 hover:border-[#2BB5A8] text-[#FAF5ED] flex items-center justify-center transition-colors cursor-pointer"
-          >
-            <ChevronLeft className="w-4 h-4" />
+          <button type="button" onClick={handlePrevMonth} aria-label="Previous month" className={navButton}>
+            <ChevronLeft className="w-4 h-4" aria-hidden="true" />
           </button>
-          <button
-            type="button"
-            onClick={handleNextMonth}
-            aria-label="Next month"
-            className="w-9 h-9 rounded-full border border-[#C79347]/20 hover:border-[#2BB5A8] text-[#FAF5ED] flex items-center justify-center transition-colors cursor-pointer"
-          >
-            <ChevronRight className="w-4 h-4" />
+          <button type="button" onClick={handleNextMonth} aria-label="Next month" className={navButton}>
+            <ChevronRight className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
       </div>
 
       {/* 7-Column Weekday Headers */}
-      <div className="grid grid-cols-7 gap-px mb-2 text-center text-xs font-mono uppercase tracking-wider text-[#C4B7D7] font-semibold">
-        {WEEKDAYS.map((day) => (
-          <div key={day.en} className="py-2">
-            <span>{locale === "ta" ? day.ta : day.en}</span>
+      <div className="grid grid-cols-7 gap-px mb-2 text-center text-xs font-sans font-semibold uppercase tracking-[0.14em]">
+        {WEEKDAYS.map((day, i) => (
+          <div key={day.en} className={`py-2 ${i === 0 || i === 6 ? "text-ink-umber" : "text-ink-earth"}`}>
+            {locale === "ta" ? (
+              <span lang="ta" className="font-tamil normal-case tracking-normal leading-[1.6]">{day.ta}</span>
+            ) : (
+              <span>{day.en}</span>
+            )}
           </div>
         ))}
       </div>
 
-      {/* 7-Column Month Grid */}
-      <div className="grid grid-cols-7 gap-px bg-[#25173B]/10 rounded-2xl overflow-hidden border border-[rgba(125,96,166,0.25)]">
-        {daysInGrid.map((day, _idx) => {
+      {/* 7-Column Month Grid: white cells on warm hairlines */}
+      <div className="grid grid-cols-7 gap-px bg-border-warm rounded-2xl overflow-hidden border border-border-warm shadow-[0_12px_32px_rgba(91,44,134,0.09)]">
+        {daysInGrid.map((day) => {
           // Format in local string matching YYYY-MM-DD
           const year = day.getFullYear();
           const month = (day.getMonth() + 1).toString().padStart(2, "0");
@@ -187,40 +190,52 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
 
           const isCurrentMonth = isSameMonth(day, selectedMonth);
           const isToday = dayKey === todayKey;
+          const isSelected = dayKey === selectedDayKey;
+          const isWeekend = day.getDay() === 0 || day.getDay() === 6;
           const dayEvents = eventsByDate.get(dayKey) || [];
+
+          const surface = isSelected
+            ? "bg-brand-purple-soft"
+            : isCurrentMonth
+            ? "bg-surface-card-light"
+            : "bg-bg-sandstone/50";
 
           return (
             <div
               key={dayKey}
               tabIndex={isCurrentMonth ? 0 : -1}
+              aria-current={isToday ? "date" : undefined}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   if (dayEvents.length > 0) {
                     e.preventDefault();
+                    setSelectedDayKey(dayKey);
                     onSelectEvent(dayEvents[0]);
                   }
                 }
               }}
-              className={`min-h-[110px] sm:min-h-[125px] p-2 sm:p-2.5 flex flex-col justify-between transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8] focus-visible:z-10 ${
-                isCurrentMonth ? "bg-[#1C122B]" : "bg-[#271A3C]/50 text-[#CBBBA8]/40"
-              } ${isToday ? "ring-2 ring-inset ring-[#B84A39] bg-[#271A3C]/70" : ""}`}
+              className={`min-h-[110px] sm:min-h-[125px] p-2 sm:p-2.5 flex flex-col justify-between transition-colors outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-teal focus-visible:z-10 ${surface} ${
+                isToday ? "ring-2 ring-inset ring-brand-purple" : ""
+              }`}
             >
-              {/* Day Header: Date number & Today dot */}
+              {/* Day Header: Date number & Today label */}
               <div className="flex items-center justify-between">
                 <span
-                  className={`text-xs sm:text-sm font-mono font-medium ${
+                  className={`text-xs sm:text-sm font-sans font-semibold tabular-nums ${
                     isToday
-                      ? "w-6 h-6 rounded-full bg-[#0F766E] text-[#FAF5ED] flex items-center justify-center font-bold"
-                      : isCurrentMonth
-                      ? "text-[#FAF5ED]"
-                      : "text-[#CBBBA8]/50"
+                      ? "w-6 h-6 rounded-full bg-brand-purple text-ink-alabaster flex items-center justify-center"
+                      : !isCurrentMonth
+                      ? "text-ink-umber/60"
+                      : isWeekend
+                      ? "text-ink-umber"
+                      : "text-ink-earth"
                   }`}
                 >
                   {day.getDate()}
                 </span>
                 {isToday && (
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#C79347] font-bold hidden sm:inline">
-                    TODAY
+                  <span className="text-[10px] font-sans uppercase tracking-[0.14em] text-brand-purple font-semibold hidden sm:inline">
+                    Today
                   </span>
                 )}
               </div>
@@ -235,19 +250,23 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
                       type="button"
                       onClick={() => {
                         audioLayer.playTapeClack();
+                        setSelectedDayKey(dayKey);
                         onSelectEvent(evt);
                       }}
-                      className={`w-full text-left p-1.5 rounded-lg border border-[#C79347]/20 ${colors.bg} hover:border-[#2BB5A8] transition-all group cursor-pointer shadow-xs`}
+                      className={`w-full text-left p-1.5 rounded-lg border border-brand-teal/20 ${colors.bg} hover:border-brand-teal transition-colors group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal`}
                       title={`${evt.titleEn} (${formatEventTimeET(evt.start, evt.end, evt.allDay)})`}
                     >
                       <div className="flex items-center gap-1.5">
-                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${colors.dot}`} />
-                        <span className={`text-[11px] font-sans font-semibold truncate ${colors.text}`}>
+                        <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full shrink-0 ${colors.dot}`} />
+                        <span
+                          lang={locale === "ta" && evt.titleTa ? "ta" : undefined}
+                          className={`text-[11px] font-sans font-semibold truncate ${colors.text}`}
+                        >
                           {locale === "ta" && evt.titleTa ? evt.titleTa : evt.titleEn}
                         </span>
                       </div>
                       {!evt.allDay && (
-                        <span className="text-[9px] font-mono text-[#CBBBA8]/80 block truncate pl-3">
+                        <span className="text-[10px] font-sans tabular-nums text-ink-umber block truncate pl-3">
                           {formatEventTimeET(evt.start, undefined, false)}
                         </span>
                       )}
@@ -261,9 +280,10 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
                     type="button"
                     onClick={() => {
                       playClick();
+                      setSelectedDayKey(dayKey);
                       setDayPopover({ dayKey, events: dayEvents });
                     }}
-                    className="text-[10px] font-mono text-[#2BB5A8] hover:text-[#FAF5ED] font-semibold text-left pl-1 cursor-pointer transition-colors"
+                    className="text-[11px] font-sans text-brand-teal hover:text-brand-teal-hover hover:underline font-semibold text-left pl-1 cursor-pointer transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
                   >
                     +{dayEvents.length - 2} more
                   </button>
@@ -275,44 +295,39 @@ export const MonthGrid: React.FC<MonthGridProps> = ({
       </div>
 
       {/* Day Popover when > 2 events */}
-      {dayPopover && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-          <div className="bg-[#140C20] border border-[rgba(125,96,166,0.25)] rounded-2xl p-6 max-w-sm w-full shadow-2xl text-left space-y-4">
-            <div className="flex items-center justify-between border-b border-[rgba(125,96,166,0.25)] pb-3">
-              <h4 className="font-serif text-lg font-bold text-[#F4F0FA]">
-                Events on {dayPopover.dayKey}
-              </h4>
+      <DialogShell
+        open={dayPopover !== null}
+        onClose={() => setDayPopover(null)}
+        title={dayPopover ? `Events on ${dayPopover.dayKey}` : undefined}
+        ariaLabel="Events on this day"
+        tone="ivory"
+        size="sm"
+      >
+        <ul className="divide-y divide-border-warm">
+          {dayPopover?.events.map((evt) => (
+            <li key={evt.id}>
               <button
                 type="button"
-                onClick={() => setDayPopover(null)}
-                className="text-xs font-mono text-[#C4B7D7] hover:text-[#F4F0FA]"
+                onClick={() => {
+                  setDayPopover(null);
+                  onSelectEvent(evt);
+                }}
+                className="w-full min-h-12 text-left px-5 py-3 sm:px-7 hover:bg-brand-purple-soft transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-teal"
               >
-                Close ✕
-              </button>
-            </div>
-            <div className="space-y-2">
-              {dayPopover.events.map((evt) => (
-                <button
-                  key={evt.id}
-                  type="button"
-                  onClick={() => {
-                    setDayPopover(null);
-                    onSelectEvent(evt);
-                  }}
-                  className="w-full text-left p-3 rounded-xl bg-[#25173B] hover:bg-[#352254] transition-colors cursor-pointer"
+                <p
+                  lang={locale === "ta" && evt.titleTa ? "ta" : undefined}
+                  className="font-serif text-base font-semibold text-ink-earth"
                 >
-                  <p className="font-serif text-sm font-semibold text-[#F4F0FA]">
-                    {locale === "ta" && evt.titleTa ? evt.titleTa : evt.titleEn}
-                  </p>
-                  <p className="text-xs font-mono text-[#C4B7D7] mt-1">
-                    {formatEventTimeET(evt.start, evt.end, evt.allDay)} · {evt.location}
-                  </p>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+                  {locale === "ta" && evt.titleTa ? evt.titleTa : evt.titleEn}
+                </p>
+                <p className="text-xs font-sans text-ink-umber mt-1">
+                  {formatEventTimeET(evt.start, evt.end, evt.allDay)} · {evt.location}
+                </p>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </DialogShell>
     </div>
   );
 };

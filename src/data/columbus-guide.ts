@@ -1,3 +1,4 @@
+import { SITE_CONFIG } from "@/data/siteConfig";
 export interface GuideSpot {
   id: string;
   name: string;
@@ -32,7 +33,7 @@ export const COLUMBUS_GUIDE: GuideSpot[] = [
     recommendationTa: "முதல் நாள் காட்சிகளுக்கு முன்கூட்டியே டிக்கெட் முன்பதிவு செய்வது அவசியம்.",
     mapsUrl: "https://maps.google.com/?q=Cinemark+Carriage+Place+Bethel+Rd+Columbus",
     actionLabel: "Join Movie-Carpool GroupMe",
-    actionUrl: "https://web.groupme.com/join_group/83424812/BeBIRg7f",
+    actionUrl: SITE_CONFIG.groupMeUrl,
     isCarpoolAction: true,
   },
   {

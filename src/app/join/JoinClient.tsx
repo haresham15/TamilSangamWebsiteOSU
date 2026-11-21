@@ -7,17 +7,94 @@ import { useSearchParams } from "next/navigation";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { audioLayer } from "@/utils/audioLayer";
-import { Loader2, Sparkles, Music2, Code2, Coffee, CalendarHeart } from "lucide-react";
+import { Loader2, Sparkles, Music2, Code2, Coffee, CalendarHeart, ArrowUpRight } from "lucide-react";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
-import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
+import { CulturalSection } from "@/components/ui/CulturalSection";
+import { CulturalCard } from "@/components/ui/CulturalCard";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
-import { GuestbookField } from "@/components/muttram/GuestbookField";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { SITE_CONFIG } from "@/data/siteConfig";
-import { Magnet, StarBorder } from "@/components/ui/react-bits";
 import { GroupMePulseGateways } from "@/components/gateways/GroupMePulseGateways";
 import { TechFiresideGateway } from "@/components/gateways/TechFiresideGateway";
 import { HeroKolamLoader } from "@/components/ui/HeroKolamLoader";
-import styles from "./join.module.css";
+
+/** Scrolls an element into view, jumping instantly when the visitor prefers reduced motion. */
+function scrollToId(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+}
+
+const FIELD_INPUT =
+  "mt-3 block w-full min-h-12 rounded-xl border border-border-warm bg-surface-card-light px-4 py-3 font-sans text-lg text-ink-earth placeholder:text-ink-umber/70 transition-colors focus:outline-none focus-visible:border-brand-teal focus-visible:ring-2 focus-visible:ring-brand-teal/40";
+
+interface JoinFieldProps {
+  id: string;
+  label: string;
+  sublabel?: string;
+  type?: string;
+  value: string;
+  placeholder?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  required?: boolean;
+  isTextarea?: boolean;
+  rows?: number;
+}
+
+/**
+ * Light guestbook field for the ivory form card. GuestbookField (muttram) is styled for dark
+ * surfaces only, so the light-surface variant lives here.
+ */
+function JoinField({ id, label, sublabel, type = "text", value, placeholder, onChange, required = false, isTextarea = false, rows = 3 }: JoinFieldProps) {
+  const hintId = sublabel ? `${id}-hint` : undefined;
+  return (
+    <div>
+      <label htmlFor={id} className="block font-serif text-xl font-normal text-ink-earth sm:text-2xl">
+        {label}
+        {required && (
+          <span aria-hidden="true" className="ml-1.5 text-brand-purple">
+            *
+          </span>
+        )}
+      </label>
+      {sublabel && (
+        <p id={hintId} className="mt-1 font-sans text-sm leading-relaxed text-ink-umber">
+          {sublabel}
+        </p>
+      )}
+      {isTextarea ? (
+        <textarea
+          id={id}
+          rows={rows}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          aria-describedby={hintId}
+          aria-required={required || undefined}
+          className={`${FIELD_INPUT} resize-none leading-relaxed`}
+        />
+      ) : (
+        <input
+          id={id}
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          aria-describedby={hintId}
+          aria-required={required || undefined}
+          className={FIELD_INPUT}
+        />
+      )}
+    </div>
+  );
+}
+
+const CHOICE_BASE =
+  "w-full min-h-12 rounded-xl border p-4 text-left transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal";
+const CHOICE_ON = "border-brand-purple/40 border-l-[3px] border-l-brand-purple bg-brand-purple-soft";
+const CHOICE_OFF = "border-border-warm bg-surface-card-light hover:border-brand-purple/40";
 
 // =========================================================================
 // R3F Nanban Hero Canvas (src/components/join/)
@@ -58,10 +135,7 @@ function JoinSearchParamsSync({
 
     if (pillar) {
       onPillar(pillar);
-      const formEl = document.getElementById("membership-form-inputs");
-      if (formEl) {
-        formEl.scrollIntoView({ behavior: "smooth" });
-      }
+      scrollToId("membership-form-inputs");
     }
   }, [searchParams, onSelectTrack, onPillar]);
 
@@ -115,10 +189,7 @@ export function JoinClient() {
   const handleSelectTrack = (track: "general" | "performer" | "committee" | "fireside") => {
     audioLayer.playTapeClack();
     setMembershipType(track);
-    const formInputs = document.getElementById("membership-form-inputs");
-    if (formInputs) {
-      formInputs.scrollIntoView({ behavior: "smooth" });
-    }
+    scrollToId("membership-form-inputs");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -192,6 +263,9 @@ export function JoinClient() {
     },
   ];
 
+  const selectedTrackLabel = fitOptions.find((o) => o.id === membershipType)?.label;
+  const chapterStatus = locale === "ta" ? SITE_CONFIG.chapterStatusTa : SITE_CONFIG.chapterStatusEn;
+
   return (
     <div className="w-full text-left bg-transparent">
       {/* 1. Cinematic Morning Gates Hero Scene - IMMUTABLE */}
@@ -204,7 +278,7 @@ export function JoinClient() {
       </div>
 
       {/* =========================================================================
-          THE WELCOMING HEARTH: SUNLIT GUESTBOOK ON WARM IVORY
+          BAND 1 · SANDSTONE: GUESTBOOK HEADER + "FIND YOUR FIT" TRACK ROUTER
           Glides up over the morning campus gates (p = 0.84 -> 1.00)
           ========================================================================= */}
       <EditorialSheetHandoff
@@ -212,473 +286,477 @@ export function JoinClient() {
         badge="STUDENT FELLOWSHIP"
         sublabel="GUESTBOOK REGISTRATION"
         surface="sandstone"
-        className="text-[#261A14]"
       >
-        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-20 sm:py-28 pb-28">
-          
-          {/* Centered Airy Header */}
+        <div className="mx-auto w-full max-w-7xl px-6 sm:px-10 py-20 sm:py-28">
           <CourtyardHeader
             align="left"
+            titleId="join-heading"
             title={locale === "ta" ? "எங்களுடன் இணையுங்கள்" : "Sign Our Guestbook"}
             tamilTitle={locale !== "ta" ? "இணைவு · நல்வரவு" : undefined}
             description="100% Free · Zero Dues · Open to every Ohio State student and friend regardless of language. Pull up a chair and become part of our campus community."
           />
 
-          {/* =========================================================================
-              "FIND YOUR FIT" INTERACTIVE ROUTER
-              4-Button Quick-Selector Routing Instantly to Form Tracks
-              ========================================================================= */}
-          <div className="my-10 bg-[#FFFFFF] border border-[#DFD1BE] rounded-2xl p-6 sm:p-8 shadow-xs text-[#261A14]">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
-              <div>
-                <span className="font-mono text-xs uppercase tracking-widest text-[#9A6B3E] font-semibold block">
-                  Find Your Fit · உங்கள் பாதை
-                </span>
-                <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#261A14] mt-0.5">
+          <div id="find-your-fit" className="scroll-mt-28">
+            <div className="flex flex-col gap-2 border-b border-border-warm pb-6 sm:flex-row sm:items-end sm:justify-between">
+              <div className="space-y-2">
+                <Eyebrow tamil="உங்கள் பாதை">Find Your Fit</Eyebrow>
+                <h3 className="font-serif text-2xl font-normal text-ink-earth sm:text-3xl">
                   How would you like to plug into Tamil Sangam?
-                </h2>
+                </h3>
               </div>
-              <span className="font-mono text-xs text-[#5E4C40] hidden sm:inline-block">
+              <p className="hidden font-sans text-sm text-ink-umber sm:block">
                 Click any track to focus the form ↓
-              </span>
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+            <ul className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {fitOptions.map((opt) => {
                 const isSelected = membershipType === opt.id;
                 return (
-                  <button
+                  <CulturalCard
                     key={opt.id}
-                    type="button"
-                    onClick={() => handleSelectTrack(opt.id)}
-                    className={`text-left p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between min-h-[110px] group ${
-                      isSelected
-                        ? "bg-[#5B2C86] text-[#FAF5ED] border-[#5B2C86] shadow-sm -translate-y-0.5"
-                        : "bg-[#FAF6F0] hover:bg-[#F0E6D6] text-[#261A14] border-[#DFD1BE] hover:border-[#9A6B3E]/40"
-                    }`}
+                    as="li"
+                    variant="light"
+                    className={isSelected ? "border-brand-purple! shadow-[0_10px_30px_rgba(91,44,134,0.14)]" : ""}
                   >
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <div className={`p-2 rounded-lg transition-colors ${isSelected ? "bg-[#FAF5ED]/20 text-[#FAF5ED]" : "bg-[#F0E6D6] text-[#5B2C86] group-hover:text-[#5B2C86]"}`}><opt.icon className="w-5 h-5" /></div>
-                      {isSelected && (
-                        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#FAF5ED] bg-[#FAF5ED]/20 px-2 py-0.5 rounded-full">
-                          Active Track
+                    <button
+                      type="button"
+                      aria-pressed={isSelected}
+                      onClick={() => handleSelectTrack(opt.id)}
+                      className="group flex h-full min-h-[132px] w-full cursor-pointer flex-col justify-between gap-4 rounded-2xl p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-teal"
+                    >
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="rounded-lg bg-brand-purple-soft p-2 text-brand-purple">
+                          <opt.icon className="h-5 w-5" aria-hidden="true" />
                         </span>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className={`font-serif text-base font-semibold leading-snug ${isSelected ? "text-[#FAF5ED]" : "text-[#261A14] group-hover:text-[#5B2C86] transition-colors"}`}>
-                        {opt.label}
-                      </h3>
-                      <p className={`text-[11px] font-sans mt-1 leading-normal ${isSelected ? "text-[#FAF5ED]/80" : "text-[#5E4C40]"}`}>
-                        {opt.tagline}
-                      </p>
-                    </div>
-                  </button>
+                        {isSelected && (
+                          <span className="rounded-full bg-brand-teal-soft px-2.5 py-0.5 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-teal">
+                            Active track
+                          </span>
+                        )}
+                      </span>
+                      <span className="block">
+                        <span className="block font-serif text-lg font-semibold leading-snug text-ink-earth transition-colors group-hover:text-brand-purple">
+                          {opt.label}
+                        </span>
+                        <span className="mt-1 block font-sans text-sm leading-normal text-ink-umber">
+                          {opt.tagline}
+                        </span>
+                      </span>
+                    </button>
+                  </CulturalCard>
                 );
               })}
-            </div>
+            </ul>
           </div>
+        </div>
+      </EditorialSheetHandoff>
 
-          <div className={styles.layout}>
-            <Suspense fallback={null}>
-              <JoinSearchParamsSync
-                onSelectTrack={setMembershipType}
-                onPillar={setIncomingPillar}
-              />
-            </Suspense>
+      {/* =========================================================================
+          BAND 2 · IVORY: GUESTBOOK FORM + LIVE MEMBERSHIP PASS (Recipe A split)
+          ========================================================================= */}
+      <CulturalSection variant="ivory" divider="korvai" aria-labelledby="join-form-heading">
+        <div className="mx-auto max-w-7xl px-6 sm:px-10 py-20 sm:py-28">
+          <Suspense fallback={null}>
+            <JoinSearchParamsSync
+              onSelectTrack={setMembershipType}
+              onPillar={setIncomingPillar}
+            />
+          </Suspense>
 
-            {!submitted ? (
-              <form
-                id="membership-form-inputs"
-                onSubmit={handleSubmit}
-                className={`${styles.form} space-y-12 bg-[#FFFFFF] border border-[#DFD1BE] shadow-xs rounded-2xl p-6 sm:p-10 text-[#261A14]`}
-              >
-                {incomingPillar && (
-                  <div className="p-4 rounded-xl bg-[#F0E6D6] border border-[#DFD1BE] flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-[#261A14]">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[#261A14] font-medium">
-                        Continuing from Pillar: Pre-selected{" "}
-                        {membershipType === "performer"
-                          ? "Dance & Music"
-                          : membershipType === "committee"
-                          ? "Media / Tech Council"
-                          : membershipType === "fireside"
-                          ? "Fireside & Mentorship"
-                          : "General Member"}{" "}
-                        Track
-                      </span>
+          <div className="grid gap-10 md:grid-cols-12">
+            <div className="min-w-0 md:col-span-7">
+              {!submitted ? (
+                <CulturalCard variant="parchment" className="p-6 sm:p-10">
+                  <form
+                    id="membership-form-inputs"
+                    onSubmit={handleSubmit}
+                    className="scroll-mt-28 space-y-12"
+                  >
+                    <div className="space-y-2">
+                      <Eyebrow>Student Fellowship</Eyebrow>
+                      <h2 id="join-form-heading" className="font-serif text-3xl font-normal tracking-tight text-ink-earth sm:text-4xl">
+                        Guestbook registration
+                      </h2>
                     </div>
-                    <Link
-                      href={`/pillars/${incomingPillar}`}
-                      className="text-[#5B2C86] font-semibold hover:underline"
-                    >
-                      View {incomingPillar.toUpperCase()} Pillar ↗
-                    </Link>
-                  </div>
-                )}
 
-                {/* Performer Dance Form Gateway */}
-                {membershipType === "performer" && (
-                  <div className="p-4 rounded-xl bg-[#FAF6F0] border border-[#DFD1BE] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                    <div className="flex items-center gap-2.5">
-                      <Music2 className="w-5 h-5 text-[#B84A39] shrink-0" />
-                      <div>
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-[#B84A39] font-bold block">
-                          Dance Troupe &amp; Stage Performance Sign-Ups
+                    {incomingPillar && (
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-l-[3px] border-l-brand-purple bg-brand-purple-soft px-4 py-3 font-sans text-sm text-ink-earth">
+                        <span className="font-medium">
+                          Continuing from Pillar: Pre-selected{" "}
+                          {membershipType === "performer"
+                            ? "Dance & Music"
+                            : membershipType === "committee"
+                            ? "Media / Tech Council"
+                            : membershipType === "fireside"
+                            ? "Fireside & Mentorship"
+                            : "General Member"}{" "}
+                          Track
                         </span>
-                        <p className="font-serif text-sm text-[#261A14]">
-                          Looking to join Kuthu, Gaana, or fusion choreography?
-                        </p>
+                        <Link
+                          href={`/pillars/${incomingPillar}`}
+                          className="inline-flex min-h-12 items-center font-semibold text-brand-teal underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
+                        >
+                          View {incomingPillar.toUpperCase()} Pillar ↗
+                        </Link>
                       </div>
-                    </div>
-                    <Link
-                      href="/dance"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0F766E] text-[#FAF5ED] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#0B5C56] transition-all shrink-0 shadow-xs"
-                    >
-                      <span>Dance Form Space</span>
-                      <Sparkles className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
-                )}
+                    )}
 
-                {/* Selected Track Ribbon */}
-                <div className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-[#F0E6D6] border border-[#DFD1BE]">
-                  <div className="flex items-center gap-2 text-xs font-sans">
-                    <Sparkles className="size-4 text-[#9A6B3E] shrink-0" />
-                    <span className="text-[#261A14]">
-                      Selected track:{" "}
-                      <strong className="text-[#5B2C86] font-semibold">
-                        {fitOptions.find((o) => o.id === membershipType)?.label}
-                      </strong>
-                    </span>
-                  </div>
-                  <a
-                    href="#nanban-gates-hero"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.scrollTo({ top: 400, behavior: "smooth" });
-                    }}
-                    className="text-[11px] font-mono text-[#5B2C86] hover:text-[#261A14] underline"
-                  >
-                    Change Track ↑
-                  </a>
-                </div>
-
-                {/* Prompt 01: Name */}
-                <GuestbookField
-                  id="guestbook-name"
-                  label="Hi there, what is your name?"
-                  sublabel="How should we greet you when you walk in?"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Brutus Buckeye"
-                  required
-                />
-
-                {/* Prompt 02: Email */}
-                <GuestbookField
-                  id="guestbook-email"
-                  type="email"
-                  label="What's the best email to reach you?"
-                  sublabel="We'll send you invitations to lawn picnics, banquets, and meetups."
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="buckeye.1@osu.edu"
-                  required
-                />
-
-                {/* Prompt 03: Major / Program */}
-                <GuestbookField
-                  id="guestbook-major"
-                  label="What are you studying at Ohio State?"
-                  sublabel="Major, degree program, or college (optional)."
-                  value={major}
-                  onChange={(e) => setMajor(e.target.value)}
-                  placeholder="e.g. Computer Science, Public Health, Fisher College..."
-                />
-
-                {/* Prompt: Buckeye Role Selector (OSU-Wide Community) */}
-                <div className="space-y-4">
-                  <div>
-                    <span className="text-xl sm:text-2xl font-serif font-normal text-[#261A14] block">
-                      What is your role at Ohio State?
-                    </span>
-                    <span className="text-sm font-sans text-[#5E4C40] block mt-1">
-                      Tamil Sangam is an OSU-wide community uniting undergraduates, graduate researchers, faculty, and alumni.
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                    {[
-                      {
-                        id: "Undergraduate",
-                        label: "Undergraduate Student",
-                        desc: "First-year, transfer, or upperclassman",
-                      },
-                      {
-                        id: "Master's / PhD Graduate Student",
-                        label: "Master's / PhD Student",
-                        desc: "Graduate studies, researchers, & TAs",
-                      },
-                      {
-                        id: "OSU Faculty / Researcher / Staff",
-                        label: "Faculty / Staff / Postdoc",
-                        desc: "Professors, clinicians, & university staff",
-                      },
-                      {
-                        id: "Alumni & Community",
-                        label: "Alumni & Community",
-                        desc: "Columbus residents & Buckeye alumni",
-                      },
-                    ].map((role) => {
-                      const isSelected = buckeyeRole === role.id;
-                      return (
-                        <button
-                          key={role.id}
-                          type="button"
-                          aria-pressed={isSelected}
-                          onClick={() => {
-                            audioLayer.playTapeClack();
-                            setBuckeyeRole(role.id);
-                          }}
-                          className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
-                            isSelected
-                              ? "border-[#5B2C86] bg-[#5B2C86]/10 shadow-xs"
-                              : "border-[#DFD1BE] hover:border-[#9A6B3E]/40 bg-[#FAF6F0]"
-                          }`}
-                        >
-                          <span
-                            className={`text-base font-serif font-medium block ${
-                              isSelected
-                                ? "text-[#5B2C86] font-semibold"
-                                : "text-[#261A14]"
-                            }`}
-                          >
-                            {role.label}
-                          </span>
-                          <p className="text-xs font-sans text-[#5E4C40] mt-0.5">
-                            {role.desc}
-                          </p>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Prompt 04: "Find Your Fit" Track Selector Inside Form */}
-                <div className="space-y-4">
-                  <div>
-                    <span className="text-xl sm:text-2xl font-serif font-normal text-[#261A14] block">
-                      Involvement Track
-                    </span>
-                    <span className="text-sm font-sans text-[#5E4C40] block mt-1">
-                      Choose your primary focus (you can always participate in multiple tracks).
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                    {fitOptions.map((opt) => {
-                      const isSelected = membershipType === opt.id;
-                      return (
-                        <button
-                          key={opt.id}
-                          type="button"
-                          onClick={() => {
-                            audioLayer.playTapeClack();
-                            setMembershipType(opt.id);
-                          }}
-                          className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
-                            isSelected
-                              ? "border-[#5B2C86] bg-[#5B2C86]/10 shadow-xs"
-                              : "border-[#DFD1BE] hover:border-[#9A6B3E]/40 bg-[#FAF6F0]"
-                          }`}
-                        >
-                          <div className="flex items-center gap-2 mb-1">
-                            <opt.icon className={`w-4 h-4 ${isSelected ? "text-[#5B2C86]" : "text-[#9A6B3E]"}`} />
-                            <span
-                              className={`text-base font-serif font-medium ${
-                                isSelected
-                                  ? "text-[#5B2C86] font-semibold"
-                                  : "text-[#261A14]"
-                              }`}
-                            >
-                              {opt.label}
+                    {/* Performer Dance Form Gateway */}
+                    {membershipType === "performer" && (
+                      <div className="flex flex-col justify-between gap-4 border-l-[3px] border-l-brand-purple pl-4 sm:flex-row sm:items-center">
+                        <div className="flex items-start gap-3">
+                          <Music2 className="mt-0.5 h-5 w-5 shrink-0 text-brand-purple" aria-hidden="true" />
+                          <div>
+                            <span className="block font-sans text-xs font-semibold uppercase tracking-[0.14em] text-brand-purple">
+                              Dance Troupe &amp; Stage Performance Sign-Ups
                             </span>
+                            <p className="mt-1 font-serif text-base text-ink-earth">
+                              Looking to join Kuthu, Gaana, or fusion choreography?
+                            </p>
                           </div>
-                          <p className="text-xs font-sans text-[#5E4C40]">
-                            {opt.tagline}
-                          </p>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                        </div>
+                        <div className="shrink-0">
+                          <MuttramButton
+                            href="/dance"
+                            variant="secondary"
+                            icon={<Sparkles className="h-4 w-4" aria-hidden="true" />}
+                          >
+                            Dance Form Space
+                          </MuttramButton>
+                        </div>
+                      </div>
+                    )}
 
-                {/* Prompt 05: Notes / Introduction */}
-                <GuestbookField
-                  id="guestbook-notes"
-                  isTextarea
-                  rows={3}
-                  label="Anything else you'd like to share or ask?"
-                  sublabel="Food preferences, dance background, or any questions for the officers (optional)."
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="e.g. Vegetarian / Love Tamil cinema trivia / Looking for dance rehearsal friends!"
-                />
-
-                {/* Monthly Sangam Dispatch Opt-In Checkbox */}
-                <div className="p-4 rounded-xl border border-[#DFD1BE] bg-[#F7EFE2] space-y-2">
-                  <label className="flex items-start gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={monthlyDispatchOptIn}
-                      onChange={(e) => setMonthlyDispatchOptIn(e.target.checked)}
-                      className="mt-1 w-4 h-4 rounded border-[#DFD1BE] text-[#0F766E] focus:ring-[#0F766E]"
-                    />
-                    <div className="text-xs font-sans text-[#261A14]">
-                      <span className="font-semibold block text-sm text-[#261A14]">
-                        Send me the Monthly Sangam Dispatch
-                      </span>
-                      <span className="leading-relaxed block mt-0.5 text-[#5E4C40]">
-                        A concise monthly roundup of Tamil community news, Columbus movie releases, playlist drops, and campus events. Zero spam, unsubscribe anytime.
-                      </span>
-                    </div>
-                  </label>
-                </div>
-
-                {/* Error Message */}
-                {errorMessage && (
-                  <div
-                    role="alert"
-                    className="p-4 border-l-2 border-rose-500 text-rose-700 text-sm font-sans font-medium"
-                  >
-                    {errorMessage}
-                  </div>
-                )}
-
-                {/* Submit Action */}
-                <div className="pt-8 border-t border-[#DFD1BE] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                  <Magnet magnetStrength={2} maxOffset={8}>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="font-serif text-2xl sm:text-3xl font-normal text-[#0F766E] hover:text-[#0B5C56] border-b-2 border-[#0F766E] hover:border-[#0B5C56] pb-1 transition-colors self-start cursor-pointer disabled:opacity-50"
-                    >
-                      {isSubmitting ? (
-                        <span className="flex items-center gap-2 text-lg">
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          <span>Signing the guestbook...</span>
+                    {/* Selected Track Ribbon */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-warm pb-4">
+                      <p className="flex items-center gap-2 font-sans text-sm text-ink-earth">
+                        <Sparkles className="size-4 shrink-0 text-brand-purple" aria-hidden="true" />
+                        <span>
+                          Selected track:{" "}
+                          <strong className="font-semibold text-brand-purple">{selectedTrackLabel}</strong>
                         </span>
-                      ) : (
-                        <span>Sign the Guestbook ✦</span>
-                      )}
-                    </button>
-                  </Magnet>
+                      </p>
+                      <a
+                        href="#find-your-fit"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          scrollToId("find-your-fit");
+                        }}
+                        className="inline-flex min-h-12 items-center font-sans text-sm font-medium text-brand-teal underline underline-offset-4 hover:text-brand-teal-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
+                      >
+                        Change Track ↑
+                      </a>
+                    </div>
 
-                  <p className="text-xs font-sans text-[#5E4C40]">
-                    The Ohio State University · Recognized Student Organization · 100% Free
+                    {/* Prompt 01: Name */}
+                    <JoinField
+                      id="guestbook-name"
+                      label="Hi there, what is your name?"
+                      sublabel="How should we greet you when you walk in?"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="e.g. Brutus Buckeye"
+                      required
+                    />
+
+                    {/* Prompt 02: Email */}
+                    <JoinField
+                      id="guestbook-email"
+                      type="email"
+                      label="What's the best email to reach you?"
+                      sublabel="We'll send you invitations to lawn picnics, banquets, and meetups."
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="buckeye.1@osu.edu"
+                      required
+                    />
+
+                    {/* Prompt 03: Major / Program */}
+                    <JoinField
+                      id="guestbook-major"
+                      label="What are you studying at Ohio State?"
+                      sublabel="Major, degree program, or college (optional)."
+                      value={major}
+                      onChange={(e) => setMajor(e.target.value)}
+                      placeholder="e.g. Computer Science, Public Health, Fisher College..."
+                    />
+
+                    {/* Prompt: Buckeye Role Selector (OSU-Wide Community) */}
+                    <fieldset className="space-y-4">
+                      <legend className="block">
+                        <span className="block font-serif text-xl font-normal text-ink-earth sm:text-2xl">
+                          What is your role at Ohio State?
+                        </span>
+                        <span className="mt-1 block font-sans text-sm leading-relaxed text-ink-umber">
+                          Tamil Sangam is an OSU-wide community uniting undergraduates, graduate researchers, faculty, and alumni.
+                        </span>
+                      </legend>
+
+                      <div className="grid grid-cols-1 gap-3 pt-1 lg:grid-cols-2">
+                        {[
+                          {
+                            id: "Undergraduate",
+                            label: "Undergraduate Student",
+                            desc: "First-year, transfer, or upperclassman",
+                          },
+                          {
+                            id: "Master's / PhD Graduate Student",
+                            label: "Master's / PhD Student",
+                            desc: "Graduate studies, researchers, & TAs",
+                          },
+                          {
+                            id: "OSU Faculty / Researcher / Staff",
+                            label: "Faculty / Staff / Postdoc",
+                            desc: "Professors, clinicians, & university staff",
+                          },
+                          {
+                            id: "Alumni & Community",
+                            label: "Alumni & Community",
+                            desc: "Columbus residents & Buckeye alumni",
+                          },
+                        ].map((role) => {
+                          const isSelected = buckeyeRole === role.id;
+                          return (
+                            <button
+                              key={role.id}
+                              type="button"
+                              aria-pressed={isSelected}
+                              onClick={() => {
+                                audioLayer.playTapeClack();
+                                setBuckeyeRole(role.id);
+                              }}
+                              className={`${CHOICE_BASE} ${isSelected ? CHOICE_ON : CHOICE_OFF}`}
+                            >
+                              <span className={`block font-serif text-base ${isSelected ? "font-semibold text-brand-purple" : "font-medium text-ink-earth"}`}>
+                                {role.label}
+                              </span>
+                              <span className="mt-0.5 block font-sans text-sm text-ink-umber">{role.desc}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </fieldset>
+
+                    {/* Prompt 04: Involvement Track Selector Inside Form */}
+                    <fieldset className="space-y-4">
+                      <legend className="block">
+                        <span className="block font-serif text-xl font-normal text-ink-earth sm:text-2xl">
+                          Involvement Track
+                        </span>
+                        <span className="mt-1 block font-sans text-sm leading-relaxed text-ink-umber">
+                          Choose your primary focus (you can always participate in multiple tracks).
+                        </span>
+                      </legend>
+
+                      <div className="grid grid-cols-1 gap-3 pt-1 lg:grid-cols-2">
+                        {fitOptions.map((opt) => {
+                          const isSelected = membershipType === opt.id;
+                          return (
+                            <button
+                              key={opt.id}
+                              type="button"
+                              aria-pressed={isSelected}
+                              onClick={() => {
+                                audioLayer.playTapeClack();
+                                setMembershipType(opt.id);
+                              }}
+                              className={`${CHOICE_BASE} ${isSelected ? CHOICE_ON : CHOICE_OFF}`}
+                            >
+                              <span className="mb-1 flex items-center gap-2">
+                                <opt.icon className={`h-4 w-4 ${isSelected ? "text-brand-purple" : "text-ink-umber"}`} aria-hidden="true" />
+                                <span className={`font-serif text-base ${isSelected ? "font-semibold text-brand-purple" : "font-medium text-ink-earth"}`}>
+                                  {opt.label}
+                                </span>
+                              </span>
+                              <span className="block font-sans text-sm text-ink-umber">{opt.tagline}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </fieldset>
+
+                    {/* Prompt 05: Notes / Introduction */}
+                    <JoinField
+                      id="guestbook-notes"
+                      isTextarea
+                      rows={3}
+                      label="Anything else you'd like to share or ask?"
+                      sublabel="Food preferences, dance background, or any questions for the officers (optional)."
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="e.g. Vegetarian / Love Tamil cinema trivia / Looking for dance rehearsal friends!"
+                    />
+
+                    {/* Monthly Sangam Dispatch Opt-In */}
+                    <label className="flex cursor-pointer items-start gap-3 border-t border-border-warm pt-6">
+                      <input
+                        type="checkbox"
+                        checked={monthlyDispatchOptIn}
+                        onChange={(e) => setMonthlyDispatchOptIn(e.target.checked)}
+                        className="mt-1 size-5 shrink-0 cursor-pointer rounded border-border-warm accent-brand-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
+                      />
+                      <span className="font-sans">
+                        <span className="block text-base font-semibold text-ink-earth">
+                          Send me the Monthly Sangam Dispatch
+                        </span>
+                        <span className="mt-0.5 block text-sm leading-relaxed text-ink-umber">
+                          A concise monthly roundup of Tamil community news, Columbus movie releases, playlist drops, and campus events. Zero spam, unsubscribe anytime.
+                        </span>
+                      </span>
+                    </label>
+
+                    {/* Error Message */}
+                    {errorMessage && (
+                      <div
+                        role="alert"
+                        className="border-l-[3px] border-l-accent-kumkum pl-4 font-sans text-sm font-medium text-accent-kumkum"
+                      >
+                        {errorMessage}
+                      </div>
+                    )}
+
+                    {/* Submit Action + open-hearth footnote */}
+                    <div className="flex flex-col gap-6 border-t border-border-warm pt-8 sm:flex-row sm:items-center sm:justify-between">
+                      <MuttramButton type="submit" size="lg" disabled={isSubmitting} className="shrink-0">
+                        {isSubmitting ? (
+                          <span className="flex items-center gap-2">
+                            <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+                            <span>Signing the guestbook...</span>
+                          </span>
+                        ) : (
+                          "Sign the Guestbook"
+                        )}
+                      </MuttramButton>
+
+                      <p className="max-w-sm font-sans text-sm leading-relaxed text-ink-umber">
+                        Membership in Tamil Sangam is completely open and free to all Buckeyes, undergraduate or graduate, of any major, language, or heritage.
+                      </p>
+                    </div>
+                  </form>
+                </CulturalCard>
+              ) : (
+                /* Warm Celebration Confirmation (Unboxed) */
+                <div className="space-y-6 py-8 animate-in fade-in duration-500">
+                  <p className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-brand-teal">
+                    Guestbook Signed Successfully
                   </p>
+
+                  <h2 id="join-form-heading" className="font-serif text-3xl text-ink-earth sm:text-5xl">
+                    Welcome to the Family, {name}!
+                  </h2>
+
+                  <p className="font-tamil text-xl leading-[1.6] text-brand-purple" lang="ta">
+                    வணக்கம் மற்றும் மனமார்ந்த நல்வரவு!
+                  </p>
+
+                  <p className="max-w-xl font-sans text-base leading-relaxed text-ink-umber sm:text-lg">
+                    You are officially plugged into the Tamil Sangam hearth at Ohio State as a{" "}
+                    <strong className="text-ink-earth">{selectedTrackLabel}</strong>. We will send you updates on upcoming Oval picnics, rehearsal calls, and banquet feasts.
+                  </p>
+
+                  <div className="flex flex-wrap gap-4 pt-4">
+                    <MuttramButton
+                      href={SITE_CONFIG.groupMeUrl}
+                      external
+                      onClick={playClick}
+                      icon={<ArrowUpRight className="h-4 w-4" aria-hidden="true" />}
+                    >
+                      Join the Student GroupMe
+                    </MuttramButton>
+                    <MuttramButton href="/events" variant="secondary" onClick={playClick}>
+                      Explore Upcoming Events →
+                    </MuttramButton>
+                  </div>
                 </div>
-              </form>
-            ) : (
-              /* Warm Celebration Confirmation (Unboxed) */
-              <div className="text-center space-y-6 py-16 max-w-xl mx-auto select-none animate-in fade-in duration-500 text-[#261A14]">
-                <span className="font-sans text-xs uppercase tracking-widest text-[#0F766E] font-semibold block">
-                  Guestbook Signed Successfully
-                </span>
+              )}
+            </div>
 
-                <h2 className="text-3xl sm:text-5xl font-serif text-[#261A14]">
-                  Welcome to the Family, {name}!
-                </h2>
-
-                <p className="font-tamil text-xl text-[#0F766E]" lang="ta">
-                  வணக்கம் மற்றும் மனமார்ந்த நல்வரவு!
-                </p>
-
-                <p className="text-base sm:text-lg text-[#5E4C40] font-sans leading-relaxed">
-                  You are officially plugged into the Tamil Sangam hearth at Ohio State as a{" "}
-                  <strong>{fitOptions.find((o) => o.id === membershipType)?.label}</strong>. We will send you updates on upcoming Oval picnics, rehearsal calls, and banquet feasts.
-                </p>
-
-                <div className="pt-8 flex flex-wrap justify-center gap-8 text-sm font-sans">
-                  <a
-                    href={SITE_CONFIG.groupMeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={playClick}
-                    className="font-semibold text-[#0F766E] border-b-2 border-[#0F766E] pb-1 hover:text-[#0B5C56] hover:border-[#0B5C56] transition-colors"
-                  >
-                    Join the Student GroupMe ↗
-                  </a>
-                  <Link
-                    href="/events"
-                    onClick={playClick}
-                    className="font-medium text-[#5E4C40] hover:text-[#261A14] border-b border-[#DFD1BE] pb-1 hover:border-[#0F766E] transition-colors"
-                  >
-                    Explore Upcoming Events →
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            <StarBorder className="w-full" color="#C79347" trailColor="#D4A36A">
-              <aside
-                className={styles.pass}
+            {/* Live membership pass: a collectible pathirikai keepsake */}
+            <div className="min-w-0 self-start md:sticky md:top-28 md:col-span-5">
+              <CulturalCard
+                as="aside"
+                variant="pathirikai"
                 aria-label="Live membership pass"
                 data-testid="membership-pass"
+                className="p-6 sm:p-8"
               >
-                <div className={styles.passHeader}>
-                  <p className="font-mono text-xs tracking-widest uppercase text-antique-gold">
-                    Tamil Sangam · Ohio State
-                  </p>
-                  <h2 className="font-serif text-2xl mt-4">Your membership pass</h2>
+                <div className="border-b border-border-zari-muted pb-6">
+                  <Eyebrow tone="dark">Tamil Sangam · Ohio State</Eyebrow>
+                  <h2 className="mt-4 font-serif text-2xl text-ink-alabaster">Your membership pass</h2>
                   {submitted && (
-                    <p className="text-xs mt-2 text-emerald-400" role="status">
+                    <p className="mt-2 font-sans text-sm text-brand-teal-dark" role="status">
                       Guestbook signed
                     </p>
                   )}
                 </div>
-                <dl aria-live="polite" aria-atomic="false">
-                  <dt>Name</dt>
-                  <dd className={styles.passName}>{name.trim() || "Your name"}</dd>
-                  <dt>Email</dt>
-                  <dd>{email.trim() || "Not entered"}</dd>
-                  <dt>Major / Program</dt>
-                  <dd>{major.trim() || "Not entered (optional)"}</dd>
-                  <dt>Participation Track</dt>
-                  <dd>{fitOptions.find((o) => o.id === membershipType)?.label}</dd>
+                <dl aria-live="polite" aria-atomic="false" className="font-sans">
+                  <dt className="mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-accent-zari">Name</dt>
+                  <dd className="mt-1.5 break-words font-serif text-3xl leading-snug text-ink-alabaster sm:text-4xl">
+                    {name.trim() || "Your name"}
+                  </dd>
+                  <dt className="mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-accent-zari">Email</dt>
+                  <dd className="mt-1.5 break-words leading-relaxed text-ink-alabaster">{email.trim() || "Not entered"}</dd>
+                  <dt className="mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-accent-zari">Major / Program</dt>
+                  <dd className="mt-1.5 break-words leading-relaxed text-ink-alabaster">{major.trim() || "Not entered (optional)"}</dd>
+                  <dt className="mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-accent-zari">Participation Track</dt>
+                  <dd className="mt-1.5 break-words leading-relaxed text-ink-alabaster">{selectedTrackLabel}</dd>
                 </dl>
-                <p className={styles.passFoot}>
+                <p className="mt-8 border-t border-border-zari-muted pt-6 font-sans text-xs leading-relaxed text-ink-sand">
                   {submitted
                     ? "Your membership request has been saved."
                     : "Preview only. Sign the guestbook to submit your membership request."}
                 </p>
-              </aside>
-            </StarBorder>
-          </div>
-
-          <div className="mt-20 sm:mt-28">
-            <KolamSectionRule tone="sandstone" />
-          </div>
-
-          {/* Open Community Gateway: Live GroupMe Pulse & Hangouts */}
-          <div className="mt-12 sm:mt-16">
-            <GroupMePulseGateways variant="light" />
-          </div>
-
-          {/* Academic & Industry Bridges: Tech & Career Firesides */}
-          <div className="mt-12 sm:mt-16">
-            <TechFiresideGateway variant="light" />
-          </div>
-
-          {/* Open Hearth Guarantee Notice (Unboxed, 1px Grounding Line) */}
-          <div className="mt-16 border-t border-[rgba(125,96,166,0.25)] pt-12 text-center space-y-2 max-w-lg mx-auto">
-            <p className="text-sm font-sans text-[#F4F0FA]/80 leading-relaxed">
-              Membership in Tamil Sangam is completely open and free to all Buckeyes, undergraduate or graduate, of any major, language, or heritage.
-            </p>
+              </CulturalCard>
+            </div>
           </div>
         </div>
-      </EditorialSheetHandoff>
+      </CulturalSection>
+
+      {/* =========================================================================
+          BAND 3 · SANGAM-DEEP: GROUPME PULSE (Recipe D jewel band)
+          ========================================================================= */}
+      <GroupMePulseGateways />
+
+      {/* Academic & Industry Bridges: Tech & Career Firesides (placement owned by the main session) */}
+      <div className="bg-bg-ivory">
+        <div className="mx-auto max-w-7xl px-6 sm:px-10 py-16 sm:py-20">
+          <div>
+            <TechFiresideGateway variant="light" />
+          </div>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          CLOSER · PEACOCK-DEEP: OSU RECOGNITION ANCHOR (no OrganicRouteGateway on /join)
+          ========================================================================= */}
+      <CulturalSection variant="peacock-deep" divider="korvai" aria-labelledby="join-recognition-heading">
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 sm:px-10 py-20 sm:py-28 md:grid-cols-12 md:items-end">
+          <div className="space-y-3 md:col-span-7">
+            <Eyebrow tone="peacock">Recognized Student Organization</Eyebrow>
+            <h2 id="join-recognition-heading" className="font-serif text-3xl font-normal leading-[1.12] tracking-tight text-ink-alabaster sm:text-4xl">
+              {SITE_CONFIG.universityAffiliationEn}
+            </h2>
+            <p lang="ta" className="font-tamil text-lg leading-[1.6] text-ink-sand">
+              {SITE_CONFIG.officialNameTa}
+            </p>
+          </div>
+          <div className="space-y-4 border-l-2 border-accent-zari/50 pl-6 md:col-span-5">
+            <p lang={locale === "ta" ? "ta" : undefined} className={`text-base text-ink-sand ${locale === "ta" ? "font-tamil leading-[1.6]" : "font-sans leading-relaxed"}`}>
+              {chapterStatus}
+            </p>
+            <a
+              href={SITE_CONFIG.constitutionPdfPath}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-12 items-center gap-1.5 rounded font-sans text-sm font-medium text-brand-teal-dark underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark"
+            >
+              <span>Constitution (2026–2027)</span>
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+      </CulturalSection>
     </div>
   );
 }

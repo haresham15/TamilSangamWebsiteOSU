@@ -6,23 +6,18 @@ main {
   overflow-x: clip;
 }
 
-/* Hide native cursor on fine-pointer devices; ViewfinderCursor takes over */
+/* Hide native cursor on fine-pointer devices ONLY when ViewfinderCursor has initialized;
+   inputs and textareas retain native I-beam text cursors. */
 @media (pointer: fine) {
-  html, body, * {
+  html.has-custom-cursor,
+  html.has-custom-cursor body,
+  html.has-custom-cursor *:not(input):not(textarea):not([contenteditable]) {
     cursor: none !important;
   }
-  /* Restore functional cursors for accessibility — these remain 'none' visually
-     because our custom overlay already handles hover state changes,
-     but we must not break OS-level cursor semantics for AT tools. */
-  a, button, [role="button"], [tabindex]:not([tabindex="-1"]),
-  input[type="submit"], input[type="button"], input[type="reset"],
-  label[for], select {
-    cursor: none !important;
-  }
-  input[type="text"], input[type="email"], input[type="password"],
-  input[type="search"], input[type="number"], input[type="tel"],
-  input[type="url"], textarea, [contenteditable] {
-    cursor: none !important;
+  html.has-custom-cursor input,
+  html.has-custom-cursor textarea,
+  html.has-custom-cursor [contenteditable] {
+    cursor: text !important;
   }
 }
 
@@ -158,11 +153,15 @@ html.sangam-fallback #guide-station-hero section { min-height: 100dvh !important
 
   --color-brand-purple: #5B2C86;
   --color-brand-purple-soft: #EFE8F7;
+  --color-brand-purple-hover: oklch(34.5% 0.120 304.8);
+  /* Purple accent that stays readable on peacock/sangam-deep bands (8.1:1 on peacock-deep) */
+  --color-brand-lavender: oklch(80.2% 0.075 304.4);
   --color-brand-teal: #0F766E;
   --color-brand-teal-dark: #2BB5A8;
   --color-brand-teal-hover: #0B5C56;
   --color-brand-teal-hover-dark: #3ED0C2;
   --color-brand-teal-soft: #E1F3F1;
+  --color-ink-on-teal: #0C1F22;
 
   --color-accent-bronze: #9A6B3E;
   --color-accent-bronze-dark: #D4A36A;
@@ -603,21 +602,6 @@ html {
   caret-color: var(--accent, #A6F0CF);
 }
 
-/* Chromatic Aberration Typography Utilities */
-.text-chromatic {
-  color: var(--accent, #A6F0CF);
-  text-shadow:
-    -2px -2px 0px rgba(242, 107, 181, 0.65),
-     2px  2px 0px rgba(79, 214, 224, 0.65);
-}
-
-.text-chromatic-white {
-  color: var(--ink, #F4F0FA);
-  text-shadow:
-    -2px -2px 0px rgba(242, 107, 181, 0.65),
-     2px  2px 0px rgba(79, 214, 224, 0.65);
-}
-
 /* Subtle Violet-on-Violet Tamil Script Pattern */
 .bg-tamil-tonal-pattern {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='42' viewBox='0 0 120 42'%3E%3Ctext x='6' y='16' font-family='sans-serif' font-size='16' font-weight='700' fill='%237D60A6' opacity='0.08'%3Eதமிழ்%3C/text%3E%3Ctext x='66' y='16' font-family='sans-serif' font-size='16' font-weight='700' fill='%237D60A6' opacity='0.08'%3Eதமிழ்%3C/text%3E%3Ctext x='36' y='37' font-family='sans-serif' font-size='16' font-weight='700' fill='%237D60A6' opacity='0.08'%3Eதமிழ்%3C/text%3E%3Ctext x='96' y='37' font-family='sans-serif' font-size='16' font-weight='700' fill='%237D60A6' opacity='0.08'%3Eதமிழ்%3C/text%3E%3C/svg%3E");
@@ -678,14 +662,6 @@ body {
 }
 
 /* Tiled wallpaper removed per Playbook Prompt 2 item 4: script is used as structure, never wallpaper with broken tracking */
-
-/* Ambient Mint Background Atmosphere Utilities */
-.bg-mint-aurora {
-  background-image: 
-    radial-gradient(ellipse 800px 500px at 15% 10%, rgba(166, 240, 207, 0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 900px 600px at 85% 70%, rgba(166, 240, 207, 0.09) 0%, transparent 65%),
-    radial-gradient(ellipse 600px 400px at 50% 95%, rgba(79, 214, 224, 0.08) 0%, transparent 60%);
-}
 
 .bg-mint-radial {
   background-image: radial-gradient(ellipse at center, rgba(166, 240, 207, 0.14) 0%, transparent 70%);
@@ -758,34 +734,6 @@ body {
 }
 
 /* Distinctive Architectural Box Structures & Masonry Framing */
-.box-architectural {
-  background: var(--surface, #25173B);
-  color: var(--ink, #F4F0FA);
-  border: 2px solid var(--surface-2, #352254);
-  border-radius: 0px;
-  box-shadow: 4px 4px 0px #140C20;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  will-change: transform, box-shadow;
-  transition-property: transform, box-shadow, border-color;
-  transition-duration: 200ms;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.box-architectural:hover {
-  border-color: var(--accent, #A6F0CF);
-  box-shadow: 6px 6px 0px var(--accent, #A6F0CF), 0 12px 24px -6px rgba(20, 12, 32, 0.5);
-  transform: translate3d(-2px, -2px, 0);
-}
-
-.box-architectural-dark {
-  background: #140C20;
-  color: #F4F0FA;
-  border: 2px solid var(--accent, #A6F0CF);
-  border-radius: 0px;
-  box-shadow: 4px 4px 0px var(--accent, #A6F0CF);
-}
-
 /* Stepped Pedestal Box */
 .box-stepped {
   position: relative;
@@ -904,93 +852,6 @@ body {
   border-color: #A6F0CF;
   box-shadow: 6px 6px 0px #A6F0CF;
   transform: translate3d(-2px, -2px, 0);
-}
-
-/* Signature Official Logo Action Button (Crisp Architectural Block with Stepped Pedestal Depth) */
-.btn-sangam {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--sangam-purple);
-  color: #ffffff;
-  font-weight: 700;
-  border-radius: 0px;
-  box-shadow: 3px 3px 0px #A6F0CF, 6px 6px 0px #250d38;
-  border: 2px solid #250d38;
-  transform: translate3d(0, 0, 0);
-  will-change: transform, box-shadow, background-color;
-  transition-property: transform, box-shadow, background-color, border-color;
-  transition-duration: 150ms;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn-sangam:hover {
-  background-color: #6e2dae;
-  border-color: #A6F0CF;
-  box-shadow: 4px 4px 0px #A6F0CF, 7px 7px 0px #250d38;
-}
-
-.btn-sangam:active {
-  transform: translate3d(2px, 2px, 0);
-  box-shadow: 1px 1px 0px #A6F0CF, 2px 2px 0px #250d38;
-}
-
-.btn-sangam-mint {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #A6F0CF;
-  color: #240e36;
-  font-weight: 700;
-  border-radius: 0px;
-  box-shadow: 3px 3px 0px #250d38, 6px 6px 0px #4c2472;
-  border: 2px solid #250d38;
-  transform: translate3d(0, 0, 0);
-  will-change: transform, box-shadow, background-color;
-  transition-property: transform, box-shadow, background-color, border-color;
-  transition-duration: 150ms;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn-sangam-mint:hover {
-  background-color: #6fe4ba;
-  box-shadow: 4px 4px 0px #250d38, 7px 7px 0px #4c2472;
-}
-
-.btn-sangam-mint:active {
-  transform: translate3d(2px, 2px, 0);
-  box-shadow: 1px 1px 0px #250d38, 2px 2px 0px #4c2472;
-}
-
-.btn-sangam-white {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff;
-  color: #250d38;
-  font-weight: 700;
-  border-radius: 0px;
-  box-shadow: 3px 3px 0px #4c2472, 6px 6px 0px #A6F0CF;
-  border: 2px solid #250d38;
-  transform: translate3d(0, 0, 0);
-  will-change: transform, box-shadow, background-color;
-  transition-property: transform, box-shadow, background-color, border-color;
-  transition-duration: 150ms;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn-sangam-white:hover {
-  background-color: #fdfafd;
-  border-color: #A6F0CF;
-  box-shadow: 4px 4px 0px #4c2472, 7px 7px 0px #A6F0CF;
-}
-
-.btn-sangam-white:active {
-  transform: translate3d(2px, 2px, 0);
-  box-shadow: 1px 1px 0px #4c2472, 2px 2px 0px #A6F0CF;
 }
 
 /* Authentic Filter Coffee Steam Vapor Animation */
@@ -1117,11 +978,6 @@ body {
   mask-image: radial-gradient(circle at 0% 50%, transparent var(--notch-r), black calc(var(--notch-r) + 0.5px)),
               radial-gradient(circle at 100% 50%, transparent var(--notch-r), black calc(var(--notch-r) + 0.5px));
   mask-composite: intersect;
-}
-
-/* Blueprint Grid Node Crosshair Marker (+) - Retired in Cultural Refinement (PRD §4.1) */
-.blueprint-node {
-  position: relative;
 }
 
 /* ========================================================================= */
@@ -1251,41 +1107,6 @@ body {
 }
 
 /* ========================================================================= */
-/* DIEGETIC AUDIO-VISUAL MICRO-ANIMATIONS (CRT Flicker & RGB Aberration)     */
-/* ========================================================================= */
-
-@keyframes crt-flicker {
-  0% { opacity: 0.12; transform: scaleY(1.02); }
-  25% { opacity: 0.98; transform: scaleY(0.98); }
-  50% { opacity: 0.45; }
-  75% { opacity: 0.95; }
-  100% { opacity: 1; transform: scaleY(1); }
-}
-
-.crt-flicker {
-  animation: crt-flicker 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes rgb-split {
-  0% {
-    text-shadow: -2px 0 oklch(0.62 0.22 25), 2px 0 oklch(0.78 0.16 168);
-    transform: translate(-1px, 0);
-  }
-  50% {
-    text-shadow: 2px 0 oklch(0.62 0.22 25), -2px 0 oklch(0.78 0.16 168);
-    transform: translate(1px, -1px);
-  }
-  100% {
-    text-shadow: none;
-    transform: translate(0, 0);
-  }
-}
-
-.rgb-split {
-  animation: rgb-split 0.22s steps(2, end) forwards;
-}
-
-/* ========================================================================= */
 /* THE 4 TYPOGRAPHIC PILLARS (Cinematic Serifs, Palm-Leaf, Viewfinder, Bridge) */
 /* ========================================================================= */
 
@@ -1369,14 +1190,14 @@ body {
    Visually purged while p < 0.62, but fully reachable via keyboard Tab focus,
    top-edge hover (top 72px), scroll-up intent, or skip link.
    ========================================================================= */
-[data-hero-purge="true"] :is(.ask-nanba, #global-sangam-chatbot, #global-floating-nav) {
+[data-hero-purge="true"] :is(.ask-nanba, #global-sangam-chatbot) {
   opacity: 0 !important;
   pointer-events: none !important;
   transform: translateY(-16px);
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-[data-hero-purge="true"].hero-nav-revealed :is(.ask-nanba, #global-sangam-chatbot, #global-floating-nav) {
+[data-hero-purge="true"].hero-nav-revealed :is(.ask-nanba, #global-sangam-chatbot) {
   opacity: 1 !important;
   pointer-events: auto !important;
   transform: translateY(0);

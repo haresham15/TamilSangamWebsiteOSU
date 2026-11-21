@@ -66,6 +66,8 @@ export const CornerUtilityDrawer: React.FC<CornerUtilityDrawerProps> = ({ onOpen
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.95 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            role="dialog"
+            aria-label={locale === "ta" ? "கருவிகள் & சூழல்" : "Sangam Utilities"}
             data-lenis-prevent
             className="mb-3 w-72 max-h-[min(80dvh,500px)] overflow-y-auto overscroll-contain bg-[#140C20]/95 backdrop-blur-md border border-[rgba(125,96,166,0.25)] shadow-[0_12px_36px_rgba(0,0,0,0.4)] p-3 text-[#F4F0FA] font-sans"
           >

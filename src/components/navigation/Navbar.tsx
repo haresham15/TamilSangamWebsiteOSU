@@ -5,50 +5,25 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  ChevronDown,
-  Sparkles,
-  Images,
-  BookOpen,
-  Link2,
-  Lightbulb,
-} from "lucide-react";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { isEditionComplete } from "@/lib/gamesStorage";
-import {
-  NAV_ROUTES,
-  PRIMARY_NAV_ROUTES,
-  SECONDARY_NAV_ROUTES,
-  NavRoute,
-} from "./navRoutes";
-
-const getSecondaryIcon = (href: string) => {
-  switch (href) {
-    case "/guide":
-      return BookOpen;
-    case "/links":
-      return Link2;
-    case "/suggestions":
-      return Lightbulb;
-    default:
-      return Sparkles;
-  }
-};
+import { Magnet } from "@/components/ui/react-bits";
+import { NAV_ROUTES, NavRoute } from "./navRoutes";
+import { SikkuKolamToggle } from "./SikkuKolamToggle";
+import { NavBilingualItem } from "./NavBilingualItem";
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
   const { locale } = useLocale();
   const { playClick, playSilkSwish } = useAudio();
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [gamesUnsolved, setGamesUnsolved] = useState(true);
-  const [isPastHero, setIsPastHero] = useState(false);
 
   const navRef = useRef<HTMLDivElement>(null);
-  const moreMenuRef = useRef<HTMLDivElement>(null);
+  const openScrollYRef = useRef<number>(0);
 
   // Check if games edition is completed
   useEffect(() => {
@@ -62,12 +37,25 @@ export const Navbar: React.FC = () => {
     "/events",
     "/about",
     "/board",
+    "/gallery",
     "/games",
     "/guide",
     "/suggestions",
     "/join",
   ];
   const isHeroRoute = darkHeroRoutes.includes(normalizedPath);
+
+  // Adaptive Backdrop & Hero Detection
+  const [isPastHero, setIsPastHero] = useState(false);
+  const isDarkHero = isHeroRoute && !isPastHero;
+  const isInHeroZone = isHeroRoute && !isPastHero;
+
+  // Auto-collapse if user enters or scrolls back into hero zone
+  useEffect(() => {
+    if (isInHeroZone && isOpen) {
+      setIsOpen(false);
+    }
+  }, [isInHeroZone, isOpen]);
 
   // Track active route
   const getActiveRoute = useCallback((): NavRoute => {
@@ -82,43 +70,60 @@ export const Navbar: React.FC = () => {
 
   const activeRoute = getActiveRoute();
 
-  const isSecondaryActive = SECONDARY_NAV_ROUTES.some(
-    (r) => pathname === r.href || (r.href !== "/" && pathname.startsWith(`${r.href}/`))
-  );
-
-  // Scroll detection: reliably detect when user is past the hero on ANY page
+  // Scroll detection for dark hero vs. courtyard backdrop
   useEffect(() => {
-    if (!isHeroRoute) {
-      setIsPastHero(true);
-      return;
-    }
+    const getHeroFallbackThreshold = (): number => {
+      if (typeof window === "undefined") return 1200;
+      const vh = window.innerHeight || 800;
+      if (pathname === "/") return vh * 3.8;
+      if (pathname === "/about") return vh * 3.0;
+      if (pathname === "/guide") return vh * 2.8;
+      if (pathname === "/games") return vh * 2.8;
+      if (pathname === "/events") return vh * 2.2;
+      if (pathname === "/gallery") return vh * 2.2;
+      if (pathname === "/suggestions") return vh * 2.2;
+      if (pathname === "/join") return vh * 1.8;
+      if (pathname === "/board") return vh * 1.4;
+      return vh * 1.5;
+    };
+
+    let ticking = false;
+    let cachedSheet: HTMLElement | null = null;
+    let sheetCheckTime = 0;
 
     const evaluateScroll = () => {
-      const scrollY = window.scrollY;
-      const vh = window.innerHeight || 800;
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const scrollY = window.scrollY;
+        const now = performance.now();
+        if (!cachedSheet || !cachedSheet.isConnected || now - sheetCheckTime > 1500) {
+          cachedSheet = document.querySelector<HTMLElement>("[data-editorial-sheet]");
+          sheetCheckTime = now;
+        }
 
-      // Check for editorial content sheet or hero container bottom
-      const sheet = document.querySelector<HTMLElement>("[data-editorial-sheet]");
-      if (sheet) {
-        setIsPastHero(sheet.getBoundingClientRect().top <= 100);
-        return;
-      }
+        let pastHero = false;
+        if (cachedSheet) {
+          pastHero = cachedSheet.getBoundingClientRect().top <= 80;
+        } else {
+          const heroEl = document.querySelector<HTMLElement>(
+            "[data-hero-pinned], [data-hero-stage], [data-hero-container], .hero-scroll-stage"
+          );
+          if (heroEl) {
+            pastHero = heroEl.getBoundingClientRect().bottom <= 80;
+          } else {
+            const threshold = getHeroFallbackThreshold();
+            pastHero = threshold === 0 || scrollY >= threshold;
+          }
+        }
+        setIsPastHero(pastHero);
 
-      const heroEl = document.querySelector<HTMLElement>(
-        "[data-hero-pinned], [data-hero-stage], [data-hero-container], .hero-scroll-stage, #games-hero-stage"
-      );
-      if (heroEl) {
-        setIsPastHero(heroEl.getBoundingClientRect().bottom <= 100);
-        return;
-      }
-
-      // Route-specific fallback thresholds
-      let threshold = vh * 1.2;
-      if (pathname === "/") threshold = vh * 2.8;
-      else if (pathname === "/about" || pathname === "/games") threshold = vh * 2.2;
-      else if (pathname === "/guide" || pathname === "/events") threshold = vh * 1.5;
-
-      setIsPastHero(scrollY >= threshold);
+        // Auto-collapse if user scrolls past 180px while open
+        if (isOpen && Math.abs(scrollY - openScrollYRef.current) > 180) {
+          setIsOpen(false);
+        }
+      });
     };
 
     evaluateScroll();
@@ -129,415 +134,372 @@ export const Navbar: React.FC = () => {
       window.removeEventListener("scroll", evaluateScroll);
       window.removeEventListener("resize", evaluateScroll);
     };
-  }, [pathname, isHeroRoute]);
+  }, [pathname, isHeroRoute, isOpen]);
 
   // Close triggers: Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        if (isMoreOpen) setIsMoreOpen(false);
-        if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false);
         playClick();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isMobileMenuOpen, isMoreOpen, playClick]);
+  }, [isOpen, playClick]);
 
   // Close triggers: Click outside
   useEffect(() => {
+    if (!isOpen) return;
+
     const handlePointerDown = (e: PointerEvent) => {
-      if (isMoreOpen && moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
-        setIsMoreOpen(false);
-      }
-      if (isMobileMenuOpen && navRef.current && !navRef.current.contains(e.target as Node)) {
-        setIsMobileMenuOpen(false);
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
         playClick();
       }
     };
 
     window.addEventListener("pointerdown", handlePointerDown);
     return () => window.removeEventListener("pointerdown", handlePointerDown);
-  }, [isMobileMenuOpen, isMoreOpen, playClick]);
+  }, [isOpen, playClick]);
 
-  const toggleMobileMenu = () => {
-    if (!isMobileMenuOpen) {
+  // Toggle handler
+  const handleToggle = () => {
+    if (!isOpen) {
+      openScrollYRef.current = typeof window !== "undefined" ? window.scrollY : 0;
       playSilkSwish();
-      setIsMobileMenuOpen(true);
+      setIsOpen(true);
     } else {
       playClick();
-      setIsMobileMenuOpen(false);
-    }
-  };
-
-  const toggleMoreMenu = () => {
-    if (!isMoreOpen) {
-      playSilkSwish();
-      setIsMoreOpen(true);
-    } else {
-      playClick();
-      setIsMoreOpen(false);
+      setIsOpen(false);
     }
   };
 
   const handleLinkClick = () => {
     playClick();
-    setIsMobileMenuOpen(false);
-    setIsMoreOpen(false);
+    setIsOpen(false);
   };
 
   const handleBrandClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     playClick();
-    setIsMobileMenuOpen(false);
-    setIsMoreOpen(false);
+    setIsOpen(false);
+
+    if (typeof window !== "undefined") {
+      try {
+        sessionStorage.setItem("ts_skip_hero", "true");
+      } catch {
+        // Ignore storage exceptions
+      }
+    }
 
     if (pathname === "/") {
-      if (isPastHero) {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+      e.preventDefault();
+      const target =
+        document.getElementById("flagship-gathering") ||
+        document.querySelector<HTMLElement>("[data-editorial-sheet]");
+      if (target) {
+        if (window.__lenis) {
+          window.__lenis.scrollTo(target, { offset: -20, duration: 1.0 });
+        } else {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
       }
     }
   };
 
-  const isDocked = isPastHero || !isHeroRoute;
+  // Spring animations for width morph
+  const containerSpring = isOpen
+    ? ({ type: "spring", stiffness: 260, damping: 26, mass: 0.9 } as const)
+    : ({ type: "spring", stiffness: 320, damping: 30, mass: 0.8 } as const);
 
   return (
-    <header
-      id="global-floating-nav"
-      ref={navRef}
-      className={`fixed left-0 right-0 z-50 transition-[top,padding,background-color,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-        isDocked
-          ? "top-0 w-full bg-[rgba(28,18,43,0.92)] backdrop-blur-xl border-b border-[#C79347]/25 shadow-[0_4px_28px_rgba(0,0,0,0.45)] py-2.5 sm:py-3 px-4 sm:px-8"
-          : "top-3 sm:top-4 w-full px-4 sm:px-8 pointer-events-none flex justify-center"
-      }`}
-    >
-      <div
-        className={`w-full flex items-center justify-between transition-[max-width,padding,background-color,border-color,border-radius,box-shadow] duration-300 ${
-          isDocked
-            ? "max-w-7xl mx-auto pointer-events-auto"
-            : "max-w-6xl mx-auto pointer-events-auto bg-[rgba(28,18,43,0.88)] backdrop-blur-md rounded-lg border border-[#C79347]/25 shadow-[0_8px_32px_rgba(0,0,0,0.35)] py-2 px-3 sm:px-5"
-        }`}
+    <LayoutGroup id="muttram-navbar-expandable">
+      <header
+        id="global-floating-nav"
+        className="fixed top-2.5 sm:top-3.5 left-0 right-0 z-50 px-3 sm:px-6 pointer-events-none flex justify-center items-center transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
       >
-        {/* ======================================================================= */}
-        {/* LEFT: Brand Lockup with Official Seal Crest                            */}
-        {/* ======================================================================= */}
-        <Link
-          href="/"
-          onClick={handleBrandClick}
-          aria-label="OSU Tamil Sangam Home"
-          className="group flex items-center gap-2.5 text-left shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8] rounded-sm select-none pr-3"
+        <motion.div
+          ref={navRef}
+          layout
+          transition={containerSpring}
+          style={{ borderRadius: isOpen ? 26 : 9999 }}
+          className={`pointer-events-auto relative border transition-colors duration-300 ${
+            isOpen
+              ? isDarkHero
+                ? "w-full max-w-6xl bg-[#1C122B]/95 border-[#C79347]/30 text-[#FAF5ED] shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl"
+                : "w-full max-w-6xl bg-[#1C122B]/95 border-[#C79347]/30 text-[#FAF5ED] shadow-[0_12px_36px_-10px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+              : isDarkHero
+              ? "w-auto max-w-[440px] bg-[#1C122B]/90 border-[#C79347]/30 text-[#FAF5ED] shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
+              : "w-auto max-w-[440px] bg-[#1C122B]/92 border-[#C79347]/30 text-[#FAF5ED] shadow-[0_8px_30px_rgba(0,0,0,0.35),0_1px_2px_rgba(0,0,0,0.2)] backdrop-blur-md"
+          } p-1.5 sm:p-2`}
         >
-          <div className="relative w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-full p-[1.5px] bg-gradient-to-tr from-[#C79347]/70 via-[#2BB5A8]/50 to-[#5B2C86]/70 group-hover:from-[#C79347] group-hover:to-[#2BB5A8] transition-colors shadow-sm">
-            <Image
-              src="/emblem.svg"
-              alt="The Ohio State University Tamil Sangam Official Seal"
-              width={36}
-              height={36}
-              priority
-              className="w-full h-full object-contain rounded-full"
-            />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-serif font-bold text-sm sm:text-base tracking-tight text-[#FAF5ED] group-hover:text-[#C79347] transition-colors leading-tight">
-              {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"}
-            </span>
-            <span
-              lang="ta"
-              style={{ letterSpacing: 0 }}
-              className="font-tamil text-[9px] text-[#C79347]/80 group-hover:text-[#C79347] transition-opacity mt-0.5 leading-none font-medium"
+          {/* ======================================================================= */}
+          {/* DESKTOP VIEW (>= 1024px): Seamless horizontal expansion                */}
+          {/* ======================================================================= */}
+          <div className="hidden lg:flex items-center justify-between gap-2 xl:gap-3 px-2">
+            {/* Left: Brand Lockup */}
+            <Link
+              href="/#flagship-gathering"
+              onClick={handleBrandClick}
+              aria-label="OSU Tamil Sangam Home"
+              className="group flex items-center gap-2.5 text-left shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8] rounded-full select-none pr-2"
             >
-              {locale === "ta" ? "The Ohio State University" : "ஒஹையோ மாநிலப் பல்கலைக்கழகம்"}
-            </span>
-          </div>
-        </Link>
-
-        {/* ======================================================================= */}
-        {/* CENTER: Hybrid Desktop Navigation (Select Pages + More Drawer)          */}
-        {/* ======================================================================= */}
-        <nav
-          aria-label="Main Navigation"
-          className="hidden lg:flex items-center gap-1 xl:gap-2 justify-center"
-        >
-          {PRIMARY_NAV_ROUTES.map((route) => {
-            const isActive = activeRoute.href === route.href;
-            return (
-              <Link
-                key={route.href}
-                href={route.href}
-                onClick={handleLinkClick}
-                aria-current={isActive ? "page" : undefined}
-                className={`group relative px-2.5 py-1.5 rounded-md text-xs xl:text-sm font-sans transition-[color,background-color] duration-150 flex items-center gap-1.5 ${
-                  isActive
-                    ? "text-[#FAF5ED] font-semibold"
-                    : "text-[#CBBBA8] hover:text-[#FAF5ED] font-medium"
-                }`}
-              >
-                <span>{locale === "ta" ? route.ta : route.en}</span>
-
-                {/* Subtle Status Indicator */}
-                {route.isNew && (
-                  <span className="font-mono text-[8px] font-bold uppercase tracking-wider px-1 py-[0.5px] rounded-xs bg-[#C79347]/20 text-[#C79347]">
-                    NEW
-                  </span>
-                )}
-                {route.badge && !route.isNew && gamesUnsolved && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#C79347] animate-pulse" />
-                )}
-
-                {/* Active indicator bar */}
-                {isActive && (
-                  <motion.div
-                    layoutId="navbar-active-indicator"
-                    className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-[#2BB5A8] shadow-[0_0_8px_rgba(43,181,168,0.6)]"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-              </Link>
-            );
-          })}
-
-          {/* More Dropdown for Secondary Pages (Gallery, Guide, Links, Ideas) */}
-          <div className="relative" ref={moreMenuRef}>
-            <button
-              type="button"
-              onClick={toggleMoreMenu}
-              aria-expanded={isMoreOpen}
-              aria-haspopup="menu"
-              aria-label={isMoreOpen ? "Close explore menu" : "Open explore menu"}
-              className={`group relative px-2.5 py-1.5 rounded-md text-xs xl:text-sm font-sans transition-[color,background-color] duration-150 flex items-center gap-1 cursor-pointer select-none ${
-                isSecondaryActive || isMoreOpen
-                  ? "text-[#F4F0FA] font-semibold"
-                  : "text-[#C4B7D7] hover:text-[#F4F0FA] font-medium"
-              }`}
-            >
-              <span>{locale === "ta" ? "மேலும்" : "More"}</span>
-              <ChevronDown
-                className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                  isMoreOpen ? "rotate-180 text-[#2BB5A8]" : "text-[#CBBBA8] group-hover:text-[#FAF5ED]"
-                }`}
-              />
-
-              {isSecondaryActive && (
-                <motion.div
-                  layoutId="navbar-active-indicator"
-                  className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] bg-[#2BB5A8] shadow-[0_0_8px_rgba(43,181,168,0.6)]"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              <div className="relative w-7 h-7 shrink-0 rounded-full bg-[#271A3C] border border-[#C79347]/40 flex items-center justify-center p-1">
+                <Image
+                  src="/emblem.svg"
+                  alt="OSU Tamil Sangam Emblem"
+                  width={20}
+                  height={20}
+                  className="object-contain"
                 />
-              )}
-            </button>
-
-            {/* Desktop More Dropdown Menu */}
-            <AnimatePresence>
-              {isMoreOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 6, scale: 0.96 }}
-                  transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                  role="menu"
-                  className="absolute top-full right-0 mt-2 w-72 p-2 rounded-2xl bg-[#1C122B]/98 backdrop-blur-2xl border border-[#C79347]/30 shadow-[0_16px_48px_rgba(0,0,0,0.6)] z-50 overflow-hidden"
+              </div>
+              <div className="flex flex-col">
+                <span className="font-serif font-bold text-sm tracking-tight text-[#FAF5ED] group-hover:text-[#C79347] transition-colors leading-tight">
+                  {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"}
+                </span>
+                <span
+                  lang="ta"
+                  style={{ letterSpacing: 0 }}
+                  className="font-tamil text-[9px] text-[#CBBBA8] opacity-80 group-hover:opacity-100 transition-opacity mt-0.5 leading-none font-medium"
                 >
-                  <div className="px-2.5 py-1.5 border-b border-[#C79347]/20 mb-1 flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#C79347] font-bold">
-                      {locale === "ta" ? "கூடுதல் பக்கங்கள்" : "COMMUNITY & EXPLORE"}
-                    </span>
-                    <span lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-[10px] text-[#CBBBA8]">
-                      {locale === "ta" ? "Explore" : "வழிகாட்டிகள்"}
-                    </span>
-                  </div>
+                  {locale === "ta" ? "The Ohio State University" : "ஒஹியோ மாநிலப் பல்கலைக்கழகம்"}
+                </span>
+              </div>
+            </Link>
 
-                  <div className="space-y-1">
-                    {SECONDARY_NAV_ROUTES.map((route) => {
+            {/* Center Context Pill: Visible ONLY when Collapsed (State A) */}
+            <AnimatePresence mode="wait">
+              {!isOpen && (
+                <div className="flex items-center gap-2">
+                  <motion.div
+                    key="collapsed-active-pill"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-sans bg-[#271A3C] border border-[#C79347]/30 text-[#FAF5ED] select-none"
+                  >
+                    <span className="font-medium">
+                      {locale === "ta" ? activeRoute.ta : activeRoute.en}
+                    </span>
+                    <span
+                      className="size-1.5 rounded-full bg-[#2BB5A8]"
+                      aria-hidden="true"
+                    />
+                    <span
+                      lang="ta"
+                      style={{ letterSpacing: 0 }}
+                      className="font-tamil text-[10px] text-[#C79347] opacity-90"
+                    >
+                      {locale === "ta" ? activeRoute.en : activeRoute.ta}
+                    </span>
+                  </motion.div>
+                </div>
+              )}
+            </AnimatePresence>
+
+            {/* Middle Track: Staggered Bilingual Reveal (State B - Expanded) */}
+            <AnimatePresence>
+              {isOpen && (
+                <motion.nav
+                  key="desktop-expanded-links"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  aria-label="Expanded Navigation"
+                  className="flex items-center gap-x-1 xl:gap-x-1.5 flex-1 justify-center overflow-x-hidden py-0.5 px-1"
+                >
+                  {NAV_ROUTES.map((route, index) => {
+                    const isActive = activeRoute.href === route.href;
+                    return (
+                      <NavBilingualItem
+                        key={route.href}
+                        route={route}
+                        isActive={isActive}
+                        isDarkHero={isDarkHero}
+                        locale={locale}
+                        gamesUnsolved={gamesUnsolved}
+                        isExpanded={isOpen}
+                        onClick={handleLinkClick}
+                        index={index}
+                      />
+                    );
+                  })}
+                </motion.nav>
+              )}
+            </AnimatePresence>
+
+            {/* Right Cluster: CTA (Visible when Expanded) + Sikku Kolam Toggle */}
+            <div className="flex items-center gap-2 shrink-0">
+              <AnimatePresence>
+                {isOpen && (
+                  <motion.div
+                    key="desktop-cta"
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    transition={{ duration: 0.25, delay: 0.15 }}
+                  >
+                    <Magnet padding={20} magnetStrength={1.8} maxOffset={4}>
+                      <Link
+                        href="/join"
+                        onClick={handleLinkClick}
+                        tabIndex={isOpen ? 0 : -1}
+                        className="group inline-flex items-center gap-1 font-sans text-xs font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8] rounded-full py-1 px-3 text-[#FAF5ED] hover:text-[#C79347] bg-[#271A3C] hover:bg-[#352254] border border-[#C79347]/30"
+                      >
+                        <span>{locale === "ta" ? "இணைந்திருங்கள்" : "Join the Hearth"}</span>
+                        <span className="text-xs transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-[#2BB5A8]">
+                          ↗
+                        </span>
+                      </Link>
+                    </Magnet>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Sikku Kolam Knot Toggle Button */}
+              <SikkuKolamToggle
+                isOpen={isOpen}
+                onToggle={handleToggle}
+                isDarkHero={isDarkHero}
+              />
+            </div>
+          </div>
+
+          {/* ======================================================================= */}
+          {/* MOBILE & TABLET VIEW (< 1024px): Smooth vertical card expansion        */}
+          {/* ======================================================================= */}
+          <div className="lg:hidden flex flex-col w-full">
+            {/* Top Bar inside Pill */}
+            <div className="flex items-center justify-between gap-2 px-2 py-0.5">
+              <Link
+                href="/#flagship-gathering"
+                onClick={handleBrandClick}
+                aria-label="OSU Tamil Sangam Home"
+                className="group flex items-center gap-2 text-left shrink-0 cursor-pointer select-none"
+              >
+                <div className="relative w-6 h-6 shrink-0 rounded-full bg-[#271A3C] border border-[#C79347]/40 flex items-center justify-center p-0.5">
+                  <Image
+                    src="/emblem.svg"
+                    alt="OSU Tamil Sangam Emblem"
+                    width={16}
+                    height={16}
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-serif font-bold text-sm tracking-tight text-[#FAF5ED] leading-tight">
+                    {locale === "ta" ? "ஓஹியோ தமிழ் சங்கம்" : "OSU Tamil Sangam"}
+                  </span>
+                  <span
+                    lang="ta"
+                    style={{ letterSpacing: 0 }}
+                    className="font-tamil text-[8.5px] leading-none mt-0.5 font-medium text-[#CBBBA8] opacity-80"
+                  >
+                    {locale === "ta" ? "The Ohio State University" : "ஒஹியோ மாநிலப் பல்கலைக்கழகம்"}
+                  </span>
+                </div>
+              </Link>
+
+              {/* Center Active Pill on Mobile */}
+              {!isOpen && (
+                <div className="flex items-center gap-1.5">
+                  <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-sans bg-[#271A3C] text-[#FAF5ED] border border-[#C79347]/30">
+                    <span className="font-medium truncate max-w-[80px]">
+                      {locale === "ta" ? activeRoute.ta : activeRoute.en}
+                    </span>
+                    <span
+                      className="size-1 rounded-full bg-[#2BB5A8]"
+                      aria-hidden="true"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Kolam Toggle */}
+              <SikkuKolamToggle
+                isOpen={isOpen}
+                onToggle={handleToggle}
+                isDarkHero={isDarkHero}
+              />
+            </div>
+
+            {/* Mobile Expanded 2-Column Grid */}
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div
+                  key="mobile-expanded-grid"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                  className="overflow-hidden pt-3 mt-2 border-t border-[#C79347]/20"
+                >
+                  <div className="grid grid-cols-2 gap-2">
+                    {NAV_ROUTES.map((route, index) => {
                       const isActive = activeRoute.href === route.href;
-                      const Icon = getSecondaryIcon(route.href);
                       return (
-                        <Link
+                        <motion.div
                           key={route.href}
-                          href={route.href}
-                          onClick={handleLinkClick}
-                          role="menuitem"
-                          className={`group flex items-start gap-3 p-2.5 rounded-xl transition-[background-color,border-color] ${
-                            isActive
-                              ? "bg-[#271A3C] border border-[#C79347]/50 text-[#FAF5ED]"
-                              : "hover:bg-[#271A3C]/70 border border-transparent text-[#CBBBA8] hover:text-[#FAF5ED]"
-                          }`}
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.02 }}
                         >
-                          <div
-                            className={`p-2 rounded-lg shrink-0 mt-0.5 border ${
+                          <Link
+                            href={route.href}
+                            onClick={handleLinkClick}
+                            className={`flex flex-col p-2.5 rounded-xl border transition-colors ${
                               isActive
-                                ? "bg-[#160E22] border-[#C79347]/60 text-[#C79347]"
-                                : "bg-[#160E22]/80 border-[#C79347]/20 text-[#CBBBA8] group-hover:text-[#2BB5A8] group-hover:border-[#2BB5A8]/40"
+                                ? "bg-[#271A3C] border-[#C79347]/50 text-[#FAF5ED]"
+                                : "bg-[#1C122B]/70 border-white/5 text-[#CBBBA8] hover:bg-[#271A3C]/60 hover:text-[#FAF5ED]"
                             }`}
                           >
-                            <Icon className="w-4 h-4" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center justify-between">
-                              <span className="font-sans text-xs font-semibold text-[#FAF5ED] group-hover:text-[#2BB5A8] transition-colors">
-                                {locale === "ta" ? route.ta : route.en}
-                              </span>
-                              <span
-                                lang="ta"
-                                style={{ letterSpacing: 0 }}
-                                className="font-tamil text-[10px] text-[#C79347]/80 ml-2 shrink-0"
-                              >
-                                {locale === "ta" ? route.en : route.ta}
-                              </span>
-                            </div>
-                            {route.descriptionEn && (
-                              <p className="text-[11px] font-sans text-[#CBBBA8] mt-0.5 leading-snug line-clamp-1">
-                                {locale === "ta" ? route.descriptionTa : route.descriptionEn}
-                              </p>
-                            )}
-                          </div>
-                        </Link>
+                            <span className="font-sans text-xs font-semibold inline-flex items-center gap-1.5">
+                              {locale === "ta" ? route.ta : route.en}
+                              {route.isNextEvent ? (
+                                <span className="font-mono text-[7px] font-bold uppercase tracking-wider px-1 py-[0.5px] rounded-full bg-[#2BB5A8]/20 text-[#2BB5A8] border border-[#2BB5A8]/50">
+                                  NEXT
+                                </span>
+                              ) : route.isNew ? (
+                                <span className="font-mono text-[7px] font-bold uppercase tracking-wider px-1 py-[0.5px] rounded-full bg-[#C79347]/20 text-[#C79347] border border-[#C79347]/35">
+                                  NEW
+                                </span>
+                              ) : null}
+                              {route.badge && !route.isNew && gamesUnsolved && (
+                                <span className="size-1 rounded-full bg-[#C79347]" />
+                              )}
+                            </span>
+                            <span
+                              lang="ta"
+                              style={{ letterSpacing: 0 }}
+                              className="font-tamil text-[9px] mt-0.5 text-[#2BB5A8]"
+                            >
+                              {locale === "ta" ? route.en : route.ta}
+                            </span>
+                          </Link>
+                        </motion.div>
                       );
                     })}
+                  </div>
+
+                  {/* Mobile CTA */}
+                  <div className="pt-3 mt-3 border-t border-[#C79347]/20">
+                    <Link
+                      href="/join"
+                      onClick={handleLinkClick}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#0F766E] text-[#FAF5ED] font-sans font-semibold text-xs hover:bg-[#0B5C56] transition-colors shadow-xs"
+                    >
+                      <span>{locale === "ta" ? "இணைந்திருங்கள்" : "Join the Hearth"}</span>
+                      <span>↗</span>
+                    </Link>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-        </nav>
-
-        {/* ======================================================================= */}
-        {/* RIGHT: Primary Action CTA & Mobile Menu Trigger                         */}
-        {/* ======================================================================= */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {/* Join CTA (Desktop) - Peacock Teal per PRD §4.1 */}
-          <Link
-            href="/join"
-            onClick={handleLinkClick}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#0F766E] text-[#FAF5ED] hover:bg-[#0B5C56] font-sans font-semibold text-xs tracking-wide transition-all shadow-[0_0_12px_rgba(15,118,110,0.35)] hover:shadow-[0_0_16px_rgba(199,147,71,0.3)] hover:ring-1 hover:ring-[#C79347]/50 cursor-pointer"
-          >
-            <span>{locale === "ta" ? "இணைந்திருங்கள்" : "Join Sangam"}</span>
-            <span className="text-[11px]">↗</span>
-          </Link>
-
-          {/* Mobile Menu Button (< 1024px) */}
-          <button
-            type="button"
-            onClick={toggleMobileMenu}
-            aria-expanded={isMobileMenuOpen}
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-            className="lg:hidden inline-flex items-center justify-center p-2 rounded-md bg-[#271A3C] border border-[#C79347]/30 text-[#FAF5ED] hover:text-[#2BB5A8] hover:border-[#2BB5A8]/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8]"
-          >
-            {isMobileMenuOpen ? (
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* MOBILE DRAWER / MENU SHEET (< 1024px)                                     */}
-      {/* ========================================================================= */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:hidden w-full max-w-7xl mx-auto mt-2 pt-3 pb-5 px-3 sm:px-6 bg-[#1C122B]/98 backdrop-blur-2xl border-t border-b border-[#C79347]/30 shadow-[0_16px_48px_rgba(0,0,0,0.6)]"
-          >
-            <div className="space-y-4">
-              {/* Primary Navigation Grid */}
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#C79347] font-bold block mb-2 px-1">
-                  {locale === "ta" ? "முக்கிய பக்கங்கள்" : "CORE & LEADERSHIP"}
-                </span>
-                <div className="grid grid-cols-2 gap-2">
-                  {PRIMARY_NAV_ROUTES.map((route) => {
-                    const isActive = activeRoute.href === route.href;
-                    return (
-                      <Link
-                        key={route.href}
-                        href={route.href}
-                        onClick={handleLinkClick}
-                        className={`flex flex-col p-3 rounded-xl border transition-[background-color,border-color] ${
-                          isActive
-                            ? "bg-[#271A3C] border-[#2BB5A8]/50 text-[#FAF5ED] shadow-[0_0_12px_rgba(43,181,168,0.15)]"
-                            : "bg-[#160E22]/70 border-[#C79347]/15 text-[#CBBBA8] hover:bg-[#271A3C] hover:text-[#FAF5ED]"
-                        }`}
-                      >
-                        <span className="font-sans text-xs sm:text-sm font-semibold flex items-center justify-between">
-                          <span>{locale === "ta" ? route.ta : route.en}</span>
-                          {route.isNew && (
-                            <span className="font-mono text-[8px] font-bold uppercase tracking-wider px-1 py-[0.5px] rounded-xs bg-[#C79347]/20 text-[#C79347]">
-                              NEW
-                            </span>
-                          )}
-                        </span>
-                        <span
-                          lang="ta"
-                          style={{ letterSpacing: 0 }}
-                          className="font-tamil text-[10px] text-[#C79347]/80 mt-0.5"
-                        >
-                          {locale === "ta" ? route.en : route.ta}
-                        </span>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Secondary Navigation Grid */}
-              <div className="pt-2 border-t border-[#C79347]/20">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#CBBBA8] font-bold block mb-2 px-1">
-                  {locale === "ta" ? "கூடுதல் வழிகாட்டிகள்" : "EXPLORE & ARCHIVES"}
-                </span>
-                <div className="grid grid-cols-2 gap-2">
-                  {SECONDARY_NAV_ROUTES.map((route) => {
-                    const isActive = activeRoute.href === route.href;
-                    return (
-                      <Link
-                        key={route.href}
-                        href={route.href}
-                        onClick={handleLinkClick}
-                        className={`flex flex-col p-2.5 rounded-xl border transition-[background-color,border-color] ${
-                          isActive
-                            ? "bg-[#271A3C] border-[#C79347]/50 text-[#FAF5ED]"
-                            : "bg-[#160E22]/80 border-[#C79347]/15 text-[#CBBBA8] hover:bg-[#271A3C] hover:text-[#FAF5ED]"
-                        }`}
-                      >
-                        <span className="font-sans text-xs font-medium flex items-center justify-between">
-                          <span>{locale === "ta" ? route.ta : route.en}</span>
-                        </span>
-                        <span
-                          lang="ta"
-                          style={{ letterSpacing: 0 }}
-                          className="font-tamil text-[9px] text-[#CBBBA8] mt-0.5"
-                        >
-                          {locale === "ta" ? route.en : route.ta}
-                        </span>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Mobile Actions: Join Sangam */}
-              <div className="pt-3 border-t border-[#C79347]/25 flex flex-col gap-2">
-                <Link
-                  href="/join"
-                  onClick={handleLinkClick}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#0F766E] text-[#FAF5ED] font-sans font-bold text-xs uppercase tracking-wider hover:bg-[#0B5C56] transition-colors shadow-sm"
-                >
-                  <span>{locale === "ta" ? "இணைந்திருங்கள்" : "Join the Hearth (Free Membership)"}</span>
-                  <span>↗</span>
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+        </motion.div>
+      </header>
+    </LayoutGroup>
   );
 };

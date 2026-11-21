@@ -27,6 +27,7 @@ import { ArcadeGameCard } from "./ArcadeGameCard";
 import { FlagshipGameCard } from "./FlagshipGameCard";
 import { ARCADE_GAMES_CATALOG } from "@/lib/games/storage";
 import { useModalScrollLock } from "@/hooks/useModalScrollLock";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
 import {
   SOLLU_BIWEEKLY_EDITIONS,
   BIWEEKLY_EDITION_IDS,
@@ -130,140 +131,155 @@ export function GamesHub() {
   };
 
   return (
-    <section id="games-hub" className="w-full bg-[#140C20] text-[#F4F0FA] py-12 sm:py-20 px-4 sm:px-8 border-t border-[#A6F0CF]/35 outline-hidden">
-      <div className="max-w-5xl mx-auto">
-        {/* ---------------------------------------------------------------- */}
-        {/* 1. EDITORIAL MASTHEAD WITH BIWEEKLY CADENCE                      */}
-        {/* ---------------------------------------------------------------- */}
-        <header className="border-b-2 border-[rgba(212,163,106,0.25)] pb-6 mb-8 select-none">
-          {/* Top Line: Cadence Badge, Edition Dates & Actions */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[rgba(212,163,106,0.2)] text-xs font-mono uppercase tracking-widest text-[#CBBBA8]">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#271A3C] border border-[rgba(212,163,106,0.3)] text-[#C79347] text-[11px] font-bold">
-                <Sparkles className="size-3 text-[#C79347]" />
-                <span>BIWEEKLY CADENCE · இருவாரப் புதிர்</span>
-              </span>
+    <section id="games-hub" className="w-full bg-bg-sangam-deep text-ink-alabaster outline-hidden">
+      {/* ---------------------------------------------------------------- */}
+      {/* 1. SANDSTONE MASTHEAD BAND: bridges the warm hero into the arcade */}
+      {/* ---------------------------------------------------------------- */}
+      <div className="texture-khadi border-b border-accent-zari/35 bg-bg-sandstone px-4 pt-12 pb-10 text-ink-earth sm:px-8 sm:pt-20 sm:pb-12">
+        <div className="mx-auto max-w-5xl">
+          <header aria-labelledby="games-masthead-title" className="mb-8 border-b border-border-warm pb-8">
+            {/* Status strip: cadence, edition dates & actions */}
+            <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-border-warm pb-3">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                <Eyebrow tamil="இருவாரப் புதிர்">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Sparkles className="size-3" aria-hidden="true" />
+                    Biweekly cadence
+                  </span>
+                </Eyebrow>
 
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#FAF5ED]">
-                <Calendar className="size-3.5 text-[#C79347]" />
-                <span>
-                  {currentEditionMeta.editionNo} · {currentEditionMeta.periodEn}
-                </span>
-                <span lang="ta" className="font-tamil text-[#C79347] text-xs">
-                  ({currentEditionMeta.periodTa})
-                </span>
+                <div className="flex flex-wrap items-center gap-x-1.5 font-sans text-sm font-semibold text-ink-earth">
+                  <Calendar className="size-3.5 text-brand-purple" aria-hidden="true" />
+                  <span>
+                    {currentEditionMeta.editionNo} · {currentEditionMeta.periodEn}
+                  </span>
+                  <span lang="ta" className="font-tamil text-sm font-normal leading-[1.6] text-ink-umber">
+                    ({currentEditionMeta.periodTa})
+                  </span>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center gap-5 text-xs font-sans">
-              <button
-                onClick={() => setIsHelpOpen(true)}
-                className="flex items-center gap-1.5 text-[#CBBBA8] hover:text-[#C79347] font-semibold transition-colors"
-              >
-                <HelpCircle className="size-3.5 text-[#C79347]" />
-                <span>Rules · வழிகாட்டி</span>
-              </button>
-
-              <button
-                onClick={handleShareHub}
-                className="flex items-center gap-1.5 text-[#CBBBA8] hover:text-[#C79347] font-semibold transition-colors"
-              >
-                {copiedHub ? <Check className="size-3.5 text-emerald-400" /> : <Share2 className="size-3.5 text-[#C79347]" />}
-                <span>{copiedHub ? "Copied Link!" : "Share · பகிர்"}</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Central Newspaper Masthead Title */}
-          <div className="pt-6 text-center">
-            <h2 className="font-serif text-4xl sm:text-6xl font-normal text-[#FAF5ED] tracking-tight mb-2">
-              The Sangam Arcade
-            </h2>
-            <p
-              lang="ta"
-              className="font-tamil text-xl sm:text-2xl text-[#C79347] font-medium tracking-wide mb-3"
-            >
-              களஞ்சியம் · இருவாரத் தமிழ்ப் புதிர்கள்
-            </p>
-            <p className="font-sans text-xs sm:text-sm text-[#CBBBA8] max-w-xl mx-auto leading-relaxed">
-              New York Times-grade biweekly cultural puzzles rooted in Tamil heritage, cinema, and campus life. New editions release on the 1st and 15th of every month.
-            </p>
-          </div>
-        </header>
-
-        {/* ---------------------------------------------------------------- */}
-        {/* 2. BIWEEKLY EDITION NAVIGATION BAR                               */}
-        {/* ---------------------------------------------------------------- */}
-        <nav aria-label="Biweekly Editions" className="mb-8">
-          <div className="flex items-center justify-between pb-2 mb-3">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#CBBBA8]">
-              <span className="font-bold text-[#C79347]">SELECT EDITION</span>
-              <span>·</span>
-              <span>பதிப்பைத் தேர்ந்தெடுக்கவும்</span>
-            </div>
-
-            {nextUnlock && (
-              <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-mono text-[#C79347]">
-                <Clock className="size-3" />
-                <span>Next drop in {nextUnlock.days}d {nextUnlock.hours}h</span>
-              </div>
-            )}
-          </div>
-
-          {/* Horizontal Scrollable Edition Strip */}
-          <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-[rgba(212,163,106,0.3)]">
-            {BIWEEKLY_EDITION_IDS.map((edId) => {
-              const meta = SOLLU_BIWEEKLY_EDITIONS[edId];
-              const unlocked = isEditionUnlocked(edId);
-              const isSelected = selectedEdition === edId;
-              const isLive = edId === currentLiveId;
-              const solved = isEditionComplete(edId);
-
-              return (
+              <div className="flex items-center gap-2 font-sans text-sm">
                 <button
-                  key={edId}
-                  onClick={() => selectEdition(edId)}
-                  className={`group relative shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono transition-all duration-200 border ${
-                    isSelected
-                      ? "bg-[#5B2C86] border-[#C79347] text-[#FAF5ED] shadow-[0_0_15px_rgba(199,147,71,0.2)]"
-                      : unlocked
-                      ? "bg-[#271A3C] border-[rgba(212,163,106,0.24)] hover:border-[#C79347]/60 text-[#CBBBA8] hover:text-[#FAF5ED]"
-                      : "bg-[#1C122B]/50 border-[rgba(212,163,106,0.15)] text-[#CBBBA8]/40 hover:border-[rgba(212,163,106,0.35)]"
-                  }`}
+                  type="button"
+                  onClick={() => setIsHelpOpen(true)}
+                  className="inline-flex min-h-12 items-center gap-1.5 rounded-full px-3 font-semibold text-brand-teal underline-offset-4 transition-colors hover:text-brand-teal-hover hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
                 >
-                  {/* Status Indicator */}
-                  {solved ? (
-                    <Check className="size-3.5 text-emerald-400 shrink-0" />
-                  ) : isLive ? (
-                    <span className="relative flex size-2 shrink-0">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C79347] opacity-75" />
-                      <span className="relative inline-flex rounded-full size-2 bg-[#C79347]" />
-                    </span>
-                  ) : !unlocked ? (
-                    <Lock className="size-3 text-[#CBBBA8]/40 shrink-0" />
-                  ) : (
-                    <span className="size-1.5 rounded-full bg-[#CBBBA8]/40 shrink-0" />
-                  )}
-
-                  {/* Edition Tag & Dates */}
-                  <div className="text-left leading-tight">
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-bold">{meta.editionNo}</span>
-                      {isLive && (
-                        <span className="text-[9px] px-1 rounded bg-[#C79347]/20 text-[#C79347] font-bold">
-                          LIVE
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-[10px] text-[#CBBBA8]/70 block whitespace-nowrap">
-                      {meta.periodEn.split(",")[0]}
-                    </span>
-                  </div>
+                  <HelpCircle className="size-4" aria-hidden="true" />
+                  <span>
+                    Rules · <span lang="ta">வழிகாட்டி</span>
+                  </span>
                 </button>
-              );
-            })}
-          </div>
-        </nav>
+
+                <button
+                  type="button"
+                  onClick={handleShareHub}
+                  className="inline-flex min-h-12 items-center gap-1.5 rounded-full px-3 font-semibold text-brand-teal underline-offset-4 transition-colors hover:text-brand-teal-hover hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
+                >
+                  {copiedHub ? <Check className="size-4" aria-hidden="true" /> : <Share2 className="size-4" aria-hidden="true" />}
+                  <span aria-live="polite">
+                    {copiedHub ? "Copied link!" : <>Share · <span lang="ta">பகிர்</span></>}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Masthead title */}
+            <div className="pt-8">
+              <h2
+                id="games-masthead-title"
+                className="font-serif text-4xl font-normal leading-[1.08] tracking-tight text-ink-earth sm:text-6xl"
+              >
+                The Sangam Arcade
+              </h2>
+              <p lang="ta" className="mt-2 font-tamil text-xl leading-[1.6] text-brand-purple sm:text-2xl">
+                களஞ்சியம் · இருவாரத் தமிழ்ப் புதிர்கள்
+              </p>
+              <p className="mt-3 max-w-xl font-sans text-sm leading-relaxed text-ink-umber sm:text-base">
+                Biweekly cultural puzzles rooted in Tamil heritage, cinema, and campus life. New editions release on the 1st and 15th of every month.
+              </p>
+            </div>
+          </header>
+
+          {/* ---------------------------------------------------------------- */}
+          {/* 2. BIWEEKLY EDITION NAVIGATION BAR                               */}
+          {/* ---------------------------------------------------------------- */}
+          <nav aria-label="Biweekly Editions">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <Eyebrow tamil="பதிப்பைத் தேர்ந்தெடுக்கவும்">Select edition</Eyebrow>
+
+              {nextUnlock && (
+                <div className="hidden items-center gap-1.5 font-sans text-xs font-medium text-ink-umber sm:flex">
+                  <Clock className="size-3.5 text-brand-purple" aria-hidden="true" />
+                  {/* Clock-derived text differs between the static prerender and the client; that drift is expected. */}
+                  <span suppressHydrationWarning>Next drop in {nextUnlock.days}d {nextUnlock.hours}h</span>
+                </div>
+              )}
+            </div>
+
+            {/* Horizontal scrollable edition strip */}
+            <div className="flex items-center gap-2.5 overflow-x-auto pb-2">
+              {BIWEEKLY_EDITION_IDS.map((edId) => {
+                const meta = SOLLU_BIWEEKLY_EDITIONS[edId];
+                const unlocked = isEditionUnlocked(edId);
+                const isSelected = selectedEdition === edId;
+                const isLive = edId === currentLiveId;
+                const solved = isEditionComplete(edId);
+
+                return (
+                  <button
+                    key={edId}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => selectEdition(edId)}
+                    className={`group relative flex min-h-12 shrink-0 items-center gap-2 rounded-full border px-4 py-1.5 font-sans text-xs transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-sandstone ${
+                      isSelected
+                        ? "border-brand-purple bg-brand-purple text-ink-alabaster shadow-[0_6px_18px_rgba(91,44,134,0.18)]"
+                        : unlocked
+                        ? "border-border-warm bg-surface-card-light text-ink-umber hover:border-brand-purple/50 hover:text-ink-earth"
+                        : "border-dashed border-border-warm bg-surface-card-parchment text-ink-umber hover:border-brand-purple/40"
+                    }`}
+                  >
+                    {/* Status indicator */}
+                    {solved ? (
+                      <Check className={`size-3.5 shrink-0 ${isSelected ? "text-ink-alabaster" : "text-brand-teal"}`} aria-label="Solved" />
+                    ) : isLive ? (
+                      <span className="relative flex size-2 shrink-0" aria-hidden="true">
+                        <span className="size-2 rounded-full bg-accent-zari" />
+                      </span>
+                    ) : !unlocked ? (
+                      <Lock className="size-3 shrink-0" aria-label="Locked" />
+                    ) : (
+                      <span className="size-1.5 shrink-0 rounded-full bg-accent-bronze/50" aria-hidden="true" />
+                    )}
+
+                    {/* Edition tag & dates */}
+                    <div className="text-left leading-tight">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-semibold">{meta.editionNo}</span>
+                        {isLive && (
+                          <span
+                            className={`rounded px-1 text-[10px] font-semibold uppercase tracking-[0.1em] ${
+                              isSelected ? "bg-ink-alabaster/15 text-ink-alabaster" : "bg-brand-purple-soft text-brand-purple"
+                            }`}
+                          >
+                            Live
+                          </span>
+                        )}
+                      </div>
+                      <span className={`block whitespace-nowrap text-[11px] ${isSelected ? "text-ink-alabaster/80" : "text-ink-umber"}`}>
+                        {meta.periodEn.split(",")[0]}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      <div className="mx-auto box-content max-w-5xl px-4 py-12 sm:px-8 sm:py-16">
 
         {/* ---------------------------------------------------------------- */}
         {/* 3. CONDITIONAL VIEW: CARDS CATALOG VS FOCUSED GAME ARENA          */}
@@ -274,13 +290,13 @@ export function GamesHub() {
           /* ============================================================== */
           <div className="w-full">
             {/* Edition Context Banner */}
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#271A3C] border border-[rgba(212,163,106,0.24)] mb-6 text-xs font-mono text-[#FAF5ED]">
+            <div className="flex items-center justify-between p-3.5 rounded-xl bg-surface-card-dark border border-border-zari-muted mb-6 text-xs font-mono text-ink-alabaster">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-[#C79347]">
+                <span className="font-bold text-accent-zari">
                   {currentEditionMeta.editionNo}: {currentEditionMeta.periodEn}
                 </span>
-                <span className="text-white/40 hidden sm:inline">|</span>
-                <span lang="ta" className="font-tamil text-[#CBBBA8] hidden sm:inline">
+                <span className="text-ink-sand/40 hidden sm:inline" aria-hidden="true">|</span>
+                <span lang="ta" className="font-tamil text-ink-sand hidden sm:inline">
                   {currentEditionMeta.periodTa}
                 </span>
               </div>
@@ -288,20 +304,20 @@ export function GamesHub() {
               <div className="flex items-center gap-3">
                 {isUnlocked ? (
                   isSelectedComplete ? (
-                    <span className="inline-flex items-center gap-1 text-emerald-400 font-bold">
+                    <span className="inline-flex items-center gap-1 text-brand-teal-dark font-bold">
                       <Check className="size-3.5" />
                       <span>Edition Solved!</span>
                     </span>
                   ) : isCurrentLive ? (
-                    <span className="inline-flex items-center gap-1.5 text-[#C79347] font-bold">
-                      <Flame className="size-3.5 text-[#C79347]" />
+                    <span className="inline-flex items-center gap-1.5 text-accent-zari font-bold">
+                      <Flame className="size-3.5 text-accent-zari" />
                       <span>Current Biweekly Window</span>
                     </span>
                   ) : (
-                    <span className="text-[#CBBBA8]">Archive Edition</span>
+                    <span className="text-ink-sand">Archive Edition</span>
                   )
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-[#CBBBA8]/60">
+                  <span className="inline-flex items-center gap-1 text-ink-sand/80">
                     <Lock className="size-3" />
                     <span>Locked (Unlocks in {countdown.days}d {countdown.hours}h)</span>
                   </span>

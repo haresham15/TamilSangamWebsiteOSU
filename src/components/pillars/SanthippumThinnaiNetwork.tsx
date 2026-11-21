@@ -82,7 +82,7 @@ export function SanthippumThinnaiNetwork() {
 
         <div className="space-y-4 max-w-3xl">
           <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#55CCA2]">
-            <span className="w-2 h-2 rounded-full bg-[#55CCA2] animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-[#55CCA2]" />
             <span>The Architectural Ethos · திண்ணை மரபு</span>
           </div>
           <h3 className="font-serif text-3xl sm:text-5xl text-[#F4F0FA] font-normal leading-tight">

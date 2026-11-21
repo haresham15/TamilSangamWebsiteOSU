@@ -33,6 +33,7 @@ import {
   recordSolluGameResult,
   type SolluStats,
 } from "@/lib/gamesStorage";
+import { SITE_CONFIG } from "@/data/siteConfig";
 
 interface SolluWordleProps {
   editionKey: string; // e.g. "2026-10-A", "2027-01-A", "2026-10"
@@ -775,7 +776,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
               </button>
 
               <a
-                href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
+                href={SITE_CONFIG.groupMeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-xs font-mono text-[#F4F0FA]/60 hover:text-[#A6F0CF] underline underline-offset-4 px-2 py-1 transition-colors ml-auto"

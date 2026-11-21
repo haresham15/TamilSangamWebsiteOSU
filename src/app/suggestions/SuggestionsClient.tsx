@@ -11,6 +11,7 @@ import {
   Check,
   Loader2,
   ArrowRight,
+  HeartHandshake,
   Sparkles
 } from "lucide-react";
 import { useLocale } from "@/context/LocaleContext";
@@ -22,12 +23,13 @@ import { audioLayer } from "@/utils/audioLayer";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
-import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
+import { CulturalSection } from "@/components/ui/CulturalSection";
+import { CulturalCard } from "@/components/ui/CulturalCard";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
 import { registerSystem } from "@/engine/masterTick";
 import { Magnet } from "@/components/ui/react-bits";
 import { PILLARS_DATA, PillarSlug } from "@/data/pillars";
 import { OsuTamilPlaylistGateway } from "@/components/gateways/OsuTamilPlaylistGateway";
-import { AramPhilanthropyGateway } from "@/components/gateways/AramPhilanthropyGateway";
 import { HeroKolamLoader } from "@/components/ui/HeroKolamLoader";
 
 function SuggestionsSearchParamsSync({
@@ -92,26 +94,45 @@ function SubmitSuggestionButton() {
 
   return (
     <Magnet magnetStrength={2} maxOffset={8}>
-      <button
-        type="submit"
-        disabled={pending}
-        className="px-8 py-3.5 bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] font-mono text-xs font-bold uppercase tracking-wider rounded-xl transition-colors duration-150 flex items-center gap-2.5 shadow-md cursor-pointer disabled:opacity-50"
-      >
+      <MuttramButton type="submit" variant="primary" disabled={pending}>
         {pending ? (
-          <>
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span>Sharing your idea...</span>
-          </>
+          <span className="inline-flex items-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+            Sharing your idea...
+          </span>
         ) : (
-          <>
-            <span>Submit Proposal</span>
-            <ArrowRight className="w-4 h-4" />
-          </>
+          <span className="inline-flex items-center gap-2">
+            Submit proposal
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </span>
         )}
-      </button>
+      </MuttramButton>
     </Magnet>
   );
 }
+
+// White inputs with a teal focus ring (ivory band).
+const FIELD_CLASS =
+  "w-full min-h-12 rounded-xl border border-border-warm bg-surface-card-light px-4 py-3 font-sans text-base text-ink-earth placeholder:text-ink-umber/60 shadow-[0_2px_10px_rgba(91,44,134,0.05)] outline-none transition-colors focus-visible:border-brand-teal focus-visible:ring-2 focus-visible:ring-brand-teal/40";
+
+// Aram philanthropy pillars: this page is their single home (removed from /about to avoid duplication).
+const ARAM_PILLARS = [
+  {
+    titleEn: "Columbus Food Pantry Drives",
+    titleTa: "உணவுப் பகிர்வு & அறப்பணி",
+    desc: "Channeling student community drives into Columbus food banks and campus pantry pantries to support food security.",
+  },
+  {
+    titleEn: "Cross-Cultural Student Coalitions",
+    titleTa: "பல்கலாச்சார மாணவர் கூட்டணி",
+    desc: "Co-hosting joint mixers, game exchanges, and shared advocacy alongside non-Indian student organizations across OSU.",
+  },
+  {
+    titleEn: "Sustainable Gathering Ethics",
+    titleTa: "சுற்றுச்சூழல் பாதுகாப்பு",
+    desc: "Phasing out disposable single-use plastic decor to invest in wholesome food and compostable campus gatherings.",
+  },
+];
 
 export function SuggestionsClient() {
   const { locale } = useLocale();
@@ -218,316 +239,346 @@ export function SuggestionsClient() {
           className="absolute bottom-28 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-auto transition-transform will-change-[transform,opacity]"
         >
           <button
+            type="button"
             onClick={scrollToForm}
-            className="flex items-center gap-2.5 whitespace-nowrap min-h-12 px-5 py-2.5 bg-[#1C122B]/95 border border-[#C79347]/40 text-[#FAF5ED] font-mono text-xs uppercase tracking-widest hover:border-[#C79347] hover:bg-[#1C122B] transition-all rounded-full shadow-lg backdrop-blur-md cursor-pointer"
+            className="flex items-center gap-2.5 whitespace-nowrap min-h-12 px-6 py-2.5 rounded-full border border-accent-zari bg-bg-sangam-deep/70 text-accent-zari font-sans text-xs font-semibold uppercase tracking-[0.14em] shadow-lg backdrop-blur-md transition-colors hover:bg-accent-zari/10 hover:text-ink-alabaster focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark focus-visible:ring-offset-2 focus-visible:ring-offset-bg-sangam-deep cursor-pointer"
           >
-            <span>DISPATCH SUGGESTION</span>
-            <ArrowDown className="w-3.5 h-3.5 text-[#C79347] animate-bounce" />
+            <span>Dispatch suggestion</span>
+            <ArrowDown className="w-3.5 h-3.5 motion-safe:animate-bounce" aria-hidden="true" />
           </button>
         </div>
       </HeroScrollStage>
 
       {/* =========================================================================
-          THE THINNAI ANCHOR & THE BLUEPRINT IDEAS TERMINAL
-          Strict 12-Column Asymmetric Grid:
+          I · THE IDEAS HEARTH: proposal form (editorial split on ivory)
           Glides up over the blueprint stage (p = 0.82 -> 1.00)
           ========================================================================= */}
-      <EditorialSheetHandoff 
+      <EditorialSheetHandoff
         id="the-ideas-form"
         badge="STUDENT PROPOSALS"
         sublabel="CAMPUS INITIATIVES"
-        surface="sandstone"
-        className="text-[#261A14]"
+        surface="ivory"
+        className="text-ink-earth"
       >
-        <div ref={formSectionRef} className="w-full">
-        <div className="w-full max-w-[1700px] mx-auto px-6 sm:px-10 lg:px-12 py-20 sm:py-28">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-            
-            {/* ===================================================================
-                THE ANCHOR (LEFT 4 COLUMNS): THE THINNAI
-                Warm Sandstone sidebar, soft serif headers, proven track record card
-                =================================================================== */}
-            <aside className="lg:col-span-4 lg:sticky lg:top-24 space-y-8 select-none">
-              <div className="relative z-10 space-y-4">
-                <h2 className="text-4xl sm:text-5xl font-serif font-normal text-[#261A14] leading-tight">
-                  The Ideas Hearth
-                </h2>
-                <p className="text-sm font-tamil text-[#0F766E] tracking-normal font-medium" lang="ta">
-                  {locale === "ta" ? "விருப்பங்கள் & வரைபடம்" : "கருத்துக்களம் · திட்டங்கள்"}
-                </p>
-                <p className="text-base font-sans text-[#5E4C40] leading-relaxed">
-                  Every festival, language circle, dinner gathering, and dance item began as an idea proposed by a student. Share yours directly with the executive board.
-                </p>
-              </div>
+        <div ref={formSectionRef} className="w-full scroll-mt-20">
+          <section aria-labelledby="ideas-hearth-title" className="mx-auto max-w-7xl px-6 py-20 sm:px-10 sm:py-28">
+            <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-12 lg:gap-16">
+              {/* Header column */}
+              <div className="space-y-8 self-start md:sticky md:top-28 md:col-span-5">
+                <div className="space-y-4">
+                  <Eyebrow>Student proposals</Eyebrow>
+                  <h2
+                    id="ideas-hearth-title"
+                    className="font-serif text-4xl font-normal leading-[1.08] tracking-tight text-ink-earth sm:text-5xl"
+                  >
+                    The Ideas Hearth
+                  </h2>
+                  <p className="font-tamil text-lg leading-[1.6] text-brand-purple" lang="ta">
+                    {locale === "ta" ? "விருப்பங்கள் & வரைபடம்" : "கருத்துக்களம் · திட்டங்கள்"}
+                  </p>
+                  <p className="max-w-md font-sans text-base leading-relaxed text-ink-umber">
+                    Every festival, language circle, dinner gathering, and dance item began as an idea proposed by a student. Share yours directly with the executive board.
+                  </p>
+                </div>
 
-              {/* Prior Community Initiatives: Compact Architectural Footnote Cards */}
-              <div className="relative z-10 pt-4 space-y-3">
-                <span className="text-[11px] font-mono tracking-widest uppercase text-[#5E4C40] block font-semibold">
-                  Past Proposals Realized
-                </span>
-                <div className="grid grid-cols-1 gap-2.5">
-                  <div className="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] shadow-xs">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-mono font-semibold text-[#0F766E]">01</span>
-                      <span className="text-xs font-serif font-semibold text-[#261A14]">Conversational Katral</span>
-                    </div>
-                    <p className="text-xs font-sans text-[#5E4C40] leading-relaxed">
-                      Bi-weekly sessions exploring everyday spoken Tamil and script fundamentals.
-                    </p>
-                  </div>
-                  <div className="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] shadow-xs">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-mono font-semibold text-[#0F766E]">02</span>
-                      <span className="text-xs font-serif font-semibold text-[#261A14]">Spring Cultural Carnival</span>
-                    </div>
-                    <p className="text-xs font-sans text-[#5E4C40] leading-relaxed">
-                      Inter-collegiate festival co-hosted on the South Oval with partner cultural orgs.
-                    </p>
-                  </div>
+                {/* Past proposals realized: ledger rows, not boxes */}
+                <div>
+                  <h3 className="mb-3 font-sans text-xs font-semibold uppercase tracking-[0.14em] text-ink-umber">
+                    Past proposals realized
+                  </h3>
+                  <ol className="max-w-md divide-y divide-border-warm border-y border-border-warm">
+                    <li className="grid grid-cols-[2.5rem_1fr] gap-x-2 py-4">
+                      <span aria-hidden="true" className="font-serif text-lg text-brand-purple">01</span>
+                      <div>
+                        <p className="font-serif text-lg text-ink-earth">Conversational Katral</p>
+                        <p className="mt-1 font-sans text-sm leading-relaxed text-ink-umber">
+                          Bi-weekly sessions exploring everyday spoken Tamil and script fundamentals.
+                        </p>
+                      </div>
+                    </li>
+                    <li className="grid grid-cols-[2.5rem_1fr] gap-x-2 py-4">
+                      <span aria-hidden="true" className="font-serif text-lg text-brand-purple">02</span>
+                      <div>
+                        <p className="font-serif text-lg text-ink-earth">Spring Cultural Carnival</p>
+                        <p className="mt-1 font-sans text-sm leading-relaxed text-ink-umber">
+                          Inter-collegiate festival co-hosted on the South Oval with partner cultural orgs.
+                        </p>
+                      </div>
+                    </li>
+                  </ol>
                 </div>
               </div>
-            </aside>
 
-            {/* ===================================================================
-                THE FLOW (RIGHT 8 COLUMNS): CONVERSATIONAL PROPOSAL FORM
-                Warm, open, conversational inputs inside Cotton Card
-                =================================================================== */}
-            <main className="lg:col-span-8 bg-[#FFFFFF] border border-[#DFD1BE] shadow-lg rounded-2xl p-6 sm:p-10 text-[#261A14]">
-              <Suspense fallback={null}>
-                <SuggestionsSearchParamsSync
-                  onCategory={setSelectedCategory}
-                  onPillar={(p) => {
-                    setIncomingPillar(p);
-                    if (formSectionRef.current) {
-                      formSectionRef.current.scrollIntoView({ behavior: "smooth" });
-                    }
-                  }}
-                  onPrompt={(promptText) => {
-                    setPillarPrompt(promptText);
-                    setMessage((prev) => prev || promptText);
-                  }}
-                />
-              </Suspense>
+              {/* Form column */}
+              <div className="text-ink-earth md:col-span-7">
+                <Suspense fallback={null}>
+                  <SuggestionsSearchParamsSync
+                    onCategory={setSelectedCategory}
+                    onPillar={(p) => {
+                      setIncomingPillar(p);
+                      if (formSectionRef.current) {
+                        formSectionRef.current.scrollIntoView({ behavior: "smooth" });
+                      }
+                    }}
+                    onPrompt={(promptText) => {
+                      setPillarPrompt(promptText);
+                      setMessage((prev) => prev || promptText);
+                    }}
+                  />
+                </Suspense>
 
-              {!state.success ? (
-                <form action={formAction} className="space-y-12 py-2">
-                  {/* Honeypot & Timestamp Hidden Inputs */}
-                  <input type="hidden" name="form_timestamp" value={timestamp} />
-                  <div className="hidden" aria-hidden="true">
-                    <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-                  </div>
-                  <input type="hidden" name="category" value={selectedCategory} />
+                {!state.success ? (
+                  <form action={formAction} className="space-y-10">
+                    {/* Honeypot & Timestamp Hidden Inputs */}
+                    <input type="hidden" name="form_timestamp" value={timestamp} />
+                    <div className="hidden" aria-hidden="true">
+                      <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+                    </div>
+                    <input type="hidden" name="category" value={selectedCategory} />
 
-                  {/* Incoming Pillar Context Banner */}
-                  {incomingPillar && PILLARS_DATA[incomingPillar as PillarSlug] && (
-                    <div className="p-4 rounded-xl bg-[#FAF6F0] border border-[#C79347]/40 space-y-2.5">
-                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
-                        <div className="flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-[#0F766E] animate-pulse" />
-                          <span className="font-semibold text-[#261A14]">
-                            Continuing from Pillar {PILLARS_DATA[incomingPillar as PillarSlug].number}: {PILLARS_DATA[incomingPillar as PillarSlug].titleEn} ({PILLARS_DATA[incomingPillar as PillarSlug].titleTa})
-                          </span>
+                    {/* Incoming Pillar Context Banner */}
+                    {incomingPillar && PILLARS_DATA[incomingPillar as PillarSlug] && (
+                      <div className="space-y-3 border-l-[3px] border-l-brand-purple bg-brand-purple-soft px-4 py-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2 font-sans text-sm">
+                          <div className="flex items-center gap-2">
+                            <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full bg-brand-teal" />
+                            <span className="font-semibold text-ink-earth">
+                              Continuing from Pillar {PILLARS_DATA[incomingPillar as PillarSlug].number}: {PILLARS_DATA[incomingPillar as PillarSlug].titleEn} (<span lang="ta">{PILLARS_DATA[incomingPillar as PillarSlug].titleTa}</span>)
+                            </span>
+                          </div>
+                          <Link
+                            href={`/pillars/${incomingPillar}`}
+                            className="inline-flex min-h-12 items-center font-semibold text-brand-teal underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
+                          >
+                            View Pillar Blueprint ↗
+                          </Link>
                         </div>
-                        <Link
-                          href={`/pillars/${incomingPillar}`}
-                          className="text-[#0F766E] hover:underline"
-                        >
-                          View Pillar Blueprint ↗
-                        </Link>
-                      </div>
 
-                      {pillarPrompt && message !== pillarPrompt && (
-                        <div className="pt-1">
+                        {pillarPrompt && message !== pillarPrompt && (
                           <button
                             type="button"
                             onClick={() => {
                               audioLayer.playTapeClack();
                               setMessage(pillarPrompt);
                             }}
-                            className="inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-[#E1F3F1] hover:bg-[#0F766E]/20 text-[#0F766E] border border-[#0F766E]/40 transition-colors"
+                            className="inline-flex min-h-12 items-center gap-1.5 rounded-full border border-brand-teal/40 bg-brand-teal-soft px-4 font-sans text-sm font-medium text-brand-teal transition-colors hover:border-brand-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
                           >
-                            <Sparkles className="w-3.5 h-3.5" />
+                            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                             <span>Insert Pillar Starter Template</span>
                           </button>
-                        </div>
-                      )}
+                        )}
+                      </div>
+                    )}
+
+                    {/* Question 01: Proposal Message */}
+                    <div className="space-y-2">
+                      <label htmlFor="terminal-message" className="block font-sans text-sm font-semibold text-ink-earth">
+                        What is your campus proposal or idea? *
+                      </label>
+                      <p id="terminal-message-hint" className="font-sans text-sm text-ink-umber">
+                        Describe what you would love to see happen (e.g., midnight filter coffee sessions, board game night, music jamming).
+                      </p>
+                      <textarea
+                        id="terminal-message"
+                        name="message"
+                        required
+                        rows={5}
+                        aria-describedby="terminal-message-hint"
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        placeholder="e.g. Host a midnight Tamil filter coffee & study session at Thompson Library during finals..."
+                        className={`${FIELD_CLASS} resize-y`}
+                      />
                     </div>
-                  )}
 
-                  {/* Question 01: Proposal Message */}
-                  <div className="space-y-3">
-                    <label 
-                      htmlFor="terminal-message" 
-                      className="block font-sans text-sm font-semibold text-[#261A14] tracking-wide"
-                    >
-                      What is your campus proposal or idea? *
-                    </label>
-                    <p className="text-xs font-sans text-[#5E4C40]">
-                      Describe what you would love to see happen (e.g., midnight filter coffee sessions, board game night, music jamming).
-                    </p>
-                    <textarea
-                      id="terminal-message"
-                      name="message"
-                      required
-                      rows={4}
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="e.g. Host a midnight Tamil filter coffee & study session at Thompson Library during finals..."
-                      className="w-full py-3 bg-transparent border-b border-[#DFD1BE] text-[#261A14] placeholder:text-[#5E4C40]/50 font-sans text-base outline-none focus:border-[#0F766E] transition-colors resize-none"
-                    />
-                  </div>
+                    {/* Question 02: Category Selection */}
+                    <fieldset className="space-y-3">
+                      <legend className="block font-sans text-sm font-semibold text-ink-earth">
+                        Proposal category
+                      </legend>
+                      <div className="flex flex-wrap gap-2.5">
+                        {categories.map((cat) => {
+                          const active = selectedCategory === cat;
+                          return (
+                            <button
+                              key={cat}
+                              type="button"
+                              aria-pressed={active}
+                              onClick={() => {
+                                audioLayer.playTapeClack();
+                                setSelectedCategory(cat);
+                              }}
+                              className={`inline-flex min-h-12 items-center rounded-full border px-5 font-sans text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-ivory ${
+                                active
+                                  ? "border-brand-purple bg-brand-purple-soft font-semibold text-brand-purple"
+                                  : "border-border-warm bg-surface-card-light text-ink-umber hover:border-brand-purple/50 hover:text-ink-earth"
+                              }`}
+                            >
+                              {cat}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </fieldset>
 
-                  {/* Question 02: Category Selection */}
-                  <div className="space-y-3">
-                    <span className="block font-sans text-sm font-semibold text-[#261A14] tracking-wide">
-                      Select Proposal Category:
-                    </span>
-                    <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2">
-                      {categories.map((cat) => (
-                        <button
-                          key={cat}
-                          type="button"
-                          onClick={() => {
-                            audioLayer.playTapeClack();
-                            setSelectedCategory(cat);
-                          }}
-                          className={`pb-1 text-xs sm:text-sm font-sans uppercase tracking-widest font-medium transition-all cursor-pointer ${
-                            selectedCategory === cat
-                              ? "text-[#0F766E] border-b-2 border-[#0F766E] font-bold"
-                              : "text-[#5E4C40] hover:text-[#261A14] border-b-2 border-transparent"
-                          }`}
-                        >
-                          {cat}
-                        </button>
-                      ))}
+                    <div className="grid gap-8 sm:grid-cols-2 sm:gap-6">
+                      {/* Question 03: Name (Optional) */}
+                      <div className="space-y-2">
+                        <label htmlFor="terminal-user-name" className="block font-sans text-sm font-semibold text-ink-earth">
+                          Your Name (Optional)
+                        </label>
+                        <p id="terminal-user-name-hint" className="font-sans text-sm text-ink-umber">
+                          Leave blank to submit anonymously.
+                        </p>
+                        <input
+                          id="terminal-user-name"
+                          name="name"
+                          type="text"
+                          aria-describedby="terminal-user-name-hint"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="e.g. Brutus Buckeye"
+                          className={FIELD_CLASS}
+                        />
+                      </div>
+
+                      {/* Question 04: Email (Optional) */}
+                      <div className="space-y-2">
+                        <label htmlFor="terminal-user-email" className="block font-sans text-sm font-semibold text-ink-earth">
+                          Your Buckeye Email (Optional)
+                        </label>
+                        <p id="terminal-user-email-hint" className="font-sans text-sm text-ink-umber">
+                          Only if you&apos;d like the board to follow up.
+                        </p>
+                        <input
+                          id="terminal-user-email"
+                          name="email"
+                          type="email"
+                          aria-describedby="terminal-user-email-hint"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="name.#@osu.edu"
+                          className={FIELD_CLASS}
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Question 03: Name (Optional) */}
-                  <div className="space-y-2">
-                    <label 
-                      htmlFor="terminal-user-name" 
-                      className="block font-sans text-sm font-semibold text-[#261A14] tracking-wide"
-                    >
-                      Your Name (Optional)
-                    </label>
-                    <p className="text-xs font-sans text-[#5E4C40]">
-                      Leave blank if you prefer to submit your idea anonymously.
-                    </p>
-                    <input
-                      id="terminal-user-name"
-                      name="name"
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="e.g. Brutus Buckeye"
-                      className="w-full py-3 bg-transparent border-b border-[#DFD1BE] text-[#261A14] placeholder:text-[#5E4C40]/50 font-sans text-sm outline-none focus:border-[#0F766E] transition-colors"
-                    />
-                  </div>
+                    {/* Server Validation Error */}
+                    {state.error && (
+                      <div role="alert" className="border-l-2 border-accent-kumkum bg-accent-kumkum/5 px-4 py-3 font-sans text-sm text-ink-earth">
+                        {state.error}
+                      </div>
+                    )}
 
-                  {/* Question 04: Email (Optional) */}
-                  <div className="space-y-2">
-                    <label 
-                      htmlFor="terminal-user-email" 
-                      className="block font-sans text-sm font-semibold text-[#261A14] tracking-wide"
-                    >
-                      Your Buckeye Email (Optional)
-                    </label>
-                    <p className="text-xs font-sans text-[#5E4C40]">
-                      Only needed if you would like the board to follow up with updates on your suggestion.
-                    </p>
-                    <input
-                      id="terminal-user-email"
-                      name="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="name.#@osu.edu"
-                      className="w-full py-3 bg-transparent border-b border-[#DFD1BE] text-[#261A14] placeholder:text-[#5E4C40]/50 font-sans text-sm outline-none focus:border-[#0F766E] transition-colors"
-                    />
-                  </div>
-
-                  {/* Server Validation Error */}
-                  {state.error && (
-                    <div className="p-4 border-l-2 border-rose-500 bg-rose-50/50 text-rose-800 font-sans text-xs">
-                      {state.error}
+                    {/* Submit Button */}
+                    <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border-warm pt-6">
+                      <SubmitSuggestionButton />
+                      <span className="font-sans text-sm text-ink-umber">
+                        Directly routed to the student executive board
+                      </span>
                     </div>
-                  )}
+                  </form>
+                ) : (
+                  /* Warm Confirmation State - Borderless */
+                  <div role="status" className="space-y-6 py-4 animate-in fade-in duration-500">
+                    <Eyebrow tamil="கோரிக்கை ஏற்றுக்கொள்ளப்பட்டது">
+                      <span className="inline-flex items-center gap-1.5">
+                        <Check className="h-4 w-4 text-brand-teal" aria-hidden="true" />
+                        Proposal received
+                      </span>
+                    </Eyebrow>
 
-                  {/* Submit Button */}
-                  <div className="pt-6 border-t border-[#DFD1BE] flex flex-wrap items-center justify-between gap-4">
-                    <SubmitSuggestionButton />
+                    <h2 className="font-serif text-3xl font-normal leading-tight text-ink-earth sm:text-5xl">
+                      Idea Received by the Executive Board.
+                    </h2>
 
-                    <span className="font-sans text-xs text-[#5E4C40]">
-                      Directly routed to the student executive board
-                    </span>
+                    <dl className="max-w-xl space-y-2.5 border-y border-border-warm py-6 font-sans text-sm text-ink-umber">
+                      <div className="flex justify-between gap-4">
+                        <dt className="font-medium text-ink-earth">Category:</dt>
+                        <dd className="font-semibold text-brand-purple">{selectedCategory}</dd>
+                      </div>
+                      <div className="flex justify-between gap-4">
+                        <dt className="font-medium text-ink-earth">Next Step:</dt>
+                        <dd className="text-right text-ink-earth">Reviewed at our upcoming executive meeting</dd>
+                      </div>
+                    </dl>
+
+                    <p className="max-w-xl font-sans text-base leading-relaxed text-ink-umber">
+                      Thank you for helping shape our campus community. We review all student proposals at our regular officer meetings.
+                    </p>
                   </div>
+                )}
+              </div>
+            </div>
+          </section>
 
-                </form>
-              ) : (
-                /* Warm Confirmation State - Borderless */
-                <div className="py-8 space-y-6 select-none animate-in fade-in duration-500">
-                  <div className="inline-flex items-center gap-2 text-[#0F766E] font-mono text-xs font-semibold uppercase tracking-widest">
-                    <Check className="w-4 h-4" />
-                    <span>Proposal Received · கோரிக்கை ஏற்றுக்கொள்ளப்பட்டது</span>
-                  </div>
+          {/* P · The All-OSU Tamil playlist: peacock jewel band */}
+          <OsuTamilPlaylistGateway variant="light" bleed />
 
-                  <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#261A14] leading-tight">
-                    Idea Received by the Executive Board.
+          {/* S · Aram philanthropy & cross-campus service */}
+          <CulturalSection variant="sandstone" aria-labelledby="aram-heading" className="py-20 sm:py-28">
+            <div className="mx-auto max-w-7xl px-6 sm:px-10">
+              <div className="grid gap-6 md:grid-cols-12 md:gap-10">
+                <div className="space-y-4 md:col-span-8">
+                  <Eyebrow tamil="அறம் · விருந்தோம்பல்">Campus impact</Eyebrow>
+                  <h2
+                    id="aram-heading"
+                    className="font-serif text-3xl font-normal leading-[1.12] tracking-tight text-ink-earth sm:text-5xl"
+                  >
+                    Tamil Hospitality in Action: Philanthropy &amp; Cross-Campus Service
                   </h2>
-
-                  <div className="space-y-2.5 font-sans text-sm text-[#5E4C40] border-t border-b border-[#DFD1BE] py-6 max-w-xl">
-                    <div className="flex justify-between">
-                      <span className="font-medium text-[#261A14]">Category:</span>
-                      <span className="text-[#0F766E] font-semibold">{selectedCategory}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium text-[#261A14]">Next Step:</span>
-                      <span className="text-[#261A14]">Reviewed at our upcoming executive meeting</span>
-                    </div>
-                  </div>
-
-                  <p className="text-base text-[#5E4C40] font-sans leading-relaxed max-w-xl">
-                    Thank you for helping shape our campus community. We review all student proposals at our regular officer meetings.
+                  <p lang="ta" className="font-tamil text-lg leading-[1.6] text-brand-purple">
+                    அறமும் விருந்தோம்பலும்: கல்லூரி சமூக நலப் பங்களிப்பு
                   </p>
-
-                  <div className="pt-4">
-                    <MuttramButton href="/board" variant="secondary" size="md">
-                      Meet the Executive Board →
-                    </MuttramButton>
-                  </div>
                 </div>
-              )}
-            </main>
+                <p className="self-end font-sans text-base leading-relaxed text-ink-umber md:col-span-4">
+                  In Tamil culture, <em>Virunthombal</em> (hospitality) and <em>Aram</em> (ethical giving) mean using what we have to uplift the wider community. Instead of spending budget on heavy plastic decorations, we prioritize better food and are opening gateways to partner with Columbus charities, campus food drives, and non-Indian student organizations across Ohio State.
+                </p>
+              </div>
 
+              <ul className="mt-12 grid gap-5 md:grid-cols-3">
+                {ARAM_PILLARS.map((pillar, i) => (
+                  <CulturalCard key={pillar.titleEn} as="li" variant="light" className="p-6">
+                    <span aria-hidden="true" className="font-serif text-2xl text-brand-purple">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="mt-3 font-serif text-xl font-normal leading-snug text-ink-earth">{pillar.titleEn}</h3>
+                    <p lang="ta" className="mt-1 font-tamil text-sm leading-[1.6] text-brand-purple">
+                      {pillar.titleTa}
+                    </p>
+                    <p className="mt-3 font-sans text-sm leading-relaxed text-ink-umber">{pillar.desc}</p>
+                  </CulturalCard>
+                ))}
+              </ul>
+
+              <div className="mt-10 flex flex-col items-start gap-4 border-t border-accent-bronze/30 pt-8 sm:flex-row sm:items-center sm:justify-between">
+                <p className="font-sans text-sm font-medium text-ink-umber">
+                  Open call for co-founding leads &amp; student partners
+                </p>
+                <MuttramButton
+                  href="/ideas?category=PARTNERSHIP&prompt=Philanthropy+or+Cross-Org+Collab"
+                  variant="primary"
+                  icon={<HeartHandshake className="h-4 w-4" aria-hidden="true" />}
+                >
+                  Partner with us / pitch a collab
+                </MuttramButton>
+              </div>
+            </div>
+          </CulturalSection>
+
+          {/* D · Closer: the one OrganicRouteGateway, last */}
+          <div className="bg-bg-peacock-deep pb-24 sm:pb-0">
+            <OrganicRouteGateway
+              primaryHref="/board"
+              primaryLabel="Step into Board Roster"
+              eyebrow="Community Leadership · அடுத்த வாசல்"
+              title="Meet the Executive Board"
+              tamilTitle="செயற்குழு உறுப்பினர்களை சந்தியுங்கள்"
+              description="Discover the student executive officers who bring these community proposals and campus festivals to life."
+            />
           </div>
         </div>
-
-        <div className="mt-20 sm:mt-28 space-y-16">
-          <KolamSectionRule tone="sandstone" />
-
-          {/* Open Community Gateway: The All-OSU Tamil Collective Playlist */}
-          <OsuTamilPlaylistGateway variant="light" />
-
-          {/* Open Community Gateway: Aram Philanthropy & Cross-Cultural Service */}
-          <AramPhilanthropyGateway variant="light" />
-        </div>
-
-        {/* =========================================================================
-            WARM ORGANIC ROUTING TO EXECUTIVE LEADERSHIP
-            ========================================================================= */}
-        <div className="mt-16 pb-28">
-          <OrganicRouteGateway
-            primaryHref="/board"
-            primaryLabel="Step into Board Roster"
-            eyebrow="Community Leadership · அடுத்த வாசல்"
-            title="Meet the Executive Board"
-            tamilTitle="செயற்குழு உறுப்பினர்களை சந்தியுங்கள்"
-            description="Discover the student executive officers who bring these community proposals and campus festivals to life."
-          />
-        </div>
-      </div>
-    </EditorialSheetHandoff>
-  </div>
-);
+      </EditorialSheetHandoff>
+    </div>
+  );
 }

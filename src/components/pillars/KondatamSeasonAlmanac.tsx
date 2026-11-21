@@ -99,7 +99,7 @@ export function KondatamSeasonAlmanac() {
     <div className="w-full space-y-10">
       <div className="space-y-3 max-w-2xl">
         <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#C79347]">
-          <span className="w-2 h-2 rounded-full bg-[#2BB5A8] animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-[#2BB5A8]" />
           <span>The Buckeye Almanac · பருவகாலத் திருவிழாக்கள்</span>
         </div>
         <h3 className="font-serif text-3xl sm:text-4xl text-[#FAF5ED] font-normal leading-tight">

@@ -1,48 +1,54 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useId, useMemo } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { GALLERY_ALBUMS, PhotoItem } from "@/data/gallery";
 import { GlyphMosaicImage } from "@/components/ui/GlyphMosaicImage";
+import { CulturalSection } from "@/components/ui/CulturalSection";
+import { DialogShell } from "@/components/ui/DialogShell";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { useLiteMode } from "@/context/LiteModeContext";
 import { ParallaxScatter } from "./ParallaxScatter";
-import {
-  Eye,
-  X,
-  ExternalLink,
-  ChevronLeft,
-  ChevronRight,
-  Maximize2,
-  Camera,
-  Shuffle,
-  Grid3X3,
-  Sparkles,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, Shuffle, Grid3X3 } from "lucide-react";
 
 interface EventPhotoVaultProps {
   eventSlug: string;
   eventTitle: string;
   scatterPhotos?: string[];
-  googlePhotosUrl?: string;
+  /** Light band the archive sits on; alternate with the band above it. */
+  surface?: "ivory" | "sandstone";
 }
 
+// White print matte for photographs on light bands (purple-tinted shadow, rule C4).
+const PRINT_MATTE =
+  "rounded-[1.25rem] border border-border-warm bg-surface-card-light p-2 sm:p-2.5 shadow-[0_10px_30px_rgba(91,44,134,0.09)]";
+
+// ParallaxScatter is a shared events file this route does not own; these descendant
+// overrides give its naked prints a white matte and a readable caption on light bands.
+const SCATTER_PRINT_OVERRIDES =
+  "[&_figure>div]:border-[6px] sm:[&_figure>div]:border-[10px] [&_figure>div]:border-surface-card-light [&_figure>div]:shadow-[0_10px_30px_rgba(91,44,134,0.12)] [&_figcaption]:text-ink-umber [&_figcaption_span]:text-brand-teal";
+
+/**
+ * The event dossier photo archive: a curated print story (or a shuffled scatter) on a
+ * light band, with a DialogShell media lightbox. The Google Photos link lives in VaultCta.
+ */
 export function EventPhotoVault({
   eventSlug,
   eventTitle,
   scatterPhotos = [],
-  googlePhotosUrl,
+  surface = "sandstone",
 }: EventPhotoVaultProps) {
   const { locale } = useLocale();
   const { playClick, playCardSlide } = useAudio();
-  const reducedMotion = useReducedMotion();
-  const { isLiteMode } = useLiteMode();
+  const headingId = useId();
+  const isTa = locale === "ta";
+  const taText = isTa ? "font-tamil leading-[1.6]" : "";
 
-  // Find matching album from GALLERY_ALBUMS
-  const album = GALLERY_ALBUMS.find(
-    (a) => a.eventSlug === eventSlug || a.slug === eventSlug
+  const album = useMemo(
+    () => GALLERY_ALBUMS.find((a) => a.eventSlug === eventSlug || a.slug === eventSlug),
+    [eventSlug]
   );
 
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
@@ -50,69 +56,57 @@ export function EventPhotoVault({
   const [randomizedScatter, setRandomizedScatter] = useState<string[]>(scatterPhotos);
   const [shuffleCount, setShuffleCount] = useState(0);
 
-  const photos = album?.photos || [];
+  const photos = useMemo(() => album?.photos ?? [], [album]);
   const heroPhoto = photos[0];
   const supportingPhotos = photos.slice(1);
 
-  // Lightbox Navigation index
-  const currentPhotoIndex = selectedPhoto
-    ? photos.findIndex((p) => p.id === selectedPhoto.id)
-    : -1;
+  const currentPhotoIndex = selectedPhoto ? photos.findIndex((p) => p.id === selectedPhoto.id) : -1;
+
+  const safeClick = useCallback(() => {
+    try {
+      playClick();
+    } catch {
+      // Audio optional
+    }
+  }, [playClick]);
 
   const handlePrevPhoto = useCallback(() => {
     if (photos.length === 0) return;
-    try {
-      playClick();
-    } catch {
-      // Audio optional
-    }
-    if (currentPhotoIndex > 0) {
-      setSelectedPhoto(photos[currentPhotoIndex - 1]);
-    } else {
-      setSelectedPhoto(photos[photos.length - 1]);
-    }
-  }, [photos, currentPhotoIndex, playClick]);
+    safeClick();
+    setSelectedPhoto(currentPhotoIndex > 0 ? photos[currentPhotoIndex - 1] : photos[photos.length - 1]);
+  }, [photos, currentPhotoIndex, safeClick]);
 
   const handleNextPhoto = useCallback(() => {
     if (photos.length === 0) return;
-    try {
-      playClick();
-    } catch {
-      // Audio optional
-    }
-    if (currentPhotoIndex < photos.length - 1) {
-      setSelectedPhoto(photos[currentPhotoIndex + 1]);
-    } else {
-      setSelectedPhoto(photos[0]);
-    }
-  }, [photos, currentPhotoIndex, playClick]);
+    safeClick();
+    setSelectedPhoto(currentPhotoIndex < photos.length - 1 ? photos[currentPhotoIndex + 1] : photos[0]);
+  }, [photos, currentPhotoIndex, safeClick]);
 
   const handleCloseLightbox = useCallback(() => {
-    try {
-      playClick();
-    } catch {
-      // Audio optional
-    }
+    safeClick();
     setSelectedPhoto(null);
-  }, [playClick]);
+  }, [safeClick]);
 
-  // Keyboard accessibility for Lightbox
+  const openPhoto = (photo: PhotoItem) => {
+    safeClick();
+    setSelectedPhoto(photo);
+  };
+
+  // Arrow keys step through the lightbox (DialogShell owns Escape, focus trap and scroll lock).
   useEffect(() => {
     if (!selectedPhoto) return;
-
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        handleCloseLightbox();
-      } else if (e.key === "ArrowLeft") {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
         handlePrevPhoto();
       } else if (e.key === "ArrowRight") {
+        e.preventDefault();
         handleNextPhoto();
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedPhoto, handleCloseLightbox, handlePrevPhoto, handleNextPhoto]);
+  }, [selectedPhoto, handlePrevPhoto, handleNextPhoto]);
 
   const shuffleScatter = () => {
     try {
@@ -121,6 +115,7 @@ export function EventPhotoVault({
     } catch {
       // Audio optional
     }
+    setViewMode("scatter");
     setRandomizedScatter((current) => {
       const next = [...current];
       for (let i = next.length - 1; i > 0; i--) {
@@ -132,362 +127,240 @@ export function EventPhotoVault({
     setShuffleCount((count) => count + 1);
   };
 
-  const finalGooglePhotosUrl = album?.googlePhotosUrl || googlePhotosUrl;
+  const tabClass = (active: boolean) =>
+    `inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full px-4 font-sans text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal ${
+      active ? "bg-brand-purple text-ink-alabaster" : "text-ink-umber hover:bg-brand-purple-soft hover:text-brand-purple"
+    }`;
+
+  const navButton =
+    "absolute top-1/2 z-20 inline-flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-border-zari-muted bg-bg-sangam-deep/85 text-ink-alabaster transition-colors hover:bg-brand-teal-dark hover:text-ink-on-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark";
 
   return (
-    <section
-      id="photo-vault"
-      aria-label="Curated Photographic Dossier and Lightbox"
-      className="mt-20 -mx-6 sm:-mx-10 lg:-mx-16 px-6 sm:px-10 lg:px-16 py-16 bg-[#1C122B] border-y border-[#C79347]/30 shadow-2xl scroll-mt-24"
-    >
-      {/* Header bar with bilingual title and view switchers */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#C79347]/30 pb-5 mb-10 gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Camera className="w-4 h-4 text-[#C79347]" />
-            <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#C79347] font-semibold">
-              CAMPUS PHOTO VAULT · ஆவணக் காப்பகம்
-            </span>
+    <CulturalSection id="photo-vault" variant={surface} aria-labelledby={headingId} className="scroll-mt-24">
+      <div className="mx-auto max-w-7xl px-6 py-20 sm:px-10 sm:py-28">
+        {/* Header with bilingual title and view switchers */}
+        <div className="mb-10 flex flex-col justify-between gap-6 border-b border-border-warm pb-6 md:flex-row md:items-end">
+          <div className="space-y-3">
+            <Eyebrow tamil="ஆவணக் காப்பகம்">Campus photo vault</Eyebrow>
+            <h2 id={headingId} className="flex flex-wrap items-baseline gap-x-3 font-serif text-3xl font-normal text-ink-earth sm:text-5xl">
+              <span lang={isTa && album ? "ta" : undefined} className={isTa && album ? "font-tamil leading-[1.6]" : ""}>
+                {album ? (isTa ? album.titleTa : album.titleEn) : "Photographic Archive"}
+              </span>
+              <span lang="ta" className="font-tamil text-xl font-normal leading-[1.6] text-brand-purple sm:text-2xl">
+                தொகுப்பு
+              </span>
+              <span className="font-sans text-sm font-semibold text-brand-purple">
+                ({album ? photos.length : randomizedScatter.length})
+              </span>
+            </h2>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-serif text-[#FAF5ED] flex items-baseline gap-3">
-            <span>{album ? (locale === "ta" ? album.titleTa : album.titleEn) : "Photographic Archive"}</span>
-            <span
-              lang="ta"
-              className="text-xl sm:text-2xl font-tamil text-[#D4A36A] font-normal"
-              style={{ letterSpacing: 0 }}
-            >
-              தொகுப்பு
-            </span>
-            <span className="text-xs font-mono text-[#2BB5A8] font-semibold">
-              ({album ? photos.length : randomizedScatter.length})
-            </span>
-          </h2>
+
+          <div className="flex flex-wrap items-center gap-3">
+            {album && scatterPhotos.length > 0 && (
+              <div
+                role="group"
+                aria-label="Archive view"
+                className="inline-flex rounded-full border border-border-warm bg-surface-card-light p-1"
+              >
+                <button
+                  type="button"
+                  aria-pressed={viewMode === "curated"}
+                  onClick={() => {
+                    safeClick();
+                    setViewMode("curated");
+                  }}
+                  className={tabClass(viewMode === "curated")}
+                >
+                  <Grid3X3 className="h-4 w-4" aria-hidden="true" />
+                  Curated story
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={viewMode === "scatter"}
+                  onClick={() => {
+                    safeClick();
+                    setViewMode("scatter");
+                  }}
+                  className={tabClass(viewMode === "scatter")}
+                >
+                  <Shuffle className="h-4 w-4" aria-hidden="true" />
+                  Scatter view
+                </button>
+              </div>
+            )}
+
+            {randomizedScatter.length > 1 && (
+              <MuttramButton onClick={shuffleScatter} icon={<Shuffle className="h-4 w-4" aria-hidden="true" />}>
+                Shuffle archive
+              </MuttramButton>
+            )}
+          </div>
         </div>
 
-        {/* View Controls & Google Photos Shortcut */}
-        <div className="flex items-center gap-3 flex-wrap">
-          {album && scatterPhotos.length > 0 && (
-            <div className="inline-flex rounded-lg border border-[#C79347]/30 p-0.5 bg-[#271A3C]">
-              <button
-                type="button"
-                onClick={() => {
-                  playClick();
-                  setViewMode("curated");
-                }}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono uppercase tracking-wider rounded-md transition-colors cursor-pointer ${
-                  viewMode === "curated"
-                    ? "bg-[#1C122B] text-[#2BB5A8] font-bold"
-                    : "text-[#CBBBA8] hover:text-[#FAF5ED]"
-                }`}
-              >
-                <Grid3X3 className="w-3.5 h-3.5" />
-                <span>Curated Story</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  playClick();
-                  setViewMode("scatter");
-                }}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono uppercase tracking-wider rounded-md transition-colors cursor-pointer ${
-                  viewMode === "scatter"
-                    ? "bg-[#1C122B] text-[#2BB5A8] font-bold"
-                    : "text-[#CBBBA8] hover:text-[#FAF5ED]"
-                }`}
-              >
-                <Shuffle className="w-3.5 h-3.5" />
-                <span>Scatter View</span>
-              </button>
-            </div>
-          )}
+        <p role="status" className="sr-only">
+          {shuffleCount > 0 ? `Archive reshuffled. ${randomizedScatter.length} selected samples.` : ""}
+        </p>
 
-          {viewMode === "scatter" && (
-            <button
-              type="button"
-              onClick={shuffleScatter}
-              className="inline-flex min-h-9 items-center gap-2 px-3 py-1.5 border border-[#C79347]/40 text-[#C79347] hover:border-[#C79347] font-mono text-xs tracking-wider rounded-lg hover:text-[#FAF5ED] transition-colors cursor-pointer"
-            >
-              <Shuffle className="w-3.5 h-3.5" />
-              <span>SHUFFLE ARCHIVE</span>
-            </button>
-          )}
+        {/* View 1: curated print story */}
+        {viewMode === "curated" && album && photos.length > 0 && (
+          <div className="space-y-8">
+            {heroPhoto && (
+              <figure data-dossier-photo={heroPhoto.imageUrl} className={`group relative ${PRINT_MATTE}`}>
+                <GlyphMosaicImage src={heroPhoto.imageUrl} alt={heroPhoto.titleEn} aspectRatio="aspect-[16/9] sm:aspect-[21/9]" />
+                <figcaption className="flex flex-col gap-1 px-2 pb-2 pt-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6 sm:px-3">
+                  <div className="min-w-0">
+                    <Eyebrow as="p">Featured archive</Eyebrow>
+                    <p lang={isTa ? "ta" : undefined} className={`mt-1 font-serif text-xl text-ink-earth sm:text-2xl ${taText}`}>
+                      {isTa ? heroPhoto.titleTa : heroPhoto.titleEn}
+                    </p>
+                  </div>
+                  <p lang={isTa ? "ta" : undefined} className={`max-w-xl font-sans text-sm text-ink-umber ${isTa ? taText : "leading-relaxed"}`}>
+                    {isTa ? heroPhoto.captionTa : heroPhoto.captionEn}
+                  </p>
+                </figcaption>
+                <button
+                  type="button"
+                  onClick={() => openPhoto(heroPhoto)}
+                  aria-label={`View enlarged photo: ${heroPhoto.titleEn}`}
+                  className="absolute inset-0 cursor-pointer rounded-[1.25rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2"
+                />
+              </figure>
+            )}
 
-          {finalGooglePhotosUrl && (
-            <a
-              href={finalGooglePhotosUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider text-[#1C122B] bg-[#2BB5A8] hover:bg-[#3ED0C2] font-semibold rounded-lg transition-colors shadow-sm"
-            >
-              <span>Full Google Photos Vault</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          )}
-        </div>
+            {supportingPhotos.length > 0 && (
+              <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {supportingPhotos.map((photo, i) => (
+                  <li key={photo.id}>
+                    <figure
+                      data-dossier-photo={photo.imageUrl}
+                      className={`group relative h-full transition-transform duration-200 hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${PRINT_MATTE} ${
+                        i % 2 ? "lg:rotate-[0.6deg]" : "lg:-rotate-[0.6deg]"
+                      }`}
+                    >
+                      <GlyphMosaicImage src={photo.imageUrl} alt={photo.titleEn} aspectRatio="aspect-[4/3]" />
+                      <figcaption className="px-1.5 pb-1.5 pt-3">
+                        <p className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-brand-purple">
+                          {photo.eventDate}
+                        </p>
+                        <p lang={isTa ? "ta" : undefined} className={`mt-1 truncate font-serif text-base text-ink-earth ${taText}`}>
+                          {isTa ? photo.titleTa : photo.titleEn}
+                        </p>
+                        <p lang={isTa ? "ta" : undefined} className={`mt-0.5 line-clamp-1 font-sans text-xs text-ink-umber ${taText}`}>
+                          {isTa ? photo.captionTa : photo.captionEn}
+                        </p>
+                      </figcaption>
+                      <button
+                        type="button"
+                        onClick={() => openPhoto(photo)}
+                        aria-label={`View enlarged photo: ${photo.titleEn}`}
+                        className="absolute inset-0 cursor-pointer rounded-[1.25rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2"
+                      />
+                    </figure>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+
+        {/* View 2: scatter, or fallback when no curated album exists */}
+        {(viewMode === "scatter" || !album || photos.length === 0) && (
+          <div className={SCATTER_PRINT_OVERRIDES}>
+            {randomizedScatter.length > 0 ? (
+              <ParallaxScatter photos={randomizedScatter} eventTitle={eventTitle} />
+            ) : (
+              <p className="py-24 font-serif text-xl italic text-ink-umber">
+                Photographic prints being cataloged in the local vault.
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Screen-reader announcement for shuffle */}
-      <p role="status" className="sr-only">
-        {shuffleCount > 0 ? `Archive reshuffled. ${randomizedScatter.length} selected samples.` : ""}
-      </p>
-
-      {/* View Mode 1: Curated Photographic Story with Hero & Grid */}
-      {viewMode === "curated" && album && photos.length > 0 && (
-        <div className="space-y-6">
-          {/* Curated Hero Photo */}
-          {heroPhoto && (
-            <div className="mb-6">
-              <motion.div
-                layoutId={`photo-card-${heroPhoto.id}`}
-                data-dossier-photo={heroPhoto.imageUrl}
-                onClick={() => {
-                  playClick();
-                  setSelectedPhoto(heroPhoto);
-                }}
-                className="relative aspect-[16/9] sm:aspect-[21/9] w-full overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl group cursor-pointer transition-[box-shadow,transform] duration-200 bg-[#271A3C] border border-[#C79347]/30"
-              >
-                <GlyphMosaicImage
-                  src={heroPhoto.imageUrl}
-                  alt={heroPhoto.titleEn}
-                  aspectRatio="aspect-[21/9]"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1C122B] via-[#1C122B]/40 to-transparent flex flex-col justify-end p-6 sm:p-10 text-white">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1C122B]/80 border border-[#C79347]/40 text-[10px] font-mono text-[#C79347] uppercase tracking-wider">
-                      <Sparkles className="w-3 h-3 text-[#C79347]" />
-                      FEATURED ARCHIVE
-                    </span>
-                    <span className="p-2 rounded-full bg-[#1C122B]/70 backdrop-blur-md text-[#FAF5ED] group-hover:bg-[#2BB5A8] group-hover:text-[#1C122B] transition-colors">
-                      <Eye className="w-4 h-4" />
-                    </span>
-                  </div>
-                  <h3
-                    lang={locale === "ta" ? "ta" : "en"}
-                    className="text-xl sm:text-3xl font-serif text-[#FAF5ED] mb-1"
-                    style={{ letterSpacing: locale === "ta" ? 0 : undefined }}
-                  >
-                    {locale === "ta" ? heroPhoto.titleTa : heroPhoto.titleEn}
-                  </h3>
-                  <p
-                    lang={locale === "ta" ? "ta" : "en"}
-                    className="text-xs sm:text-sm text-[#CBBBA8] font-sans max-w-2xl line-clamp-2"
-                    style={{
-                      letterSpacing: locale === "ta" ? 0 : undefined,
-                      lineHeight: locale === "ta" ? 1.6 : undefined,
-                    }}
-                  >
-                    {locale === "ta" ? heroPhoto.captionTa : heroPhoto.captionEn}
-                  </p>
-                </div>
-              </motion.div>
-            </div>
-          )}
-
-          {/* Supporting Grid of Photos */}
-          {supportingPhotos.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {supportingPhotos.map((photo) => (
-                <motion.div
-                  key={photo.id}
-                  layoutId={`photo-card-${photo.id}`}
-                  data-dossier-photo={photo.imageUrl}
-                  onClick={() => {
-                    playClick();
-                    setSelectedPhoto(photo);
-                  }}
-                  className="relative aspect-[4/3] overflow-hidden rounded-xl group cursor-pointer bg-[#271A3C] border border-[#C79347]/20 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-[box-shadow,transform] duration-200 flex flex-col justify-between"
-                >
-                  <GlyphMosaicImage
-                    src={photo.imageUrl}
-                    alt={photo.titleEn}
-                    aspectRatio="aspect-[4/3]"
-                  />
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1C122B] via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-4 text-white">
-                    <div className="flex items-center justify-end">
-                      <span className="p-1.5 rounded-full bg-[#1C122B]/70 backdrop-blur-md text-[#FAF5ED] group-hover:bg-[#2BB5A8] group-hover:text-[#1C122B] transition-colors">
-                        <Eye className="w-3.5 h-3.5" />
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="text-[10px] font-mono text-[#C79347] block mb-0.5 uppercase tracking-wider">
-                        {photo.eventDate}
-                      </span>
-                      <h4
-                        lang={locale === "ta" ? "ta" : "en"}
-                        className="text-sm font-serif text-[#FAF5ED] truncate"
-                        style={{ letterSpacing: locale === "ta" ? 0 : undefined }}
-                      >
-                        {locale === "ta" ? photo.titleTa : photo.titleEn}
-                      </h4>
-                      <p
-                        lang={locale === "ta" ? "ta" : "en"}
-                        className="text-[11px] text-[#CBBBA8] line-clamp-1 font-sans mt-0.5"
-                        style={{
-                          letterSpacing: locale === "ta" ? 0 : undefined,
-                          lineHeight: locale === "ta" ? 1.6 : undefined,
-                        }}
-                      >
-                        {locale === "ta" ? photo.captionTa : photo.captionEn}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* View Mode 2 (Scatter) or Fallback when no curated album exists */}
-      {(viewMode === "scatter" || !album || photos.length === 0) && (
-        <div>
-          {randomizedScatter.length > 0 ? (
-            <ParallaxScatter photos={randomizedScatter} eventTitle={eventTitle} />
-          ) : (
-            <div className="py-24 text-center font-serif text-xl text-[#F4F0FA]/75 italic">
-              Photographic prints being cataloged in the local vault.
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Fullscreen Interactive Lightbox Modal */}
-      <AnimatePresence>
+      {/* Media lightbox */}
+      <DialogShell
+        open={Boolean(selectedPhoto)}
+        onClose={handleCloseLightbox}
+        tone="media"
+        size="full"
+        eyebrow={selectedPhoto ? `Photo ${currentPhotoIndex + 1} of ${photos.length}` : undefined}
+        title={
+          selectedPhoto ? (
+            <span lang={isTa ? "ta" : undefined} className={taText}>
+              {isTa ? selectedPhoto.titleTa : selectedPhoto.titleEn}
+            </span>
+          ) : undefined
+        }
+        closeLabel="Close photo preview"
+        bodyClassName="p-4 sm:p-6"
+      >
         {selectedPhoto && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#090b14]/90 backdrop-blur-md"
-            onClick={handleCloseLightbox}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Event Photograph Lightbox"
-          >
-            <motion.div
-              layoutId={reducedMotion || isLiteMode ? undefined : `photo-card-${selectedPhoto.id}`}
-              transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="w-full max-w-5xl bg-[#271A3C] border border-[#C79347]/30 rounded-2xl p-6 sm:p-8 shadow-2xl relative text-left"
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-            >
-              {/* Close Button (48x48px min hit target, accessible) */}
-              <button
-                type="button"
-                onClick={handleCloseLightbox}
-                className="absolute top-4 right-4 w-12 h-12 rounded-full bg-[#1C122B] hover:bg-[#0F766E] hover:text-[#FAF5ED] text-[#FAF5ED] border border-[#C79347]/30 z-20 transition-colors active:scale-95 flex items-center justify-center cursor-pointer shadow-sm focus-visible:outline-2 focus-visible:outline-[#2BB5A8]"
-                aria-label="Close photo preview"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              {/* Prev / Next Navigation Buttons */}
+          <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:gap-8">
+            <div className="relative h-[52dvh] overflow-hidden rounded-2xl border border-border-zari-muted bg-bg-sangam-deep sm:h-[64dvh] lg:col-span-8">
+              <Image
+                src={selectedPhoto.imageUrl}
+                alt={selectedPhoto.titleEn}
+                fill
+                className="object-contain"
+                sizes="(max-width: 1024px) 100vw, 1000px"
+                priority
+              />
               {photos.length > 1 && (
                 <>
-                  <button
-                    type="button"
-                    onClick={handlePrevPhoto}
-                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#1C122B]/90 hover:bg-[#0F766E] hover:text-[#FAF5ED] text-[#FAF5ED] border border-[#C79347]/30 z-20 active:scale-95 transition-colors flex items-center justify-center shadow-md cursor-pointer focus-visible:outline-2 focus-visible:outline-[#2BB5A8]"
-                    aria-label="Previous photo"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
+                  <button type="button" onClick={handlePrevPhoto} aria-label="Previous photo" className={`left-3 ${navButton}`}>
+                    <ChevronLeft className="h-5 w-5" aria-hidden="true" />
                   </button>
-                  <button
-                    type="button"
-                    onClick={handleNextPhoto}
-                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#1C122B]/90 hover:bg-[#0F766E] hover:text-[#FAF5ED] text-[#FAF5ED] border border-[#C79347]/30 z-20 active:scale-95 transition-colors flex items-center justify-center shadow-md cursor-pointer focus-visible:outline-2 focus-visible:outline-[#2BB5A8]"
-                    aria-label="Next photo"
-                  >
-                    <ChevronRight className="w-5 h-5" />
+                  <button type="button" onClick={handleNextPhoto} aria-label="Next photo" className={`right-3 ${navButton}`}>
+                    <ChevronRight className="h-5 w-5" aria-hidden="true" />
                   </button>
                 </>
               )}
+            </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                {/* Photo High-Res Container */}
-                <div className="lg:col-span-8 relative h-80 sm:h-[480px] rounded-2xl bg-[#1C122B] overflow-hidden border border-[#C79347]/20">
-                  <Image
-                    src={selectedPhoto.imageUrl}
-                    alt={selectedPhoto.titleEn}
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 1024px) 100vw, 850px"
-                    priority
-                  />
+            <div className="space-y-4 lg:col-span-4">
+              <p lang={isTa ? "ta" : undefined} className={`font-sans text-sm text-ink-sand ${isTa ? taText : "leading-relaxed"}`}>
+                {isTa ? selectedPhoto.captionTa : selectedPhoto.captionEn}
+              </p>
+
+              <dl className="space-y-1 border-t border-border-zari-muted pt-3 font-sans text-xs text-ink-sand">
+                <div className="flex gap-1.5">
+                  <dt>Photographer:</dt>
+                  <dd>{selectedPhoto.photographer}</dd>
                 </div>
+                <div className="flex gap-1.5">
+                  <dt>Event date:</dt>
+                  <dd>{selectedPhoto.eventDate}</dd>
+                </div>
+              </dl>
 
-                {/* Metadata & Captions Column */}
-                <div className="lg:col-span-4 space-y-4 text-[#FAF5ED]">
-                  <div className="text-xs font-mono text-[#C79347] font-semibold uppercase tracking-wider">
-                    Photo {currentPhotoIndex + 1} of {photos.length}
-                  </div>
-
-                  <h3
-                    lang={locale === "ta" ? "ta" : "en"}
-                    className="text-2xl font-normal text-[#FAF5ED] font-serif"
-                    style={{ letterSpacing: locale === "ta" ? 0 : undefined }}
-                  >
-                    {locale === "ta" ? selectedPhoto.titleTa : selectedPhoto.titleEn}
-                  </h3>
-
-                  <p
-                    lang={locale === "ta" ? "ta" : "en"}
-                    className="text-sm text-[#CBBBA8] leading-relaxed font-sans"
-                    style={{
-                      letterSpacing: locale === "ta" ? 0 : undefined,
-                      lineHeight: locale === "ta" ? 1.6 : undefined,
-                    }}
-                  >
-                    {locale === "ta" ? selectedPhoto.captionTa : selectedPhoto.captionEn}
-                  </p>
-
-                  <div className="text-xs font-mono text-[#CBBBA8] space-y-1 pt-3 border-t border-[#C79347]/20">
-                    <p>Photographer: {selectedPhoto.photographer}</p>
-                    <p>Event Date: {selectedPhoto.eventDate}</p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {selectedPhoto.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2.5 py-1 rounded-full bg-[#1C122B] text-[11px] font-mono text-[#2BB5A8] border border-[#C79347]/20"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="pt-4 border-t border-[#C79347]/20 flex items-center justify-between gap-3">
-                    <a
-                      href={selectedPhoto.imageUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-mono text-[#2BB5A8] hover:text-[#3ED0C2] hover:underline flex items-center gap-1.5 font-semibold uppercase tracking-wider"
+              {selectedPhoto.tags.length > 0 && (
+                <ul className="flex flex-wrap gap-1.5" aria-label="Photo tags">
+                  {selectedPhoto.tags.map((tag) => (
+                    <li
+                      key={tag}
+                      className="rounded-full border border-border-zari-muted px-2.5 py-1 font-sans text-xs text-brand-lavender"
                     >
-                      <Maximize2 className="w-3.5 h-3.5" />
-                      <span>Full Resolution ↗</span>
-                    </a>
+                      #{tag}
+                    </li>
+                  ))}
+                </ul>
+              )}
 
-                    {finalGooglePhotosUrl && (
-                      <a
-                        href={finalGooglePhotosUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs font-mono text-[#CBBBA8] hover:text-[#C79347] flex items-center gap-1.5 uppercase tracking-wider"
-                      >
-                        <span>Google Vault ↗</span>
-                      </a>
-                    )}
-                  </div>
-                </div>
+              <div className="border-t border-border-zari-muted pt-4">
+                <a
+                  href={selectedPhoto.imageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-12 items-center gap-1.5 font-sans text-sm font-semibold text-brand-teal-dark hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark"
+                >
+                  <Maximize2 className="h-4 w-4" aria-hidden="true" />
+                  Full resolution ↗
+                </a>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
-    </section>
+      </DialogShell>
+    </CulturalSection>
   );
 }

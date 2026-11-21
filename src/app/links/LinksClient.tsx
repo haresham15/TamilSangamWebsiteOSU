@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import {
   Calendar,
   Users,
   Compass,
@@ -22,10 +22,14 @@ import {
   Lightbulb,
   Award,
   FileText,
-  Music2
+  Music2,
 } from "lucide-react";
 import { WatermarkGlyph } from "@/components/ui/WatermarkGlyph";
+import { CulturalCard } from "@/components/ui/CulturalCard";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { SITE_CONFIG } from "@/data/siteConfig";
+import { EVENTS } from "@/data/events";
 
 const InstagramIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -93,9 +97,101 @@ const PREVIOUS_EVENT_ALBUMS: PreviousEventAlbum[] = [
   },
 ];
 
+const DIWALI_SLUG = "namma-deepavali-2026";
+const DIWALI_FORM_URL =
+  EVENTS.find((e) => e.slug === DIWALI_SLUG)?.interestFormUrl ?? `/events/${DIWALI_SLUG}`;
+
+/** Category-coded icon badges: purple = events/board, teal = chats & social, bronze = vaults/constitution. */
+type LinkCategory = "purple" | "teal" | "bronze";
+
+const CATEGORY = {
+  purple: {
+    badge: "bg-brand-purple-soft text-brand-purple border-brand-purple/25",
+    label: "text-brand-purple",
+    chip: "bg-brand-purple-soft text-brand-purple",
+  },
+  teal: {
+    badge: "bg-brand-teal-soft text-brand-teal border-brand-teal/25",
+    label: "text-brand-teal",
+    chip: "bg-brand-teal-soft text-brand-teal",
+  },
+  bronze: {
+    badge: "bg-surface-card-parchment text-ink-umber border-accent-bronze/50",
+    label: "text-ink-umber",
+    chip: "bg-surface-card-parchment text-ink-umber border border-accent-bronze/40",
+  },
+} as const;
+
+const SMALL_CAPS = "font-sans font-semibold uppercase tracking-[0.14em]";
+const META = `${SMALL_CAPS} text-[11px]`;
+const FOCUS_RING = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal";
+
+interface LinkCardProps {
+  href: string;
+  external?: boolean;
+  icon: React.ComponentType<{ className?: string }>;
+  category: LinkCategory;
+  label: string;
+  labelTa?: string;
+  chip?: string;
+  title: string;
+  description: string;
+}
+
+/** One link in the bio stack: a CulturalCard light whose whole surface is the native link. */
+function LinkCard({ href, external = false, icon: Icon, category, label, labelTa, chip, title, description }: LinkCardProps) {
+  const tone = CATEGORY[category];
+  const TrailIcon = external ? ExternalLink : ChevronRight;
+  const inner = (
+    <>
+      <span className="flex min-w-0 items-start gap-3">
+        <span className={`mt-0.5 shrink-0 rounded-lg border p-2.5 ${tone.badge}`}>
+          <Icon className="h-4 w-4" />
+        </span>
+        <span className="block min-w-0">
+          <span className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <span className={`${META} ${tone.label}`}>{label}</span>
+            {labelTa && (
+              <span lang="ta" className={`font-tamil text-xs leading-[1.6] tracking-normal ${tone.label}`}>
+                {labelTa}
+              </span>
+            )}
+            {chip && <span className={`rounded-full px-2 py-0.5 ${SMALL_CAPS} text-[10px] ${tone.chip}`}>{chip}</span>}
+          </span>
+          <span className="mt-0.5 block truncate font-serif text-base font-medium text-ink-earth transition-colors group-hover:text-brand-purple">
+            {title}
+          </span>
+          <span className="mt-0.5 block truncate font-sans text-xs text-ink-umber">{description}</span>
+        </span>
+      </span>
+      <TrailIcon
+        aria-hidden="true"
+        className="mt-2 h-4 w-4 shrink-0 text-ink-umber transition-[color,transform] group-hover:translate-x-0.5 group-hover:text-brand-teal motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+      />
+    </>
+  );
+  const linkClass = `group flex min-h-12 items-start justify-between gap-3 rounded-2xl p-4 text-left ${FOCUS_RING} focus-visible:ring-inset`;
+
+  return (
+    <CulturalCard as="li" variant="light">
+      {external ? (
+        <a href={href} target="_blank" rel="noopener noreferrer" className={linkClass}>
+          {inner}
+          <span className="sr-only">(opens in a new tab)</span>
+        </a>
+      ) : (
+        <Link href={href} className={linkClass}>
+          {inner}
+        </Link>
+      )}
+    </CulturalCard>
+  );
+}
+
 export function LinksClient() {
   const [copiedItem, setCopiedItem] = useState<string | null>(null);
   const [isPhotosMenuOpen, setIsPhotosMenuOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   const handleCopy = (key: string, text: string) => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -105,133 +201,125 @@ export function LinksClient() {
     }
   };
 
-  return (
-    <div className="relative min-h-screen bg-[#F0E6D6] text-[#261A14] flex flex-col justify-between pt-10 pb-28 px-4 font-sans select-none overflow-x-hidden">
-      {/* Warm Sunlit Ambient Glows */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_600px_400px_at_15%_10%,rgba(199,147,71,0.08),transparent_60%),radial-gradient(ellipse_700px_450px_at_85%_65%,rgba(91,44,134,0.05),transparent_65%),radial-gradient(ellipse_500px_350px_at_50%_90%,rgba(154,107,62,0.08),transparent_60%)]"
-        aria-hidden="true"
-      />
+  const socialLink = `inline-flex min-h-12 items-center gap-1.5 px-1 font-sans text-xs font-medium text-ink-umber transition-colors rounded ${FOCUS_RING}`;
 
-      {/* Structural Watermark */}
-      <WatermarkGlyph text="இணைப்பு" position="center" theme="bronze" opacity={0.1} />
+  return (
+    <div className="relative flex min-h-dvh flex-col justify-between overflow-x-hidden bg-bg-sandstone px-4 pb-28 pt-10 font-sans text-ink-earth texture-khadi">
+      {/* Soft bronze இணை watermark (WatermarkGlyph is aria-hidden and lang="ta") */}
+      <WatermarkGlyph text="இணை" position="center" theme="bronze" opacity={0.06} />
 
       {/* Top Persistent Return Bar */}
-      <header className="w-full max-w-md mx-auto mb-6 flex items-center justify-between text-xs font-mono">
+      <header className="relative z-10 mx-auto mb-6 flex w-full max-w-md items-center justify-between">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-[#5E4C40] hover:text-[#5B2C86] transition-colors py-1 focus-visible:outline-2 focus-visible:outline-[#5B2C86]"
+          className={`inline-flex min-h-12 items-center gap-1.5 rounded text-sm text-ink-umber transition-colors hover:text-brand-purple ${FOCUS_RING}`}
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           <span>Back to Main Website</span>
         </Link>
-        <span className="text-[#5B2C86] bg-[#5B2C86]/10 border border-[#5B2C86]/20 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-semibold">
-          Bio Hub
-        </span>
+        <span className={`${META} text-ink-umber`}>Bio Hub</span>
       </header>
 
-      {/* Centered Editorial Column */}
-      <main className="relative z-10 w-full max-w-md mx-auto flex-1 flex flex-col items-center text-center">
+      {/* Centered bio-link column (the /links R1 exception) */}
+      <main className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col items-center text-center">
         {/* Prominent 'Explore Full Website' Top Banner */}
-        <Link
-          href="/"
-          className="group w-full mb-8 p-3.5 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#5B2C86]/40 hover:bg-[#FAF6F0] transition-all flex items-center justify-between shadow-xs hover:shadow-md focus-visible:outline-2 focus-visible:outline-[#5B2C86]"
-        >
-          <div className="flex items-center gap-2.5 text-left pl-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#5B2C86] animate-pulse" />
-            <span className="text-xs font-mono font-bold tracking-wider uppercase text-[#261A14] group-hover:text-[#5B2C86] transition-colors">
-              Explore Full Website
+        <CulturalCard variant="light" className="mb-8 w-full">
+          <Link
+            href="/"
+            className={`group flex min-h-12 w-full items-center justify-between gap-3 rounded-2xl p-4 ${FOCUS_RING} focus-visible:ring-inset`}
+          >
+            <span className="flex items-center gap-2.5 pl-1">
+              <span className="h-2.5 w-2.5 rounded-full bg-brand-purple" aria-hidden="true" />
+              <span className={`${SMALL_CAPS} text-xs text-ink-earth transition-colors group-hover:text-brand-purple`}>
+                Explore Full Website
+              </span>
             </span>
-          </div>
-          <div className="flex items-center gap-1.5 text-xs font-mono text-[#5B2C86] font-semibold group-hover:translate-x-1 transition-transform">
-            <span>Enter Site</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </div>
-        </Link>
+            <span className="flex items-center gap-1.5 font-sans text-sm font-semibold text-brand-teal">
+              <span>Enter Site</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" aria-hidden="true" />
+            </span>
+          </Link>
+        </CulturalCard>
 
         {/* Official Collegiate Crest & Verified Organization Badge */}
-        <div className="relative w-24 h-24 mb-4 rounded-full p-1 bg-gradient-to-tr from-[#C79347] via-[#D4A36A] to-[#5B2C86] shadow-md">
-          <div className="relative w-full h-full rounded-full overflow-hidden bg-[#FAF6F0] flex items-center justify-center">
+        <div className="relative mb-4 h-24 w-24 rounded-full border-2 border-accent-zari bg-bg-ivory p-1 shadow-[0_8px_24px_rgba(91,44,134,0.12)]">
+          <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-bg-ivory">
             <Image
               src="/emblem.svg"
               alt="The Ohio State University Tamil Sangam Official Seal"
               width={96}
               height={96}
               priority
-              className="w-full h-full object-contain"
+              className="h-full w-full object-contain"
             />
           </div>
-          {/* Official Verification Badge */}
-          <div 
-            className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#5B2C86] border-2 border-[#FAF6F0] flex items-center justify-center shadow-md"
+          <div
+            aria-hidden="true"
+            className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-bg-ivory bg-brand-purple shadow-[0_4px_12px_rgba(91,44,134,0.25)]"
             title="Recognized Student Organization · The Ohio State University"
           >
-            <Check className="w-3.5 h-3.5 text-[#FAF5ED] stroke-[3]" />
+            <Check className="h-3.5 w-3.5 stroke-[3] text-ink-alabaster" />
           </div>
         </div>
 
         {/* Club Handle & Institutional Badge */}
-        <div className="flex items-center justify-center gap-2 mb-1">
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#261A14]">
-            {SITE_CONFIG.brandNameEn}
-          </h1>
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#5B2C86]/10 text-[#5B2C86] border border-[#5B2C86]/30">
+        <div className="mb-1 flex flex-wrap items-center justify-center gap-2">
+          <h1 className="font-serif text-2xl font-bold text-ink-earth sm:text-3xl">{SITE_CONFIG.brandNameEn}</h1>
+          <span className={`inline-flex items-center rounded-full border border-brand-purple/30 bg-brand-purple-soft px-2.5 py-0.5 ${SMALL_CAPS} text-[10px] text-brand-purple`}>
             Official RSO
           </span>
         </div>
-        <p className="text-xs text-[#9A6B3E] font-mono uppercase tracking-widest mb-1.5 font-bold">
-          @tamilsangam.osu · The Ohio State University
-        </p>
-        <p className="text-xs text-[#5E4C40] mb-6 max-w-sm leading-relaxed font-sans">
+        <p className={`${META} mb-1.5 text-ink-umber`}>@tamilsangam.osu · The Ohio State University</p>
+        <p className="mb-6 max-w-sm font-sans text-xs leading-relaxed text-ink-umber">
           Office of Student Life · Recognized Student Organization · Columbus, OH
         </p>
 
         {/* Quick Social Actions Row */}
-        <div className="w-full flex items-center justify-center gap-5 sm:gap-6 mb-8 pb-6 border-b border-[#DFD1BE]">
+        <div className="mb-8 flex w-full flex-wrap items-center justify-center gap-x-5 gap-y-1 border-b border-border-warm pb-6">
           <a
             href={SITE_CONFIG.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-medium text-[#5E4C40] hover:text-[#B84A39] transition-colors"
-            aria-label="Instagram profile"
+            className={`${socialLink} hover:text-brand-purple`}
+            aria-label="Instagram profile (opens in a new tab)"
           >
-            <InstagramIcon className="w-4 h-4 text-[#B84A39]" />
+            <InstagramIcon className="h-4 w-4 text-brand-purple" />
             <span>Instagram</span>
           </a>
           <a
             href={SITE_CONFIG.tiktokUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-medium text-[#5E4C40] hover:text-[#0F766E] transition-colors"
-            aria-label="TikTok profile"
+            className={`${socialLink} hover:text-brand-teal`}
+            aria-label="TikTok profile (opens in a new tab)"
           >
-            <TikTokIcon className="w-3.5 h-3.5 text-[#0F766E]" />
+            <TikTokIcon className="h-3.5 w-3.5 text-brand-teal" />
             <span>TikTok</span>
           </a>
           <a
             href={SITE_CONFIG.groupMeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-medium text-[#5E4C40] hover:text-[#0F766E] transition-colors"
-            aria-label="GroupMe chat"
+            className={`${socialLink} hover:text-brand-teal`}
+            aria-label="GroupMe chat (opens in a new tab)"
           >
-            <MessageSquare className="w-4 h-4 text-[#0F766E]" />
+            <MessageSquare className="h-4 w-4 text-brand-teal" aria-hidden="true" />
             <span>GroupMe</span>
           </a>
           <button
             type="button"
             onClick={() => handleCopy("email", SITE_CONFIG.contactEmail)}
-            className="flex items-center gap-1.5 text-xs font-medium text-[#5E4C40] hover:text-[#5B2C86] transition-colors cursor-pointer"
+            className={`${socialLink} cursor-pointer hover:text-brand-purple`}
             aria-label="Copy Contact Email"
           >
             {copiedItem === "email" ? (
               <>
-                <Check className="w-4 h-4 text-[#0F766E]" />
-                <span className="text-[#0F766E] font-bold">Copied</span>
+                <Check className="h-4 w-4 text-brand-teal" aria-hidden="true" />
+                <span className="font-bold text-brand-teal" role="status">Copied</span>
               </>
             ) : (
               <>
-                <Mail className="w-4 h-4 text-[#5E4C40]" />
+                <Mail className="h-4 w-4 text-ink-umber" aria-hidden="true" />
                 <span>Email</span>
               </>
             )}
@@ -239,195 +327,120 @@ export function LinksClient() {
         </div>
 
         {/* Interactive Link Stack */}
-        <div className="w-full space-y-3.5 text-left">
-          
-          {/* Section: Core Gatherings & Community */}
-          <div className="space-y-2.5">
-            {/* FEATURED: Diwali 2026 Sign-Up Form (TS × MS × KS) */}
-            <div className="relative rounded-xl border border-[#C79347]/50 bg-[#1C122B] shadow-xl p-4 sm:p-5 card-pathirikai">
-              <div className="flex items-start justify-between gap-3 mb-2.5">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#C79347] animate-ping" />
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#C79347] font-bold">
-                    UPCOMING EVENT · DIWALI 2026
-                  </span>
-                </div>
-                <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded-xs bg-[#C79347] text-[#1C122B] font-bold">
-                  SIGN-UPS OPEN
-                </span>
-              </div>
-
-              <div className="mb-2">
-                <h2 className="text-lg font-serif font-bold text-[#FAF5ED] leading-tight">
-                  Diwali 2026: TS × MS × KS
-                </h2>
-                <p className="font-tamil text-xs text-[#C79347] mt-0.5" lang="ta">
-                  நம்ம தீபாவளி · நிகழ்ச்சி &amp; நடனப் பதிவு
-                </p>
-                <p className="text-xs text-[#CBBBA8] mt-1.5 leading-relaxed font-sans">
-                  Tamil Sangam, Kannada Sangam, and Mallu Society are hosting Diwali on Nov 15th! Sign up for dance performances, cultural acts, or attend.
-                </p>
-              </div>
-
-              {/* Direct Action Buttons */}
-              <div className="pt-2 flex flex-wrap items-center gap-2">
-                <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSes22yw_nxw1WnmTWIbgWFXsri0v-P7FB_wqkvI8XxE1epgfA/viewform"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#0F766E] text-[#FAF5ED] hover:bg-[#0B5C56] transition-all text-xs font-mono font-bold uppercase tracking-wider shadow-xs"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-[#FAF5ED]" />
-                  <span>Open Sign-Up Form</span>
-                  <ExternalLink className="w-3 h-3 text-[#FAF5ED]" />
-                </a>
-
-                <Link
-                  href="/dance"
-                  className="inline-flex items-center gap-1 px-3 py-2.5 rounded-xl bg-[#271A3C] border border-[#C79347]/40 text-[#FAF5ED] hover:border-[#C79347] transition-colors text-xs font-mono font-semibold"
-                >
-                  <Music2 className="w-3.5 h-3.5 text-[#C79347]" />
-                  <span>Dance Hub</span>
-                </Link>
-
-                <Link
-                  href="/events/namma-deepavali-2026"
-                  className="inline-flex items-center gap-1 px-3 py-2.5 rounded-xl bg-[#271A3C] border border-[rgba(212,163,106,0.24)] text-[#FAF5ED]/80 hover:text-[#FAF5ED] hover:border-[#C79347]/40 transition-colors text-xs font-mono"
-                >
-                  <span>Dossier</span>
-                  <ArrowRight className="w-3 h-3" />
-                </Link>
-              </div>
+        <div className="w-full space-y-6 text-left">
+          {/* FEATURED: Diwali 2026 Sign-Up Form (TS × MS × KS) — the page's only deep element */}
+          <CulturalCard variant="pathirikai" as="article" className="p-5 sm:p-6" aria-labelledby="links-diwali-heading">
+            <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+              <span className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-accent-zari" aria-hidden="true" />
+                <Eyebrow tone="dark">Upcoming Event · Diwali 2026</Eyebrow>
+              </span>
+              <span className={`rounded-full border border-accent-zari/60 px-2 py-0.5 ${SMALL_CAPS} text-[10px] text-accent-zari`}>
+                Sign-ups open
+              </span>
             </div>
 
-            {/* Dance Performance Sign-Ups */}
-            <Link
+            <h2 id="links-diwali-heading" className="font-serif text-xl font-bold leading-tight text-ink-alabaster">
+              Diwali 2026: TS × MS × KS
+            </h2>
+            <p className="mt-1 font-tamil text-sm leading-[1.6] text-brand-lavender" lang="ta">
+              நம்ம தீபாவளி · நிகழ்ச்சி &amp; நடனப் பதிவு
+            </p>
+            <p className="mt-2 font-sans text-sm leading-relaxed text-ink-sand">
+              Tamil Sangam, Kannada Sangam, and Mallu Society are hosting Diwali on Nov 15th! Sign up for dance performances, cultural acts, or attend.
+            </p>
+
+            <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-border-zari-muted pt-4">
+              <MuttramButton
+                href={DIWALI_FORM_URL}
+                external={DIWALI_FORM_URL.startsWith("http")}
+                onDark
+                icon={<Sparkles className="h-4 w-4" aria-hidden="true" />}
+              >
+                Open sign-up form
+              </MuttramButton>
+              <MuttramButton
+                href="/dance"
+                variant="secondary"
+                onDark
+                icon={<Music2 className="h-4 w-4" aria-hidden="true" />}
+              >
+                Dance Hub
+              </MuttramButton>
+              <MuttramButton href={`/events/${DIWALI_SLUG}`} variant="ghost" onDark>
+                Dossier →
+              </MuttramButton>
+            </div>
+          </CulturalCard>
+
+          {/* Section: Core Gatherings & Community */}
+          <ul className="space-y-3">
+            <LinkCard
               href="/dance"
-              className="group block p-4 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#5B2C86]/40 hover:bg-[#FAF6F0] hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#5B2C86]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#F7EFE2] border border-[#DFD1BE] text-[#B84A39] group-hover:border-[#B84A39]/60 transition-colors shrink-0 mt-0.5">
-                    <Music2 className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#B84A39] font-bold block">
-                        Stage Sign-Ups · ஆடல் அரங்கம்
-                      </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-xs bg-[#B84A39]/10 text-[#B84A39] font-bold">
-                        Form Live Now
-                      </span>
-                    </div>
-                    <h2 className="text-base font-serif font-medium text-[#261A14] group-hover:text-[#5B2C86] transition-colors truncate">
-                      Dance Performance Registration
-                    </h2>
-                    <p className="text-xs text-[#5E4C40] mt-0.5 truncate font-sans">
-                      Diwali 2026 dance troupes · Kuthu, Gaana, and cinematic fusion
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#9A6B3E] group-hover:text-[#5B2C86] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
-              </div>
-            </Link>
-
-            {/* Event Schedule & Gatherings */}
-            <Link
+              icon={Music2}
+              category="purple"
+              label="Stage Sign-Ups"
+              labelTa="ஆடல் அரங்கம்"
+              chip="Form Live Now"
+              title="Dance Performance Registration"
+              description="Diwali 2026 dance troupes · Kuthu, Gaana, and cinematic fusion"
+            />
+            <LinkCard
               href="/events"
-              className="group block p-4 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#5B2C86]/40 hover:bg-[#FAF6F0] hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#5B2C86]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#F7EFE2] border border-[#DFD1BE] text-[#5B2C86] group-hover:border-[#5B2C86]/60 transition-colors shrink-0 mt-0.5">
-                    <Calendar className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#5B2C86] font-bold block">
-                      Events &amp; Calendar · All Welcome
-                    </span>
-                    <h2 className="text-base font-serif font-medium text-[#261A14] group-hover:text-[#5B2C86] transition-colors truncate">
-                      Event Schedule &amp; Gatherings
-                    </h2>
-                    <p className="text-xs text-[#5E4C40] mt-0.5 truncate font-sans">
-                      Celebrations, festivals, dates, and campus event dossiers
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#9A6B3E] group-hover:text-[#5B2C86] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
-              </div>
-            </Link>
-
-            {/* 2. Join the Sangam / Membership */}
-            <Link
+              icon={Calendar}
+              category="purple"
+              label="Events & Calendar · All Welcome"
+              title="Event Schedule & Gatherings"
+              description="Celebrations, festivals, dates, and campus event dossiers"
+            />
+            <LinkCard
               href="/join"
-              className="group block p-4 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#5B2C86]/40 hover:bg-[#FAF6F0] hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#5B2C86]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#F7EFE2] border border-[#DFD1BE] text-[#5B2C86] group-hover:border-[#5B2C86]/60 transition-colors shrink-0 mt-0.5">
-                    <Users className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#5B2C86] font-bold block">
-                        Join the Family
-                      </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-xs bg-[#5B2C86]/10 text-[#5B2C86] font-bold">
-                        100% Free · $0 Dues
-                      </span>
-                    </div>
-                    <h2 className="text-base font-serif font-medium text-[#261A14] group-hover:text-[#5B2C86] transition-colors truncate">
-                      Membership &amp; Community Guestbook
-                    </h2>
-                    <p className="text-xs text-[#5E4C40] mt-0.5 truncate font-sans">
-                      Sign the guestbook, performer signups &amp; freshman mentorship
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#9A6B3E] group-hover:text-[#5B2C86] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
-              </div>
-            </Link>
-          </div>
+              icon={Users}
+              category="purple"
+              label="Join the Family"
+              chip="100% Free · $0 Dues"
+              title="Membership & Community Guestbook"
+              description="Sign the guestbook, performer signups & freshman mentorship"
+            />
 
-          {/* Section: Photos Archive Button with Expandable Previous Events Menu */}
-          <div className="pt-2">
-            <div className="rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] overflow-hidden transition-all shadow-xs hover:border-[#9A6B3E]/60">
+            {/* Photos Archive with Expandable Previous Events Menu */}
+            <CulturalCard as="li" variant="light">
               <button
                 type="button"
                 onClick={() => setIsPhotosMenuOpen((prev) => !prev)}
                 aria-expanded={isPhotosMenuOpen}
                 aria-controls="photos-menu-content"
-                className="w-full p-4 flex items-start justify-between gap-3 text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-[#5B2C86]"
+                className={`flex min-h-12 w-full cursor-pointer items-start justify-between gap-3 rounded-2xl p-4 text-left ${FOCUS_RING} focus-visible:ring-inset`}
               >
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#F7EFE2] border border-[#DFD1BE] text-[#9A6B3E] shrink-0 mt-0.5">
-                    <Camera className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#9A6B3E] font-bold block">
-                        Photo Archive
-                      </span>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#F0E6D6] text-[#9A6B3E] border border-[#DFD1BE] font-semibold">
+                <span className="flex min-w-0 items-start gap-3">
+                  <span className={`mt-0.5 shrink-0 rounded-lg border p-2.5 ${CATEGORY.bronze.badge}`}>
+                    <Camera className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  <span className="block min-w-0">
+                    <span className="flex flex-wrap items-center gap-2">
+                      <span className={`${META} ${CATEGORY.bronze.label}`}>Photo Archive</span>
+                      <span className={`rounded-full px-2 py-0.5 ${SMALL_CAPS} text-[10px] ${CATEGORY.bronze.chip}`}>
                         {PREVIOUS_EVENT_ALBUMS.length} Albums
                       </span>
-                    </div>
-                    <h2 className="text-base font-serif font-medium text-[#261A14]">
+                    </span>
+                    <span className="mt-0.5 block font-serif text-base font-medium text-ink-earth">
                       Previous Event Photo Vaults
-                    </h2>
-                    <p className="text-xs text-[#5E4C40] mt-0.5 font-sans">
+                    </span>
+                    <span className="mt-0.5 block font-sans text-xs text-ink-umber">
                       {isPhotosMenuOpen ? "Tap to close album list" : "Tap to open all high-resolution Google Photos links"}
-                    </p>
-                  </div>
-                </div>
-                <div className="p-1 rounded-full text-[#9A6B3E] shrink-0 mt-1">
-                  <motion.div animate={{ rotate: isPhotosMenuOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                    <ChevronDown className="w-4 h-4 text-[#9A6B3E]" />
-                  </motion.div>
-                </div>
+                    </span>
+                  </span>
+                </span>
+                <motion.span
+                  aria-hidden="true"
+                  className="mt-2 shrink-0 text-ink-umber"
+                  animate={{ rotate: isPhotosMenuOpen ? 180 : 0 }}
+                  transition={{ duration: reduceMotion ? 0 : 0.2 }}
+                >
+                  <ChevronDown className="h-4 w-4" />
+                </motion.span>
               </button>
 
-              {/* Expandable Menu of Previous Event Album Links */}
               <AnimatePresence initial={false}>
                 {isPhotosMenuOpen && (
                   <motion.div
@@ -435,299 +448,149 @@ export function LinksClient() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="overflow-hidden border-t border-[#DFD1BE] bg-[#FAF6F0]"
+                    transition={reduceMotion ? { duration: 0 } : { duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    className="overflow-hidden border-t border-border-warm"
                   >
-                    <div className="p-3.5 space-y-2">
-                      <p className="text-[11px] font-mono text-[#9A6B3E] px-1 uppercase tracking-wider font-bold">
-                        Official Google Photos Albums:
-                      </p>
-                      {PREVIOUS_EVENT_ALBUMS.map((album) => (
-                        <a
-                          key={album.id}
-                          href={album.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="group/album block p-3 rounded-lg bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#5B2C86]/40 hover:bg-[#F7EFE2] transition-all"
-                        >
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2">
-                                <span className="text-[10px] font-mono text-[#9A6B3E] font-bold">
-                                  {album.num}
+                    <div className="px-4 pb-3 pt-3">
+                      <p className={`${META} px-1 text-ink-umber`}>Official Google Photos Albums</p>
+                      <ul className="mt-1 divide-y divide-border-warm">
+                        {PREVIOUS_EVENT_ALBUMS.map((album) => (
+                          <li key={album.id}>
+                            <a
+                              href={album.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`group/album flex min-h-12 items-center justify-between gap-3 rounded px-1 py-3 ${FOCUS_RING}`}
+                            >
+                              <span className="block min-w-0">
+                                <span className="flex items-baseline gap-2">
+                                  <span className="font-serif text-sm font-semibold text-brand-purple">{album.num}</span>
+                                  <span className="truncate font-serif text-sm font-medium text-ink-earth transition-colors group-hover/album:text-brand-purple">
+                                    {album.title}
+                                  </span>
                                 </span>
-                                <h3 className="text-xs font-serif font-medium text-[#261A14] group-hover/album:text-[#5B2C86] transition-colors truncate">
-                                  {album.title}
-                                </h3>
-                              </div>
-                              <p className="text-[11px] text-[#5E4C40] mt-0.5 truncate font-sans">
-                                {album.season} · {album.location}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-1 text-[11px] font-mono text-[#5B2C86] shrink-0 font-medium">
-                              <span className="hidden sm:inline">Open</span>
-                              <ExternalLink className="w-3.5 h-3.5" />
-                            </div>
-                          </div>
-                        </a>
-                      ))}
+                                <span className="mt-0.5 block truncate font-sans text-xs text-ink-umber">
+                                  {album.season} · {album.location}
+                                </span>
+                              </span>
+                              <span className="flex shrink-0 items-center gap-1 font-sans text-xs font-medium text-brand-teal">
+                                <span className="hidden sm:inline">Open</span>
+                                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                                <span className="sr-only">(opens in a new tab)</span>
+                              </span>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
 
                       {/* Link to Website Living Photo Gallery */}
                       <Link
                         href="/gallery"
-                        className="w-full mt-2 py-2.5 px-3 rounded-lg bg-[#F0E6D6] border border-[#DFD1BE] hover:border-[#5B2C86]/40 text-[#261A14] flex items-center justify-between text-xs font-mono font-medium transition-colors"
+                        className={`mt-1 flex min-h-12 w-full items-center justify-between gap-2 border-t border-border-warm px-1 pt-3 font-sans text-sm font-medium text-brand-teal underline-offset-4 hover:underline ${FOCUS_RING}`}
                       >
-                        <div className="flex items-center gap-2">
-                          <Images className="w-4 h-4 text-[#5B2C86]" />
+                        <span className="flex items-center gap-2">
+                          <Images className="h-4 w-4 text-brand-purple" aria-hidden="true" />
                           <span>View 35mm Campus Gallery on Website</span>
-                        </div>
-                        <ArrowRight className="w-3.5 h-3.5 text-[#5B2C86]" />
+                        </span>
+                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
                       </Link>
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
-          </div>
+            </CulturalCard>
+          </ul>
 
           {/* Section: Community Channels */}
-          <div className="pt-2 space-y-2.5">
-            <span className="text-[10px] font-mono text-[#5B2C86] uppercase tracking-wider block px-1 font-bold">
-              Official Community &amp; Chats
-            </span>
-
-            {/* GroupMe Section */}
-            <a
-              href={SITE_CONFIG.groupMeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block p-4 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#0F766E]/70 hover:bg-[#FAF6F0] hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#0F766E]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#F7EFE2] border border-[#DFD1BE] text-[#0F766E] group-hover:border-[#0F766E] transition-colors shrink-0 mt-0.5">
-                    <MessageSquare className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#0F766E] font-bold block">
-                      Student Chat · GroupMe
-                    </span>
-                    <h2 className="text-base font-serif font-medium text-[#261A14] group-hover:text-[#0F766E] transition-colors truncate">
-                      Official Student GroupMe
-                    </h2>
-                    <p className="text-xs text-[#5E4C40] mt-0.5 truncate font-sans">
-                      120+ Buckeyes · rideshares, meetups, food spots &amp; active chat
-                    </p>
-                  </div>
-                </div>
-                <ExternalLink className="w-4 h-4 text-[#9A6B3E] group-hover:text-[#0F766E] transition-all shrink-0 mt-2" />
-              </div>
-            </a>
-
-            {/* Instagram Section */}
-            <a
-              href={SITE_CONFIG.instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block p-4 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#B84A39]/70 hover:bg-[#FAF6F0] hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#B84A39]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#F7EFE2] border border-[#DFD1BE] text-[#B84A39] group-hover:border-[#B84A39] transition-colors shrink-0 mt-0.5">
-                    <InstagramIcon className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#B84A39] font-bold block">
-                      Instagram · @tamilsangam.osu
-                    </span>
-                    <h2 className="text-base font-serif font-medium text-[#261A14] group-hover:text-[#B84A39] transition-colors truncate">
-                      Official Instagram Page
-                    </h2>
-                    <p className="text-xs text-[#5E4C40] mt-0.5 truncate font-sans">
-                      Stories, live event announcements &amp; photo reels
-                    </p>
-                  </div>
-                </div>
-                <ExternalLink className="w-4 h-4 text-[#9A6B3E] group-hover:text-[#B84A39] transition-all shrink-0 mt-2" />
-              </div>
-            </a>
-
-            {/* TikTok Section */}
-            <a
-              href={SITE_CONFIG.tiktokUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block p-4 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#0F766E]/70 hover:bg-[#FAF6F0] hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#0F766E]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#F7EFE2] border border-[#DFD1BE] text-[#0F766E] group-hover:border-[#0F766E] transition-colors shrink-0 mt-0.5">
-                    <TikTokIcon className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#0F766E] font-bold block">
-                      TikTok · @osutamilsangam
-                    </span>
-                    <h2 className="text-base font-serif font-medium text-[#261A14] group-hover:text-[#0F766E] transition-colors truncate">
-                      Official TikTok Channel
-                    </h2>
-                    <p className="text-xs text-[#5E4C40] mt-0.5 truncate font-sans">
-                      Campus POV clips, dance routines &amp; event highlights
-                    </p>
-                  </div>
-                </div>
-                <ExternalLink className="w-4 h-4 text-[#9A6B3E] group-hover:text-[#0F766E] transition-all shrink-0 mt-2" />
-              </div>
-            </a>
+          <div className="space-y-3">
+            <Eyebrow as="p" className="px-1">Official Community &amp; Chats</Eyebrow>
+            <ul className="space-y-3">
+              <LinkCard
+                href={SITE_CONFIG.groupMeUrl}
+                external
+                icon={MessageSquare}
+                category="teal"
+                label="Student Chat · GroupMe"
+                title="Official Student GroupMe"
+                description="120+ Buckeyes · rideshares, meetups, food spots & active chat"
+              />
+              <LinkCard
+                href={SITE_CONFIG.instagramUrl}
+                external
+                icon={InstagramIcon}
+                category="teal"
+                label="Instagram · @tamilsangam.osu"
+                title="Official Instagram Page"
+                description="Stories, live event announcements & photo reels"
+              />
+              <LinkCard
+                href={SITE_CONFIG.tiktokUrl}
+                external
+                icon={TikTokIcon}
+                category="teal"
+                label="TikTok · @osutamilsangam"
+                title="Official TikTok Channel"
+                description="Campus POV clips, dance routines & event highlights"
+              />
+            </ul>
           </div>
 
           {/* Section: Campus Exploration & Student Resources */}
-          <div className="pt-2 space-y-2.5">
-            <span className="text-[10px] font-mono text-[#5B2C86] uppercase tracking-wider block px-1 font-bold">
-              Student Resources &amp; Discovery
-            </span>
-
-            {/* New Student Guide & FAQ */}
-            <Link
-              href="/guide"
-              className="group block p-4 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#0F766E]/60 hover:bg-[#FAF6F0] hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#0F766E]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#F7EFE2] border border-[#DFD1BE] text-[#0F766E] group-hover:border-[#0F766E]/60 transition-colors shrink-0 mt-0.5">
-                    <Compass className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#0F766E] font-bold block">
-                      Freshmen &amp; Transfer Handbook
-                    </span>
-                    <h2 className="text-base font-serif font-medium text-[#261A14] group-hover:text-[#0F766E] transition-colors truncate">
-                      Student Survival Guide &amp; FAQ
-                    </h2>
-                    <p className="text-xs text-[#5E4C40] mt-0.5 truncate font-sans">
-                      Columbus South Asian dining, grocery markets, transit &amp; housing
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#9A6B3E] group-hover:text-[#0F766E] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
-              </div>
-            </Link>
-
-            {/* Executive Board Leadership */}
-            <Link
-              href="/board"
-              className="group block p-4 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#5B2C86]/60 hover:bg-[#FAF6F0] hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#5B2C86]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#F7EFE2] border border-[#DFD1BE] text-[#5B2C86] group-hover:border-[#5B2C86]/60 transition-colors shrink-0 mt-0.5">
-                    <Award className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#5B2C86] font-bold block">
-                      2026–2027 Leadership
-                    </span>
-                    <h2 className="text-base font-serif font-medium text-[#261A14] group-hover:text-[#5B2C86] transition-colors truncate">
-                      Executive Board Officers
-                    </h2>
-                    <p className="text-xs text-[#5E4C40] mt-0.5 truncate font-sans">
-                      Meet the team leading Tamil Sangam at Ohio State
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#9A6B3E] group-hover:text-[#5B2C86] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
-              </div>
-            </Link>
-
-            {/* Ideas Hearth */}
-            <Link
-              href="/ideas"
-              className="group block p-4 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#C79347]/60 hover:bg-[#FAF6F0] hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#C79347]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#F7EFE2] border border-[#DFD1BE] text-[#C79347] group-hover:border-[#C79347]/60 transition-colors shrink-0 mt-0.5">
-                    <Lightbulb className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#C79347] font-bold block">
-                      Propose Events &amp; Feedback
-                    </span>
-                    <h2 className="text-base font-serif font-medium text-[#261A14] group-hover:text-[#C79347] transition-colors truncate">
-                      The Ideas Hearth
-                    </h2>
-                    <p className="text-xs text-[#5E4C40] mt-0.5 truncate font-sans">
-                      Submit anonymous suggestions, workshop ideas &amp; event requests
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#9A6B3E] group-hover:text-[#C79347] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
-              </div>
-            </Link>
-
-            {/* Games & Cultural Lab */}
-            <Link
-              href="/games"
-              className="group block p-4 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#0F766E]/60 hover:bg-[#FAF6F0] hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#0F766E]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#F7EFE2] border border-[#DFD1BE] text-[#0F766E] group-hover:border-[#0F766E]/60 transition-colors shrink-0 mt-0.5">
-                    <Sparkles className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#0F766E] font-bold block">
-                      Interactive Cultural Lab
-                    </span>
-                    <h2 className="text-base font-serif font-medium text-[#261A14] group-hover:text-[#0F766E] transition-colors truncate">
-                      Wordle, Connections &amp; Kolam
-                    </h2>
-                    <p className="text-xs text-[#5E4C40] mt-0.5 truncate font-sans">
-                      Play biweekly Tamil-English word puzzles (Sollu) and pattern games
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#9A6B3E] group-hover:text-[#0F766E] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
-              </div>
-            </Link>
-
-            {/* Constitution Document */}
-            <a
-              href={SITE_CONFIG.constitutionPdfPath}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block p-4 rounded-xl bg-[#FFFFFF] border border-[#DFD1BE] hover:border-[#9A6B3E]/60 hover:bg-[#FAF6F0] hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-[#9A6B3E]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-[#F7EFE2] border border-[#DFD1BE] text-[#9A6B3E] group-hover:border-[#9A6B3E]/60 transition-colors shrink-0 mt-0.5">
-                    <FileText className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#9A6B3E] font-bold block">
-                      Official Governance
-                    </span>
-                    <h2 className="text-base font-serif font-medium text-[#261A14] group-hover:text-[#9A6B3E] transition-colors truncate">
-                      Constitution (2026–2027)
-                    </h2>
-                    <p className="text-xs text-[#5E4C40] mt-0.5 truncate font-sans">
-                      Official student organization bylaws registered at Ohio State
-                    </p>
-                  </div>
-                </div>
-                <ExternalLink className="w-4 h-4 text-[#9A6B3E] group-hover:text-[#5B2C86] transition-all shrink-0 mt-2" />
-              </div>
-            </a>
+          <div className="space-y-3">
+            <Eyebrow as="p" className="px-1">Student Resources &amp; Discovery</Eyebrow>
+            <ul className="space-y-3">
+              <LinkCard
+                href="/guide"
+                icon={Compass}
+                category="teal"
+                label="Freshmen & Transfer Handbook"
+                title="Student Survival Guide & FAQ"
+                description="Columbus South Asian dining, grocery markets, transit & housing"
+              />
+              <LinkCard
+                href="/board"
+                icon={Award}
+                category="purple"
+                label="2026–2027 Leadership"
+                title="Executive Board Officers"
+                description="Meet the team leading Tamil Sangam at Ohio State"
+              />
+              <LinkCard
+                href="/ideas"
+                icon={Lightbulb}
+                category="purple"
+                label="Propose Events & Feedback"
+                title="The Ideas Hearth"
+                description="Submit anonymous suggestions, workshop ideas & event requests"
+              />
+              <LinkCard
+                href="/games"
+                icon={Sparkles}
+                category="teal"
+                label="Interactive Cultural Lab"
+                title="Wordle, Connections & Kolam"
+                description="Play biweekly Tamil-English word puzzles (Sollu) and pattern games"
+              />
+              <LinkCard
+                href={SITE_CONFIG.constitutionPdfPath}
+                external
+                icon={FileText}
+                category="bronze"
+                label="Official Governance"
+                title="Constitution (2026–2027)"
+                description="Official student organization bylaws registered at Ohio State"
+              />
+            </ul>
           </div>
-
         </div>
       </main>
 
       {/* Footer Branding */}
-      <footer className="mt-12 text-center text-xs text-[#5E4C40] space-y-1">
-        <p className="font-medium text-[#261A14]">{SITE_CONFIG.universityAffiliationEn}</p>
-        <p className="text-[11px] text-[#5E4C40]">
-          {SITE_CONFIG.officialNameTa} · Project Aintinai (ஐந்திணை)
+      <footer className="relative z-10 mt-12 space-y-1 text-center font-sans text-xs text-ink-umber">
+        <p className="font-medium text-ink-earth">{SITE_CONFIG.universityAffiliationEn}</p>
+        <p className="leading-[1.6]">
+          <span lang="ta" className="font-tamil">{SITE_CONFIG.officialNameTa}</span> · Project Aintinai (
+          <span lang="ta" className="font-tamil">ஐந்திணை</span>)
         </p>
       </footer>
     </div>

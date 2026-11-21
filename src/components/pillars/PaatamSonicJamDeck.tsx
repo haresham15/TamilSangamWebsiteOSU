@@ -106,7 +106,7 @@ export function PaatamSonicJamDeck() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#C79347]/20 pb-6">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#C79347]">
-              <span className="w-2 h-2 rounded-full bg-[#2BB5A8] animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-[#2BB5A8]" />
               <span>Interactive Raga Mohanam Acoustic Deck · வீணை மற்றும் கிட்டார் நரம்புகள்</span>
             </div>
             <h4 className="font-serif text-2xl sm:text-3xl font-normal text-[#FAF5ED]">

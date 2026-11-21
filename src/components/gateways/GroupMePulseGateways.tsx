@@ -1,133 +1,131 @@
 import React from "react";
-import { Film, Coffee, Gamepad2, Users, ArrowUpRight, MessageCircle } from "lucide-react";
+import { Film, Coffee, Gamepad2, ArrowUpRight, MessageCircle } from "lucide-react";
+import { SITE_CONFIG } from "@/data/siteConfig";
+import { CulturalSection } from "@/components/ui/CulturalSection";
+import { CulturalCard } from "@/components/ui/CulturalCard";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
 
 interface GroupMePulseGatewaysProps {
   className?: string;
+  /** Kept for backward compatibility. The band always renders as a sangam-deep jewel band. */
   variant?: "dark" | "light";
 }
 
-export function GroupMePulseGateways({
-  className = "",
-  variant = "light",
-}: GroupMePulseGatewaysProps) {
-  const isDark = variant === "dark";
+const PULSE_CARDS = [
+  {
+    id: "fdfs-movies",
+    icon: Film,
+    badge: "FDFS Screenings",
+    titleEn: "FDFS Kollywood Theater Meetups",
+    titleTa: "முதல் நாள் முதல் காட்சி சினிமா சந்திப்புகள்",
+    desc: "Whenever a major Tamil film drops, we pick a Columbus theater & showtime, coordinate carpools from the Ohio Union, and watch together as a meeting.",
+    iconClass: "bg-accent-zari/15 text-accent-zari",
+  },
+  {
+    id: "study-cricket",
+    icon: Coffee,
+    badge: "Chill Kickbacks",
+    titleEn: "Study Tables & Cricket Watch-Alongs",
+    titleTa: "படிப்பு சந்திப்பு & கிரிக்கெட் நேரலை",
+    desc: "Low-maintenance bonding—Thompson Library study tables, IPL/India cricket watch-alongs, and late-night food runs with fellow Buckeyes.",
+    iconClass: "bg-brand-teal-dark/15 text-brand-teal-dark",
+  },
+  {
+    id: "game-lab",
+    icon: Gamepad2,
+    badge: "Small-Squad Lab",
+    titleEn: "Small-Squad Game Lab (No Repeat Games)",
+    titleTa: "புதிய குழு விளையாட்டு பட்டறை",
+    desc: "Moving beyond standard Kahoot & musical chairs—designing small-group team games, Kollywood auctions, and social deduction rounds where everyone plays.",
+    iconClass: "bg-brand-lavender/15 text-brand-lavender",
+  },
+] as const;
 
-  const PULSE_CARDS = [
-    {
-      id: "fdfs-movies",
-      icon: Film,
-      badge: "FDFS SCREENINGS",
-      titleEn: "FDFS Kollywood Theater Meetups",
-      titleTa: "முதல் நாள் முதல் காட்சி சினிமா சந்திப்புகள்",
-      desc: "Whenever a major Tamil film drops, we pick a Columbus theater & showtime, coordinate carpools from the Ohio Union, and watch together as a meeting.",
-      accent: "#B84A39",
-    },
-    {
-      id: "study-cricket",
-      icon: Coffee,
-      badge: "CHILL KICKBACKS",
-      titleEn: "Study Tables & Cricket Watch-Alongs",
-      titleTa: "படிப்பு சந்திப்பு & கிரிக்கெட் நேரலை",
-      desc: "Low-maintenance bonding—Thompson Library study tables, IPL/India cricket watch-alongs, and late-night food runs with fellow Buckeyes.",
-      accent: "#0F766E",
-    },
-    {
-      id: "game-lab",
-      icon: Gamepad2,
-      badge: "SMALL-SQUAD LAB",
-      titleEn: "Small-Squad Game Lab (No Repeat Games)",
-      titleTa: "புதிய குழு விளையாட்டு பட்டறை",
-      desc: "Moving beyond standard Kahoot & musical chairs—designing small-group team games, Kollywood auctions, and social deduction rounds where everyone plays.",
-      accent: "#C79347",
-    },
-  ];
-
+/**
+ * GroupMePulseGateways — one full-bleed sangam-deep jewel band (recipe D) for the
+ * GroupMe hangout pulse. Tiles are CulturalCard dark; the single CTA is a teal-dark MuttramButton.
+ */
+export function GroupMePulseGateways({ className = "" }: GroupMePulseGatewaysProps) {
   return (
-    <section
+    <CulturalSection
+      variant="sangam-deep"
+      divider="korvai"
       aria-labelledby="groupme-pulse-heading"
-      className={`w-full py-12 px-4 sm:px-6 md:px-8 rounded-2xl border bg-[#1C122B] border-[#C79347]/30 text-[#FAF5ED] shadow-xl ${className}`}
+      className={className}
     >
-      <div className="max-w-6xl mx-auto space-y-8">
-        {/* Header Strip */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-6 border-[rgba(212,163,106,0.2)]">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#C79347]">
-              <MessageCircle className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Pop-Up Hangouts</span>
-            </div>
+      <div className="mx-auto max-w-7xl px-6 sm:px-10 py-20 sm:py-28">
+        {/* Header strip */}
+        <div className="flex flex-col gap-8 border-b border-border-zari-muted pb-10 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl space-y-3">
+            <Eyebrow tone="dark">Pop-Up Hangouts</Eyebrow>
             <h2
               id="groupme-pulse-heading"
-              className="text-2xl sm:text-3xl lg:text-4xl font-serif font-normal tracking-tight text-[#FAF5ED]"
+              className="font-serif text-3xl font-normal leading-[1.12] tracking-tight text-ink-alabaster sm:text-4xl lg:text-5xl"
             >
               Between the Big Meetings: Live GroupMe Pulse
             </h2>
-            <p className="text-sm sm:text-base max-w-2xl font-sans text-[#CBBBA8]">
+            <p className="max-w-2xl pt-1 font-sans text-base leading-relaxed text-ink-sand sm:text-lg">
               OSU Tamil Sangam isn&apos;t just 4 formal meetings a year. We are turning our GroupMe into an active, low-maintenance hub for spontaneous student hangouts across campus.
             </p>
           </div>
 
-          <a
-            href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider transition-colors bg-[#0F766E] text-[#FAF5ED] hover:bg-[#0B5C56] shadow-xs focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
-          >
-            <span>Join Campus Chat</span>
-            <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
-          </a>
+          <div className="shrink-0">
+            <MuttramButton
+              href={SITE_CONFIG.groupMeUrl}
+              external
+              onDark
+              icon={<MessageCircle className="h-4 w-4" aria-hidden="true" />}
+              ariaLabel="Join Campus Chat on GroupMe (opens in a new tab)"
+            >
+              Join Campus Chat
+            </MuttramButton>
+          </div>
         </div>
 
-        {/* 3-Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Hangout tiles */}
+        <ul className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
           {PULSE_CARDS.map((card) => {
             const Icon = card.icon;
             return (
-              <div
-                key={card.id}
-                className="relative flex flex-col justify-between p-6 rounded-xl border transition-[border-color,transform,box-shadow] duration-200 hover:-translate-y-1 bg-[#271A3C] border-[rgba(212,163,106,0.24)] hover:border-[#C79347]/50 shadow-sm"
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div
-                      className="p-2.5 rounded-lg"
-                      style={{ backgroundColor: `${card.accent}20`, color: card.accent }}
-                    >
-                      <Icon className="w-5 h-5" aria-hidden="true" />
-                    </div>
-                    <span className="text-[10px] font-mono font-medium tracking-widest text-[#CBBBA8] uppercase">
-                      {card.badge}
-                    </span>
-                  </div>
+              <CulturalCard key={card.id} as="li" variant="dark" className="flex flex-col p-6 sm:p-8">
+                <div className="flex items-center justify-between gap-3">
+                  <span className={`rounded-lg p-2.5 ${card.iconClass}`}>
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-sand">
+                    {card.badge}
+                  </span>
+                </div>
 
-                  <div className="space-y-1">
-                    <h3 className="font-serif text-xl font-medium tracking-tight text-[#FAF5ED]">
-                      {card.titleEn}
-                    </h3>
-                    <p lang="ta" className="text-xs font-tamil text-[#C79347] tracking-normal">
-                      {card.titleTa}
-                    </p>
-                  </div>
-
-                  <p className="text-xs sm:text-sm leading-relaxed font-sans text-[#CBBBA8]">
-                    {card.desc}
+                <div className="mt-6 space-y-1">
+                  <h3 className="font-serif text-xl font-medium tracking-tight text-ink-alabaster">
+                    {card.titleEn}
+                  </h3>
+                  <p lang="ta" className="font-tamil text-sm leading-[1.6] tracking-normal text-accent-zari">
+                    {card.titleTa}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-[rgba(212,163,106,0.2)]">
+                <p className="mb-6 mt-4 font-sans text-sm leading-relaxed text-ink-sand">{card.desc}</p>
+
+                <div className="mt-auto border-t border-border-zari-muted pt-4">
                   <a
-                    href="https://web.groupme.com/join_group/83424812/BeBIRg7f"
+                    href={SITE_CONFIG.groupMeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-xs font-mono font-medium text-[#C79347] hover:underline"
+                    aria-label={`Vote on the ${card.titleEn} poll in GroupMe (opens in a new tab)`}
+                    className="inline-flex min-h-12 items-center gap-1.5 rounded font-sans text-sm font-medium text-brand-teal-dark underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark"
                   >
-                    <span>Vote on poll in GroupMe ↗</span>
+                    <span>Vote on poll in GroupMe</span>
+                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                   </a>
                 </div>
-              </div>
+              </CulturalCard>
             );
           })}
-        </div>
+        </ul>
       </div>
-    </section>
+    </CulturalSection>
   );
 }

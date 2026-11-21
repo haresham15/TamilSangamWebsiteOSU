@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
-import { createPortal } from "react-dom";
+import React, { useEffect, useCallback } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
-import { useModalScrollLock } from "@/hooks/useModalScrollLock";
+import { motion, useReducedMotion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { DialogShell } from "@/components/ui/DialogShell";
 
 export interface LightboxPhoto {
   id?: string;
@@ -33,14 +32,9 @@ export function CinemaLightbox({
   onClose,
   onNavigate,
 }: CinemaLightboxProps) {
-  const [mounted, setMounted] = useState(false);
+  const reduced = useReducedMotion();
   const currentPhoto = photos[currentIndex];
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useModalScrollLock(isOpen, onClose);
+  const open = isOpen && Boolean(currentPhoto);
 
   const handlePrev = useCallback(() => {
     if (photos.length <= 1) return;
@@ -52,9 +46,9 @@ export function CinemaLightbox({
     onNavigate((currentIndex + 1) % photos.length);
   }, [currentIndex, photos.length, onNavigate]);
 
-  // Keyboard arrow navigation
+  // Keyboard arrow navigation (Escape, focus trap and scroll lock come from DialogShell)
   useEffect(() => {
-    if (!isOpen) return;
+    if (!open) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") {
@@ -68,80 +62,49 @@ export function CinemaLightbox({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, handlePrev, handleNext]);
+  }, [open, handlePrev, handleNext]);
 
-  if (!isOpen || !currentPhoto || !mounted) return null;
-
-  const plateLabel = currentPhoto.plateNumber
+  const plateLabel = currentPhoto?.plateNumber
     ? String(currentPhoto.plateNumber).padStart(2, "0")
     : String(currentIndex + 1).padStart(2, "0");
 
-  return createPortal(
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed inset-0 z-[100] flex flex-col justify-between bg-[#140C20]/95 backdrop-blur-md text-[#F4F0FA] select-none p-4 sm:p-6 lg:p-8"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) onClose();
-          }}
-        >
-          {/* Top Control Bar */}
-          <header className="w-full flex items-center justify-between z-20 shrink-0">
-            <div className="flex items-center gap-3">
-              <span className="font-mono text-xs uppercase tracking-widest text-[#C79347] font-bold">
-                Plate {plateLabel}
-              </span>
-              <span className="text-white/20">/</span>
-              <span className="font-mono text-xs text-white/50 tracking-wider">
-                {currentIndex + 1} OF {photos.length}
-              </span>
-            </div>
+  const stepButton =
+    "absolute z-20 w-12 h-12 rounded-full bg-bg-sangam-deep/60 hover:bg-brand-teal-dark hover:text-ink-on-teal border border-accent-zari/25 text-ink-alabaster flex items-center justify-center transition-colors cursor-pointer backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark";
 
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close lightbox (ESC)"
-              className="group flex items-center gap-2 px-3.5 py-2 min-w-[48px] min-h-[48px] rounded-full border border-white/15 bg-white/5 hover:bg-white/10 hover:border-[#2BB5A8] text-white/80 hover:text-white transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8]"
-            >
-              <span className="text-[10px] font-mono uppercase tracking-widest text-white/50 group-hover:text-white/90">
-                ESC
-              </span>
-              <X className="w-4 h-4 text-white/80 group-hover:text-white" />
-            </button>
-          </header>
-
+  return (
+    <DialogShell
+      open={open}
+      onClose={onClose}
+      tone="media"
+      size="full"
+      ariaLabel={currentPhoto?.titleEn ? `Photo lightbox: ${currentPhoto.titleEn}` : "Photo lightbox"}
+      eyebrow={`Plate ${plateLabel} · ${currentIndex + 1} of ${photos.length}`}
+      closeLabel="Close lightbox"
+      bodyClassName="flex flex-col select-none"
+    >
+      {currentPhoto && (
+        <>
           {/* Center Stage Photograph */}
-          <main className="relative flex-1 w-full flex items-center justify-center my-4 overflow-hidden">
-            {/* Prev Button */}
+          <div className="relative w-full h-[60dvh] sm:h-[70dvh] flex items-center justify-center overflow-hidden px-2 py-4">
             {photos.length > 1 && (
               <button
                 type="button"
                 onClick={handlePrev}
                 aria-label="Previous photograph (Left Arrow)"
-                className="absolute left-2 sm:left-4 z-20 w-11 h-11 rounded-full bg-black/40 hover:bg-[#0F766E] hover:text-[#FAF5ED] border border-white/15 text-white flex items-center justify-center transition-all cursor-pointer backdrop-blur-sm"
+                className={`${stepButton} left-2 sm:left-4`}
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft className="w-5 h-5" aria-hidden="true" />
               </button>
             )}
 
-            {/* Photo Container */}
-            <div
-              className="relative w-full h-full max-w-6xl max-h-[75vh] flex items-center justify-center"
-              onClick={(e) => {
-                if (e.target === e.currentTarget) onClose();
-              }}
-            >
+            <div className="relative w-full h-full max-w-6xl" onClick={onClose}>
               <motion.div
                 key={currentPhoto.src}
-                initial={{ opacity: 0, scale: 0.97 }}
+                initial={{ opacity: 0, scale: reduced ? 1 : 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.97 }}
-                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: reduced ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
                 className="relative w-full h-full"
+                onClick={(e) => e.stopPropagation()}
               >
                 <Image
                   src={currentPhoto.src}
@@ -154,70 +117,67 @@ export function CinemaLightbox({
               </motion.div>
             </div>
 
-            {/* Next Button */}
             {photos.length > 1 && (
               <button
                 type="button"
                 onClick={handleNext}
                 aria-label="Next photograph (Right Arrow)"
-                className="absolute right-2 sm:right-4 z-20 w-11 h-11 rounded-full bg-black/40 hover:bg-[#0F766E] hover:text-[#FAF5ED] border border-white/15 text-white flex items-center justify-center transition-all cursor-pointer backdrop-blur-sm"
+                className={`${stepButton} right-2 sm:right-4`}
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-5 h-5" aria-hidden="true" />
               </button>
             )}
-          </main>
+          </div>
 
-          {/* Bottom Architectural Colophon Bar */}
-          <footer className="w-full max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-3 border-t border-white/10 z-20 shrink-0 text-left">
+          {/* Colophon */}
+          <div className="w-full max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-5 pb-5 pt-3 sm:px-7 border-t border-accent-zari/15 text-left">
             <div className="space-y-1">
               <div className="flex flex-wrap items-baseline gap-3">
                 {currentPhoto.titleEn && (
-                  <h3 className="font-serif text-lg sm:text-xl text-[#FAF5ED]">
-                    {currentPhoto.titleEn}
-                  </h3>
+                  <h3 className="font-serif text-lg sm:text-xl text-ink-alabaster">{currentPhoto.titleEn}</h3>
                 )}
                 {currentPhoto.titleTa && (
-                  <span lang="ta" className="font-tamil text-sm text-[#C79347]">
+                  <span lang="ta" className="font-tamil text-sm leading-[1.6] text-brand-lavender">
                     {currentPhoto.titleTa}
                   </span>
                 )}
                 {currentPhoto.date && (
-                  <span className="font-mono text-xs text-white/50 tracking-wider">
-                    · {currentPhoto.date}
-                  </span>
+                  <span className="font-sans text-xs text-ink-sand tabular-nums">· {currentPhoto.date}</span>
                 )}
               </div>
               {(currentPhoto.captionEn || currentPhoto.captionTa) && (
-                <p className="text-xs sm:text-sm text-white/70 font-sans max-w-2xl leading-relaxed">
+                <p
+                  lang={currentPhoto.captionEn ? undefined : "ta"}
+                  className="text-xs sm:text-sm text-ink-sand font-sans max-w-2xl leading-[1.6]"
+                >
                   {currentPhoto.captionEn || currentPhoto.captionTa}
                 </p>
               )}
             </div>
 
             {photos.length > 1 && (
-              <div className="flex items-center gap-4 shrink-0 font-mono text-xs uppercase tracking-widest text-white/50">
+              <div className="flex items-center gap-2 shrink-0 font-sans text-xs font-semibold uppercase tracking-[0.14em] text-ink-sand">
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="hover:text-white transition-colors cursor-pointer"
+                  className="min-h-12 px-3 rounded-full hover:text-brand-teal-dark transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark"
                 >
-                  ← PREV
+                  ← Prev
                 </button>
-                <span className="text-white/20">/</span>
+                <span aria-hidden="true" className="text-accent-zari/40">/</span>
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="hover:text-white transition-colors cursor-pointer"
+                  className="min-h-12 px-3 rounded-full hover:text-brand-teal-dark transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark"
                 >
-                  NEXT →
+                  Next →
                 </button>
               </div>
             )}
-          </footer>
-        </motion.div>
+          </div>
+        </>
       )}
-    </AnimatePresence>,
-    document.body
+    </DialogShell>
   );
 }
 

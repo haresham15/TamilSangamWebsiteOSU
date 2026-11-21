@@ -14,11 +14,10 @@ export interface EditorialBackgroundCanvasProps {
  * EditorialBackgroundCanvas
  * "The Living Chola Monograph & Pulli Architectural Background System"
  * 
- * 1. 5-Tier Ledger Hairlines (6%, 28%, 50%, 72%, 94%)
- * 2. Subtle Pulli Dot Matrix masked away from body copy
- * 3. 3 Monumental Rotating Ghost Kolams & Tamil Glyph Watermarks (அ, ழ, ம்)
- * 4. Cursor-Reactive Warm Hearth Dapple Lighting
- * 5. Heavy Khadi Cotton-Rag Paper Tooth
+ * 1. Cursor-reactive warm hearth dapple light
+ * 2. One scroll-rotated sikku kolam in a corner, masked away from body copy
+ * 3. Khadi cotton-rag paper grain
+ * (Ledger rails, dot matrix and glyph walls were retired: they read as a CAD canvas.)
  * 
  * Zero React re-renders on scroll / mousemove (driven via RAF + CSS custom properties).
  */
@@ -70,10 +69,7 @@ export function EditorialBackgroundCanvas({
       if (!visible || reducedMotion || isLiteMode) return;
       const y = window.scrollY;
       const deg = (y * 0.025) % 360;
-      const dash = (y * 0.08) % 400;
       container.style.setProperty("--kolam-rot", `${deg}deg`);
-      container.style.setProperty("--kolam-rot-rev", `${-deg * 0.85}deg`);
-      container.style.setProperty("--kolam-dash", `${dash}`);
     };
 
     const updateLoop = () => {
@@ -116,8 +112,6 @@ export function EditorialBackgroundCanvas({
   }, [reducedMotion, isLiteMode]);
 
   const isEspresso = variant === "espresso";
-  const hairlineColor = "rgba(212, 163, 106, 0.15)";
-  const dotColor = "rgba(212, 163, 106, 0.18)";
 
   return (
     <div
@@ -126,126 +120,32 @@ export function EditorialBackgroundCanvas({
       data-editorial-canvas="true"
       className={`pointer-events-none select-none absolute inset-0 z-0 overflow-hidden editorial-background-canvas ${className}`.trim()}
     >
-      {/* =========================================================================
-          1. WARM HEARTH CURSOR & AMBIENT DAPPLE LIGHTING
-          ========================================================================= */}
-      <div
-        className="absolute inset-0 transition-opacity duration-700"
-        style={{
-          background: `radial-gradient(750px circle at var(--mouse-x, 50%) var(--mouse-y, 30%), rgba(212, 163, 106, 0.14), rgba(199, 147, 71, 0.08) 35%, rgba(91, 44, 134, 0.06) 55%, transparent 75%),
-             radial-gradient(1000px ellipse at 50% 0%, rgba(212, 163, 106, 0.1), transparent 70%),
-             radial-gradient(900px ellipse at 85% 20%, rgba(199, 147, 71, 0.08), transparent 70%),
-             radial-gradient(900px ellipse at 15% 80%, rgba(91, 44, 134, 0.06), transparent 70%),
-             radial-gradient(1100px ellipse at 50% 100%, rgba(212, 163, 106, 0.08), transparent 75%)`,
-        }}
-      />
-
-      {/* =========================================================================
-          2. ARCHITECTURAL PULLI GRID (5 LEDGER HAIRLINES)
-          Aligned with container grid at 6%, 28%, 50%, 72%, 94%
-          ========================================================================= */}
-      <div className="absolute inset-0">
-        {[6, 28, 50, 72, 94].map((pos) => (
-          <div
-            key={pos}
-            className="absolute top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#C79347]/15 to-transparent"
-            style={{
-              left: `${pos}%`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* =========================================================================
-          3. PULLI DOT MATRIX (48px × 48px) WITH RADIAL MASK
-          Soft along margins & section seams; fades to 0% behind body text
-          ========================================================================= */}
+      {/* 1. Warm hearth dapple light (zari + a whisper of Sangam purple). No grids, rails or dot matrices. */}
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: `radial-gradient(${dotColor} 1.5px, transparent 1.5px)`,
-          backgroundSize: "44px 44px",
-          maskImage:
-            "radial-gradient(ellipse 75% 65% at 50% 50%, transparent 25%, black 85%), linear-gradient(to right, black 0%, transparent 18%, transparent 82%, black 100%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 75% 65% at 50% 50%, transparent 25%, black 85%), linear-gradient(to right, black 0%, transparent 18%, transparent 82%, black 100%)",
+          background: `radial-gradient(700px circle at var(--mouse-x, 50%) var(--mouse-y, 30%), rgba(199, 147, 71, ${isEspresso ? 0.1 : 0.07}), rgba(91, 44, 134, 0.05) 50%, transparent 72%)`,
         }}
       />
 
-      {/* =========================================================================
-          4. SCROLL-LINKED GHOST SIKKU KOLAMS & CLASSICAL TAMIL WATERMARKS
-          ========================================================================= */}
+      {/* 2. One hand-drawn sikku kolam anchored to the top-left margin, faded away from the text column. */}
       {showKolamWatermarks && !isLiteMode && (
-        <div className="absolute inset-0 overflow-hidden text-[#D4A36A]">
-          {/* Kolam 1 (Top Left Margin) */}
-          <div
-            className="absolute top-[8%] -left-36 sm:-left-48 w-[560px] h-[560px] transition-transform duration-100 ease-out will-change-transform opacity-75 drop-shadow-[0_0_20px_rgba(199,147,71,0.25)]"
-            style={{
-              transform: "rotate(var(--kolam-rot, 0deg))",
-            }}
-          >
-            <SikkuKolamSvg />
-          </div>
-
-          {/* Monumental Tamil Glyph 1: "அ" (Akaram - The Primordial Letter) */}
-          <span
-            lang="ta"
-            className="absolute top-[14%] right-[5%] font-serif font-light text-[18rem] md:text-[24rem] leading-none select-none pointer-events-none opacity-[0.09] text-transparent drop-shadow-[0_0_25px_rgba(199,147,71,0.2)]"
-            style={{
-              WebkitTextStroke: "1.75px rgba(212, 163, 106, 0.45)",
-            }}
-          >
-            அ
-          </span>
-
-          {/* Kolam 2 (Middle Right Margin) */}
-          <div
-            className="absolute top-[42%] -right-36 sm:-right-48 w-[560px] h-[560px] transition-transform duration-100 ease-out will-change-transform opacity-75 drop-shadow-[0_0_20px_rgba(199,147,71,0.25)]"
-            style={{
-              transform: "rotate(var(--kolam-rot-rev, 0deg))",
-            }}
-          >
-            <SikkuKolamSvg />
-          </div>
-
-          {/* Monumental Tamil Glyph 2: "ழ" (Zha - The Soul of Tamil) */}
-          <span
-            lang="ta"
-            className="absolute top-[48%] left-[4%] font-serif font-light text-[18rem] md:text-[24rem] leading-none select-none pointer-events-none opacity-[0.09] text-transparent drop-shadow-[0_0_25px_rgba(199,147,71,0.2)]"
-            style={{
-              WebkitTextStroke: "1.75px rgba(212, 163, 106, 0.45)",
-            }}
-          >
-            ழ
-          </span>
-
-          {/* Kolam 3 (Lower Left Margin) */}
-          <div
-            className="absolute top-[76%] -left-36 sm:-left-48 w-[560px] h-[560px] transition-transform duration-100 ease-out will-change-transform opacity-75 drop-shadow-[0_0_20px_rgba(199,147,71,0.25)]"
-            style={{
-              transform: "rotate(var(--kolam-rot, 0deg))",
-            }}
-          >
-            <SikkuKolamSvg />
-          </div>
-
-          {/* Monumental Tamil Glyph 3: "ம்" (Om / Pure Consonant Cadence) */}
-          <span
-            lang="ta"
-            className="absolute top-[82%] right-[5%] font-serif font-light text-[18rem] md:text-[24rem] leading-none select-none pointer-events-none opacity-[0.09] text-transparent drop-shadow-[0_0_25px_rgba(199,147,71,0.2)]"
-            style={{
-              WebkitTextStroke: "1.75px rgba(212, 163, 106, 0.45)",
-            }}
-          >
-            ம்
-          </span>
+        <div
+          className={`absolute -left-40 top-[4%] h-[520px] w-[520px] will-change-transform sm:-left-52 ${
+            isEspresso ? "text-accent-bronze-dark opacity-[0.12]" : "text-accent-bronze opacity-[0.12]"
+          }`}
+          style={{
+            transform: "rotate(var(--kolam-rot, 0deg))",
+            maskImage: "radial-gradient(circle at 30% 30%, black 40%, transparent 72%)",
+            WebkitMaskImage: "radial-gradient(circle at 30% 30%, black 40%, transparent 72%)",
+          }}
+        >
+          <SikkuKolamSvg />
         </div>
       )}
 
-      {/* =========================================================================
-          5. KHADI COTTON-RAG TACTILE PAPER GRAIN
-          ========================================================================= */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.024] pointer-events-none mix-blend-multiply">
+      {/* 3. Khadi cotton-rag paper grain */}
+      <svg className="absolute inset-0 h-full w-full pointer-events-none opacity-[0.024] mix-blend-multiply">
         <filter id="khadi-monograph-grain">
           <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
           <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" />

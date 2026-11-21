@@ -1,11 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Link from "next/link";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
-import { useReducedMotion } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
 import dynamic from "next/dynamic";
 import { HeroKolamLoader } from "@/components/ui/HeroKolamLoader";
@@ -18,109 +14,23 @@ const GopuramZScroll = dynamic(
   }
 );
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
-import { FlowingRiverTimeline } from "@/components/muttram/FlowingRiverTimeline";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
-import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
+import { CulturalSection } from "@/components/ui/CulturalSection";
+import { CulturalCard } from "@/components/ui/CulturalCard";
 import { ThirukkuralExplorer } from "@/components/gateways/ThirukkuralExplorer";
-import { AramPhilanthropyGateway } from "@/components/gateways/AramPhilanthropyGateway";
-import { PronounceableQuote } from "@/components/ui/PronounceableQuote";
+import { SITE_CONFIG } from "@/data/siteConfig";
+
+const CONTAINER = "mx-auto w-full max-w-7xl px-6 sm:px-10";
+const BAND = "py-20 sm:py-28";
 
 export function AboutClient() {
   const { locale } = useLocale();
-  const quoteContainerRef = useRef<HTMLDivElement>(null);
-  const tagRef = useRef<HTMLSpanElement>(null);
-  const quoteRef = useRef<HTMLQuoteElement>(null);
-  const tamilRef = useRef<HTMLDivElement>(null);
-  const watermarkRef = useRef<HTMLSpanElement>(null);
-  const reduced = useReducedMotion();
-
-  useEffect(() => {
-    if (reduced || !quoteRef.current || !quoteContainerRef.current) return;
-    gsap.registerPlugin(ScrollTrigger, SplitText);
-
-    const split = new SplitText(quoteRef.current, { type: "words" });
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: quoteContainerRef.current,
-          start: "top 82%",
-          end: "center 48%",
-          scrub: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      // 1. Tagline badge reveal
-      if (tagRef.current) {
-        tl.fromTo(
-          tagRef.current,
-          { opacity: 0, y: -16 },
-          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
-          0
-        );
-      }
-
-      // 2. Tamil script slide-up + unblur (The Thirukkural/Purananuru classical verse)
-      if (tamilRef.current) {
-        tl.fromTo(
-          tamilRef.current,
-          { opacity: 0, y: 28, filter: "blur(8px)" },
-          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power2.out" },
-          0.05
-        );
-      }
-
-      // 3. English translation words cascade with subtle blur & lift
-      if (split.words && split.words.length > 0) {
-        tl.fromTo(
-          split.words,
-          { opacity: 0.12, filter: "blur(4px)", y: 12 },
-          { opacity: 1, filter: "blur(0px)", y: 0, stagger: 0.02, duration: 0.6, ease: "power1.out" },
-          0.15
-        );
-      }
-
-      // 4. Subtle watermark horizontal parallax
-      if (watermarkRef.current) {
-        gsap.fromTo(
-          watermarkRef.current,
-          { xPercent: -12 },
-          {
-            xPercent: 12,
-            ease: "none",
-            scrollTrigger: {
-              trigger: quoteContainerRef.current,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-              invalidateOnRefresh: true,
-            },
-          }
-        );
-      }
-    }, quoteContainerRef);
-
-    if (typeof document !== "undefined" && document.fonts) {
-      document.fonts.ready.then(() => {
-        ScrollTrigger.refresh();
-      });
-    }
-    const timer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 250);
-
-    return () => {
-      clearTimeout(timer);
-      ctx.revert();
-      split.revert();
-    };
-  }, [reduced, locale]);
 
   const timelineMilestones = [
     {
-      year: "2021",
+      year: SITE_CONFIG.informalFoundingYear,
       titleEn: "Informal Student Cohort Founded",
       titleTa: "மாணவர் தோழமை தொடக்கம்",
       descriptionEn:
@@ -138,11 +48,11 @@ export function AboutClient() {
         "மாணவர் கலை நிகழ்ச்சிகள் மற்றும் தென் இந்திய உணவுடன் கூடிய பெருவிழாக்கள் ஓஹியோ யூனியனில் முறைப்படுத்தப்பட்டன.",
     },
     {
-      year: "2024",
+      year: SITE_CONFIG.officialRegistrationYear,
       titleEn: "Official OSU Student Organization Registration",
       titleTa: "பல்கலைக்கழக உத்தியோகபூர்வ அங்கீகாரம்",
-      descriptionEn:
-        "Formally chartered as a Recognized Student Organization (RSO) under Ohio State University Student Activities and the Council on Student Affairs (CSA), ratifying our first democratic constitution.",
+      // RSO status wording comes from the site's single source of truth.
+      descriptionEn: `${SITE_CONFIG.chapterStatusEn} Our first democratic constitution was ratified the same year.`,
       descriptionTa:
         "ஓஹியோ மாநில பல்கலைக்கழக மாணவர் அமைப்பாக அதிகாரப்பூர்வமாகப் பதிவு செய்யப்பட்டு, ஜனநாயக விதிகள் உறுதிசெய்யப்பட்டன.",
     },
@@ -190,190 +100,168 @@ export function AboutClient() {
         <GopuramZScroll />
       </div>
 
-      {/* Hero to Content Gradient Transition */}
+      {/* Purananuru 192 lives in the hero's first tier, so no repeat quote band here. */}
+      <EditorialSheetHandoff badge="THE SANGAM EPIC" sublabel="MISSION & ROOTS" surface="ivory">
+        {/* 1 · Ivory · Recipe A: intro split */}
+        <section aria-labelledby="about-intro-heading" className={`${CONTAINER} ${BAND}`}>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+            <div className="md:col-span-5 md:sticky md:top-28 self-start">
+              <CourtyardHeader
+                className="!mb-0"
+                titleId="about-intro-heading"
+                eyebrow="Heritage & Roots"
+                title={locale === "ta" ? "எங்கள் வரலாறு & சங்கப் பார்வை" : "The Sangam Epic"}
+                tamilTitle={locale !== "ta" ? "வரலாறு · தமிழ் மன்றம்" : undefined}
+              />
+            </div>
 
-      {/* =========================================================================
-          THE ORGANIC JOURNEY: CENTRAL RIVER TIMELINE ON WARM SANDSTONE
-          Glides up over the bronze rings stage (p = 0.84 -> 1.00)
-          ========================================================================= */}
-      <EditorialSheetHandoff
-        badge="THE SANGAM EPIC"
-        sublabel="MISSION & ROOTS"
-        surface="sandstone"
-        className="text-[#261A14]"
-      >
-        
-        <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
-          
-          {/* Centered Airy Section Header */}
-          <CourtyardHeader
-            align="center"
-            eyebrow="Heritage & Roots"
-            title={locale === "ta" ? "எங்கள் வரலாறு & சங்கப் பார்வை" : "The Sangam Epic"}
-            tamilTitle={locale !== "ta" ? "வரலாறு · தமிழ் மன்றம்" : undefined}
-          />
+            <div className="md:col-span-7 space-y-12">
+              <p className="font-serif text-2xl sm:text-3xl lg:text-4xl font-light leading-snug text-ink-earth">
+                Tamil Sangam was born from the deep longing for home-cooked flavors, authentic kinship, and the resonant
+                cadence of <span className="text-brand-purple">Sangam verses</span> beneath Midwest skies.
+              </p>
 
-
-          {/* The Hero Quote: Naked Architectural Monument with Warm Amber Halo */}
-          <div
-            ref={quoteContainerRef}
-            className="relative my-24 sm:my-36 text-center space-y-8 max-w-4xl mx-auto py-12 px-6 sm:px-10 rounded-2xl bg-[#1C122B] border border-[#C79347]/40 shadow-2xl card-pathirikai"
-          >
-            <span
-              ref={tagRef}
-              className="font-sans text-xs uppercase tracking-widest text-[#C79347] font-semibold block will-change-[transform,opacity]"
-            >
-              புறநானூறு 192 · கணியன் பூங்குன்றனார்
-            </span>
-            <span
-              ref={watermarkRef}
-              aria-hidden="true"
-              lang="ta"
-              className="pointer-events-none absolute inset-x-0 top-1/3 font-tamil text-8xl text-[#FAF5ED]/[0.04] whitespace-nowrap tracking-normal will-change-transform"
-            >
-              யாதும் ஊரே யாவரும் கேளிர்
-            </span>
-            <blockquote
-              ref={quoteRef}
-              className="text-3xl sm:text-5xl lg:text-6xl font-serif font-light text-[#FAF5ED] leading-snug tracking-tight will-change-[transform,opacity]"
-            >
-              &ldquo;<strong className="font-medium text-[#C79347]">To Us All Towns Are Home, Everyone Our Kin.</strong> Born from the deep longing for home-cooked flavors, authentic kinship, and the resonant cadence of <strong className="font-medium text-[#C79347]">Sangam verses</strong> beneath Midwest skies.&rdquo;
-            </blockquote>
-            <div ref={tamilRef} className="will-change-[transform,opacity]">
-              <PronounceableQuote
-                tamilText="யாதும் ஊரே யாவரும் கேளிர்"
-                label="Purananuru 192: Yadhum Oore Yaavarum Kaelir. Click to hear pronunciation."
-                tone="gold"
-                badgePosition="beside"
-                className="inline-block mx-auto px-4 py-2"
-              >
-                <p className="font-tamil text-xl sm:text-2xl text-[#D4A36A]" lang="ta">
-                  யாதும் ஊரே யாவரும் கேளிர் — கணியன் பூங்குன்றனார்
+              <div className="border-t border-border-warm pt-8 space-y-3">
+                <Eyebrow tamil="வழிகாட்டி">Freshmen, Transfers &amp; Columbus Living</Eyebrow>
+                <Link
+                  href="/guide"
+                  className="group inline-flex min-h-12 items-center gap-2 rounded-sm font-serif text-2xl sm:text-3xl font-normal leading-snug text-brand-teal underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-ivory"
+                >
+                  <span>New to OSU or Tamil Sangam? Read the Student Guide &amp; FAQ</span>
+                  <span aria-hidden="true" className="transition-transform duration-200 motion-safe:group-hover:translate-x-1">
+                    →
+                  </span>
+                </Link>
+                <p className="max-w-xl font-sans text-base leading-relaxed text-ink-umber">
+                  Columbus Indian grocers, dosa spots, bus routes, housing, membership questions, and club governance.
                 </p>
-              </PronounceableQuote>
+              </div>
             </div>
           </div>
+        </section>
 
-          <KolamSectionRule tone="sandstone" />
-
-          {/* Centered Snaking Timeline: The Flowing River (Stepped Contrast Chapter) */}
-          <div className="my-24 sm:my-36 -mx-6 sm:-mx-10 px-6 sm:px-10 py-24 bg-[#1C122B] border-y border-[#C79347]/30 shadow-2xl space-y-8 text-[#FAF5ED]">
-            <div className="text-center space-y-2">
-              <span className="font-sans text-xs font-semibold text-[#C79347] tracking-widest uppercase block">
-                வரலாற்றுப் பாதை · Historical Path
-              </span>
-              <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#FAF5ED]">
+        {/* 2 · Sandstone · Heritage timeline on a bronze rail */}
+        <CulturalSection variant="sandstone" divider="korvai" aria-labelledby="about-journey-heading">
+          <div className={`${CONTAINER} ${BAND}`}>
+            <div className="max-w-3xl space-y-3">
+              <Eyebrow tamil="வரலாற்றுப் பாதை">Historical Path</Eyebrow>
+              <h2
+                id="about-journey-heading"
+                className="font-serif text-3xl sm:text-5xl font-normal leading-[1.12] tracking-tight text-ink-earth"
+              >
                 Our Journey on the Olentangy
               </h2>
-              <p className="text-base text-[#CBBBA8] font-sans max-w-xl mx-auto">
-                Snaking from informal campus chai circles to a chartered, democratic student organization hosting flagship festivals.
+              <p className="font-sans text-base sm:text-lg leading-relaxed text-ink-umber">
+                From informal campus chai circles to a chartered, democratic student organization hosting flagship festivals.
               </p>
             </div>
 
-            <FlowingRiverTimeline milestones={timelineMilestones} locale={locale} variant="dark" />
+            <ol className="relative mt-14 sm:mt-20 space-y-10 md:space-y-14">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute top-3 bottom-3 left-[7px] md:left-[calc(9rem+7px)] w-0.5 bg-accent-bronze/45"
+              />
+              {timelineMilestones.map((item) => (
+                <li key={item.year} className="relative pl-10 md:pl-0 md:grid md:grid-cols-[9rem_1fr]">
+                  <span
+                    aria-hidden="true"
+                    className="absolute left-0 md:left-[9rem] top-3 size-4 rounded-full border-2 border-accent-zari bg-bg-sandstone"
+                  />
+                  <p className="font-serif text-4xl md:text-5xl font-light leading-none text-brand-purple md:pr-8 md:pt-1 md:text-right">
+                    {item.year}
+                  </p>
+                  <CulturalCard as="article" variant="light" className="mt-4 md:mt-0 md:ml-12 max-w-3xl p-6 sm:p-8 space-y-2">
+                    <p lang="ta" className="font-tamil text-base leading-[1.6] tracking-normal text-brand-purple">
+                      {item.titleTa}
+                    </p>
+                    <h3 className="font-serif text-2xl sm:text-3xl font-normal leading-snug text-ink-earth">
+                      {item.titleEn}
+                    </h3>
+                    <p
+                      lang={locale === "ta" ? "ta" : undefined}
+                      className={`text-base text-ink-umber ${
+                        locale === "ta" ? "font-tamil leading-[1.7] tracking-normal" : "font-sans leading-relaxed"
+                      }`}
+                    >
+                      {locale === "ta" ? item.descriptionTa : item.descriptionEn}
+                    </p>
+                  </CulturalCard>
+                </li>
+              ))}
+            </ol>
+
+            <div className="mt-12 md:pl-[calc(9rem+3rem)]">
+              <Link
+                href="/events"
+                className="inline-flex min-h-12 items-center gap-2 rounded-sm font-sans text-base font-medium text-brand-teal underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-sandstone"
+              >
+                See what&apos;s next on the events calendar <span aria-hidden="true">→</span>
+              </Link>
+            </div>
           </div>
+        </CulturalSection>
 
-          {/* Open Community Gateway: Living Thirukkural Card */}
-          <div className="my-16 sm:my-24">
-            <ThirukkuralExplorer variant="light" />
+        {/* 3 · Sangam-deep · Recipe D jewel band: Thirukkural, couplet as recipe C */}
+        <CulturalSection variant="sangam-deep">
+          <div className={`${CONTAINER} ${BAND}`}>
+            <ThirukkuralExplorer variant="dark" />
           </div>
+        </CulturalSection>
 
-          <KolamSectionRule tone="sandstone" />
-
-          {/* Open Community Gateway: Aram Philanthropy & Cross-Cultural Service */}
-          <div className="my-16 sm:my-24">
-            <AramPhilanthropyGateway variant="light" />
-          </div>
-
-          <KolamSectionRule tone="sandstone" />
-
-          {/* Campus & Regional Alliances: Staggered Text-Only Typographic List (No Beige Cards) */}
-          <div className="mt-28 sm:mt-40 space-y-12">
-            <div className="text-center space-y-2">
-              <span className="font-sans text-xs font-semibold text-[#0F766E] tracking-widest uppercase block">
-                Campus & Community Alliances · கூட்டணிகள்
-              </span>
-              <h3 className="text-3xl sm:text-4xl font-serif font-normal text-[#261A14]">
-                Rooted in Columbus & Buckeye Life
-              </h3>
-              <p className="text-base text-[#5E4C40] font-sans max-w-xl mx-auto">
+        {/* 5 · Sandstone · Recipe B ledger: alliances */}
+        <CulturalSection variant="sandstone" divider="korvai" aria-labelledby="about-alliances-heading">
+          <div className={`${CONTAINER} ${BAND}`}>
+            <div className="max-w-3xl space-y-3">
+              <Eyebrow tamil="கூட்டணிகள்">Campus &amp; Community Alliances</Eyebrow>
+              <h2
+                id="about-alliances-heading"
+                className="font-serif text-3xl sm:text-5xl font-normal leading-[1.12] tracking-tight text-ink-earth"
+              >
+                Rooted in Columbus &amp; Buckeye Life
+              </h2>
+              <p className="font-sans text-base sm:text-lg leading-relaxed text-ink-umber">
                 Collaborating with campus cultural organizations, local catering kitchens, and regional families.
               </p>
             </div>
 
-            {/* Staggered Text-Only Typographic List (Zero Beige Boxes, 1px Grounding Lines) */}
-            <div className="border-t border-[#DFD1BE] divide-y divide-[#DFD1BE] text-left">
+            <ol className="mt-12 sm:mt-16 border-y border-border-warm divide-y divide-border-warm">
               {partners.map((partner, idx) => (
-                <div
+                <li
                   key={partner.name}
-                  className={`py-10 sm:py-14 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline ${
-                    idx % 2 === 1 ? "md:pl-8" : ""
-                  }`}
+                  className="grid grid-cols-[3rem_1fr] md:grid-cols-12 gap-x-4 gap-y-3 md:gap-x-8 py-8 sm:py-10 items-baseline"
                 >
-                  <div className="md:col-span-4 space-y-1">
-                    <span className="font-sans text-xs text-[#0F766E] uppercase tracking-widest font-semibold block">
+                  <span aria-hidden="true" className="font-serif text-3xl leading-none text-brand-purple md:col-span-1">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <div className="md:col-span-5 space-y-2">
+                    <span className="inline-flex items-center rounded-full bg-brand-teal-soft px-3 py-1 font-sans text-xs font-semibold uppercase tracking-[0.14em] text-brand-teal">
                       {partner.type}
                     </span>
-                    <h4 className="text-2xl sm:text-3xl font-serif text-[#261A14]">
+                    <h3 className="font-serif text-2xl sm:text-3xl font-normal leading-snug text-ink-earth">
                       {partner.name}
-                    </h4>
+                    </h3>
                   </div>
-                  <div className="md:col-span-8">
-                    <p className="text-base font-sans text-[#5E4C40] leading-relaxed">
-                      {partner.collaboration}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <KolamSectionRule tone="light" />
-
-          {/* Gateway Section to The Board (Organic Route Gateway) */}
-          <OrganicRouteGateway
-            eyebrow="Student Leadership"
-            tamilEyebrow="ஆளுமை"
-            title="Meet the Executive Board"
-            tamilTitle="நிர்வாகக் குழு மற்றும் மாணவப் பொறுப்பாளர்கள்"
-            description="Discover the student organizers and committee coordinators guiding our cultural, linguistic, and campus initiatives."
-            primaryHref="/board"
-            primaryLabel="Meet the Officers"
-            secondaryHref="/join"
-            secondaryLabel="Sign the Guestbook"
-          />
-
-
-          <KolamSectionRule tone="sandstone" />
-
-          {/* Student Guide & FAQ Editorial Callout Section */}
-          <section className="my-16 sm:my-24 pb-28 text-left">
-            <Link
-              href="/guide"
-              className="group block p-8 sm:p-12 rounded-2xl bg-[#FFFFFF] text-[#261A14] border border-[#DFD1BE] hover:border-[#0F766E] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 shadow-lg focus-visible:outline-2 focus-visible:outline-[#0F766E]"
-            >
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div className="space-y-3 max-w-2xl">
-                  <span className="font-mono text-xs uppercase tracking-widest text-[#0F766E] font-semibold block">
-                    Freshmen, Transfers &amp; Columbus Living · வழிகாட்டி
-                  </span>
-                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-normal text-[#261A14] group-hover:text-[#0F766E] transition-colors">
-                    New to OSU or Tamil Sangam? Read the Student Guide &amp; FAQ →
-                  </h3>
-                  <p className="text-sm sm:text-base font-sans text-[#5E4C40] leading-relaxed">
-                    Essential campus resources: Columbus Indian grocers, authentic dosa spots, bus routes, housing recommendations, membership questions, and club governance.
+                  <p className="col-start-2 md:col-start-auto md:col-span-6 font-sans text-base leading-relaxed text-ink-umber">
+                    {partner.collaboration}
                   </p>
-                </div>
-                <div className="shrink-0 flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-[#0F766E] group-hover:text-[#0B5C56] transition-colors">
-                  <span className="hidden sm:inline">Open Student Guide</span>
-                  <span className="text-xl group-hover:translate-x-1.5 transition-transform">→</span>
-                </div>
-              </div>
-            </Link>
-          </section>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </CulturalSection>
 
-
-        </div>
+        {/* 6 · Peacock closer, always last */}
+        <OrganicRouteGateway
+          eyebrow="Student Leadership"
+          tamilEyebrow="ஆளுமை"
+          title="Meet the Executive Board"
+          tamilTitle="நிர்வாகக் குழு மற்றும் மாணவப் பொறுப்பாளர்கள்"
+          description="Discover the student organizers and committee coordinators guiding our cultural, linguistic, and campus initiatives."
+          primaryHref="/board"
+          primaryLabel="Meet the Officers"
+          secondaryHref="/guide"
+          secondaryLabel="Read the Student Guide & FAQ"
+        />
       </EditorialSheetHandoff>
     </div>
   );

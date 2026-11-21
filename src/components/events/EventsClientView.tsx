@@ -18,7 +18,6 @@ import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import dynamic from "next/dynamic";
 import { HeroScrollStage } from "@/components/canvas/HeroScrollStage";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
-import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { registerSystem } from "@/engine/masterTick";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { useTier } from "@/components/providers/TierProvider";
@@ -26,8 +25,10 @@ import { useReducedMotion } from "framer-motion";
 import { Calendar as CalendarIcon, List as ListIcon, Download } from "lucide-react";
 import { EditorialPhotoCarousel } from "./EditorialPhotoCarousel";
 import { LiveBoxOfficeTicketModule } from "./LiveBoxOfficeTicketModule";
-import { GooglePhotosVaultsStrip } from "@/components/gateways/GooglePhotosVaultsStrip";
-import { GroupMePulseGateways } from "@/components/gateways/GroupMePulseGateways";
+import { PhotoVaultArchive } from "@/components/gallery/PhotoVaultArchive";
+import { CulturalSection } from "@/components/ui/CulturalSection";
+import { CulturalCard } from "@/components/ui/CulturalCard";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
 
 // =========================================================================
 // 3D Events hero (Leo forge arena), reworked in the hero-quality art pass:
@@ -40,6 +41,37 @@ const EventsGen3Canvas = dynamic(
     ),
   { ssr: false }
 );
+
+interface AnnualTradition {
+  when: string;
+  title: string;
+  titleTa?: string;
+  body: string;
+}
+
+const ANNUAL_TRADITIONS: AnnualTradition[] = [
+  {
+    when: "Early Autumn · South Oval",
+    title: "Welcome Lawn Picnic & Social",
+    body: "Casual welcome mixer out on the South Oval grass with samosas, Indian snacks, cold drinks, Kahoot trivia, and connecting freshmen with mentors.",
+  },
+  {
+    when: "Late Autumn · Ohio Union",
+    title: "Diwali Sparkler Night & Festive Feast",
+    body: "Our signature autumn festival featuring authentic catered South Indian dinner, live student acoustic film jams, and sparklers on the plaza.",
+  },
+  {
+    when: "Mid Winter · Campus Plaza",
+    title: "Pongal Harvest Gathering",
+    titleTa: "தைப்பொங்கல்",
+    body: "Traditional sweet pongal celebration, festive kolam sidewalk chalk competitions, and cultural games honoring the harvest season.",
+  },
+  {
+    when: "Mid Spring · Recreation Grounds",
+    title: "Namma Jathara Spring Carnival",
+    body: "Joint collegiate carnival co-hosted with Telugu Tamasha, uniting 200+ students for Indian snacks, hot biryani, outdoor carnival games, and open dance circle.",
+  },
+];
 
 interface EventsClientViewProps {
   initialCalendarData: CalendarResponse;
@@ -194,22 +226,21 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
       </HeroScrollStage>
 
       {/* =========================================================================
-          THE FLOWING RIVER & LIVE CALENDAR
-          Royal Violet (#140C20), Raised Surface (#25173B), Off-White (#F4F0FA)
-          Glides up as an architectural paper sheet (p = 0.84 -> 1.00)
+          BAND 1 · SANDSTONE SHEET (recipe A): almanac header + ticket drop,
+          then the view toggle and year filters that drive the river below.
           ========================================================================= */}
       <EditorialSheetHandoff
         id="gatherings-river"
+        surface="sandstone"
         badge="CAMPUS GATHERINGS"
         sublabel="ALMANAC 2026–2027"
-        className="text-[#F4F0FA]"
       >
-        {/* Floating Tactile Photo Following Mouse Cursor (List View Only) */}
+        {/* Floating photo that follows the cursor (list view, fine pointers only) */}
         {currentView === "list" && (
           <div
             ref={cursorRef}
             aria-hidden="true"
-            className="fixed top-0 left-0 pointer-events-none z-50 w-72 sm:w-96 h-52 sm:h-64 overflow-hidden rounded-2xl shadow-2xl shadow-stone-900/35 bg-[#1C122B] border border-[#C79347]/30"
+            className="fixed top-0 left-0 pointer-events-none z-50 w-72 sm:w-96 h-52 sm:h-64 overflow-hidden rounded-2xl border border-accent-zari/30 bg-bg-sangam-deep shadow-[0_18px_48px_rgba(28,18,43,0.35)]"
             style={{ willChange: "transform, opacity" }}
           >
             {hoveredEvent && (
@@ -221,117 +252,138 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
                   className="object-cover"
                   sizes="400px"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent" />
-                <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs font-sans text-white">
-                  <span className="font-serif font-medium truncate text-[#FAF5ED]">{hoveredEvent.titleEn}</span>
-                  <span className="text-[#C79347] shrink-0 ml-2 font-medium">{hoveredEvent.academicYear}</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-bg-sangam-deep/85 via-transparent to-transparent" />
+                <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between font-sans text-xs">
+                  <span className="truncate font-serif font-medium text-ink-alabaster">{hoveredEvent.titleEn}</span>
+                  <span className="ml-2 shrink-0 font-medium text-accent-zari">{hoveredEvent.academicYear}</span>
                 </div>
               </div>
             )}
           </div>
         )}
 
-        {/* Content Container with Generous Negative Space */}
-        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-24 sm:py-32">
-          {/* Central Vertical Golden-Terracotta Hairline extending from stage centerpiece */}
-          <div aria-hidden="true" className="w-full flex justify-center -mt-8 mb-6">
-            <div className="w-px h-12 bg-gradient-to-b from-[#C79347] via-[#D4A36A] to-transparent" />
-          </div>
-
-          {/* Centered Airy Header */}
-          <CourtyardHeader
-            align="center"
-            eyebrow="Campus Almanac"
-            title={locale === "ta" ? "நிகழ்வுகள் & பண்பாட்டு சந்திப்புகள்" : "The Gatherings River"}
-            tamilTitle={locale !== "ta" ? "பஞ்சாங்கம் · நற்கூடல்" : undefined}
-          />
-
-          {/* Pinned Live Box Office & Ticket Drop Module */}
-          <div className="max-w-4xl mx-auto mb-12">
-            <LiveBoxOfficeTicketModule />
-          </div>
-
-          {/* VIEW TOGGLE: Segmented Control (List | Calendar) */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <div
-              role="radiogroup"
-              aria-label="Event display view mode"
-              className="inline-flex items-center p-1.5 rounded-full bg-[#271A3C] border border-[rgba(212,163,106,0.24)] shadow-inner"
-            >
-              <button
-                type="button"
-                role="radio"
-                aria-checked={currentView === "list"}
-                onClick={() => setViewMode("list")}
-                className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-sans font-semibold transition-colors cursor-pointer min-h-[44px] ${
-                  currentView === "list"
-                    ? "bg-[#1C122B] text-[#FAF5ED] shadow-sm border border-[#C79347]/40"
-                    : "text-[#CBBBA8] hover:text-[#FAF5ED]"
-                }`}
-              >
-                <ListIcon className="w-3.5 h-3.5" />
-                <span>{locale === "ta" ? "பட்டியல்" : "List"}</span>
-              </button>
-
-              <button
-                type="button"
-                role="radio"
-                aria-checked={currentView === "calendar"}
-                onClick={() => setViewMode("calendar")}
-                className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-sans font-semibold transition-colors cursor-pointer min-h-[44px] ${
-                  currentView === "calendar"
-                    ? "bg-[#1C122B] text-[#FAF5ED] shadow-sm border border-[#C79347]/40"
-                    : "text-[#CBBBA8] hover:text-[#FAF5ED]"
-                }`}
-              >
-                <CalendarIcon className="w-3.5 h-3.5 text-[#C79347]" />
-                <span>{locale === "ta" ? "நாட்காட்டி" : "Calendar"}</span>
-              </button>
+        <div className="mx-auto w-full max-w-7xl px-6 py-20 sm:px-10 sm:py-28">
+          <div className="grid gap-10 md:grid-cols-12 md:items-start">
+            <div className="md:col-span-5">
+              <CourtyardHeader
+                eyebrow="Campus Almanac"
+                title={locale === "ta" ? "நிகழ்வுகள் & பண்பாட்டு சந்திப்புகள்" : "The Gatherings River"}
+                tamilTitle={locale !== "ta" ? "பஞ்சாங்கம் · நற்கூடல்" : undefined}
+                titleId="gatherings-heading"
+                className="mb-0! sm:mb-0!"
+              />
+            </div>
+            <div className="md:col-span-7">
+              <LiveBoxOfficeTicketModule />
             </div>
           </div>
 
-          {/* Academic Year Filter Links & Almanac Export */}
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `(function(){if(typeof window==='undefined')return;function handle(e){var b=e.target&&e.target.closest?e.target.closest('[data-event-year]'):null;if(b){var y=b.getAttribute('data-event-year');window.__pendingEventYear=y;window.dispatchEvent(new CustomEvent('event-year-select',{detail:y}));}}document.addEventListener('click',handle,true);document.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){handle(e);}},true);})();`,
-            }}
-          />
-          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mb-16 sm:mb-20">
-            {years.map((yr) => {
-              const isSelected = filterYear === yr;
-              return (
-                <button
-                  key={yr}
-                  type="button"
-                  data-event-year={yr}
-                  aria-pressed={isSelected}
-                  onClick={() => {
-                    playClick();
-                    setFilterYear(yr);
-                  }}
-                  className={`font-sans text-xs tracking-widest uppercase font-semibold transition-colors duration-200 cursor-pointer min-h-12 pb-1 ${
-                    isSelected
-                      ? "text-[#C79347] border-b-2 border-[#C79347]"
-                      : "text-[#CBBBA8] hover:text-[#FAF5ED] border-b-2 border-transparent"
-                  }`}
-                >
-                  {yr === "all" ? "All Gatherings" : yr}
-                </button>
-              );
-            })}
-            <a
-              href="/calendars/almanac.ics"
-              download="gatherings-almanac.ics"
-              onClick={() => playClick()}
-              className="font-mono text-xs tracking-widest uppercase text-[#C79347] hover:text-[#FAF5ED] transition-colors duration-200 min-h-12 pb-1 inline-flex items-center gap-1.5 border-b-2 border-transparent hover:border-[#C79347]"
-              title="Download all Gatherings River events to your calendar"
+          {/* View toggle, year filters and almanac export */}
+          <div className="mt-14 flex flex-col gap-6 border-t border-border-warm pt-8 lg:flex-row lg:items-center lg:justify-between">
+            <div
+              role="group"
+              aria-label="Event display view mode"
+              className="inline-flex w-fit items-center rounded-full border border-border-warm bg-surface-card-light p-1 shadow-[0_6px_18px_rgba(91,44,134,0.09)]"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Export Almanac (.ics)</span>
-            </a>
+              <button
+                type="button"
+                aria-pressed={currentView === "list"}
+                onClick={() => setViewMode("list")}
+                className={`inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full px-5 font-sans text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal ${
+                  currentView === "list"
+                    ? "bg-brand-purple text-ink-alabaster"
+                    : "text-ink-umber hover:bg-brand-purple-soft hover:text-brand-purple"
+                }`}
+              >
+                <ListIcon className="h-4 w-4" aria-hidden="true" />
+                <span lang={locale === "ta" ? "ta" : undefined}>{locale === "ta" ? "பட்டியல்" : "List"}</span>
+              </button>
+
+              <button
+                type="button"
+                aria-pressed={currentView === "calendar"}
+                onClick={() => setViewMode("calendar")}
+                className={`inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full px-5 font-sans text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal ${
+                  currentView === "calendar"
+                    ? "bg-brand-purple text-ink-alabaster"
+                    : "text-ink-umber hover:bg-brand-purple-soft hover:text-brand-purple"
+                }`}
+              >
+                <CalendarIcon className="h-4 w-4" aria-hidden="true" />
+                <span lang={locale === "ta" ? "ta" : undefined}>{locale === "ta" ? "நாட்காட்டி" : "Calendar"}</span>
+              </button>
+            </div>
+
+            {/* Academic year filters (pre-hydration clicks are queued by this inline handler) */}
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `(function(){if(typeof window==='undefined')return;function handle(e){var b=e.target&&e.target.closest?e.target.closest('[data-event-year]'):null;if(b){var y=b.getAttribute('data-event-year');window.__pendingEventYear=y;window.dispatchEvent(new CustomEvent('event-year-select',{detail:y}));}}document.addEventListener('click',handle,true);document.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){handle(e);}},true);})();`,
+              }}
+            />
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              <div role="group" aria-label="Filter gatherings by academic year" className="flex flex-wrap items-center gap-x-6">
+                {years.map((yr) => {
+                  const isSelected = filterYear === yr;
+                  return (
+                    <button
+                      key={yr}
+                      type="button"
+                      data-event-year={yr}
+                      aria-pressed={isSelected}
+                      onClick={() => {
+                        playClick();
+                        setFilterYear(yr);
+                      }}
+                      className={`min-h-12 cursor-pointer border-b-2 font-sans text-xs font-semibold uppercase tracking-[0.14em] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal ${
+                        isSelected
+                          ? "border-brand-purple text-brand-purple"
+                          : "border-transparent text-ink-umber hover:text-brand-purple"
+                      }`}
+                    >
+                      {yr === "all" ? "All Gatherings" : yr}
+                    </button>
+                  );
+                })}
+              </div>
+              <a
+                href="/calendars/almanac.ics"
+                download="gatherings-almanac.ics"
+                onClick={() => playClick()}
+                className="inline-flex min-h-12 items-center gap-1.5 font-sans text-sm font-semibold text-brand-teal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
+                title="Download all Gatherings River events to your calendar"
+              >
+                <Download className="h-4 w-4" aria-hidden="true" />
+                <span>Export almanac (.ics)</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </EditorialSheetHandoff>
+
+      {/* =========================================================================
+          BAND 2 · IVORY: the river timeline (white event cards on a bronze stroke)
+          or the live calendar.
+          ========================================================================= */}
+      <CulturalSection variant="ivory" aria-labelledby="river-heading">
+        <div className="mx-auto max-w-7xl px-6 py-20 sm:px-10 sm:py-28">
+          <div className="mb-12 flex flex-wrap items-end justify-between gap-4">
+            <div className="space-y-2">
+              <Eyebrow>Almanac 2026–2027</Eyebrow>
+              <h2 id="river-heading" className="font-serif text-3xl font-normal tracking-tight text-ink-earth sm:text-4xl">
+                {currentView === "calendar"
+                  ? "Live calendar"
+                  : filterYear === "all"
+                    ? "All gatherings"
+                    : `Gatherings · ${filterYear}`}
+              </h2>
+            </div>
+            {currentView === "list" && (
+              <p className="font-sans text-sm text-ink-umber" aria-live="polite">
+                {filteredEvents.length} {filteredEvents.length === 1 ? "gathering" : "gatherings"}
+              </p>
+            )}
           </div>
 
-          {/* VIEW SWITCH: Calendar View vs River List View */}
           {currentView === "calendar" ? (
             <CalendarView
               initialEvents={initialCalendarData.events}
@@ -341,151 +393,149 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
               webcalUrl={initialCalendarData.webcalUrl}
             />
           ) : (
-            /* Flowing Open List of Events: 1px Razor-Thin Grounding Lines, Naked Typography */
-            <div ref={riverRef} className="relative border-t border-[rgba(212,163,106,0.2)]">
-              <svg aria-hidden="true" viewBox="0 0 100 1000" preserveAspectRatio="none" className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-24 -translate-x-1/2 text-[#C79347]/40 lg:block" fill="none">
-                <path ref={pathRef} d="M50 0 C-15 120 115 210 50 330 S-15 540 50 660 S115 880 50 1000" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" pathLength="1" strokeDasharray="1" />
+            <div ref={riverRef} className="relative">
+              <svg aria-hidden="true" viewBox="0 0 100 1000" preserveAspectRatio="none" className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-24 -translate-x-1/2 text-accent-bronze/60 lg:block" fill="none">
+                <path ref={pathRef} d="M50 0 C-15 120 115 210 50 330 S-15 540 50 660 S115 880 50 1000" stroke="currentColor" strokeWidth="1.5" vectorEffect="non-scaling-stroke" pathLength="1" strokeDasharray="1" />
               </svg>
-              {filteredEvents.map((evt, index) => {
-                return (
-                  <Link
-                    data-cursor="view"
+              <ol className="relative flex flex-col gap-8 border-l border-accent-bronze/50 pl-5 sm:pl-8 lg:gap-12 lg:border-l-0 lg:pl-0">
+                {filteredEvents.map((evt, index) => (
+                  <CulturalCard
                     key={evt.slug}
-                    href={`/events/${evt.slug}`}
-                    onClick={playClick}
-                    onMouseEnter={() => {
-                      audioLayer.playTapeClack();
-                      if (!reducedMotion && matchMedia("(pointer: fine)").matches) setHoveredEvent(evt);
-                    }}
-                    onMouseLeave={() => setHoveredEvent(null)}
-                    className={`group block relative py-14 sm:py-20 border-b border-[rgba(212,163,106,0.2)] lg:w-5/12 ${index % 2 ? "lg:ml-auto" : ""} focus-visible:outline-2 focus-visible:outline-[#C79347]`}
+                    as="li"
+                    variant="light"
+                    className={`group lg:w-5/12 ${index % 2 ? "lg:ml-auto" : ""}`}
                   >
-                    {/* Floating Date Lockup */}
-                    <div className="flex flex-wrap items-center gap-2 mb-4">
-                      <span className="font-sans text-xs sm:text-sm font-semibold text-[#C79347] uppercase tracking-widest">
-                        {evt.date}
+                    <Link
+                      data-cursor="view"
+                      href={`/events/${evt.slug}`}
+                      onClick={playClick}
+                      onMouseEnter={() => {
+                        audioLayer.playTapeClack();
+                        if (!reducedMotion && matchMedia("(pointer: fine)").matches) setHoveredEvent(evt);
+                      }}
+                      onMouseLeave={() => setHoveredEvent(null)}
+                      className="block rounded-2xl p-7 sm:p-9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-teal"
+                    >
+                      <div className="mb-4 flex flex-wrap items-center gap-2 font-sans text-xs sm:text-sm">
+                        <span className="font-semibold uppercase tracking-[0.14em] text-brand-purple">{evt.date}</span>
+                        <span aria-hidden="true" className="text-accent-bronze">·</span>
+                        <span className="text-ink-umber">{evt.time}</span>
+                      </div>
+
+                      <h3
+                        lang={locale === "ta" ? "ta" : undefined}
+                        className={`font-normal text-ink-earth transition-colors group-hover:text-brand-purple ${
+                          locale === "ta" ? "font-tamil text-2xl leading-[1.6] sm:text-3xl" : "font-serif text-2xl leading-[1.15] tracking-tight sm:text-4xl"
+                        }`}
+                      >
+                        {locale === "ta" ? evt.titleTa : evt.titleEn}
+                      </h3>
+
+                      <p lang="ta" className="mt-2 font-tamil text-sm leading-[1.6] text-brand-purple sm:text-base">
+                        {evt.tamilDate}
+                      </p>
+
+                      <p
+                        lang={locale === "ta" ? "ta" : undefined}
+                        className={`mt-4 line-clamp-3 text-base text-ink-umber ${locale === "ta" ? "font-tamil leading-[1.7]" : "font-sans leading-relaxed"}`}
+                      >
+                        {locale === "ta" ? evt.descriptionTa : evt.descriptionEn}
+                      </p>
+
+                      <span className="mt-6 inline-flex items-center gap-1 font-sans text-sm font-semibold text-brand-teal group-hover:underline">
+                        Open event dossier
+                        <Magnetic className="inline-flex"><span aria-hidden="true" className="magnetic-inner inline-block p-3">→</span></Magnetic>
                       </span>
-                      <span className="text-[#CBBBA8]/60">·</span>
-                      <span className="font-sans text-xs sm:text-sm text-[#CBBBA8]">
-                        {evt.time}
-                      </span>
-                    </div>
-
-                    {/* Centered Massive Serif Event Title */}
-                    <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-[#FAF5ED] group-hover:text-[#C79347] transition-colors leading-[1.15] tracking-tight max-w-3xl mx-auto">
-                      {locale === "ta" ? evt.titleTa : evt.titleEn}
-                    </h2>
-
-                    {/* Tamil Subscript Date */}
-                    <p className="mt-2 font-tamil text-sm sm:text-base text-[#C79347] font-medium" lang="ta">
-                      {evt.tamilDate}
-                    </p>
-
-                    {/* Narrative Description & Location */}
-                    <p className="mt-5 text-base sm:text-lg text-[#CBBBA8] font-sans leading-relaxed max-w-2xl mx-auto line-clamp-2 group-hover:text-[#FAF5ED] transition-colors">
-                      {locale === "ta" ? evt.descriptionTa : evt.descriptionEn}
-                    </p>
-
-                    <div className="mt-8 inline-flex items-center gap-2 text-xs font-sans font-semibold text-[#C79347] group-hover:text-[#FAF5ED] tracking-wider uppercase border-b border-[#C79347] pb-0.5 transition-colors">
-                      <span>Open event dossier</span>
-                      <Magnetic className="inline-flex"><span aria-hidden="true" className="magnetic-inner inline-block p-3">→</span></Magnetic>
-                    </div>
-                  </Link>
-                );
-              })}
+                    </Link>
+                  </CulturalCard>
+                ))}
+              </ol>
             </div>
           )}
+        </div>
+      </CulturalSection>
 
-          {/* Signature Editorial Photo Carousel & Lightbox Archive */}
+      {/* =========================================================================
+          BAND 3 · SANGAM-DEEP JEWEL (recipe D): photo carousel + the five vaults.
+          ========================================================================= */}
+      <CulturalSection
+        variant="sangam-deep"
+        divider="korvai"
+        id="photo-archives"
+        aria-labelledby="editorial-photo-carousel-heading"
+        className="scroll-mt-24"
+      >
+        <div className="mx-auto max-w-7xl space-y-16 px-6 py-20 sm:px-10 sm:py-28">
           <EditorialPhotoCarousel />
+          <PhotoVaultArchive />
+        </div>
+      </CulturalSection>
 
-          {/* Quick-Access Strip to all 5 official Google Photos albums */}
-          <div className="mt-8 sm:mt-12">
-            <GooglePhotosVaultsStrip variant="light" />
-          </div>
-
-          {/* Open Community Gateway: Live GroupMe Pulse & Hangouts */}
-          <div className="mt-12 sm:mt-16">
-            <GroupMePulseGateways variant="light" />
-          </div>
-
-          <div className="mt-20">
-            <KolamSectionRule tone="sandstone" />
-          </div>
-
-          {/* Annual Recurring Traditions (Warm Sandstone Band with Crisp White Specimen Cards) */}
-          <div className="mt-20 sm:mt-32 -mx-6 sm:-mx-12 px-6 sm:px-12 py-20 bg-[#F0E6D6] text-[#261A14] border-y border-[#DFD1BE] space-y-12 shadow-xs">
-            <div className="text-center space-y-2">
-              <span className="font-sans text-xs font-semibold text-[#9A6B3E] tracking-widest uppercase block">
-                Recurring Cycles · ஆண்டு சுழற்சி
-              </span>
-              <h3 className="text-3xl sm:text-4xl font-serif font-normal text-[#261A14]">
+      {/* =========================================================================
+          BAND 4 · SANDSTONE LEDGER (recipe B): annual campus traditions, 2×2.
+          ========================================================================= */}
+      <CulturalSection variant="sandstone" aria-labelledby="traditions-heading">
+        <div className="mx-auto max-w-7xl px-6 py-20 sm:px-10 sm:py-28">
+          <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div className="space-y-3">
+              <Eyebrow tamil="ஆண்டு சுழற்சி">Recurring cycles</Eyebrow>
+              <h2 id="traditions-heading" className="font-serif text-3xl font-normal tracking-tight text-ink-earth sm:text-5xl">
                 Annual Campus Traditions
-              </h3>
-              <p className="text-base text-[#5E4C40] font-sans max-w-xl mx-auto">
+              </h2>
+              <p className="max-w-xl font-sans text-base leading-relaxed text-ink-umber">
                 Signature gatherings uniting generations of Buckeyes through harvests, sparklers, and feast tables.
               </p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-5xl mx-auto">
-              <div className="p-8 bg-[#FFFFFF] rounded-xl border border-[#DFD1BE] shadow-xs hover:border-[#9A6B3E]/40 hover:shadow-md transition-all space-y-3">
-                <span className="font-sans text-xs text-[#9A6B3E] uppercase tracking-widest font-semibold block">
-                  Early Autumn · South Oval
-                </span>
-                <h4 className="text-2xl font-serif text-[#261A14]">Welcome Lawn Picnic & Social</h4>
-                <p className="text-sm font-sans text-[#5E4C40] leading-relaxed">
-                  Casual welcome mixer out on the South Oval grass with samosas, Indian snacks, cold drinks, Kahoot trivia, and connecting freshmen with mentors.
-                </p>
-              </div>
-
-              <div className="p-8 bg-[#FFFFFF] rounded-xl border border-[#DFD1BE] shadow-xs hover:border-[#9A6B3E]/40 hover:shadow-md transition-all space-y-3">
-                <span className="font-sans text-xs text-[#9A6B3E] uppercase tracking-widest font-semibold block">
-                  Late Autumn · Ohio Union
-                </span>
-                <h4 className="text-2xl font-serif text-[#261A14]">Diwali Sparkler Night & Festive Feast</h4>
-                <p className="text-sm font-sans text-[#5E4C40] leading-relaxed">
-                  Our signature autumn festival featuring authentic catered South Indian dinner, live student acoustic film jams, and sparklers on the plaza.
-                </p>
-              </div>
-
-              <div className="p-8 bg-[#FFFFFF] rounded-xl border border-[#DFD1BE] shadow-xs hover:border-[#9A6B3E]/40 hover:shadow-md transition-all space-y-3">
-                <span className="font-sans text-xs text-[#9A6B3E] uppercase tracking-widest font-semibold block">
-                  Mid Winter · Campus Plaza
-                </span>
-                <h4 className="text-2xl font-serif text-[#261A14]">Pongal Harvest Gathering (தைப்பொங்கல்)</h4>
-                <p className="text-sm font-sans text-[#5E4C40] leading-relaxed">
-                  Traditional sweet pongal celebration, festive kolam sidewalk chalk competitions, and cultural games honoring the harvest season.
-                </p>
-              </div>
-
-              <div className="p-8 bg-[#FFFFFF] rounded-xl border border-[#DFD1BE] shadow-xs hover:border-[#9A6B3E]/40 hover:shadow-md transition-all space-y-3">
-                <span className="font-sans text-xs text-[#9A6B3E] uppercase tracking-widest font-semibold block">
-                  Mid Spring · Recreation Grounds
-                </span>
-                <h4 className="text-2xl font-serif text-[#261A14]">Namma Jathara Spring Carnival</h4>
-                <p className="text-sm font-sans text-[#5E4C40] leading-relaxed">
-                  Joint collegiate carnival co-hosted with Telugu Tamasha, uniting 200+ students for Indian snacks, hot biryani, outdoor carnival games, and open dance circle.
-                </p>
-              </div>
-            </div>
+            <Link
+              href="/events?view=calendar#gatherings-river"
+              onClick={playClick}
+              className="inline-flex min-h-12 shrink-0 items-center gap-1.5 font-sans text-sm font-semibold text-brand-teal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
+            >
+              See dates on the live calendar
+              <span aria-hidden="true">→</span>
+            </Link>
           </div>
 
-          <KolamSectionRule tone="sandstone" />
-
-          {/* Gateway Section to Join / Links */}
-          <OrganicRouteGateway
-            eyebrow="Student Fellowship"
-            tamilEyebrow="இணைவு"
-            title="Step Into the Warm Courtyard"
-            tamilTitle="பாசமிகு திண்ணையில் இணையுங்கள்"
-            description="100% Free · Zero Dues · Open to every Ohio State student and friend regardless of language. Pull up a chair and become part of our campus community."
-            primaryHref="/join"
-            primaryLabel="Sign the Guestbook"
-            secondaryHref="/links"
-            secondaryLabel="Explore Social Links"
-          />
+          <ol className="grid gap-x-14 md:grid-cols-2">
+            {ANNUAL_TRADITIONS.map((tradition, index) => (
+              <li key={tradition.title} className="grid grid-cols-[3rem_1fr] gap-x-4 border-t border-border-warm py-8">
+                <span aria-hidden="true" className="font-serif text-3xl leading-none text-brand-purple">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div className="space-y-2">
+                  <p className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-ink-umber">{tradition.when}</p>
+                  <h3 className="font-serif text-2xl font-normal text-ink-earth">
+                    {tradition.title}
+                    {tradition.titleTa && (
+                      <>
+                        {" "}
+                        <span lang="ta" className="font-tamil text-xl leading-[1.6] text-brand-purple">
+                          ({tradition.titleTa})
+                        </span>
+                      </>
+                    )}
+                  </h3>
+                  <p className="font-sans text-sm leading-relaxed text-ink-umber">{tradition.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
-      </EditorialSheetHandoff>
+      </CulturalSection>
+
+      {/* Closer: the page's one route gateway (bottom clearance keeps the Ask Nanba pill off it on mobile) */}
+      <OrganicRouteGateway
+        eyebrow="Student Fellowship"
+        tamilEyebrow="இணைவு"
+        title="Step Into the Warm Courtyard"
+        tamilTitle="பாசமிகு திண்ணையில் இணையுங்கள்"
+        description="100% Free · Open to every Ohio State student and friend regardless of language. Pull up a chair and become part of our campus community."
+        primaryHref="/join"
+        primaryLabel="Sign the Guestbook"
+        secondaryHref="/links"
+        secondaryLabel="Explore Social Links"
+        className="pb-24 md:pb-0"
+      />
     </div>
   );
 }

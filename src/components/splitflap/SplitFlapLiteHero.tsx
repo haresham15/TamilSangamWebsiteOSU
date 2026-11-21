@@ -88,7 +88,7 @@ export function SplitFlapLiteHero({ onSearchFocus }: SplitFlapLiteHeroProps) {
           {/* LED Indicators */}
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#22c55e]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shadow-[0_0_8px_#f59e0b]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]" />
             <span className="text-[10px] font-mono text-[#a89985] uppercase hidden sm:inline">
               LITE MODE ENGINE
             </span>

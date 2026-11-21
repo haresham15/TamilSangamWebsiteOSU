@@ -29,6 +29,8 @@ export function ViewfinderCursor() {
     const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!isFinePointer || isReducedMotion) return;
 
+    document.documentElement.classList.add("has-custom-cursor");
+
     let targetX = -100;
     let targetY = -100;
     let currentX = -100;
@@ -40,21 +42,35 @@ export function ViewfinderCursor() {
       targetX = e.clientX;
       targetY = e.clientY;
 
+      // Update center dot synchronously on hardware pointer event (zero frame lag)
+      if (dotPosRef.current) {
+        dotPosRef.current.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
+      }
+
+      const target = e.target as HTMLElement | null;
+      const isInput = Boolean(target?.closest("input, textarea, [contenteditable]"));
+
+      if (isInput) {
+        // Yield to native OS text I-beam cursor
+        if (ringPosRef.current) ringPosRef.current.style.opacity = "0";
+        if (dotPosRef.current) dotPosRef.current.style.opacity = "0";
+        return;
+      }
+
       if (!isVisible) {
         currentX = targetX;
         currentY = targetY;
         isVisible = true;
-        if (ringPosRef.current) ringPosRef.current.style.opacity = "1";
-        if (dotPosRef.current) dotPosRef.current.style.opacity = "1";
       }
+      if (ringPosRef.current) ringPosRef.current.style.opacity = "1";
+      if (dotPosRef.current) dotPosRef.current.style.opacity = "1";
 
       // Contextual hover detection via e.target.closest(...)
-      const target = e.target as HTMLElement | null;
       const isCard = Boolean(
         target?.closest("[data-cursor='view'], .gallery-card, [data-lightbox-trigger], [data-dossier-photo]")
       );
       const isInteractive = Boolean(
-        target?.closest("a, button, input, textarea, select, [role='button'], [tabindex='0']")
+        target?.closest("a, button, select, [role='button'], [tabindex='0']")
       );
 
       // Update state attribute directly on inner visual DOM node (ZERO React setState)
@@ -81,9 +97,6 @@ export function ViewfinderCursor() {
       currentX += (targetX - currentX) * 0.22;
       currentY += (targetY - currentY) * 0.22;
 
-      if (dotPosRef.current) {
-        dotPosRef.current.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
-      }
       if (ringPosRef.current) {
         ringPosRef.current.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0)`;
       }
@@ -96,6 +109,7 @@ export function ViewfinderCursor() {
     rafId = requestAnimationFrame(tick);
 
     return () => {
+      document.documentElement.classList.remove("has-custom-cursor");
       window.removeEventListener("pointermove", onPointerMove);
       document.removeEventListener("mouseleave", onPointerLeaveWindow);
       cancelAnimationFrame(rafId);

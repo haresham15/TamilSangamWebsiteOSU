@@ -5,6 +5,7 @@ import { EVENTS, SangamEvent } from "@/data/events";
 import { CURRENT_BOARD, BoardMember } from "@/data/board";
 import { GALLERY_ALBUMS, GalleryAlbum } from "@/data/gallery";
 import { COLUMBUS_GUIDE } from "@/data/columbus-guide";
+import { SITE_CONFIG } from "@/data/siteConfig";
 
 /**
  * XSS-Safe JSON-LD Serializer.
@@ -723,13 +724,13 @@ export function LinksPageJsonLd() {
           "@type": "ListItem",
           position: 1,
           name: "Official Student GroupMe",
-          url: "https://web.groupme.com/join_group/83424812/BeBIRg7f",
+          url: SITE_CONFIG.groupMeUrl,
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "Official Instagram @tamilsangam.osu",
-          url: "https://www.instagram.com/tamilsangam.osu/",
+          url: SITE_CONFIG.instagramUrl,
         },
         {
           "@type": "ListItem",

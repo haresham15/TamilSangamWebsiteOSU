@@ -84,7 +84,7 @@ export function AatamMovementStudio() {
       {/* Studio Eyebrow & Description */}
       <div className="space-y-3 max-w-2xl">
         <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#C79347]">
-          <span className="w-2 h-2 rounded-full bg-[#2BB5A8] animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-[#2BB5A8]" />
           <span>Interactive Choreography Studio · நடனக் களங்கள்</span>
         </div>
         <h3 className="font-serif text-3xl sm:text-4xl text-[#FAF5ED] font-normal leading-tight">
@@ -153,7 +153,7 @@ export function AatamMovementStudio() {
                       <span>Sonic Texture</span>
                       {isSelected && (
                         <span className="flex items-center gap-1 text-[#2BB5A8]">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#2BB5A8] animate-ping" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#2BB5A8]" />
                           <span>Active Beat</span>
                         </span>
                       )}

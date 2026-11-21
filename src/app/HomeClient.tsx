@@ -31,8 +31,9 @@ import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { OrganicRouteGateway } from "@/components/muttram/OrganicRouteGateway";
 import { NextFlagshipGathering } from "@/components/home/NextFlagshipGathering";
 import { EditorialSheetHandoff } from "@/components/ui/EditorialSheetHandoff";
-import { KolamSectionRule } from "@/components/ui/KolamSectionRule";
 import { KorvaiDivider } from "@/components/ui/CulturalDividers";
+import { CulturalSection } from "@/components/ui/CulturalSection";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
 import { EventJsonLd } from "@/components/seo/JsonLd";
 import { useTamilSpeech } from "@/lib/tamilSpeech";
 import { ThirukkuralAudioButton } from "@/components/ui/PronounceableQuote";
@@ -628,131 +629,94 @@ export function HomeClient() {
       </div>
 
       {/* =========================================================================
-          THE SUNLIT MUTTRAM (COURTYARD) ARCHITECTURE
-          Royal Violet (#140C20), Raised Surface (#25173B), Off-White (#F4F0FA)
-          Glides up over the pinned stage (p = 0.88 -> 1.00)
+          THE SUNLIT MUTTRAM (COURTYARD): bands below the pinned hero.
+          D Puranaanuru ribbon → S flagship (feature + rail) → I pillars → S kinship ledger → P closer
           ========================================================================= */}
       <EditorialSheetHandoff id="flagship-gathering" badge="CAMPUS HEARTH" sublabel="COLUMBUS, OH" overlapHero={false}>
 
-        {/* Puranaanuru 192 Sunlit Wisdom Banner: --bg-sangam-deep (#1C122B) with Zari Korvai border (PRD §5.01) */}
-        <div className="relative bg-[#1C122B] py-6 px-6 text-center select-none overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.35)]">
-          <KorvaiDivider tone="gold" className="mb-4" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(199,147,71,0.1),transparent_70%)]" aria-hidden="true" />
-          <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 font-sans text-xs text-[#CBBBA8]">
-            <span lang="ta" style={{ letterSpacing: 0 }} className="text-base font-serif font-bold text-[#C79347]">
-              யாதும் ஊரே யாவரும் கேளிர்
-            </span>
-            <span className="hidden sm:inline text-[#C79347]/40">·</span>
-            <span className="font-serif italic text-base text-[#FAF5ED]">
-              &ldquo;To us all towns are home, everyone our kin.&rdquo;
-            </span>
-            <span className="hidden md:inline text-[#C79347]/40">·</span>
-            <span className="text-[#C79347] tracking-widest uppercase text-[11px] font-semibold">
-              Kaniyan Poongundranar · Puranaanuru 192
-            </span>
-          </div>
-          <KorvaiDivider tone="gold" className="mt-4" />
-        </div>
-
-        {/* 1. Quick-Action Command Strip: --bg-sandstone (Warm sunlit contrast break, PRD §5.01) */}
-        <div className="relative bg-[#F0E6D6] border-b border-[#DFD1BE] py-3.5 px-6 text-[#261A14]">
-          <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#0F766E] animate-pulse" />
-              <span className="font-semibold text-[#261A14] uppercase tracking-wider">
-                Upcoming Flagship Gathering
-              </span>
-              <span className="hidden sm:inline text-[#5E4C40]">·</span>
-              <span className="hidden sm:inline text-[#5E4C40]">
-                Free Admission · All Buckeyes Welcome
-              </span>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link
-                href="/events"
-                onClick={playClick}
-                className="font-semibold text-[#0F766E] hover:text-[#0B5C56] transition-colors border-b border-[#0F766E] pb-0.5"
+        {/* 1. Puranaanuru 192 ribbon: pull-quote (recipe C) between korvai seams */}
+        <CulturalSection variant="sangam-deep" divider="korvai" aria-labelledby="puranaanuru-title">
+          <div className="mx-auto max-w-7xl px-6 sm:px-10 py-14 sm:py-20">
+            <h2 id="puranaanuru-title" className="sr-only">Puranaanuru 192</h2>
+            <figure className="relative max-w-4xl border-l-2 border-accent-zari pl-6 sm:pl-10">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-10 left-3 sm:-top-14 sm:left-6 select-none font-serif text-[6rem] sm:text-[8rem] leading-none text-accent-zari/25"
               >
-                View Event Schedule →
-              </Link>
-              <span className="text-[#DFD1BE]">|</span>
-              <Link
-                href="/join"
-                onClick={playClick}
-                className="font-semibold text-[#261A14] hover:text-[#0F766E] transition-colors"
-              >
-                Sign Guestbook →
-              </Link>
-            </div>
+                &ldquo;
+              </span>
+              <blockquote className="relative">
+                <p lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-2xl sm:text-4xl lg:text-5xl font-medium leading-[1.6] text-brand-lavender">
+                  யாதும் ஊரே யாவரும் கேளிர்
+                </p>
+                <p className="mt-2 font-serif italic text-xl sm:text-2xl lg:text-3xl leading-snug text-ink-alabaster">
+                  &ldquo;To us all towns are home, everyone our kin.&rdquo;
+                </p>
+              </blockquote>
+              <figcaption className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+                <Eyebrow tone="dark">Kaniyan Poongundranar · Puranaanuru 192</Eyebrow>
+                <Link
+                  href="/about"
+                  onClick={playClick}
+                  className="inline-flex min-h-12 items-center font-sans text-sm font-semibold text-brand-teal-dark hover:text-brand-teal-hover-dark hover:underline underline-offset-[6px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark rounded-sm"
+                >
+                  Our story →
+                </Link>
+              </figcaption>
+            </figure>
           </div>
-        </div>
+          <KorvaiDivider tone="gold" />
+        </CulturalSection>
 
-        {/* =========================================================================
-            FEATURED NEXT EVENT: DYNAMIC FLAGSHIP EVENT ENGINE (Warm Sandstone Band)
-            ========================================================================= */}
-        <div className="bg-[#F0E6D6] texture-khadi">
-          <NextFlagshipGathering />
-        </div>
+        {/* 2. Intro + next flagship gathering (sandstone, recipe E) */}
+        <NextFlagshipGathering />
 
-        <KolamSectionRule tone="light" />
+        {/* 3. The 3 core pillars (ivory, recipe A) */}
+        <SilkHoverPillars />
 
-        {/* 2. The 3 Core Pillars: Clean 3-Column Layout on --bg-ivory (PRD §5.01) */}
-        <div className="bg-[#FAF6F0] texture-khadi text-[#261A14]">
-          <SilkHoverPillars />
-        </div>
+        {/* 4. Community kinship ledger (sandstone, recipe B) */}
+        <CulturalSection variant="sandstone" divider="korvai" aria-labelledby="kinship-title">
+          <div className="mx-auto max-w-7xl px-6 sm:px-10 py-20 sm:py-28">
+            <h2 id="kinship-title" className="sr-only">Our community in numbers</h2>
+            <dl className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 divide-border-warm border-y border-border-warm">
+              <div className="relative flex flex-col gap-3 py-8 md:py-10 md:px-8 lg:px-10">
+                <motion.span aria-hidden="true" className="absolute left-0 top-10 bottom-10 hidden w-px origin-top bg-accent-bronze/40 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
+                <dt className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-ink-earth">Buckeyes &amp; Community</dt>
+                <dd className="order-first font-serif tabular-nums text-5xl sm:text-6xl font-light text-brand-purple"><span aria-hidden="true"><CountUp to={120} />+</span><span className="sr-only">120+</span></dd>
+                <dd className="text-sm text-ink-umber font-sans leading-relaxed max-w-xs">
+                  Undergraduate and graduate students from every college, alumni, and friends across Columbus.
+                </dd>
+              </div>
+              <div className="relative flex flex-col gap-3 py-8 md:py-10 md:px-8 lg:px-10">
+                <motion.span aria-hidden="true" className="absolute left-0 top-10 bottom-10 hidden w-px origin-top bg-accent-bronze/40 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
+                <dt className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-ink-earth">Years of Kinship</dt>
+                <dd className="order-first font-serif tabular-nums text-5xl sm:text-6xl font-light text-brand-purple"><span aria-hidden="true">0<CountUp to={4} />+</span><span className="sr-only">04+</span></dd>
+              </div>
+              <div className="relative flex flex-col gap-3 py-8 md:py-10 md:px-8 lg:px-10">
+                <motion.span aria-hidden="true" className="absolute left-0 top-10 bottom-10 hidden w-px origin-top bg-accent-bronze/40 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
+                <dt className="font-sans text-xs font-semibold uppercase tracking-[0.14em] text-ink-earth">Zero Dues · Open Hearth</dt>
+                <dd className="order-first font-serif tabular-nums text-5xl sm:text-6xl font-light text-brand-teal"><span aria-hidden="true"><CountUp to={100} />%</span><span className="sr-only">100%</span></dd>
+                <dd className="text-sm text-ink-umber font-sans leading-relaxed max-w-xs">
+                  Membership is completely voluntary and free. No language test. No attendance quotas to participate.
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </CulturalSection>
 
-        <KolamSectionRule tone="sandstone" />
-
-        {/* 3. Direct Join / Involvement CTA: Closing Anchor on --bg-peacock-deep (PRD §5.01) */}
-        <div className="bg-[#102830] texture-silk text-[#FAF5ED]">
+        {/* 5. Closer: exactly one route gateway, always last (peacock-deep) */}
+        <div className="bg-bg-peacock-deep texture-silk text-ink-alabaster">
           <OrganicRouteGateway
             eyebrow="Student Fellowship & Social Hub"
             tamilEyebrow="இணைவு"
             title="A Warm Hearth on the Banks of the Olentangy"
             tamilTitle="ஓலண்டாஞ்சி நதிக்கரையில் ஒரு பாசமிகு திண்ணை"
-            description="Whether you crave authentic home-cooked flavors, want to dance, or simply want to find friendly faces on campus, our community is 100% free with zero dues."
             primaryHref="/join"
             primaryLabel="Sign the Free Guestbook"
             secondaryHref="/links"
             secondaryLabel="Open Bio Links & Socials"
           />
         </div>
-
-        <KolamSectionRule tone="sandstone" />
-
-        {/* =========================================================================
-            COMMUNITY KINSHIP PROOF STRIP (Warm Sandstone Band, PRD §5.01)
-            ========================================================================= */}
-        <section className="bg-[#F0E6D6] texture-khadi text-[#261A14] py-24 sm:py-32 px-6 sm:px-12 w-full">
-          <div className="max-w-[1600px] mx-auto">
-            <div className="border-t border-b border-[#DFD1BE] py-16 sm:py-24 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 text-left">
-              <div className="relative space-y-3">
-                <motion.span aria-hidden="true" className="absolute -left-6 top-0 hidden h-full w-px origin-top bg-[#9A6B3E]/40 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
-                <span className="font-serif tabular-nums text-5xl sm:text-6xl font-light text-[#9A6B3E] block"><span aria-hidden="true"><CountUp to={120} />+</span><span className="sr-only">120+</span></span>
-                <span className="font-sans text-xs uppercase tracking-widest text-[#261A14] block font-semibold">Buckeyes & Community</span>
-                <p className="text-sm text-[#5E4C40] font-sans leading-relaxed">
-                  Undergraduate and graduate students from every college, alumni, and friends across Columbus.
-                </p>
-              </div>
-              <div className="relative space-y-3">
-                <motion.span aria-hidden="true" className="absolute -left-6 top-0 hidden h-full w-px origin-top bg-[#9A6B3E]/40 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
-                <span className="font-serif text-5xl sm:text-6xl font-light text-[#9A6B3E] block"><span aria-hidden="true">0<CountUp to={4} />+</span><span className="sr-only">04+</span></span>
-                <span className="font-sans text-xs uppercase tracking-widest text-[#261A14] block font-semibold">Years of Kinship</span>
-                <p className="text-sm text-[#5E4C40] font-sans leading-relaxed">
-                  Informally founded in 2021; chartered as a recognized student organization at Ohio State in 2024.
-                </p>
-              </div>
-              <div className="relative space-y-3">
-                <motion.span aria-hidden="true" className="absolute -left-6 top-0 hidden h-full w-px origin-top bg-[#9A6B3E]/40 md:block" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} />
-                <span className="font-serif text-5xl sm:text-6xl font-light text-[#261A14] block"><span aria-hidden="true"><CountUp to={100} />%</span><span className="sr-only">100%</span></span>
-                <span className="font-sans text-xs uppercase tracking-widest text-[#261A14] block font-semibold">Zero Dues · Open Hearth</span>
-                <p className="text-sm text-[#5E4C40] font-sans leading-relaxed">
-                  Membership is completely voluntary and free. No language test. No attendance quotas to participate.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
       </EditorialSheetHandoff>
     </div>
   );

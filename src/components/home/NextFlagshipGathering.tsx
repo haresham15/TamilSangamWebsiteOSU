@@ -6,16 +6,30 @@ import Link from "next/link";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
+import { Eyebrow } from "@/components/muttram/Eyebrow";
+import { MuttramButton } from "@/components/muttram/MuttramButton";
+import { CulturalSection } from "@/components/ui/CulturalSection";
+import { CulturalCard } from "@/components/ui/CulturalCard";
 import { DitherVeil } from "@/components/ui/DitherVeil";
 import { activeUpcomingEvent, type FlagshipEventConfig } from "@/config/upcomingEvent";
-import { Calendar, Sparkles } from "lucide-react";
-import { Magnet, SpotlightCard } from "@/components/ui/react-bits";
+import { ArrowUpRight, Calendar, Sparkles } from "lucide-react";
+import { SpotlightCard } from "@/components/ui/react-bits";
 
 export interface NextFlagshipGatheringProps {
   config?: FlagshipEventConfig;
   className?: string;
 }
 
+const RAIL_LINK =
+  "group flex min-h-12 w-full items-center justify-between gap-4 py-3 font-sans text-sm font-semibold text-brand-teal transition-colors hover:text-brand-teal-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 focus-visible:ring-offset-bg-sandstone";
+
+const LEDGER_LABEL = "font-sans text-xs font-semibold uppercase tracking-[0.14em] text-accent-zari shrink-0";
+const LEDGER_VALUE = "font-serif text-base sm:text-lg text-ink-alabaster sm:text-right";
+
+/**
+ * Home band 2 (recipe E, sandstone): intro rail on the left, the flagship event
+ * as one featured pathirikai card on the right.
+ */
 export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
   config = activeUpcomingEvent,
   className = "",
@@ -68,198 +82,178 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
       : "aspect-[3/4]";
 
   return (
-    <section
-      id="flagship-gathering"
-      className={`relative w-full py-16 sm:py-24 lg:py-32 px-4 sm:px-8 lg:px-12 max-w-[1600px] mx-auto ${className}`.trim()}
-    >
-      {/* Architectural Courtyard Section Header */}
-      <CourtyardHeader
-        eyebrow="Upcoming Gathering"
-        title={locale === "ta" ? "அடுத்த முக்கிய சங்கமம்" : "Next Flagship Gathering"}
-        tamilTitle={locale !== "ta" ? "அடுத்த முக்கிய சங்கமம்" : undefined}
-        description="Our calendar brings together authentic food, live performance, and fellowship beneath Columbus skies. Open to every Buckeye regardless of language or background."
-      />
+    <CulturalSection variant="sandstone" aria-labelledby="next-gathering-title" className={className}>
+      <div className="mx-auto max-w-7xl px-6 sm:px-10 py-20 sm:py-28 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14">
+        {/* Intro rail */}
+        <div className="lg:col-span-5 lg:sticky lg:top-28 self-start">
+          <CourtyardHeader
+            eyebrow="Upcoming Gathering"
+            title={locale === "ta" ? "அடுத்த முக்கிய சங்கமம்" : "Next Flagship Gathering"}
+            tamilTitle={locale !== "ta" ? "அடுத்த முக்கிய சங்கமம்" : undefined}
+            description="Our calendar brings together authentic food, live performance, and fellowship beneath Columbus skies. Open to every Buckeye regardless of language or background."
+            titleId="next-gathering-title"
+          />
 
-      {/* Ambient Gold/Kumkum Radiant Bloom */}
-      <div
-        className="pointer-events-none absolute top-1/2 left-1/3 -translate-y-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-[radial-gradient(ellipse_at_center,rgba(199,147,71,0.12),rgba(184,74,57,0.06)_50%,transparent_70%)]"
-        aria-hidden="true"
-      />
-
-      {/* 12-Column Asymmetric Grid: Dithered Installation (5 cols) + Editorial Dossier (7 cols) inside Deep Jewel Card (PRD §5.01) */}
-      <div className="relative w-full rounded-2xl bg-[#1C122B] p-5 sm:p-8 lg:p-12 border border-[#C79347]/45 card-pathirikai shadow-[0_20px_50px_rgba(28,18,43,0.4),0_0_40px_rgba(184,74,57,0.12)] grid grid-cols-1 lg:grid-cols-12 gap-y-10 lg:gap-x-16 items-stretch">
-        {/* COLS 1–5: THE DITHERED INSTALLATION */}
-        <div className="lg:col-span-5 relative w-full flex flex-col justify-center">
-          <SpotlightCard className="w-full bg-transparent border-0 p-0">
-            <motion.div
-              onPointerMove={(event) => {
-                if (reduced || event.pointerType !== "mouse") return;
-                const box = event.currentTarget.getBoundingClientRect();
-                tiltX.set((0.5 - (event.clientY - box.top) / box.height) * 6);
-                tiltY.set(((event.clientX - box.left) / box.width - 0.5) * 6);
-              }}
-              onPointerLeave={() => { tiltX.set(0); tiltY.set(0); }}
-              className={`relative w-full ${aspectClass} select-none flex items-center justify-center`}
-              style={{ rotateX, rotateY, transformPerspective: 900 }}
-            >
-              <DitherVeil
-                imageSrc={config.visual.silhouetteSrc}
-                veilColor={config.visual.dither.veilColor}
-                shadowColor={config.visual.dither.shadowColor}
-                matrixSize={config.visual.dither.matrixSize}
-                grainScale={config.visual.dither.grainScale}
-                noiseIntensity={config.visual.dither.noiseIntensity}
-                interactive={config.visual.dither.interactive}
-                className="w-full h-full"
-              />
-            </motion.div>
-          </SpotlightCard>
+          <ul className="divide-y divide-border-warm border-y border-border-warm">
+            <li>
+              <Link href="/events" onClick={() => playClick?.()} className={RAIL_LINK}>
+                <span className="underline decoration-brand-teal/50 decoration-2 underline-offset-[6px] group-hover:decoration-brand-teal-hover">
+                  View Event Schedule
+                </span>
+                <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/events?view=calendar" onClick={() => playClick?.()} className={RAIL_LINK}>
+                <span className="inline-flex items-center gap-2 group-hover:underline underline-offset-[6px]">
+                  <Calendar className="h-4 w-4" aria-hidden="true" />
+                  See full calendar
+                </span>
+                <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/join" onClick={() => playClick?.()} className={RAIL_LINK}>
+                <span className="group-hover:underline underline-offset-[6px]">Sign Guestbook</span>
+                <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+              </Link>
+            </li>
+          </ul>
         </div>
 
-        {/* COLS 6–12: THE EDITORIAL DOSSIER */}
-        <div className="lg:col-span-7 flex flex-col justify-between space-y-8">
-          <div className="space-y-6">
-            {/* Seasonal Preview */}
-            <div className="space-y-2">
-              <span className="font-mono text-xs uppercase tracking-widest text-[#C79347] block font-semibold">
-                Seasonal Preview
-              </span>
-              <p className="font-serif italic text-lg sm:text-2xl text-[#FAF5ED] leading-relaxed">
-                &ldquo;{config.teaserQuote}&rdquo;
-              </p>
+        {/* Featured flagship card */}
+        <CulturalCard
+          as="article"
+          variant="pathirikai"
+          aria-labelledby="flagship-event-title"
+          className="lg:col-span-7 p-6 sm:p-10"
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-5 gap-8 sm:items-end">
+            <div className="sm:col-span-2 w-full max-w-[16rem] sm:max-w-none">
+              <SpotlightCard className="w-full bg-transparent border-0 p-0">
+                <motion.div
+                  onPointerMove={(event) => {
+                    if (reduced || event.pointerType !== "mouse") return;
+                    const box = event.currentTarget.getBoundingClientRect();
+                    tiltX.set((0.5 - (event.clientY - box.top) / box.height) * 6);
+                    tiltY.set(((event.clientX - box.left) / box.width - 0.5) * 6);
+                  }}
+                  onPointerLeave={() => { tiltX.set(0); tiltY.set(0); }}
+                  className={`relative w-full ${aspectClass} select-none flex items-center justify-center`}
+                  style={{ rotateX, rotateY, transformPerspective: 900 }}
+                >
+                  <DitherVeil
+                    imageSrc={config.visual.silhouetteSrc}
+                    veilColor={config.visual.dither.veilColor}
+                    shadowColor={config.visual.dither.shadowColor}
+                    matrixSize={config.visual.dither.matrixSize}
+                    grainScale={config.visual.dither.grainScale}
+                    noiseIntensity={config.visual.dither.noiseIntensity}
+                    interactive={config.visual.dither.interactive}
+                    className="w-full h-full"
+                  />
+                </motion.div>
+              </SpotlightCard>
             </div>
 
-            {/* Event Title + Tamil Sub-header */}
-            <div className="space-y-2 pt-1">
-              <h3 className="text-5xl sm:text-6xl lg:text-7xl font-serif text-[#FAF5ED] tracking-tight leading-[1.06]">
+            <div className="sm:col-span-3 space-y-4">
+              <Eyebrow tone="dark">Seasonal Preview</Eyebrow>
+              <h3
+                id="flagship-event-title"
+                className="text-4xl sm:text-5xl font-serif text-ink-alabaster tracking-tight leading-[1.06]"
+              >
                 {title}
               </h3>
-              <p
-                lang="ta"
-                style={{ letterSpacing: 0 }}
-                className="font-serif text-2xl sm:text-3xl text-[#CBBBA8] font-light"
-              >
+              <p lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-xl sm:text-2xl leading-[1.6] text-brand-lavender">
                 {tamilTitle}
               </p>
             </div>
+          </div>
 
-            {/* Narrative Essay */}
-            <p className="text-base sm:text-lg font-sans text-[#CBBBA8] leading-relaxed max-w-2xl whitespace-pre-line">
-              {description}
-            </p>
+          <p className="mt-8 font-serif italic text-lg sm:text-xl text-ink-alabaster leading-relaxed">
+            &ldquo;{config.teaserQuote}&rdquo;
+          </p>
+          <p className="mt-4 text-base font-sans text-ink-sand leading-relaxed whitespace-pre-line">
+            {description}
+          </p>
 
-            {/* Telemetry Ledger */}
-            <div className="pt-2 border-t border-[rgba(212,163,106,0.25)] divide-y divide-[rgba(212,163,106,0.2)]">
-              <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 sm:gap-6">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#C79347] font-medium shrink-0">
-                  DATE
-                </span>
-                <time className="font-serif text-base sm:text-lg text-[#FAF5ED] tracking-wide sm:text-right">
-                  {displayDate}
-                </time>
-              </div>
-
-              <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 sm:gap-6">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#C79347] font-medium shrink-0">
-                  TIME
-                </span>
-                <span className="font-serif text-base sm:text-lg text-[#FAF5ED] tracking-wide sm:text-right">
-                  {displayTime}
-                  {config.telemetry.doorsOpen && config.telemetry.doorsOpen !== "COMING SOON" && (
-                    <span className="text-xs font-sans text-[#CBBBA8] ml-2">
-                      (DOORS: {config.telemetry.doorsOpen})
-                    </span>
-                  )}
-                </span>
-              </div>
-
-              <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 sm:gap-6">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#C79347] font-medium shrink-0">
-                  VENUE
-                </span>
-                <address className="not-italic font-serif text-base sm:text-lg text-[#FAF5ED] tracking-wide sm:text-right block sm:inline">
+          {/* Telemetry Ledger */}
+          <dl className="mt-8 border-t border-border-zari-muted divide-y divide-border-zari-muted">
+            <div className="py-4 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 sm:gap-6">
+              <dt className={LEDGER_LABEL}>Date</dt>
+              <dd className={LEDGER_VALUE}>
+                <time>{displayDate}</time>
+              </dd>
+            </div>
+            <div className="py-4 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 sm:gap-6">
+              <dt className={LEDGER_LABEL}>Time</dt>
+              <dd className={LEDGER_VALUE}>
+                {displayTime}
+                {config.telemetry.doorsOpen && config.telemetry.doorsOpen !== "COMING SOON" && (
+                  <span className="text-xs font-sans text-ink-sand ml-2">
+                    (Doors: {config.telemetry.doorsOpen})
+                  </span>
+                )}
+              </dd>
+            </div>
+            <div className="py-4 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 sm:gap-6">
+              <dt className={LEDGER_LABEL}>Venue</dt>
+              <dd className={LEDGER_VALUE}>
+                <address className="not-italic">
                   {venueName}
                   {venueAddress && (
-                    <span className="block text-xs font-sans text-[#CBBBA8] tracking-normal mt-0.5">
-                      {venueAddress}
-                    </span>
+                    <span className="block text-xs font-sans text-ink-sand mt-0.5">{venueAddress}</span>
                   )}
                 </address>
-              </div>
-
-              <div className="py-5 sm:py-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 sm:gap-6">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#C79347] font-medium shrink-0">
-                  ADMISSION
-                </span>
-                <span className="font-serif text-base sm:text-lg text-[#FAF5ED] tracking-wide sm:text-right">
-                  {config.telemetry.admission}
-                </span>
-              </div>
+              </dd>
             </div>
-          </div>
-
-          {/* Magnetic Call to Action: Link Aligned to Canvas Bottom */}
-          <div className="pt-4 border-t border-[rgba(212,163,106,0.25)] space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex flex-wrap items-center gap-4">
-                <Magnet padding={40} magnetStrength={2.0} maxOffset={10}>
-                  <Link
-                    className="group inline-flex items-center gap-3 text-xl sm:text-2xl font-serif text-[#FAF5ED] hover:text-[#C79347] transition-colors cursor-pointer"
-                    href={actionHref}
-                    onClick={() => playClick?.()}
-                  >
-                    <span>{config.action.label}</span>
-                    <span className="text-sm font-sans opacity-60">
-                      ({config.action.tamilLabel})
-                    </span>
-                    <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                      ↗
-                    </span>
-                  </Link>
-                </Magnet>
-
-                {config.signUpAction && (
-                  <a
-                    href={config.signUpAction.href}
-                    target={config.signUpAction.external ? "_blank" : undefined}
-                    rel={config.signUpAction.external ? "noopener noreferrer" : undefined}
-                    onClick={() => playClick?.()}
-                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider bg-[#0F766E] text-[#FAF5ED] hover:bg-[#0B5C56] transition-all shadow-[0_0_14px_rgba(15,118,110,0.35)] hover:shadow-[0_0_20px_rgba(199,147,71,0.3)] hover:ring-1 hover:ring-[#C79347]/50 cursor-pointer"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-[#C79347]" />
-                    <span>{config.signUpAction.label}</span>
-                    <span>↗</span>
-                  </a>
-                )}
-              </div>
-              {icsDownloadHref && !displayDate.includes("COMING SOON") && (
-                <a
-                  href={icsDownloadHref}
-                  download
-                  onClick={() => playClick?.()}
-                  className="text-xs font-mono uppercase tracking-widest text-[#C79347] hover:text-[#FAF5ED] transition-colors duration-200 border-b border-[#C79347]/60 pb-0.5 inline-flex items-center gap-1.5"
-                  title="Add gathering to your calendar (.ics)"
-                >
-                  <span>+ Add to Calendar (.ics)</span>
-                </a>
-              )}
+            <div className="py-4 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 sm:gap-6">
+              <dt className={LEDGER_LABEL}>Admission</dt>
+              <dd className={LEDGER_VALUE}>{config.telemetry.admission}</dd>
             </div>
+          </dl>
 
-            {/* See Full Calendar Link */}
-            <div className="pt-2">
-              <Link
-                href="/events?view=calendar"
+          {/* Actions */}
+          <div className="mt-6 pt-6 border-t border-border-zari-muted flex flex-wrap items-center gap-x-4 gap-y-3">
+            {config.signUpAction && (
+              <MuttramButton
+                href={config.signUpAction.href}
+                external={config.signUpAction.external}
                 onClick={() => playClick?.()}
-                className="inline-flex items-center gap-1.5 text-xs font-mono text-[#CBBBA8] hover:text-[#C79347] uppercase tracking-wider transition-colors"
+                onDark
+                icon={<Sparkles className="h-4 w-4" aria-hidden="true" />}
               >
-                <Calendar className="w-3.5 h-3.5 text-[#C79347]" />
-                <span>See full calendar →</span>
-              </Link>
-            </div>
+                {config.signUpAction.label}
+              </MuttramButton>
+            )}
+            <MuttramButton
+              href={actionHref}
+              external={config.action.external}
+              onClick={() => playClick?.()}
+              variant="secondary"
+              onDark
+            >
+              {config.action.label}{" "}
+              <span lang="ta" className="font-tamil text-xs leading-[1.6] opacity-80">
+                ({config.action.tamilLabel})
+              </span>{" "}
+              <ArrowUpRight className="inline h-4 w-4 align-[-2px]" aria-hidden="true" />
+            </MuttramButton>
+            {icsDownloadHref && !displayDate.includes("COMING SOON") && (
+              <a
+                href={icsDownloadHref}
+                download
+                onClick={() => playClick?.()}
+                className="inline-flex min-h-12 items-center font-sans text-sm font-semibold text-brand-teal-dark hover:text-brand-teal-hover-dark underline decoration-brand-teal-dark/40 underline-offset-[6px] hover:decoration-brand-teal-hover-dark transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark rounded-sm"
+                title="Add gathering to your calendar (.ics)"
+              >
+                Add to calendar (.ics)
+              </a>
+            )}
           </div>
-        </div>
+        </CulturalCard>
       </div>
-    </section>
+    </CulturalSection>
   );
 };
 
