@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, X, ChevronDown, Calendar, MapPin, Sparkles } from "lucide-react";
+import { Search, X, ChevronDown, Calendar, MapPin, Sparkles, Camera } from "lucide-react";
 import { EVENTS, type SangamEvent } from "@/data/events";
 import { GALLERY_ALBUMS } from "@/data/gallery";
 
@@ -191,7 +191,11 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
     >
       {/* Ambient background glow to ground the archive section */}
       <div
-        className="pointer-events-none absolute inset-x-0 -top-24 h-96 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(212,163,106,0.1),transparent_75%)] opacity-70"
+        className="pointer-events-none absolute inset-x-0 -top-24 h-96 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(212,163,106,0.12),transparent_75%)] opacity-80"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute right-10 top-36 h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(43,181,168,0.06),transparent_70%)] blur-2xl"
         aria-hidden="true"
       />
 
@@ -200,8 +204,8 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
           ========================================================================= */}
       <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div className="space-y-3.5">
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-[#D4A36A]/30 bg-[#271A3C]/80 px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-widest text-[#D4A36A] shadow-sm backdrop-blur-sm">
-            <span className="flex h-1.5 w-1.5 rounded-full bg-[#D4A36A]" aria-hidden="true" />
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-[#D4A36A]/35 bg-[#25173B]/90 px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-widest text-[#D4A36A] shadow-sm backdrop-blur-md">
+            <span className="flex h-1.5 w-1.5 rounded-full bg-[#D4A36A] animate-pulse" aria-hidden="true" />
             <span>GOOGLE PHOTOS VAULTS</span>
             <span className="text-[#D4A36A]/40">❖</span>
             <span lang="ta" className="font-tamil font-normal tracking-normal text-[#D4A36A]">
@@ -214,7 +218,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
             className="flex flex-wrap items-center gap-3.5 font-serif text-3xl font-normal tracking-tight text-[#FAF5ED] sm:text-4xl lg:text-5xl"
           >
             <span>The Sangam Photo Vaults</span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#2BB5A8]/40 bg-[#2BB5A8]/15 px-3 py-1 font-mono text-xs font-semibold tracking-wider text-[#2BB5A8] shadow-[0_0_15px_rgba(43,181,168,0.15)]">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#2BB5A8]/50 bg-[#2BB5A8]/15 px-3 py-1 font-mono text-xs font-semibold tracking-wider text-[#2BB5A8] shadow-[0_0_20px_rgba(43,181,168,0.2)]">
               <Sparkles className="h-3 w-3" aria-hidden="true" />
               <span>{allVaults.length} Official Albums</span>
             </span>
@@ -238,7 +242,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
             <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-[#D4A36A]">
               TIER 1 · LATEST STUDIO DROPS
             </h4>
-            <span className="hidden rounded bg-[#D4A36A]/10 px-2 py-0.5 font-mono text-[10px] text-[#D4A36A]/80 sm:inline-block">
+            <span className="hidden rounded bg-[#D4A36A]/10 px-2 py-0.5 font-mono text-[10px] text-[#D4A36A]/85 sm:inline-block">
               RECENT PRINTS
             </span>
           </div>
@@ -248,10 +252,10 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
         </div>
 
         {/* 3-Column Responsive Envelope Grid with Generous Overhead Clearance */}
-        <div className="grid grid-cols-1 gap-10 pt-10 sm:pt-14 md:grid-cols-3 md:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 gap-12 pt-12 sm:pt-16 md:grid-cols-3 md:gap-6 lg:gap-8">
           {latestDrops.map((vault, idx) => {
             const hasPhotos = vault.photos.length > 0;
-            const peekingPhotos = vault.photos.slice(0, 3);
+            const peekingPhotos = hasPhotos ? vault.photos.slice(0, 3) : [vault.coverImage];
             const isLatest = idx === 0;
             const stampDate = deriveShortStampDate(vault.date);
 
@@ -267,88 +271,74 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                   className="pointer-events-none absolute inset-x-0 top-0 flex h-40 items-center justify-center overflow-visible"
                   aria-hidden="true"
                 >
-                  {hasPhotos ? (
-                    <>
-                      {/* Photo 1: Left tilted print with classic bottom chin */}
-                      {peekingPhotos[0] && (
-                        <div
-                          className="absolute h-24 w-32 -translate-x-8 translate-y-3 -rotate-6 rounded-sm border border-[#FAF6F0] bg-[#FAF6F0] p-1.5 pb-4 shadow-[0_8px_20px_rgba(0,0,0,0.55)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-x-11 group-hover:-translate-y-8 group-hover:-rotate-12 group-hover:shadow-[0_16px_32px_rgba(0,0,0,0.7)] motion-reduce:transform-none sm:h-26 sm:w-34 md:h-22 md:w-28 lg:h-24 lg:w-32"
-                        >
-                          <div className="relative h-full w-full overflow-hidden rounded-[1px] bg-[#140C20]">
-                            <Image
-                              src={peekingPhotos[0]}
-                              alt={`${vault.titleEn} — OSU Tamil Sangam photo archive preview`}
-                              fill
-                              sizes="(max-width: 768px) 140px, 160px"
-                              className="object-cover"
-                              loading="lazy"
-                            />
-                            {/* Subtle glossy photo glare overlay */}
-                            <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.08] to-transparent" />
-                          </div>
-                          {/* Vintage pencil stamp on the polaroid chin */}
-                          <div className="mt-1 flex items-center justify-between font-mono text-[7px] text-[#6B5A4B]/80 tracking-widest px-0.5">
-                            <span>01/03</span>
-                            <span>{stampDate}</span>
-                          </div>
-                        </div>
-                      )}
+                  {/* Photo 1: Left tilted print with classic bottom chin */}
+                  {peekingPhotos[0] && (
+                    <div
+                      className="absolute h-24 w-32 -translate-x-8 translate-y-3 -rotate-6 rounded-sm border border-[#FAF6F0] bg-[#FAF6F0] p-1.5 pb-4 shadow-[0_10px_24px_rgba(0,0,0,0.6)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-x-12 group-hover:-translate-y-9 group-hover:-rotate-12 group-hover:shadow-[0_20px_36px_rgba(0,0,0,0.75)] motion-reduce:transform-none sm:h-26 sm:w-34 md:h-22 md:w-28 lg:h-24 lg:w-32"
+                    >
+                      <div className="relative h-full w-full overflow-hidden rounded-[1px] bg-[#140C20]">
+                        <Image
+                          src={peekingPhotos[0]}
+                          alt={`${vault.titleEn} — OSU Tamil Sangam photo archive preview`}
+                          fill
+                          sizes="(max-width: 768px) 140px, 160px"
+                          className="object-cover"
+                          loading="lazy"
+                        />
+                        {/* Subtle glossy photo glare overlay */}
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.09] to-transparent" />
+                      </div>
+                      {/* Vintage pencil stamp on the polaroid chin */}
+                      <div className="mt-1 flex items-center justify-between font-mono text-[7px] text-[#6B5A4B]/90 tracking-widest px-0.5">
+                        <span>01/03</span>
+                        <span>{stampDate}</span>
+                      </div>
+                    </div>
+                  )}
 
-                      {/* Photo 2: Center elevated print */}
-                      {peekingPhotos[1] ? (
-                        <div
-                          className="absolute z-10 h-24 w-32 translate-y-1 rotate-0 rounded-sm border border-[#FAF6F0] bg-[#FAF6F0] p-1.5 pb-4 shadow-[0_10px_25px_rgba(0,0,0,0.65)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-[-2.5rem] group-hover:scale-105 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)] motion-reduce:transform-none sm:h-26 sm:w-34 md:h-22 md:w-28 lg:h-24 lg:w-32"
-                        >
-                          <div className="relative h-full w-full overflow-hidden rounded-[1px] bg-[#140C20]">
-                            <Image
-                              src={peekingPhotos[1]}
-                              alt={`${vault.titleEn} — OSU Tamil Sangam photo archive preview`}
-                              fill
-                              sizes="(max-width: 768px) 140px, 160px"
-                              className="object-cover"
-                              loading="lazy"
-                            />
-                            <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.08] to-transparent" />
-                          </div>
-                          <div className="mt-1 flex items-center justify-between font-mono text-[7px] text-[#6B5A4B]/80 tracking-widest px-0.5">
-                            <span>02/03</span>
-                            <span>TS·COL</span>
-                          </div>
-                        </div>
-                      ) : null}
+                  {/* Photo 2: Center elevated print */}
+                  {peekingPhotos[1] && (
+                    <div
+                      className="absolute z-10 h-24 w-32 translate-y-1 rotate-0 rounded-sm border border-[#FAF6F0] bg-[#FAF6F0] p-1.5 pb-4 shadow-[0_12px_28px_rgba(0,0,0,0.7)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-12 group-hover:scale-105 group-hover:shadow-[0_24px_44px_rgba(0,0,0,0.85)] motion-reduce:transform-none sm:h-26 sm:w-34 md:h-22 md:w-28 lg:h-24 lg:w-32"
+                    >
+                      <div className="relative h-full w-full overflow-hidden rounded-[1px] bg-[#140C20]">
+                        <Image
+                          src={peekingPhotos[1]}
+                          alt={`${vault.titleEn} — OSU Tamil Sangam photo archive preview`}
+                          fill
+                          sizes="(max-width: 768px) 140px, 160px"
+                          className="object-cover"
+                          loading="lazy"
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.09] to-transparent" />
+                      </div>
+                      <div className="mt-1 flex items-center justify-between font-mono text-[7px] text-[#6B5A4B]/90 tracking-widest px-0.5">
+                        <span>02/03</span>
+                        <span>TS·PROOF</span>
+                      </div>
+                    </div>
+                  )}
 
-                      {/* Photo 3: Right tilted print */}
-                      {peekingPhotos[2] ? (
-                        <div
-                          className="absolute h-24 w-32 translate-x-8 translate-y-3 rotate-6 rounded-sm border border-[#FAF6F0] bg-[#FAF6F0] p-1.5 pb-4 shadow-[0_8px_20px_rgba(0,0,0,0.55)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-11 group-hover:-translate-y-8 group-hover:rotate-12 group-hover:shadow-[0_16px_32px_rgba(0,0,0,0.7)] motion-reduce:transform-none sm:h-26 sm:w-34 md:h-22 md:w-28 lg:h-24 lg:w-32"
-                        >
-                          <div className="relative h-full w-full overflow-hidden rounded-[1px] bg-[#140C20]">
-                            <Image
-                              src={peekingPhotos[2]}
-                              alt={`${vault.titleEn} — OSU Tamil Sangam photo archive preview`}
-                              fill
-                              sizes="(max-width: 768px) 140px, 160px"
-                              className="object-cover"
-                              loading="lazy"
-                            />
-                            <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.08] to-transparent" />
-                          </div>
-                          <div className="mt-1 flex items-center justify-between font-mono text-[7px] text-[#6B5A4B]/80 tracking-widest px-0.5">
-                            <span>03/03</span>
-                            <span>{vault.academicYear.slice(-4)}</span>
-                          </div>
-                        </div>
-                      ) : null}
-                    </>
-                  ) : (
-                    /* Fallback 35mm negative frame if 0 local photos */
-                    <div className="absolute h-24 w-32 rounded-sm border border-[#D4A36A]/60 bg-[#1A1028] p-3 text-center shadow-lg">
-                      <p lang="ta" className="font-tamil text-xs leading-[1.6] text-[#D4A36A]">
-                        {vault.titleTa}
-                      </p>
-                      <span className="mt-1 block font-mono text-[9px] uppercase tracking-wider text-[#D4A36A]/60">
-                        35mm Vault
-                      </span>
+                  {/* Photo 3: Right tilted print */}
+                  {peekingPhotos[2] && (
+                    <div
+                      className="absolute h-24 w-32 translate-x-8 translate-y-3 rotate-6 rounded-sm border border-[#FAF6F0] bg-[#FAF6F0] p-1.5 pb-4 shadow-[0_10px_24px_rgba(0,0,0,0.6)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-12 group-hover:-translate-y-9 group-hover:rotate-12 group-hover:shadow-[0_20px_36px_rgba(0,0,0,0.75)] motion-reduce:transform-none sm:h-26 sm:w-34 md:h-22 md:w-28 lg:h-24 lg:w-32"
+                    >
+                      <div className="relative h-full w-full overflow-hidden rounded-[1px] bg-[#140C20]">
+                        <Image
+                          src={peekingPhotos[2]}
+                          alt={`${vault.titleEn} — OSU Tamil Sangam photo archive preview`}
+                          fill
+                          sizes="(max-width: 768px) 140px, 160px"
+                          className="object-cover"
+                          loading="lazy"
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.09] to-transparent" />
+                      </div>
+                      <div className="mt-1 flex items-center justify-between font-mono text-[7px] text-[#6B5A4B]/90 tracking-widest px-0.5">
+                        <span>03/03</span>
+                        <span>{vault.academicYear.slice(-4)}</span>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -356,22 +346,22 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                 {/* -------------------------------------------------------------
                     PACKET BODY (Front velvet sleeve with die-cut thumb notch)
                     ------------------------------------------------------------- */}
-                <div className="relative z-20 flex flex-1 flex-col justify-between rounded-2xl border border-[#D4A36A]/35 bg-[#25173B] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.45)] ring-1 ring-inset ring-[#D4A36A]/20 transition-all duration-300 group-hover:border-[#D4A36A]/70 group-hover:shadow-[0_18px_50px_rgba(212,163,106,0.15)] sm:p-7 before:pointer-events-none before:absolute before:inset-0 before:rounded-2xl before:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] before:from-[#D4A36A]/[0.1] before:via-transparent before:to-transparent">
-                  {/* Subtle curved thumb-notch cutout on top border */}
+                <div className="relative z-20 flex flex-1 flex-col justify-between rounded-2xl border border-[#D4A36A]/35 bg-[#25173B] p-6 shadow-[0_14px_45px_rgba(0,0,0,0.5)] ring-1 ring-inset ring-[#D4A36A]/20 transition-all duration-300 group-hover:border-[#D4A36A]/75 group-hover:shadow-[0_20px_55px_rgba(212,163,106,0.18)] sm:p-7 before:pointer-events-none before:absolute before:inset-0 before:rounded-2xl before:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] before:from-[#D4A36A]/[0.12] before:via-transparent before:to-transparent">
+                  {/* Subtle curved thumb-notch cutout on top border revealing inner pocket darkness */}
                   <div
-                    className="pointer-events-none absolute -top-3.5 left-1/2 -translate-x-1/2 h-4 w-18"
+                    className="pointer-events-none absolute -top-3.5 left-1/2 -translate-x-1/2 h-4 w-20"
                     aria-hidden="true"
                   >
-                    <svg viewBox="0 0 72 16" className="h-full w-full fill-[#140C20] text-[#D4A36A]/40" preserveAspectRatio="none">
-                      <path d="M0,0 Q36,16 72,0" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                    <svg viewBox="0 0 80 16" className="h-full w-full fill-[#160D26] text-[#D4A36A]/45" preserveAspectRatio="none">
+                      <path d="M0,0 Q40,16 80,0" stroke="currentColor" strokeWidth="1.5" fill="none" />
                     </svg>
                   </div>
 
                   {/* Corner Brass Accent Flourishes (Studio Packet Aesthetics) */}
-                  <div className="pointer-events-none absolute left-3 top-3 h-2 w-2 border-l border-t border-[#D4A36A]/40" aria-hidden="true" />
-                  <div className="pointer-events-none absolute right-3 top-3 h-2 w-2 border-r border-t border-[#D4A36A]/40" aria-hidden="true" />
-                  <div className="pointer-events-none absolute bottom-3 left-3 h-2 w-2 border-b border-l border-[#D4A36A]/40" aria-hidden="true" />
-                  <div className="pointer-events-none absolute bottom-3 right-3 h-2 w-2 border-b border-r border-[#D4A36A]/40" aria-hidden="true" />
+                  <div className="pointer-events-none absolute left-3 top-3 h-2.5 w-2.5 border-l border-t border-[#D4A36A]/45" aria-hidden="true" />
+                  <div className="pointer-events-none absolute right-3 top-3 h-2.5 w-2.5 border-r border-t border-[#D4A36A]/45" aria-hidden="true" />
+                  <div className="pointer-events-none absolute bottom-3 left-3 h-2.5 w-2.5 border-b border-l border-[#D4A36A]/45" aria-hidden="true" />
+                  <div className="pointer-events-none absolute bottom-3 right-3 h-2.5 w-2.5 border-b border-r border-[#D4A36A]/45" aria-hidden="true" />
 
                   {/* Packet Header & Serial Stamp */}
                   <div>
@@ -381,13 +371,16 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                           {String(idx + 1).padStart(2, "0")}
                         </span>
                         {isLatest && (
-                          <span className="ml-3 inline-flex items-center rounded-sm border border-[#D4A36A] bg-[#D4A36A]/20 px-2 py-0.5 font-mono text-[10px] font-bold tracking-widest uppercase text-[#D4A36A] shadow-[0_0_12px_rgba(212,163,106,0.3)]">
-                            LATEST
+                          <span className="ml-3 inline-flex items-center gap-1 rounded-sm border border-[#D4A36A] bg-[#D4A36A]/20 px-2 py-0.5 font-mono text-[10px] font-bold tracking-widest uppercase text-[#D4A36A] shadow-[0_0_12px_rgba(212,163,106,0.3)]">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#D4A36A] animate-pulse" />
+                            <span>LATEST</span>
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-[#D4A36A]/75">
-                        <span className="hidden sm:inline">PACKET NO.</span>
+
+                      {/* Studio Stamp Seal */}
+                      <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-[#D4A36A]/80">
+                        <Camera className="h-3 w-3 text-[#D4A36A]/70" aria-hidden="true" />
                         <span>TS-0{idx + 1}</span>
                       </div>
                     </div>
@@ -419,7 +412,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                           <Calendar className="h-3.5 w-3.5 text-[#D4A36A]" aria-hidden="true" />
                           <span>{vault.semester} · {vault.eventType}</span>
                         </p>
-                        <p className="flex items-center gap-1.5 text-[#C4B7D7]/80">
+                        <p className="flex items-center gap-1.5 text-[#C4B7D7]/85">
                           <MapPin className="h-3.5 w-3.5 text-[#D4A36A]/70 shrink-0" aria-hidden="true" />
                           <span className="max-w-[140px] truncate sm:max-w-[180px]">{vault.location}</span>
                         </p>
@@ -444,7 +437,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
 
                         <Link
                           href={vault.detailHref}
-                          className="mt-2 text-[11px] font-sans text-[#C4B7D7]/75 transition-colors hover:text-[#FAF5ED]"
+                          className="mt-2 text-[11px] font-sans text-[#C4B7D7]/80 transition-colors hover:text-[#FAF5ED]"
                         >
                           Dossier →
                         </Link>
@@ -463,12 +456,12 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
           ========================================================================= */}
       <div className="my-16 flex items-center justify-center gap-4 sm:my-20" aria-hidden="true">
         <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4A36A]/25 to-[#D4A36A]/50" />
-        <div className="flex items-center gap-2.5 rounded-full border border-[#D4A36A]/30 bg-[#271A3C]/90 px-4 py-1 font-mono text-[11px] tracking-widest text-[#D4A36A] uppercase shadow-sm">
+        <div className="flex items-center gap-2.5 rounded-full border border-[#D4A36A]/35 bg-[#25173B]/95 px-4 py-1.5 font-mono text-[11px] tracking-widest text-[#D4A36A] uppercase shadow-sm">
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M12 2C12 2 14.5 7 17.5 8C20.5 9 22 12 22 12C22 12 17.5 13 16 16.5C14.5 20 12 22 12 22C12 22 9.5 20 8 16.5C6.5 13 2 12 2 12C2 12 3.5 9 6.5 8C9.5 7 12 2 12 2Z" />
             <circle cx="12" cy="12" r="2" fill="currentColor" />
           </svg>
-          <span>CHRONOLOGICAL YEAR LEDGER</span>
+          <span>CHRONOLOGICAL YEAR LEDGER ❖ ஆண்டுக் குறிப்பேடு</span>
         </div>
         <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[#D4A36A]/25 to-[#D4A36A]/50" />
       </div>
@@ -552,7 +545,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
               })}
             </div>
 
-            <span className="font-mono text-[11px] uppercase tracking-wider text-[#D4A36A]/80 shrink-0">
+            <span className="font-mono text-[11px] uppercase tracking-wider text-[#D4A36A]/85 shrink-0">
               Showing {filteredVaults.length} of {allVaults.length} Rolls
             </span>
           </div>
@@ -598,12 +591,12 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                 <ul className="divide-y divide-[#D4A36A]/15 rounded-2xl border border-[#D4A36A]/20 bg-[#25173B]/50 overflow-visible backdrop-blur-sm">
                   {yearVaults.map((vault, rowIdx) => {
                     const isTop3 = top3Slugs.has(vault.slug);
-                    const previewPhotos = vault.photos.slice(0, 3);
+                    const previewPhotos = vault.photos.length > 0 ? vault.photos.slice(0, 3) : [vault.coverImage];
 
                     return (
                       <li
                         key={vault.slug}
-                        className="group relative flex items-center justify-between px-3.5 py-4 transition-colors duration-200 hover:bg-[#2e1d48]/70 sm:px-5 sm:py-4.5"
+                        className="group relative flex items-center justify-between px-3.5 py-4 transition-colors duration-200 hover:bg-[#2e1d48]/70 sm:px-5 sm:py-4.5 before:pointer-events-none before:absolute before:inset-y-2 before:left-0 before:w-1 before:rounded-r before:bg-[#2BB5A8] before:opacity-0 group-hover:before:opacity-100 before:transition-opacity"
                       >
                         {/* Col 1: Index + Polaroid Mini-Thumbnail (Mobile & Desktop) */}
                         <div className="flex shrink-0 items-center gap-3 sm:gap-3.5">
