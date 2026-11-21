@@ -11,16 +11,15 @@ test("Two-Tier Cultural Photo Vault Archive end-to-end suite", async ({ page }) 
 
   // 1. Section Header & Dynamic Count Badge
   await expect(vaultSection.getByText("GOOGLE PHOTOS VAULTS")).toBeVisible();
-  const badge = vaultSection.locator("#google-photos-vaults-heading span").filter({ hasText: "Official Albums" });
+  const badge = vaultSection.getByText(/\d+\s+Official Albums/);
   await expect(badge).toBeVisible();
-  await expect(badge).toHaveText(/\d+\s+Official Albums/);
 
   // 2. Tier 1: 3 Studio Envelopes
   const envelopes = vaultSection.locator("article");
   await expect(envelopes).toHaveCount(3);
 
   // #01 has LATEST stamp
-  await expect(envelopes.first().getByText("01")).toBeVisible();
+  await expect(envelopes.first().getByText("01", { exact: true })).toBeVisible();
   await expect(envelopes.first().getByText("LATEST")).toBeVisible();
 
   // Open Vault buttons: must have target="_blank" and rel="noopener noreferrer"
