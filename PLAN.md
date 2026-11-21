@@ -42,23 +42,21 @@ This document tracks the phased milestones, architectural specifications, and im
   - Removed erratic zero-scroll closing logic; implemented continuous delta scroll evaluation.
 - [x] **Dual-Trigger Activation**:
   - Both the collapsed active context pill and the 4-petal Brahmamudi knot toggle open the navigation menu.
-- [x] **10 Prioritized Primary Routes**:
+- [x] **8 Prioritized Primary Routes**:
   - Streamlined routes by collegiate necessity:
     1. `/` (Home)
     2. `/events` (Events)
-    3. `/events/namma-deepavali-2026` (Next Event — with `NEXT` tag)
-    4. `/about` (About)
-    5. `/board` (Board)
-    6. `/gallery` (Gallery)
-    7. `/games` (Games — with badge)
-    8. `/guide` (Guide)
-    9. `/links` (Links — Bio Hub)
-    10. `/suggestions` (Ideas)
-    *(Dedicated CTA: `/join` Join the Hearth ↗).*
+    3. `/about` (About)
+    4. `/board` (Board)
+    5. `/games` (Games — with badge)
+    6. `/guide` (Guide)
+    7. `/links` (Links — Bio Hub)
+    8. `/suggestions` (Suggestions — proposals & feedback)
+    *(Dedicated CTA: `/join` Join the Hearth ↗; Secondary routes: `/gallery`, `/events/namma-deepavali-2026`, `/faq`).*
 - [x] **Mobile 2-Column Responsive Drawer**:
-  - Clean $5 \times 2$ grid with `max-h-[75vh] overflow-y-auto` and smooth spring physics (`stiffness: 260, damping: 26`).
+  - Clean $4 \times 2$ grid with `max-h-[75vh] overflow-y-auto` and smooth spring physics (`stiffness: 260, damping: 26`).
 - [x] **Automated Unit Testing & Production Deployment**:
-  - 3/3 tests passing in `SikkuKolamToggle.test.ts`. Commit `cb8a27b` verified live on Vercel production.
+  - 3/3 tests passing in `SikkuKolamToggle.test.ts`. Verified live on Vercel production.
 
 ---
 

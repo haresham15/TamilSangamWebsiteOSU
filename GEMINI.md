@@ -52,7 +52,7 @@ When preparing the site for an upcoming event, make coordinated updates across t
   ```
 - **Rendering Mechanism**:
   - `src/components/navigation/NavBilingualItem.tsx` checks `route.isNextEvent` and renders an animated pulsing dot and an emerald tag (`NEXT` in English or `அடுத்தது` in Tamil).
-  - `src/components/navigation/Navbar.tsx` reflects active state and handles the dual-trigger expandable pill bar (active context pill button + Sikku Kolam toggle button) on desktop and mobile. All 10 necessary routes are sorted strictly by necessity in `PRIMARY_NAV_ROUTES`.
+  - `src/components/navigation/Navbar.tsx` reflects active state and handles the dual-trigger expandable pill bar (active context pill button + Sikku Kolam toggle button) on desktop and mobile. All 8 essential routes are sorted strictly by necessity in `PRIMARY_NAV_ROUTES`.
 
 #### 2. Homepage Next-Event Showcase (Hero & Dossier Section)
 - **File**: `src/config/upcomingEvent.ts`

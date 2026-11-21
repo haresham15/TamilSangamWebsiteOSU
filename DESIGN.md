@@ -140,7 +140,7 @@ All animations must honor user accessibility preferences via `prefers-reduced-mo
 1. **Sikku Kolam Dual-Trigger Navbar (`src/components/navigation/Navbar.tsx`)**:
    - Collapsed state: Elegant floating glass pill (`--bg-sangam-deep`) displaying active route context alongside a 4-petal Brahmamudi knot toggle.
    - Dual-trigger activation: Clicking either the context pill or the knot toggle opens the menu.
-   - Expanded state: Spring-unraveled menu revealing 10 prioritized primary routes with gold borders (`--border-zari-muted`) and mobile 2-column responsive layout.
+   - Expanded state: Spring-unraveled menu revealing 8 prioritized primary routes with gold borders (`--border-zari-muted`) and mobile 2-column responsive layout.
 
 2. **Progress-Driven Kolam Loader (`src/components/ui/KolamLoader.tsx`)**:
    - Replaces abrupt flash spinners with continuous geometric rice-flour thread weaving.

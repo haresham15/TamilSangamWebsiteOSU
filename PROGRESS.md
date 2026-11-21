@@ -28,21 +28,19 @@
 - [x] **Working Sikku Kolam Dual-Trigger Navbar (`Navbar.tsx` & `navRoutes.ts`)**:
   - **Root Cause Fix**: Removed an erroneous `useEffect` in `Navbar.tsx` that auto-closed the menu upon opening while in the hero zone (`scrollY === 0`). Replaced with non-blocking delta scroll evaluation.
   - **Dual-Trigger Activation**: Converted the collapsed active context pill into a clickable `<motion.button>` with hover effects and aria-label so clicking either the context pill OR the Brahmamudi knot toggle opens the menu.
-  - **10 Prioritized Primary Routes**: Reordered navigation routes by necessity:
+  - **8 Prioritized Primary Routes**: Streamlined navigation routes by collegiate necessity:
     1. `/` (Home)
     2. `/events` (Events)
-    3. `/events/namma-deepavali-2026` (Next Event — with `NEXT` tag)
-    4. `/about` (About)
-    5. `/board` (Board)
-    6. `/gallery` (Gallery)
-    7. `/games` (Games — with badge)
-    8. `/guide` (Guide)
-    9. `/links` (Links)
-    10. `/suggestions` (Ideas)
-    *(Dedicated CTA: `/join` Join the Hearth ↗).*
-  - **Fluid Physics & Mobile Drawer**: Added `borderRadius: isOpen ? 24 : 9999` morphing with spring physics (`stiffness: 260, damping: 26`), unrolling the 4-petal knot into a clean "X" close icon, and implemented a comfortable 2-column mobile grid with `max-h-[75vh] overflow-y-auto`.
-  - **Automated Unit Testing**: Updated `SikkuKolamToggle.test.ts` to assert 10 primary routes, games badge, and next event badge (passed 3/3).
-  - **Vercel Production Deployment**: Commit `cb8a27b` successfully deployed and verified live on `https://tamil-sangam-website-osu.vercel.app/`.
+    3. `/about` (About)
+    4. `/board` (Board)
+    5. `/games` (Games — with badge)
+    6. `/guide` (Guide)
+    7. `/links` (Links)
+    8. `/suggestions` (Suggestions — community proposals & feedback)
+    *(Dedicated CTA: `/join` Join the Hearth ↗; Secondary routes: `/gallery`, `/events/namma-deepavali-2026`, `/faq`).*
+  - **Fluid Physics & Mobile Drawer**: Added `borderRadius: isOpen ? 24 : 9999` morphing with spring physics (`stiffness: 260, damping: 26`), unrolling the 4-petal knot into a clean "X" close icon, and implemented a comfortable $4 \times 2$ mobile grid with `max-h-[75vh] overflow-y-auto`.
+  - **Automated Unit Testing**: Updated `SikkuKolamToggle.test.ts` to assert 8 primary routes, games badge, and renamed Suggestions route (passed 3/3).
+  - **Vercel Production Deployment**: Fully verified live on `https://tamil-sangam-website-osu.vercel.app/`.
 
 ---
 

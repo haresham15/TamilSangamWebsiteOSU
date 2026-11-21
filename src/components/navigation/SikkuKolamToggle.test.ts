@@ -24,17 +24,28 @@ describe("SikkuKolamToggle specifications", () => {
     expect(ids).toEqual(["top", "bottom", "left", "right"]);
   });
 
-  it("curates primary routes sorted by necessity with event and games badges", () => {
+  it("curates 8 primary routes sorted by necessity with games badge and clear names", () => {
     const gamesRoute = PRIMARY_NAV_ROUTES.find((r) => r.href === "/games");
     expect(gamesRoute).toBeDefined();
     expect(gamesRoute?.badge).toBe(true);
 
-    const nextEventRoute = PRIMARY_NAV_ROUTES.find((r) => r.isNextEvent);
-    expect(nextEventRoute).toBeDefined();
-    expect(nextEventRoute?.badge).toBe(true);
+    // Gallery and Next Event removed from primary navbar per user steering
+    expect(PRIMARY_NAV_ROUTES.find((r) => r.href === "/gallery")).toBeUndefined();
+    expect(PRIMARY_NAV_ROUTES.find((r) => r.isNextEvent)).toBeUndefined();
 
-    expect(PRIMARY_NAV_ROUTES.length).toBe(10);
-    expect(SECONDARY_NAV_ROUTES.length).toBe(1);
+    // Renamed ideas to Suggestions
+    const suggestionsRoute = PRIMARY_NAV_ROUTES.find((r) => r.href === "/suggestions");
+    expect(suggestionsRoute).toBeDefined();
+    expect(suggestionsRoute?.en).toBe("Suggestions");
+    expect(suggestionsRoute?.ta).toBe("பரிந்துரைகள்");
+
+    // Full route counts
+    expect(PRIMARY_NAV_ROUTES.length).toBe(8);
+    expect(SECONDARY_NAV_ROUTES.length).toBe(3);
     expect(NAV_ROUTES.length).toBe(11);
+
+    // Secondary routes contain gallery and next event for deep matching
+    expect(NAV_ROUTES.find((r) => r.href === "/gallery")).toBeDefined();
+    expect(NAV_ROUTES.find((r) => r.isNextEvent)).toBeDefined();
   });
 });

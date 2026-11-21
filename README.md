@@ -116,7 +116,7 @@ node scripts/capture-content-audit.mjs
 ## 🎨 Design Engineering Ground Truth
 
 - **Kanchipuram Courtyard & Temple Stone Palette:** Warm temple neutrals (Warm Ivory `#FAF6F0`, Sunlit Sandstone `#F0E6D6`), Royal deep anchors (Sangam Deep `#1C122B`, Royal Violet `#25173B`, Peacock Deep `#102830`), and Hero bridging accents (Zari Gold `#C79347`, Temple Bronze `#9A6B3E`/`#D4A36A`, Radiant Bloom `#2BB5A8`, Kumkum Red `#B84A39`). Strictly zero un-tinted black (`#000000`), zero card clutter, and zero decorative emoji bullets.
-- **Sikku Kolam Dual-Trigger Navigation:** Dual-trigger unrolling navigation bar (context pill + Brahmamudi knot toggle) orchestrating 10 primary prioritized routes with spring physics and mobile 2-column drawer.
+- **Sikku Kolam Dual-Trigger Navigation:** Dual-trigger unrolling navigation bar (context pill + Brahmamudi knot toggle) orchestrating 8 primary prioritized routes with spring physics and mobile 2-column drawer.
 - **Master PRD:** Read [`PRD.MD`](./PRD.MD) for full subsystem specifications, mathematical derivations, and invariants.
 - **Design Tokens:** Read [`DESIGN.md`](./DESIGN.md) and [`design/tokens.json`](./design/tokens.json).
 - **Tamil Text Safety:** Never split Tamil text by code unit; all kinetic text uses `Intl.Segmenter` with grapheme cluster granularity (`lang="ta"`, `letter-spacing: 0`, line-height $\ge 1.6$).

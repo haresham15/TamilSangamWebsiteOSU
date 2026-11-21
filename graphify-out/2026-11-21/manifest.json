@@ -2436,9 +2436,9 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1792036612.5425854,
-    "seen": 1793830245.8490262,
-    "ast_hash": "b66cdf16ae65b738a3c8fa905713a204",
+    "mtime": 1795296405.8817482,
+    "seen": 1795296488.5279408,
+    "ast_hash": "6b552aca29eb7d8c94950a31042271cb",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
@@ -2448,15 +2448,15 @@
     "semantic_hash": ""
   },
   "DESIGN.md": {
-    "mtime": 1790114658.7829523,
-    "seen": 1791920053.1873233,
-    "ast_hash": "1a99010c4df98a80cbf90b3ff90f2752",
+    "mtime": 1795295877.8183012,
+    "seen": 1795296488.5281963,
+    "ast_hash": "42180e215e2569b7140d9c91ce1ce794",
     "semantic_hash": ""
   },
   "GEMINI.md": {
-    "mtime": 1793828016.1909332,
-    "seen": 1793830245.8492737,
-    "ast_hash": "c1bbe6a37967b2baa3967d6949eab98a",
+    "mtime": 1795295642.31104,
+    "seen": 1795296488.5282004,
+    "ast_hash": "799b006f8f7abe0d79eea62b781099a5",
     "semantic_hash": ""
   },
   "PRD.MD": {
@@ -2466,9 +2466,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1793058529.688959,
-    "seen": 1793830245.8492851,
-    "ast_hash": "e83afd943381d9d389ba0a4430277ab3",
+    "mtime": 1795295804.1046364,
+    "seen": 1795296488.5290024,
+    "ast_hash": "c6e8279537b476bcf79a608fe0aa55b3",
     "semantic_hash": ""
   },
   "assets/RIGHTS.md": {
@@ -2544,9 +2544,9 @@
     "semantic_hash": ""
   },
   "src/components/AGENTS.md": {
-    "mtime": 1789955015.7329001,
-    "seen": 1791920053.1873648,
-    "ast_hash": "e89b6f9237f897a5f2641d7d153d2bd8",
+    "mtime": 1795295993.9435134,
+    "seen": 1795296488.5427592,
+    "ast_hash": "081b04d291ddad0badc0d3b8a589ea45",
     "semantic_hash": ""
   },
   "src/components/hero/HERO_V3_PRD.md": {
@@ -3198,9 +3198,9 @@
     "semantic_hash": ""
   },
   "codex.md": {
-    "mtime": 1792036612.5581677,
-    "seen": 1793830245.849295,
-    "ast_hash": "b3a181e8e3103de596345017cc4cd16d",
+    "mtime": 1795296029.6402175,
+    "seen": 1795296488.5309834,
+    "ast_hash": "21ae65520751dafee4a46e6611a1f843",
     "semantic_hash": ""
   },
   "docs/README.md": {
@@ -4734,9 +4734,9 @@
     "semantic_hash": ""
   },
   "PLAN.md": {
-    "mtime": 1793737822.2861328,
-    "seen": 1793830245.8492756,
-    "ast_hash": "450d14a743503380b5849c55d49d1515",
+    "mtime": 1795295965.9022963,
+    "seen": 1795296488.5282042,
+    "ast_hash": "18c09ad7f67a9d474f7c5f781f919436",
     "semantic_hash": ""
   },
   "PRD \u2014 Games Page v1.1 \u00b7 The Sangam Arcade & Beach Blast Sequence.md": {
@@ -4752,9 +4752,9 @@
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1793737822.291647,
-    "seen": 1793830245.849284,
-    "ast_hash": "e8fc7a31f69c662569abbcd09dc7c93e",
+    "mtime": 1795295934.7689972,
+    "seen": 1795296488.528999,
+    "ast_hash": "0487de611881f4a13af53d3b8899923c",
     "semantic_hash": ""
   },
   "SEO.md": {
@@ -4872,15 +4872,15 @@
     "semantic_hash": ""
   },
   "public/llms-full.txt": {
-    "mtime": 1795152833.32995,
-    "seen": 1795153328.3766832,
-    "ast_hash": "82235634501288f1f747a162ce9e6730",
+    "mtime": 1795296257.1497405,
+    "seen": 1795296488.5415454,
+    "ast_hash": "4dcab68d36927312f1fcd70dcad7fe90",
     "semantic_hash": ""
   },
   "public/llms.txt": {
-    "mtime": 1795152802.2921958,
-    "seen": 1795153328.3766854,
-    "ast_hash": "cfb18f188d91a1db67f90c5a96275830",
+    "mtime": 1795296075.459292,
+    "seen": 1795296488.541549,
+    "ast_hash": "d6fe4544ae40aaaa0c7a58c1af6b37ee",
     "semantic_hash": ""
   },
   "art/games-hybrid/source/coast_sand_02_diff_1k.jpg": {

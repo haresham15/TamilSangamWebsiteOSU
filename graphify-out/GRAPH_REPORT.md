@@ -1,7 +1,7 @@
 # Graph Report - TamilSangamWebsiteOSU  (2026-11-21)
 
 ## Corpus Check
-- 832 files · ~16,272,320 words
+- 832 files · ~16,272,365 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 37 file(s) not represented in the graph (top: (none) 6, .mdc 5, .css 5)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cb8a27b5`
+- Built from commit: `29f5afcb`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1455,7 +1455,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `useAudio` be split into smaller, more focused modules?**
   _Cohesion score 0.0701344243132671 - nodes in this community are weakly interconnected._
 - **Why does `three` connect `three` to `HalfCurve`, `HalfCurve`, `GamesHeroCanvas.tsx`, `createHeroKineticsTracker`, `SideKolam.tsx`, `mergeParts`, `EventsArenaCanvas.tsx`, `GlobalCanvas.tsx`, `JoinHeroCanvas.tsx`, `react`, `fretMath.ts`, `Rose.tsx`, `events-gen2/CameraRig.tsx`, `fsm.ts`, `generate-performer-glb.mjs`, `@react-three/fiber`, `Gizmos.tsx`, `GopuramArtScene.tsx`, `CrowdField.tsx`, `blueprintProps.ts`, `home/lab/page.tsx`, `latheProfile`, `strumStateMachine.ts`, `registry.ts`, `BlueprintSceneGL.tsx`, `beachWorldBuild.ts`, `SplitFlapBoard.tsx`, `package.json`, `IvyField.tsx`, `GamesFocusScene.tsx`, `cells.tsx`, `StationSet.tsx`, `flowMath.ts`, `blueprintLines.ts`, `tileGrammar.ts`, `isHeroCinematicEnabled`, `JumpingCrowdSilhouettes.tsx`, `DigitalKolamHero.tsx`, `EventsSceneCanvas.tsx`, `useGradeLut.ts`, `CorridorTreadmill.tsx`, `blastFxSystem.ts`, `StationScene.tsx`, `Scene.tsx`, `LayeredFocusCompositor.ts`, `geometry.ts`, `SceneView.tsx`, `BlastLab.tsx`, `BakedEnvironment`, `guideRail.ts`, `chamferedBox`, `masterTick.ts`, `peelConveyorShader.ts`, `LeoFactoryEnvironment.tsx`, `BeachLabCanvas.tsx`, `director.test.ts`, `wireframe.ts`, `useDisposeOnUnmount`, `kolamGeometry.ts`, `HalfCurve`?**
-  _High betweenness centrality (0.236) - this node is a cross-community bridge._
+  _High betweenness centrality (0.237) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `ja()` (e.g. with `ha()` and `e()`) actually correct?**
   _`ja()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Should `ha` be split into smaller, more focused modules?**

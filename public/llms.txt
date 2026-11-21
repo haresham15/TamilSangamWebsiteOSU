@@ -53,20 +53,20 @@
 
 ---
 
-## 5. Canonical Route Index (Primary 10 Routes & Auxiliary Portals)
+## 5. Canonical Route Index (Primary 8 Routes & Auxiliary Portals)
 
 1. **Home**: https://tamil-sangam-website-osu.vercel.app/
 2. **Events & Gatherings**: https://tamil-sangam-website-osu.vercel.app/events
-3. **Next Gathering Dossier**: https://tamil-sangam-website-osu.vercel.app/events/namma-deepavali-2026
-4. **About Us & Heritage**: https://tamil-sangam-website-osu.vercel.app/about
-5. **Executive Board Officers**: https://tamil-sangam-website-osu.vercel.app/board
-6. **Campus Photo Vault**: https://tamil-sangam-website-osu.vercel.app/gallery
-7. **Sangam Arcade (12 Daily Games)**: https://tamil-sangam-website-osu.vercel.app/games
-8. **Columbus Guide & Directory**: https://tamil-sangam-website-osu.vercel.app/guide
-9. **Official Links Hub (Bio Portal)**: https://tamil-sangam-website-osu.vercel.app/links
-10. **The Ideas Hearth**: https://tamil-sangam-website-osu.vercel.app/suggestions
+3. **About Us & Heritage**: https://tamil-sangam-website-osu.vercel.app/about
+4. **Executive Board Officers**: https://tamil-sangam-website-osu.vercel.app/board
+5. **Sangam Arcade (12 Daily Games)**: https://tamil-sangam-website-osu.vercel.app/games
+6. **Columbus Guide & Directory**: https://tamil-sangam-website-osu.vercel.app/guide
+7. **Official Links Hub (Bio Portal)**: https://tamil-sangam-website-osu.vercel.app/links
+8. **Suggestions & Proposals Hearth**: https://tamil-sangam-website-osu.vercel.app/suggestions
 
-### Auxiliary Gateways & Legal
+### Auxiliary Gateways & Memory Vaults
+- **Campus Photo Vault**: https://tamil-sangam-website-osu.vercel.app/gallery
+- **Next Gathering Dossier**: https://tamil-sangam-website-osu.vercel.app/events/namma-deepavali-2026
 - **Join Sangam (Free Guestbook)**: https://tamil-sangam-website-osu.vercel.app/join
 - **Frequently Asked Questions**: https://tamil-sangam-website-osu.vercel.app/faq
 - **Dance Troupe Auditions**: https://tamil-sangam-website-osu.vercel.app/dance
