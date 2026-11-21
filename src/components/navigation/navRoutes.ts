@@ -12,7 +12,17 @@ export interface NavRoute {
 
 /**
  * Primary select important pages directly displayed in the navbar.
- * Curated per user specification: Core + Leadership + Linktree.
+ * Curated and sorted strictly by necessity:
+ * 1. Home - Core portal & flagship intro
+ * 2. Events - Major gatherings, calendar & festivals
+ * 3. Next Event - Immediate upcoming event dossier (Namma Deepavali 2026)
+ * 4. About - Organization heritage, charter & constitution
+ * 5. Board - Student executive leadership
+ * 6. Gallery - Photo vaults & past memories
+ * 7. Games - Sangam Arcade (daily Sollu, Tanglish puzzles)
+ * 8. Guide - Student life handbook, campus dining & survival
+ * 9. Links - Linktree bio hub (GroupMe, Instagram, Spotify)
+ * 10. Ideas - Suggestion box & community submissions
  */
 export const PRIMARY_NAV_ROUTES: NavRoute[] = [
   { href: "/", en: "Home", ta: "முகப்பு" },
@@ -28,28 +38,15 @@ export const PRIMARY_NAV_ROUTES: NavRoute[] = [
   { href: "/board", en: "Board", ta: "அவை" },
   { href: "/gallery", en: "Gallery", ta: "படங்கள்" },
   { href: "/games", en: "Games", ta: "விளையாட்டு", badge: true },
+  { href: "/guide", en: "Guide", ta: "வழிகாட்டி" },
   { href: "/links", en: "Links", ta: "இணைப்புகள்" },
+  { href: "/suggestions", en: "Ideas", ta: "கருத்து" },
 ];
 
 /**
- * Secondary pages accessible via navigation or sitemap.
- * Guide, Suggestions, FAQ.
+ * Secondary pages accessible via route matching and sitemap.
  */
 export const SECONDARY_NAV_ROUTES: NavRoute[] = [
-  {
-    href: "/guide",
-    en: "Guide",
-    ta: "வழிகாட்டி",
-    descriptionEn: "Campus life handbook & FAQs",
-    descriptionTa: "வழிகாட்டி & கேள்வி-பதில்",
-  },
-  {
-    href: "/suggestions",
-    en: "Ideas",
-    ta: "கருத்து",
-    descriptionEn: "Suggestion box & community initiatives",
-    descriptionTa: "கருத்துகள் & யோசனைகள்",
-  },
   {
     href: "/faq",
     en: "FAQ",

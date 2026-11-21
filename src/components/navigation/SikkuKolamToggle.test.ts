@@ -24,13 +24,17 @@ describe("SikkuKolamToggle specifications", () => {
     expect(ids).toEqual(["top", "bottom", "left", "right"]);
   });
 
-  it("positions Games as the final primary route with isNew and badge active", () => {
-    const lastPrimaryRoute = PRIMARY_NAV_ROUTES[PRIMARY_NAV_ROUTES.length - 1];
-    expect(lastPrimaryRoute.href).toBe("/games");
-    expect(lastPrimaryRoute.isNew).toBe(true);
-    expect(lastPrimaryRoute.badge).toBe(true);
-    expect(PRIMARY_NAV_ROUTES.length).toBe(6);
-    expect(SECONDARY_NAV_ROUTES.length).toBe(3);
-    expect(NAV_ROUTES.length).toBe(9);
+  it("curates primary routes sorted by necessity with event and games badges", () => {
+    const gamesRoute = PRIMARY_NAV_ROUTES.find((r) => r.href === "/games");
+    expect(gamesRoute).toBeDefined();
+    expect(gamesRoute?.badge).toBe(true);
+
+    const nextEventRoute = PRIMARY_NAV_ROUTES.find((r) => r.isNextEvent);
+    expect(nextEventRoute).toBeDefined();
+    expect(nextEventRoute?.badge).toBe(true);
+
+    expect(PRIMARY_NAV_ROUTES.length).toBe(10);
+    expect(SECONDARY_NAV_ROUTES.length).toBe(1);
+    expect(NAV_ROUTES.length).toBe(11);
   });
 });

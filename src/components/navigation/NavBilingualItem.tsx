@@ -52,7 +52,7 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
             ? `${locale === "ta" ? route.ta : route.en}, new puzzles available`
             : undefined
         }
-        className={`relative flex flex-col items-center justify-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark rounded-full px-2.5 py-1 transition-all duration-200 ${
+        className={`relative flex flex-col items-center justify-center cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark rounded-full px-2 xl:px-2.5 py-1 transition-all duration-200 ${
           isActive
             ? isDarkHero
               ? "bg-white/[0.12] border border-white/10 shadow-xs"

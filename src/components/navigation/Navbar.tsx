@@ -10,7 +10,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { isEditionComplete } from "@/lib/gamesStorage";
 import { Magnet } from "@/components/ui/react-bits";
-import { NAV_ROUTES, NavRoute } from "./navRoutes";
+import { NAV_ROUTES, PRIMARY_NAV_ROUTES, NavRoute } from "./navRoutes";
 import { SikkuKolamToggle } from "./SikkuKolamToggle";
 import { NavBilingualItem } from "./NavBilingualItem";
 
@@ -48,14 +48,6 @@ export const Navbar: React.FC = () => {
   // Adaptive Backdrop & Hero Detection
   const [isPastHero, setIsPastHero] = useState(false);
   const isDarkHero = isHeroRoute && !isPastHero;
-  const isInHeroZone = isHeroRoute && !isPastHero;
-
-  // Auto-collapse if user enters or scrolls back into hero zone
-  useEffect(() => {
-    if (isInHeroZone && isOpen) {
-      setIsOpen(false);
-    }
-  }, [isInHeroZone, isOpen]);
 
   // Track active route
   const getActiveRoute = useCallback((): NavRoute => {
@@ -222,12 +214,12 @@ export const Navbar: React.FC = () => {
           ref={navRef}
           layout
           transition={containerSpring}
-          style={{ borderRadius: isOpen ? 26 : 9999 }}
+          animate={{ borderRadius: isOpen ? 24 : 9999 }}
           className={`pointer-events-auto relative border transition-colors duration-300 ${
             isOpen
               ? isDarkHero
-                ? "w-full max-w-6xl bg-[#1C122B]/95 border-[#C79347]/30 text-[#FAF5ED] shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl"
-                : "w-full max-w-6xl bg-[#1C122B]/95 border-[#C79347]/30 text-[#FAF5ED] shadow-[0_12px_36px_-10px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+                ? "w-full max-w-6xl bg-[#1C122B]/95 border-[#C79347]/35 text-[#FAF5ED] shadow-[0_12px_44px_rgba(0,0,0,0.55)] backdrop-blur-xl"
+                : "w-full max-w-6xl bg-[#1C122B]/95 border-[#C79347]/35 text-[#FAF5ED] shadow-[0_12px_40px_-10px_rgba(0,0,0,0.45)] backdrop-blur-xl"
               : isDarkHero
               ? "w-auto max-w-[440px] bg-[#1C122B]/90 border-[#C79347]/30 text-[#FAF5ED] shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
               : "w-auto max-w-[440px] bg-[#1C122B]/92 border-[#C79347]/30 text-[#FAF5ED] shadow-[0_8px_30px_rgba(0,0,0,0.35),0_1px_2px_rgba(0,0,0,0.2)] backdrop-blur-md"
@@ -271,15 +263,19 @@ export const Navbar: React.FC = () => {
             <AnimatePresence mode="wait">
               {!isOpen && (
                 <div className="flex items-center gap-2">
-                  <motion.div
+                  <motion.button
+                    type="button"
                     key="collapsed-active-pill"
+                    onClick={handleToggle}
+                    aria-label={`Current page: ${locale === "ta" ? activeRoute.ta : activeRoute.en}. Click to open navigation menu.`}
+                    title="Click to explore all pages"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.2 }}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-sans bg-[#271A3C] border border-[#C79347]/30 text-[#FAF5ED] select-none"
+                    className="group inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-sans bg-[#271A3C] border border-[#C79347]/30 hover:border-[#C79347]/60 hover:bg-[#352254] text-[#FAF5ED] select-none cursor-pointer transition-colors"
                   >
-                    <span className="font-medium">
+                    <span className="font-medium group-hover:text-[#FAF5ED] transition-colors">
                       {locale === "ta" ? activeRoute.ta : activeRoute.en}
                     </span>
                     <span
@@ -289,11 +285,11 @@ export const Navbar: React.FC = () => {
                     <span
                       lang="ta"
                       style={{ letterSpacing: 0 }}
-                      className="font-tamil text-[10px] text-[#C79347] opacity-90"
+                      className="font-tamil text-[10px] text-[#C79347] opacity-90 group-hover:opacity-100 transition-opacity"
                     >
                       {locale === "ta" ? activeRoute.en : activeRoute.ta}
                     </span>
-                  </motion.div>
+                  </motion.button>
                 </div>
               )}
             </AnimatePresence>
@@ -308,9 +304,9 @@ export const Navbar: React.FC = () => {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.25 }}
                   aria-label="Expanded Navigation"
-                  className="flex items-center gap-x-1 xl:gap-x-1.5 flex-1 justify-center overflow-x-hidden py-0.5 px-1"
+                  className="flex items-center gap-x-0.5 xl:gap-x-1.5 flex-1 justify-center py-0.5 px-0.5 sm:px-1"
                 >
-                  {NAV_ROUTES.map((route, index) => {
+                  {PRIMARY_NAV_ROUTES.map((route, index) => {
                     const isActive = activeRoute.href === route.href;
                     return (
                       <NavBilingualItem
@@ -404,8 +400,14 @@ export const Navbar: React.FC = () => {
 
               {/* Center Active Pill on Mobile */}
               {!isOpen && (
-                <div className="flex items-center gap-1.5">
-                  <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-sans bg-[#271A3C] text-[#FAF5ED] border border-[#C79347]/30">
+                <button
+                  type="button"
+                  onClick={handleToggle}
+                  aria-label={`Current page: ${locale === "ta" ? activeRoute.ta : activeRoute.en}. Click to open navigation menu.`}
+                  title="Click to explore all pages"
+                  className="flex items-center gap-1.5 cursor-pointer"
+                >
+                  <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-sans bg-[#271A3C] text-[#FAF5ED] border border-[#C79347]/30 hover:border-[#C79347]/60 transition-colors">
                     <span className="font-medium truncate max-w-[80px]">
                       {locale === "ta" ? activeRoute.ta : activeRoute.en}
                     </span>
@@ -414,7 +416,7 @@ export const Navbar: React.FC = () => {
                       aria-hidden="true"
                     />
                   </div>
-                </div>
+                </button>
               )}
 
               {/* Kolam Toggle */}
@@ -434,10 +436,10 @@ export const Navbar: React.FC = () => {
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                  className="overflow-hidden pt-3 mt-2 border-t border-[#C79347]/20"
+                  className="overflow-hidden pt-3 mt-2 border-t border-[#C79347]/20 max-h-[75vh] overflow-y-auto"
                 >
                   <div className="grid grid-cols-2 gap-2">
-                    {NAV_ROUTES.map((route, index) => {
+                    {PRIMARY_NAV_ROUTES.map((route, index) => {
                       const isActive = activeRoute.href === route.href;
                       return (
                         <motion.div
