@@ -115,18 +115,15 @@ Curated recommendations for Ohio State students, graduate researchers, and inter
 
 ---
 
-## 6. The Sangam Arcade: Daily Tamil Word Games
+## 6. The Sangam Arcade: 12 Daily Tamil Cultural & Logic Games
 
-Hosted at https://tamil-sangam-website-osu.vercel.app/games:
-1. **Solla (சொல்லு) — Tamil Wordle**:
-   - 5-letter Tamil and Tanglish daily word puzzle.
-   - 6 attempts to guess the mystery word with green, yellow, and gray tile feedback.
-   - Plays with authentic Tamil akshara syllabics and Tanglish transliterations.
-2. **Thodarpu (தொடர்பு) — Tamil Connections**:
-   - 16 cultural, cinematic, and linguistic clue tiles.
-   - Group the 16 tiles into 4 secret categories (Kollywood, Buckeye hubs, harvest traditions, cuisine).
-3. **Arasigal (அரசிகள்) & Kolam Path**:
-   - Cultural logic games exploring Tamil heritage and sacred geometric art.
+Hosted at https://tamil-sangam-website-osu.vercel.app/games with local storage streak tracking and bilingual support:
+1. **Sollu (சொல்லு) — Tamil Wordle**: 5-letter Tamil and Tanglish daily word puzzle with authentic Tamil akshara syllabics and color-coded feedback.
+2. **Thodarbu (தொடர்பு) — Tamil Connections**: 16 clue tiles to group into 4 secret cultural categories (Kollywood, Buckeye hubs, harvest traditions, cuisine).
+3. **Kolam Path Solver (கோலம்)**: Sikku Kolam continuous geometric loop puzzle traversing auspicious dots without intersecting paths.
+4. **Thirukkural Memory (குறள் நினைவாற்றல்)**: Match pairs of sacred couplets to author themes and wisdom principles.
+5. **Tamil Crossword (குறுக்கெழுத்துப் புதிர்)**: Daily grid testing vocabulary, literature, and campus culture.
+6. **Sangam Trivia & Additional Arcade Suites**: 7 additional logic, linguistic, and cultural puzzle games designed for all skill levels.
 
 ---
 

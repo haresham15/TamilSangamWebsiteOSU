@@ -28,7 +28,7 @@ When preparing the site for an upcoming event, make coordinated updates across t
 
 #### 1. Navbar Upcoming Event Badge & Route
 - **File**: `src/components/navigation/navRoutes.ts`
-- **Target**: `NAV_ROUTES` array
+- **Target**: `PRIMARY_NAV_ROUTES` and `NAV_ROUTES` arrays
 - **Data Shape**:
   ```typescript
   export interface NavRoute {
@@ -52,7 +52,7 @@ When preparing the site for an upcoming event, make coordinated updates across t
   ```
 - **Rendering Mechanism**:
   - `src/components/navigation/NavBilingualItem.tsx` checks `route.isNextEvent` and renders an animated pulsing dot and an emerald tag (`NEXT` in English or `அடுத்தது` in Tamil).
-  - `src/components/navigation/Navbar.tsx` reflects active state and handles desktop bar + mobile drawer.
+  - `src/components/navigation/Navbar.tsx` reflects active state and handles the dual-trigger expandable pill bar (active context pill button + Sikku Kolam toggle button) on desktop and mobile. All 10 necessary routes are sorted strictly by necessity in `PRIMARY_NAV_ROUTES`.
 
 #### 2. Homepage Next-Event Showcase (Hero & Dossier Section)
 - **File**: `src/config/upcomingEvent.ts`
@@ -140,26 +140,26 @@ Link cards use the courtyard card design system:
 ```tsx
 <Link
   href="/destination"
-  className="group block p-4 rounded-xl bg-[#25173B] border border-[rgba(125,96,166,0.35)] hover:border-[#A6F0CF]/60 hover:bg-[#2d1b47] hover:shadow-[0_4px_20px_rgba(166,240,207,0.06)] transition-all"
+  className="group block p-4 rounded-xl bg-[#271A3C] border border-[#C79347]/30 hover:border-[#C79347]/70 hover:bg-[#352254] hover:shadow-[0_4px_24px_rgba(199,147,71,0.12)] transition-all"
 >
   <div className="flex items-start justify-between gap-3">
     <div className="flex items-start gap-3 min-w-0">
-      <div className="p-2.5 rounded-lg bg-[#140C20] border border-[rgba(125,96,166,0.4)] text-[#A6F0CF] group-hover:border-[#A6F0CF]/60 transition-colors shrink-0 mt-0.5">
+      <div className="p-2.5 rounded-lg bg-[#1C122B] border border-[#C79347]/40 text-[#C79347] group-hover:text-[#2BB5A8] group-hover:border-[#2BB5A8]/60 transition-colors shrink-0 mt-0.5">
         <IconComponent className="w-4 h-4" />
       </div>
       <div className="min-w-0">
-        <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6F0CF] font-bold block">
+        <span className="text-[10px] font-mono uppercase tracking-wider text-[#C79347] font-bold block">
           EYEBROW TAG
         </span>
-        <h2 className="text-base font-serif font-medium text-[#F4F0FA] group-hover:text-[#A6F0CF] transition-colors truncate">
+        <h2 className="text-base font-serif font-medium text-[#FAF5ED] group-hover:text-[#C79347] transition-colors truncate">
           Card Title
         </h2>
-        <p className="text-xs text-[#C4B7D7] mt-0.5 truncate font-sans">
+        <p className="text-xs text-[#CBBBA8] mt-0.5 truncate font-sans">
           Brief description
         </p>
       </div>
     </div>
-    <ChevronRight className="w-4 h-4 text-[#C4B7D7] group-hover:text-[#A6F0CF] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
+    <ChevronRight className="w-4 h-4 text-[#CBBBA8] group-hover:text-[#C79347] group-hover:translate-x-1 transition-all shrink-0 mt-2" />
   </div>
 </Link>
 ```
@@ -255,15 +255,19 @@ When an event concludes and needs to be archived into the `/events` river, dossi
 
 1. **Autonomous Verification (Non-Negotiable)**:
    - Always run `npm run build` (`npx tsc --noEmit` + Turbopack build) to confirm zero syntax or typing errors.
+   - Run Vitest navigation suites: `npx vitest run src/components/navigation/SikkuKolamToggle.test.ts`.
    - Zero Hallucinated Renders: Inspect computed DOM structure and ensure no broken assets.
-2. **Design Tokens & Colors**:
-   - Follow semantic colors from `globals.css` and `design/tokens.json`.
-   - Never use raw un-tinted black (`#000000`) or generic Tailwind purple-indigo gradients (`from-indigo-500 to-purple-600`).
-   - Use the warm courtyard palette: royal violet (`#140C20`, `#25173B`), mint radiant bloom (`#A6F0CF`), and warm terracotta/sandstone accents.
+2. **Kanchipuram Courtyard & Temple Stone Color System**:
+   - Master Tokens in `globals.css`:
+     - **Light Canvas**: Sunlit Temple Ivory (`--bg-ivory: #FAF6F0`), Raw Tanjore Sandstone (`--bg-sandstone: #F0E6D6`), Crisp Paper Card (`--surface-card-light: #FFFFFF`), Palm-Leaf Parchment (`--surface-card-parchment: #F7EFE2`).
+     - **Dark Canvas**: Royal Sangam Deep Aubergine (`--bg-sangam-deep: #1C122B`), Velvet Silk Purple Card (`--surface-card-dark: #271A3C`), Deep Peacock Silk (`--bg-peacock-deep: #102830`), Peacock Silk Card (`--surface-card-peacock: #173640`).
+     - **Hero Bridging & Accents**: Chola Bronze (`--accent-bronze: #9A6B3E / #D4A36A`), Kanchipuram Zari Gold (`--accent-zari: #C79347`), Trademark Peacock Teal (`--brand-teal: #0F766E / #2BB5A8`), Kumkum Vermilion (`--accent-kumkum: #B84A39 / #E06D58`).
+     - **Typography Inks**: Roasted Palmyra (`--ink-earth: #261A14`), Warm Umber (`--ink-umber: #5E4C40`), Warm Rice-Flour White (`--ink-alabaster: #FAF5ED`), Warm Sand (`--ink-sand: #CBBBA8`).
+   - Anti-Pattern Invariants: Never use raw `#000000`, generic cool-slate `#94A3B8`, harsh neon mint, or dot-matrix blueprint grids behind body text.
 3. **Typography & Bilingual Integrity**:
    - Tamil script must always have `lang="ta"`, zero letter spacing (`tracking-normal` / `style={{ letterSpacing: 0 }}`), and adequate line-height (≥ 1.6).
    - Display headings use serif fonts (Marcellus, Cormorant, Prata); body copy uses Outfit; mono uses Fragment Mono/Azeret Mono.
-4. **Motion & Interaction**:
-   - Physics springs (`stiffness: 150–400, damping: 15–30`) for user-driven interactions (magnetic hover, drag).
-   - Bézier tweens with fixed duration (`duration: 0.35s, ease: [0.16, 1, 0.3, 1]`) for entrance/exit.
+4. **Motion & Interaction Mechanics**:
+   - **Page Loader**: Dynamic Brahmamudi knot weaving in [KolamLoader.tsx](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/ui/KolamLoader.tsx) mathematically bound to progress ($14\% \rightarrow 98\%$), with sequential 5-Pulli lattice illumination and hairline progress gauge.
+   - **Navbar Unraveling**: In [Navbar.tsx](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/navigation/Navbar.tsx) and [SikkuKolamToggle.tsx](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/components/navigation/SikkuKolamToggle.tsx), dual-trigger activation unrolls the navigation bar with spring physics (`stiffness: 260, damping: 26`), morphing the 4-petal knot into a clean "X" close icon while staggering the 10 necessary routes.
    - Respect `useReducedMotion()` and Lite mode fallbacks unconditionally.

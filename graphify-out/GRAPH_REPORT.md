@@ -1,55 +1,55 @@
 # Graph Report - TamilSangamWebsiteOSU  (2026-11-21)
 
 ## Corpus Check
-- 830 files · ~16,268,944 words
+- 832 files · ~16,272,320 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 36 file(s) not represented in the graph (top: (none) 6, .mdc 5, .css 5)
+- Unclassified: 37 file(s) not represented in the graph (top: (none) 6, .mdc 5, .css 5)
 
 ## Summary
-- 5764 nodes · 14150 edges · 297 communities (271 shown, 26 thin omitted)
+- 5778 nodes · 14169 edges · 300 communities (274 shown, 26 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 574 edges (avg confidence: 0.87)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e7097ba9`
+- Built from commit: `cb8a27b5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- useLiteMode
+- useAudio
 - ha
 - JoinHeroCanvas.tsx
-- isHeroCinematicEnabled
-- chamferedBox
+- createHeroKineticsTracker
+- mergeParts
 - Eyebrow
-- gsap
-- ki
+- EventsArenaCanvas.tsx
+- ma
 - f
 - PART A: PRODUCT REQUIREMENTS
-- @react-three/fiber
+- react
 - useLocale
 - ref_node_path
 - e
 - draco_decoder.js
 - fretMath.ts
 - Rose.tsx
-- FinaleFlare.tsx
+- events-gen2/CameraRig.tsx
 - make-identity-lut.mjs
 - generate-performer-glb.mjs
 - LinksClient.tsx
-- SceneRoot.tsx
+- @react-three/fiber
 - Global Architecture — "One Canvas, One Clock"
 - Events Scene Animation: Architecture, Historical Evolution & Critical Audit
 - v
 - PRD — Suggestions Hero: "The Kaththi War Room & Ohio Stadium Blueprint"
-- strings/Strings.tsx
+- Gizmos.tsx
 - GopuramArtScene.tsx
 - CrowdField.tsx
 - basis_transcoder.js
 - CommandPalette.tsx
-- StationSet.tsx
-- masterTick.ts
-- BlueprintSceneLegacy.tsx
+- latheProfile
+- registry.ts
+- BlueprintScene3D.tsx
 - AazhamGame.tsx
 - QuordleGame.tsx
 - BlueprintSceneGL.tsx
@@ -59,12 +59,12 @@
 - SplitFlapBoard.tsx
 - package.json
 - test-audio-controller.mjs
-- test-wreath-math.mjs
+- homeHero.constants.ts
 - sounds.ts
-- gamesRail.ts
+- GamesFocusScene.tsx
 - PRD — Gallery Hero: "Vaaranam Aayiram" Cinematic Journey (v2 Rebuild)
-- mergeParts
-- home/lab/page.tsx
+- StationSet.tsx
+- flowMath.ts
 - render-games-hybrid.py
 - dependencies
 - Guide Hero v3: "The Station Sequence" — Technical Architecture & Reference Guide
@@ -73,7 +73,7 @@
 - PRD — Games Page v1.1 · The Sangam Arcade & Beach Blast Sequence
 - compilerOptions
 - components.json
-- BoardHeroCanvas.tsx
+- isHeroCinematicEnabled
 - SmoothScroll.tsx
 - DitherVeil.tsx
 - DigitalKolamHero.tsx
@@ -83,17 +83,17 @@
 - ExceptionInfo
 - ArcadeGameCard.tsx
 - test-phase5-hardening.mjs
-- forgeGeometry.ts
-- useRenderMode
+- useGradeLut.ts
+- BoardView.tsx
 - abort
 - A
 - ref_fs
 - CorridorTreadmill.tsx
 - blastFxSystem.ts
-- ref_node_assert
+- validate-jsonld.mjs
 - review-fixes.spec.ts
 - StationScene.tsx
-- state.ts
+- Scene.tsx
 - webhooks.ts
 - lucide-react
 - devDependencies
@@ -101,19 +101,19 @@
 - generate-join-textures.mjs
 - app/layout.tsx
 - props.test.mjs
-- GamesFocusScene.tsx
+- LayeredFocusCompositor.ts
 - seed.ts
 - suggestion.ts
 - Join Hero — "The Morning Campus"
-- Workflow 2: Updating the Linktree (`/links` Bio Hub)
+- Workflow 3: Adding a Past Event & Archiving
 - SceneView.tsx
 - BlastLab.tsx
 - storage.ts
 - DESIGN_SYSTEM.md — The "Muttram" (Courtyard / முற்றம்) Design System
 - guideRail.ts
-- props/types.ts
-- perfProbe.ts
-- docs/README.md
+- chamferedBox
+- masterTick.ts
+- Project Aintinai (ஐந்திணை) — Official Design System & Token Ground Truth
 - test-color-pipeline.mjs
 - LeoFactoryEnvironment.tsx
 - DatabaseSync
@@ -124,33 +124,33 @@
 - KolamIcons.tsx
 - 1. Join Hero — "The Morning Campus" (`/join`)
 - PART C — TERRA EXECUTION PLAN FOR THIS REPOSITORY
-- soundEngine.ts
+- AudioController.ts
 - wireframe.ts
 - check-frame-deltas.cjs
-- service.ts
-- seo/JsonLd.tsx
-- Scene.tsx
+- Providers.tsx
+- next
+- GuideClient.tsx
 - three
 - Guide Hero v3 — Phase 2 checkpoint
 - OSU Tamil Sangam — Master SEO Architecture & Ranking Playbook
 - Figma Agent Design Specification: Content Pages Renovation & Optimization
 - verify-contrast.mjs
-- getPuzzleNumber
+- generateShareCard
 - debugStore
 - callRuntimeCallbacks
-- useTier
+- TransitionProvider.tsx
 - kolamGeometry.ts
 - alphabet.ts
 - kolamMath.ts
 - Authoritative Decisions (Phase 0)
 - PART A — PRODUCT REQUIREMENTS
 - SideKolam.tsx
-- generateShareCard
+- getPuzzleNumber
 - GamesHeroCanvas.tsx
 - scripts
 - Flagship Event Theming Engine & Seasonal Swap Protocol
 - Master Product Requirements Document & Technical Architecture Ground Truth
-- Performer.tsx
+- GlobalCanvas.tsx
 - contracts.ts
 - SafeComponentBoundary.tsx
 - **PRD — Games Page v1.1 · The Sangam Arcade & Beach Blast Sequence**
@@ -163,59 +163,59 @@
 - Guide Hero v3 - Phase 4 checkpoint
 - Guide Hero v3 - Phase 5 checkpoint
 - Renovated Post-Hero Content Specifications
-- Renovated Post-Hero Content Specifications
+- 4. Page-by-Page Content Renovation Wireframe Specs
 - Join Hero — "The Morning Campus" (`/join`)
-- GameShell
+- framer-motion
 - createWasm
 - GamesHub.tsx
 - **PRD — Games Page v1.1 · The Sangam Arcade & Beach Blast Sequence**
 - ArasigalGame.tsx
 - designSearch.ts
-- Review Focus
-- 3.2. Inner Workings & Mathematical Implementation
+- service.ts
+- blueprintProps.ts
 - ArcadeAudioSynth
-- pathBuilder.ts
+- home/lab/page.tsx
 - Authentic Side Kolams Architectural Review & Verification
-- PRD — Board Hero: "Chola Darbar Corridor" (Imperial Assembly)
-- timeline.test.mjs
-- GlobalCanvas.tsx
+- heroes/README.md
+- ref_node_fs
+- chatEngine.ts
 - PRD — Join Hero: "The Morning Campus Courtyard Gates & Leaf Drift"
 - 3. Detailed Page Intent & Narrative Architecture
 - 2. Exhaustive Route Specifications & Cinematic Easter Eggs
-- AGENTS.md
-- BeachLabCanvas.tsx
+- Tamil Sangam OSU — shared agent guidance
+- rateLimit.ts
 - ScrollExpand.tsx
 - constitution.ts
 - transliteration.ts
-- 19. Phased execution map
+- GameShell
 - KolamKnotCurve
 - PRD — Event Dossier: "The Sunlit Randomized Dossier & ReactBits Kinematics"
 - guideStore.ts
-- 2.2. Inner Workings & Mathematical Implementation
+- cells.tsx
 - PRD — Events Hero: "The Leo Concert Arena Gen 3"
-- DogTags.tsx
+- blueprintLines.ts
 - timeline.ts
-- faqStore.ts
-- Hero art pass: working guide
+- stringMath.ts
+- useRenderMode.ts
 - Basis Universal GPU Texture Compression
 - emscripten_realloc_buffer
 - intArrayFromString
 - ⚡ Getting Started
-- la
+- Vc
 - JumpingCrowdSilhouettes.tsx
-- framer-motion
-- codex.md
+- GopuramZScroll.tsx
+- AGENTS.md
 - EventsSceneCanvas.tsx
 - kolamPaths.ts
 - shadcn
-- heroes/README.md
+- 15. Philosophical Intent, Literary Genesis & Media Artifacts
 - shadcn
 - Google Calendar Integration & Officer Guide
 - verify-seo.mjs
 - capture-all-heroes.mjs
 - FramedGame.tsx
-- StrandsGame.tsx
 - updateDailyGameRecord
+- ThodarbuGame.tsx
 - thirukkural.ts
 - bolt.md
 - sentinel.md
@@ -223,45 +223,45 @@
 - portraits/README.md
 - models/README.md
 - Games hybrid cinematic implementation evidence
-- BlastFxSystem
+- games-hero.spec.ts
 - EnPuthirGame.tsx
 - convert-to-avif.mjs
-- EventsGen3Canvas.tsx
+- buildOhioStadiumLines
 - @playwright/test
 - postRun
 - RIGHTS.md
 - Tamil Sangam OSU — Official Logo-Derived Color System
-- debugState.ts
-- src/config/upcomingEvent.ts
+- geometry.ts
+- make-heritage-lut.mjs
 - scrambleTerminal.ts
 - Guide Hero v3: "The Station Sequence" Verification Report
-- Guide Hero v3 - Phase 3 checkpoint
+- BakedEnvironment
 - DirectorHUD.tsx
-- 12. Verification and acceptance
+- 3.2. Inner Workings & Mathematical Implementation
 - OSU Tamil Sangam — Off-Site SEO & Search Engine Authority Checklist
 - peelConveyorShader.ts
-- 15. Philosophical Intent, Literary Genesis & Media Artifacts
+- Review Focus
 - Renovated Post-Hero Content Specifications
 - 1. Executive Vision, Cultural Architecture & Cinema Connections
-- react
+- BeachLabCanvas.tsx
 - Creative Brief: "Emblem Engine"
-- ref_node_test
-- next
+- ref_node_assert
+- events.ts
 - Navbar.tsx
 - director.test.ts
-- Hero 5: missiles, contrails, fireballs and shockwave
-- games-hero-hybrid-cinematic-prd.md
+- soundEngine.ts
+- Current Roadmap & Completed Epics
 - guide-hero-board.spec.ts
 - **Hero 1: reference calibration and camera model**
 - **Hero 1: reference calibration and camera model**
 - build-official-brand-assets.mjs
-- HeroGradientTransition.tsx
+- 2.2. Inner Workings & Mathematical Implementation
 - useDisposeOnUnmount
 - instantiateArrayBuffer
 - Games page: hybrid hero optimization PRD
-- wa
-- Games Page v1.1 Progress
-- Page 7: Initiatives & Campus Hubs (`/initiatives`)
+- debugState.ts
+- Guide Hero v3 - Phase 3 checkpoint
+- The Cinematic Universe of OSU Tamil Sangam
 - **Games hub: layout, shared systems, storage, share, audio, analytics**
 - **Executive summary, launch plan and success gates**
 - **Executive summary, launch plan and success gates**
@@ -272,7 +272,7 @@
 - HalfCurve
 - HalfCurve
 - HalfCurve
-- CampusGate.tsx
+- faqStore.ts
 - **Sollu spec**
 - **Hero 5: missiles, contrails, fireballs, shockwave**
 - **Appendices: rail schema, seed data, tokens and contrast audit**
@@ -284,47 +284,48 @@
 - **Hero 2: world layout**
 - **Hero 7: master timeline and lens registration contract**
 - vercel.json
-- find-all-residual-browns.mjs
-- cells.tsx
+- LineBatchBuilder
+- fsm.ts
 - 8. Design Tokens & DTCG Three-Tier Architecture
 - generate-assets.mjs
-- 2. Global Design Foundations & Token Architecture
+- Codex workflow for Tamil Sangam OSU
 - Renovated Post-Hero Content Specifications
-- Hero 1: reference calibration and camera model
-- Hero 8: performance budget, fallbacks and accessibility
-- Hero 3: foreground rig, glasses and hand
+- Vaaranam Aayiram Gallery Hero (v2 Architecture & Tuning Guide)
+- Workflow 2: Updating the Linktree (`/links` Bio Hub)
+- ParallaxScatter
 - Sangam Motion Engineering Skill
 - Tamil Typography & Text Engineering Skill
-- splitTamilAksharas
+- 4. Deep Mathematical, Physics & Shader Engineering
 - 5. Optimization requirements
-- GuideLab.tsx
-- 4. Page-by-Page Content Renovation Wireframe Specs
+- find-all-residual-browns.mjs
+- HeroGradientTransition.tsx
 - strumStateMachine.ts
 - Page 8: Campus Blueprints & Suggestions (`/suggestions`)
 - Renovated Post-Hero Content Specifications
 - 9. Hardware-Accelerated Capture Pipeline & Visual Inspection Board
-- 6. Asset production requirements
+- splitTamilAksharas
 - craftInvokerFunction
 - RegisteredPointer_fromWireType
 - [trackId]/route.ts
-- DepthCarousel.tsx
-- DynamicKolamHero.tsx
+- gsap
+- 6. Sensory Layer: Cinematic Color Grading & Diegetic Audio
+- Component-Scoped AGENTS.md — Design System Primitives & Cultural Components
+- IvyField.tsx
+- RenderMode
 
 ## God Nodes (most connected - your core abstractions)
-1. `react` - 365 edges
+1. `react` - 366 edges
 2. `three` - 234 edges
 3. `ha()` - 234 edges
 4. `ja()` - 143 edges
 5. `@react-three/fiber` - 125 edges
-6. `next` - 121 edges
+6. `next` - 122 edges
 7. `lucide-react` - 93 edges
 8. `isHeroCinematicEnabled()` - 81 edges
 9. `v()` - 79 edges
 10. `useLocale()` - 74 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `7.6 The wreath lane (the ring)` --references--> `k()`  [INFERRED]
-  docs/heroes/home-hero-peel-and-flow-prd.md → public/decoders/draco/draco_wasm_wrapper.js
 - `4. Master timeline` --references--> `q()`  [INFERRED]
   src/components/hero/HERO_V3_PRD.md → public/decoders/draco/draco_wasm_wrapper.js
 - `11. Fallbacks` --references--> `e()`  [INFERRED]
@@ -333,99 +334,101 @@
   docs/heroes/home-hero-peel-and-flow-prd.md → public/decoders/draco/draco_wasm_wrapper.js
 - `8.4 Dots, emblem, grade` --references--> `C()`  [INFERRED]
   docs/heroes/home-hero-peel-and-flow-prd.md → public/decoders/draco/draco_wasm_wrapper.js
+- `1. Executive Summary & SEO Scorecard` --references--> `AboutPage()`  [INFERRED]
+  SEO.md → src/app/about/page.tsx
 
 ## Import Cycles
 - 3-file cycle: `src/components/gallery-hero/props/types.ts -> src/components/gallery-hero/strings/Strings.tsx -> src/components/gallery-hero/state.ts -> src/components/gallery-hero/props/types.ts`
 
-## Communities (297 total, 26 thin omitted)
+## Communities (300 total, 26 thin omitted)
 
-### Community 0 - "useLiteMode"
+### Community 0 - "useAudio"
 Cohesion: 0.07
-Nodes (41): GlowingKolamField(), DancePerformanceSpaceProps, DANCER_FAQ, DEFAULT_DIWALI_FORM_DIRECT_URL, DEFAULT_DIWALI_FORM_EMBED_URL, PERFORMANCE_TRACKS, EventDossierView(), EventDossierViewProps (+33 more)
+Nodes (45): 8. Figma Agent Deliverables Checklist, BoardClient(), BoardHeroCanvas, initialsOf(), InstagramIcon(), OfficerPortraitMedia(), DigitalKolamHero, HomeClient() (+37 more)
 
 ### Community 1 - "ha"
 Cohesion: 0.04
-Nodes (81): ha(), Ae(), ah(), $b(), bg(), bh(), bi(), Ce() (+73 more)
+Nodes (77): ha(), Ae(), ah(), $b(), Be(), bg(), bh(), bi() (+69 more)
 
 ### Community 2 - "JoinHeroCanvas.tsx"
 Cohesion: 0.05
-Nodes (57): COLORS, createBlurredLeafTexture(), DUMMY, ForegroundLeaves(), CraneCameraRig(), fovForWidth(), MorningEnvironment(), MorningEnvironmentProps (+49 more)
+Nodes (58): @react-three/drei, CampusGate(), CampusGateProps, MorningEnvironment(), MorningEnvironmentProps, MorningKeyLight(), MorningKeyLightProps, MorningLightShafts() (+50 more)
 
-### Community 3 - "isHeroCinematicEnabled"
-Cohesion: 0.07
-Nodes (43): @react-three/drei, GopuramCanvas(), LegacyCamera(), LegacyGopuramScene(), LegacyRing(), useLegacyAssets(), ForgeQuality, CAM_POINTS (+35 more)
+### Community 3 - "createHeroKineticsTracker"
+Cohesion: 0.08
+Nodes (33): GopuramCanvas(), LegacyCamera(), LegacyGopuramScene(), LegacyRing(), useLegacyAssets(), createTapestryTexture(), TapestryPortraitProps, TapestryTrimMaterials (+25 more)
 
-### Community 4 - "chamferedBox"
+### Community 4 - "mergeParts"
 Cohesion: 0.07
-Nodes (58): ArtGate(), createIronMaterial(), easeDoor(), buildWalls(), CampusBackdrop(), buildArchLetters(), CastLettering(), buildCanopyCards() (+50 more)
+Nodes (59): ArtGate(), createIronMaterial(), easeDoor(), buildRailings(), buildWalls(), CampusBackdrop(), buildArchLetters(), CastLettering() (+51 more)
 
 ### Community 5 - "Eyebrow"
 Cohesion: 0.06
-Nodes (86): 5.1 `CourtyardHeader` (Master Component), 5.2 `MuttramButton` (Tactile Button Component), 5.3 `OrganicRouteGateway` (Footer Cross-Navigation), 5. Shared UI Component Primitives (Figma Component Library), 8. Figma Agent Deliverables Checklist, AboutClient(), GopuramZScroll, BoardClient() (+78 more)
+Nodes (77): 5.1 `CourtyardHeader` (Master Component), 5.2 `MuttramButton` (Tactile Button Component), 5.3 `OrganicRouteGateway` (Footer Cross-Navigation), 5. Shared UI Component Primitives (Figma Component Library), AboutClient(), GopuramZScroll, GamesClient(), GamesHeroCanvas (+69 more)
 
-### Community 6 - "gsap"
-Cohesion: 0.08
-Nodes (28): gsap, ArenaLightingEnvironment(), ArenaLightingEnvironmentProps, embersCache, generateEmbersData(), getEmbersData(), CinematicSilhouette, CinematicSilhouetteHandle (+20 more)
+### Community 6 - "EventsArenaCanvas.tsx"
+Cohesion: 0.10
+Nodes (26): ArenaLightingEnvironment(), ArenaLightingEnvironmentProps, embersCache, generateEmbersData(), getEmbersData(), CinematicSilhouette, CinematicSilhouetteHandle, CinematicSilhouetteProps (+18 more)
 
-### Community 7 - "ki"
-Cohesion: 0.17
-Nodes (30): Ab(), ac(), Bb(), bc(), $c(), Cb(), cc(), ei() (+22 more)
+### Community 7 - "ma"
+Cohesion: 0.11
+Nodes (48): Ab(), ac(), ag(), Bb(), bc(), $c(), Cb(), cc() (+40 more)
 
 ### Community 8 - "f"
-Cohesion: 0.08
-Nodes (42): Lg(), Yh(), B(), C(), D(), E(), f(), G() (+34 more)
+Cohesion: 0.06
+Nodes (54): 7.1 Concept: a rope on a conveyor, 7.2 Definitions, 7.3 Feed schedule (per strand `k`), 7.4 Why the split is top-only, and what it looks like, 7.5 The stream path Γ ("flow like water"), 7.6 The wreath lane (the ring), 7.7 Putting it together (per rope point), 7.8 Reversibility and numerics (+46 more)
 
 ### Community 9 - "PART A: PRODUCT REQUIREMENTS"
 Cohesion: 0.06
 Nodes (34): 0. How this PRD changes the directive (read first), 10. Performance, tiers, fallbacks, 11. Accessibility, i18n, content integrity, 13. Delivery plan and gates, 14. Risks and mitigations, 15. Open questions, 1. Experience narrative (storyboard), 2. Goals, non-goals, success criteria (+26 more)
 
-### Community 10 - "@react-three/fiber"
-Cohesion: 0.06
-Nodes (40): postprocessing, @react-three/fiber, @react-three/postprocessing, ShatterTransitionPassProps, PostFXProps, AcousticCameraRig(), AcousticCameraRigProps, AcousticStrings() (+32 more)
+### Community 10 - "react"
+Cohesion: 0.03
+Nodes (52): react, @react-three/postprocessing, PostFXProps, AcousticCameraRig(), AcousticCameraRigProps, AcousticStrings(), AcousticStringsProps, STRING_CONFIGS (+44 more)
 
 ### Community 11 - "useLocale"
-Cohesion: 0.13
-Nodes (27): date-fns, AgendaList(), AgendaListProps, CalendarEventJsonLdProps, CalendarView(), CalendarViewProps, EventModal(), EventModalProps (+19 more)
+Cohesion: 0.12
+Nodes (31): date-fns, AgendaList(), AgendaListProps, CalendarEventJsonLdProps, CalendarView(), CalendarViewProps, EventModal(), EventModalProps (+23 more)
 
 ### Community 12 - "ref_node_path"
-Cohesion: 0.06
-Nodes (30): OUT_DIR_DESKTOP, OUT_DIR_MOBILE, ROUTES, BROWN_HEXES, fileGroups, hits, regex, scanDir() (+22 more)
+Cohesion: 0.09
+Nodes (17): { chromium }, require, [root, route, away, query = ""], { chromium }, require, { chromium }, require, [root, outDir] (+9 more)
 
 ### Community 13 - "e"
-Cohesion: 0.11
-Nodes (30): 7.3 Feed schedule (per strand `k`), c(), ag(), Bf(), Cg(), Df(), Dg(), Ed() (+22 more)
+Cohesion: 0.09
+Nodes (37): c(), Ce(), Cg(), Df(), Gh(), Hc(), Hd(), Hh() (+29 more)
 
 ### Community 14 - "draco_decoder.js"
 Cohesion: 0.08
 Nodes (24): AttributeOctahedronTransform(), AttributeQuantizationTransform(), AttributeTransformData(), castObject(), Decoder(), DecoderBuffer(), destroy(), DracoFloat32Array() (+16 more)
 
 ### Community 15 - "fretMath.ts"
-Cohesion: 0.14
-Nodes (23): LandmarkGizmos(), StringGizmo(), anchorAt(), getStringWorldPosition(), Fretboard(), computeAllFrets(), computeAllInlays(), FretData (+15 more)
+Cohesion: 0.20
+Nodes (12): Fretboard(), computeAllFrets(), FretData, getCameraSpeed(), getNeckWidth(), InlayData, MAX_JOURNEY_S, SCALE_LENGTH (+4 more)
 
 ### Community 16 - "Rose.tsx"
-Cohesion: 0.22
-Nodes (17): CameraBody(), createCameraMaterials(), getLcdScreenTexture(), getLeatheretteTexture(), Compass(), createCompassMaterials(), DissolveUniforms, patchDissolveMaterial() (+9 more)
+Cohesion: 0.12
+Nodes (32): getDefaultContactOrigin(), GoldDustBurst(), GoldDustBurstProps, seededRandom(), CameraBody(), createCameraMaterials(), getLcdScreenTexture(), getLeatheretteTexture() (+24 more)
 
-### Community 17 - "FinaleFlare.tsx"
-Cohesion: 0.19
-Nodes (11): CameraRig(), easeInOutCubic(), interpolateKeyframes(), Keyframe, KEYFRAMES, FinaleFlare(), FinaleFlareProps, VolumetricSunburst() (+3 more)
+### Community 17 - "events-gen2/CameraRig.tsx"
+Cohesion: 0.23
+Nodes (9): CameraRig(), easeInOutCubic(), interpolateKeyframes(), Keyframe, KEYFRAMES, VolumetricSunburst(), VolumetricSunburstProps, scrollProgressStore (+1 more)
 
 ### Community 18 - "make-identity-lut.mjs"
-Cohesion: 0.09
-Nodes (26): content, dataLines, lines, png, raw, size, sizeMatch, applyHeritageGrade() (+18 more)
+Cohesion: 0.12
+Nodes (16): content, dataLines, lines, png, raw, size, sizeMatch, chunk() (+8 more)
 
 ### Community 19 - "generate-performer-glb.mjs"
 Cohesion: 0.06
 Nodes (32): bones, chest, clip, exporter, geometry, head, hips, hipsYValues (+24 more)
 
 ### Community 20 - "LinksClient.tsx"
-Cohesion: 0.12
-Nodes (19): InitiativesClient(), InitiativesPage(), metadata, CATEGORY, InstagramIcon(), LinkCard(), LinkCardProps, LinkCategory (+11 more)
+Cohesion: 0.14
+Nodes (16): CATEGORY, InstagramIcon(), LinkCard(), LinkCardProps, LinkCategory, LinksClient(), PREVIOUS_EVENT_ALBUMS, PreviousEventAlbum (+8 more)
 
-### Community 21 - "SceneRoot.tsx"
-Cohesion: 0.06
-Nodes (43): 1. Architectural Overview, 2. Core Tuning Constants (`heroTimeline.ts`), 3. String Physical Modeling (`GuitarString.tsx` & `pluckBus.ts`), 4. Master Scroll Choreography (`getHeroTimelineValues`), Vaaranam Aayiram Gallery Hero (v2 Architecture & Tuning Guide), CameraRig(), DustMotes(), seededRandom() (+35 more)
+### Community 21 - "@react-three/fiber"
+Cohesion: 0.05
+Nodes (46): postprocessing, @react-three/fiber, ShatterTransitionPassProps, FinaleFlareProps, LightingProps, AcousticStringsProps, STRING_CONFIGS, CameraRig() (+38 more)
 
 ### Community 22 - "Global Architecture — "One Canvas, One Clock""
 Cohesion: 0.06
@@ -436,56 +439,56 @@ Cohesion: 0.15
 Nodes (12): 1.1. The Creative Mandate, 1.2. The Reality: Two Generations of Visual Failures, 1. Executive Summary & The Arc of the Leo Initiative, 4. Side-by-Side Comparative Matrix: Generation 1 vs. Generation 2, 5. Deep Root-Cause Synthesis: Why Both Failed, 6. Strategic Roadmap: Concrete Solutions to Fix the Events Scene, 7. Diagnostic Harness & Verification Guide, Events Scene Animation: Architecture, Historical Evolution & Critical Audit (+4 more)
 
 ### Community 24 - "v"
-Cohesion: 0.15
-Nodes (45): $a(), Ad(), Bd(), Cd(), Cf(), Da(), Dd(), de() (+37 more)
+Cohesion: 0.14
+Nodes (41): $a(), Aa(), Ad(), ai(), Bd(), Cf(), $d(), Da() (+33 more)
 
 ### Community 25 - "PRD — Suggestions Hero: "The Kaththi War Room & Ohio Stadium Blueprint""
 Cohesion: 0.15
 Nodes (12): 1.1 Beyond Passive Suggestion Boxes, 1.2 The Solution: The Tactical War Room, 1. Creative Intent & Thematic Architecture, 2.1 The *Kaththi* Planning Headquarters Aesthetic, 2. Cinematic Homage & Memorabilia Easter Eggs, 3.1 Ohio Stadium Procedural Geometry (`OhioStadiumWireframe.ts`), 3.2 Holographic Line Construction Shader (`BlueprintScene3D.tsx`), 3. Mathematical & Geometric Wireframe Engineering (+4 more)
 
-### Community 26 - "strings/Strings.tsx"
-Cohesion: 0.12
-Nodes (16): recordStringPluck(), registerPluckHandlers(), StringEnergyModel, AnamorphicStreakShader, createKajiyaKayStringMaterial(), SingleStringUniforms, StringFragmentShader, StringVertexShader (+8 more)
+### Community 26 - "Gizmos.tsx"
+Cohesion: 0.29
+Nodes (10): LandmarkGizmos(), StringGizmo(), anchorAt(), getStringWorldPosition(), computeAllInlays(), getCameraS(), getFretS(), getStringHeight() (+2 more)
 
 ### Community 27 - "GopuramArtScene.tsx"
 Cohesion: 0.07
-Nodes (69): AddPart, bakeCache, buildCrown(), buildKnot(), buildRingFrame(), buildStoneworks(), buildTalaModule(), cachedGeometry() (+61 more)
+Nodes (68): AddPart, bakeCache, bakeChunk(), buildCrown(), buildKnot(), buildRingFrame(), buildStoneworks(), buildTalaModule() (+60 more)
 
 ### Community 28 - "CrowdField.tsx"
-Cohesion: 0.29
-Nodes (8): CrowdField(), CrowdLayerConfig, pseudoRand(), TextureStatus, SilhouetteBillboard(), SilhouetteBillboardProps, getMagentaCheckerTexture(), loadTextureWithFallback()
+Cohesion: 0.33
+Nodes (7): CrowdField(), CrowdLayerConfig, pseudoRand(), SilhouetteBillboard(), SilhouetteBillboardProps, getMagentaCheckerTexture(), loadTextureWithFallback()
 
 ### Community 29 - "basis_transcoder.js"
 Cohesion: 0.08
 Nodes (3): onComplete(), registerType(), sharedRegisterType()
 
 ### Community 30 - "CommandPalette.tsx"
-Cohesion: 0.05
-Nodes (50): 2023-10-11 - [ARIA Labels on Icon-Only Buttons], Navbar and command palette, HolographicCard(), HolographicCardProps, NanbaAvatar(), NanbaAvatarProps, ChatMessageUI, QUICK_PROMPTS (+42 more)
+Cohesion: 0.07
+Nodes (41): 2023-10-11 - [ARIA Labels on Icon-Only Buttons], Navbar and command palette, react-dom, RootLayout(), HolographicCard(), HolographicCardProps, NanbaAvatar(), NanbaAvatarProps (+33 more)
 
-### Community 31 - "StationSet.tsx"
+### Community 31 - "latheProfile"
 Cohesion: 0.09
-Nodes (43): archPoint(), buildHallRoof(), buildHallTruss(), strut(), Crowd(), Figure, figures(), CANOPY (+35 more)
+Nodes (42): ReflectionSource, assembly(), BODY_PROFILE, CholaCrownArt(), createCrownBody(), createDais(), createPedestal(), DUMMY (+34 more)
 
-### Community 32 - "masterTick.ts"
-Cohesion: 0.10
-Nodes (37): GlobalDebugHUD(), DomPlane(), DomPlaneProps, emptySubscribe(), ImageGridView(), ImageGridViewProps, PlanesScene(), useIsClient() (+29 more)
+### Community 32 - "registry.ts"
+Cohesion: 0.17
+Nodes (23): DomPlane(), DomPlaneProps, emptySubscribe(), ImageGridView(), ImageGridViewProps, PlanesScene(), useIsClient(), activePlanesSnapshot (+15 more)
 
-### Community 33 - "BlueprintSceneLegacy.tsx"
-Cohesion: 0.09
-Nodes (38): emptySubscribe(), useHeroStageVisibility(), VisibilityContext, PhotoTunnel(), PhotoTunnelProps, TunnelPlanes(), BlueprintScene3D(), BlueprintScene3DProps (+30 more)
+### Community 33 - "BlueprintScene3D.tsx"
+Cohesion: 0.29
+Nodes (10): BlueprintScene3D(), BlueprintScene3DProps, BlueprintSceneGL, BlueprintSceneLegacy, EphemeralPin, BlueprintSceneLegacyProps, BLUEPRINT_PINS, BlueprintPin (+2 more)
 
 ### Community 34 - "AazhamGame.tsx"
 Cohesion: 0.08
-Nodes (51): AazhamGame(), AazhamGameProps, GamePhase, AazhamPostDive(), AazhamPostDiveProps, getContrastRatio(), getLuminance(), hexToRgb() (+43 more)
+Nodes (50): AazhamGame(), AazhamGameProps, GamePhase, AazhamPostDive(), AazhamPostDiveProps, getContrastRatio(), getLuminance(), hexToRgb() (+42 more)
 
 ### Community 35 - "QuordleGame.tsx"
 Cohesion: 0.13
-Nodes (21): KurukkezhuthuPage(), metadata, metadata, NaankuSorkalPage(), MiniCrosswordGame(), BoardState, LetterEval, QuordleGame() (+13 more)
+Nodes (20): KurukkezhuthuPage(), metadata, metadata, NaankuSorkalPage(), MiniCrosswordGame(), BoardState, LetterEval, QuordleGame() (+12 more)
 
 ### Community 36 - "BlueprintSceneGL.tsx"
-Cohesion: 0.04
-Nodes (67): SceneProps, RenderMode, bindViewportResolution(), createLineGeometries(), createLineMaterial(), createLineUniforms(), Item, LINE_KIND (+59 more)
+Cohesion: 0.12
+Nodes (23): bindViewportResolution(), createLineUniforms(), createPaperMaterial(), createPaperUniforms(), PaperKind, PaperOptions, PaperUniforms, propContactSpots() (+15 more)
 
 ### Community 37 - "beachWorldBuild.ts"
 Cohesion: 0.06
@@ -493,7 +496,7 @@ Nodes (67): python, BREACH_MASONRY, BREACH_RUBBLE, BREACH_XS, FENCE, FENCE_DUST,
 
 ### Community 38 - "missilePath.ts"
 Cohesion: 0.06
-Nodes (54): BLAST_AGE_SPAN, BLAST_COUNT, BLAST_SEEDS, blastAge(), blastGrow(), blastHit(), buildBlastSeeds(), clamp01() (+46 more)
+Nodes (57): BlastFxSystem, BLAST_AGE_SPAN, BLAST_COUNT, BLAST_SEEDS, blastAge(), blastGrow(), blastHit(), buildBlastSeeds() (+49 more)
 
 ### Community 39 - "ramp.test.ts"
 Cohesion: 0.14
@@ -511,29 +514,29 @@ Nodes (19): eslintConfig, name, private, version, canvas-confetti, clsx, eslint,
 Cohesion: 0.11
 Nodes (8): controller, metricsAfterOptIn, metricsAfterUnlock, metricsCap, MockAudioContext, MockAudioNode, mockBusAudio, MockGainNode
 
-### Community 43 - "test-wreath-math.mjs"
-Cohesion: 0.17
-Nodes (17): cornerValues, p0, p1, seamError, testF, wBottomRight, wTarget, WREATH_PARAMS_LANDSCAPE (+9 more)
+### Community 43 - "homeHero.constants.ts"
+Cohesion: 0.11
+Nodes (24): cornerValues, p0, p1, seamError, testF, wBottomRight, wTarget, WREATH_BAND_WIDTH (+16 more)
 
 ### Community 44 - "sounds.ts"
 Cohesion: 0.13
 Nodes (11): elementCooldowns, playCtaThud(), playPillarHover(), playSilkSwish(), Magnetic(), MagneticProps, activeInstances, MagneticInstance (+3 more)
 
-### Community 45 - "gamesRail.ts"
-Cohesion: 0.10
-Nodes (27): failures, viewports, failures, VIEWPORTS, PORTRAIT_STANDOFF_SCALE, createCinematicFrame(), createHardware(), EyeglassHandRig() (+19 more)
+### Community 45 - "GamesFocusScene.tsx"
+Cohesion: 0.08
+Nodes (45): failures, viewports, failures, VIEWPORTS, heroProjection(), PORTRAIT_STANDOFF_SCALE, createLayeredFocusTargets(), disposeLayeredFocusTargets() (+37 more)
 
 ### Community 46 - "PRD — Gallery Hero: "Vaaranam Aayiram" Cinematic Journey (v2 Rebuild)"
 Cohesion: 0.08
 Nodes (23): 1.1 What v1 looks like, 1.2 Root causes, 1.3 Core creative diagnosis, 1. Problem statement, 2. Goals, non-goals, success criteria, 3.1 One-line pitch, 3.2 Mood, 3.3 Palette (tie into DESIGN.md tokens) (+15 more)
 
-### Community 47 - "mergeParts"
-Cohesion: 0.06
-Nodes (81): Look kit: `src/gl/art/` (read the files; they are short and documented), bakeChunk(), createStandingLampGeometry(), petalGeometry(), ReflectionSource, withLampLight(), assembly(), BODY_PROFILE (+73 more)
+### Community 47 - "StationSet.tsx"
+Cohesion: 0.07
+Nodes (66): ARCH_COLORS, archPoint(), buildCanopy(), buildCanopyColumn(), buildGableWall(), buildHallColumn(), buildHallRoof(), buildHallTruss() (+58 more)
 
-### Community 48 - "home/lab/page.tsx"
-Cohesion: 0.19
-Nodes (24): HomeLabPage(), LabConveyorController(), StrandVisualData, calcPeelLift(), calcStrandFeed(), calcWreathLaneLength(), easeSettle(), evalCamera() (+16 more)
+### Community 48 - "flowMath.ts"
+Cohesion: 0.31
+Nodes (13): calcCameraAlignedFrame(), calcPeelLift(), calcStrandFeed(), calcWreathLaneLength(), easeSettle(), evalCamera(), evalLaneRadius(), evalWreathPoint() (+5 more)
 
 ### Community 49 - "render-games-hybrid.py"
 Cohesion: 0.11
@@ -552,12 +555,12 @@ Cohesion: 0.17
 Nodes (21): buildKolamMesh(), buildParallelTransportTube(), CurvePoint3D, gridToLocal(), KolamGeometryBundle, mergeBufferGeometries(), sampleSegment(), smoothClosedCurve() (+13 more)
 
 ### Community 53 - "Games hero: hybrid cinematic production PRD"
-Cohesion: 0.08
-Nodes (25): 10. Performance and accessibility gates, 11. Implementation work packages, 13. Risks and prescribed responses, 14. Deliverables and stop boundary, 1. Product decision, 2. Current implementation and boundaries, 3. Audience and experience, 4. Creative and timing specification (+17 more)
+Cohesion: 0.06
+Nodes (34): 10. Performance and accessibility gates, 11. Implementation work packages, 12.1 Existing numeric gates, 12.2 Required new focused checks, 12.3 Browser and visual matrix, 12. Verification and acceptance, 13. Risks and prescribed responses, 14. Deliverables and stop boundary (+26 more)
 
 ### Community 54 - "PRD — Games Page v1.1 · The Sangam Arcade & Beach Blast Sequence"
-Cohesion: 0.08
-Nodes (25): Arcade sheet handoff, Defect log: v1 versus v1.1, Document control and what changed, Executive summary, launch plan and success gates, Fire, haze and the dissolve, Hero 2: world layout, Hero 6: portal push-through and handoff, Hero 7: master timeline and lens registration contract (+17 more)
+Cohesion: 0.04
+Nodes (48): Arcade sheet handoff, Aspect policy, Budgets, Defect log: v1 versus v1.1, Document control and what changed, Executive summary, launch plan and success gates, Fallbacks, Fire, haze and the dissolve (+40 more)
 
 ### Community 55 - "compilerOptions"
 Cohesion: 0.10
@@ -567,9 +570,9 @@ Nodes (19): compilerOptions, allowImportingTsExtensions, allowJs, esModuleIntero
 Cohesion: 0.11
 Nodes (17): aliases, components, hooks, lib, ui, utils, registries, @react-bits (+9 more)
 
-### Community 57 - "BoardHeroCanvas.tsx"
-Cohesion: 0.14
-Nodes (21): AlignmentBox(), GlowingDiamond(), InteractiveKnot(), SpikePage(), BoardDiagnostics(), BoardHeroCanvas(), BoardHeroCanvasProps, BoardSceneWarmup() (+13 more)
+### Community 57 - "isHeroCinematicEnabled"
+Cohesion: 0.05
+Nodes (62): zustand, AlignmentBox(), GlowingDiamond(), InteractiveKnot(), SpikePage(), BoardDiagnostics(), BoardHeroCanvas(), BoardHeroCanvasProps (+54 more)
 
 ### Community 58 - "SmoothScroll.tsx"
 Cohesion: 0.26
@@ -580,8 +583,8 @@ Cohesion: 0.15
 Nodes (17): ogl, diffuse(), DitherVeil(), DitherVeilProps, Fit, fitScale(), getBlueNoise(), hexToRgb() (+9 more)
 
 ### Community 60 - "DigitalKolamHero.tsx"
-Cohesion: 0.14
-Nodes (23): playCinematicWhoosh(), DigitalKolamHero(), DustMotes(), GoldenTamilEmblem(), heroCamDist(), heroPushT(), heroTiltDeg(), HeroTruckCamera() (+15 more)
+Cohesion: 0.13
+Nodes (25): playCinematicWhoosh(), CastEmblem(), DigitalKolamHero(), DustMotes(), GoldenTamilEmblem(), GroundedPulliPoints(), heroCamDist(), heroPushT() (+17 more)
 
 ### Community 61 - "getEvents.ts"
 Cohesion: 0.10
@@ -589,7 +592,7 @@ Nodes (31): dynamic, GET(), dynamic, GET(), dynamic, GET(), CALENDAR_API_KEY, CA
 
 ### Community 63 - "gamesData.ts"
 Cohesion: 0.11
-Nodes (24): legacyKeys, tanglishLengthsSeen, ThodarpuConnectionsProps, TIER_COLORS, BIWEEKLY_EDITION_IDS, BiweeklyEditionId, ConnectionsCategory, ConnectionsEdition (+16 more)
+Nodes (25): legacyKeys, tanglishLengthsSeen, ThodarpuConnectionsProps, TIER_COLORS, BIWEEKLY_EDITION_IDS, BiweeklyEditionId, ConnectionsCategory, ConnectionsEdition (+17 more)
 
 ### Community 65 - "ArcadeGameCard.tsx"
 Cohesion: 0.30
@@ -599,13 +602,13 @@ Nodes (15): ArcadeGameCard(), ArcadeGameCardProps, CholaCrownGlyph(), CrosswordG
 Cohesion: 0.12
 Nodes (15): audioControllerSrc, cameraRigSrc, cubeLines, forbiddenNewDeps, gradeStackSource, hasToneMappingInStack, identityCube, isScopedToOpen (+7 more)
 
-### Community 67 - "forgeGeometry.ts"
-Cohesion: 0.11
-Nodes (29): AISLE_FROM_Z, AISLE_HALF_WIDTH, backlightGantry(), BAY_Z, buildSteelwork(), COIN_POS, COIN_RADIUS, COLUMN_X (+21 more)
+### Community 67 - "useGradeLut.ts"
+Cohesion: 0.33
+Nodes (8): cache, createIdentityLut(), finishLut(), loadGradeLut(), loadStrip(), resolved, stripToVolume(), useGradeLut()
 
-### Community 68 - "useRenderMode"
-Cohesion: 0.12
-Nodes (28): Frozen Hero Context, chapterCopyState(), emptySubscribe(), GopuramCanvas, GopuramScene(), GopuramZScroll(), RingModalCard(), STAGE_RANGES (+20 more)
+### Community 68 - "BoardView.tsx"
+Cohesion: 0.15
+Nodes (20): BoardProps, BoardView(), BoardViewProps, StationViewScene(), StationViewSceneProps, BoardView, GuideHero(), noopSubscribe() (+12 more)
 
 ### Community 69 - "abort"
 Cohesion: 0.17
@@ -617,35 +620,35 @@ Nodes (6): opentype.js, fs, path, sharp, target, outputDir
 
 ### Community 72 - "CorridorTreadmill.tsx"
 Cohesion: 0.07
-Nodes (65): createFlameGeometry(), createFlameMaterial(), createFloorPoolGeometry(), createFloorPoolMaterial(), createFloorReflection(), createLampLightUniforms(), createSconceGeometry(), LAMP_PHASE() (+57 more)
+Nodes (67): createFlameGeometry(), createFlameMaterial(), createFloorPoolGeometry(), createFloorPoolMaterial(), createFloorReflection(), createLampLightUniforms(), createSconceGeometry(), createStandingLampGeometry() (+59 more)
 
 ### Community 73 - "blastFxSystem.ts"
-Cohesion: 0.13
-Nodes (19): SUN_COLOR, BLAST_FX_COUNTS, BLAST_FX_LIGHT_SCALE, dynamicInstanced(), FX_SKY_AMBIENT, FX_SUN_DIRECTION, FX_SUN_RADIANCE, instancedQuad() (+11 more)
+Cohesion: 0.14
+Nodes (18): BLAST_FX_COUNTS, BLAST_FX_LIGHT_SCALE, dynamicInstanced(), FX_SKY_AMBIENT, FX_SUN_DIRECTION, FX_SUN_RADIANCE, instancedQuad(), premultiplied (+10 more)
 
-### Community 74 - "ref_node_assert"
-Cohesion: 0.10
-Nodes (12): gov, Governor, s, Spring, breadcrumbSchema, facts, factsRaw, faqSchema (+4 more)
+### Community 74 - "validate-jsonld.mjs"
+Cohesion: 0.22
+Nodes (8): breadcrumbSchema, facts, factsRaw, faqSchema, gallerySchema, orgJson, orgSchema, websiteSchema
 
 ### Community 75 - "review-fixes.spec.ts"
-Cohesion: 0.09
-Nodes (30): 12. Debug and test tooling, dynamic, ipHits, isRateLimited(), POST(), DELETE(), dynamic, GET() (+22 more)
+Cohesion: 0.17
+Nodes (12): DELETE(), dynamic, GET(), POST(), isKnowledgeAdmin(), deleteKnowledgeItem(), getKnowledgeBase(), loadCustomKnowledge() (+4 more)
 
 ### Community 76 - "StationScene.tsx"
-Cohesion: 0.09
-Nodes (36): ChassisProps, createHeaderSignTexture(), GuideChassis(), BoardRoot(), BoardRootProps, ArtCoaches(), STATION_ART_FOG, WindowSpill() (+28 more)
+Cohesion: 0.10
+Nodes (33): GuideLabPage(), GuideLab(), GuideLabViewport(), LabScene(), WindowSpill(), GUIDE_STATION_FOG_DENSITY, guideStationPalette, RainStreaks() (+25 more)
 
-### Community 77 - "state.ts"
-Cohesion: 0.17
-Nodes (15): DebugHUD(), GalleryHero(), GuitarScene, STATIC_PHOTOS, StaticGalleryHero(), easterEggListeners, MotionTier, pluckChangeListeners (+7 more)
+### Community 77 - "Scene.tsx"
+Cohesion: 0.07
+Nodes (49): CraneCameraRig(), CraneCameraRigProps, easeInOutCubic(), portraitFov(), smootherstep(), AcousticSoundboard(), ArchivalPlanes(), CameraRig() (+41 more)
 
 ### Community 78 - "webhooks.ts"
-Cohesion: 0.13
-Nodes (22): guestbookDiscord, guestbookEmail, guestbookSlack, newsletterDiscord, newsletterEmail, suggestionDiscord, suggestionEmail, suggestionSlack (+14 more)
+Cohesion: 0.14
+Nodes (21): guestbookDiscord, guestbookEmail, guestbookSlack, newsletterDiscord, newsletterEmail, suggestionDiscord, suggestionEmail, suggestionSlack (+13 more)
 
 ### Community 79 - "lucide-react"
-Cohesion: 0.06
-Nodes (42): lucide-react, ErrorProps, ARCHIVE_ITEMS, DraggableMemoryArchive(), PolaroidArtifact, AatamMovementStudio(), MovementCard, MOVEMENTS (+34 more)
+Cohesion: 0.05
+Nodes (48): lucide-react, ErrorProps, ARCHIVE_ITEMS, DraggableMemoryArchive(), PolaroidArtifact, AatamMovementStudio(), MovementCard, MOVEMENTS (+40 more)
 
 ### Community 80 - "devDependencies"
 Cohesion: 0.12
@@ -656,44 +659,44 @@ Cohesion: 0.28
 Nodes (7): crc32(), crcTable, encodePNG(), createChunk(), OUT_DIR, pseudoRandom(), smoothNoise()
 
 ### Community 83 - "app/layout.tsx"
-Cohesion: 0.09
-Nodes (22): react-dom, anekTamil, azeretMono, cormorant, fragmentMono, halant, jetbrainsMono, kavivanar (+14 more)
+Cohesion: 0.05
+Nodes (38): EventPageProps, generateMetadata(), alt, contentType, size, anekTamil, azeretMono, cormorant (+30 more)
 
 ### Community 84 - "props.test.mjs"
 Cohesion: 0.16
 Nodes (3): createMockStrumMachine(), completeStrum(), updateScroll()
 
-### Community 85 - "GamesFocusScene.tsx"
-Cohesion: 0.08
-Nodes (30): BeachQuality, heroProjection(), Clock, gamesDiagnosticsEnabled, GamesGpuTimer, GamesRenderDiagnostics, GamesStage, TimerExtension (+22 more)
+### Community 85 - "LayeredFocusCompositor.ts"
+Cohesion: 0.10
+Nodes (13): BeachQuality, Clock, gamesDiagnosticsEnabled, GamesGpuTimer, GamesRenderDiagnostics, GamesStage, TimerExtension, blurFragment (+5 more)
 
 ### Community 86 - "seed.ts"
 Cohesion: 0.24
 Nodes (8): KolamPathPage(), metadata, KolamPathGame(), generateKolamPuzzle(), KolamCell, KolamPuzzle, getGamePrng(), hashString()
 
 ### Community 87 - "suggestion.ts"
-Cohesion: 0.15
-Nodes (17): submitSuggestion(), SuggestionActionState, SuggestionRecord, CATEGORIES, initialState, SubmitButton(), SuggestionForm(), SuggestionFormProps (+9 more)
+Cohesion: 0.14
+Nodes (19): submitSuggestion(), SuggestionActionState, SuggestionRecord, CATEGORIES, initialState, SubmitButton(), SuggestionForm(), SuggestionFormProps (+11 more)
 
 ### Community 88 - "Join Hero — "The Morning Campus""
 Cohesion: 0.15
 Nodes (12): 0. What changed from your directive, and why, 1.1 Frozen scope, 1.2 Film and IP, 1.3 Material that stays out, 1.4 Culture, 1. Guardrails, 2. Art direction, 3. Lighting Rig (Procedural Lightformer Environment) (+4 more)
 
-### Community 89 - "Workflow 2: Updating the Linktree (`/links` Bio Hub)"
-Cohesion: 0.10
-Nodes (19): 1. Master Event Record, 1. Navbar Upcoming Event Badge & Route, 1. Page Implementation File, 2. Event Photos & Assets, 2. Featured Upcoming Event Card (Top of Links Stack), 2. Homepage Next-Event Showcase (Hero & Dossier Section), 3. Left-Side 3D Dither-Veil Logo Asset Path, 3. Photo Carousel Archive (+11 more)
+### Community 89 - "Workflow 3: Adding a Past Event & Archiving"
+Cohesion: 0.14
+Nodes (13): 1. Master Event Record, 1. Navbar Upcoming Event Badge & Route, 2. Event Photos & Assets, 2. Homepage Next-Event Showcase (Hero & Dossier Section), 3. Left-Side 3D Dither-Veil Logo Asset Path, 3. Photo Carousel Archive, 4. Wiring the Bottom Google Photos Album External Link, 🎨 Design Engineering Ground Truth & Anti-Slop Directives (+5 more)
 
 ### Community 90 - "SceneView.tsx"
-Cohesion: 0.07
-Nodes (40): gradeDisabledByUrl(), hdrServer(), hdrSnapshot(), SceneGrade, SceneView(), SceneViewProps, Tier, RenderModeState (+32 more)
+Cohesion: 0.09
+Nodes (30): gradeDisabledByUrl(), hdrServer(), hdrSnapshot(), SceneGrade, SceneView(), SceneViewProps, HeroCinematicKey, reportGpuBytes() (+22 more)
 
 ### Community 91 - "BlastLab.tsx"
 Cohesion: 0.21
 Nodes (13): BlastLab(), HeroLens(), readQuery(), SKY_HORIZON, SkyDome(), Stage(), SUV_X, WALLS (+5 more)
 
 ### Community 92 - "storage.ts"
-Cohesion: 0.23
-Nodes (12): DailyGauntletStrip(), getDailyDateString(), ARCADE_GAME_SLUGS, ARCADE_GAMES_CATALOG, ArcadeStorageSchema, GameDailyRecord, GameStatus, GameStreakRecord (+4 more)
+Cohesion: 0.24
+Nodes (11): DailyGauntletStrip(), getDailyDateString(), ARCADE_GAME_SLUGS, ArcadeStorageSchema, GameDailyRecord, GameStatus, GameStreakRecord, getDailyGauntletSummary() (+3 more)
 
 ### Community 93 - "DESIGN_SYSTEM.md — The "Muttram" (Courtyard / முற்றம்) Design System"
 Cohesion: 0.17
@@ -703,17 +706,17 @@ Nodes (11): 1. System Foundation & Philosophy: The Open Courtyard, 2. DTCG Three
 Cohesion: 0.13
 Nodes (17): clampProgress(), findSegment(), focusSpline, GUIDE_BOARD_WORLD_POSITION, GUIDE_HERO_SCROLL_VH, GUIDE_RAIL_KEYFRAMES, GUIDE_STATION_TIME_OF_DAY, GuideRailFrame (+9 more)
 
-### Community 95 - "props/types.ts"
-Cohesion: 0.29
-Nodes (9): getDefaultContactOrigin(), GoldDustBurst(), GoldDustBurstProps, seededRandom(), HeroRefs, PropHandle, registerDustBurstHandler(), triggerDustBurst() (+1 more)
+### Community 95 - "chamferedBox"
+Cohesion: 0.16
+Nodes (25): AISLE_FROM_Z, AISLE_HALF_WIDTH, backlightGantry(), buildStageDrum(), buildSteelwork(), buildWalls(), DECK_Y, EMBLEM_POS (+17 more)
 
-### Community 96 - "perfProbe.ts"
-Cohesion: 0.09
-Nodes (24): attach(), BYTES_PER_TYPE, collectTextures(), detach(), estimateTextureMb(), isPerfProbeEnabled(), pendingQueries, PerfSample (+16 more)
+### Community 96 - "masterTick.ts"
+Cohesion: 0.07
+Nodes (36): O-1. Measure the actual hybrid cost before changing quality, GlobalDebugHUD(), getTextureMemoryUsage(), asks, governor, GovernorLevel, heroScrollProgress, resetMasterClock() (+28 more)
 
-### Community 97 - "docs/README.md"
-Cohesion: 0.14
-Nodes (11): 1. Three-Tier Token Architecture, 2. OKLCH Color Space: Official Logo & Festive Dravidian Palette, 3. Typography Hierarchy: Clash Display & Mukta Malar, 4. Motion Tokens & Physics Parameters, Core Pigment Palette (Primitives), Project Aintinai (ஐந்திணை) — Official Design System, The Five Landscape Themes (ஐந்திணை), 📂 Documentation Directory Map (+3 more)
+### Community 97 - "Project Aintinai (ஐந்திணை) — Official Design System & Token Ground Truth"
+Cohesion: 0.15
+Nodes (13): 1. Three-Tier Token Architecture, 2. Color Architecture: Kanchipuram Courtyard & Temple Stone, 3. Official Emblem Palette (Emblem Engine & Chromatic Accents), 4. Typography Hierarchy & Bilingual Standards, 5. Modern Motion Engineering & Physics Parameters, 6. Signature Cultural Components, Fluid Typography Scale (§7.1), Pillar 1: Sunlit Temple Neutrals (Courtyard & Editorial Grounds) (+5 more)
 
 ### Community 98 - "test-color-pipeline.mjs"
 Cohesion: 0.17
@@ -751,9 +754,9 @@ Nodes (12): 1. Join Hero — "The Morning Campus" (`/join`), 1b. Home and Board 
 Cohesion: 0.12
 Nodes (16): 15. Purpose and authority, 17. Decisions that must be locked, 18.1 One phase per context, 18.2 Inspect, propose, execute, prove, 18.3 Evidence, not confidence language, 18.4 Checkpoint artifacts, 18. Terra operating protocol, 20. Standing Terra controller prompt (+8 more)
 
-### Community 108 - "soundEngine.ts"
-Cohesion: 0.10
-Nodes (11): armAudioUnlock(), audio, AudioController, PlayOpts, SoundId, buckets, AazhamInputBarProps, AudioProvider() (+3 more)
+### Community 108 - "AudioController.ts"
+Cohesion: 0.17
+Nodes (7): armAudioUnlock(), audio, AudioController, PlayOpts, SoundId, buckets, AudioProvider()
 
 ### Community 109 - "wireframe.ts"
 Cohesion: 0.20
@@ -763,21 +766,21 @@ Nodes (13): applyWireToObject(), applyWireToScene(), DiagnosticMaterials, getDia
 Cohesion: 0.15
 Nodes (12): typescript, assert, checkModuleScopeGpu(), checkSource(), visit(), failures, fs, inspect() (+4 more)
 
-### Community 111 - "service.ts"
-Cohesion: 0.22
-Nodes (15): dynamic, isLikelyBot(), POST(), runtime, dynamic, GET(), runtime, createDailyVisitorHash() (+7 more)
+### Community 111 - "Providers.tsx"
+Cohesion: 0.09
+Nodes (30): 12. Debug and test tooling, 4.1 One callback, explicit order, 4.2 R3F on the same clock, 4.3 Frame governor, 4.4 Scroll and route behaviour, 4. Phase 2 — The master ticker, 16. Repository reconciliation snapshot (2026-10-05), 19. Phased execution map (+22 more)
 
-### Community 112 - "seo/JsonLd.tsx"
-Cohesion: 0.05
-Nodes (60): AboutPage(), metadata, BoardPage(), metadata, DancePage(), metadata, EventsPage(), metadata (+52 more)
+### Community 112 - "next"
+Cohesion: 0.04
+Nodes (67): nextConfig, next, AboutPage(), metadata, BoardPage(), metadata, DancePage(), metadata (+59 more)
 
-### Community 113 - "Scene.tsx"
-Cohesion: 0.14
-Nodes (18): SangamStudioEnvironment(), AcousticSoundboard(), ArchivalPlanes(), LightingRig(), HeroCanvas(), Scene(), SceneRegistrar(), SceneWarmup() (+10 more)
+### Community 113 - "GuideClient.tsx"
+Cohesion: 0.16
+Nodes (15): categorySlug(), FaqPage(), DEFAULT_OPEN_FAQS, GuideFilterCategory, FaqAccordion(), FaqAccordionProps, FaqCategoryNav(), FaqCategoryNavProps (+7 more)
 
 ### Community 114 - "three"
-Cohesion: 0.12
-Nodes (28): three, vitest, CholaCrown3DProps, GLINT_DUMMY, KolamRosetteAbaloneShader, SunburstSoundboardShader, FRAME_TRANSFORMS, KODACHROME_PHOTOS (+20 more)
+Cohesion: 0.09
+Nodes (35): three, vitest, CholaCrown3D(), CholaCrown3DProps, CholaCrownFiligreeGlints(), GLINT_DUMMY, KolamRosetteAbaloneShader, SunburstSoundboardShader (+27 more)
 
 ### Community 115 - "Guide Hero v3 — Phase 2 checkpoint"
 Cohesion: 0.20
@@ -788,14 +791,14 @@ Cohesion: 0.08
 Nodes (24): 1. Executive Summary & SEO Scorecard, 2.1 Single Source of Truth (SSOT): [`src/lib/seo.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/lib/seo.ts), 2.2 XML Sitemap (`/sitemap.xml`): [`src/app/sitemap.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/sitemap.ts), 2.3 Crawler Directives (`/robots.txt`): [`src/app/robots.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/robots.ts), 2.4 RSS Syndication Feed (`/feed.xml`): [`src/app/feed.xml/route.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/feed.xml/route.ts), 2.5 Progressive Web App Manifest (`/manifest.webmanifest`): [`src/app/manifest.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/app/manifest.ts), 2. Technical SEO Architecture, 3.1 Organization & Collegiate Binding (`RootGraphJsonLd`) (+16 more)
 
 ### Community 117 - "Figma Agent Design Specification: Content Pages Renovation & Optimization"
-Cohesion: 0.29
-Nodes (7): 1. Executive Directive & Scope Boundary, 3. The Hero-to-Content Seam Architecture, 6. Responsive Auto-Layout Rules & Breakpoints, 7. Content Tone of Voice & Copywriting Directives, Figma Agent Design Specification: Content Pages Renovation & Optimization, Mobile Quality Gates, OSU Tamil Sangam Digital Presence · Frontend Redesign Directive
+Cohesion: 0.14
+Nodes (13): 1. Executive Directive & Scope Boundary, 2.1 Perceptually Uniform OKLCH Color Palette, 2.2 Content Page Surface Hierarchy (The Atmosphere Tokens), 2.3 Strict Typography Stack & Sizing Scales, 2.4 Banned Anti-Patterns ("Anti-Slop" Checklist for Figma), 2. Global Design Foundations & Token Architecture, 3. The Hero-to-Content Seam Architecture, 6. Responsive Auto-Layout Rules & Breakpoints (+5 more)
 
 ### Community 118 - "verify-contrast.mjs"
 Cohesion: 0.27
 Nodes (7): audit(), getEffectiveBg(), getLuminance(), parseColor(), sRGBtoLin(), getLuminance(), ROUTES
 
-### Community 119 - "getPuzzleNumber"
+### Community 119 - "generateShareCard"
 Cohesion: 0.30
 Nodes (9): metadata, SpellingBeePage(), SpellingBeeGame(), BeeHoneycomb, BeeWord, getDailyHoneycomb(), getRankTitle(), SPELLING_BEE_BANKS (+1 more)
 
@@ -803,9 +806,9 @@ Nodes (9): metadata, SpellingBeePage(), SpellingBeeGame(), BeeHoneycomb, BeeWord
 Cohesion: 0.32
 Nodes (8): addOnPostRun(), addOnPreRun(), callRuntimeCallbacks(), initRuntime(), postRun(), preRun(), run(), doRun()
 
-### Community 122 - "useTier"
-Cohesion: 0.08
-Nodes (35): 16. Repository reconciliation snapshot (2026-10-05), Loading(), MotionContext, MotionContextValue, MotionProvider(), Providers(), TierContext, TierContextValue (+27 more)
+### Community 122 - "TransitionProvider.tsx"
+Cohesion: 0.15
+Nodes (16): Loading(), useTierContext(), getSceneIdForPath(), TransitionContext, TransitionContextValue, TransitionProvider(), KolamLoader(), KolamLoaderProps (+8 more)
 
 ### Community 123 - "kolamGeometry.ts"
 Cohesion: 0.32
@@ -831,29 +834,29 @@ Nodes (47): 0. Executive summary, 10. Scene budget summary, 11. Delivery plan an
 Cohesion: 0.36
 Nodes (7): ApprovedDesign, KOLAM_L_DESIGN, KOLAM_R_DESIGN, SideKolamProps, SideKolamsGroup(), TileType, heroDirectorState
 
-### Community 129 - "generateShareCard"
+### Community 129 - "getPuzzleNumber"
 Cohesion: 0.31
-Nodes (8): metadata, PaadalKandupidiPage(), HeardleGame(), UNLOCK_SECONDS, getDailyPaadal(), PAADAL_TRACKS, PaadalTrack, generateShareCard()
+Nodes (8): metadata, PaadalKandupidiPage(), HeardleGame(), UNLOCK_SECONDS, getDailyPaadal(), PAADAL_TRACKS, PaadalTrack, getPuzzleNumber()
 
 ### Community 130 - "GamesHeroCanvas.tsx"
-Cohesion: 0.17
-Nodes (18): gamesBeachQuality(), GamesHeroCanvas(), GAMES_POSTERS, posterBeatAt(), posterUrl(), getDebugScrollProgress(), clamp(), ease() (+10 more)
+Cohesion: 0.18
+Nodes (17): gamesBeachQuality(), GamesHeroCanvas(), GAMES_POSTERS, posterBeatAt(), posterUrl(), getDebugScrollProgress(), clamp(), ease() (+9 more)
 
 ### Community 131 - "scripts"
 Cohesion: 0.22
 Nodes (9): scripts, build, dev, lint, prebuild, start, test, test:guide-board (+1 more)
 
 ### Community 132 - "Flagship Event Theming Engine & Seasonal Swap Protocol"
-Cohesion: 0.29
-Nodes (6): Flagship Event Theming Engine & Seasonal Swap Protocol, Seasonal Color Palettes Reference, Step 1: Add High-Contrast Silhouette Asset, Step 2: Update `config/upcomingEvent.ts`, Step 3: Verify & Deploy, The Effortless Seasonal Swap Protocol
+Cohesion: 0.25
+Nodes (7): Architecture Overview, Flagship Event Theming Engine & Seasonal Swap Protocol, Seasonal Color Palettes Reference, Step 1: Add High-Contrast Silhouette Asset, Step 2: Update `config/upcomingEvent.ts`, Step 3: Verify & Deploy, The Effortless Seasonal Swap Protocol
 
 ### Community 133 - "Master Product Requirements Document & Technical Architecture Ground Truth"
-Cohesion: 0.10
-Nodes (20): 0. Master Subsystem Implementation Matrix, 10. Performance Budgets, Core Web Vitals & Draw Call Limits, 11. Accessibility (a11y) & WCAG 2.1 AA Compliance Architecture, 12. Privacy, Student Data Protection & Media Rights Compliance, 13. Operational Runbook, Developer CLI & Automated Test Harness, 14. Repository Architecture & Structural Map, 3. The Master Cinematic & Pop-Culture Easter Egg Compendium, 4.1 Digital Kolam Weaving & Parabolic Peel Vertex Shader (+12 more)
+Cohesion: 0.22
+Nodes (9): 10. Performance Budgets, Core Web Vitals & Draw Call Limits, 11. Accessibility (a11y) & WCAG 2.1 AA Compliance Architecture, 12. Privacy, Student Data Protection & Media Rights Compliance, 13. Operational Runbook, Developer CLI & Automated Test Harness, 14. Repository Architecture & Structural Map, 7.1 Grapheme Cluster Integrity Protocol, 7.2 Typography Tokens & Loading Strategy, 7. Tamil Text Engineering & Typography System (+1 more)
 
-### Community 134 - "Performer.tsx"
-Cohesion: 0.29
-Nodes (9): extendLoader(), findBone(), FOREARM_BONES, GLTFLoaderWithExtensions, HAND_BONES, Performer(), PerformerProps, BacklitRim (+1 more)
+### Community 134 - "GlobalCanvas.tsx"
+Cohesion: 0.07
+Nodes (31): Deferred work, Delivered, Guide Hero v3 — Phase 0B checkpoint, Important findings, Locked decisions, Required decision before Phase 1, Verification, Frame evidence (+23 more)
 
 ### Community 135 - "contracts.ts"
 Cohesion: 0.14
@@ -884,8 +887,8 @@ Cohesion: 0.19
 Nodes (18): SolluWordle(), SolluWordleProps, TileStatus, VICTORY_APPRAISALS, ThodarpuConnections(), SolluEdition, TANG_ENGLISH_VALID_DICTIONARY, getArcadeStorage() (+10 more)
 
 ### Community 142 - "PART A: PRODUCT REQUIREMENTS"
-Cohesion: 0.04
-Nodes (48): 0. Why this document exists, 10.1 Feel, 10.2 Parameter table (all live-tunable in the lab), 10.3 Composition rules (normative, tune parameters to hit them), 10.4 Kural fit, 10. Motion quality rules and composition targets, 11. Fallbacks, 12.1 Unit tests on `flowMath.ts` / `pathBuilder.ts` (+40 more)
+Cohesion: 0.05
+Nodes (40): 0. Why this document exists, 10.1 Feel, 10.2 Parameter table (all live-tunable in the lab), 10.3 Composition rules (normative, tune parameters to hit them), 10.4 Kural fit, 10. Motion quality rules and composition targets, 11. Fallbacks, 12.1 Unit tests on `flowMath.ts` / `pathBuilder.ts` (+32 more)
 
 ### Community 143 - "projectionMath.ts"
 Cohesion: 0.12
@@ -900,20 +903,20 @@ Cohesion: 0.29
 Nodes (6): Accessibility and lifecycle audit, Delivered, Gate request, Guide Hero v3 - Phase 5 checkpoint, Measured/known limits, Verification
 
 ### Community 146 - "Renovated Post-Hero Content Specifications"
-Cohesion: 0.20
-Nodes (9): Page 1: About & Mission (`/about`), Renovated Post-Hero Content Specifications, Zone 1: Section Header (`CourtyardHeader`), Zone 2: Central River Timeline (`FlowingRiverTimeline`), Zone 3: Campus Collaborators & Partners Grid, Zone 4: Inter-Page Route Gateway (`OrganicRouteGateway`), FlowingRiverTimeline(), FlowingRiverTimelineProps (+1 more)
+Cohesion: 0.22
+Nodes (8): Renovated Post-Hero Content Specifications, Zone 1: Section Header (`CourtyardHeader`), Zone 2: Central River Timeline (`FlowingRiverTimeline`), Zone 3: Campus Collaborators & Partners Grid, Zone 4: Inter-Page Route Gateway (`OrganicRouteGateway`), FlowingRiverTimeline(), FlowingRiverTimelineProps, TimelineMilestone
 
-### Community 147 - "Renovated Post-Hero Content Specifications"
-Cohesion: 0.33
-Nodes (6): Frozen Hero Context, Page 5: Student Guide & FAQ (`/guide`), Renovated Post-Hero Content Specifications, Zone 1: Real-time Search & Filter Links, Zone 2: Open Book / Ola-chuvadi Q&A Accordion, Zone 3: "Still Got Questions?" Help Hub
+### Community 147 - "4. Page-by-Page Content Renovation Wireframe Specs"
+Cohesion: 0.11
+Nodes (19): 4. Page-by-Page Content Renovation Wireframe Specs, Frozen Hero Context, Frozen Hero Context, Frozen Hero Context, Page 1: About & Mission (`/about`), Page 5: Student Guide & FAQ (`/guide`), Page 6: Join & Student Onboarding (`/join`), Page 7: Initiatives & Campus Hubs (`/initiatives`) (+11 more)
 
 ### Community 148 - "Join Hero — "The Morning Campus" (`/join`)"
 Cohesion: 0.33
 Nodes (5): Join Hero — "The Morning Campus" (`/join`), String 1: "வாங்க நண்பா", String 2: "அனைத்தும் நலம்" / "ALL IS WELL", String 3: "ஓஹியோ தமிழ் சங்கம்", Tamil Typography and Cultural Strings Audit
 
-### Community 149 - "GameShell"
-Cohesion: 0.27
-Nodes (9): GameDrawer(), GameDrawerProps, GameShell(), GameShellProps, HowToPlayModal(), HowToPlayModalProps, copyToClipboard(), ShareCardPayload (+1 more)
+### Community 149 - "framer-motion"
+Cohesion: 0.06
+Nodes (29): framer-motion, GlowingKolamField(), ParallaxScatterProps, PRINT_PROFILES, AazhamPressureGaugeProps, CornerUtilityDrawer(), CornerUtilityDrawerProps, CourtyardPhotoCardProps (+21 more)
 
 ### Community 150 - "createWasm"
 Cohesion: 0.22
@@ -935,53 +938,53 @@ Nodes (9): ArasigalPage(), metadata, ArasigalGame(), CellMark, applyArasigalIsom
 Cohesion: 0.24
 Nodes (14): buildContactSheetSvg(), indexToConfig(), renderCandidateSvg(), runDesignSearch(), TILES, solveAlternatingWeave(), SideKolam(), expandFundamentalDomain() (+6 more)
 
-### Community 155 - "Review Focus"
+### Community 155 - "service.ts"
 Cohesion: 0.20
-Nodes (10): Review Focus, Task 1: Milestone 1 — Validated Games Data, Tamil Grapheme Splitter, Dictionary & Data Gate (D-11, D-12, D-13), Task 2: Milestone 2 — Lens-Shifted Projection Math & Parity / Registration Scripts (D-01, D-02, D-03, D-05), Task 3: Milestone 3 — Calibrated J1 Coastal Compound Scene (D-09), Task 4: Milestone 4 — 1:1 Foreground Eyeglasses & Sun-Bronzed Hand Rig (D-03, D-10), Task 5: Milestone 5 — Layered Focus Compositor & Sunblast Grade Profile (D-08), Task 6: Milestone 6 — Scrubbable Missile Contrails, Fireballs & Dual-Rail Portal (D-04, D-06, D-07), Task 7: Milestone 7 — NYT-Style Sangam Arcade Hub, Sollu & Thodarpu (+2 more)
+Nodes (15): dynamic, isLikelyBot(), POST(), runtime, dynamic, GET(), runtime, createDailyVisitorHash() (+7 more)
 
-### Community 156 - "3.2. Inner Workings & Mathematical Implementation"
+### Community 156 - "blueprintProps.ts"
+Cohesion: 0.14
+Nodes (16): buildProps(), E, GROUP, LOCAL, ONE, place(), Placement, PROP_LAYOUT (+8 more)
+
+### Community 158 - "home/lab/page.tsx"
 Cohesion: 0.20
-Nodes (10): 3.1. Overview & Architectural Intent, 3.2. Inner Workings & Mathematical Implementation, 3.3. Detailed Results & Why Generation 2 Looked Horrible, 3. Generation 2: The 7-Phase Silhouette & Selective Bloom Overhaul, A. Selective Bloom & The Layer-1 Isolation Pipeline (`Lighting.tsx`, `PostFX.tsx`), B. The Hero Silhouette Billboard (`SilhouetteBillboard.tsx`), C. The 3-Tier Depth Crowd Field (`CrowdField.tsx`), D. The Volumetric Sunburst Radial Shader (`VolumetricSunburst.tsx`) (+2 more)
-
-### Community 158 - "pathBuilder.ts"
-Cohesion: 0.17
-Nodes (21): GroundedPulliPoints(), PeelAndFlowKolamMesh(), PowderKolam(), TubeKolam(), calcCameraAlignedFrame(), buildCompositePath(), buildPathTextureBundle(), buildResampledStrand() (+13 more)
+Nodes (22): HomeLabPage(), LabConveyorController(), StrandVisualData, PeelAndFlowKolamMesh(), PowderKolam(), TubeKolam(), STRAND_COUNT, getAct3Start() (+14 more)
 
 ### Community 159 - "Authentic Side Kolams Architectural Review & Verification"
 Cohesion: 0.40
 Nodes (4): 1. Mathematical & Topological Ground Truth, 2. Geometry Engine Implementation, 3. Verification & Test Evidence, Authentic Side Kolams Architectural Review & Verification
 
-### Community 160 - "PRD — Board Hero: "Chola Darbar Corridor" (Imperial Assembly)"
-Cohesion: 0.14
-Nodes (13): 1.1 The Problem with Conventional Board Directories, 1.2 The Solution: The Chola Darbar, 1. Creative Intent & Philosophical Genesis, 2.1 The *Ponniyin Selvan* Homage, 2.2 The Imperial Chola Royal Crown (*Karanda Makuta* — கரண்ட மகுடம்), 2. Cinematic Connections & Literary Homage, 3.1 Procedural Cloth Wave Shader (`TapestryPortrait.tsx`), 3.2 Floating Agal Vilakku Flame Physics (`OilLamp.tsx`) (+5 more)
+### Community 160 - "heroes/README.md"
+Cohesion: 0.08
+Nodes (21): 1.1 The Problem with Conventional Board Directories, 1.2 The Solution: The Chola Darbar, 1. Creative Intent & Philosophical Genesis, 2.1 The *Ponniyin Selvan* Homage, 2.2 The Imperial Chola Royal Crown (*Karanda Makuta* — கரண்ட மகுடம்), 2. Cinematic Connections & Literary Homage, 3.1 Procedural Cloth Wave Shader (`TapestryPortrait.tsx`), 3.2 Floating Agal Vilakku Flame Physics (`OilLamp.tsx`) (+13 more)
 
-### Community 161 - "timeline.test.mjs"
-Cohesion: 0.36
-Nodes (6): createMockGuardedTriggerState(), setProgress(), setVelocity(), trigger(), ERA_RANGE, PROP_TWEENS
+### Community 161 - "ref_node_fs"
+Cohesion: 0.12
+Nodes (11): OUT_DIR_DESKTOP, OUT_DIR_MOBILE, ROUTES, BROWN_HEXES, fileGroups, hits, regex, scanDir() (+3 more)
 
-### Community 162 - "GlobalCanvas.tsx"
-Cohesion: 0.06
-Nodes (35): 4.1 One callback, explicit order, 4.2 R3F on the same clock, 4.3 Frame governor, 4.4 Scroll and route behaviour, 4. Phase 2 — The master ticker, Deferred work, Delivered, Guide Hero v3 — Phase 0B checkpoint (+27 more)
+### Community 162 - "chatEngine.ts"
+Cohesion: 0.23
+Nodes (11): dynamic, ipHits, isRateLimited(), POST(), BASELINE_KNOWLEDGE, KnowledgeItem, answerQuestion(), ChatMessage (+3 more)
 
 ### Community 163 - "PRD — Join Hero: "The Morning Campus Courtyard Gates & Leaf Drift""
 Cohesion: 0.14
 Nodes (13): 1.1 The Anxiety of Arriving on Campus, 1.2 The Solution: The Open Morning Gates, 1. Creative Intent & Emotional Architecture, 2.1 The Buckeye & Madurai Jasmine Confluence (`LeafDrift.tsx`), 2.2 Collegiate Cinematic Nostalgia, 2. Cultural Metaphor & Cinematic Homage, 3.1 Procedural Hinge Kinematics (`CampusGate.tsx`), 3.2 Dual-Texture Atlas Leaf Shader (`LeafDrift.tsx`) (+5 more)
 
 ### Community 164 - "3. Detailed Page Intent & Narrative Architecture"
-Cohesion: 0.12
-Nodes (17): 1. Executive Philosophy: Why Tamil Cinema & Literature Anchor Our Campus Identity, 2. Master Hero Subsystem Matrix, 3.1 Home (`/`): The Digital Kolam & Thirukkural Genesis, 3.2 Events (`/events`): The Leo Factory Concert Arena, 3.3 About (`/about`): The 5-Tala Gopuram Z-Scroll, 3.4 Board (`/board`): The Ponniyin Selvan Chola Darbar Corridor, 3.5 Gallery (`/gallery`): The Vaaranam Aayiram 24-Fret Acoustic Highway, 3.6 Guide (`/guide`): The Alaipayuthey Blue Hour Railway Station (+9 more)
+Cohesion: 0.22
+Nodes (9): 3.1 Home (`/`): The Digital Kolam & Thirukkural Genesis, 3.2 Events (`/events`): The Leo Factory Concert Arena, 3.3 About (`/about`): The 5-Tala Gopuram Z-Scroll, 3.4 Board (`/board`): The Ponniyin Selvan Chola Darbar Corridor, 3.5 Gallery (`/gallery`): The Vaaranam Aayiram 24-Fret Acoustic Highway, 3.6 Guide (`/guide`): The Alaipayuthey Blue Hour Railway Station, 3.7 Suggestions (`/suggestions`): The Kaththi War Room & Ohio Stadium 3D Blueprint, 3.8 Join (`/join`): The Morning Campus Courtyard Gates & Leaf Drift (+1 more)
 
 ### Community 165 - "2. Exhaustive Route Specifications & Cinematic Easter Eggs"
-Cohesion: 0.14
-Nodes (14): 2.10 `/initiatives` — Campus Hubs, Cultural Pillars & Art Forms, 2.11 `/links` — Native High-Performance Linktree Replacement, 2.12 `/privacy` — Zero-Cookie Anonymous FAQ Engagement Policy, 2.13 Global Overlays & Modals, 2.1 `/` — Home (முகப்பு): Digital Kolam Conveyor & Thirukkural Genesis, 2.2 `/events` — Events (நிகழ்வுகள்): The Leo Concert Arena Gen 3, 2.3 `/about` — About (அறிமுகம்): 5-Tala Gopuram Z-Scroll Fly-Through, 2.4 `/board` — Board (அவை): Ponniyin Selvan Chola Darbar Corridor (+6 more)
-
-### Community 166 - "AGENTS.md"
 Cohesion: 0.15
-Nodes (10): Evidence and completion, Styling authority and reuse, Tamil, accessibility, and motion, Tamil Sangam OSU — shared agent guidance, This is NOT the Next.js you know, Working agreement, 1. Protected Primitives, 2. Token Discipline (+2 more)
+Nodes (13): 2.10 `/initiatives` — Campus Hubs, Cultural Pillars & Art Forms, 2.11 `/links` — Native High-Performance Linktree Replacement, 2.12 `/privacy` — Zero-Cookie Anonymous FAQ Engagement Policy, 2.13 Global Overlays & Modals, 2.1 `/` — Home (முகப்பு): Digital Kolam Conveyor & Thirukkural Genesis, 2.2 `/events` — Events (நிகழ்வுகள்): The Leo Concert Arena Gen 3, 2.3 `/about` — About (அறிமுகம்): 5-Tala Gopuram Z-Scroll Fly-Through, 2.4 `/board` — Board (அவை): Ponniyin Selvan Chola Darbar Corridor (+5 more)
 
-### Community 167 - "BeachLabCanvas.tsx"
-Cohesion: 0.29
-Nodes (7): BeachLabCanvas(), LabRig(), LabStats, readParams(), Window, BeachLabCanvas, GamesBeachLabPage()
+### Community 166 - "Tamil Sangam OSU — shared agent guidance"
+Cohesion: 0.40
+Nodes (5): Evidence and completion, Styling authority and reuse, Tamil, accessibility, and motion, Tamil Sangam OSU — shared agent guidance, Working agreement
+
+### Community 167 - "rateLimit.ts"
+Cohesion: 0.43
+Nodes (5): checkRateLimit(), MAX_REQUESTS, RATE_LIMIT_WINDOW, rateLimitMap, runRateLimitUnitTests()
 
 ### Community 168 - "ScrollExpand.tsx"
 Cohesion: 0.70
@@ -995,9 +998,9 @@ Nodes (4): CLUB_ACTIVITIES, CLUB_PURPOSE, GovernanceRule, MEMBERSHIP_GOVERNANCE
 Cohesion: 0.40
 Nodes (3): CONSONANT_MAP, VOWEL_DEPENDENT_SIGNS, VOWEL_INDEPENDENT
 
-### Community 171 - "19. Phased execution map"
-Cohesion: 0.22
-Nodes (9): 19. Phased execution map, Phase 0 — Read-only audit and integration design, Phase 0B — Regression harness and skeleton, Phase 1 — Token lock and static environment, Phase 2 — Window, silhouettes, and lighting, Phase 3 — Camera rail and reversible choreography, Phase 4 — Popular FAQ contract and data adapter, Phase 5 — Fallbacks, performance, accessibility, and hand-off (+1 more)
+### Community 171 - "GameShell"
+Cohesion: 0.24
+Nodes (10): GameDrawer(), GameDrawerProps, GameShell(), GameShellProps, HowToPlayModal(), HowToPlayModalProps, copyToClipboard(), ShareCardPayload (+2 more)
 
 ### Community 172 - "KolamKnotCurve"
 Cohesion: 0.12
@@ -1008,32 +1011,32 @@ Cohesion: 0.15
 Nodes (12): 1.1 The Curse of the Monolithic Photo Grid, 1.2 The Solution: The Curated Sunlit Dossier, 1. Creative Intent & Editorial Architecture, 2.1 The Fisher-Yates Server Engine, 2. Server-Side Randomizer Architecture, 3.1 SplitText Letterpress Emergence (`SplitText.tsx`), 3.2 ParallaxScatter Light Table (`ParallaxScatter.tsx`), 3.3 Magnetic Vault Door Gateway (`VaultGateway.tsx`) (+4 more)
 
 ### Community 174 - "guideStore.ts"
-Cohesion: 0.16
-Nodes (15): GuideClientProps, FaqAccordionProps, BoardContentItem, GuideHeroProps, DEFAULT_BOARD_ITEM, GuideSource, GuideStoreState, initialPopularRanking (+7 more)
+Cohesion: 0.18
+Nodes (13): GuideClientProps, BoardContentItem, GuideHeroProps, DEFAULT_BOARD_ITEM, GuideSource, GuideStoreState, initialPopularRanking, useGuideStore (+5 more)
 
-### Community 175 - "2.2. Inner Workings & Mathematical Implementation"
-Cohesion: 0.22
-Nodes (9): 2.1. Overview & Architectural Intent, 2.2. Inner Workings & Mathematical Implementation, 2.3. Detailed Results & Why Generation 1 Failed, 2. Generation 1: The Industrial Cauldron & 8,000 Dancers, A. The Industrial Cauldron & Timber Platform (`DaturaCauldron.tsx`), B. The Extruded SVG Silhouette & Shoulder Joint (`CinematicSilhouette.tsx`), C. The 8,000-Dancer Instanced Simulation (`CrowdInstancedSimulation.tsx`), D. The Lighting Environment & "The God Light" (`ArenaLightingEnvironment.tsx`) (+1 more)
+### Community 175 - "cells.tsx"
+Cohesion: 0.21
+Nodes (10): charToGlyph(), makeAtlas(), createCellGeometry(), createCellMaterial(), CellsProps, FlapCells(), MAX_CELLS, Window (+2 more)
 
 ### Community 176 - "PRD — Events Hero: "The Leo Concert Arena Gen 3""
 Cohesion: 0.15
 Nodes (12): 1.1 The Stagnation of Event Calendars, 1.2 The Solution: The Theatrical Arena, 1. Creative Intent & Thematic Architecture, 2.1 The *Leo* (2023) Factory Sequence, 2. Cinematic Homage & Film Easter Eggs, 3.1 128 BPM Harmonic Vertex Shader (`JumpingCrowdSilhouettes.tsx`), 3.2 Stochastic Phone Torch Twinkle (`PhoneTorches.tsx`), 3. Kinematic Architecture & Scroll Progression (+4 more)
 
-### Community 177 - "DogTags.tsx"
-Cohesion: 0.50
-Nodes (6): createDogTagShape(), createDogTagsMaterials(), createSilencerShape(), DogTags(), getDogTagBumpMap(), getDogTagTexture()
+### Community 177 - "blueprintLines.ts"
+Cohesion: 0.18
+Nodes (12): createLineGeometries(), createLineMaterial(), Item, LINE_KIND, LineBatch, LineKind, LinePalette, LinePriority (+4 more)
 
 ### Community 178 - "timeline.ts"
 Cohesion: 0.24
 Nodes (8): assertInEra(), buildMasterTimeline(), createGuardedTrigger(), Era, ERA_RANGE, lastEventTimestamps, PROP_TWEENS, TweenSpec
 
-### Community 179 - "faqStore.ts"
-Cohesion: 0.36
-Nodes (6): zustand, SplitFlapLiteHero(), SplitFlapLiteHeroProps, FaqStoreState, truncateToTeaser(), useFaqStore
+### Community 179 - "stringMath.ts"
+Cohesion: 0.19
+Nodes (6): StringEnergyModel, GUITAR_STRINGS, GuitarStringSpec, smoothstep(), StringPhysicsState, stringY()
 
-### Community 180 - "Hero art pass: working guide"
-Cohesion: 0.25
-Nodes (7): Commands (Git Bash; the project root must be passed as a Windows path), Hero art pass: working guide, Infrastructure you must use, Rules, The goal, What to return, Workflow
+### Community 180 - "useRenderMode.ts"
+Cohesion: 0.09
+Nodes (22): Commands (Git Bash; the project root must be passed as a Windows path), Hero art pass: working guide, Infrastructure you must use, Rules, The goal, What to return, Workflow, EventsGen3Canvas() (+14 more)
 
 ### Community 181 - "Basis Universal GPU Texture Compression"
 Cohesion: 0.50
@@ -1051,33 +1054,33 @@ Nodes (4): ensureString(), intArrayFromString(), lengthBytesUTF8(), stringToUTF8
 Cohesion: 0.22
 Nodes (9): 🎨 Design Engineering Ground Truth, Development Server, ⚡ Getting Started, Installation, 📄 License & Student Organization, Prerequisites, 🧭 Repository Structure, Verification & Testing (+1 more)
 
-### Community 185 - "la"
-Cohesion: 0.13
-Nodes (28): Ba(), Be(), Ca(), Eb(), Eg(), fh(), Hc(), ic() (+20 more)
+### Community 185 - "Vc"
+Cohesion: 0.24
+Nodes (15): Ba(), Ca(), Eg(), fh(), ic(), jc(), nb(), Nc() (+7 more)
 
 ### Community 186 - "JumpingCrowdSilhouettes.tsx"
 Cohesion: 0.29
 Nodes (12): buildInstancedAttributes(), createCrowdMaterial(), createOrganicDuoTexture(), createOrganicSoloTexture(), createOrganicTrioTexture(), crowdUniforms, drawHumanCheeringSilhouette(), generateCuratedCrowdData() (+4 more)
 
-### Community 187 - "framer-motion"
-Cohesion: 0.07
-Nodes (33): framer-motion, DigitalKolamHero, HomeClient(), CountUp(), CountUpProps, AazhamPressureGaugeProps, PillarItem, SilkHoverPillars() (+25 more)
+### Community 187 - "GopuramZScroll.tsx"
+Cohesion: 0.29
+Nodes (10): chapterCopyState(), emptySubscribe(), GopuramCanvas, GopuramScene(), GopuramZScroll(), RingModalCard(), STAGE_RANGES, StaticSpread() (+2 more)
 
-### Community 188 - "codex.md"
-Cohesion: 0.12
-Nodes (12): Autonomous Review Protocol, Execution Order, Deep Debug Protocol, Execution Order, Execution Order, ML Experiment Protocol, Checks by task, Codex workflow for Tamil Sangam OSU (+4 more)
+### Community 188 - "AGENTS.md"
+Cohesion: 0.11
+Nodes (11): Autonomous Review Protocol, Execution Order, Deep Debug Protocol, Execution Order, Execution Order, ML Experiment Protocol, This is NOT the Next.js you know, 📂 Documentation Directory Map (+3 more)
 
 ### Community 189 - "EventsSceneCanvas.tsx"
-Cohesion: 0.19
-Nodes (10): EventsSceneCanvas(), getIsMobileSnapshot(), SceneContent(), SceneContentProps, subscribeResize(), WebGLCanvasErrorBoundary, Lighting(), LightingProps (+2 more)
+Cohesion: 0.21
+Nodes (10): EventsSceneCanvas(), getIsMobileSnapshot(), SceneContent(), SceneContentProps, subscribeResize(), WebGLCanvasErrorBoundary, FinaleFlare(), Lighting() (+2 more)
 
 ### Community 190 - "kolamPaths.ts"
 Cohesion: 0.15
 Nodes (11): KOLAM_CORNER_BL, KOLAM_CORNER_BR, KOLAM_CORNER_TL, KOLAM_CORNER_TR, KOLAM_RIVER_BRAID_PATH, KOLAM_RIVER_PATH, KOLAM_RIVER_VIEWBOX, PULLI_DOTS_3X3 (+3 more)
 
-### Community 192 - "heroes/README.md"
-Cohesion: 0.18
-Nodes (8): PART B — PASTE-READY AGENT DIRECTIVE (replaces the original), PRD — Guide Hero v3: "The Station Sequence", Window → Crane → Departure Board (Alaipayuthey-inspired cinematic expansion), PRD — Home Hero: "Peel & Flow" (Top-Only Split → Flowing Wreath), 📐 Capture Specifications, Content Audit & Hero Animation Archive (All Pages), 🎨 Interactive Framer Board with Live Hero Video & GIF Previews, 📄 Master Page & Hero Index
+### Community 192 - "15. Philosophical Intent, Literary Genesis & Media Artifacts"
+Cohesion: 0.40
+Nodes (5): 15.1 The Threshold Art & Thirukkural Genesis, 15.2 Content Integration: The Courtyard Unmasking, 15.3 Hero Media Artifacts, 15. Philosophical Intent, Literary Genesis & Media Artifacts, PART B: PASTE-READY AGENT DIRECTIVE
 
 ### Community 194 - "Google Calendar Integration & Officer Guide"
 Cohesion: 0.17
@@ -1095,21 +1098,21 @@ Nodes (22): checkBudget(), cliArg(), CONTENT_AUDIT_DIR, CONTENT_AUDIT_HEROES, DO
 Cohesion: 0.33
 Nodes (7): metadata, PadamKandupidiPage(), FramedGame(), getDailyPadam(), MovieClueLadder, PADAM_MOVIES, PadamMovie
 
-### Community 198 - "StrandsGame.tsx"
-Cohesion: 0.33
-Nodes (7): metadata, SolVettaiPage(), StrandsGame(), getDailyStrands(), STRANDS_PUZZLES, StrandsPuzzle, StrandsWord
+### Community 198 - "updateDailyGameRecord"
+Cohesion: 0.27
+Nodes (9): metadata, SolVettaiPage(), StrandsGame(), getDailyStrands(), STRANDS_PUZZLES, StrandsPuzzle, StrandsWord, saveArcadeState() (+1 more)
 
-### Community 199 - "updateDailyGameRecord"
-Cohesion: 0.29
-Nodes (8): metadata, ThodarbuPage(), ThodarbuGame(), getThodarbuPuzzle(), THODARBU_PUZZLES, ThodarbuPuzzle, saveArcadeState(), updateDailyGameRecord()
+### Community 199 - "ThodarbuGame.tsx"
+Cohesion: 0.33
+Nodes (7): metadata, ThodarbuPage(), ThodarbuGame(), getThodarbuPuzzle(), THODARBU_PUZZLES, ThodarbuPuzzle, matchesTanglishFuzzy()
 
 ### Community 208 - "Games hybrid cinematic implementation evidence"
-Cohesion: 0.25
-Nodes (8): Baseline, Current candidate and verification, Current checklist mapping, Games hybrid cinematic implementation evidence, Historical work-package snapshot (superseded by current summary), Implementation evidence, Release gates still requiring evidence (current revision), Subsequent steering: fixed camera and smoother playback
+Cohesion: 0.12
+Nodes (13): Baseline, Current candidate and verification, Current checklist mapping, Games hybrid cinematic implementation evidence, Historical work-package snapshot (superseded by current summary), Implementation evidence, Release gates still requiring evidence (current revision), Subsequent steering: fixed camera and smoother playback (+5 more)
 
-### Community 209 - "BlastFxSystem"
-Cohesion: 0.32
-Nodes (3): BlastFxSystem, shockwave(), blastWatts()
+### Community 209 - "games-hero.spec.ts"
+Cohesion: 0.24
+Nodes (5): createSvgScene(), run(), HeroState, setProgress(), showProgress()
 
 ### Community 210 - "EnPuthirGame.tsx"
 Cohesion: 0.26
@@ -1119,13 +1122,13 @@ Nodes (10): EnPuthirPage(), metadata, EnPuthirGame(), TileEval, evaluateArithmet
 Cohesion: 0.24
 Nodes (7): convertFile(), __dirname, EXTENSIONS, INPUT_DIRS, main(), ROOT, walk()
 
-### Community 212 - "EventsGen3Canvas.tsx"
-Cohesion: 0.36
-Nodes (4): EventsGen3Canvas(), EventsHeroPoster(), EventsHeroView, ShellErrorBoundary
+### Community 212 - "buildOhioStadiumLines"
+Cohesion: 0.22
+Nodes (11): buildOhioStadiumLines(), addBoxLines(), addLine(), boxSolid(), drawArch(), horseshoeStrip(), quad(), horseshoePath() (+3 more)
 
 ### Community 213 - "@playwright/test"
-Cohesion: 0.08
-Nodes (9): @playwright/test, OUT_DIR_DESKTOP, OUT_DIR_MOBILE, ROUTES, ROUTES, ROUTES, HeroState, setProgress() (+1 more)
+Cohesion: 0.10
+Nodes (6): @playwright/test, OUT_DIR_DESKTOP, OUT_DIR_MOBILE, ROUTES, ROUTES, ROUTES
 
 ### Community 214 - "postRun"
 Cohesion: 0.29
@@ -1139,13 +1142,13 @@ Nodes (4): Creative Commons CC0 1.0 Universal, Statement of Purpose, Games hybri
 Cohesion: 0.22
 Nodes (8): 1. Executive Summary & Brand Alignment, 2. Token Architecture & Hierarchy, 3. WCAG AA / AAA Accessibility & Contrast Verification, 4. Chromatic Aberration & Display Typography, 5. 3D Scene Lighting, Fog & Shaders, Core Token Mapping, Original Emblem Extraction (k-Means & Peak Saturation Sampling), Tamil Sangam OSU — Official Logo-Derived Color System
 
-### Community 217 - "debugState.ts"
-Cohesion: 0.36
-Nodes (6): DebugHUD(), getIsDebugSnapshot(), subscribeLocation(), DebugState, globalRef, Listener
+### Community 217 - "geometry.ts"
+Cohesion: 0.20
+Nodes (10): Look kit: `src/gl/art/` (read the files; they are short and documented), buildStone(), DUMMY, E, M, P, polygonalShaft(), Q (+2 more)
 
-### Community 218 - "src/config/upcomingEvent.ts"
-Cohesion: 0.33
-Nodes (4): Architecture Overview, NextFlagshipGatheringProps, activeUpcomingEvent, FlagshipEventConfig
+### Community 218 - "make-heritage-lut.mjs"
+Cohesion: 0.27
+Nodes (10): applyHeritageGrade(), clamp(), cube, cubePath, generateHeritageCube(), generateHeritageLUT(), outDir, { png } (+2 more)
 
 ### Community 219 - "scrambleTerminal.ts"
 Cohesion: 0.47
@@ -1155,29 +1158,29 @@ Nodes (5): initTerminalBootScramble(), registerPlugins(), SANGAM_CIPHER_CHARS, S
 Cohesion: 0.25
 Nodes (7): 1. Executive Summary & Mission Status, 2. Defects Eliminated, 3.1 Z-Ordered Window Assembly ($z = -2.4$ to $z = +0.8$), 3.2 Sangam Junction Hall & Crane Rail, 3. Architecture & Subsystem Specification, 4. Live Visual Inspection Keyframes (Verified in DevTools), Guide Hero v3: "The Station Sequence" Verification Report
 
-### Community 221 - "Guide Hero v3 - Phase 3 checkpoint"
-Cohesion: 0.25
-Nodes (7): Automated rail evidence, Choreography contract, Delivered, F6 evidence, Gate request, Guide Hero v3 - Phase 3 checkpoint, Verification
+### Community 221 - "BakedEnvironment"
+Cohesion: 0.19
+Nodes (12): SangamStudioEnvironment(), Board(), CameraFitter(), ChassisProps, createHeaderSignTexture(), GuideChassis(), GuideEnvironment(), GuideEnvironmentProps (+4 more)
 
 ### Community 222 - "DirectorHUD.tsx"
 Cohesion: 0.25
 Nodes (13): playToggleTick(), DirectorFooterButton(), DirectorHUD(), isDirectorEnabled(), DirectorState, useDirector(), useDirectorStore, initDirectorKeys() (+5 more)
 
-### Community 223 - "12. Verification and acceptance"
-Cohesion: 0.40
-Nodes (5): 12.1 Existing numeric gates, 12.2 Required new focused checks, 12.3 Browser and visual matrix, 12. Verification and acceptance, Release acceptance checklist
+### Community 223 - "3.2. Inner Workings & Mathematical Implementation"
+Cohesion: 0.20
+Nodes (10): 3.1. Overview & Architectural Intent, 3.2. Inner Workings & Mathematical Implementation, 3.3. Detailed Results & Why Generation 2 Looked Horrible, 3. Generation 2: The 7-Phase Silhouette & Selective Bloom Overhaul, A. Selective Bloom & The Layer-1 Isolation Pipeline (`Lighting.tsx`, `PostFX.tsx`), B. The Hero Silhouette Billboard (`SilhouetteBillboard.tsx`), C. The 3-Tier Depth Crowd Field (`CrowdField.tsx`), D. The Volumetric Sunburst Radial Shader (`VolumetricSunburst.tsx`) (+2 more)
 
 ### Community 224 - "OSU Tamil Sangam — Off-Site SEO & Search Engine Authority Checklist"
 Cohesion: 0.25
 Nodes (7): 1. Domain Registration & Vercel Custom Domain Configuration, 2. Webmaster Console Verification & Sitemap Indexation, 3. High-Authority Backlink Acquisition, 4. Brand Name & Entity Consistency, 5. Continuous Content Publishing & Event Recaps, 6. Rich Results & PageSpeed Verification Links, OSU Tamil Sangam — Off-Site SEO & Search Engine Authority Checklist
 
 ### Community 225 - "peelConveyorShader.ts"
-Cohesion: 0.22
-Nodes (9): PathTextureBundle, TUBE_RADIUS_BASE, ConveyorShaderUniforms, createPowderConveyorMaterial(), HV, PowderConveyor, PowderSharedUniforms, PowderUniforms (+1 more)
+Cohesion: 0.18
+Nodes (11): PathTextureBundle, TUBE_RADIUS_BASE, ConveyorShaderUniforms, createPowderConveyorMaterial(), createPowderSharedUniforms(), createShedGrainGeometry(), HV, PowderConveyor (+3 more)
 
-### Community 226 - "15. Philosophical Intent, Literary Genesis & Media Artifacts"
-Cohesion: 0.40
-Nodes (5): 15.1 The Threshold Art & Thirukkural Genesis, 15.2 Content Integration: The Courtyard Unmasking, 15.3 Hero Media Artifacts, 15. Philosophical Intent, Literary Genesis & Media Artifacts, PART B: PASTE-READY AGENT DIRECTIVE
+### Community 226 - "Review Focus"
+Cohesion: 0.20
+Nodes (10): Review Focus, Task 1: Milestone 1 — Validated Games Data, Tamil Grapheme Splitter, Dictionary & Data Gate (D-11, D-12, D-13), Task 2: Milestone 2 — Lens-Shifted Projection Math & Parity / Registration Scripts (D-01, D-02, D-03, D-05), Task 3: Milestone 3 — Calibrated J1 Coastal Compound Scene (D-09), Task 4: Milestone 4 — 1:1 Foreground Eyeglasses & Sun-Bronzed Hand Rig (D-03, D-10), Task 5: Milestone 5 — Layered Focus Compositor & Sunblast Grade Profile (D-08), Task 6: Milestone 6 — Scrubbable Missile Contrails, Fireballs & Dual-Rail Portal (D-04, D-06, D-07), Task 7: Milestone 7 — NYT-Style Sangam Arcade Hub, Sollu & Thodarpu (+2 more)
 
 ### Community 227 - "Renovated Post-Hero Content Specifications"
 Cohesion: 0.33
@@ -1187,37 +1190,37 @@ Nodes (6): Frozen Hero Context, Page 4: Visual Archives & Gallery (`/gallery` & 
 Cohesion: 0.40
 Nodes (5): 1.1 The Genesis & Mission, 1.2 The Five Ecological Landscapes (*Aintinai* / ஐந்திணை), 1.3 Why Tamil Cinema & Literature Anchor Our Identity, 1.4 The "Muttram" (Courtyard) Anti-Slop Design Constitution, 1. Executive Vision, Cultural Architecture & Cinema Connections
 
-### Community 229 - "react"
-Cohesion: 0.03
-Nodes (24): react, CircularTextProps, AcousticStringsProps, STRING_CONFIGS, CoastalCycloramaProps, WashOverlayProps, SunDiscProps, AazhamLivingCanvasProps (+16 more)
+### Community 229 - "BeachLabCanvas.tsx"
+Cohesion: 0.29
+Nodes (7): BeachLabCanvas(), LabRig(), LabStats, readParams(), Window, BeachLabCanvas, GamesBeachLabPage()
 
 ### Community 230 - "Creative Brief: "Emblem Engine""
-Cohesion: 0.29
+Cohesion: 0.25
 Nodes (7): 1. The Core Idea, 2. Motion Vocabulary, 3. Home: The Sequence (Desktop; Mobile keeps the order, simplifies effects), 4. Type & Color Rules, 5. Copy Voice & Ban List, Creative Brief: "Emblem Engine", OSU Tamil Sangam — Redesign Ground Truth
 
-### Community 231 - "ref_node_test"
-Cohesion: 0.18
-Nodes (4): GUITAR_STRINGS, smoothstep(), stringY(), TestEnergyModel
+### Community 231 - "ref_node_assert"
+Cohesion: 0.07
+Nodes (14): gov, Governor, s, Spring, GUITAR_STRINGS, smoothstep(), stringY(), TestEnergyModel (+6 more)
 
-### Community 232 - "next"
-Cohesion: 0.04
-Nodes (38): nextConfig, next, alt, contentType, size, EventPageProps, generateMetadata(), dynamic (+30 more)
+### Community 232 - "events.ts"
+Cohesion: 0.10
+Nodes (24): alt, contentType, size, dynamic, GET(), parseEventDate(), EventDossierViewProps, deriveAcademicYear() (+16 more)
 
 ### Community 233 - "Navbar.tsx"
-Cohesion: 0.29
+Cohesion: 0.30
 Nodes (11): Navbar(), NavBilingualItem(), NavBilingualItemProps, NAV_ROUTES, NavRoute, PRIMARY_NAV_ROUTES, SECONDARY_NAV_ROUTES, KOLAM_PATHS (+3 more)
 
 ### Community 234 - "director.test.ts"
 Cohesion: 0.11
 Nodes (17): closedState, customWireMat, mesh1, mesh2, meshNoWire, mockButton, mockEditable, mockInput (+9 more)
 
-### Community 235 - "Hero 5: missiles, contrails, fireballs and shockwave"
-Cohesion: 0.40
-Nodes (5): Fireballs, Hero 5: missiles, contrails, fireballs and shockwave, Missiles and contrails, Sand shockwave, dust and light, Scrubbable FX model
+### Community 235 - "soundEngine.ts"
+Cohesion: 0.27
+Nodes (4): AazhamInputBarProps, MOHANAM_ASCENDING_SCALE, RAGA_MOHANAM_HZ, VAARANAM_6_STRINGS_HZ
 
-### Community 236 - "games-hero-hybrid-cinematic-prd.md"
+### Community 236 - "Current Roadmap & Completed Epics"
 Cohesion: 0.22
-Nodes (7): Approved hybrid optimization — October 27, 2026, Fixed camera and smoother playback — subsequent user steering, Games hydration and frame-pacing fixes, Games Page v1.1 Implementation Plan, Games slow-motion pacing follow-up, Hybrid cinematic implementation — 2026-10-27, Milestones
+Nodes (8): Current Roadmap & Completed Epics, Epic 1: Thematic Cultural Refinement & De-slopping (Shipped & Verified), Epic 2: Photo Vault Tactile Studio Envelopes (`/gallery`) (Shipped & Verified), Epic 3: Sangam Arcade 12-Game Daily Suite (`/games`) (Shipped & Verified), Epic 4: Progress-Driven Kolam Page Loader (`KolamLoader.tsx`) (Shipped & Verified), Epic 5: Sikku Kolam Dual-Trigger Unraveling Navbar (Shipped & Verified), Historical Milestones: Games Page v1.1 & Cinematic Hybrid, Project Aintinai (ஐந்திணை) — Master Architecture & Implementation Plan
 
 ### Community 237 - "guide-hero-board.spec.ts"
 Cohesion: 0.42
@@ -1235,13 +1238,13 @@ Nodes (6): **Aspect policy**, **Hero 1: reference calibration and camera model**
 Cohesion: 0.33
 Nodes (4): createIco(), curvedBottom, curvedTop, main()
 
-### Community 241 - "HeroGradientTransition.tsx"
-Cohesion: 0.40
-Nodes (4): GRADIENT_CONFIGS, HeroGradientTransition(), HeroGradientTransitionProps, HeroGradientVariant
+### Community 241 - "2.2. Inner Workings & Mathematical Implementation"
+Cohesion: 0.22
+Nodes (9): 2.1. Overview & Architectural Intent, 2.2. Inner Workings & Mathematical Implementation, 2.3. Detailed Results & Why Generation 1 Failed, 2. Generation 1: The Industrial Cauldron & 8,000 Dancers, A. The Industrial Cauldron & Timber Platform (`DaturaCauldron.tsx`), B. The Extruded SVG Silhouette & Shoulder Joint (`CinematicSilhouette.tsx`), C. The 8,000-Dancer Instanced Simulation (`CrowdInstancedSimulation.tsx`), D. The Lighting Environment & "The God Light" (`ArenaLightingEnvironment.tsx`) (+1 more)
 
 ### Community 242 - "useDisposeOnUnmount"
-Cohesion: 0.06
-Nodes (64): ArenaCrowd(), Arm, createCrowdAtlas(), createCrowdMaterial(), CROWD_POSES, featherCell(), paintFigure(), Pose (+56 more)
+Cohesion: 0.05
+Nodes (73): ArenaCrowd(), Arm, createCrowdAtlas(), createCrowdMaterial(), CROWD_POSES, featherCell(), paintFigure(), Pose (+65 more)
 
 ### Community 243 - "instantiateArrayBuffer"
 Cohesion: 0.40
@@ -1251,17 +1254,17 @@ Nodes (5): abort(), getBinaryPromise(), getBinarySync(), instantiateArrayBuffer(
 Cohesion: 0.14
 Nodes (14): 10. Decisions and stop condition, 1. Product decision and authority, 2. Baseline to preserve, 3. What to extract from v1.1, 4. Experience and timeline contract, 6. Targets and acceptance matrix, 7. Calibration, source safety and release method, 8. Future work packages and owning paths (+6 more)
 
-### Community 245 - "wa"
-Cohesion: 0.43
-Nodes (8): Aa(), ai(), $d(), ee(), Na(), Oa(), wa(), Yd()
+### Community 245 - "debugState.ts"
+Cohesion: 0.31
+Nodes (7): DebugHUD(), getIsDebugSnapshot(), subscribeLocation(), DebugState, globalRef, Listener, TextureStatus
 
-### Community 246 - "Games Page v1.1 Progress"
-Cohesion: 0.33
-Nodes (6): Approved hybrid optimization — October 27, 2026, Fixed camera and smoother playback — subsequent user steering, Games hydration and frame-pacing fixes, Games Page v1.1 Progress, Games slow-motion pacing follow-up, Hybrid cinematic implementation — 2026-10-27
+### Community 246 - "Guide Hero v3 - Phase 3 checkpoint"
+Cohesion: 0.25
+Nodes (7): Automated rail evidence, Choreography contract, Delivered, F6 evidence, Gate request, Guide Hero v3 - Phase 3 checkpoint, Verification
 
-### Community 247 - "Page 7: Initiatives & Campus Hubs (`/initiatives`)"
-Cohesion: 0.40
-Nodes (5): Page 7: Initiatives & Campus Hubs (`/initiatives`), Renovated Content Specifications, Visual Atmosphere, Zone 1: The Three Cultural Pillars Selector Tabs, Zone 2: Active Pillar Deep-Dive Showcase
+### Community 247 - "The Cinematic Universe of OSU Tamil Sangam"
+Cohesion: 0.29
+Nodes (7): 1. Executive Philosophy: Why Tamil Cinema & Literature Anchor Our Campus Identity, 2. Master Hero Subsystem Matrix, 4. Media Asset Directory Map, 5. Hero Quality Pass (November 2026), 6. Live Interactive Inspection Board, Master Hero Animation Architecture, Cultural PRDs & Movie Easter Eggs Matrix, The Cinematic Universe of OSU Tamil Sangam
 
 ### Community 248 - "**Games hub: layout, shared systems, storage, share, audio, analytics**"
 Cohesion: 0.40
@@ -1288,12 +1291,12 @@ Cohesion: 0.40
 Nodes (5): 5.1 Single `<GlobalCanvas>` Singleton & Drei `<View>` Scissoring, 5.2 Dynamic Governor & Frame Budgeting ([`governor.ts`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/src/engine/governor.ts)), 5.3 Three-Tier Hardware Degradation Model, 5.4 State Management & LocalStorage Persistence Schema, 5. Global 3D Engine & Runtime Architecture
 
 ### Community 254 - "email.ts"
-Cohesion: 0.11
-Nodes (23): MembershipRequest, POST(), runtime, checkRateLimit(), MAX_REQUESTS, RATE_LIMIT_WINDOW, rateLimitMap, runRateLimitUnitTests() (+15 more)
+Cohesion: 0.19
+Nodes (15): MembershipRequest, POST(), runtime, GET(), POST(), generateGuestbookConfirmationHtml(), dispatchEmail(), EmailDispatchResult (+7 more)
 
-### Community 258 - "CampusGate.tsx"
-Cohesion: 0.57
-Nodes (5): CampusGate(), CampusGateProps, createBrickTexture(), createIronBumpTexture(), createStoneBumpTexture()
+### Community 258 - "faqStore.ts"
+Cohesion: 0.43
+Nodes (5): SplitFlapLiteHero(), SplitFlapLiteHeroProps, FaqStoreState, truncateToTeaser(), useFaqStore
 
 ### Community 259 - "**Sollu spec**"
 Cohesion: 0.50
@@ -1335,13 +1338,13 @@ Nodes (4): **Hero 2: world layout**, **Lighting, fog and atmosphere**, **Silhoue
 Cohesion: 0.67
 Nodes (3): **Hero 7: master timeline and lens registration contract**, **Master scroll timeline (**p ∈ \[0.00, 1.00\]**)**, **Numeric Lens Registration Contract (**D-05 **&** D-15 **Gate)**
 
-### Community 272 - "find-all-residual-browns.mjs"
-Cohesion: 0.40
-Nodes (4): files, hits, patterns, walk()
+### Community 272 - "LineBatchBuilder"
+Cohesion: 0.48
+Nodes (3): LineBatchBuilder, buildLineBatch(), vellumToWorld()
 
-### Community 273 - "cells.tsx"
-Cohesion: 0.12
-Nodes (24): scheduleImpact(), cachedAtlasCanvas, charToGlyph(), GLYPH_MAP, GLYPHS, makeAtlas(), N, createCellGeometry() (+16 more)
+### Community 273 - "fsm.ts"
+Cohesion: 0.22
+Nodes (14): scheduleImpact(), cachedAtlasCanvas, GLYPH_MAP, GLYPHS, N, beginStep(), createCellState(), delayFor() (+6 more)
 
 ### Community 274 - "8. Design Tokens & DTCG Three-Tier Architecture"
 Cohesion: 0.40
@@ -1351,61 +1354,61 @@ Nodes (5): 8.1 Primitive Tier (Raw Values), 8.2 Semantic Tier (Intent Mappings),
 Cohesion: 0.60
 Nodes (4): crc32(), makeChunk(), outDir, writePng()
 
-### Community 276 - "2. Global Design Foundations & Token Architecture"
+### Community 276 - "Codex workflow for Tamil Sangam OSU"
 Cohesion: 0.33
-Nodes (6): 2.1 Perceptually Uniform OKLCH Color Palette, 2.2 Content Page Surface Hierarchy (The Atmosphere Tokens), 2.3 Strict Typography Stack & Sizing Scales, 2.4 Banned Anti-Patterns ("Anti-Slop" Checklist for Figma), 2. Global Design Foundations & Token Architecture, Tamil Typography Commandments
+Nodes (6): Checks by task, Codex workflow for Tamil Sangam OSU, Common task paths, Context and tool routing, Entry and execution, Where existing behavior lives
 
 ### Community 277 - "Renovated Post-Hero Content Specifications"
 Cohesion: 0.33
 Nodes (6): Frozen Hero Context, Page 3: Campus Gatherings & Events (`/events` & `/events/[slug]`), Renovated Post-Hero Content Specifications, Zone 1: Year & Category Filter Strip, Zone 2: Flowing River Gatherings List, Zone 3: Single Event Detail Template (`/events/[slug]`)
 
-### Community 278 - "Hero 1: reference calibration and camera model"
+### Community 278 - "Vaaranam Aayiram Gallery Hero (v2 Architecture & Tuning Guide)"
 Cohesion: 0.33
-Nodes (6): Aspect policy, Hero 1: reference calibration and camera model, Locked camera (J1 to J3), Measured landmarks and what they imply, Projection model, Screen-anchored rig solver
+Nodes (5): 1. Architectural Overview, 2. Core Tuning Constants (`heroTimeline.ts`), 3. String Physical Modeling (`GuitarString.tsx` & `pluckBus.ts`), 4. Master Scroll Choreography (`getHeroTimelineValues`), Vaaranam Aayiram Gallery Hero (v2 Architecture & Tuning Guide)
 
-### Community 279 - "Hero 8: performance budget, fallbacks and accessibility"
+### Community 279 - "Workflow 2: Updating the Linktree (`/links` Bio Hub)"
 Cohesion: 0.33
-Nodes (6): Budgets, Fallbacks, Frame-time plan, Hero 8: performance budget, fallbacks and accessibility, Loading and boot, Quality tiers
+Nodes (6): 1. Page Implementation File, 2. Featured Upcoming Event Card (Top of Links Stack), 3. Previous Event Photo Vaults Expandable Menu, 4. Action Link Cards Structure & Props, 5. Central Communication & Social Links Single Source of Truth, Workflow 2: Updating the Linktree (`/links` Bio Hub)
 
-### Community 280 - "Hero 3: foreground rig, glasses and hand"
-Cohesion: 0.33
-Nodes (6): Frame material, light, tremor and shadow, Glasses, Hand and the hand decision gate, Hero 3: foreground rig, glasses and hand, Pose over scroll, What the stills measure
+### Community 280 - "ParallaxScatter"
+Cohesion: 0.40
+Nodes (5): 3.9 Event Dossier (`/events/[slug]`): The Sunlit Randomized Dossier, 0. Master Subsystem Implementation Matrix, 2.9 `/events/[slug]` — Event Dossier (நிகழ்ச்சி ஆவணம்): Sunlit Randomized Magazine, 3. The Master Cinematic & Pop-Culture Easter Egg Compendium, ParallaxScatter()
 
-### Community 283 - "splitTamilAksharas"
-Cohesion: 0.70
-Nodes (3): getGraphemeCount(), getGraphemes(), splitTamilAksharas()
+### Community 283 - "4. Deep Mathematical, Physics & Shader Engineering"
+Cohesion: 0.40
+Nodes (5): 4.1 Digital Kolam Weaving & Parabolic Peel Vertex Shader, 4.2 Leo Concert Arena Instancing & Crowd Harmonic Bounce, 4.3 12-TET Mathematical Fret Spacing & 6-String Physics, 4.4 Solari Split-Flap Mechanical State Machine, 4. Deep Mathematical, Physics & Shader Engineering
 
 ### Community 284 - "5. Optimization requirements"
-Cohesion: 0.18
-Nodes (11): 5. Optimization requirements, Fire, smoke and debris, Ground interaction, O-1. Measure the actual hybrid cost before changing quality, O-2. Improve playback efficiency without undoing the cache fixes, O-3. Add image-based focus and lens-quality review, O-4. Refine the existing hand and eyewear, keeping their placement, O-5. Make the existing offline explosions more legible and detailed (+3 more)
+Cohesion: 0.20
+Nodes (10): 5. Optimization requirements, Fire, smoke and debris, Ground interaction, O-2. Improve playback efficiency without undoing the cache fixes, O-3. Add image-based focus and lens-quality review, O-4. Refine the existing hand and eyewear, keeping their placement, O-5. Make the existing offline explosions more legible and detailed, O-6. Recover selected coastal details without rebuilding the set (+2 more)
 
-### Community 285 - "GuideLab.tsx"
-Cohesion: 0.33
-Nodes (8): GuideLabPage(), GuideLab(), GuideLabViewport(), LabScene(), clamp(), GuideStationDebug, parseGuideStationDebug(), parseNumber()
+### Community 285 - "find-all-residual-browns.mjs"
+Cohesion: 0.40
+Nodes (4): files, hits, patterns, walk()
 
-### Community 286 - "4. Page-by-Page Content Renovation Wireframe Specs"
-Cohesion: 0.25
-Nodes (8): 4. Page-by-Page Content Renovation Wireframe Specs, Frozen Hero Context, Frozen Hero Context, Page 2: Executive Board & Governance (`/board`), Page 6: Join & Student Onboarding (`/join`), Renovated Post-Hero Content Specifications, Zone 1: The Courtyard Guestbook Form, Zone 2: Direct Social Circles Grid
+### Community 286 - "HeroGradientTransition.tsx"
+Cohesion: 0.40
+Nodes (4): GRADIENT_CONFIGS, HeroGradientTransition(), HeroGradientTransitionProps, HeroGradientVariant
 
 ### Community 287 - "strumStateMachine.ts"
-Cohesion: 0.20
-Nodes (8): history, historyPool, pickSpline, PickTransform, StrumFrameState, StrumPhase, triggerStrumSequence(), updateStrumScrollIntent()
+Cohesion: 0.18
+Nodes (9): currentStrumState, history, historyPool, pickSpline, PickTransform, StrumFrameState, StrumPhase, triggerStrumSequence() (+1 more)
 
 ### Community 288 - "Page 8: Campus Blueprints & Suggestions (`/suggestions`)"
 Cohesion: 0.40
 Nodes (5): Frozen Hero Context, Page 8: Campus Blueprints & Suggestions (`/suggestions`), Renovated Post-Hero Content Specifications, Zone 1: Anonymous Feedback Engine, Zone 2: Community Suggestion Radar
 
 ### Community 289 - "Renovated Post-Hero Content Specifications"
-Cohesion: 0.40
-Nodes (5): Renovated Post-Hero Content Specifications, Zone 1: Architectural Governance Metrics Bar, Zone 2: Executive Officers Portrait Grid, Zone 3: Sub-committees & Student Volunteers Rail, Zone 4: Democratic Constitution & Election Rules
+Cohesion: 0.29
+Nodes (7): Frozen Hero Context, Page 2: Executive Board & Governance (`/board`), Renovated Post-Hero Content Specifications, Zone 1: Architectural Governance Metrics Bar, Zone 2: Executive Officers Portrait Grid, Zone 3: Sub-committees & Student Volunteers Rail, Zone 4: Democratic Constitution & Election Rules
 
 ### Community 290 - "9. Hardware-Accelerated Capture Pipeline & Visual Inspection Board"
 Cohesion: 0.40
 Nodes (5): 9.1 Direct3D11 Headless Capture Engine ([`scripts/capture-all-heroes.mjs`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/scripts/capture-all-heroes.mjs)), 9.2 Adaptive 256-Color GIF Compiler ([`scripts/compile_gifs.py`](file:///c:/Users/hares/OneDrive/Desktop/CS_Projects/TamilSangamWebsiteOSU/scripts/compile_gifs.py)), 9.3 Live Interactive Content Audit Board, 9.4 Media Asset Archive Matrix, 9. Hardware-Accelerated Capture Pipeline & Visual Inspection Board
 
-### Community 291 - "6. Asset production requirements"
-Cohesion: 0.50
-Nodes (4): 6.1 Hand and glasses, 6.2 Environment, 6.3 Fire, smoke and dust, 6. Asset production requirements
+### Community 291 - "splitTamilAksharas"
+Cohesion: 0.70
+Nodes (3): getGraphemeCount(), getGraphemes(), splitTamilAksharas()
 
 ### Community 292 - "craftInvokerFunction"
 Cohesion: 0.67
@@ -1415,33 +1418,45 @@ Nodes (4): craftInvokerFunction(), createJsInvoker(), newFunc(), usesDestructorS
 Cohesion: 0.50
 Nodes (3): destructor(), getPointee(), RegisteredPointer_fromWireType()
 
-### Community 295 - "DepthCarousel.tsx"
-Cohesion: 0.38
-Nodes (6): clamp(), DEFAULT_ITEMS, DepthCarousel(), DepthCarouselItem, DepthCarouselProps, normalizeItem()
+### Community 295 - "gsap"
+Cohesion: 0.18
+Nodes (8): gsap, ScrollRevealProps, clamp(), DEFAULT_ITEMS, DepthCarousel(), DepthCarouselItem, DepthCarouselProps, normalizeItem()
 
-### Community 296 - "DynamicKolamHero.tsx"
+### Community 296 - "6. Sensory Layer: Cinematic Color Grading & Diegetic Audio"
+Cohesion: 0.50
+Nodes (4): 6.1 DaVinci Resolve AGX Tone Mapping & 33³ Compacted LUT, 6.2 Diegetic Web Audio Synthesis Engine, 6.3 Backend Services, Server Actions & Storage Architecture, 6. Sensory Layer: Cinematic Color Grading & Diegetic Audio
+
+### Community 297 - "Component-Scoped AGENTS.md — Design System Primitives & Cultural Components"
+Cohesion: 0.50
+Nodes (4): 1. Protected Primitives, 2. Token Discipline, 3. Strict Semantic HTML, Component-Scoped AGENTS.md — Design System Primitives & Cultural Components
+
+### Community 298 - "IvyField.tsx"
 Cohesion: 0.67
-Nodes (3): DynamicKolamHero(), emptySubscribe(), Point
+Nodes (3): IvyClusterProps, IvyField(), PillarIvy()
+
+### Community 299 - "RenderMode"
+Cohesion: 0.67
+Nodes (3): SceneProps, RenderMode, BlueprintSceneGLProps
 
 ## Knowledge Gaps
 - **14 isolated node(s):** `npx`, `npx`, `@gsap/react`, `@tailwindcss/postcss`, `@types/canvas-confetti` (+9 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2243 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2246 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **26 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `react` connect `react` to `useLiteMode`, `JoinHeroCanvas.tsx`, `isHeroCinematicEnabled`, `chamferedBox`, `Eyebrow`, `gsap`, `@react-three/fiber`, `useLocale`, `fretMath.ts`, `Rose.tsx`, `FinaleFlare.tsx`, `LinksClient.tsx`, `SceneRoot.tsx`, `strings/Strings.tsx`, `GopuramArtScene.tsx`, `CrowdField.tsx`, `CommandPalette.tsx`, `StationSet.tsx`, `masterTick.ts`, `BlueprintSceneLegacy.tsx`, `AazhamGame.tsx`, `QuordleGame.tsx`, `BlueprintSceneGL.tsx`, `beachWorldBuild.ts`, `SplitFlapBoard.tsx`, `package.json`, `sounds.ts`, `gamesRail.ts`, `mergeParts`, `home/lab/page.tsx`, `BoardHeroCanvas.tsx`, `SmoothScroll.tsx`, `DitherVeil.tsx`, `DigitalKolamHero.tsx`, `gamesData.ts`, `ArcadeGameCard.tsx`, `useRenderMode`, `CorridorTreadmill.tsx`, `StationScene.tsx`, `state.ts`, `lucide-react`, `app/layout.tsx`, `GamesFocusScene.tsx`, `seed.ts`, `suggestion.ts`, `SceneView.tsx`, `BlastLab.tsx`, `storage.ts`, `props/types.ts`, `LeoFactoryEnvironment.tsx`, `Games hybrid optimization evidence`, `getDailyGameRecord`, `WorldleGame.tsx`, `KolamIcons.tsx`, `soundEngine.ts`, `wireframe.ts`, `seo/JsonLd.tsx`, `Scene.tsx`, `three`, `getPuzzleNumber`, `useTier`, `SideKolam.tsx`, `generateShareCard`, `GamesHeroCanvas.tsx`, `Performer.tsx`, `SafeComponentBoundary.tsx`, `SolluWordle.tsx`, `Renovated Post-Hero Content Specifications`, `GameShell`, `GamesHub.tsx`, `ArasigalGame.tsx`, `GlobalCanvas.tsx`, `BeachLabCanvas.tsx`, `ScrollExpand.tsx`, `guideStore.ts`, `DogTags.tsx`, `faqStore.ts`, `JumpingCrowdSilhouettes.tsx`, `framer-motion`, `EventsSceneCanvas.tsx`, `FramedGame.tsx`, `StrandsGame.tsx`, `updateDailyGameRecord`, `EnPuthirGame.tsx`, `EventsGen3Canvas.tsx`, `debugState.ts`, `DirectorHUD.tsx`, `Navbar.tsx`, `HeroGradientTransition.tsx`, `useDisposeOnUnmount`, `CampusGate.tsx`, `cells.tsx`, `GuideLab.tsx`, `DepthCarousel.tsx`, `DynamicKolamHero.tsx`?**
-  _High betweenness centrality (0.252) - this node is a cross-community bridge._
+- **Why does `react` connect `react` to `useAudio`, `JoinHeroCanvas.tsx`, `createHeroKineticsTracker`, `mergeParts`, `Eyebrow`, `EventsArenaCanvas.tsx`, `useLocale`, `fretMath.ts`, `Rose.tsx`, `events-gen2/CameraRig.tsx`, `LinksClient.tsx`, `@react-three/fiber`, `Gizmos.tsx`, `GopuramArtScene.tsx`, `CrowdField.tsx`, `CommandPalette.tsx`, `latheProfile`, `registry.ts`, `BlueprintScene3D.tsx`, `AazhamGame.tsx`, `QuordleGame.tsx`, `BlueprintSceneGL.tsx`, `beachWorldBuild.ts`, `SplitFlapBoard.tsx`, `package.json`, `sounds.ts`, `GamesFocusScene.tsx`, `StationSet.tsx`, `isHeroCinematicEnabled`, `SmoothScroll.tsx`, `DitherVeil.tsx`, `DigitalKolamHero.tsx`, `gamesData.ts`, `ArcadeGameCard.tsx`, `useGradeLut.ts`, `BoardView.tsx`, `CorridorTreadmill.tsx`, `StationScene.tsx`, `Scene.tsx`, `lucide-react`, `seed.ts`, `suggestion.ts`, `SceneView.tsx`, `BlastLab.tsx`, `storage.ts`, `masterTick.ts`, `LeoFactoryEnvironment.tsx`, `Games hybrid optimization evidence`, `getDailyGameRecord`, `WorldleGame.tsx`, `KolamIcons.tsx`, `wireframe.ts`, `Providers.tsx`, `next`, `GuideClient.tsx`, `three`, `generateShareCard`, `TransitionProvider.tsx`, `SideKolam.tsx`, `getPuzzleNumber`, `GamesHeroCanvas.tsx`, `GlobalCanvas.tsx`, `SafeComponentBoundary.tsx`, `SolluWordle.tsx`, `Renovated Post-Hero Content Specifications`, `framer-motion`, `GamesHub.tsx`, `ArasigalGame.tsx`, `home/lab/page.tsx`, `ScrollExpand.tsx`, `GameShell`, `guideStore.ts`, `cells.tsx`, `useRenderMode.ts`, `JumpingCrowdSilhouettes.tsx`, `GopuramZScroll.tsx`, `EventsSceneCanvas.tsx`, `FramedGame.tsx`, `updateDailyGameRecord`, `ThodarbuGame.tsx`, `EnPuthirGame.tsx`, `BakedEnvironment`, `DirectorHUD.tsx`, `BeachLabCanvas.tsx`, `events.ts`, `Navbar.tsx`, `soundEngine.ts`, `useDisposeOnUnmount`, `debugState.ts`, `faqStore.ts`, `fsm.ts`, `HeroGradientTransition.tsx`, `gsap`, `IvyField.tsx`?**
+  _High betweenness centrality (0.286) - this node is a cross-community bridge._
 - **Are the 144 inferred relationships involving `ha()` (e.g. with `Ae()` and `Af()`) actually correct?**
   _`ha()` has 144 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `npx`, `npx`, `@gsap/react` to the rest of the system?**
   _14 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `useLiteMode` be split into smaller, more focused modules?**
-  _Cohesion score 0.06594071385359952 - nodes in this community are weakly interconnected._
-- **Why does `three` connect `three` to `HalfCurve`, `HalfCurve`, `GamesHeroCanvas.tsx`, `isHeroCinematicEnabled`, `SideKolam.tsx`, `chamferedBox`, `gsap`, `Performer.tsx`, `JoinHeroCanvas.tsx`, `CampusGate.tsx`, `@react-three/fiber`, `fretMath.ts`, `Rose.tsx`, `FinaleFlare.tsx`, `cells.tsx`, `generate-performer-glb.mjs`, `SceneRoot.tsx`, `strings/Strings.tsx`, `GopuramArtScene.tsx`, `CrowdField.tsx`, `pathBuilder.ts`, `strumStateMachine.ts`, `masterTick.ts`, `BlueprintSceneLegacy.tsx`, `GlobalCanvas.tsx`, `StationSet.tsx`, `BlueprintSceneGL.tsx`, `beachWorldBuild.ts`, `BeachLabCanvas.tsx`, `SplitFlapBoard.tsx`, `package.json`, `gamesRail.ts`, `mergeParts`, `home/lab/page.tsx`, `DogTags.tsx`, `tileGrammar.ts`, `BoardHeroCanvas.tsx`, `JumpingCrowdSilhouettes.tsx`, `DigitalKolamHero.tsx`, `EventsSceneCanvas.tsx`, `forgeGeometry.ts`, `CorridorTreadmill.tsx`, `blastFxSystem.ts`, `review-fixes.spec.ts`, `StationScene.tsx`, `state.ts`, `GamesFocusScene.tsx`, `SceneView.tsx`, `BlastLab.tsx`, `guideRail.ts`, `props/types.ts`, `perfProbe.ts`, `peelConveyorShader.ts`, `LeoFactoryEnvironment.tsx`, `react`, `director.test.ts`, `wireframe.ts`, `Scene.tsx`, `useDisposeOnUnmount`, `kolamGeometry.ts`, `HalfCurve`?**
-  _High betweenness centrality (0.249) - this node is a cross-community bridge._
+- **Should `useAudio` be split into smaller, more focused modules?**
+  _Cohesion score 0.0701344243132671 - nodes in this community are weakly interconnected._
+- **Why does `three` connect `three` to `HalfCurve`, `HalfCurve`, `GamesHeroCanvas.tsx`, `createHeroKineticsTracker`, `SideKolam.tsx`, `mergeParts`, `EventsArenaCanvas.tsx`, `GlobalCanvas.tsx`, `JoinHeroCanvas.tsx`, `react`, `fretMath.ts`, `Rose.tsx`, `events-gen2/CameraRig.tsx`, `fsm.ts`, `generate-performer-glb.mjs`, `@react-three/fiber`, `Gizmos.tsx`, `GopuramArtScene.tsx`, `CrowdField.tsx`, `blueprintProps.ts`, `home/lab/page.tsx`, `latheProfile`, `strumStateMachine.ts`, `registry.ts`, `BlueprintSceneGL.tsx`, `beachWorldBuild.ts`, `SplitFlapBoard.tsx`, `package.json`, `IvyField.tsx`, `GamesFocusScene.tsx`, `cells.tsx`, `StationSet.tsx`, `flowMath.ts`, `blueprintLines.ts`, `tileGrammar.ts`, `isHeroCinematicEnabled`, `JumpingCrowdSilhouettes.tsx`, `DigitalKolamHero.tsx`, `EventsSceneCanvas.tsx`, `useGradeLut.ts`, `CorridorTreadmill.tsx`, `blastFxSystem.ts`, `StationScene.tsx`, `Scene.tsx`, `LayeredFocusCompositor.ts`, `geometry.ts`, `SceneView.tsx`, `BlastLab.tsx`, `BakedEnvironment`, `guideRail.ts`, `chamferedBox`, `masterTick.ts`, `peelConveyorShader.ts`, `LeoFactoryEnvironment.tsx`, `BeachLabCanvas.tsx`, `director.test.ts`, `wireframe.ts`, `useDisposeOnUnmount`, `kolamGeometry.ts`, `HalfCurve`?**
+  _High betweenness centrality (0.236) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `ja()` (e.g. with `ha()` and `e()`) actually correct?**
   _`ja()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Should `ha` be split into smaller, more focused modules?**
-  _Cohesion score 0.041237113402061855 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.04278197208876687 - nodes in this community are weakly interconnected._

@@ -47,24 +47,27 @@
 
 1. **Cultural Festivals**: Major campus moments including Diwali galas, Pongal harvest banquets, and collaborative carnivals.
 2. **Collegiate Dance Troupe (ஆட்டம் - Aatam)**: Free auditions for Kuthu, Gaana, and Bharatanatyam troupes performing at university cultural showcases. Rehearsals in RPAC and Ohio Union. Sign-up: https://tamil-sangam-website-osu.vercel.app/dance
-3. **Sangam Daily Arcade (விளையாட்டு)**: Daily Tamil word puzzles including Solla (Tamil Wordle) and Thodarpu (Tamil Connections) with streak tracking: https://tamil-sangam-website-osu.vercel.app/games
+3. **Sangam Daily Arcade (விளையாட்டு)**: 12 daily Tamil cultural and logic games including Sollu (சொல்லு - Tamil Wordle), Thodarbu (தொடர்பு - Connections), Kolam Path Solver, and Thirukkural Memory with streak tracking: https://tamil-sangam-website-osu.vercel.app/games
 4. **Columbus Tamil Survival Directory**: Curated guide to Indian grocery stores (Patel Brothers, Bhavani Cash & Carry, Saraga), Tamil theaters (Cinemark Carriage Place, AMC Lennox), and authentic South Indian dining (Dosa Corner, AAB India, Godavari): https://tamil-sangam-website-osu.vercel.app/guide
 5. **The Ideas Hearth**: Submit event proposals and collaborate on the All-OSU Collaborative Tamil Spotify Playlist: https://tamil-sangam-website-osu.vercel.app/suggestions
 
 ---
 
-## 5. Canonical Route Index
+## 5. Canonical Route Index (Primary 10 Routes & Auxiliary Portals)
 
-- **Home**: https://tamil-sangam-website-osu.vercel.app/
-- **Events & Gatherings**: https://tamil-sangam-website-osu.vercel.app/events
-- **Columbus Guide & Directory**: https://tamil-sangam-website-osu.vercel.app/guide
+1. **Home**: https://tamil-sangam-website-osu.vercel.app/
+2. **Events & Gatherings**: https://tamil-sangam-website-osu.vercel.app/events
+3. **Next Gathering Dossier**: https://tamil-sangam-website-osu.vercel.app/events/namma-deepavali-2026
+4. **About Us & Heritage**: https://tamil-sangam-website-osu.vercel.app/about
+5. **Executive Board Officers**: https://tamil-sangam-website-osu.vercel.app/board
+6. **Campus Photo Vault**: https://tamil-sangam-website-osu.vercel.app/gallery
+7. **Sangam Arcade (12 Daily Games)**: https://tamil-sangam-website-osu.vercel.app/games
+8. **Columbus Guide & Directory**: https://tamil-sangam-website-osu.vercel.app/guide
+9. **Official Links Hub (Bio Portal)**: https://tamil-sangam-website-osu.vercel.app/links
+10. **The Ideas Hearth**: https://tamil-sangam-website-osu.vercel.app/suggestions
+
+### Auxiliary Gateways & Legal
 - **Join Sangam (Free Guestbook)**: https://tamil-sangam-website-osu.vercel.app/join
-- **Sangam Arcade (Tamil Wordle)**: https://tamil-sangam-website-osu.vercel.app/games
-- **Dance Troupe Auditions**: https://tamil-sangam-website-osu.vercel.app/dance
 - **Frequently Asked Questions**: https://tamil-sangam-website-osu.vercel.app/faq
-- **Executive Board Officers**: https://tamil-sangam-website-osu.vercel.app/board
-- **About Us & Five Pillars**: https://tamil-sangam-website-osu.vercel.app/about
-- **Campus Photo Vault**: https://tamil-sangam-website-osu.vercel.app/gallery
-- **The Ideas Hearth**: https://tamil-sangam-website-osu.vercel.app/suggestions
-- **Official Links Hub**: https://tamil-sangam-website-osu.vercel.app/links
+- **Dance Troupe Auditions**: https://tamil-sangam-website-osu.vercel.app/dance
 - **Privacy Policy**: https://tamil-sangam-website-osu.vercel.app/privacy

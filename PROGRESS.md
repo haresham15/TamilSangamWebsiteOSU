@@ -1,4 +1,52 @@
-# Games Page v1.1 Progress
+# Project Aintinai (ஐந்திணை) — Engineering Progress & Milestone Ledger
+
+## Milestone: Kanchipuram Courtyard Refinement, Arcade Suite & Navigation Engine (November 2026)
+
+- [x] **Master Kanchipuram Courtyard & Temple Stone System**:
+  - Replaced legacy color schemes with a cohesive 4-pillar architectural palette across all 15 routes:
+    - **Sunlit Temple Neutrals**: `--bg-ivory` (`#FAF6F0`), `--bg-sandstone` (`#F0E6D6`), `--surface-card-light` (`#FFFFFF`), `--surface-card-parchment` (`#F7EFE2`).
+    - **Royal Deep Anchors**: `--bg-sangam-deep` (`#1C122B`), `--surface-card-dark` (`#271A3C`), `--bg-peacock-deep` (`#102830`), `--surface-card-peacock` (`#173640`).
+    - **Hero Bridging & Accents**: `--accent-zari` (`#C79347`), `--accent-bronze` (`#9A6B3E`/`#D4A36A`), `--brand-teal` (`#0F766E`/`#2BB5A8`), `--accent-kumkum` (`#B84A39`).
+    - **Ink & Typography**: High-contrast `--color-ink-earth` (`#261A14`) and `--color-ink-alabaster` (`#FAF5ED`).
+  - **De-slopping & Anti-Slop Audit**: Stripped generic card clutters, un-tinted pure blacks (`#000000`), decorative emoji bullets, and generic gradient borders site-wide.
+  - **Bilingual & Typography Integrity**: Strict enforcement of `lang="ta"`, `letterSpacing: 0`, and `leading-[1.6]` to `leading-[1.72]` on all Tamil typography using `Mukta Malar` with grapheme cluster segmentation via `Intl.Segmenter`.
+
+- [x] **Sangam Arcade 12-Game Daily Suite (`/games`)**:
+  - Expanded `/games` into a complete daily cultural games portal framed in deep peacock stone (`--bg-peacock-deep`).
+  - Implemented 12 interactive games including Sollu (Tamil Wordle), Thodarbu (Connections), Kolam Path Solver, Thirukkural Memory, and Tamil crossword puzzles.
+  - Grounded with full keyboard navigation, touch responsiveness, accessible aria landmarks, and state persistence.
+
+- [x] **Photo Vault Studio Envelopes & Year Ledger (`/gallery`)**:
+  - Redesigned `/gallery` with tactile Kanchipuram silk and parchment paper envelopes featuring string-and-washer clasps.
+  - Integrated authentic Polaroid scatter previews on hover/tap.
+  - Added archival year ledger and direct links to Google Photos external vaults via `<VaultGateway>`.
+
+- [x] **Progress-Driven Kolam Page Loader (`KolamLoader.tsx`)**:
+  - Refactored page loader from an abrupt spinner to an unspooling Brahmamudi knot geometric weaving animation.
+  - Animated with SVG `pathLength: 0 → 1` and real-time telemetry (stage, coordinates, percentage counter) and cultural aphorisms.
+
+- [x] **Working Sikku Kolam Dual-Trigger Navbar (`Navbar.tsx` & `navRoutes.ts`)**:
+  - **Root Cause Fix**: Removed an erroneous `useEffect` in `Navbar.tsx` that auto-closed the menu upon opening while in the hero zone (`scrollY === 0`). Replaced with non-blocking delta scroll evaluation.
+  - **Dual-Trigger Activation**: Converted the collapsed active context pill into a clickable `<motion.button>` with hover effects and aria-label so clicking either the context pill OR the Brahmamudi knot toggle opens the menu.
+  - **10 Prioritized Primary Routes**: Reordered navigation routes by necessity:
+    1. `/` (Home)
+    2. `/events` (Events)
+    3. `/events/namma-deepavali-2026` (Next Event — with `NEXT` tag)
+    4. `/about` (About)
+    5. `/board` (Board)
+    6. `/gallery` (Gallery)
+    7. `/games` (Games — with badge)
+    8. `/guide` (Guide)
+    9. `/links` (Links)
+    10. `/suggestions` (Ideas)
+    *(Dedicated CTA: `/join` Join the Hearth ↗).*
+  - **Fluid Physics & Mobile Drawer**: Added `borderRadius: isOpen ? 24 : 9999` morphing with spring physics (`stiffness: 260, damping: 26`), unrolling the 4-petal knot into a clean "X" close icon, and implemented a comfortable 2-column mobile grid with `max-h-[75vh] overflow-y-auto`.
+  - **Automated Unit Testing**: Updated `SikkuKolamToggle.test.ts` to assert 10 primary routes, games badge, and next event badge (passed 3/3).
+  - **Vercel Production Deployment**: Commit `cb8a27b` successfully deployed and verified live on `https://tamil-sangam-website-osu.vercel.app/`.
+
+---
+
+## Historical Ledger: Games Page v1.1 & Cinematic Hybrid (October 2026)
 
 - [x] Milestone 1: Validated Games Data, Tamil Grapheme Splitter, Dictionary & Data Gate.
 - [x] Milestone 2: Lens-Shifted Projection Math & Parity / Registration Scripts.
@@ -10,7 +58,7 @@
 - [x] Milestone 8: Route, Navigation, Accessibility, Performance & E2E Verification.
 - All 8 Milestones Completed and Verified!
 
-## Hybrid cinematic implementation — 2026-10-27
+### Hybrid cinematic implementation — 2026-10-27
 
 - Baseline revision: `3cad14a5f73835b2bde911a25f6c008a3e9fa0a9`; feature branch `feat/games-hybrid-cinematic`. Prior v1.1 completion above remains historical.
 - Baseline native checks passed: `npm.cmd test -- --reporter=dot` (12 files, 71 tests); `verify-frame-parity.mjs`, `verify-lens-registration.mjs`, `verify-games-hero.mjs` with Node type stripping.
@@ -18,23 +66,7 @@
 - Runtime, asset production and independent browser QA in progress. Production art/performance acceptance remains open; see [evidence](docs/heroes/games-hero-hybrid-cinematic-evidence.md).
 - First independent Chromium browser subset passed: missing-manifest fallback, keyboard skip focusing `#arcade`, playable Thodarpu tab and context-loss fallback. Full media/static matrix awaits generated original posters/sequence.
 
-## Fixed camera and smoother playback — subsequent user steering
-
-- Reinspected working tree after Gemini changes; unrelated `src/components/ui/react-bits/*`, `src/context/LiteModeContext.tsx`, and new game thumbnails remain outside QA edit scope.
-- Current manifest baseline: `games-hybrid-2a7aee909b824ace`, 130 samples, 5,866,044 sequence bytes. SHA-256 audit: 36 files in `[0.64,0.85)` contain only one unique image; 15 files in `[0.85,0.94)` also contain only one unique image. The baseline does not contain the requested changing blast animation.
-- Existing `http://127.0.0.1:3000/games` responds; 3100 is absent. Fresh real-media `.42`/`.72`/`.93` captures and browser interval sampling are in progress. Prior intercepted pilot images are separate historical diagnostics.
-- Stale server was subsequently verified/restarted with authorization. Fresh task server is `http://127.0.0.1:3100`; real current-media debug captures succeeded and showed the legacy baked zoom that regeneration must replace.
-- Revised runtime browser subset: eight functional checks passed, including actual hand movement while a background plate is held. Ordinary-flow ninth case needs rerun after fixing its premature dynamic-hero query. All task Chromium instances closed during final media rendering to free graphics resources; final full matrix waits for asset-ready signal.
-- Parent reports revised camera/hand assertions and 82 unit checks passing; source typegen fixed transient generated-route errors, with fresh typecheck/lint passing. Final independent browser evidence remains separate from those reported source checks.
-- Runtime now fixes camera/projection throughout; removes portal hand zoom and transformed arcade handoff; uses continuous requested hand progress with displayed-media focus/light/lens/captions. Loaded-state guards prevent disposed-resource reuse on offscreen reentry; hidden startup deadlines pause and resume. New browser cases cover these lifecycles after final media encoding.
-- New original 149-frame batch in progress. Final unique blast hashes, fixed-scale late landmarks, byte totals and warm browser measurements pending; no production-art/performance acceptance claimed.
-- Final stronger-fire media installed: `games-hybrid-f410c08628fed149`, 149 plates, 7,972,676 bytes (7.60 MiB), 126 unique moving hashes and eight verified posters. No further art render planned.
-- Valid software matrix passed 17 functional checks; isolated follow-up passed hidden-before-first-draw, actual offscreen reentry and blast-to-exit skip imagery/focus. Delayed-plate software case saw three drawn frame IDs against four required; retain this result pending actual Iris Xe validation.
-- Hardware capability is real Intel Iris Xe ANGLE/D3D11. Earlier 16-second scrub exposed decode starvation (p95 108.4 ms, multi-second plate holds under concurrent software load). Cache now publishes nearest completed relevant frames, preserves in-flight continuous work and filters against direction reversal; deterministic cache/rail checks 20/20, full source unit total 91/13 reported passing. Final hardware full suite and isolated scrub await the final build's completion.
-- Final validation supersedes the pending notes above: final build/typecheck/lint passed; all 21 browser cases passed on final `f410` media using actual Iris Xe/D3D11 across bounded runs. Ordinary-scroll harness now continues natural wheel input past the tall GamesHub heading/media; neutral-ramp screenshot waits for the existing 250 ms poster fade, preserving its three-level tolerance.
-- Final delayed-response scrub advanced 67 distinct drawn samples in 181 observations with monotonic progress. Hidden startup, actual offscreen resource disposal/reentry and immediate exit-image skip/focus passed. Isolated warm 16.0165-second hardware scrub: first ready 2.0551 s, 946 animation callbacks, p95 callback interval 16.9 ms, maximum observed completed moving-sample gap 200.2 ms, decoded/pending bounds 6/4 and no page errors. Callback counts do not prove WebGL draw FPS; physical-device and photoreal art gates remain open.
-
-## Approved hybrid optimization — October 27, 2026
+### Approved hybrid optimization — October 27, 2026
 
 - Preserved source/media baseline in TEMP; user’s October Thodarpu CHAI content change remains untouched. Specialists own hero runtime, original offline media and independent browser evidence; parent owns hero integration and review.
 - Measured repeated plate texture allocation; final candidate reuses one GPU texture. Hero-local completed-composite/upload/pass diagnostics provide actual measurements; shared legacy timer-based HUD is unchanged. Intermediate hardware browser matrix passed 22 cases before unrelated shared-canvas changes; no texture-upload speed gain has been established.
@@ -44,19 +76,3 @@
 - Fresh parent checks passed: 34 hero unit tests, typecheck, affected-file ESLint, asset self-check, production build including numeric/149-frame verification, scoped whitespace checks and 14 local documentation links. Full `npm test` passed 110 assertions/16 files but failed discovery for two unrelated non-Vitest suite files; no runner changes made. Production smoke verified loaded revision, native close-up/blast progression, no failed media, no development hook and skip focus; retained one shared React #418 error.
 - Three isolated development runs measured 60.24 median composites/s with 28–29 1% lows; strict 45-low and 33 ms ignition gates remain unmet. A separate native-scroll production control measured 59.88 median and 5.79 1% low including three large pauses; no speedup or complete performance acceptance claimed. Exploratory tracing points to native-scroll style/layout work without proving a full cause. Detailed protocols/limits are in the optimization evidence; no other hero/shared infrastructure edits were made.
 - Independent runtime review found no blocking regression. Art/reference-anatomy approval, physical Safari/Firefox, Tier B performance and final measured J3 halo/edge gates remain open. All task render/browser/production-smoke jobs stopped; no commit or deployment.
-
-## Games slow-motion pacing follow-up
-
-- Reproduced a separate Skip-return bug: native scroll returned to the top while Games remained exited/paused at progress 1.0. Added Games-only passive return handling; both actual-wheel forward/reverse and Skip-return regressions passed before pacing changes. No other hero/shared scroll source edited.
-- User confirmed initial playback working; numbered buttons identified the intentional static-preview state. New steering requests slower cinematic pacing and seamless four-stage transitions.
-- Added a Games-only monotone C1 scroll-to-scene map. Desktop runway grows 340→640dvh; narrow landscape 260→480dvh; static remains 100dvh. Blast interval receives approximately 3.43× prior desktop physical scroll distance. Exact debug progress, camera/hand calibration, 149 media samples and three impact origins/times remain unchanged.
-- Existing captions crossfade from displayed-media progress with small CSS easing; only the active caption remains exposed to assistive technology. Final .94→1 scene progress fades into the existing arcade paper token with a stationary camera; static previews and explicit Skip retain their imagery.
-- Fresh checks passed: 52 focused unit tests, typecheck, affected-file ESLint, production build including numeric/frame/asset verification, scoped whitespace checks and six hardware Chromium cases (native-wheel forward/reverse, Skip-return, captions/final fade, ordinary arcade flow, reduced-motion static downloads, 375px touch). Inspected the 1912×800 final-fade screenshot. Earlier hardware FPS figures remain pre-retiming, with no new speedup claim. Shared hydration and prior strict frame-pacing limits remain outside this focused change. No commit or deployment.
-
-## Games hydration and frame-pacing fixes
-
-- User explicitly authorized the previously excluded shared hydration and pacing fixes. Other hero animation sources, camera/media calibration and Games story pacing remain unchanged.
-- Reproduced the completed baseline build's React #418 recovery and 72 offscreen editorial-background style mutations during a short hero wheel scroll. Production regression run: four failures and one pass before fixes. Original shared-source copies retained in `%TEMP%/sangam-shared-hydration-prechange`.
-- Canvas now starts with matching server/client null source and resolves its DOM source after mount. StarBorder uses its existing reduced-motion CSS instead of render-time media-dependent opacity; KolamSectionRule starts with deterministic markup and a reduced-motion transform override. Six fresh development hydration cases passed, including normal Games playback, Lite, reduced motion, desktop and 375px visits; five initial production regressions also passed.
-- EditorialBackgroundCanvas pauses scroll/pointer writes while offscreen and synchronizes on approach to the viewport. Its regression verifies zero offscreen writes plus correct visible rotation. Diagnostic tracing reduced typical style-recalc scope from 79 elements to six; raw timing runs remain variable and do not establish strict FPS acceptance.
-- Profiled recurring React style/scene updates and moved Games hand transforms to the existing frame callbacks, reading the existing continuous progress ref. Memoized the Games SceneView subtree between plate/lifecycle changes. Five motion/lifecycle browser regressions passed: held-background hand movement, wheel reversal, Skip-return, caption/final fade and actual offscreen resource reentry. Typecheck and Games-file lint passed. Final production build, full affected lint/unit checks and post-change hardware timing in progress.

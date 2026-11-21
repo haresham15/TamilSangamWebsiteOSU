@@ -2436,9 +2436,9 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1792036612.5425854,
-    "seen": 1793830245.8490262,
-    "ast_hash": "b66cdf16ae65b738a3c8fa905713a204",
+    "mtime": 1795296405.8817482,
+    "seen": 1795296488.5279408,
+    "ast_hash": "6b552aca29eb7d8c94950a31042271cb",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
@@ -2448,15 +2448,15 @@
     "semantic_hash": ""
   },
   "DESIGN.md": {
-    "mtime": 1790114658.7829523,
-    "seen": 1791920053.1873233,
-    "ast_hash": "1a99010c4df98a80cbf90b3ff90f2752",
+    "mtime": 1795295877.8183012,
+    "seen": 1795296488.5281963,
+    "ast_hash": "42180e215e2569b7140d9c91ce1ce794",
     "semantic_hash": ""
   },
   "GEMINI.md": {
-    "mtime": 1793828016.1909332,
-    "seen": 1793830245.8492737,
-    "ast_hash": "c1bbe6a37967b2baa3967d6949eab98a",
+    "mtime": 1795295642.31104,
+    "seen": 1795296488.5282004,
+    "ast_hash": "799b006f8f7abe0d79eea62b781099a5",
     "semantic_hash": ""
   },
   "PRD.MD": {
@@ -2466,9 +2466,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1793058529.688959,
-    "seen": 1793830245.8492851,
-    "ast_hash": "e83afd943381d9d389ba0a4430277ab3",
+    "mtime": 1795295804.1046364,
+    "seen": 1795296488.5290024,
+    "ast_hash": "c6e8279537b476bcf79a608fe0aa55b3",
     "semantic_hash": ""
   },
   "assets/RIGHTS.md": {
@@ -2544,9 +2544,9 @@
     "semantic_hash": ""
   },
   "src/components/AGENTS.md": {
-    "mtime": 1789955015.7329001,
-    "seen": 1791920053.1873648,
-    "ast_hash": "e89b6f9237f897a5f2641d7d153d2bd8",
+    "mtime": 1795295993.9435134,
+    "seen": 1795296488.5427592,
+    "ast_hash": "081b04d291ddad0badc0d3b8a589ea45",
     "semantic_hash": ""
   },
   "src/components/hero/HERO_V3_PRD.md": {
@@ -3198,9 +3198,9 @@
     "semantic_hash": ""
   },
   "codex.md": {
-    "mtime": 1792036612.5581677,
-    "seen": 1793830245.849295,
-    "ast_hash": "b3a181e8e3103de596345017cc4cd16d",
+    "mtime": 1795296029.6402175,
+    "seen": 1795296488.5309834,
+    "ast_hash": "21ae65520751dafee4a46e6611a1f843",
     "semantic_hash": ""
   },
   "docs/README.md": {
@@ -4128,9 +4128,9 @@
     "semantic_hash": ""
   },
   "src/components/events/EventsClientView.tsx": {
-    "mtime": 1795206911.92832,
-    "seen": 1795287457.7018263,
-    "ast_hash": "4dcc66770c5e336c26d803dde52df703",
+    "mtime": 1795287480.8473895,
+    "seen": 1795295574.0054047,
+    "ast_hash": "4fa9feedd2cde1f5f62a19653e156192",
     "semantic_hash": ""
   },
   "src/components/events/LiveBoxOfficeTicketModule.tsx": {
@@ -4272,9 +4272,9 @@
     "semantic_hash": ""
   },
   "src/components/gateways/GooglePhotosVaultsStrip.tsx": {
-    "mtime": 1795206613.8365185,
-    "seen": 1795287457.7520537,
-    "ast_hash": "0ab55daa7906063b40831440f9285736",
+    "mtime": 1795287465.6818821,
+    "seen": 1795295574.049118,
+    "ast_hash": "e44fc79b49fb551f1b1b14d9d187f104",
     "semantic_hash": ""
   },
   "src/components/gateways/GroupMePulseGateways.tsx": {
@@ -4350,21 +4350,21 @@
     "semantic_hash": ""
   },
   "src/components/navigation/NavBilingualItem.tsx": {
-    "mtime": 1795286971.1212077,
-    "seen": 1795287457.792151,
-    "ast_hash": "d30756e9cbdb705e89a99990124c35e4",
+    "mtime": 1795294667.6238637,
+    "seen": 1795295574.0915816,
+    "ast_hash": "65fce35b3fd145c694268b2a9e02aace",
     "semantic_hash": ""
   },
   "src/components/navigation/Navbar.tsx": {
-    "mtime": 1795287010.1768415,
-    "seen": 1795287457.7921548,
-    "ast_hash": "b5e3536d8ecd02f564b3b0181b94d5a8",
+    "mtime": 1795294658.9728334,
+    "seen": 1795295574.0915875,
+    "ast_hash": "0451a5b52777ff4461061a6265bec65f",
     "semantic_hash": ""
   },
   "src/components/navigation/SikkuKolamToggle.test.ts": {
-    "mtime": 1795126573.006379,
-    "seen": 1795141160.7977939,
-    "ast_hash": "93d4a544c55ff1b5a3d9ed312162e7a0",
+    "mtime": 1795294566.6076586,
+    "seen": 1795295574.091591,
+    "ast_hash": "59d11dbfa6cde73fa4ea26201d10d017",
     "semantic_hash": ""
   },
   "src/components/navigation/SikkuKolamToggle.tsx": {
@@ -4380,9 +4380,9 @@
     "semantic_hash": ""
   },
   "src/components/navigation/navRoutes.ts": {
-    "mtime": 1795287031.0566058,
-    "seen": 1795287457.7929637,
-    "ast_hash": "a123db6997ece83551d2df7d445e0d0b",
+    "mtime": 1795294554.8926854,
+    "seen": 1795295574.0929394,
+    "ast_hash": "7b44720e7395cde220115c29264c3b13",
     "semantic_hash": ""
   },
   "src/components/pillars/AatamMovementStudio.tsx": {
@@ -4458,15 +4458,15 @@
     "semantic_hash": ""
   },
   "src/components/ui/HeroKolamLoader.tsx": {
-    "mtime": 1793737822.7049663,
-    "seen": 1793830245.8435466,
-    "ast_hash": "8298a051d9896cf71c690b1b77b2495e",
+    "mtime": 1795287754.9113777,
+    "seen": 1795295574.1070642,
+    "ast_hash": "6f9eda9517a4359d34125426de170c3e",
     "semantic_hash": ""
   },
   "src/components/ui/KolamLoader.tsx": {
-    "mtime": 1795153564.5112526,
-    "seen": 1795153764.7399669,
-    "ast_hash": "55e4a252e857d58b635b3af8c774ccf5",
+    "mtime": 1795287746.8889966,
+    "seen": 1795295574.10788,
+    "ast_hash": "6e458c407495fe84667fd28f8d55268c",
     "semantic_hash": ""
   },
   "src/components/ui/KolamSectionRule.tsx": {
@@ -4734,9 +4734,9 @@
     "semantic_hash": ""
   },
   "PLAN.md": {
-    "mtime": 1793737822.2861328,
-    "seen": 1793830245.8492756,
-    "ast_hash": "450d14a743503380b5849c55d49d1515",
+    "mtime": 1795295965.9022963,
+    "seen": 1795296488.5282042,
+    "ast_hash": "18c09ad7f67a9d474f7c5f781f919436",
     "semantic_hash": ""
   },
   "PRD \u2014 Games Page v1.1 \u00b7 The Sangam Arcade & Beach Blast Sequence.md": {
@@ -4752,9 +4752,9 @@
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1793737822.291647,
-    "seen": 1793830245.849284,
-    "ast_hash": "e8fc7a31f69c662569abbcd09dc7c93e",
+    "mtime": 1795295934.7689972,
+    "seen": 1795296488.528999,
+    "ast_hash": "0487de611881f4a13af53d3b8899923c",
     "semantic_hash": ""
   },
   "SEO.md": {
@@ -4872,15 +4872,15 @@
     "semantic_hash": ""
   },
   "public/llms-full.txt": {
-    "mtime": 1795152833.32995,
-    "seen": 1795153328.3766832,
-    "ast_hash": "82235634501288f1f747a162ce9e6730",
+    "mtime": 1795296257.1497405,
+    "seen": 1795296488.5415454,
+    "ast_hash": "4dcab68d36927312f1fcd70dcad7fe90",
     "semantic_hash": ""
   },
   "public/llms.txt": {
-    "mtime": 1795152802.2921958,
-    "seen": 1795153328.3766854,
-    "ast_hash": "cfb18f188d91a1db67f90c5a96275830",
+    "mtime": 1795296075.459292,
+    "seen": 1795296488.541549,
+    "ast_hash": "d6fe4544ae40aaaa0c7a58c1af6b37ee",
     "semantic_hash": ""
   },
   "art/games-hybrid/source/coast_sand_02_diff_1k.jpg": {
@@ -8349,6 +8349,18 @@
     "mtime": 1795201394.9063663,
     "seen": 1795287457.833081,
     "ast_hash": "41abac09d740eb4f37b8a42b109b3697",
+    "semantic_hash": ""
+  },
+  "src/components/gallery/PhotoVaultArchive.tsx": {
+    "mtime": 1795290859.5285301,
+    "seen": 1795295574.0232909,
+    "ast_hash": "833fbeffff10193fafb06be7f3bb408a",
+    "semantic_hash": ""
+  },
+  "tests/photo-vault-archive.spec.ts": {
+    "mtime": 1795290416.1191003,
+    "seen": 1795295574.1674004,
+    "ast_hash": "1a4acf1fd44a21facad6f0d3c9ae1c4b",
     "semantic_hash": ""
   }
 }

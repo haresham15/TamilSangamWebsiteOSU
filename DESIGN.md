@@ -1,6 +1,8 @@
-# Project Aintinai (ஐந்திணை) — Official Design System
+# Project Aintinai (ஐந்திணை) — Official Design System & Token Ground Truth
 
-This document specifies the design tokens and architectural constraints for the OSU Tamil Sangam digital presence, adhering to the **W3C Design Tokens Community Group (DTCG)** three-tier hierarchy and **perceptually uniform OKLCH color spaces** rooted in the **official OSU Tamil Sangam emblem**: Royal Purple, Electric Mint Teal 3D extrusion, Soft Lilac Tamil watermark, and Warm Ivory typography.
+This document specifies the design tokens, color architecture, typography scales, and motion specifications for the OSU Tamil Sangam digital platform (`tamil-sangam-website-osu`).
+
+It adheres to the **W3C Design Tokens Community Group (DTCG)** three-tier hierarchy and **perceptually uniform OKLCH color spaces** grounded in the **official OSU Tamil Sangam emblem** and the **Master Kanchipuram Courtyard & Temple Stone Token System**.
 
 ---
 
@@ -9,90 +11,145 @@ This document specifies the design tokens and architectural constraints for the 
 ```mermaid
 flowchart LR
     subgraph Primitive["Tier 1: Primitive Tokens"]
-        P1["oklch(0.38 0.22 305) - Sangam Royal Purple (#4c2472)"]
-        P2["oklch(0.78 0.16 168) - Electric Mint Teal (#55CCA2)"]
-        P3["oklch(0.86 0.09 300) - Watermark Lilac (#e9d5ff)"]
-        P4["oklch(0.98 0.015 85) - Warm Ivory (#fffdf9)"]
-        P5["oklch(0.82 0.18 85) - Solar Gold (#f59e0b)"]
+        P1["oklch(0.38 0.22 305) - Sangam Deep (#1C122B)"]
+        P2["oklch(0.78 0.16 168) - Electric Mint Teal (#A6F0CF)"]
+        P3["oklch(0.97 0.015 85) - Warm Ivory (#FAF6F0)"]
+        P4["oklch(0.92 0.035 80) - Sunbaked Sandstone (#F0E6D6)"]
+        P5["oklch(0.72 0.14 78) - Zari Gold (#C79347)"]
+        P6["oklch(0.55 0.12 185) - Brand Teal (#0F766E / #2BB5A8)"]
     end
     subgraph Semantic["Tier 2: Semantic Tokens"]
-        S1["--color-action-primary"]
-        S2["--color-surface-base"]
-        S3["--color-border-mint"]
+        S1["--color-bg-ivory / --color-bg-sangam-deep"]
+        S2["--color-surface-card-light / --color-surface-card-dark"]
+        S3["--color-ink-earth / --color-ink-alabaster"]
+        S4["--color-accent-zari / --color-brand-teal"]
     end
     subgraph Component["Tier 3: Component Tokens"]
         C1["--button-primary-bg"]
-        C2["--card-surface-bg"]
-        C3["--logo-mint-shadow"]
+        C2["--envelope-clasp-border"]
+        C3["--kolam-node-stroke"]
+        C4["--navbar-pill-background"]
     end
     Primitive --> Semantic --> Component
 ```
 
 ---
 
-## 2. OKLCH Color Space: Official Logo & Festive Dravidian Palette
+## 2. Color Architecture: Kanchipuram Courtyard & Temple Stone
 
-All palette colors are defined in native, perceptually uniform **OKLCH**, ensuring equal luminance steps and vibrant collegiate energy.
+The palette balances warm, editorial daytime courtyard readability with royal nocturnal temple anchors. Strictly zero pure black (`#000000`) and zero dead un-tinted grays.
 
-### Core Pigment Palette (Primitives)
+### Pillar 1: Sunlit Temple Neutrals (Courtyard & Editorial Grounds)
 
-| Token Name | Cultural Name | OKLCH Value | Role & Character |
+| Token Name | Cultural Name | Hex / CSS Value | Role & Character |
 | :--- | :--- | :--- | :--- |
-| `--color-sangam-purple` | அரச ஊதா (Royal Violet) | `oklch(0.38 0.22 305)` | **Official emblem background**; rich regal purple (`#4c2472`) |
-| `--color-sangam-mint` | மரகதம் / புதினா (Mint Teal) | `oklch(0.78 0.16 168)` | **Signature 3D text shadow**; electric seafoam (`#55CCA2`) |
-| `--color-sangam-lilac` | நீலாம்பரி (Soft Lilac) | `oklch(0.86 0.09 300)` | **Repeating Tamil script watermark** (`#e9d5ff`) |
-| `--color-sangam-cream` | வெண்முத்து (Warm Ivory) | `oklch(0.98 0.015 85)` | **Main lettering fill**; crisp ivory white (`#fffdf9`) |
-| `--color-sangam-gold` | பொன்மஞ்சள் (Solar Gold) | `oklch(0.82 0.18 85)` | Harvest radiance, festive Pongal celebration (`#f59e0b`) |
-| `--color-sangam-coral` | குங்குமச் சிவப்பு (Kumkumam Coral) | `oklch(0.62 0.22 25)` | Energetic dance accents, celebration red (`#f43f5e`) |
+| `--color-bg-ivory` | வெண்முத்து (Warm Ivory) | `#FAF6F0` | Primary courtyard background, warm editorial canvas |
+| `--color-bg-sandstone` | மணற்பாறை (Sandstone) | `#F0E6D6` | Secondary courtyard ground, pill highlights, card backings |
+| `--color-surface-card-light` | வெள்ளைத்தாள் (Pure White Card) | `#FFFFFF` | Daytime editorial cards, guide listings, paper panels |
+| `--color-surface-card-parchment`| ஏட்டுச்சுவடி (Parchment Card) | `#F7EFE2` | Elevated parchment surfaces, dossier cards |
+| `--color-border-warm` | மணற்கோடு (Warm Sand Border) | `#DFD1BE` | Subtle daytime card borders and dividers |
 
-### The Five Landscape Themes (ஐந்திணை)
+### Pillar 2: Royal Deep Anchors (Temple Nocturne & Cinematic Surfaces)
 
-Each landscape dynamically re-tints the semantic layer:
+| Token Name | Cultural Name | Hex / CSS Value | Role & Character |
+| :--- | :--- | :--- | :--- |
+| `--color-bg-sangam-deep` | அரச கருநீலம் (Sangam Deep) | `#1C122B` | Primary nocturne ground, hero backgrounds, navbar pill |
+| `--color-surface-card-dark` | அந்தி மாடம் (Dark Card Surface) | `#271A3C` | Elevated dark cards, linktree cards, drawer containers |
+| `--color-bg-peacock-deep` | மயில் கருநீலம் (Peacock Deep) | `#102830` | Oceanic temple base, games hub arcade ground |
+| `--color-surface-card-peacock` | மயில் மாடம் (Peacock Card) | `#173640` | Arcade cards, interactive game grids |
 
-1. **மருதம் (Marutham — Plains & Assembly)**
-   - *Primary Accent*: `--color-temple-bronze` (`oklch(0.68 0.16 85)`)
-   - *Secondary*: `--color-olai-green` (`oklch(0.60 0.12 135)`)
-   - *Sky Gradient*: `linear-gradient(180deg, oklch(0.14 0.02 60) 0%, oklch(0.18 0.03 80) 50%, oklch(0.24 0.05 90) 100%)`
+### Pillar 3: Hero Bridging & Metallic Accents
 
-2. **நெய்தல் (Neithal — Seashore & Estuaries)**
-   - *Primary Accent*: `--color-mayil-teal` (`oklch(0.52 0.14 195)`)
-   - *Secondary*: `--color-kumkumam-crimson` (`oklch(0.55 0.22 28)`)
-   - *Sky Gradient*: `linear-gradient(180deg, oklch(0.12 0.03 240) 0%, oklch(0.20 0.06 250) 60%, oklch(0.28 0.08 260) 100%)`
+| Token Name | Cultural Name | Hex / CSS Value | Role & Character |
+| :--- | :--- | :--- | :--- |
+| `--color-accent-zari` | சரிகைத்தங்கம் (Zari Gold) | `#C79347` | Metallic filigree, kolam nodes, premium borders |
+| `--color-accent-bronze` | சிற்ப வெண்கலம் (Temple Bronze) | `#9A6B3E` / `#D4A36A` | Architectural borders, warm metallic clasps |
+| `--color-brand-teal` | மரகதப்பச்சை (Emerald Teal) | `#0F766E` / `#2BB5A8` | Interactive accents, live tags (`NEXT`), hover blooms |
+| `--color-accent-kumkum` | குங்குமம் (Kumkum Red) | `#B84A39` / `#E06D58` | Urgency tags, badge pings, festive highlights |
+| `--color-brand-lavender` | நீலாம்பரி (Soft Lavender) | `oklch(80.2% 0.075 304.4)` | High-contrast accent on peacock/sangam-deep (8.1:1 contrast) |
+| `--color-border-zari-muted` | சரிகைக்கோடு (Muted Zari Border)| `rgba(212, 163, 106, 0.24)` | Subtle gold borders on dark containers |
 
-3. **முல்லை (Mullai — Forest & Jasmine Groves)**
-   - *Primary Accent*: `--color-olai-green` (`oklch(0.60 0.12 135)`)
-   - *Secondary*: `--color-temple-bronze` (`oklch(0.68 0.16 85)`)
-   - *Sky Gradient*: `linear-gradient(180deg, oklch(0.12 0.02 140) 0%, oklch(0.18 0.04 145) 60%, oklch(0.24 0.05 135) 100%)`
+### Pillar 4: Ink & Typographic Hierarchy
 
-4. **பாலை (Paalai — Sun-Drenched Earth & Journey)**
-   - *Primary Accent*: `--color-terracotta` (`oklch(0.48 0.18 38)`)
-   - *Secondary*: `--color-temple-bronze` (`oklch(0.68 0.16 85)`)
-   - *Sky Gradient*: `linear-gradient(180deg, oklch(0.14 0.03 38) 0%, oklch(0.20 0.05 40) 60%, oklch(0.26 0.06 42) 100%)`
-
-5. **குறிஞ்சி (Kurinji — High Mountain Neelakurinji Bloom)**
-   - *Primary Accent*: `oklch(0.62 0.18 290)` (Neelakurinji Violet)
-   - *Secondary*: `--color-neeli-midnight` (`oklch(0.24 0.09 265)`)
-   - *Sky Gradient*: `linear-gradient(180deg, oklch(0.12 0.03 280) 0%, oklch(0.18 0.05 285) 60%, oklch(0.24 0.07 290) 100%)`
+| Token Name | Cultural Name | Hex / CSS Value | Role & Character |
+| :--- | :--- | :--- | :--- |
+| `--color-ink-earth` | சுடுமண் மை (Earth Ink) | `#261A14` | High-contrast daytime body and headline typography |
+| `--color-ink-umber` | கருங்காப்பி மை (Umber Ink) | `#5E4C40` | Secondary daytime typography, subheadings, metadata |
+| `--color-ink-alabaster` | பளிங்கு மை (Alabaster Ink) | `#FAF5ED` | High-contrast nocturne headline and primary text |
+| `--color-ink-sand` | மணல் மை (Sand Ink) | `#CBBBA8` | Secondary nocturne typography, telemetry labels |
 
 ---
 
-## 3. Typography Hierarchy: Clash Display & Mukta Malar
+## 3. Official Emblem Palette (Emblem Engine & Chromatic Accents)
 
-- **Display Headings (English / Latin)**: `Clash Display` (`var(--font-display)`)
-  - Expressive geometric authority, high character, wide stance.
-  - Tight line heights (`leading-[1.05–1.15]`), optical tracking.
-- **Body & Authentic Tamil Typography**: `Mukta Malar` (`var(--font-body)` / `var(--font-tamil)`)
-  - Crafted specifically for classical and modern Tamil scripts; zero character clipping.
-  - Generous line height on Tamil: `leading-[1.72]`, `letter-spacing: 0`.
-- **Monospace & Metadata**: `JetBrains Mono` (`var(--font-mono)`)
+The official OSU Tamil Sangam emblem anchors these chromatic accents:
+
+| Token Name | Cultural Name | Value | Role |
+| :--- | :--- | :--- | :--- |
+| `--color-sangam-purple` | அரச ஊதா (Royal Purple) | `#6B4E94` / `#4c2472` | Emblem core body, regalia banners |
+| `--color-sangam-mint` | மரகதம் (Electric Mint) | `#A6F0CF` / `#55CCA2` | Emblem 3D extrusion, luminous interactive accents |
+| `--color-sangam-lilac` | நீலாம்பரி (Watermark Lilac) | `#C4B7D7` / `#e9d5ff` | Watermarks, subtle icons, decorative glyphs |
+| `--color-sangam-cream` | வெண்முத்து (Cream Ivory) | `#F4F0FA` / `#fffdf9` | Emblem text fill, crisp light foreground |
+| `--color-sangam-coral` | குங்குமச் சிவப்பு (Chromatic Pink) | `#F26BB5` | Chromatic fringe, celebration banners |
+| `--color-sangam-cyan` | மயிற்பச்சை (Chromatic Cyan) | `#4FD6E0` | Cybernetic accents, WebGL lens flare highlights |
 
 ---
 
-## 4. Motion Tokens & Physics Parameters
+## 4. Typography Hierarchy & Bilingual Standards
 
-| Animation Type | Engine | Parameters | Usage |
+The typography balances classic Dravidian monumental grace with crisp collegiate readability.
+
+```text
+Display / Serif:  Marcellus, Prata, Cormorant (fallback: serif)
+Body / Sans:      Outfit (fallback: system sans-serif)
+Authentic Tamil:  Mukta Malar (fallbacks: Tiro Tamil, Kavivanar, serif)
+Mono / Data:      Fragment Mono, Azeret Mono, JetBrains Mono
+```
+
+### Tamil Script Invariants (§7.3)
+- **Attribute**: All Tamil script must be wrapped in `lang="ta"`.
+- **Zero Letter-Spacing**: Never apply tracking or letter spacing to Tamil script (`letterSpacing: 0` / `tracking-normal`). Expanding Tamil breaks conjunct ligatures.
+- **Line Height**: Minimum `leading-[1.6]` to `leading-[1.72]` to prevent vowel sign (`கொம்பு`, `சுழி`) vertical clipping.
+- **Grapheme Splitting**: Never split Tamil strings by UTF-16 code units (`str.split('')`). Always use `Intl.Segmenter` with `{ granularity: 'grapheme' }` via `src/lib/tamil.ts` or `src/lib/tamilGraphemes.ts`.
+- **No Uppercase**: Never apply CSS `uppercase` or `capitalize` transforms to Tamil text.
+
+### Fluid Typography Scale (§7.1)
+- `--text-display`: `clamp(2.5rem, 1rem + 5vw, 6rem)` — Hero H1 titles.
+- `--text-title`: `clamp(1.75rem, 1rem + 2.6vw, 3.5rem)` — Section headings.
+- `--text-body`: `clamp(1rem, 0.95rem + 0.25vw, 1.125rem)` — Editorial body copy.
+- `--text-mark`: `clamp(8rem, 5rem + 22vw, 26rem)` — Decorative watermarks (`aria-hidden="true"`).
+
+---
+
+## 5. Modern Motion Engineering & Physics Parameters
+
+All animations must honor user accessibility preferences via `prefers-reduced-motion` and the project Lite Mode toggle.
+
+| Interaction Type | Engine | Specification / Curve | Usage |
 | :--- | :--- | :--- | :--- |
-| **Direct Interaction (Tilt/Hover/Pull)** | Spring | `stiffness: 350, damping: 28` | 3D card tilt, button magnetism |
-| **Modal / Lightbox Morph** | Framer Motion | `layout`, `layoutId` | Shared element card to lightbox morph |
-| **List Sequencing** | Variant | `staggerChildren: 0.07s, delayChildren: 0.1s` | Board roster, event timeline, gallery |
-| **Systemic Route Fades** | Tween | `duration: 0.35s, ease: [0.16, 1, 0.3, 1]` | Route transition and modal backdrop |
+| **Direct Manipulation** | Spring | `stiffness: 260–350, damping: 24–28` | Kolam knot unrolling, button hover magnetism, tilt cards |
+| **Systemic Transitions** | Tween | `duration: 0.35s, ease: [0.16, 1, 0.3, 1]` | Route changes, modal backdrops, drawer expansions |
+| **Kolam Progress Weaving** | SVG Path | `pathLength: 0 → 1, ease: "easeInOut"` | Page loader Brahmamudi knot unspooling & telemetry count |
+| **Choreographed Stagger** | Variants | `staggerChildren: 0.05s–0.08s, delayChildren: 0.05s` | Navigation links unrolling, card grids, photo vault tiles |
+| **Shared Element Morph** | Framer | `layoutId`, `layout` | Envelope to photo album expansion, game victory modals |
+
+---
+
+## 6. Signature Cultural Components
+
+1. **Sikku Kolam Dual-Trigger Navbar (`src/components/navigation/Navbar.tsx`)**:
+   - Collapsed state: Elegant floating glass pill (`--bg-sangam-deep`) displaying active route context alongside a 4-petal Brahmamudi knot toggle.
+   - Dual-trigger activation: Clicking either the context pill or the knot toggle opens the menu.
+   - Expanded state: Spring-unraveled menu revealing 10 prioritized primary routes with gold borders (`--border-zari-muted`) and mobile 2-column responsive layout.
+
+2. **Progress-Driven Kolam Loader (`src/components/ui/KolamLoader.tsx`)**:
+   - Replaces abrupt flash spinners with continuous geometric rice-flour thread weaving.
+   - Displays real-time telemetry (stage, coordinates, percentage counter) and cultural aphorism.
+
+3. **Photo Vault Studio Envelopes (`src/components/gallery/`)**:
+   - Tactile Kanchipuram silk and parchment paper envelopes with string-and-washer clasps.
+   - Hover reveals randomized authentic Polaroid scatter previews before opening full photo vaults.
+
+4. **Sangam Arcade Daily Suite (`src/components/games/`)**:
+   - Unified 12-game arcade hub (`/games`) framed in deep peacock stone (`--bg-peacock-deep`).
+   - Daily puzzle rotations (Sollu Wordle, Thodarbu Connections, Kolam Path Solver, Thirukkural Memory).

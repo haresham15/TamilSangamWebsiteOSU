@@ -18,14 +18,19 @@ TamilSangamWebsiteOSU/
 │   │   │   └── [slug]/               # Randomized Editorial Dossier & ReactBits kinematics
 │   │   ├── about/                    # Mission, timeline, alliances & democratic constitution
 │   │   ├── board/                    # Executive leadership, trading cards & Chola Darbar hero
-│   │   ├── gallery/                  # Memory Vault, 35mm archive & Fretboard Highway hero
-│   │   ├── guide/                    # Student knowledge base & Solari split-flap departure hero
+│   │   ├── gallery/                  # Memory Vault, 35mm archive, Polaroid stacks & Studio Envelopes
+│   │   ├── games/                    # Sangam Arcade daily hub (Sollu Wordle, Thodarbu, 12 games)
+│   │   ├── guide/                    # Student knowledge base, dining guide & Solari departure hero
 │   │   ├── suggestions/              # Ideas Hearth & Ohio Stadium 3D blueprint hero
 │   │   ├── join/                     # Membership gateway & Morning Campus gates hero
-│   │   └── links/                    # Ultra-light bio hub (<30 KB, no WebGL) for mobile bio
+│   │   ├── links/                    # Ultra-light bio hub (<30 KB, no WebGL) for mobile bio
+│   │   └── faq/                      # Searchable categorized FAQs & student life queries
 │   │
 │   ├── components/                   # UI components partitioned by feature domain
+│   │   ├── navigation/               # Sikku Kolam dual-trigger unraveling navbar & route engine
 │   │   ├── events/                   # Event list, dossier views, SplitText, ParallaxScatter, VaultGateway
+│   │   ├── gallery/                  # Tactile Studio Envelopes, authentic Polaroids & Year Ledger
+│   │   ├── games/                    # Sangam Arcade daily game engine, Sollu Wordle & Thodarbu
 │   │   ├── gen3/                     # Leo concert stadium 3D arena (trusses, crowd, torches, emblem)
 │   │   ├── hero/                     # Digital Kolam conveyor peel hero & Lissajous flow math
 │   │   ├── gallery-hero/             # 24-fret 12-TET guitar neck highway & string physics
@@ -34,7 +39,7 @@ TamilSangamWebsiteOSU/
 │   │   ├── suggestions/              # Ohio Stadium 3D wireframe blueprint scene
 │   │   ├── join/                     # Morning campus collegiate wrought-iron gates & leaf drift
 │   │   ├── gl/                       # Persistent GlobalCanvas, view scissoring & asset pre-warm
-│   │   └── ui/                       # Reusable primitives (Magnetic, WatermarkGlyph, DitherVeil, etc.)
+│   │   └── ui/                       # Reusable primitives (KolamLoader, DitherVeil, Magnetic, etc.)
 │   │
 │   ├── engine/                       # Core simulation & rendering coordinator
 │   │   ├── masterTick.ts             # Single unified rAF ticker with delta clamping (≤ 50ms)
@@ -43,8 +48,8 @@ TamilSangamWebsiteOSU/
 │   │
 │   ├── gl/grade/                     # Cinematic color grading (AGX tonemapper, 33³ LUT strip)
 │   ├── audio/                        # Web Audio synthesis singleton, impact bus & sound design
-│   ├── data/                         # Typed static data (events, gallery, board, constitution, FAQ)
-│   ├── lib/                          # Server-side utilities & photo pool randomizer (event-photos.ts)
+│   ├── data/                         # Typed static data (events, gallery, board, constitution, games)
+│   ├── lib/                          # Server-side utilities, photo pool randomizer & Tamil graphemes
 │   └── context/                      # React contexts (LocaleContext, AudioContext)
 │
 ├── public/                           # Static assets, 3D models, fonts, and local event photo pools
@@ -61,10 +66,10 @@ TamilSangamWebsiteOSU/
 │   └── screenshots/                  # Progression renders and state matrices
 │
 ├── screenshots/                      # Full-page visual regression artifacts
-│   ├── content-audit/                # 9 full-page captures + interactive Framer inspection board
+│   ├── content-audit/                # 10 full-page captures + interactive Framer inspection board
 │   └── archive/                      # Historical scratch screenshots
 │
-└── tests/                            # Playwright end-to-end tests
+└── tests/                            # Playwright end-to-end tests & Vitest unit suites
 ```
 
 ---
@@ -110,10 +115,11 @@ node scripts/capture-content-audit.mjs
 
 ## 🎨 Design Engineering Ground Truth
 
-- **Muttram Philosophy:** Naked layouts on Warm Ivory (`#FAF9F6`), Charcoal (`#2A2825`), and Terracotta (`#B85C38`). Strictly zero card wrappers or decorative emojis.
+- **Kanchipuram Courtyard & Temple Stone Palette:** Warm temple neutrals (Warm Ivory `#FAF6F0`, Sunlit Sandstone `#F0E6D6`), Royal deep anchors (Sangam Deep `#1C122B`, Royal Violet `#25173B`, Peacock Deep `#102830`), and Hero bridging accents (Zari Gold `#C79347`, Temple Bronze `#9A6B3E`/`#D4A36A`, Radiant Bloom `#2BB5A8`, Kumkum Red `#B84A39`). Strictly zero un-tinted black (`#000000`), zero card clutter, and zero decorative emoji bullets.
+- **Sikku Kolam Dual-Trigger Navigation:** Dual-trigger unrolling navigation bar (context pill + Brahmamudi knot toggle) orchestrating 10 primary prioritized routes with spring physics and mobile 2-column drawer.
 - **Master PRD:** Read [`PRD.MD`](./PRD.MD) for full subsystem specifications, mathematical derivations, and invariants.
 - **Design Tokens:** Read [`DESIGN.md`](./DESIGN.md) and [`design/tokens.json`](./design/tokens.json).
-- **Tamil Text Safety:** Never split Tamil text by code unit; all kinetic text uses `Intl.Segmenter` with grapheme cluster granularity.
+- **Tamil Text Safety:** Never split Tamil text by code unit; all kinetic text uses `Intl.Segmenter` with grapheme cluster granularity (`lang="ta"`, `letter-spacing: 0`, line-height $\ge 1.6$).
 
 ---
 
