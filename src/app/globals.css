@@ -903,6 +903,25 @@ body {
   }
 }
 
+/* Fluid GPU Kolam Loader Keyframes (Zero Main-Thread Freezing) */
+@keyframes kolamWeaveFlow {
+  0% {
+    stroke-dashoffset: 200;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes hairlineShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 @keyframes marquee-left {
   0% {
     transform: translate3d(0%, 0, 0);

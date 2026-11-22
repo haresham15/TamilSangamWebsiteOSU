@@ -1,8 +1,8 @@
 // src/components/ui/KolamLoader.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import React from "react";
+import { useReducedMotion } from "framer-motion";
 
 export interface KolamLoaderProps {
   size?: number;
@@ -17,11 +17,11 @@ export interface KolamLoaderProps {
 
 // 5-Pulli Matrix (Auspicious Tamil household entrance Brahmamudi Kolam)
 const PULLIS = [
-  { id: "center", x: 60, y: 60, r: 2.8, threshold: 0, center: true }, // Sacred Bindu Center
-  { id: "north", x: 60, y: 34, r: 2.0, threshold: 22 },               // North
-  { id: "east", x: 86, y: 60, r: 2.0, threshold: 46 },                // East
-  { id: "south", x: 60, y: 86, r: 2.0, threshold: 70 },               // South
-  { id: "west", x: 34, y: 60, r: 2.0, threshold: 88 },                // West
+  { id: "center", x: 60, y: 60, r: 2.8, center: true }, // Sacred Bindu Center
+  { id: "north", x: 60, y: 34, r: 2.0, center: false }, // North
+  { id: "east", x: 86, y: 60, r: 2.0, center: false },  // East
+  { id: "south", x: 60, y: 86, r: 2.0, center: false }, // South
+  { id: "west", x: 34, y: 60, r: 2.0, center: false },  // West
 ];
 
 export const ROUTE_INFO_MAP: Record<
@@ -100,23 +100,6 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
   isExpanding = false,
 }) => {
   const reducedMotion = useReducedMotion();
-  const [progress, setProgress] = useState(14);
-
-  // Smooth progressive animation ticker simulating realistic resource resolution
-  useEffect(() => {
-    let current = 14;
-    const interval = setInterval(() => {
-      const remaining = 98 - current;
-      if (remaining > 0.4) {
-        // Natural deceleration curve: brisk initial progression, steady glide towards 98%
-        const step = Math.max(0.65, remaining * 0.08);
-        current = Math.min(98, current + step);
-        setProgress(Math.round(current));
-      }
-    }, 45);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const cleanRoute = (route || "").split("?")[0].split("#")[0].replace(/\/+$/, "") || "/";
   const meta = ROUTE_INFO_MAP[cleanRoute] || {
@@ -127,24 +110,23 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
 
   const english = titleEn || meta.titleEn;
   const tamil = titleTa || meta.titleTa;
-  const normalizedProgress = progress / 100;
 
   const content = (
     <div
-      className={`relative z-10 flex flex-col items-center justify-center select-none text-center px-4 transition-all duration-300 ${
+      className={`relative z-10 flex flex-col items-center justify-center select-none text-center px-4 max-w-full transition-all duration-300 ${
         isExpanding ? "opacity-0 scale-95" : "opacity-100 scale-100"
       }`}
     >
-      {/* 1. Progress-Driven Kolam Weaving Motif */}
+      {/* 1. GPU-Accelerated Kolam Weaving Motif (Runs off main JS thread: never freezes or hitches) */}
       <div
         className="relative flex items-center justify-center"
-        style={{ width: size, height: size }}
+        style={{ width: size, height: size, maxWidth: "70vw", maxHeight: "70vw" }}
       >
         <svg
           viewBox="0 0 120 120"
           width={size}
           height={size}
-          className="overflow-visible"
+          className="overflow-visible w-full h-full"
           aria-hidden="true"
         >
           {/* Subtle Outer Guideline Ring (slow gentle rotation) */}
@@ -187,41 +169,37 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
             }
           />
 
-          {/* 5-Pulli Dot Lattice: Illuminates in sequence as Kolam ribbon reaches each quadrant */}
-          {PULLIS.map((p) => {
-            const isReached = progress >= p.threshold;
-            return (
-              <g key={p.id}>
-                {isReached && (
+          {/* 5-Pulli Dot Lattice: Center Bindu + 4 Directional Dots */}
+          {PULLIS.map((p) => (
+            <g key={p.id}>
+              {p.center ? (
+                <>
                   <circle
                     cx={p.x}
                     cy={p.y}
                     r={p.r + 2.5}
-                    fill={p.center ? "rgba(199, 147, 71, 0.2)" : "rgba(43, 181, 168, 0.2)"}
+                    fill="rgba(199, 147, 71, 0.25)"
+                    className={reducedMotion ? "" : "animate-pulse"}
                   />
-                )}
-                <circle
-                  cx={p.x}
-                  cy={p.y}
-                  r={p.r}
-                  fill={
-                    p.center
-                      ? "#C79347"
-                      : isReached
-                      ? "#2BB5A8"
-                      : "rgba(203, 187, 168, 0.35)"
-                  }
-                  style={{
-                    transition: "fill 0.3s ease, transform 0.3s ease",
-                  }}
-                />
-              </g>
-            );
-          })}
+                  <circle cx={p.x} cy={p.y} r={p.r} fill="#C79347" />
+                </>
+              ) : (
+                <>
+                  <circle
+                    cx={p.x}
+                    cy={p.y}
+                    r={p.r + 1.8}
+                    fill="rgba(43, 181, 168, 0.2)"
+                    className={reducedMotion ? "" : "animate-pulse"}
+                  />
+                  <circle cx={p.x} cy={p.y} r={p.r} fill="#2BB5A8" />
+                </>
+              )}
+            </g>
+          ))}
 
-          {/* Continuous Sacred 4-Petal Sikku Knotwork (Brahmamudi Loop) */}
-          {/* pathLength is dynamically bound to loading progress: thread physically weaves! */}
-          <motion.path
+          {/* Base Ghost Path: Outlines the sacred knotwork geometry */}
+          <path
             d="
               M 60 16
               C 76 16, 78 40, 64 52
@@ -235,19 +213,38 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
             "
             fill="none"
             stroke="#C79347"
-            strokeWidth="2"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity="0.22"
+          />
+
+          {/* Continuous Sacred 4-Petal Sikku Knotwork (Brahmamudi Loop) */}
+          {/* Hardware-accelerated CSS stroke-dash flow: butter smooth at 60fps on GPU thread */}
+          <path
+            d="
+              M 60 16
+              C 76 16, 78 40, 64 52
+              C 76 38, 104 40, 104 60
+              C 104 80, 76 82, 64 68
+              C 78 80, 76 104, 60 104
+              C 44 104, 42 80, 56 68
+              C 44 82, 16 80, 16 60
+              C 16 40, 44 38, 56 52
+              C 42 40, 44 16, 60 16 Z
+            "
+            pathLength={100}
+            fill="none"
+            stroke="#C79347"
+            strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
             style={{
               filter: "drop-shadow(0 0 6px rgba(199, 147, 71, 0.45))",
+              strokeDasharray: reducedMotion ? "none" : "45 55",
+              strokeDashoffset: 0,
+              animation: reducedMotion ? "none" : "kolamWeaveFlow 2.8s linear infinite",
             }}
-            initial={reducedMotion ? false : { pathLength: 0.14 }}
-            animate={
-              reducedMotion
-                ? { pathLength: 1 }
-                : { pathLength: Math.min(1, Math.max(0.14, normalizedProgress)) }
-            }
-            transition={{ ease: "easeOut", duration: 0.18 }}
           />
         </svg>
       </div>
@@ -266,25 +263,30 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
         </span>
       </div>
 
-      {/* 3. Sleek Ceremonial Progress Bar & Telemetry */}
-      <div className="mt-5 flex flex-col items-center w-52 sm:w-60">
-        {/* Track Container */}
-        <div className="w-full h-[2.5px] rounded-full bg-white/10 overflow-hidden relative border border-white/5">
-          <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-[#C79347] via-[#2BB5A8] to-[#C79347] shadow-[0_0_12px_rgba(199,147,71,0.6)]"
-            initial={{ width: "14%" }}
-            animate={{ width: `${progress}%` }}
-            transition={{ ease: "easeOut", duration: 0.15 }}
+      {/* 3. Sleek Ceremonial Hairline Progress Gauge (Smooth GPU Shimmer) */}
+      <div className="mt-5 flex flex-col items-center w-48 sm:w-56 max-w-full">
+        {/* Hairline Track */}
+        <div className="w-full h-[2px] rounded-full bg-white/10 overflow-hidden relative">
+          <div
+            className="absolute inset-0 w-full h-full rounded-full"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent 0%, #C79347 40%, #2BB5A8 70%, transparent 100%)",
+              backgroundSize: "200% 100%",
+              animation: reducedMotion ? "none" : "hairlineShimmer 1.8s ease-in-out infinite",
+            }}
           />
         </div>
 
-        {/* Status Label & Percentage Readout */}
-        <div className="flex items-center justify-between w-full mt-2 font-mono text-[10px] tracking-wider text-[#CBBBA8]/80">
-          <span className="uppercase text-[#2BB5A8] tracking-[0.16em] font-medium">
+        {/* Status Label */}
+        <div className="flex items-center justify-center w-full mt-2.5 font-mono text-[10px] tracking-widest text-[#CBBBA8]/80">
+          <span className="uppercase text-[#2BB5A8] tracking-[0.16em] font-medium flex items-center gap-1.5">
+            <span
+              className={`inline-block w-1.5 h-1.5 rounded-full bg-[#2BB5A8] ${
+                reducedMotion ? "" : "animate-pulse"
+              }`}
+            />
             {meta.subtitleEn}
-          </span>
-          <span className="font-semibold text-[#FAF5ED] tabular-nums font-mono">
-            {progress}%
           </span>
         </div>
       </div>
@@ -294,20 +296,17 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
   if (fullScreen) {
     return (
       <div
-        className={`fixed inset-0 z-[9990] flex items-center justify-center bg-[#1C122B] text-[#FAF5ED] overflow-hidden ${className}`}
+        className={`fixed inset-0 z-[9990] flex items-center justify-center bg-[var(--color-bg,#140C20)] text-[#FAF5ED] overflow-hidden select-none ${className}`}
         aria-live="polite"
         aria-busy="true"
         role="progressbar"
-        aria-valuenow={progress}
-        aria-valuemin={0}
-        aria-valuemax={100}
       >
-        {/* Warm Ambient Courtyard Light Bloom */}
+        {/* Soft Ambient Courtyard Radial Glow */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse 700px 450px at 50% 50%, rgba(199, 147, 71, 0.08) 0%, rgba(43, 181, 168, 0.04) 45%, transparent 75%)",
+              "radial-gradient(ellipse 700px 450px at 50% 50%, rgba(199, 147, 71, 0.08) 0%, rgba(43, 181, 168, 0.03) 45%, transparent 75%)",
           }}
           aria-hidden="true"
         />
@@ -318,23 +317,11 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
 
   return (
     <div
-      className={`relative w-full h-full flex items-center justify-center bg-[#1C122B] text-[#FAF5ED] min-h-[260px] py-12 ${className}`}
+      className={`relative w-full flex items-center justify-center bg-transparent text-[#FAF5ED] py-6 select-none ${className}`}
       aria-live="polite"
       aria-busy="true"
       role="progressbar"
-      aria-valuenow={progress}
-      aria-valuemin={0}
-      aria-valuemax={100}
     >
-      {/* Warm Ambient Light Bloom */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 50%, rgba(199, 147, 71, 0.06) 0%, transparent 70%)",
-        }}
-        aria-hidden="true"
-      />
       {content}
     </div>
   );

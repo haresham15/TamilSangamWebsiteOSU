@@ -218,7 +218,7 @@ export const Shutter = forwardRef<ShutterHandle, ShutterProps>(function Shutter(
       <div className="relative z-10 flex flex-col items-center justify-center">
         <KolamLoader
           route={targetRoute}
-          size={230}
+          size={160}
           isExpanding={isExpanding}
         />
       </div>
