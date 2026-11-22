@@ -8,6 +8,7 @@ import { PathirikaiFormFrame } from "@/components/ui/PathirikaiFormFrame";
 import { CulturalSection } from "@/components/ui/CulturalSection";
 import { CulturalCard } from "@/components/ui/CulturalCard";
 import { EditorialBackgroundCanvas } from "@/components/ui/EditorialBackgroundCanvas";
+import { ThresholdSeam } from "@/components/ui/ThresholdSeam";
 import { Eyebrow } from "@/components/muttram/Eyebrow";
 
 interface DancePerformanceSpaceProps {
@@ -134,6 +135,9 @@ export function DancePerformanceSpace({
           </div>
         </div>
       </CulturalSection>
+      <div className="relative" aria-hidden="true">
+        <ThresholdSeam surface="ivory" variant="knot" />
+      </div>
 
       {/* I · Performance categories: editorial split */}
       <CulturalSection variant="ivory" aria-labelledby="dance-categories-title" className="py-20 sm:py-28">

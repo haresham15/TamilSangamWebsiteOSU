@@ -632,7 +632,7 @@ export function HomeClient() {
           THE SUNLIT MUTTRAM (COURTYARD): bands below the pinned hero.
           D Puranaanuru ribbon → S flagship (feature + rail) → I pillars → S kinship ledger → P closer
           ========================================================================= */}
-      <EditorialSheetHandoff id="flagship-gathering" badge="CAMPUS HEARTH" sublabel="COLUMBUS, OH" overlapHero={false}>
+      <EditorialSheetHandoff id="flagship-gathering" badge="CAMPUS HEARTH" sublabel="COLUMBUS, OH" overlapHero={false} seam="knot">
 
         {/* 1. Puranaanuru 192 ribbon: pull-quote (recipe C) between korvai seams */}
         <CulturalSection variant="sangam-deep" divider="korvai" aria-labelledby="puranaanuru-title">

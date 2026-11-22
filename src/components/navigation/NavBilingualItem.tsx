@@ -29,12 +29,17 @@ export const NavBilingualItem: React.FC<NavBilingualItemProps> = ({
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 6, filter: "blur(4px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      exit={{ opacity: 0, y: 4, filter: "blur(2px)" }}
+      initial={{ opacity: 0, x: -8, filter: "blur(3px)" }}
+      animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+      exit={{
+        opacity: 0,
+        x: -4,
+        filter: "blur(2px)",
+        transition: { duration: 0.12, ease: "easeOut" },
+      }}
       transition={{
         duration: 0.22,
-        delay: index * 0.025 + 0.05,
+        delay: index * 0.025 + 0.04,
         ease: [0.16, 1, 0.3, 1],
       }}
       className="relative shrink-0"

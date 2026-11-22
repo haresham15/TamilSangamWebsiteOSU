@@ -35,6 +35,7 @@ export function GamesClient() {
           sublabel="BIWEEKLY TAMIL GAMES"
           className="text-[#F4F0FA]"
           overlapHero={false}
+          seam="knot"
         >
           <GamesHub />
         </EditorialSheetHandoff>

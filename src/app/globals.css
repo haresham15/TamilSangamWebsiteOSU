@@ -1261,6 +1261,74 @@ input, textarea {
   }
 }
 
+/* Vaasal threshold seam: default state is fully drawn (SSR, Lite, reduced motion, no support). */
+.threshold-seam__strand {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.threshold-seam__dot {
+  opacity: 1;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.threshold-seam__rule {
+  background-image: linear-gradient(to right, transparent, color-mix(in oklch, var(--color-accent-zari) 70%, transparent));
+  transform: scaleX(1);
+}
+.threshold-seam__rule--l {
+  transform-origin: right center;
+}
+.threshold-seam__rule--r {
+  transform-origin: left center;
+  background-image: linear-gradient(to left, transparent, color-mix(in oklch, var(--color-accent-zari) 70%, transparent));
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html:not(.sangam-fallback) .threshold-seam {
+      timeline-scope: --vaasal;
+    }
+    html:not(.sangam-fallback) .threshold-seam__anchor {
+      view-timeline-name: --vaasal;
+      view-timeline-axis: block;
+    }
+    html:not(.sangam-fallback) .threshold-seam__dot,
+    html:not(.sangam-fallback) .threshold-seam__strand,
+    html:not(.sangam-fallback) .threshold-seam__rule {
+      animation-timeline: --vaasal;
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+    }
+    html:not(.sangam-fallback) .threshold-seam__dot {
+      animation-name: vaasalDot;
+      animation-range: cover 14% cover 26%;
+    }
+    html:not(.sangam-fallback) .threshold-seam__strand {
+      animation-name: vaasalStrand;
+      animation-range: cover 22% cover 42%;
+    }
+    html:not(.sangam-fallback) .threshold-seam__rule {
+      animation-name: vaasalRule;
+      animation-range: cover 34% cover 50%;
+    }
+  }
+}
+
+@keyframes vaasalDot {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes vaasalStrand {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes vaasalRule {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
 @keyframes kolamRotateSlow {
   from {
     transform: rotate(0deg);

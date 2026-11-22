@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { isEditionComplete } from "@/lib/gamesStorage";
@@ -111,8 +111,8 @@ export const Navbar: React.FC = () => {
         }
         setIsPastHero(pastHero);
 
-        // Auto-collapse if user scrolls past 180px while open
-        if (isOpen && Math.abs(scrollY - openScrollYRef.current) > 180) {
+        // Auto-collapse only on desktop if user scrolls far past open position (> 350px)
+        if (isOpen && typeof window !== "undefined" && window.innerWidth >= 1024 && Math.abs(scrollY - openScrollYRef.current) > 350) {
           setIsOpen(false);
         }
       });
@@ -128,6 +128,17 @@ export const Navbar: React.FC = () => {
     };
   }, [pathname, isHeroRoute, isOpen]);
 
+  // Lock body scroll on mobile while navigation drawer is open
+  useEffect(() => {
+    if (isOpen && typeof window !== "undefined" && window.innerWidth < 1024) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
   // Close triggers: Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -138,21 +149,6 @@ export const Navbar: React.FC = () => {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, playClick]);
-
-  // Close triggers: Click outside
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handlePointerDown = (e: PointerEvent) => {
-      if (navRef.current && !navRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-        playClick();
-      }
-    };
-
-    window.addEventListener("pointerdown", handlePointerDown);
-    return () => window.removeEventListener("pointerdown", handlePointerDown);
   }, [isOpen, playClick]);
 
   // Toggle handler
@@ -176,53 +172,65 @@ export const Navbar: React.FC = () => {
     playClick();
     setIsOpen(false);
 
-    if (typeof window !== "undefined") {
-      try {
-        sessionStorage.setItem("ts_skip_hero", "true");
-      } catch {
-        // Ignore storage exceptions
-      }
-    }
-
     if (pathname === "/") {
       e.preventDefault();
-      const target =
-        document.getElementById("flagship-gathering") ||
-        document.querySelector<HTMLElement>("[data-editorial-sheet]");
-      if (target) {
-        if (window.__lenis) {
-          window.__lenis.scrollTo(target, { offset: -20, duration: 1.0 });
-        } else {
-          target.scrollIntoView({ behavior: "smooth" });
-        }
+      if (window.__lenis) {
+        window.__lenis.scrollTo(0, { duration: 0.8 });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
   };
 
-  // Spring animations for width morph
-  const containerSpring = isOpen
-    ? ({ type: "spring", stiffness: 260, damping: 26, mass: 0.9 } as const)
-    : ({ type: "spring", stiffness: 320, damping: 30, mass: 0.8 } as const);
+  // Spring animation parameters for smooth width expansion without scale distortion
+  const containerSpring = {
+    type: "spring" as const,
+    stiffness: 280,
+    damping: 28,
+    mass: 0.85,
+  };
 
   return (
-    <LayoutGroup id="muttram-navbar-expandable">
+    <>
+      {/* Dimmed Courtyard Backdrop to intercept outside clicks and focus nav */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            key="nav-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            onClick={() => {
+              playClick();
+              setIsOpen(false);
+            }}
+            aria-hidden="true"
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px] pointer-events-auto cursor-pointer"
+          />
+        )}
+      </AnimatePresence>
+
       <header
         id="global-floating-nav"
         className="fixed top-2.5 sm:top-3.5 left-0 right-0 z-50 px-3 sm:px-6 pointer-events-none flex justify-center items-center transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
       >
         <motion.div
           ref={navRef}
-          layout
+          initial={false}
+          animate={{
+            maxWidth: isOpen ? 1152 : 440,
+            borderRadius: isOpen ? 24 : 9999,
+          }}
           transition={containerSpring}
-          animate={{ borderRadius: isOpen ? 24 : 9999 }}
-          className={`pointer-events-auto relative border transition-colors duration-300 ${
+          className={`pointer-events-auto relative border transition-colors duration-300 w-full ${
             isOpen
               ? isDarkHero
-                ? "w-full max-w-6xl bg-[#1C122B]/95 border-[#C79347]/35 text-[#FAF5ED] shadow-[0_12px_44px_rgba(0,0,0,0.55)] backdrop-blur-xl"
-                : "w-full max-w-6xl bg-[#1C122B]/95 border-[#C79347]/35 text-[#FAF5ED] shadow-[0_12px_40px_-10px_rgba(0,0,0,0.45)] backdrop-blur-xl"
+                ? "bg-[#1C122B]/95 border-[#C79347]/35 text-[#FAF5ED] shadow-[0_12px_44px_rgba(0,0,0,0.55)] backdrop-blur-xl"
+                : "bg-[#1C122B]/95 border-[#C79347]/35 text-[#FAF5ED] shadow-[0_12px_40px_-10px_rgba(0,0,0,0.45)] backdrop-blur-xl"
               : isDarkHero
-              ? "w-auto max-w-[440px] bg-[#1C122B]/90 border-[#C79347]/30 text-[#FAF5ED] shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
-              : "w-auto max-w-[440px] bg-[#1C122B]/92 border-[#C79347]/30 text-[#FAF5ED] shadow-[0_8px_30px_rgba(0,0,0,0.35),0_1px_2px_rgba(0,0,0,0.2)] backdrop-blur-md"
+              ? "bg-[#1C122B]/90 border-[#C79347]/30 text-[#FAF5ED] shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
+              : "bg-[#1C122B]/92 border-[#C79347]/30 text-[#FAF5ED] shadow-[0_8px_30px_rgba(0,0,0,0.35),0_1px_2px_rgba(0,0,0,0.2)] backdrop-blur-md"
           } p-1.5 sm:p-2`}
         >
           {/* ======================================================================= */}
@@ -231,7 +239,7 @@ export const Navbar: React.FC = () => {
           <div className="hidden lg:flex items-center justify-between gap-2 xl:gap-3 px-2">
             {/* Left: Brand Lockup */}
             <Link
-              href="/#flagship-gathering"
+              href="/"
               onClick={handleBrandClick}
               aria-label="OSU Tamil Sangam Home"
               className="group flex items-center gap-2.5 text-left shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8] rounded-full select-none pr-2"
@@ -370,7 +378,7 @@ export const Navbar: React.FC = () => {
             {/* Top Bar inside Pill */}
             <div className="flex items-center justify-between gap-2 px-2 py-0.5">
               <Link
-                href="/#flagship-gathering"
+                href="/"
                 onClick={handleBrandClick}
                 aria-label="OSU Tamil Sangam Home"
                 className="group flex items-center gap-2 text-left shrink-0 cursor-pointer select-none"
@@ -502,6 +510,6 @@ export const Navbar: React.FC = () => {
           </div>
         </motion.div>
       </header>
-    </LayoutGroup>
+    </>
   );
 };

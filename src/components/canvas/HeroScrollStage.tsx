@@ -10,6 +10,16 @@ export const useHeroStageVisibility = () => useContext(VisibilityContext);
 
 const emptySubscribe = () => () => {};
 
+const STAGE_EXIT_START = 0.78;
+const STAGE_EXIT_END = 1.0;
+
+export function stageExit(progress: number): { scale: number; y: number; opacity: number } {
+  const raw = (progress - STAGE_EXIT_START) / (STAGE_EXIT_END - STAGE_EXIT_START);
+  const t = Math.min(1, Math.max(0, raw));
+  const e = t * t * (3 - 2 * t);
+  return { scale: 1 - 0.05 * e, y: -6 * e, opacity: 1 - 0.75 * e };
+}
+
 export function HeroScrollStage({ children, className = "", id, runway = 280, progressRef, tone = "indigo", static: isStatic = false }: {
   children: ReactNode;
   className?: string;
@@ -52,13 +62,10 @@ export function HeroScrollStage({ children, className = "", id, runway = 280, pr
       onUpdate: ({ progress }) => {
         if (progressRef) progressRef.current = progress;
         if (stageEl) {
-          // AWWWARDS Recessive Camera & Stage Push (p = 0.84 -> 1.00)
-          if (progress >= 0.84) {
-            const t = (progress - 0.84) / 0.16;
-            const scale = 1.0 - 0.05 * t;
-            const yOffset = -6 * t;
-            const opacity = 1.0 - 0.75 * t;
-            stageEl.style.transform = `scale(${scale.toFixed(3)}) translateY(${yOffset.toFixed(2)}vh)`;
+          // AWWWARDS Recessive Camera & Stage Push (p = 0.78 -> 1.00 smoothstep)
+          if (progress > STAGE_EXIT_START) {
+            const { scale, y, opacity } = stageExit(progress);
+            stageEl.style.transform = `scale(${scale.toFixed(3)}) translateY(${y.toFixed(2)}vh)`;
             stageEl.style.opacity = opacity.toFixed(3);
           } else {
             stageEl.style.transform = "";

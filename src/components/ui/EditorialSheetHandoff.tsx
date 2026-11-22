@@ -2,6 +2,13 @@
 
 import React from "react";
 import { EditorialBackgroundCanvas } from "@/components/ui/EditorialBackgroundCanvas";
+import { ThresholdSeam } from "@/components/ui/ThresholdSeam";
+
+export type SeamMode = "full" | "knot" | "none";
+
+export function resolveSeamVariant(seam: SeamMode | undefined, overlapHero: boolean): SeamMode {
+  return seam ?? (overlapHero ? "full" : "knot");
+}
 
 export interface EditorialSheetHandoffProps {
   children: React.ReactNode;
@@ -14,6 +21,7 @@ export interface EditorialSheetHandoffProps {
   backgroundCanvasVariant?: "light" | "espresso";
   overlapHero?: boolean;
   surface?: "sandstone" | "ivory" | "sangam-deep" | "peacock-deep";
+  seam?: SeamMode;
 }
 
 /**
@@ -34,10 +42,13 @@ export function EditorialSheetHandoff({
   backgroundCanvasVariant,
   overlapHero = true,
   surface = "sangam-deep",
+  seam,
 }: EditorialSheetHandoffProps) {
+  const seamMode = resolveSeamVariant(seam, overlapHero);
+  const hasSeam = seamMode !== "none";
   const overlapStyles = overlapHero
-    ? "-mt-[10vh] md:-mt-[12vh] rounded-t-[28px] shadow-[0_-8px_36px_rgba(0,0,0,0.35),0_-24px_60px_rgba(28,18,43,0.65)] border-t border-accent-zari/50"
-    : "mt-0 border-t border-accent-zari/35 shadow-[0_-4px_24px_rgba(0,0,0,0.25)]";
+    ? `-mt-[10vh] md:-mt-[12vh] rounded-t-[28px] shadow-[0_-8px_36px_rgba(0,0,0,0.35),0_-24px_60px_rgba(28,18,43,0.65)]${hasSeam ? "" : " border-t border-accent-zari/50"}`
+    : `mt-0 shadow-[0_-4px_24px_rgba(0,0,0,0.25)]${hasSeam ? "" : " border-t border-accent-zari/35"}`;
 
   const surfaceClasses = {
     sandstone: "bg-bg-sandstone text-ink-earth texture-khadi",
@@ -52,6 +63,8 @@ export function EditorialSheetHandoff({
       data-editorial-sheet="true"
       className={`relative z-20 w-full ${surfaceClasses} ${overlapStyles} ${overflowClass} ${className}`.trim()}
     >
+      {hasSeam && <ThresholdSeam surface={surface} variant={seamMode === "knot" ? "knot" : "full"} />}
+
       {/* Living Chola Monograph & Pulli Background Layer */}
       {showBackgroundCanvas && (
         <EditorialBackgroundCanvas
