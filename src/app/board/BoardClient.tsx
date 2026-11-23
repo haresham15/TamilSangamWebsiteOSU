@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS, BoardMember } from "@/data/board";
+import { CURRENT_BOARD, BoardMember } from "@/data/board";
 import { SITE_CONFIG } from "@/data/siteConfig";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
@@ -575,52 +575,16 @@ export function BoardClient() {
           </div>
         </section>
 
-        {/* 2 · Sandstone · Recipe B ledger: subcommittees + constitution row */}
-        <CulturalSection variant="sandstone" divider="korvai" aria-labelledby="board-subcommittees-heading">
+        {/* 2 · Sandstone · Recipe B ledger: constitution row */}
+        <CulturalSection variant="sandstone" divider="korvai" aria-labelledby="board-constitution-heading">
           <div className={`${CONTAINER} ${BAND}`}>
-            <div className="max-w-3xl space-y-3">
-              <Eyebrow tamil="துணைக் குழுக்கள்">Working Groups</Eyebrow>
-              <h2
-                id="board-subcommittees-heading"
-                className="font-serif text-3xl sm:text-5xl font-normal leading-[1.12] tracking-tight text-ink-earth"
-              >
-                Subcommittee Coordinators
-              </h2>
-              <p className="font-sans text-base sm:text-lg leading-relaxed text-ink-umber">
-                Dedicated student organizers leading choreography, social media trailers, campus catering, and community service.
-              </p>
-            </div>
-
-            <ol className="mt-12 sm:mt-16 border-y border-border-warm divide-y divide-border-warm">
-              {SUBCOMMITTEE_MEMBERS.map((sub, i) => (
-                <li
-                  key={sub.id || i}
-                  className="grid grid-cols-[3rem_1fr] md:grid-cols-12 gap-x-4 gap-y-2 md:gap-x-8 py-6 sm:py-8 items-baseline"
-                >
-                  <span aria-hidden="true" className="font-serif text-3xl leading-none text-brand-purple md:col-span-1">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="font-serif text-2xl sm:text-3xl font-normal leading-snug text-ink-earth md:col-span-5">
-                    {sub.nameEn}
-                  </h3>
-                  <div className="col-start-2 md:col-start-auto md:col-span-6 space-y-0.5">
-                    <p className="font-sans text-base text-ink-umber">{sub.areaEn}</p>
-                    <p lang="ta" className="font-tamil text-sm leading-[1.6] tracking-normal text-brand-purple">
-                      {sub.nameTa} · {sub.areaTa}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-
-            {/* Constitution: an inline ledger row, not a centered block */}
-            <div className="grid grid-cols-[3rem_1fr] md:grid-cols-12 gap-x-4 gap-y-4 md:gap-x-8 border-b border-border-warm py-8 sm:py-10 items-start">
+            <div className="grid grid-cols-[3rem_1fr] md:grid-cols-12 gap-x-4 gap-y-4 md:gap-x-8 border-y border-border-warm py-8 sm:py-10 items-start">
               <FileText aria-hidden="true" className="size-7 text-brand-purple md:col-span-1" />
               <div className="md:col-span-5 space-y-2">
                 <Eyebrow tamil="ஜனநாயக விதிகள்">Democratic Governance</Eyebrow>
-                <h3 className="font-serif text-2xl sm:text-3xl font-normal leading-snug text-ink-earth">
+                <h2 id="board-constitution-heading" className="font-serif text-2xl sm:text-3xl font-normal leading-snug text-ink-earth">
                   Constitution of Tamil Sangam at Ohio State
-                </h3>
+                </h2>
               </div>
               <div className="col-start-2 md:col-start-auto md:col-span-6 space-y-5">
                 <p className="font-sans text-base leading-relaxed text-ink-umber">

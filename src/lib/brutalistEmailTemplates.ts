@@ -34,7 +34,7 @@ const TRACK_DETAILS: Record<MembershipTrack, { name: string; tag: string; desc: 
     name: "Working Council",
     tag: "EXECUTIVE & WORKING COUNCIL TRACK",
     desc: "Festival organizing, media trailers, stage production, catering logistics, and design.",
-    nextStep: "You will receive an onboarding invite to our subcommittee sync with President Meenakshi Varadarajan.",
+    nextStep: "You will receive an onboarding invite to our executive team sync with President Meenakshi Varadarajan.",
   },
 };
 
@@ -163,7 +163,7 @@ export function generateGuestbookConfirmationHtml(params: {
           <div class="signoff-name">Meenakshi Varadarajan</div>
           <div class="signoff-title">President, The Ohio State University Tamil Sangam</div>
           <div style="font-size: 12px; color: #C4B7D7; margin-top: 4px;">
-            On behalf of the 2026 Executive Council & Subcommittee
+            On behalf of the 2026–2027 Executive Board & Leadership
           </div>
         </div>
       </div>

@@ -236,17 +236,18 @@ export const BASELINE_KNOWLEDGE: KnowledgeItem[] = [
     titleEn: "Executive Board Leadership & Structure",
     titleTa: "நிர்வாகக் குழு மற்றும் பொறுப்புகள்",
     contentEn:
-      "The club is directed by 9 student executive officers: President (Meenakshi Varadarajan), Vice President (Shrinidhi Nagappan), Design Lead (Sadhana Sunder), and officers across Treasurer, Secretary, Marketing, Logistics, Outreach, and Cultural Coordination. They are supported by a 9-member appointed Subcommittee Council.",
+      "The club is directed by 10 student executive officers: President (Meenakshi Varadarajan), Vice President (Shrinidhi Nagappan), Design Lead (Sadhana Sunder), Creative Director (Srinivas Sankaranarayanan), Treasurer (Anirudh Kamalakannan), Social Media Manager (Raghav Iyer), Marketing & Program Manager (Ashwinameera Selvakumar), Marketing & Media Lead (Haresh Murugesan), Event Coordinator (Jerachand Senthilkumar), and Outreach Coordinator (Monaasri Gopinath).",
     contentTa:
-      "சங்கம் 9 முதன்மை நிர்வாகிகள் மற்றும் 9 துணைக் குழு உறுப்பினர்களால் வழிநடத்தப்படுகிறது.",
+      "சங்கம் 10 முதன்மை நிர்வாகிகளால் ஒருங்கிணைந்து வழிநடத்தப்படுகிறது.",
     keywords: [
       "board",
       "leadership",
       "officers",
       "president",
       "vice president",
+      "marketing",
+      "media",
       "executive board",
-      "subcommittee",
     ],
     route: "/board",
   },

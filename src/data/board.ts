@@ -17,14 +17,6 @@ export interface BoardMember {
   instagram: string;
 }
 
-export interface SubcommitteeMember {
-  id: string;
-  nameEn: string;
-  nameTa: string;
-  areaEn: string;
-  areaTa: string;
-}
-
 export const CURRENT_BOARD: BoardMember[] = [
   {
     id: "president",
@@ -209,6 +201,32 @@ export const CURRENT_BOARD: BoardMember[] = [
     instagram: "@tamilsangam.osu",
   },
   {
+    id: "marketing-media-lead",
+    nameEn: "Haresh Murugesan",
+    nameTa: "ஹரேஷ் முருகேசன்",
+    roleEn: "Marketing & Media Lead",
+    roleTa: "சந்தைப்படுத்தல் & ஊடகத் தலைவர்",
+    committeeEn: "Brand Marketing, Creative Media & Web Architecture",
+    committeeTa: "சந்தைப்படுத்தல், படைப்பாற்றல் ஊடகம் & வலைத்தளக் கட்டமைப்பு",
+    term: "2026-2027",
+    bioEn: "Directs visual brand marketing, event photography, cinematic video reels, promotional campaigns, and web architecture across Ohio State Tamil Sangam digital platforms.",
+    bioTa: "சங்கத்தின் பிராண்ட் அடையாளம், நிகழ்வுப் புகைப்படங்கள், சமூக வலைதள ரீல்ஸ் காணொளிகள், விளம்பரப் பிரச்சாரங்கள் மற்றும் அதிகாரப்பூர்வ வலைத்தளத்தை வழிநடத்துபவர்.",
+    photoUrl: "/emblem.svg",
+    responsibilitiesEn: [
+      "Directs visual media, capturing high-resolution photography and cinematic recap reels for all flagship gatherings",
+      "Architects and maintains the official Ohio State Tamil Sangam website, digital portals, and bio hub",
+      "Coordinates multi-channel marketing campaigns, promotional releases, and campus-wide creative outreach",
+    ],
+    responsibilitiesTa: [
+      "அனைத்து முக்கிய நிகழ்வுகளுக்கும் உயர்தர புகைப்படங்கள் மற்றும் அழகிய ரீல்ஸ் காணொளிகளை உருவாக்குதல்",
+      "ஓஹியோ ஸ்டேட் தமிழ் சங்கத்தின் அதிகாரப்பூர்வ வலைத்தளம் மற்றும் டிஜிட்டல் தளங்களை வடிவமைத்து நிர்வகித்தல்",
+      "சமூக வலைதளங்கள் மற்றும் வளாகம் முழுமைக்கான சந்தைப்படுத்தல் மற்றும் விளம்பரங்களை ஒருங்கிணைத்தல்",
+    ],
+    quote: "செயற்கரிய செய்வார் பெரியர் (Those who accomplish what seems impossible are truly noble).",
+    email: "osutamilsangam@gmail.com",
+    instagram: "@tamilsangam.osu",
+  },
+  {
     id: "event-coordinator",
     nameEn: "Jerachand Senthilkumar",
     nameTa: "ஜெரச்சந்த் செந்தில்குமார்",
@@ -259,71 +277,5 @@ export const CURRENT_BOARD: BoardMember[] = [
     quote: "அன்பே சிவம் (Love is the highest divinity).",
     email: "osutamilsangam@gmail.com",
     instagram: "@tamilsangam.osu",
-  },
-];
-
-export const SUBCOMMITTEE_MEMBERS: SubcommitteeMember[] = [
-  {
-    id: "sub-1",
-    nameEn: "Akshaya Hariharan",
-    nameTa: "அக்ஷயா ஹரிஹரன்",
-    areaEn: "Cultural & Dance Operations",
-    areaTa: "கலாச்சார & நடன ஒருங்கிணைப்பு",
-  },
-  {
-    id: "sub-2",
-    nameEn: "Haresh Murugesan",
-    nameTa: "ஹரேஷ் முருகேசன்",
-    areaEn: "Web Architecture & Digital Systems",
-    areaTa: "மென்பொருள் & டிஜிட்டல் வடிவமைப்பு",
-  },
-  {
-    id: "sub-3",
-    nameEn: "Adharsh Lakshmi Kanthan",
-    nameTa: "ஆதர்ஷ் லக்ஷ்மி காந்தன்",
-    areaEn: "Event Logistics & Production",
-    areaTa: "நிகழ்வு ஏற்பாடுகள் & மேடை மேலாண்மை",
-  },
-  {
-    id: "sub-4",
-    nameEn: "Pradnya Kannan",
-    nameTa: "பிரக்ஞா கண்ணன்",
-    areaEn: "Creative Media & Visual Identity",
-    areaTa: "படைப்பாற்றல் ஊடகம் & காட்சி வடிவம்",
-  },
-  {
-    id: "sub-5",
-    nameEn: "Amrithaa Ashok Kumar",
-    nameTa: "அம்ரிதா அசோக் குமார்",
-    areaEn: "Community Relations & Welcoming",
-    areaTa: "சமூகத் தொடர்பு & வரவேற்பு",
-  },
-  {
-    id: "sub-6",
-    nameEn: "Sai Lavanya Premkumar",
-    nameTa: "சாய் லாவண்யா பிரேம்குமார்",
-    areaEn: "Finance & Ticketing Support",
-    areaTa: "நிதி & நுழைவுச்சீட்டு ஒருங்கிணைப்பு",
-  },
-  {
-    id: "sub-7",
-    nameEn: "Akaash Balaji",
-    nameTa: "ஆகாஷ் பாலாஜி",
-    areaEn: "Stage Engineering & Sound",
-    areaTa: "ஒலி, ஒளி & மேடை தொழில்நுட்பம்",
-  },
-  {
-    id: "sub-8",
-    nameEn: "Amana Shannon",
-    nameTa: "அமனா ஷானன்",
-    areaEn: "Philanthropy & Campus Partnerships",
-    areaTa: "அறப்பணிகள் & வளாகக் கூட்டணிகள்",
-  },
-  {
-    id: "sub-9",
-    nameEn: "Subhiksha Arulselvam",
-    nameTa: "சுபிக்ஷா அருள்செல்வம்",
-    areaEn: "Educational Workshops & Tamil Literacy",
-    areaTa: "கல்விப் பட்டறைகள் & தமிழ் பயிலகம்",
   },
 ];

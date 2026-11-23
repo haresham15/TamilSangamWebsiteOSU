@@ -7,7 +7,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 import { EVENTS } from "@/data/events";
-import { CURRENT_BOARD, SUBCOMMITTEE_MEMBERS } from "@/data/board";
+import { CURRENT_BOARD } from "@/data/board";
 import { GALLERY_ALBUMS } from "@/data/gallery";
 import { FAQS } from "@/data/faq";
 import { getSynonymMatches } from "@/data/searchSynonyms";
@@ -80,16 +80,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         subtitle: `${b.roleEn} · ${b.committeeEn}`,
         href: `/board`,
         icon: <Users className="w-4 h-4 text-accent-bronze-dark" />,
-      })),
-
-      // Subcommittee Members
-      ...SUBCOMMITTEE_MEMBERS.map((s) => ({
-        id: `sub-${s.id}`,
-        category: "Person" as const,
-        title: `${s.nameEn} (${s.nameTa})`,
-        subtitle: `Subcommittee · ${s.areaEn}`,
-        href: `/board`,
-        icon: <Users className="w-4 h-4 text-[var(--accent-tint)]" />,
       })),
 
       // Gallery Albums
