@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
@@ -14,6 +14,7 @@ import { DitherVeil } from "@/components/ui/DitherVeil";
 import { activeUpcomingEvent, type FlagshipEventConfig } from "@/config/upcomingEvent";
 import { ArrowUpRight, Calendar, Sparkles } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/react-bits";
+import { useDeviceTilt } from "@/hooks/useDeviceTilt";
 
 export interface NextFlagshipGatheringProps {
   config?: FlagshipEventConfig;
@@ -36,11 +37,13 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
 }) => {
   const { locale } = useLocale();
   const { playClick } = useAudio();
-  const reduced = useReducedMotion();
-  const tiltX = useMotionValue(0);
-  const tiltY = useMotionValue(0);
-  const rotateX = useSpring(tiltX, { stiffness: 130, damping: 20 });
-  const rotateY = useSpring(tiltY, { stiffness: 130, damping: 20 });
+  const {
+    rotateX,
+    rotateY,
+    onPointerMove,
+    onPointerLeave,
+    containerRef: tiltFrameRef,
+  } = useDeviceTilt({ maxTilt: 7, stiffness: 130, damping: 20 });
 
   // Compute displayed values directly from curated config
   const title = config.title;
@@ -132,13 +135,9 @@ export const NextFlagshipGathering: React.FC<NextFlagshipGatheringProps> = ({
             <div className="sm:col-span-2 w-full max-w-[16rem] sm:max-w-none">
               <SpotlightCard className="w-full bg-transparent border-0 p-0">
                 <motion.div
-                  onPointerMove={(event) => {
-                    if (reduced || event.pointerType !== "mouse") return;
-                    const box = event.currentTarget.getBoundingClientRect();
-                    tiltX.set((0.5 - (event.clientY - box.top) / box.height) * 6);
-                    tiltY.set(((event.clientX - box.left) / box.width - 0.5) * 6);
-                  }}
-                  onPointerLeave={() => { tiltX.set(0); tiltY.set(0); }}
+                  ref={tiltFrameRef}
+                  onPointerMove={onPointerMove}
+                  onPointerLeave={onPointerLeave}
                   className={`relative w-full ${aspectClass} select-none flex items-center justify-center`}
                   style={{ rotateX, rotateY, transformPerspective: 900 }}
                 >

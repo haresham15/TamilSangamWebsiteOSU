@@ -37,6 +37,7 @@ import { Eyebrow } from "@/components/muttram/Eyebrow";
 import { EventJsonLd } from "@/components/seo/JsonLd";
 import { useTamilSpeech } from "@/lib/tamilSpeech";
 import { ThirukkuralAudioButton, PronounceableQuote } from "@/components/ui/PronounceableQuote";
+import { useDeviceTilt } from "@/hooks/useDeviceTilt";
 
 interface LivingPillar {
   id: string;
@@ -96,6 +97,13 @@ const LIVING_PILLARS: LivingPillar[] = [
 export function HomeClient() {
   const { playClick } = useAudio();
   const [activePillar, setActivePillar] = useState(0);
+  const {
+    rotateX: pillarRotateX,
+    rotateY: pillarRotateY,
+    onPointerMove: onPillarPointerMove,
+    onPointerLeave: onPillarPointerLeave,
+    containerRef: pillarFrameRef,
+  } = useDeviceTilt({ maxTilt: 6, stiffness: 140, damping: 22 });
   const { isLiteMode } = useLiteMode();
   const tier = useTier();
   const reducedMotion = useReducedMotion();
@@ -630,7 +638,18 @@ export function HomeClient() {
 
                   {/* Right (5 Cols / 45% width): 4:5 Portrait Cinematic Preview Frame */}
                   <div className="lg:col-span-5 flex justify-center">
-                    <div className="relative w-full max-w-md aspect-[4/5] rounded-2xl overflow-hidden bg-[#150D22] border border-[#C79347]/25 shadow-[0_24px_60px_rgba(0,0,0,0.65),0_0_40px_rgba(199,147,71,0.08)]">
+                    <motion.div
+                      ref={pillarFrameRef}
+                      onPointerMove={onPillarPointerMove}
+                      onPointerLeave={onPillarPointerLeave}
+                      style={{
+                        rotateX: pillarRotateX,
+                        rotateY: pillarRotateY,
+                        transformPerspective: 900,
+                        transformStyle: "preserve-3d",
+                      }}
+                      className="relative w-full max-w-md aspect-[4/5] rounded-2xl overflow-hidden bg-[#150D22] border border-[#C79347]/25 shadow-[0_24px_60px_rgba(0,0,0,0.65),0_0_40px_rgba(199,147,71,0.08)] transform-gpu"
+                    >
                       {/* Layered Crossfading Images */}
                       {LIVING_PILLARS.map((pillar, idx) => (
                         <div
@@ -676,7 +695,7 @@ export function HomeClient() {
                           {LIVING_PILLARS[activePillar].actionLabel}
                         </p>
                       </div>
-                    </div>
+                    </motion.div>
                   </div>
                 </div>
               </div>
