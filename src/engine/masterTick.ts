@@ -72,9 +72,9 @@ export function masterTick(timeSec: number, lenis: Lenis | null) {
   const dt = Math.max(0.0005, Math.min(rawDt, 1 / 30));
   masterSimTime += dt;
 
-  // 1) Smooth scroll step driven with synchronized monotonic clamped time (ms)
+  // 1) Smooth scroll step driven with synchronized monotonic time (ms)
   if (lenis) {
-    lenis.raf(masterSimTime * 1000);
+    lenis.raf(timeSec * 1000);
   } else if (typeof window !== "undefined") {
     // Synchronize ScrollTrigger with window scroll when Lenis is not active
     ScrollTrigger.update();

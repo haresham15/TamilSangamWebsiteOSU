@@ -46,12 +46,18 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
     // Initialize Lenis with smooth cinematic pacing and responsive inertial damping
     const lenis = new Lenis({
       autoRaf: false,
-      lerp: 0.082,
-      wheelMultiplier: 0.88,
-      touchMultiplier: 0.95,
+      duration: 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential deceleration for silky momentum
+      orientation: "vertical",
+      gestureOrientation: "vertical",
       smoothWheel: true,
-      syncTouch: false, // Keep native touch momentum scrolling on iOS and mobile
-      anchors: true,
+      syncTouch: false, // Keep native touch momentum scrolling on iOS and mobile (no touch hijacking)
+      wheelMultiplier: 1.0, // Natural 1:1 wheel response
+      touchMultiplier: 1.0,
+      anchors: {
+        offset: -80, // Clearance for fixed navbar when jumping to hash anchors
+        duration: 1.2,
+      },
       allowNestedScroll: true,
     });
 
@@ -69,8 +75,8 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
     };
 
     gsap.ticker.add(tick);
-    // Smooth out stalls: clamp any frame spike > 120ms to 24ms to eliminate freeze-and-teleport cuts
-    gsap.ticker.lagSmoothing(120, 24);
+    // Eliminate lagSmoothing time warping during Lenis scroll (per official Darkroom Engineering guidelines)
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
       gsap.ticker.remove(tick);

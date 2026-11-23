@@ -613,6 +613,10 @@ html.lenis body {
   height: auto;
 }
 
+html {
+  overscroll-behavior-y: none;
+}
+
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }

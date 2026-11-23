@@ -19,8 +19,7 @@ const DigitalKolamHero = dynamic(
 );
 import { SilkHoverPillars } from "@/components/home/SilkHoverPillars";
 import { HeritageTextureOverlay } from "@/components/ui/HeritageTextureOverlay";
-import { setHeroScrollProgress, heroScrollProgress } from "@/engine/heroScrollStore";
-import { registerSystem } from "@/engine/masterTick";
+import { setHeroScrollProgress } from "@/engine/heroScrollStore";
 import { motion, useReducedMotion } from "framer-motion";
 import CountUp from "@/components/CountUp";
 import { useLiteMode } from "@/context/LiteModeContext";
@@ -104,13 +103,6 @@ export function HomeClient() {
   const { isSpeaking, toggleSpeak } = useTamilSpeech();
   const kural81Tamil = "இருந்தோம்பி இல்வாழ்வ தெல்லாம் விருந்தோம்பி வேளாண்மை செய்தற் பொருட்டு.";
   const isSpeakingKural81 = isSpeaking(kural81Tamil);
-  useEffect(() => registerSystem({ order: 60, step: () => {
-    if (monolithRef.current) {
-      const hidden = staticHero || heroScrollProgress.current < 0.66;
-      monolithRef.current.inert = hidden;
-      monolithRef.current.setAttribute("aria-hidden", String(hidden));
-    }
-  } }), [staticHero]);
 
   const pinnedWrapperRef = useRef<HTMLDivElement>(null);
   const pinnedViewportRef = useRef<HTMLDivElement>(null);
@@ -219,7 +211,7 @@ export function HomeClient() {
 
 
     const ctx = gsap.context(() => {
-      // 1. Master Pinned Timeline: Pins the 100dvh viewport container while scrubbing 300vh (§MASTER DIRECTIVE)
+      // 1. Master Pinned Timeline: Pins the 100dvh viewport container while scrubbing Acts I & II (§MASTER DIRECTIVE)
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapper,
@@ -237,8 +229,8 @@ export function HomeClient() {
         const scrubbedP = tl.progress();
         setHeroScrollProgress(scrubbedP);
 
-        // Toggle hero purge dataset attribute (active during Acts I & II up to 0.60)
-        const isPurge = scrubbedP < 0.60;
+        // Toggle hero purge dataset attribute (active during Acts I & II up to 0.70)
+        const isPurge = scrubbedP < 0.70;
         if (heroPurgeActiveRef.current !== isPurge) {
           heroPurgeActiveRef.current = isPurge;
           if (isPurge) {
@@ -247,35 +239,6 @@ export function HomeClient() {
           } else {
             delete document.body.dataset.heroPurge;
             document.body.dataset.heroPassed = "true";
-          }
-        }
-        if (!isPurge) {
-
-          // Terminal Boot Sequence (GSAP ScrambleText) on Act III Monolith
-          if (!decodedMonolithRef.current) {
-            decodedMonolithRef.current = true;
-            if (monolithPrologueRef.current) {
-              gsap.to(monolithPrologueRef.current, {
-                duration: 0.8,
-                scrambleText: {
-                  text: monolithPrologueRef.current.innerText,
-                  chars: SANGAM_CIPHER_CHARS,
-                  speed: 1.2,
-                  revealDelay: 0.1,
-                },
-              });
-            }
-            if (monolithTamilRef.current) {
-              gsap.to(monolithTamilRef.current, {
-                duration: 0.8,
-                scrambleText: {
-                  text: monolithTamilRef.current.innerText,
-                  chars: SANGAM_CIPHER_CHARS,
-                  speed: 1.2,
-                  revealDelay: 0.1,
-                },
-              });
-            }
           }
         }
 
@@ -287,22 +250,21 @@ export function HomeClient() {
         }
       });
 
-
       // =========================================================================
-      // ACT II: 0.52 -> 0.70 Scroll (§PRD 9: KURAL TIERS INSIDE WREATH)
+      // ACT II: 0.45 -> 0.88 Scroll (§PRD 9: KURAL TIERS INSIDE WREATH)
       // 3-Tier Staggered Reveal for Kural 81 centered inside wreath cradle
-      // Reading Plateau Hold from 0.64 -> 0.70 before curtain rise
+      // Reading Plateau Hold from 0.70 -> 0.88 before handoff to Courtyard Threshold
       // =========================================================================
       if (kural) {
         tl.fromTo(
           kural,
           { opacity: 0 },
-          { opacity: 1, duration: 0.02, ease: "none" },
-          0.52
+          { opacity: 1, duration: 0.04, ease: "none" },
+          0.45
         );
       }
 
-      // Tier 1: Tamil Script (0.53 -> 0.57, slide up + blur 10px -> 0px)
+      // Tier 1: Tamil Script (0.47 -> 0.55, slide up + blur 10px -> 0px)
       if (tamil) {
         tl.fromTo(
           tamil,
@@ -311,58 +273,80 @@ export function HomeClient() {
             opacity: 1,
             y: 0,
             filter: "blur(0px)",
-            duration: 0.04,
+            duration: 0.08,
             ease: "power2.out",
             onStart: () => {
               soundEngine.playTempleChime();
             },
           },
-          0.53
+          0.47
         );
       }
 
-      // Tier 2: English Translation (0.57 -> 0.61, word-by-word cascade)
+      // Tier 2: English Translation (0.55 -> 0.64, word-by-word cascade)
       if (split && split.words && split.words.length > 0) {
         tl.fromTo(
           split.words,
           { opacity: 0, y: 12 },
-          { opacity: 1, y: 0, stagger: 0.002, duration: 0.04, ease: "power2.out" },
-          0.57
+          { opacity: 1, y: 0, stagger: 0.003, duration: 0.08, ease: "power2.out" },
+          0.55
         );
       }
 
-      // Tier 3: Metadata / Caption (0.61 -> 0.64)
+      // Tier 3: Metadata / Caption (0.64 -> 0.70)
       if (meta) {
         tl.fromTo(
           meta,
           { opacity: 0, y: 14 },
-          { opacity: 1, y: 0, duration: 0.03, ease: "power2.out" },
-          0.61
+          { opacity: 1, y: 0, duration: 0.06, ease: "power2.out" },
+          0.64
         );
       }
 
-      // Reading Hold Plateau (0.64 -> 0.70): Generous reading dwell with wreath formed.
-      // Exit of Kural at start of curtain rise (0.70 -> 0.73)
+      // Reading Hold Plateau (0.70 -> 0.88): Generous reading dwell with wreath formed.
+      // Exit of Kural at end of Act II (0.88 -> 0.98)
       if (kural) {
         tl.to(
           kural,
-          { opacity: 0, y: -20, filter: "blur(6px)", duration: 0.03, ease: "power1.in" },
-          0.70
+          { opacity: 0, y: -20, filter: "blur(6px)", duration: 0.10, ease: "power1.in" },
+          0.88
         );
       }
 
-      // =========================================================================
-      // ACT III: 0.72 -> 0.80 Scroll ("Curtain Rise", slides up and settles)
-      // Monolith slides UP (yPercent: 100 -> 0) naturally covering the WebGL scene
-      // and stays resting and visible through 0.80 -> 1.00
-      // =========================================================================
+      // Trigger ScrambleText terminal cipher when Courtyard Threshold (#monolith) enters viewport
       if (monolith) {
-        tl.fromTo(
-          monolith,
-          { yPercent: 100 },
-          { yPercent: 0, duration: 0.08, ease: "power2.out" },
-          0.72
-        );
+        ScrollTrigger.create({
+          trigger: monolith,
+          start: "top 80%",
+          once: true,
+          onEnter: () => {
+            if (!decodedMonolithRef.current) {
+              decodedMonolithRef.current = true;
+              if (monolithPrologueRef.current) {
+                gsap.to(monolithPrologueRef.current, {
+                  duration: 0.8,
+                  scrambleText: {
+                    text: monolithPrologueRef.current.innerText,
+                    chars: SANGAM_CIPHER_CHARS,
+                    speed: 1.2,
+                    revealDelay: 0.1,
+                  },
+                });
+              }
+              if (monolithTamilRef.current) {
+                gsap.to(monolithTamilRef.current, {
+                  duration: 0.8,
+                  scrambleText: {
+                    text: monolithTamilRef.current.innerText,
+                    chars: SANGAM_CIPHER_CHARS,
+                    speed: 1.2,
+                    revealDelay: 0.1,
+                  },
+                });
+              }
+            }
+          },
+        });
       }
     }, wrapper);
 
@@ -413,13 +397,13 @@ export function HomeClient() {
       <HeritageTextureOverlay variant="sandstone" opacity={0.02} />
 
       {/* =========================================================================
-          ACTS I, II & III: 420vh PINNED DOM WRAPPER & GSAP TIMELINE (CINEMATIC)
+          ACTS I & II: 260vh PINNED DOM WRAPPER & GSAP TIMELINE (CINEMATIC)
           ========================================================================= */}
       <div
         ref={pinnedWrapperRef}
         data-hero-pinned="home"
         id="act-i-viewport-wrapper"
-        className={`relative w-full bg-hero-dusk-home ${staticHero ? "h-dvh" : "h-[420dvh]"}`}
+        className={`relative w-full bg-hero-dusk-home ${staticHero ? "h-dvh" : "h-[260dvh]"}`}
       >
         {/* Pinned 100dvh Viewport Container */}
         <div
@@ -497,18 +481,21 @@ export function HomeClient() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* =========================================================================
-              ACT III: THE COURTYARD THRESHOLD (AESTHETIC POST-HERO REMODEL)
-              ========================================================================= */}
-          <section
-            hidden={staticHero}
-            style={staticHero ? { display: "none" } : undefined}
-            id="monolith"
-            ref={monolithRef}
-            data-lenis-prevent
-            className="absolute inset-0 z-20 w-full h-[100dvh] overflow-y-auto bg-[#1C122B] border-t border-[#C79347]/30 text-[#FAF5ED] selection:bg-[#C79347]/30 selection:text-[#FAF5ED]"
-          >
+      {/* =========================================================================
+          ACT III: THE COURTYARD THRESHOLD (AESTHETIC POST-HERO EDITORIAL SEQUENCE)
+          Flows seamlessly in document flow with full Lenis smooth scroll momentum
+          ========================================================================= */}
+      <section
+        hidden={staticHero}
+        style={staticHero ? { display: "none" } : undefined}
+        id="monolith"
+        ref={monolithRef}
+        data-editorial-sheet="true"
+        className="relative z-20 w-full bg-[#1C122B] border-t border-[#C79347]/30 text-[#FAF5ED] selection:bg-[#C79347]/30 selection:text-[#FAF5ED] rounded-t-[28px] -mt-[6vh] shadow-[0_-16px_48px_rgba(28,18,43,0.95)]"
+      >
             <div className="relative w-full min-h-[140vh] sm:min-h-[160vh] flex flex-col justify-between overflow-x-hidden">
               {/* Beat 1: The Atmospheric Manifesto (Top 45% of Section) */}
               <div className="relative z-10 w-full max-w-5xl mx-auto pt-36 sm:pt-40 md:pt-44 px-6 sm:px-10 lg:px-12 text-center">
@@ -723,8 +710,6 @@ export function HomeClient() {
               </div>
             </div>
           </section>
-        </div>
-      </div>
 
       {/* =========================================================================
           THE SUNLIT MUTTRAM (COURTYARD): bands below the pinned hero.

@@ -128,13 +128,15 @@ export const Navbar: React.FC = () => {
     };
   }, [pathname, isHeroRoute, isOpen]);
 
-  // Lock body scroll on mobile while navigation drawer is open
+  // Lock body scroll on mobile while navigation drawer is open and freeze Lenis
   useEffect(() => {
     if (isOpen && typeof window !== "undefined" && window.innerWidth < 1024) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
+      window.__lenis?.stop();
       return () => {
         document.body.style.overflow = originalOverflow;
+        window.__lenis?.start();
       };
     }
   }, [isOpen]);
