@@ -142,9 +142,12 @@ export function GuideClient({ initialPopularRanking }: GuideClientProps) {
           S header + filters → I directory → S FAQ teaser → P closer
           ========================================================================= */}
       <EditorialSheetHandoff
+        id="guide-directory"
         badge="COLUMBUS TAMIL SURVIVAL DIRECTORY"
         sublabel="STUDENT DIRECTORY & FAQ"
         surface="sandstone"
+        overlapHero={true}
+        overflowClass="overflow-x-clip"
       >
         {/* 1. S — Header + category filters + search */}
         <div className="mx-auto max-w-7xl px-6 sm:px-10 py-20 sm:py-28">

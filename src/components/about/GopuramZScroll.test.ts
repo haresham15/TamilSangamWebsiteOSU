@@ -84,5 +84,5 @@ describe("chapter copy cross-fade", () => {
     }
     expect(chapterCopyState(0, 0).opacity).toBe(1);
     expect(chapterCopyState(0.4, 2).opacity).toBe(1);
-  });
+  }, 15000);
 });

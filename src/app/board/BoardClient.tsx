@@ -226,6 +226,7 @@ export function BoardClient() {
       </div>
 
       <EditorialSheetHandoff
+        id="board-officers"
         badge="EXECUTIVE LEADERSHIP"
         sublabel="OFFICERS 2026–2027"
         surface="ivory"

@@ -259,6 +259,7 @@ export function SuggestionsClient() {
         sublabel="CAMPUS INITIATIVES"
         surface="ivory"
         className="text-ink-earth"
+        overflowClass="overflow-x-clip"
       >
         <div ref={formSectionRef} className="w-full scroll-mt-20">
           <section aria-labelledby="ideas-hearth-title" className="mx-auto max-w-7xl px-6 py-20 sm:px-10 sm:py-28">

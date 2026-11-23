@@ -234,6 +234,7 @@ export function EventsClientView({ initialCalendarData }: EventsClientViewProps)
         surface="sandstone"
         badge="CAMPUS GATHERINGS"
         sublabel="ALMANAC 2026–2027"
+        overflowClass="overflow-x-clip"
       >
         {/* Floating photo that follows the cursor (list view, fine pointers only) */}
         {currentView === "list" && (

@@ -256,6 +256,23 @@ export function HomeClient() {
         } else {
           if (kural) kural.removeAttribute("inert");
         }
+
+        // Seamless Recessive Stage Push for Act II -> Act III Threshold Handoff
+        if (viewport) {
+          if (scrubbedP > 0.84) {
+            const raw = (scrubbedP - 0.84) / 0.16;
+            const t = Math.min(1, Math.max(0, raw));
+            const e = t * t * (3 - 2 * t);
+            const scale = 1 - 0.04 * e;
+            const y = -4 * e;
+            const opacity = 1 - 0.65 * e;
+            viewport.style.transform = `scale(${scale.toFixed(3)}) translateY(${y.toFixed(2)}vh)`;
+            viewport.style.opacity = opacity.toFixed(3);
+          } else {
+            viewport.style.transform = "";
+            viewport.style.opacity = "";
+          }
+        }
       });
 
       // =========================================================================

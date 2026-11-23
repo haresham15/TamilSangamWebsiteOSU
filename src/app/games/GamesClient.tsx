@@ -34,8 +34,9 @@ export function GamesClient() {
           badge="THE SANGAM ARCADE"
           sublabel="BIWEEKLY TAMIL GAMES"
           className="text-[#F4F0FA]"
-          overlapHero={false}
-          seam="knot"
+          overlapHero={true}
+          seam="full"
+          overflowClass="overflow-x-clip"
         >
           <GamesHub />
         </EditorialSheetHandoff>

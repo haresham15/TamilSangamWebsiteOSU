@@ -66,10 +66,6 @@ export function EditorialBackgroundCanvas({
 
     const onScroll = () => {
       markRectDirty();
-      if (!visible || reducedMotion || isLiteMode) return;
-      const y = window.scrollY;
-      const deg = (y * 0.025) % 360;
-      container.style.setProperty("--kolam-rot", `${deg}deg`);
     };
 
     const updateLoop = () => {
@@ -128,16 +124,15 @@ export function EditorialBackgroundCanvas({
         }}
       />
 
-      {/* 2. One hand-drawn sikku kolam anchored to the top-left margin, faded away from the text column. */}
+      {/* 2. Classical Moola Kolam (Corner Stone Watermark) — stationary, anchored to top-left margin */}
       {showKolamWatermarks && !isLiteMode && (
         <div
-          className={`absolute -left-40 top-[4%] h-[520px] w-[520px] will-change-transform sm:-left-52 ${
-            isEspresso ? "text-accent-bronze-dark opacity-[0.12]" : "text-accent-bronze opacity-[0.12]"
+          className={`absolute -left-16 -top-16 h-[360px] w-[360px] pointer-events-none select-none ${
+            isEspresso ? "text-accent-zari opacity-[0.06]" : "text-accent-bronze opacity-[0.05]"
           }`}
           style={{
-            transform: "rotate(var(--kolam-rot, 0deg))",
-            maskImage: "radial-gradient(circle at 30% 30%, black 40%, transparent 72%)",
-            WebkitMaskImage: "radial-gradient(circle at 30% 30%, black 40%, transparent 72%)",
+            maskImage: "radial-gradient(circle at top left, black 25%, transparent 68%)",
+            WebkitMaskImage: "radial-gradient(circle at top left, black 25%, transparent 68%)",
           }}
         >
           <SikkuKolamSvg />

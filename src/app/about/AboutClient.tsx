@@ -101,7 +101,14 @@ export function AboutClient() {
       </div>
 
       {/* Purananuru 192 lives in the hero's first tier, so no repeat quote band here. */}
-      <EditorialSheetHandoff badge="THE SANGAM EPIC" sublabel="MISSION & ROOTS" surface="ivory">
+      <EditorialSheetHandoff
+        id="about-epic"
+        badge="THE SANGAM EPIC"
+        sublabel="MISSION & ROOTS"
+        surface="ivory"
+        overlapHero={true}
+        overflowClass="overflow-x-clip"
+      >
         {/* 1 · Ivory · Recipe A: intro split */}
         <section aria-labelledby="about-intro-heading" className={`${CONTAINER} ${BAND}`}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10">

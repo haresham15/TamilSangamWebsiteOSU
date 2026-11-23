@@ -286,6 +286,7 @@ export function JoinClient() {
         badge="STUDENT FELLOWSHIP"
         sublabel="GUESTBOOK REGISTRATION"
         surface="sandstone"
+        overflowClass="overflow-x-clip"
       >
         <div className="mx-auto w-full max-w-7xl px-6 sm:px-10 py-20 sm:py-28">
           <CourtyardHeader

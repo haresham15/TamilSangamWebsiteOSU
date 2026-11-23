@@ -41,12 +41,14 @@ export function ThresholdSeam({ surface, variant, className = "" }: ThresholdSea
       <div className="threshold-seam__anchor absolute inset-x-0 top-[-12vh] h-[24vh]" />
 
       {variant === "full" && (
-        <div className="absolute inset-x-0 bottom-full h-[10vh] md:h-[14vh]">
+        <div className="absolute inset-x-0 bottom-full h-[10vh] md:h-[14vh] pointer-events-none">
           <div
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(in oklch to bottom, transparent, color-mix(in oklch, var(--seam-surface) 60%, transparent))",
+                surface === "ivory" || surface === "sandstone"
+                  ? "linear-gradient(to bottom, transparent, rgba(28, 18, 43, 0.45))"
+                  : "linear-gradient(in oklch to bottom, transparent, color-mix(in oklch, var(--seam-surface) 60%, transparent))",
             }}
           />
           <div
@@ -60,8 +62,11 @@ export function ThresholdSeam({ surface, variant, className = "" }: ThresholdSea
       <span className="threshold-seam__rule threshold-seam__rule--r absolute top-0 right-0 h-px w-[calc(50%-34px)] md:w-[calc(50%-40px)]" />
 
       <div className="absolute top-0 left-1/2 size-11 -translate-x-1/2 -translate-y-1/2 md:size-14">
-        <span className="absolute inset-[6%] rounded-full" style={{ backgroundColor: "var(--seam-surface)" }} />
-        <svg viewBox="0 0 32 32" className="relative size-full overflow-visible" focusable="false">
+        <span
+          className="absolute inset-[6%] rounded-full shadow-[0_2px_12px_rgba(0,0,0,0.24)] border border-accent-zari/40"
+          style={{ backgroundColor: "var(--seam-surface)" }}
+        />
+        <svg viewBox="0 0 32 32" className="relative size-full overflow-visible drop-shadow-[0_1px_4px_rgba(0,0,0,0.2)]" focusable="false">
           {[KOLAM_PATHS.loopA_woven, KOLAM_PATHS.loopB_woven].map((d) => (
             <path
               key={d}
