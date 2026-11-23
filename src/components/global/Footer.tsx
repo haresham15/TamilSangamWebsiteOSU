@@ -147,7 +147,7 @@ export const Footer: React.FC<FooterProps> = () => {
       {isHomePage && (
         <div className="relative w-full bg-bg-sangam-deep border-b border-accent-zari/20 py-3 overflow-hidden select-none">
           {/* Infinite Running Marquee Film Credits */}
-          <div className="relative flex overflow-x-hidden">
+          <div className="relative flex overflow-x-clip">
             <div className="py-0.5 animate-[marquee-left_36s_linear_infinite] whitespace-nowrap flex items-center font-sans text-xs uppercase tracking-wider text-ink-sand font-medium">
               <span className="mx-4 text-accent-zari font-semibold">★ EXECUTIVE PRODUCTION: OSU TAMIL SANGAM</span>
               {CURRENT_BOARD.map((officer) => (

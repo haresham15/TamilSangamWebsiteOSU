@@ -118,7 +118,7 @@ export function HomeClient() {
   const kuralTamilRef = useRef<HTMLQuoteElement>(null);
   const kuralEnglishRef = useRef<HTMLParagraphElement>(null);
   const kuralMetaRef = useRef<HTMLDivElement>(null);
-  const monolithRef = useRef<HTMLElement>(null);
+  const monolithRef = useRef<HTMLDivElement>(null);
   const liveTimeRef = useRef<HTMLSpanElement>(null);
   const monolithPrologueRef = useRef<HTMLParagraphElement>(null);
   const monolithTamilRef = useRef<HTMLParagraphElement>(null);
@@ -493,20 +493,25 @@ export function HomeClient() {
       </div>
 
       {/* =========================================================================
-          ACT III: THE COURTYARD THRESHOLD (AESTHETIC POST-HERO EDITORIAL SEQUENCE)
-          Flows seamlessly in document flow with full Lenis smooth scroll momentum
+          ACT III & THE SUNLIT MUTTRAM (COURTYARD): Unified Architectural Sheet Handoff
+          Glides seamlessly over the pinned 3D hero with the sacred Threshold Seam ("Vaasal")
+          Acts I & II (Hero) -> Act III (Threshold & Manifesto) -> Courtyard Gatherings River
           ========================================================================= */}
-      <section
-        hidden={staticHero}
-        style={staticHero ? { display: "none" } : undefined}
+      <EditorialSheetHandoff
         id="monolith"
-        ref={monolithRef}
-        data-editorial-sheet="true"
-        className="relative z-20 w-full bg-[#1C122B] border-t border-[#C79347]/30 text-[#FAF5ED] selection:bg-[#C79347]/30 selection:text-[#FAF5ED] rounded-t-[28px] -mt-[6vh] shadow-[0_-16px_48px_rgba(28,18,43,0.95)]"
+        badge="CAMPUS HEARTH"
+        sublabel="COLUMBUS, OH"
+        overlapHero={true}
+        seam="full"
+        surface="sangam-deep"
+        overflowClass="overflow-x-clip"
       >
-            <div className="relative w-full min-h-[140vh] sm:min-h-[160vh] flex flex-col justify-between overflow-x-hidden">
-              {/* Beat 1: The Atmospheric Manifesto (Top 45% of Section) */}
-              <div className="relative z-10 w-full max-w-5xl mx-auto pt-36 sm:pt-40 md:pt-44 px-6 sm:px-10 lg:px-12 text-center">
+        <div
+          ref={monolithRef}
+          className="relative w-full min-h-[140vh] sm:min-h-[160vh] flex flex-col justify-between overflow-x-clip"
+        >
+          {/* Beat 1: The Atmospheric Manifesto (Top 45% of Section) */}
+          <div className="relative z-10 w-full max-w-5xl mx-auto pt-36 sm:pt-40 md:pt-44 px-6 sm:px-10 lg:px-12 text-center">
                 {/* Architectural Backdrop: Oversized Centered Tamil Glyph (த) */}
                 <div
                   aria-hidden="true"
@@ -728,15 +733,9 @@ export function HomeClient() {
                 </a>
               </div>
             </div>
-          </section>
-
-      {/* =========================================================================
-          THE SUNLIT MUTTRAM (COURTYARD): bands below the pinned hero.
-          D Puranaanuru ribbon → S flagship (feature + rail) → I pillars → S kinship ledger → P closer
-          ========================================================================= */}
-      <EditorialSheetHandoff id="flagship-gathering" badge="CAMPUS HEARTH" sublabel="COLUMBUS, OH" overlapHero={false} seam="full">
 
         {/* 1. Puranaanuru 192 ribbon: pull-quote (recipe C) between korvai seams */}
+        <div id="flagship-gathering" className="scroll-mt-20" />
         <CulturalSection variant="sangam-deep" divider="korvai" aria-labelledby="puranaanuru-title">
           <div className="mx-auto max-w-7xl px-6 sm:px-10 py-14 sm:py-20">
             <h2 id="puranaanuru-title" className="sr-only">Puranaanuru 192</h2>

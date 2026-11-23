@@ -204,7 +204,7 @@ export function LinksClient() {
   const socialLink = `inline-flex min-h-12 items-center gap-1.5 px-1 font-sans text-xs font-medium text-ink-umber transition-colors rounded ${FOCUS_RING}`;
 
   return (
-    <div className="relative flex min-h-dvh flex-col justify-between overflow-x-hidden bg-bg-sandstone px-4 pb-28 pt-10 font-sans text-ink-earth texture-khadi">
+    <div className="relative flex min-h-dvh flex-col justify-between overflow-x-clip bg-bg-sandstone px-4 pb-28 pt-10 font-sans text-ink-earth texture-khadi">
       {/* Soft bronze இணை watermark (WatermarkGlyph is aria-hidden and lang="ta") */}
       <WatermarkGlyph text="இணை" position="center" theme="bronze" opacity={0.06} />
 
