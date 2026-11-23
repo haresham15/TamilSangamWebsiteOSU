@@ -1,9 +1,9 @@
 // src/components/ui/PronounceableQuote.tsx
 "use client";
 
-import React, { KeyboardEvent } from "react";
+import React, { KeyboardEvent, useMemo } from "react";
 import { Volume2, VolumeX } from "lucide-react";
-import { useTamilSpeech } from "@/lib/tamilSpeech";
+import { useTamilSpeech, extractTamilText } from "@/lib/tamilSpeech";
 
 export interface ThirukkuralAudioButtonProps {
   tamilText: string;
@@ -121,6 +121,73 @@ export function ThirukkuralAudioButton({
         </>
       )}
     </button>
+  );
+}
+
+
+/**
+ * KaraokeTamilText — Real-time word-by-word illuminating captions synchronized with voice.
+ */
+export function KaraokeTamilText({
+  text,
+  activeCharIndex,
+  isSpeaking,
+  className = "",
+  highlightClass = "text-[#C79347] font-bold drop-shadow-[0_0_12px_rgba(199,147,71,0.85)] scale-105",
+}: {
+  text: string;
+  activeCharIndex: number | null;
+  isSpeaking: boolean;
+  className?: string;
+  highlightClass?: string;
+}) {
+  const words = useMemo(() => {
+    const list: { word: string; start: number; end: number }[] = [];
+    const regex = /\S+/g;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+      list.push({
+        word: match[0],
+        start: match.index,
+        end: match.index + match[0].length,
+      });
+    }
+    return list;
+  }, [text]);
+
+  let activeWordIdx = -1;
+  if (isSpeaking && activeCharIndex !== null) {
+    activeWordIdx = words.findIndex(
+      (w) => activeCharIndex >= w.start && activeCharIndex <= w.end + 1
+    );
+    if (activeWordIdx === -1 && words.length > 0) {
+      for (let i = words.length - 1; i >= 0; i--) {
+        if (activeCharIndex >= words[i].start) {
+          activeWordIdx = i;
+          break;
+        }
+      }
+    }
+  }
+
+  return (
+    <span lang="ta" style={{ letterSpacing: 0 }} className={className}>
+      {words.map((w, idx) => {
+        const isActive = isSpeaking && idx === activeWordIdx;
+        return (
+          <React.Fragment key={idx}>
+            <span
+              className={`inline-block transition-all duration-200 ${
+                isActive ? highlightClass : "opacity-90"
+              }`}
+            >
+              {w.word}
+            </span>
+            {idx < words.length - 1 ? " " : ""}
+          </React.Fragment>
+        );
+      })}
+    </span>
   );
 }
 

@@ -899,7 +899,7 @@ function GoldenTamilEmblem({ isMobile, tier }: { isMobile: boolean; tier: string
         <Text3D
           font={muktaFont as unknown as Parameters<typeof Text3D>[0]["font"]}
           size={letterSize}
-          height={0.32}
+          height={0.12}
           // 64/16 produced 196k triangles (×2 with the shadow pass) for a ~3 px bevel;
           // 32/8 (52k) and 24/6 (30k) are visually identical at this size.
           curveSegments={tier === "A" ? 32 : 24}
@@ -949,6 +949,9 @@ function GoldenTamilEmblem({ isMobile, tier }: { isMobile: boolean; tier: string
  * Static (PRD §5.1): the camera's parallax supplies the motion.
  */
 function CastEmblem({ isMobile, tier }: { isMobile: boolean; tier: string }) {
+  useEffect(() => {
+    useBootStore.getState().markReady("home-kolam");
+  }, []);
   const material = useMemo(
     () =>
       createSurfaceMaterial(
@@ -963,10 +966,9 @@ function CastEmblem({ isMobile, tier }: { isMobile: boolean; tier: string }) {
   // Mobile frames the scene from much further back; 1.4x keeps the letter the subject.
   const letterSize = isMobile ? 1.96 : 1.85;
   const scale = 1.35;
-  const depth = 0.22;
-  const bevelThickness = 0.07;
-  // Back face just under the stone so the letter reads as resting on it, not hovering.
-  const restZ = THRESHOLD_FLOOR_Z + ((depth + 2 * bevelThickness) / 2) * scale - 0.015;
+  const depth = 0.09;
+  const bevelThickness = 0.024;
+  const restZ = THRESHOLD_FLOOR_Z + ((depth + 2 * bevelThickness) / 2) * scale - 0.01;
   const footprint = letterSize * scale;
   const contact = useMemo(
     () => [{ position: [0, 0, 0] as [number, number, number], size: [footprint * 1.22, footprint * 0.98] as [number, number], opacity: 0.5 }],
@@ -988,7 +990,7 @@ function CastEmblem({ isMobile, tier }: { isMobile: boolean; tier: string }) {
             height={depth}
             curveSegments={tier === "A" ? 24 : 16}
             bevelEnabled
-            bevelSize={0.055}
+            bevelSize={0.016}
             bevelThickness={bevelThickness}
             bevelSegments={tier === "A" ? 6 : 3}
             castShadow

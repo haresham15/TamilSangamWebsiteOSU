@@ -23,7 +23,7 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
   const { isSoundEnabled, toggleSound, playClick } = useAudio();
   const { locale } = useLocale();
   const normalizedPath = pathname.replace(/\/+$/, "") || "/";
-  const darkHeroRoutes = ["/", "/events", "/about", "/board", "/games", "/guide", "/suggestions", "/join"];
+  const darkHeroRoutes = ["/", "/events", "/about", "/board", "/gallery", "/games", "/guide", "/suggestions", "/join"];
   const isHeroRoute = darkHeroRoutes.includes(normalizedPath);
   const [isInHeroZone, setIsInHeroZone] = useState(() => isHeroRoute);
   const inHeroZoneRef = useRef(isHeroRoute);
@@ -86,11 +86,14 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
     };
   }, [pathname, isHeroRoute]);
 
+  const shouldHideDock = isHeroRoute && isInHeroZone && !isChatOpen;
+
   return (
     <aside
       aria-label="Quick tools dock"
-      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none pointer-events-auto"
-    >
+      className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        shouldHideDock ? "translate-y-24 opacity-0 pointer-events-none" : "translate-y-0 opacity-100 pointer-events-auto"
+      }`}>
       <StarBorder className="rounded-xl shadow-[0_10px_28px_rgba(28,18,43,0.55)]" color="#C79347" trailColor="#2BB5A8" thickness={1}>
         <div className="bg-bg-sangam-deep text-ink-alabaster border border-accent-zari/40 backdrop-blur-md rounded-xl h-12 px-1.5 sm:px-2 flex items-center gap-1 transition-[background-color,border-color] duration-200">
         {/* 1. Ask Nanba Trigger */}

@@ -263,32 +263,17 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
         </span>
       </div>
 
-      {/* 3. Sleek Ceremonial Hairline Progress Gauge (Smooth GPU Shimmer) */}
-      <div className="mt-5 flex flex-col items-center w-48 sm:w-56 max-w-full">
-        {/* Hairline Track */}
-        <div className="w-full h-[2px] rounded-full bg-white/10 overflow-hidden relative">
-          <div
-            className="absolute inset-0 w-full h-full rounded-full"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent 0%, #C79347 40%, #2BB5A8 70%, transparent 100%)",
-              backgroundSize: "200% 100%",
-              animation: reducedMotion ? "none" : "hairlineShimmer 1.8s ease-in-out infinite",
-            }}
-          />
-        </div>
-
-        {/* Status Label */}
-        <div className="flex items-center justify-center w-full mt-2.5 font-mono text-[10px] tracking-widest text-[#CBBBA8]/80">
-          <span className="uppercase text-[#2BB5A8] tracking-[0.16em] font-medium flex items-center gap-1.5">
-            <span
-              className={`inline-block w-1.5 h-1.5 rounded-full bg-[#2BB5A8] ${
-                reducedMotion ? "" : "animate-pulse"
-              }`}
-            />
-            {meta.subtitleEn}
-          </span>
-        </div>
+            {/* 3. Pure Ceremonial Breathing Status (Zero artificial progress bars or percentages) */}
+      <div className="mt-4 flex items-center justify-center gap-2 font-mono text-[11px] tracking-widest text-[#CBBBA8]/75">
+        <span
+          className={`inline-block w-1.5 h-1.5 rounded-full bg-[#2BB5A8] shadow-[0_0_8px_#2BB5A8] ${
+            reducedMotion ? "" : "animate-pulse"
+          }`}
+          aria-hidden="true"
+        />
+        <span className="uppercase text-[#2BB5A8] tracking-[0.18em] font-medium">
+          {meta.subtitleEn}
+        </span>
       </div>
     </div>
   );

@@ -182,6 +182,9 @@ export const Navbar: React.FC = () => {
     }
   };
 
+  // Hide nav during initial 3D hero section so hero has full stage; show permanently on scroll into content
+  const shouldHideNav = isHeroRoute && !isPastHero && !isOpen;
+
   // Spring animation parameters for smooth width expansion without scale distortion
   const containerSpring = {
     type: "spring" as const,
@@ -213,7 +216,9 @@ export const Navbar: React.FC = () => {
 
       <header
         id="global-floating-nav"
-        className="fixed top-2.5 sm:top-3.5 left-0 right-0 z-50 px-3 sm:px-6 pointer-events-none flex justify-center items-center transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        className={`fixed top-2.5 sm:top-3.5 left-0 right-0 z-50 px-3 sm:px-6 pointer-events-none flex justify-center items-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          shouldHideNav ? "-translate-y-28 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"
+        }`}
       >
         <motion.div
           ref={navRef}

@@ -9,6 +9,7 @@ import { CinemaLightbox, LightboxPhoto } from "@/components/ui/CinemaLightbox";
 interface ParallaxScatterProps {
   photos: string[];
   eventTitle: string;
+  googlePhotosUrl?: string;
 }
 
 // Preset editorial angles and aspect ratios to give physical print texture
@@ -29,7 +30,7 @@ const PRINT_PROFILES = [
  * parallax column drift. Each print opens the lightbox through a native button
  * overlay, so it works by keyboard as well as pointer.
  */
-export function ParallaxScatter({ photos, eventTitle }: ParallaxScatterProps) {
+export function ParallaxScatter({ photos, eventTitle, googlePhotosUrl }: ParallaxScatterProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
   const { isLiteMode } = useLiteMode();

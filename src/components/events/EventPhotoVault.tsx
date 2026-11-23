@@ -267,7 +267,7 @@ export function EventPhotoVault({
         {(viewMode === "scatter" || !album || photos.length === 0) && (
           <div className={SCATTER_PRINT_OVERRIDES}>
             {randomizedScatter.length > 0 ? (
-              <ParallaxScatter photos={randomizedScatter} eventTitle={eventTitle} />
+              <ParallaxScatter photos={randomizedScatter} eventTitle={eventTitle} googlePhotosUrl={album?.googlePhotosUrl} />
             ) : (
               <p className="py-24 font-serif text-xl italic text-ink-umber">
                 Photographic prints being cataloged in the local vault.
@@ -346,7 +346,7 @@ export function EventPhotoVault({
                 </ul>
               )}
 
-              <div className="border-t border-border-zari-muted pt-4">
+              <div className="border-t border-border-zari-muted pt-4 flex flex-wrap items-center gap-4">
                 <a
                   href={selectedPhoto.imageUrl}
                   target="_blank"
@@ -356,6 +356,16 @@ export function EventPhotoVault({
                   <Maximize2 className="h-4 w-4" aria-hidden="true" />
                   Full resolution ↗
                 </a>
+                {album?.googlePhotosUrl && (
+                  <a
+                    href={album.googlePhotosUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-12 items-center gap-1.5 font-sans text-sm font-semibold text-accent-zari hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-zari"
+                  >
+                    Google Photos Vault ↗
+                  </a>
+                )}
               </div>
             </div>
           </div>

@@ -28,24 +28,28 @@ export function EditorialPhotoCarousel() {
     return targetAlbum ? targetAlbum.photos : [];
   }, [activeAlbumSlug]);
 
-  // Formatted photos for CinemaLightbox
-  const lightboxPhotos: LightboxPhoto[] = useMemo(() => {
-    return photos.map((p, idx) => ({
-      id: p.id,
-      src: p.imageUrl,
-      titleEn: p.titleEn,
-      titleTa: p.titleTa,
-      captionEn: p.captionEn,
-      captionTa: p.captionTa,
-      date: p.eventDate,
-      plateNumber: String(idx + 1).padStart(2, "0"),
-    }));
-  }, [photos]);
-
   const activeAlbum = useMemo(() => {
     if (activeAlbumSlug === "all") return null;
     return GALLERY_ALBUMS.find((a) => a.slug === activeAlbumSlug) || null;
   }, [activeAlbumSlug]);
+
+  // Formatted photos for CinemaLightbox
+  const lightboxPhotos: LightboxPhoto[] = useMemo(() => {
+    return photos.map((p, idx) => {
+      const parentAlbum = GALLERY_ALBUMS.find((a) => a.photos.some((ph) => ph.id === p.id));
+      return {
+        id: p.id,
+        src: p.imageUrl,
+        titleEn: p.titleEn,
+        titleTa: p.titleTa,
+        captionEn: p.captionEn,
+        captionTa: p.captionTa,
+        date: p.eventDate,
+        plateNumber: String(idx + 1).padStart(2, "0"),
+        googlePhotosUrl: parentAlbum?.googlePhotosUrl || (activeAlbumSlug !== "all" ? activeAlbum?.googlePhotosUrl : undefined),
+      };
+    });
+  }, [photos, activeAlbum, activeAlbumSlug]);
 
   const handleScroll = (direction: "left" | "right") => {
     playClick();

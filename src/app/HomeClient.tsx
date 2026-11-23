@@ -36,7 +36,7 @@ import { CulturalSection } from "@/components/ui/CulturalSection";
 import { Eyebrow } from "@/components/muttram/Eyebrow";
 import { EventJsonLd } from "@/components/seo/JsonLd";
 import { useTamilSpeech } from "@/lib/tamilSpeech";
-import { ThirukkuralAudioButton } from "@/components/ui/PronounceableQuote";
+import { ThirukkuralAudioButton, PronounceableQuote } from "@/components/ui/PronounceableQuote";
 
 export function HomeClient() {
   const { playClick } = useAudio();
@@ -95,6 +95,14 @@ export function HomeClient() {
       window.location.hash === "#flagship-gathering" ||
       window.location.search.includes("skipHero") ||
       sessionStorage.getItem("ts_skip_hero") === "true";
+
+    if (!isSkip && !window.location.hash) {
+      window.scrollTo(0, 0);
+      const lenis = (window as unknown as { __lenis?: { scrollTo: (t: number, opts?: unknown) => void } }).__lenis;
+      if (lenis) {
+        lenis.scrollTo(0, { immediate: true, force: true });
+      }
+    }
 
     if (isSkip) {
       try {
@@ -632,7 +640,7 @@ export function HomeClient() {
           THE SUNLIT MUTTRAM (COURTYARD): bands below the pinned hero.
           D Puranaanuru ribbon → S flagship (feature + rail) → I pillars → S kinship ledger → P closer
           ========================================================================= */}
-      <EditorialSheetHandoff id="flagship-gathering" badge="CAMPUS HEARTH" sublabel="COLUMBUS, OH" overlapHero={false} seam="knot">
+      <EditorialSheetHandoff id="flagship-gathering" badge="CAMPUS HEARTH" sublabel="COLUMBUS, OH" overlapHero={false} seam="full">
 
         {/* 1. Puranaanuru 192 ribbon: pull-quote (recipe C) between korvai seams */}
         <CulturalSection variant="sangam-deep" divider="korvai" aria-labelledby="puranaanuru-title">
@@ -645,14 +653,21 @@ export function HomeClient() {
               >
                 &ldquo;
               </span>
-              <blockquote className="relative">
-                <p lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-2xl sm:text-4xl lg:text-5xl font-medium leading-[1.6] text-brand-lavender">
-                  யாதும் ஊரே யாவரும் கேளிர்
-                </p>
-                <p className="mt-2 font-serif italic text-xl sm:text-2xl lg:text-3xl leading-snug text-ink-alabaster">
-                  &ldquo;To us all towns are home, everyone our kin.&rdquo;
-                </p>
-              </blockquote>
+              <PronounceableQuote
+                tamilText="யாதும் ஊரே யாவரும் கேளிர்"
+                label="Puranaanuru 192: Yaathum Oore Yaavarum Kaelir"
+                tone="gold"
+                badgePosition="corner"
+              >
+                <blockquote className="relative">
+                  <p lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-2xl sm:text-4xl lg:text-5xl font-medium leading-[1.6] text-brand-lavender">
+                    யாதும் ஊரே யாவரும் கேளிர்
+                  </p>
+                  <p className="mt-2 font-serif italic text-xl sm:text-2xl lg:text-3xl leading-snug text-ink-alabaster">
+                    &ldquo;To us all towns are home, everyone our kin.&rdquo;
+                  </p>
+                </blockquote>
+              </PronounceableQuote>
               <figcaption className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
                 <Eyebrow tone="dark">Kaniyan Poongundranar · Puranaanuru 192</Eyebrow>
                 <Link

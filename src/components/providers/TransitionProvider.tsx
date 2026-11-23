@@ -81,7 +81,8 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
         router.push(href);
 
         // 3) Wait for target scene ready with a 600ms safety cap and minimal 80ms dwell
-        const minDwell = new Promise((r) => setTimeout(r, 80));
+        // Pure breathing dwell (450ms) gives the user time to experience the sacred Kolam loop and allows WebGL/chunks to compile seamlessly
+        const minDwell = new Promise((r) => setTimeout(r, 450));
         const sceneReady = sceneId ? waitForSceneReady(sceneId, 600) : Promise.resolve(true);
         await Promise.all([minDwell, sceneReady]);
 
