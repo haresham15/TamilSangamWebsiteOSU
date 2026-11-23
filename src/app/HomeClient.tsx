@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -38,8 +39,64 @@ import { EventJsonLd } from "@/components/seo/JsonLd";
 import { useTamilSpeech } from "@/lib/tamilSpeech";
 import { ThirukkuralAudioButton, PronounceableQuote } from "@/components/ui/PronounceableQuote";
 
+interface LivingPillar {
+  id: string;
+  num: string;
+  title: string;
+  tamilSubtitle: string;
+  description: string;
+  href: string;
+  image: string;
+  imageAlt: string;
+  badge: string;
+  actionLabel: string;
+}
+
+const LIVING_PILLARS: LivingPillar[] = [
+  {
+    id: "cultural-heritage",
+    num: "01",
+    title: "Cultural Heritage & Language",
+    tamilSubtitle: "மரபு & மொழி",
+    description:
+      "Conversational Tamil workshops, living Sangam literature explorations, historical linguistics & Dravidian living arts.",
+    href: "/about",
+    image: "/events/yaar-andha-killer/killer-03.jpg",
+    imageAlt: "Tamil Sangam cultural presentation and community gathering at Ohio State",
+    badge: "LIVING TRADITIONS",
+    actionLabel: "Explore Archive ↗",
+  },
+  {
+    id: "festivals-banquet",
+    num: "02",
+    title: "Festivals & Banquet Table",
+    tamilSubtitle: "விழாக்கள் & விருந்து",
+    description:
+      "Authentic South Indian feast tables, streetside sapad & major campus festivals like Diwali and Pongal.",
+    href: "/events",
+    image: "/events/yaar-andha-killer/killer-02.jpg",
+    imageAlt: "Students sharing authentic South Indian festive cuisine and banquet dining",
+    badge: "CAMPUS CELEBRATIONS",
+    actionLabel: "View Gatherings ↗",
+  },
+  {
+    id: "peer-mentorship",
+    num: "03",
+    title: "Peer Mentorship & Kinship",
+    tamilSubtitle: "தோழமை & வழிகாட்டல்",
+    description:
+      "Freshman peer guidance, community volunteering, student solidarity & inclusive Buckeye kinship.",
+    href: "/join",
+    image: "/events/yaar-andha-killer/killer-04.jpg",
+    imageAlt: "Buckeyes sharing laughs and bonding together during a Sangam gathering",
+    badge: "COMMUNITY HEARTH",
+    actionLabel: "Join the Community ↗",
+  },
+];
+
 export function HomeClient() {
   const { playClick } = useAudio();
+  const [activePillar, setActivePillar] = useState(0);
   const { isLiteMode } = useLiteMode();
   const tier = useTier();
   const reducedMotion = useReducedMotion();
@@ -442,194 +499,227 @@ export function HomeClient() {
           </div>
 
           {/* =========================================================================
-              ACT III: THE MONOLITH SPLIT ("CURTAIN RISE" SLIDE-UP AT SCROLL 0.72)
+              ACT III: THE COURTYARD THRESHOLD (AESTHETIC POST-HERO REMODEL)
               ========================================================================= */}
           <section
             hidden={staticHero}
             style={staticHero ? { display: "none" } : undefined}
             id="monolith"
             ref={monolithRef}
-            className="absolute inset-0 z-20 w-full h-[100dvh] overflow-y-auto grid grid-cols-1 lg:grid-cols-12 bg-[#1C122B] border-t border-[#C79347]/30 text-[#FAF5ED]"
+            data-lenis-prevent
+            className="absolute inset-0 z-20 w-full h-[100dvh] overflow-y-auto bg-[#1C122B] border-t border-[#C79347]/30 text-[#FAF5ED] selection:bg-[#C79347]/30 selection:text-[#FAF5ED]"
           >
-            {/* Left Column (4 Cols - The Anchor, §PRD 9.1) */}
-            <div className="lg:col-span-4 relative p-6 pt-16 sm:p-8 sm:pt-20 lg:p-8 lg:pt-20 xl:p-12 xl:pt-24 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#C79347]/20 overflow-hidden">
-              {/* Absolute Massive Tamil Numeral Watermark: warm zari gold accent */}
-              <div
-                aria-hidden="true"
-                className="absolute -bottom-10 -left-6 text-[clamp(14rem,32vw,36rem)] font-noto-serif-tamil font-bold text-[#C79347] opacity-[0.09] select-none pointer-events-none leading-none drop-shadow-[0_0_35px_rgba(199,147,71,0.2)]"
-              >
-                ௦௧
-              </div>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(199,147,71,0.08),transparent_65%)] pointer-events-none" aria-hidden="true" />
+            <div className="relative w-full min-h-[140vh] sm:min-h-[160vh] flex flex-col justify-between overflow-x-hidden">
+              {/* Beat 1: The Atmospheric Manifesto (Top 45% of Section) */}
+              <div className="relative z-10 w-full max-w-5xl mx-auto pt-36 sm:pt-40 md:pt-44 px-6 sm:px-10 lg:px-12 text-center">
+                {/* Architectural Backdrop: Oversized Centered Tamil Glyph (த) */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-1/2 top-44 -translate-x-1/2 select-none font-noto-serif-tamil text-[clamp(16rem,36vw,44rem)] font-bold text-[#C79347] opacity-[0.05] leading-none drop-shadow-[0_0_60px_rgba(199,147,71,0.2)] transition-transform duration-700 ease-out"
+                >
+                  த
+                </div>
 
-              {/* Top Anchor Header */}
-              <div className="relative z-10 space-y-3">
-                <span className="font-space-mono text-[10px] text-[#C79347] tracking-widest uppercase block font-semibold">
-                  COLUMBUS CHAPTER
-                </span>
+                {/* Subtle warm radial diya/amber vignette */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-1/2 top-48 -translate-x-1/2 h-[500px] w-[750px] max-w-full -translate-y-1/4 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(199,147,71,0.12),rgba(15,118,110,0.06)_45%,transparent_70%)] blur-2xl"
+                />
+
+                {/* Bilingual Eyebrow */}
+                <div className="relative z-10 flex items-center justify-center gap-2.5">
+                  <span className="w-1.5 h-1.5 rotate-45 bg-[#C79347]" aria-hidden="true" />
+                  <span className="font-space-mono text-xs sm:text-[13px] text-[#C79347] tracking-[0.24em] uppercase font-semibold">
+                    COLUMBUS CHAPTER · EST. 2021
+                  </span>
+                  <span className="w-1.5 h-1.5 rotate-45 bg-[#C79347]" aria-hidden="true" />
+                </div>
+
+                {/* Main Display Headline */}
+                <h2 className="relative z-10 mt-4 font-serif text-[clamp(2.1rem,4.5vw,4.25rem)] font-normal text-[#FAF5ED] leading-[1.14] tracking-tight max-w-4xl mx-auto">
+                  Where Tamil Heritage Meets Ohio State.
+                </h2>
+
+                {/* Tamil Tagline right underneath in muted gold */}
                 <p
                   ref={monolithTamilRef}
                   lang="ta"
                   style={{ letterSpacing: 0 }}
-                  className="font-noto-serif-tamil text-base sm:text-lg text-[#FAF5ED] leading-relaxed"
+                  className="relative z-10 mt-3.5 font-tamil text-xl sm:text-2xl md:text-3xl text-[#C79347] font-normal leading-[1.6] max-w-3xl mx-auto"
                 >
                   ஓஹியோ மாநிலத்தில் தமிழ் மரபையும் மாணவர் தோழமையையும் ஒன்றிணைக்கும் கலாச்சாரப் பீடம்.
                 </p>
-              </div>
-            </div>
 
-            {/* Right Column (8 Cols - The Dossier) */}
-            <div className="lg:col-span-8 flex flex-col justify-between">
-              {/* Constitutional Introduction */}
-              <div className="p-5 pt-14 sm:p-7 sm:pt-16 lg:p-7 lg:pt-16 xl:p-10 xl:pt-20 border-b border-[#C79347]/20">
-                <span className="font-space-mono text-[10px] text-[#C79347] tracking-widest uppercase block mb-1.5 font-semibold">
-                  COMMUNITY CHARTER · OHIO STATE
-                </span>
-                <h2 className="text-[clamp(1.5rem,2.5vw,2.5rem)] font-display font-medium text-[#FAF5ED] leading-tight tracking-tight">
-                  Tamil Sangam at Ohio State
-                </h2>
-                <p className="mt-1 text-xs sm:text-sm font-mono text-[#2BB5A8] tracking-wider uppercase font-medium">
-                  Open Year-Round · No Language Requirement
+                {/* Scannable Identity Strip: Crisp 2-line welcome summary */}
+                <p
+                  ref={monolithPrologueRef}
+                  className="relative z-10 mt-5 font-body text-sm sm:text-base md:text-lg text-[#CBBBA8] leading-relaxed max-w-2xl mx-auto"
+                >
+                  The official collegiate student fellowship celebrating Tamil language, living arts, and lifelong community at The Ohio State University in Columbus, Ohio.
                 </p>
-                <p ref={monolithPrologueRef} className="mt-2.5 text-xs sm:text-[14px] text-[#CBBBA8] font-body leading-relaxed max-w-2xl">
-                  OSU Tamil Sangam is the official collegiate student organization celebrating Tamil heritage, language, and community at The Ohio State University in Columbus, Ohio. Founded in 2021 as a registered student organization, we welcome all students with 100% free membership, zero dues, authentic cultural feasts, collegiate dance, and semester gatherings.
-                </p>
-                <div className="mt-4 flex flex-wrap items-center gap-4 sm:gap-5">
+
+                {/* Hairline Metadata Strip */}
+                <div className="relative z-10 mt-8 pt-6 border-t border-[#C79347]/20 max-w-2xl mx-auto flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono text-xs sm:text-sm text-[#2BB5A8] tracking-wider uppercase font-medium">
+                  <span>100% Free Membership</span>
+                  <span className="text-[#C79347]/40" aria-hidden="true">·</span>
+                  <span>No Language Requirement</span>
+                  <span className="text-[#C79347]/40" aria-hidden="true">·</span>
+                  <span>Open to All Majors</span>
+                </div>
+
+                {/* Single Primary Action: Emerald Button */}
+                <div className="relative z-10 mt-8 flex justify-center">
                   <Link
                     href="/join"
                     onClick={playClick}
-                    className="px-4 py-2 sm:px-5 sm:py-2.5 bg-[#0F766E] text-[#FAF5ED] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#0B5C56] transition-colors rounded-xl shadow-sm"
+                    className="group inline-flex items-center gap-3 px-7 py-3.5 bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] font-mono text-xs sm:text-sm font-bold uppercase tracking-wider rounded-full shadow-[0_4px_24px_rgba(15,118,110,0.35)] hover:shadow-[0_8px_32px_rgba(15,118,110,0.5)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border border-[#2BB5A8]/30"
                   >
-                    Join the Hearth →
-                  </Link>
-                  <Link
-                    href="/events"
-                    onClick={playClick}
-                    className="font-mono text-xs uppercase tracking-wider text-[#FAF5ED] hover:text-[#2BB5A8] border-b border-[#C79347]/30 hover:border-[#2BB5A8] pb-0.5 transition-colors"
-                  >
-                    Campus Events ↗
-                  </Link>
-                  <Link
-                    href="/about"
-                    onClick={playClick}
-                    className="font-mono text-xs uppercase tracking-wider text-[#CBBBA8] hover:text-[#2BB5A8] border-b border-transparent hover:border-[#2BB5A8] pb-0.5 transition-colors"
-                  >
-                    About Us ↗
-                  </Link>
-                  <Link
-                    href="/board"
-                    onClick={playClick}
-                    className="font-mono text-xs uppercase tracking-wider text-[#CBBBA8] hover:text-[#2BB5A8] border-b border-transparent hover:border-[#2BB5A8] pb-0.5 transition-colors"
-                  >
-                    Executive Board ↗
-                  </Link>
-                  <Link
-                    href="/gallery"
-                    onClick={playClick}
-                    className="font-mono text-xs uppercase tracking-wider text-[#CBBBA8] hover:text-[#2BB5A8] border-b border-transparent hover:border-[#2BB5A8] pb-0.5 transition-colors"
-                  >
-                    Photo Archive ↗
+                    <span>Join the Hearth</span>
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                   </Link>
                 </div>
               </div>
 
-              {/* The Three Horizontal Ribbons with Hover Kinematics */}
-              <div className="divide-y divide-[#C79347]/20">
-                {/* Ribbon 1: CULTURAL HERITAGE */}
-                <Link
-                  href="/about"
-                  onClick={playClick}
-                  onMouseEnter={() => {
-                    audioLayer.playTapeClack();
-                  }}
-                  data-cursor="bracket"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 sm:p-4 lg:p-4 xl:p-5 hover:bg-[#271A3C]/40 transition-[transform,color,background-color] duration-300 ease-out"
-                >
-                  <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
-                    <span className="font-space-mono text-xs sm:text-sm text-[#C79347] font-semibold transition-colors">
-                      01 ·
-                    </span>
-                    <div>
-                      <h4 className="text-base sm:text-lg font-editorial font-bold text-[#FAF5ED] group-hover:text-[#2BB5A8] transition-colors">
-                        CULTURAL HERITAGE & LANGUAGE
-                      </h4>
-                      <p className="text-xs sm:text-sm text-[#CBBBA8] mt-0.5 font-body">
-                        Conversational Tamil workshops, Sangam literature explorations & Dravidian living arts.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mt-3 sm:mt-0 flex items-center gap-2 font-space-mono text-xs text-[#FAF5ED]/60 group-hover:text-[#2BB5A8] transition-colors shrink-0">
-                    <span className="hidden sm:inline">EXPLORE ARCHIVE</span>
-                    <span className="text-sm font-mono leading-none transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                      ↗
-                    </span>
-                  </div>
-                </Link>
+              {/* Beat 2: The Living Pillars — Interactive Preview Stage (Middle 40%) */}
+              <div className="relative z-10 mt-20 sm:mt-28 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+                  {/* Left (7 Cols / 55% width): The 3 Pillars */}
+                  <div className="lg:col-span-7 flex flex-col divide-y divide-[#C79347]/20 border-y border-[#C79347]/20">
+                    {LIVING_PILLARS.map((pillar, idx) => {
+                      const isActive = activePillar === idx;
+                      return (
+                        <Link
+                          key={pillar.id}
+                          href={pillar.href}
+                          onClick={playClick}
+                          onMouseEnter={() => {
+                            setActivePillar(idx);
+                            audioLayer.playTapeClack();
+                          }}
+                          onFocus={() => setActivePillar(idx)}
+                          className={`group block py-8 sm:py-10 px-4 sm:px-6 transition-[background-color,transform] duration-300 rounded-xl ${
+                            isActive ? "bg-[#271A3C]/40" : "hover:bg-[#271A3C]/25"
+                          }`}
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
+                            <div className="flex items-start gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
+                              <span
+                                className={`font-space-mono text-sm sm:text-base font-semibold transition-colors duration-300 ${
+                                  isActive ? "text-[#2BB5A8]" : "text-[#C79347]"
+                                }`}
+                              >
+                                {pillar.num} ·
+                              </span>
+                              <div>
+                                <div className="flex items-baseline gap-3 flex-wrap">
+                                  <h3
+                                    className={`font-serif text-2xl sm:text-3xl font-medium tracking-tight transition-colors duration-300 ${
+                                      isActive ? "text-[#C79347]" : "text-[#FAF5ED] group-hover:text-[#C79347]"
+                                    }`}
+                                  >
+                                    {pillar.title}
+                                  </h3>
+                                  <span lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-sm text-[#C79347]/80">
+                                    {pillar.tamilSubtitle}
+                                  </span>
+                                </div>
+                                <p className="mt-2 font-body text-xs sm:text-sm text-[#CBBBA8] leading-relaxed max-w-xl">
+                                  {pillar.description}
+                                </p>
+                              </div>
+                            </div>
 
-                {/* Ribbon 2: THE BANQUET TABLE & FESTIVALS */}
-                <Link
-                  href="/events"
-                  onClick={playClick}
-                  onMouseEnter={() => {
-                    audioLayer.playTapeClack();
-                  }}
-                  data-cursor="bracket"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 sm:p-4 lg:p-4 xl:p-5 hover:bg-[#271A3C]/40 transition-[transform,color,background-color] duration-300 ease-out"
-                >
-                  <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
-                    <span className="font-space-mono text-xs sm:text-sm text-[#C79347] font-semibold transition-colors">
-                      02 ·
-                    </span>
-                    <div>
-                      <h4 className="text-base sm:text-lg font-editorial font-bold text-[#FAF5ED] group-hover:text-[#2BB5A8] transition-colors">
-                        FESTIVALS & BANQUET TABLE
-                      </h4>
-                      <p className="text-xs sm:text-sm text-[#CBBBA8] mt-0.5 font-body">
-                        Authentic South Indian cuisine, streetside sapad & major campus festivals like Diwali and Pongal.
-                      </p>
-                    </div>
+                            <div className="mt-2 sm:mt-0 flex items-center gap-1.5 font-space-mono text-xs text-[#FAF5ED]/50 group-hover:text-[#2BB5A8] transition-colors shrink-0 self-end sm:self-center">
+                              <span className="hidden sm:inline">Explore</span>
+                              <span className="text-sm font-mono transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                                ↗
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
-                  <div className="mt-3 sm:mt-0 flex items-center gap-2 font-space-mono text-xs text-[#FAF5ED]/60 group-hover:text-[#2BB5A8] transition-colors shrink-0">
-                    <span className="hidden sm:inline">VIEW GATHERINGS</span>
-                    <span className="text-sm font-mono leading-none transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                      ↗
-                    </span>
-                  </div>
-                </Link>
 
-                {/* Ribbon 3: PEER MENTORSHIP & KINSHIP */}
-                <Link
-                  href="/join"
-                  onClick={playClick}
-                  onMouseEnter={() => {
-                    audioLayer.playTapeClack();
-                  }}
-                  onPointerDown={() => {
-                    audioLayer.playSubBassThud();
-                  }}
-                  data-cursor="bracket"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 sm:p-4 lg:p-4 xl:p-5 hover:bg-[#271A3C]/40 transition-[transform,color,background-color] duration-300 ease-out border-b border-[#C79347]/20 lg:border-b-0"
-                >
-                  <div className="flex items-start sm:items-center gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
-                    <span className="font-space-mono text-xs sm:text-sm text-[#C79347] font-semibold transition-colors">
-                      03 ·
-                    </span>
-                    <div>
-                      <h4 className="text-base sm:text-lg font-editorial font-bold text-[#FAF5ED] group-hover:text-[#2BB5A8] transition-colors">
-                        PEER MENTORSHIP & KINSHIP
-                      </h4>
-                      <p className="text-xs sm:text-sm text-[#CBBBA8] mt-0.5 font-body">
-                        Freshman peer guidance, community volunteering & inclusive South Asian student solidarity.
-                      </p>
+                  {/* Right (5 Cols / 45% width): 4:5 Portrait Cinematic Preview Frame */}
+                  <div className="lg:col-span-5 flex justify-center">
+                    <div className="relative w-full max-w-md aspect-[4/5] rounded-2xl overflow-hidden bg-[#150D22] border border-[#C79347]/25 shadow-[0_24px_60px_rgba(0,0,0,0.65),0_0_40px_rgba(199,147,71,0.08)]">
+                      {/* Layered Crossfading Images */}
+                      {LIVING_PILLARS.map((pillar, idx) => (
+                        <div
+                          key={pillar.id}
+                          className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
+                            activePillar === idx ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
+                          }`}
+                        >
+                          <Image
+                            src={pillar.image}
+                            alt={pillar.imageAlt}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 440px"
+                            priority={idx === 0}
+                          />
+                        </div>
+                      ))}
+
+                      {/* Soft Vignette Gradients */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#1C122B] via-[#1C122B]/35 to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-b from-[#1C122B]/40 via-transparent to-transparent pointer-events-none" />
+
+                      {/* Top Active Category Badge */}
+                      <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1C122B]/85 backdrop-blur-md border border-[#C79347]/30 text-[10px] font-mono tracking-widest uppercase text-[#C79347]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2BB5A8] animate-pulse" />
+                        {LIVING_PILLARS[activePillar].badge}
+                      </div>
+
+                      {/* Bottom Text in Preview Frame */}
+                      <div className="absolute bottom-6 left-6 right-6 z-10 space-y-1">
+                        <span
+                          lang="ta"
+                          style={{ letterSpacing: 0 }}
+                          className="font-tamil text-xl sm:text-2xl text-[#C79347] font-medium block drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
+                        >
+                          {LIVING_PILLARS[activePillar].tamilSubtitle}
+                        </span>
+                        <p className="font-serif text-base sm:text-lg text-[#FAF5ED] font-medium leading-snug drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                          {LIVING_PILLARS[activePillar].title}
+                        </p>
+                        <p className="text-xs font-mono text-[#2BB5A8] tracking-wider uppercase pt-1 font-semibold">
+                          {LIVING_PILLARS[activePillar].actionLabel}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <div className="mt-3 sm:mt-0 flex items-center gap-2 font-space-mono text-xs text-[#FAF5ED]/60 group-hover:text-[#2BB5A8] transition-colors shrink-0">
-                    <span className="hidden sm:inline">JOIN THE COMMUNITY</span>
-                    <span className="text-sm font-mono leading-none transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                      ↗
-                    </span>
-                  </div>
-                </Link>
+                </div>
+              </div>
+
+              {/* Beat 3: The Quiet Handoff (Bottom 15%) */}
+              <div className="relative z-10 mt-20 sm:mt-28 pb-28 sm:pb-36 flex flex-col items-center justify-center text-center">
+                {/* Centered vertical 1px gold gradient hairline fading downward */}
+                <div className="w-px h-16 sm:h-20 bg-gradient-to-b from-[#C79347]/80 via-[#C79347]/30 to-transparent" />
+
+                {/* Quiet scroll cue: NEXT GATHERING ↓ */}
+                <a
+                  href="#flagship-gathering"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    playClick();
+                    const el = document.getElementById("flagship-gathering");
+                    if (el) {
+                      el.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="group mt-4 inline-flex flex-col items-center gap-1.5 font-space-mono text-[11px] sm:text-xs text-[#C79347] hover:text-[#2BB5A8] tracking-[0.25em] uppercase font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB5A8] rounded-md px-4 py-2"
+                >
+                  <span className="flex items-center gap-2">
+                    <span>NEXT GATHERING</span>
+                    <span className="transition-transform duration-300 group-hover:translate-y-1">↓</span>
+                  </span>
+                  <span lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-[11px] text-[#CBBBA8]/75 group-hover:text-[#2BB5A8]/90 font-normal">
+                    அடுத்த நிகழ்வு
+                  </span>
+                </a>
               </div>
             </div>
           </section>

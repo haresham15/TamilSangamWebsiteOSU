@@ -119,7 +119,7 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
     >
       {/* 1. GPU-Accelerated Kolam Weaving Motif (Runs off main JS thread: never freezes or hitches) */}
       <div
-        className="relative flex items-center justify-center"
+        className="relative flex items-center justify-center kolam-breathing-group"
         style={{ width: size, height: size, maxWidth: "70vw", maxHeight: "70vw" }}
       >
         <svg
@@ -239,11 +239,9 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
             strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            className="kolam-weave-flow"
             style={{
               filter: "drop-shadow(0 0 6px rgba(199, 147, 71, 0.45))",
-              strokeDasharray: reducedMotion ? "none" : "45 55",
-              strokeDashoffset: 0,
-              animation: reducedMotion ? "none" : "kolamWeaveFlow 2.8s linear infinite",
             }}
           />
         </svg>

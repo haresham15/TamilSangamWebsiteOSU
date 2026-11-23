@@ -27,6 +27,7 @@ import { AppShell } from "@/components/global/AppShell";
 import { RootGraphJsonLd } from "@/components/seo/JsonLd";
 import { SITE_URL, ROUTE_METADATA, DEFAULT_ROBOTS, constructAlternates, DEFAULT_KEYWORDS } from "@/lib/seo";
 import { ViewfinderCursor } from "@/components/ui/ViewfinderCursor";
+import { CinematicBootCurtain } from "@/components/ui/CinematicBootCurtain";
 
 const muktaMalar = Mukta_Malar({
   variable: "--font-mukta-malar",
@@ -247,11 +248,14 @@ export default function RootLayout({
         <link rel="alternate" type="text/plain" href="/llms-full.txt" title="Exhaustive LLM Knowledge Base" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){if(typeof window==='undefined')return;try{if('scrollRestoration' in history){history.scrollRestoration='manual';}if(!window.location.hash&&!window.location.search.includes('skipHero')){window.scrollTo(0,0);}var rm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;var lt=localStorage.getItem('sangam_lite_mode')==='true';var tr=localStorage.getItem('sangam_tier')==='C';if(rm||lt||tr){document.documentElement.classList.add('sangam-fallback');}}catch(e){}function clickHandler(e){var g=e.target&&e.target.closest?e.target.closest('[data-guide-category]'):null;if(g){var c=g.getAttribute('data-guide-category');window.__pendingGuideCategory=c;window.dispatchEvent(new CustomEvent('guide-category-click',{detail:c}));}var m=e.target&&e.target.closest?e.target.closest('[data-membership-type]'):null;if(m){var t=m.getAttribute('data-membership-type');window.__pendingMembershipType=t;window.dispatchEvent(new CustomEvent('membership-type-select',{detail:t}));}}document.addEventListener('click',clickHandler,true);function sync(e){var t=e.target;if(!t)return;if(t.id==='guestbook-name')window.__pendingGuestbookName=t.value;if(t.id==='guestbook-email')window.__pendingGuestbookEmail=t.value;if(t.id==='guestbook-major')window.__pendingGuestbookMajor=t.value;window.dispatchEvent(new CustomEvent('guestbook-input-sync'));}document.addEventListener('input',sync,true);document.addEventListener('change',sync,true);})();`,
+            __html: `(function(){if(typeof window==='undefined')return;setTimeout(function(){var c=document.getElementById('app-boot-curtain');if(c&&c.style.display!=='none'){c.style.opacity='0';c.style.pointerEvents='none';setTimeout(function(){if(c)c.style.display='none';},900);}},4500);try{if('scrollRestoration' in history){history.scrollRestoration='manual';}if(!window.location.hash&&!window.location.search.includes('skipHero')){window.scrollTo(0,0);}var rm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;var lt=localStorage.getItem('sangam_lite_mode')==='true';var tr=localStorage.getItem('sangam_tier')==='C';if(rm||lt||tr){document.documentElement.classList.add('sangam-fallback');}}catch(e){}function clickHandler(e){var g=e.target&&e.target.closest?e.target.closest('[data-guide-category]'):null;if(g){var c=g.getAttribute('data-guide-category');window.__pendingGuideCategory=c;window.dispatchEvent(new CustomEvent('guide-category-click',{detail:c}));}var m=e.target&&e.target.closest?e.target.closest('[data-membership-type]'):null;if(m){var t=m.getAttribute('data-membership-type');window.__pendingMembershipType=t;window.dispatchEvent(new CustomEvent('membership-type-select',{detail:t}));}}document.addEventListener('click',clickHandler,true);function sync(e){var t=e.target;if(!t)return;if(t.id==='guestbook-name')window.__pendingGuestbookName=t.value;if(t.id==='guestbook-email')window.__pendingGuestbookEmail=t.value;if(t.id==='guestbook-major')window.__pendingGuestbookMajor=t.value;window.dispatchEvent(new CustomEvent('guestbook-input-sync'));}document.addEventListener('input',sync,true);document.addEventListener('change',sync,true);})();`,
           }}
         />
       </head>
       <body className="min-h-full flex flex-col font-body text-[var(--text-primary)] relative overflow-x-clip w-full max-w-[100vw]">
+        {/* Full-Screen Initial Boot Veil: First thing seen on cold load; dissolves cinematically */}
+        <CinematicBootCurtain />
+
         {/* Floating Tamil Letter Cursor */}
         <ViewfinderCursor />
         <HeritageTextureOverlay variant="sandstone" opacity={0.03} blendMode="multiply" className="parchment-grain" />
