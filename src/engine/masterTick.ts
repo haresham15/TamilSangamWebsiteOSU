@@ -57,6 +57,10 @@ let lastSyncedClock: unknown = null;
 let lastScrollActiveTime = 0;
 let masterSimTime = 0;
 
+export function getMasterSimTime(): number {
+  return masterSimTime;
+}
+
 export function resetMasterClock() {
   last = 0;
   lastRenderTime = 0;

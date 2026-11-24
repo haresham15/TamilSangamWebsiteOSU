@@ -68,7 +68,7 @@ export function GradePass({ element, active, mode, profile, lut, index }: GradeP
   useFrame(
     (state, delta) => {
       const dt = Math.min(delta, 0.05);
-      time.current += dt;
+      time.current += Math.max(0, dt);
       if (!active || !element) return;
       if (mode === "full" && !lut) return;
 

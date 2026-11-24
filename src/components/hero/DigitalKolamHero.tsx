@@ -197,7 +197,7 @@ function heroCamDist(p: number, camZ: number, aspect: number): number {
 function useSafeFrame(callback: (state: RootState, safeDelta: number) => void) {
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
-    callback(state, dt);
+    callback(state, Math.max(0.0001, dt));
   });
 }
 

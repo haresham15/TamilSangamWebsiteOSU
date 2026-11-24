@@ -5,7 +5,8 @@ import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 import type * as THREE from "three";
 import { useBootStore } from "@/engine/bootStore";
-import { rendererAdvance } from "@/engine/renderer";
+import { getMasterSimTime } from "@/engine/masterTick";
+import { getRendererClock, rendererAdvance } from "@/engine/renderer";
 
 /**
  * useWarmup (§6.3)
@@ -77,7 +78,9 @@ export function useWarmup(sceneId: string) {
           };
           const fallbackTid = window.setTimeout(finish, 150);
           requestAnimationFrame(() => {
-            rendererAdvance(performance.now(), false);
+            const r3fClock = getRendererClock();
+            const simTime = Math.max(getMasterSimTime(), r3fClock?.elapsedTime ?? 0);
+            rendererAdvance(simTime, false);
             requestAnimationFrame(() => {
               window.clearTimeout(fallbackTid);
               finish();
