@@ -542,7 +542,7 @@ export const DitherVeil: React.FC<DitherVeilProps> = ({
     let renderer: Renderer | null = null;
     try {
       renderer = new Renderer({
-        dpr: Math.min(window.devicePixelRatio || 1, 2),
+        dpr: Math.min(window.devicePixelRatio || 1, typeof window !== "undefined" && window.innerWidth < 768 ? 1.5 : 2),
         alpha: true,
         antialias: true,
         premultipliedAlpha: false,
@@ -1000,6 +1000,12 @@ export const DitherVeil: React.FC<DitherVeilProps> = ({
       container.removeEventListener("pointerdown", onDown);
       container.removeEventListener("pointerleave", onLeave);
       container.removeEventListener("pointercancel", onLeave);
+      try {
+        masks.forEach(destroyMask);
+        if (imageTexture && imageTexture.texture) gl.deleteTexture(imageTexture.texture);
+        if (noiseTexture && noiseTexture.texture) gl.deleteTexture(noiseTexture.texture);
+        if (diffusedTexture && diffusedTexture.texture) gl.deleteTexture(diffusedTexture.texture);
+      } catch {}
       gl.getExtension("WEBGL_lose_context")?.loseContext();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };

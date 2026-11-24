@@ -2,8 +2,10 @@
 
 html,
 body,
-main {
+main,
+#app-root {
   overflow-x: clip;
+  max-width: 100vw;
 }
 
 /* Hide native cursor on fine-pointer devices ONLY when ViewfinderCursor has initialized;
@@ -594,8 +596,8 @@ html {
 }
 
 ::selection {
-  background-color: var(--surface-3, #452C6D);
-  color: var(--accent, #A6F0CF);
+  background-color: #352254;
+  color: #C79347;
 }
 
 * {
@@ -647,7 +649,7 @@ body {
 
 /* Accessible High-Contrast Focus Indicators (WCAG 2.1 AA) */
 :focus-visible {
-  outline: 2px solid var(--accent-3, #4FD6E0);
+  outline: 2px solid #C79347;
   outline-offset: 2px;
 }
 
@@ -989,20 +991,25 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
 }
 
-/* Custom Scrollbar */
+/* Custom Editorial Scrollbar */
+html {
+  scrollbar-color: #352254 #140C20;
+  scrollbar-width: thin;
+}
+
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg, #140C20);
+  background: #140C20;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--surface-3, #452C6D);
+  background: #352254;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent, #A6F0CF);
+  background: #C79347;
 }
 
 /* ========================================================================= */

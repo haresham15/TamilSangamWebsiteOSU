@@ -687,6 +687,8 @@ export function HomeClient() {
                             className="object-cover"
                             sizes="(max-width: 768px) 100vw, 440px"
                             priority={idx === 0}
+                            loading={idx === 0 ? "eager" : "lazy"}
+                            decoding="async"
                           />
                         </div>
                       ))}

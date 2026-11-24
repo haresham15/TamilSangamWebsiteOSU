@@ -174,7 +174,9 @@ export function EditorialPhotoCarousel() {
                   alt={photo.titleEn}
                   fill
                   sizes="(max-width: 640px) 280px, (max-width: 768px) 340px, 380px"
-                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                  loading="lazy"
+                  decoding="async"
+                  className="object-cover transition-all duration-500 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               </div>
               <div className="space-y-1 p-4">

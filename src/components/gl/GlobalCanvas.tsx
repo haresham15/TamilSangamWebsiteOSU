@@ -17,7 +17,9 @@ function DprGovernor({ tierCap }: { tierCap: number }) {
   const setDpr = useThree((s) => s.setDpr);
   const level = useSyncExternalStore(qualityGovernor.subscribe, qualityGovernor.getLevel, serverLevel);
   useEffect(() => {
-    const cap = dprCapFor(level, tierCap);
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const maxTier = isMobile ? Math.min(1.5, tierCap) : tierCap;
+    const cap = dprCapFor(level, maxTier);
     setDpr([1, cap]);
   }, [level, tierCap, setDpr]);
   return null;

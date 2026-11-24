@@ -48,15 +48,34 @@ export function CinematicBootCurtain() {
     let isMounted = true;
     const sceneId = getSceneIdForPath(pathname);
 
-    // Minimum ceremonial breathing duration: 1.4s gives the user a calm, majestic bootup
-    const minDwell = new Promise((resolve) => setTimeout(resolve, 1400));
-    // Scene readiness wait: waits up to 1.8s for 3D shaders/models to compile
-    const sceneReady = sceneId ? waitForSceneReady(sceneId, 1800) : Promise.resolve(true);
+    // 1. Minimum ceremonial breathing duration (700ms) for respectful, dignified bootup
+    const minDwell = new Promise((resolve) => setTimeout(resolve, 700));
 
-    Promise.all([minDwell, sceneReady]).then(() => {
+    // 2. Document fonts readiness gate: eliminates FOUC and font snapping before reveal
+    const fontsReady =
+      typeof document !== "undefined" && document.fonts
+        ? document.fonts.ready.catch(() => true)
+        : Promise.resolve(true);
+
+    // 3. Scene readiness wait: waits up to 2.2s for above-the-fold 3D shaders/models to compile
+    const sceneReady = sceneId ? waitForSceneReady(sceneId, 2200) : Promise.resolve(true);
+
+    // 4. Combined readiness requirement
+    const pageReady = Promise.all([minDwell, fontsReady, sceneReady]);
+
+    // 5. Hard safety timeout (2500ms) so slow networks or offline environments never get stuck
+    const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 2500));
+
+    Promise.race([pageReady, safetyTimeout]).then(() => {
       if (!isMounted) return;
 
-      // 1. Begin slow, cinematic dissolution (850ms smooth dissolve)
+      // Cleanly unlock document scroll immediately upon reveal
+      if (typeof document !== "undefined") {
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+      }
+
+      // 1. Begin smooth, GPU-composited veil dissolution
       setCurtainState("unveiling");
       hasClientBootCompleted = true;
       if (typeof window !== "undefined") {
@@ -68,7 +87,7 @@ export function CinematicBootCurtain() {
         if (isMounted) {
           setCurtainState("hidden");
         }
-      }, 900);
+      }, 850);
     });
 
     return () => {
@@ -95,10 +114,10 @@ export function CinematicBootCurtain() {
       aria-label="Loading cultural stage"
       role="status"
       aria-live="polite"
-      className={`fixed inset-0 z-[99999] bg-[#140C20] flex flex-col items-center justify-center text-[#FAF5ED] select-none overflow-hidden will-change-[opacity,transform,filter] transition-all duration-[850ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      className={`fixed inset-0 z-[99999] bg-[#140C20] flex flex-col items-center justify-center text-[#FAF5ED] select-none overflow-hidden will-change-[opacity,transform] transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isUnveiling
-          ? "opacity-0 scale-105 blur-md pointer-events-none"
-          : "opacity-100 scale-100 blur-0 pointer-events-auto"
+          ? "opacity-0 scale-[1.02] pointer-events-none"
+          : "opacity-100 scale-100 pointer-events-auto"
       }`}
     >
       {/* Soft Ambient Courtyard Radial Glow */}

@@ -83,8 +83,10 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
         // 3) Wait for target scene ready with a 600ms safety cap and minimal 80ms dwell
         // Pure breathing dwell (450ms) gives the user time to experience the sacred Kolam loop and allows WebGL/chunks to compile seamlessly
         const minDwell = new Promise((r) => setTimeout(r, 450));
-        const sceneReady = sceneId ? waitForSceneReady(sceneId, 600) : Promise.resolve(true);
-        await Promise.all([minDwell, sceneReady]);
+        const sceneReady = sceneId ? waitForSceneReady(sceneId, 900) : Promise.resolve(true);
+        const fontsReady = typeof document !== "undefined" && document.fonts ? document.fonts.ready.catch(() => true) : Promise.resolve(true);
+        const transitionSafety = new Promise((r) => setTimeout(r, 1400));
+        await Promise.race([Promise.all([minDwell, sceneReady, fontsReady]), transitionSafety]);
 
         // 4) Kolam screen EXPANDS OPEN via circular iris to show the ready hero animation!
         if (shutterRef.current) {

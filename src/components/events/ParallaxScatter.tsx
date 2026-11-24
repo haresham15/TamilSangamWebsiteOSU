@@ -82,7 +82,9 @@ export function ParallaxScatter({ photos, eventTitle, googlePhotosUrl }: Paralla
             alt={`${eventTitle} — Document ${plate}`}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover rounded-none transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+            className="object-cover rounded-none transition-all duration-500 group-hover:scale-105"
           />
         </div>
 
