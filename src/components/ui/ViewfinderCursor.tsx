@@ -38,6 +38,12 @@ export function ViewfinderCursor() {
     let isVisible = false;
     let rafId = 0;
 
+    const ensureTick = () => {
+      if (!rafId && isVisible && !document.hidden) {
+        rafId = requestAnimationFrame(tick);
+      }
+    };
+
     const onPointerMove = (e: PointerEvent) => {
       targetX = e.clientX;
       targetY = e.clientY;
@@ -52,6 +58,11 @@ export function ViewfinderCursor() {
 
       if (isInput) {
         // Yield to native OS text I-beam cursor
+        isVisible = false;
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
         if (ringPosRef.current) ringPosRef.current.style.opacity = "0";
         if (dotPosRef.current) dotPosRef.current.style.opacity = "0";
         return;
@@ -61,6 +72,9 @@ export function ViewfinderCursor() {
         currentX = targetX;
         currentY = targetY;
         isVisible = true;
+        if (ringPosRef.current) {
+          ringPosRef.current.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0)`;
+        }
       }
       if (ringPosRef.current) ringPosRef.current.style.opacity = "1";
       if (dotPosRef.current) dotPosRef.current.style.opacity = "1";
@@ -84,18 +98,39 @@ export function ViewfinderCursor() {
       if (labelRef.current) {
         labelRef.current.style.opacity = isCard ? "1" : "0";
       }
+
+      ensureTick();
     };
 
     const onPointerLeaveWindow = () => {
       isVisible = false;
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
       if (ringPosRef.current) ringPosRef.current.style.opacity = "0";
       if (dotPosRef.current) dotPosRef.current.style.opacity = "0";
     };
 
     const tick = () => {
+      rafId = 0;
+      if (!isVisible || document.hidden) return;
+
+      const dx = targetX - currentX;
+      const dy = targetY - currentY;
+
+      if (Math.abs(dx) < 0.08 && Math.abs(dy) < 0.08) {
+        currentX = targetX;
+        currentY = targetY;
+        if (ringPosRef.current) {
+          ringPosRef.current.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0)`;
+        }
+        return;
+      }
+
       // Smooth frame-independent lerp for trailing terracotta ring
-      currentX += (targetX - currentX) * 0.22;
-      currentY += (targetY - currentY) * 0.22;
+      currentX += dx * 0.22;
+      currentY += dy * 0.22;
 
       if (ringPosRef.current) {
         ringPosRef.current.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0)`;
@@ -104,15 +139,25 @@ export function ViewfinderCursor() {
       rafId = requestAnimationFrame(tick);
     };
 
+    const onVisibilityChange = () => {
+      if (document.hidden && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      } else {
+        ensureTick();
+      }
+    };
+
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     document.addEventListener("mouseleave", onPointerLeaveWindow);
-    rafId = requestAnimationFrame(tick);
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
       document.documentElement.classList.remove("has-custom-cursor");
       window.removeEventListener("pointermove", onPointerMove);
       document.removeEventListener("mouseleave", onPointerLeaveWindow);
-      cancelAnimationFrame(rafId);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -140,7 +185,7 @@ export function ViewfinderCursor() {
         <div
           ref={ringVisualRef}
           data-state="default"
-          className="cursor-visual -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center text-center transition-[width,height,background-color,border-color,opacity,transform] duration-200 ease-out"
+          className="cursor-visual rounded-full flex items-center justify-center text-center transition-[background-color,border-color,opacity,transform] duration-200 ease-out"
         >
           <span
             ref={labelRef}
@@ -156,21 +201,22 @@ export function ViewfinderCursor() {
 
       {/* Styles for the inner visual node based on data-state */}
       <style jsx>{`
+        .cursor-visual {
+          width: 72px;
+          height: 72px;
+        }
         .cursor-visual[data-state="default"] {
-          width: 34px;
-          height: 34px;
-          border: 1.5px solid rgba(199, 147, 71, 0.7);
+          transform: translate3d(-50%, -50%, 0) scale(0.472);
+          border: 3px solid rgba(199, 147, 71, 0.7);
           background-color: rgba(199, 147, 71, 0.05);
         }
         .cursor-visual[data-state="interactive"] {
-          width: 48px;
-          height: 48px;
-          border: 1.5px solid rgba(43, 181, 168, 0.9);
+          transform: translate3d(-50%, -50%, 0) scale(0.667);
+          border: 2.25px solid rgba(43, 181, 168, 0.9);
           background-color: rgba(43, 181, 168, 0.12);
         }
         .cursor-visual[data-state="card"] {
-          width: 72px;
-          height: 72px;
+          transform: translate3d(-50%, -50%, 0) scale(1);
           border: 1.5px solid rgba(184, 74, 57, 0.95);
           background-color: rgba(28, 18, 43, 0.88);
           backdrop-filter: blur(4px);

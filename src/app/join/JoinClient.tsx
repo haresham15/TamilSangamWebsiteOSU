@@ -104,7 +104,7 @@ const JoinHeroCanvas = dynamic(
   () => import("@/components/join/JoinHeroCanvas").then((m) => m.JoinHeroCanvas),
   {
     ssr: false,
-    loading: () => <HeroKolamLoader route="/join" minHeight="70dvh" />,
+    loading: () => <HeroKolamLoader route="/join" minHeight="100dvh" />,
   }
 );
 
@@ -272,7 +272,7 @@ export function JoinClient() {
       <div
         id="nanban-gates-hero"
         data-hero-container="true"
-        className="w-full min-h-[70dvh] relative z-10 bg-transparent"
+        className="w-full min-h-[100dvh] relative z-10 bg-transparent"
       >
         <JoinHeroCanvas />
       </div>

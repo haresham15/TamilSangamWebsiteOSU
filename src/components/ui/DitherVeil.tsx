@@ -558,6 +558,10 @@ export const DitherVeil: React.FC<DitherVeilProps> = ({
     canvas.style.display = "block";
     canvas.style.width = "100%";
     canvas.style.height = "100%";
+    canvas.style.opacity = "0";
+    canvas.style.transition = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "none"
+      : "opacity 360ms cubic-bezier(0.16, 1, 0.3, 1)";
     container.appendChild(canvas);
 
     const gl2 = gl as WebGL2RenderingContext;
@@ -677,6 +681,7 @@ export const DitherVeil: React.FC<DitherVeilProps> = ({
     let width = 1;
     let height = 1;
     let visible = true;
+    let firstFramePainted = false;
     let raf = 0;
     let last = performance.now();
     let trailUntil = 0;
@@ -899,7 +904,12 @@ export const DitherVeil: React.FC<DitherVeilProps> = ({
       const intro = image ? Math.min(1, (now - introStart) / INTRO_MS) : 0;
       viewUniforms.uIntro.value = 1 - Math.pow(1 - intro, 2);
       renderer.render({ scene: viewMesh });
+      if (image && !firstFramePainted) {
+        firstFramePainted = true;
+        canvas.style.opacity = "1";
+      }
 
+      const isActive = visible && !document.hidden;
       const busy =
         pointer.inside ||
         wanderOn ||
@@ -907,11 +917,11 @@ export const DitherVeil: React.FC<DitherVeilProps> = ({
         bursts.length > 0 ||
         now < trailUntil ||
         (image && intro < 1);
-      if (busy && visible) raf = requestAnimationFrame(frame);
+      if (busy && isActive) raf = requestAnimationFrame(frame);
     };
 
     const wake = () => {
-      if (raf || !visible) return;
+      if (raf || !visible || document.hidden) return;
       last = performance.now();
       raf = requestAnimationFrame(frame);
     };
@@ -934,6 +944,9 @@ export const DitherVeil: React.FC<DitherVeilProps> = ({
       } catch {}
       introStart = performance.now();
       wake();
+    };
+    img.onerror = () => {
+      canvas.style.opacity = "1";
     };
     img.src = effectiveSrc;
 
@@ -982,9 +995,24 @@ export const DitherVeil: React.FC<DitherVeilProps> = ({
 
     const intersectionObserver = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      wake();
+      if (!visible && raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      } else {
+        wake();
+      }
     });
     intersectionObserver.observe(container);
+
+    const onVisibilityChange = () => {
+      if (document.hidden && raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      } else if (!document.hidden) {
+        wake();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     layout();
     wake();
@@ -994,7 +1022,9 @@ export const DitherVeil: React.FC<DitherVeilProps> = ({
       wakeRef.current = () => {};
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       img.onload = null;
+      img.onerror = null;
       container.removeEventListener("pointermove", onMove);
       container.removeEventListener("pointerenter", onMove);
       container.removeEventListener("pointerdown", onDown);
@@ -1002,6 +1032,9 @@ export const DitherVeil: React.FC<DitherVeilProps> = ({
       container.removeEventListener("pointercancel", onLeave);
       try {
         masks.forEach(destroyMask);
+        geometry.remove?.();
+        maskMesh.program?.remove?.();
+        viewMesh.program?.remove?.();
         if (imageTexture && imageTexture.texture) gl.deleteTexture(imageTexture.texture);
         if (noiseTexture && noiseTexture.texture) gl.deleteTexture(noiseTexture.texture);
         if (diffusedTexture && diffusedTexture.texture) gl.deleteTexture(diffusedTexture.texture);

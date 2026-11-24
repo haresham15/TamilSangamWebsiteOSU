@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
+import { FadeImage } from "@/components/ui/FadeImage";
 import { PhotoItem } from "@/data/gallery";
 import { audioLayer } from "@/utils/audioLayer";
 import { useModalScrollLock } from "@/hooks/useModalScrollLock";
@@ -35,8 +35,8 @@ export function NleTimelineLightbox({
   const currentIndex = photos.findIndex((p) => p.id === photo.id);
   const trackRef = useRef<HTMLDivElement>(null);
   const playheadRef = useRef<HTMLDivElement>(null);
+  const timecodeRef = useRef<HTMLDivElement>(null);
   const [isScrubbing, setIsScrubbing] = useState(false);
-  const [timecodeStr, setTimecodeStr] = useState("01:04:22:18");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -45,14 +45,18 @@ export function NleTimelineLightbox({
 
   useModalScrollLock(true, onClose);
 
-  // 24FPS Timecode simulation
+  // 24FPS Timecode simulation via direct ref mutation (zero per-frame React re-renders)
   useEffect(() => {
+    if (!mounted) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     let frame = 18;
     let sec = 22;
     let min = 4;
     let hr = 1;
 
     const interval = setInterval(() => {
+      if (document.hidden) return;
       frame += 1;
       if (frame >= 24) {
         frame = 0;
@@ -66,12 +70,14 @@ export function NleTimelineLightbox({
           }
         }
       }
-      const pad = (n: number) => n.toString().padStart(2, "0");
-      setTimecodeStr(`${pad(hr)}:${pad(min)}:${pad(sec)}:${pad(frame)}`);
+      if (timecodeRef.current) {
+        const pad = (n: number) => n.toString().padStart(2, "0");
+        timecodeRef.current.textContent = `TC: ${pad(hr)}:${pad(min)}:${pad(sec)}:${pad(frame)}`;
+      }
     }, 1000 / 24);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [mounted]);
 
   // Cinematic sound whoosh on open
   useEffect(() => {
@@ -184,8 +190,11 @@ export function NleTimelineLightbox({
 
         {/* Center: Running 24FPS Timecode Clock */}
         <div className="flex items-center gap-3">
-          <div className="px-3 py-1 bg-black border border-white/20 text-[#2BB5A8] font-mono text-xs sm:text-sm font-bold tracking-widest shadow-inner">
-            TC: {timecodeStr}
+          <div
+            ref={timecodeRef}
+            className="px-3 py-1 bg-black border border-white/20 text-[#2BB5A8] font-mono text-xs sm:text-sm font-bold tracking-widest shadow-inner"
+          >
+            TC: 01:04:22:18
           </div>
           <span className="text-[10px] text-white/50 hidden lg:inline">
             24.000 FPS · PRORES 4444 XQ
@@ -226,7 +235,7 @@ export function NleTimelineLightbox({
 
         {/* Active Image */}
         <div className="relative w-full h-full p-4 flex items-center justify-center">
-          <Image
+          <FadeImage
             src={photo.imageUrl}
             alt={photo.titleEn}
             fill
@@ -364,11 +373,13 @@ export function NleTimelineLightbox({
                   idx === currentIndex ? "opacity-100 ring-2 ring-[#E11D48] z-10" : "opacity-40 hover:opacity-75"
                 }`}
               >
-                <Image
+                <FadeImage
                   src={p.imageUrl}
                   alt={p.titleEn}
                   fill
                   sizes="100px"
+                  loading="lazy"
+                  decoding="async"
                   className="object-cover pointer-events-none select-none"
                 />
                 <div className="absolute bottom-0 inset-x-0 bg-black/80 px-1 py-0.5 text-[7px] truncate text-white/70 pointer-events-none">

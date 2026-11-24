@@ -77,17 +77,6 @@ export function Performer({ position = [0, 0, 0], scale = 1, backlit }: Performe
   const proxyHandQuat = useRef(new THREE.Quaternion());
 
   useEffect(() => {
-    if (debug) {
-      const boneNames: string[] = [];
-      scene.traverse((child) => {
-        if ((child as THREE.Bone).isBone) {
-          boneNames.push(child.name);
-        }
-      });
-      console.log("[Performer Debug] Found Bones:", boneNames);
-      console.log("[Performer Debug] Found Animations:", animations.map(a => a.name));
-    }
-
     if (actions && actions["dance_loop"]) {
       actions["dance_loop"].play();
     } else if (actions && Object.keys(actions).length > 0) {

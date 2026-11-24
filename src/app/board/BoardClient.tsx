@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
+import { FadeImage } from "@/components/ui/FadeImage";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { CURRENT_BOARD, BoardMember } from "@/data/board";
 import { SITE_CONFIG } from "@/data/siteConfig";
@@ -86,12 +86,12 @@ function OfficerPortraitMedia({
       className={`relative w-full overflow-hidden rounded-xl border border-accent-zari/40 bg-gradient-to-b from-surface-card-dark to-bg-sangam-deep shadow-[inset_0_2px_8px_rgba(0,0,0,0.35)] ${className}`}
     >
       {hasPhoto ? (
-        <div className="relative w-full h-full min-h-[16rem]">
-          <Image
+        <div className="relative w-full h-full min-h-[16rem] bg-[#140C20]">
+          <FadeImage
             src={member.photoUrl}
             alt={member.nameEn}
             fill
-            className="object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:hover:scale-105"
+            className="object-cover motion-safe:hover:scale-105"
             sizes="(max-width: 1024px) 100vw, 450px"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-bg-sangam-deep/60 via-transparent to-transparent pointer-events-none" />
@@ -435,7 +435,7 @@ export function BoardClient() {
                         }`}
                       >
                         {hasPhoto ? (
-                          <Image src={member.photoUrl} alt={member.nameEn} fill className="object-cover" sizes="64px" />
+                          <FadeImage src={member.photoUrl} alt={member.nameEn} fill className="object-cover" sizes="64px" />
                         ) : (
                           <div
                             aria-hidden="true"

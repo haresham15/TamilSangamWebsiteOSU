@@ -1,15 +1,26 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { FloatingNav } from "./FloatingNav";
-import { CommandPalette } from "./CommandPalette";
 import { Footer } from "./Footer";
 import { UnifiedFloatingDock } from "./UnifiedFloatingDock";
-import { SangamChatbot } from "@/components/chat/SangamChatbot";
-import { DirectorHUD } from "@/director/DirectorHUD";
 import { ClickSpark } from "@/components/ui/react-bits";
+
+const CommandPalette = dynamic(
+  () => import("./CommandPalette").then((m) => m.CommandPalette),
+  { ssr: false }
+);
+const SangamChatbot = dynamic(
+  () => import("@/components/chat/SangamChatbot").then((m) => m.SangamChatbot),
+  { ssr: false }
+);
+const DirectorHUD = dynamic(
+  () => import("@/director/DirectorHUD").then((m) => m.DirectorHUD),
+  { ssr: false }
+);
 
 interface AppShellProps {
   children: React.ReactNode;

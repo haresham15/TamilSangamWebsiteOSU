@@ -246,21 +246,21 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
       </div>
 
       {/* 2. Bilingual Editorial Header */}
-      <div className="mt-4 flex flex-col items-center">
-        <h2 className="font-serif text-base sm:text-lg tracking-wider text-[#FAF5ED] font-medium leading-tight">
+      <div className="mt-4 flex flex-col items-center justify-center">
+        <h2 className="h-6 flex items-center font-serif text-base sm:text-lg tracking-wider text-[#FAF5ED] font-medium leading-none">
           {english}
         </h2>
         <span
           lang="ta"
           style={{ letterSpacing: 0 }}
-          className="font-tamil text-xs sm:text-sm text-[#C79347] font-medium mt-1 leading-none"
+          className="h-5 flex items-center font-tamil text-xs sm:text-sm text-[#C79347] font-medium mt-1 leading-none"
         >
           {tamil}
         </span>
       </div>
 
       {/* 3. Pure Ceremonial Status Marker */}
-      <div className="mt-4 flex items-center justify-center gap-2 font-mono text-[11px] tracking-widest text-[#CBBBA8]/75">
+      <div className="mt-4 h-5 flex items-center justify-center gap-2 font-mono text-[11px] tracking-widest text-[#CBBBA8]/75">
         <span
           className="inline-block w-1.5 h-1.5 rounded-full bg-[#2BB5A8] shadow-[0_0_6px_rgba(43,181,168,0.4)]"
           aria-hidden="true"

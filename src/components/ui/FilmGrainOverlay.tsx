@@ -12,7 +12,7 @@ export const FilmGrainOverlay = memo(function FilmGrainOverlay() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[9999] select-none overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-[90] select-none overflow-hidden"
     >
       {/* 35mm Grain Noise Layer */}
       <svg

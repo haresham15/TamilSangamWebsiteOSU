@@ -59,6 +59,18 @@
   display: block;
   pointer-events: none;
   -webkit-user-drag: none;
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.depth-carousel__img.is-loaded {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .depth-carousel__img {
+    transition: none;
+  }
 }
 
 .depth-carousel__tint {

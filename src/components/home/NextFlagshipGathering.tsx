@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useLocale } from "@/context/LocaleContext";
@@ -10,11 +11,18 @@ import { Eyebrow } from "@/components/muttram/Eyebrow";
 import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { CulturalSection } from "@/components/ui/CulturalSection";
 import { CulturalCard } from "@/components/ui/CulturalCard";
-import { DitherVeil } from "@/components/ui/DitherVeil";
 import { activeUpcomingEvent, type FlagshipEventConfig } from "@/config/upcomingEvent";
 import { ArrowUpRight, Calendar, Sparkles } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/react-bits";
 import { useDeviceTilt } from "@/hooks/useDeviceTilt";
+
+const DitherVeil = dynamic(
+  () => import("@/components/ui/DitherVeil").then((m) => m.DitherVeil),
+  {
+    ssr: false,
+    loading: () => <div className="w-full h-full bg-[#140C20]/60 rounded-2xl" aria-hidden="true" />,
+  }
+);
 
 export interface NextFlagshipGatheringProps {
   config?: FlagshipEventConfig;

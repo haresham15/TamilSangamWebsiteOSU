@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useId, useMemo } from "react";
-import Image from "next/image";
+import dynamic from "next/dynamic";
+import { FadeImage } from "@/components/ui/FadeImage";
 import { GALLERY_ALBUMS, PhotoItem } from "@/data/gallery";
 import { GlyphMosaicImage } from "@/components/ui/GlyphMosaicImage";
 import { CulturalSection } from "@/components/ui/CulturalSection";
@@ -10,8 +11,15 @@ import { MuttramButton } from "@/components/muttram/MuttramButton";
 import { Eyebrow } from "@/components/muttram/Eyebrow";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { ParallaxScatter } from "./ParallaxScatter";
 import { ChevronLeft, ChevronRight, Maximize2, Shuffle, Grid3X3 } from "lucide-react";
+
+const ParallaxScatter = dynamic(
+  () => import("./ParallaxScatter").then((m) => m.ParallaxScatter),
+  {
+    ssr: false,
+    loading: () => <div className="min-h-[480px] rounded-2xl bg-[#140C20]/20" aria-hidden="true" />,
+  }
+);
 
 interface EventPhotoVaultProps {
   eventSlug: string;
@@ -297,13 +305,14 @@ export function EventPhotoVault({
         {selectedPhoto && (
           <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:gap-8">
             <div className="relative h-[52dvh] overflow-hidden rounded-2xl border border-border-zari-muted bg-bg-sangam-deep sm:h-[64dvh] lg:col-span-8">
-              <Image
+              <FadeImage
                 src={selectedPhoto.imageUrl}
                 alt={selectedPhoto.titleEn}
                 fill
                 className="object-contain"
                 sizes="(max-width: 1024px) 100vw, 1000px"
                 priority
+                decoding="async"
               />
               {photos.length > 1 && (
                 <>

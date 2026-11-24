@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useMemo } from "react";
-import Image from "next/image";
+import { FadeImage } from "@/components/ui/FadeImage";
 import Link from "next/link";
 import { GALLERY_ALBUMS } from "@/data/gallery";
 import { CinemaLightbox, type LightboxPhoto } from "@/components/ui/CinemaLightbox";
@@ -169,14 +169,14 @@ export function EditorialPhotoCarousel() {
               className="group w-[280px] flex-none snap-start focus-within:border-brand-teal-dark sm:w-[340px] md:w-[380px]"
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-surface-card-dark">
-                <Image
+                <FadeImage
                   src={photo.imageUrl}
                   alt={photo.titleEn}
                   fill
                   sizes="(max-width: 640px) 280px, (max-width: 768px) 340px, 380px"
                   loading="lazy"
                   decoding="async"
-                  className="object-cover transition-all duration-500 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                  className="object-cover group-hover:scale-105 motion-reduce:group-hover:scale-100"
                 />
               </div>
               <div className="space-y-1 p-4">

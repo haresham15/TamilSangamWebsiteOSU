@@ -38,7 +38,6 @@ export const Shutter = forwardRef<ShutterHandle, ShutterProps>(function Shutter(
   const portalRingRef = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
   const [targetRoute, setTargetRoute] = useState<string | undefined>(undefined);
-  const [maskRadius, setMaskRadius] = useState(0);
   const [isExpanding, setIsExpanding] = useState(false);
 
   const tier = useTier();
@@ -66,7 +65,6 @@ export const Shutter = forwardRef<ShutterHandle, ShutterProps>(function Shutter(
         setTargetRoute(nextRoute);
         setIsActive(true);
         setIsExpanding(false);
-        setMaskRadius(0);
 
         const el = containerRef.current;
         if (!el) {
@@ -74,6 +72,8 @@ export const Shutter = forwardRef<ShutterHandle, ShutterProps>(function Shutter(
           resolve();
           return;
         }
+        el.style.maskImage = "none";
+        el.style.webkitMaskImage = "none";
 
         if (isReduced) {
           el.style.opacity = "1";
@@ -132,21 +132,26 @@ export const Shutter = forwardRef<ShutterHandle, ShutterProps>(function Shutter(
         const ring = portalRingRef.current;
         const state = { radius: 0 };
 
-        // Fast circular iris aperture mask expansion
+        // Fast circular iris aperture mask expansion (GPU-composited DOM writes, zero React setState)
         const tl = gsap.timeline({
           onUpdate: () => {
-            setMaskRadius(state.radius);
+            if (el) {
+              const mask =
+                state.radius > 0
+                  ? `radial-gradient(circle at center, transparent ${state.radius}%, black ${state.radius + 2}%)`
+                  : "none";
+              el.style.maskImage = mask;
+              el.style.webkitMaskImage = mask;
+            }
             if (ring) {
-              const ringSize = state.radius * 2.8;
-              ring.style.width = `${ringSize}vmax`;
-              ring.style.height = `${ringSize}vmax`;
+              const ringScale = (state.radius * 2.8) / 100;
+              ring.style.transform = `translate3d(-50%, -50%, 0) scale(${ringScale})`;
               ring.style.opacity = state.radius < 125 ? String(Math.max(0, 1 - state.radius / 135)) : "0";
             }
           },
           onComplete: () => {
             setIsActive(false);
             setIsExpanding(false);
-            setMaskRadius(0);
             if (el) {
               el.style.opacity = "0";
               el.style.maskImage = "none";
@@ -171,17 +176,6 @@ export const Shutter = forwardRef<ShutterHandle, ShutterProps>(function Shutter(
     return null;
   }
 
-  // Radial mask calculation:
-  // When maskRadius == 0: no mask (100% covered)
-  // When maskRadius > 0: transparent circle expands from center (50% 50%)
-  const maskStyle =
-    maskRadius > 0
-      ? {
-          maskImage: `radial-gradient(circle at center, transparent ${maskRadius}%, black ${maskRadius + 2}%)`,
-          WebkitMaskImage: `radial-gradient(circle at center, transparent ${maskRadius}%, black ${maskRadius + 2}%)`,
-        }
-      : {};
-
   return (
     <div
       ref={containerRef}
@@ -189,7 +183,6 @@ export const Shutter = forwardRef<ShutterHandle, ShutterProps>(function Shutter(
       aria-live="polite"
       aria-label="Loading page hero animation"
       className="fixed inset-0 z-[9990] pointer-events-none select-none overflow-hidden bg-[#140C20] flex items-center justify-center will-change-transform"
-      style={maskStyle}
     >
       {/* Background Ambient Warm Vignette */}
       <div
@@ -207,9 +200,9 @@ export const Shutter = forwardRef<ShutterHandle, ShutterProps>(function Shutter(
         style={{
           left: "50%",
           top: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "0px",
-          height: "0px",
+          transform: "translate3d(-50%, -50%, 0) scale(0)",
+          width: "100vmax",
+          height: "100vmax",
           opacity: 0,
         }}
       />

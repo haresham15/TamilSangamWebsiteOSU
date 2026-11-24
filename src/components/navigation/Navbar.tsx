@@ -211,14 +211,14 @@ export const Navbar: React.FC = () => {
               setIsOpen(false);
             }}
             aria-hidden="true"
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px] pointer-events-auto cursor-pointer"
+            className="fixed inset-0 z-[45] bg-black/50 backdrop-blur-[2px] pointer-events-auto cursor-pointer"
           />
         )}
       </AnimatePresence>
 
       <header
         id="global-floating-nav"
-        className={`fixed top-2.5 sm:top-3.5 left-0 right-0 z-50 px-3 sm:px-6 pointer-events-none flex justify-center items-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`fixed top-2.5 sm:top-3.5 left-0 right-0 z-50 px-3 sm:px-6 pointer-events-none flex justify-center items-center transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           shouldHideNav ? "-translate-y-28 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"
         }`}
       >

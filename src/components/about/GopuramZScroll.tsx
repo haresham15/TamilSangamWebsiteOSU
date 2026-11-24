@@ -7,6 +7,7 @@ import { useRenderMode } from "@/components/providers/useRenderMode";
 import { HeroScrollStage, useHeroStageVisibility } from "@/components/canvas/HeroScrollStage";
 import { registerSystem } from "@/engine/masterTick";
 import { PronounceableQuote } from "@/components/ui/PronounceableQuote";
+import { useBootStore } from "@/engine/bootStore";
 
 // The 3D ascent is code-split: static mode (Tier C, Lite, reduced motion) never loads it.
 const GopuramCanvas = dynamic(() => import("./GopuramCanvas"), { ssr: false, loading: () => null });
@@ -264,7 +265,7 @@ export function GopuramZScroll() {
           qualityLevel={qualityLevel}
         />
       ) : (
-        <StaticSpread locale={locale} />
+        <StaticSpread locale={locale} active={mounted && isStatic} />
       )}
     </HeroScrollStage>
   );
@@ -320,7 +321,12 @@ function GopuramScene({
  * Static / Lite / reduced-motion hero: all five talas as one typographic spread that fits a
  * desktop viewport (the opening verse large, the four pillars in a ruled two-by-two grid).
  */
-function StaticSpread({ locale }: { locale: string }) {
+function StaticSpread({ locale, active }: { locale: string; active: boolean }) {
+  useEffect(() => {
+    if (active) {
+      useBootStore.getState().markReady("about-gopuram");
+    }
+  }, [active]);
   const ta = locale === "ta";
   const lang = ta ? "ta" : "en";
   const label = (idx: number, item: TierItem) => (

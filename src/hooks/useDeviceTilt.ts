@@ -93,6 +93,17 @@ export function useDeviceTilt({
   const lastScrollTime = useRef(0);
   const scrollVelocity = useRef(0);
   const isRafScheduled = useRef(false);
+  const rafIdRef = useRef<number | null>(null);
+  const isGyroActiveRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
+    };
+  }, []);
 
   // Request iOS 13+ permission
   const requestPermission = useCallback(async (): Promise<boolean> => {
@@ -152,7 +163,8 @@ export function useDeviceTilt({
     if (isRafScheduled.current) return;
     isRafScheduled.current = true;
 
-    requestAnimationFrame(() => {
+    rafIdRef.current = requestAnimationFrame(() => {
+      rafIdRef.current = null;
       isRafScheduled.current = false;
       if (reduced || !active || !isInViewportRef.current) return;
 
@@ -186,7 +198,10 @@ export function useDeviceTilt({
       if (e.beta === null || e.gamma === null) return;
       if (!isInViewportRef.current) return;
 
-      setIsGyroActive(true);
+      if (!isGyroActiveRef.current) {
+        isGyroActiveRef.current = true;
+        setIsGyroActive(true);
+      }
 
       // Calibrate adaptive resting baseline
       if (baselineBeta.current === null || baselineGamma.current === null) {

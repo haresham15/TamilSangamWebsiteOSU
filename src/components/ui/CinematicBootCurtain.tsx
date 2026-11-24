@@ -1,7 +1,7 @@
 // src/components/ui/CinematicBootCurtain.tsx
 "use client";
 
-import React, { useEffect, useState, useSyncExternalStore } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ROUTE_INFO_MAP } from "@/components/ui/KolamLoader";
 import { getSceneIdForPath } from "@/components/providers/TransitionProvider";
@@ -31,22 +31,50 @@ const PULLIS = [
 export function CinematicBootCurtain() {
   const pathname = usePathname();
   const [curtainState, setCurtainState] = useState<"visible" | "unveiling" | "hidden">("visible");
-
-  // SSR-safe check for whether client has already booted
-  const isAlreadyBooted = useSyncExternalStore(
-    () => () => {},
-    () => hasClientBootCompleted || (typeof window !== "undefined" && (window as unknown as { __ts_booted?: boolean }).__ts_booted === true),
-    () => false
-  );
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const hasUnveiledRef = useRef(false);
 
   useEffect(() => {
-    if (isAlreadyBooted) {
+    if (typeof window !== "undefined") {
+      (window as unknown as { __ts_curtain_mounted?: boolean }).__ts_curtain_mounted = true;
+    }
+
+    const alreadyBooted =
+      hasUnveiledRef.current ||
+      hasClientBootCompleted ||
+      (typeof window !== "undefined" && Boolean((window as unknown as { __ts_booted?: boolean }).__ts_booted));
+
+    if (alreadyBooted) {
       setCurtainState("hidden");
       return;
     }
 
     let isMounted = true;
+    let hideTimer: number | null = null;
     const sceneId = getSceneIdForPath(pathname);
+
+    // Hold scroll without toggling overflow:hidden (eliminates scrollbar-width CLS)
+    if (typeof window !== "undefined") {
+      window.__lenis?.stop();
+    }
+    const blockEvent = (e: Event) => {
+      if (e.cancelable) e.preventDefault();
+    };
+    const overlayEl = overlayRef.current;
+    overlayEl?.addEventListener("wheel", blockEvent, { passive: false });
+    overlayEl?.addEventListener("touchmove", blockEvent, { passive: false });
+
+    const unlockScroll = () => {
+      overlayEl?.removeEventListener("wheel", blockEvent);
+      overlayEl?.removeEventListener("touchmove", blockEvent);
+      if (typeof document !== "undefined") {
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+      }
+      if (typeof window !== "undefined") {
+        window.__lenis?.start();
+      }
+    };
 
     // 1. Minimum ceremonial breathing duration (700ms) for respectful, dignified bootup
     const minDwell = new Promise((resolve) => setTimeout(resolve, 700));
@@ -57,33 +85,31 @@ export function CinematicBootCurtain() {
         ? document.fonts.ready.catch(() => true)
         : Promise.resolve(true);
 
-    // 3. Scene readiness wait: waits up to 2.2s for above-the-fold 3D shaders/models to compile
-    const sceneReady = sceneId ? waitForSceneReady(sceneId, 2200) : Promise.resolve(true);
+    // 3. Scene readiness wait: waits up to 2.3s for above-the-fold 3D shaders/models to compile
+    const sceneReady = sceneId ? waitForSceneReady(sceneId, 2300) : Promise.resolve(true);
 
     // 4. Combined readiness requirement
     const pageReady = Promise.all([minDwell, fontsReady, sceneReady]);
 
-    // 5. Hard safety timeout (2500ms) so slow networks or offline environments never get stuck
+    // 5. Hard safety timeout (2500ms after mount) so slow networks never get stuck on the veil
     const safetyTimeout = new Promise((resolve) => setTimeout(resolve, 2500));
 
     Promise.race([pageReady, safetyTimeout]).then(() => {
-      if (!isMounted) return;
+      if (!isMounted || hasUnveiledRef.current) return;
+      hasUnveiledRef.current = true;
 
-      // Cleanly unlock document scroll immediately upon reveal
-      if (typeof document !== "undefined") {
-        document.documentElement.style.overflow = "";
-        document.body.style.overflow = "";
-      }
+      // Cleanly unlock document & Lenis scroll immediately upon reveal
+      unlockScroll();
 
       // 1. Begin smooth, GPU-composited veil dissolution
       setCurtainState("unveiling");
-      hasClientBootCompleted = true;
-      if (typeof window !== "undefined") {
-        (window as unknown as { __ts_booted?: boolean }).__ts_booted = true;
-      }
 
-      // 2. After transition finishes, cleanly unmount from DOM
-      setTimeout(() => {
+      // 2. Mark global boot complete & unmount AFTER the 800ms dissolve completes
+      hideTimer = window.setTimeout(() => {
+        hasClientBootCompleted = true;
+        if (typeof window !== "undefined") {
+          (window as unknown as { __ts_booted?: boolean }).__ts_booted = true;
+        }
         if (isMounted) {
           setCurtainState("hidden");
         }
@@ -92,8 +118,10 @@ export function CinematicBootCurtain() {
 
     return () => {
       isMounted = false;
+      if (hideTimer !== null) window.clearTimeout(hideTimer);
+      unlockScroll();
     };
-  }, [pathname, isAlreadyBooted]);
+  }, [pathname]);
 
   if (curtainState === "hidden") {
     return null;
@@ -110,11 +138,12 @@ export function CinematicBootCurtain() {
 
   return (
     <div
+      ref={overlayRef}
       id="app-boot-curtain"
       aria-label="Loading cultural stage"
       role="status"
       aria-live="polite"
-      className={`fixed inset-0 z-[99999] bg-[#140C20] flex flex-col items-center justify-center text-[#FAF5ED] select-none overflow-hidden will-change-[opacity,transform] transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      className={`fixed inset-0 z-[99999] bg-[#140C20] flex flex-col items-center justify-center text-[#FAF5ED] select-none overflow-hidden touch-none overscroll-none will-change-[opacity,transform] transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${
         isUnveiling
           ? "opacity-0 scale-[1.02] pointer-events-none"
           : "opacity-100 scale-100 pointer-events-auto"
@@ -252,21 +281,21 @@ export function CinematicBootCurtain() {
         </div>
 
         {/* Bilingual Editorial Inscription */}
-        <div className="mt-5 flex flex-col items-center">
-          <h2 className="font-serif text-lg sm:text-xl tracking-wider text-[#FAF5ED] font-medium leading-tight">
+        <div className="mt-5 flex flex-col items-center justify-center">
+          <h2 className="h-7 flex items-center font-serif text-lg sm:text-xl tracking-wider text-[#FAF5ED] font-medium leading-none">
             {meta.titleEn}
           </h2>
           <span
             lang="ta"
             style={{ letterSpacing: 0 }}
-            className="font-tamil text-sm sm:text-base text-[#C79347] font-medium mt-1 leading-none"
+            className="h-6 flex items-center font-tamil text-sm sm:text-base text-[#C79347] font-medium mt-1 leading-none"
           >
             {meta.titleTa}
           </span>
         </div>
 
         {/* Pure Ceremonial Static Status Marker */}
-        <div className="mt-4 flex items-center justify-center gap-2 font-mono text-[11px] tracking-widest text-[#CBBBA8]/80">
+        <div className="mt-4 h-5 flex items-center justify-center gap-2 font-mono text-[11px] tracking-widest text-[#CBBBA8]/80">
           <span
             className="inline-block w-2 h-2 rounded-full bg-[#2BB5A8] shadow-[0_0_8px_rgba(43,181,168,0.5)]"
             aria-hidden="true"

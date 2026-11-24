@@ -1,6 +1,7 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
+import { useBootStore } from "@/engine/bootStore";
 
 const noopSubscribe = () => () => {};
 
@@ -20,6 +21,14 @@ export function GuideHeroPoster({ fallback, title, status }: GuideHeroPosterProp
   // in after hydration to keep the server and client trees identical.
   const hydrated = useSyncExternalStore(noopSubscribe, () => true, () => false);
   const showStill = fallback && hydrated;
+  const stillRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (showStill && stillRef.current && stillRef.current.complete && stillRef.current.naturalWidth > 0) {
+      useBootStore.getState().markReady("guide-station");
+    }
+  }, [showStill]);
+
   return (
     <div
       aria-hidden="true"
@@ -29,12 +38,15 @@ export function GuideHeroPoster({ fallback, title, status }: GuideHeroPosterProp
       {showStill ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
+          ref={stillRef}
           src="/guide/guide-hero-poster.webp"
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
           width={1600}
           height={900}
           decoding="async"
+          onLoad={() => useBootStore.getState().markReady("guide-station")}
+          onError={() => useBootStore.getState().markReady("guide-station")}
         />
       ) : (
         <>

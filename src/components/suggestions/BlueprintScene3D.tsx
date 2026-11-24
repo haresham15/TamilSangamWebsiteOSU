@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRenderMode } from "@/components/providers/useRenderMode";
+import { useBootStore } from "@/engine/bootStore";
 import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 import { BlueprintPin, BLUEPRINT_PINS, BlueprintSVG } from "./BlueprintSVG";
 import type { EphemeralPin } from "./BlueprintSceneGL";
@@ -30,8 +31,15 @@ interface BlueprintScene3DProps {
 export function BlueprintScene3D({ scrollProgress, isLiteMode = false, newPin = null, onSelectPin, className = "" }: BlueprintScene3DProps) {
   const { mode, qualityLevel } = useRenderMode();
   const [cinematic] = useState(() => isHeroCinematicEnabled("suggestions"));
+  const showStaticSvg = isLiteMode || mode === "static";
 
-  if (isLiteMode || mode === "static") {
+  useEffect(() => {
+    if (showStaticSvg) {
+      useBootStore.getState().markReady("ideas-blueprint");
+    }
+  }, [showStaticSvg]);
+
+  if (showStaticSvg) {
     return (
       <div className={`w-full h-full flex items-center justify-center ${className}`}>
         <BlueprintSVG

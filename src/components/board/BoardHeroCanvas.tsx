@@ -15,6 +15,7 @@ import { DustMotes, HazeLayer } from "@/gl/art/Atmosphere";
 import { Terminal } from "lucide-react";
 import { createBespokeEnvironmentTexture } from "@/components/shared/createCustomEnvironment";
 import { useWarmup } from "@/components/gl/useWarmup";
+import { useBootStore } from "@/engine/bootStore";
 
 import { isHeroCinematicEnabled } from "@/config/heroCinematicFlags";
 import { useRenderMode } from "@/components/providers/useRenderMode";
@@ -37,10 +38,17 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
   const sectionRef = useRef<HTMLDivElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const goldOverlayRef = useRef<HTMLDivElement>(null);
+  const staticPosterRef = useRef<HTMLImageElement>(null);
   const [isCinematic] = useState(() => isHeroCinematicEnabled("board"));
   // One quality source; Tier C / Lite / reduced motion render the static poster (no canvas).
   const { mode, qualityLevel } = useRenderMode();
   const reducedMotion = mode === "static";
+
+  useEffect(() => {
+    if (reducedMotion && staticPosterRef.current && staticPosterRef.current.complete && staticPosterRef.current.naturalWidth > 0) {
+      useBootStore.getState().markReady("board-corridor");
+    }
+  }, [reducedMotion]);
 
   // Bespoke scene-matched environment reflections (§1.1b PRD Mandate)
   const bespokeEnv = React.useMemo(() => createBespokeEnvironmentTexture("chola-darbar"), []);
@@ -140,12 +148,15 @@ export function BoardHeroCanvas({ onFinaleComplete, bezel }: BoardHeroCanvasProp
             // PRD §5: reduced motion = static throne-room snapshot at the crown reveal.
             // eslint-disable-next-line @next/next/no-img-element
             <img
+              ref={staticPosterRef}
               src="/board/board-hero-poster.webp"
               alt="Chola Darbar (சோழர் அவை): a lamp-lit granite colonnade hung with silk banners of the executive committee, a jewelled gold Chola crown on a lotus pedestal in the foreground"
               className="absolute inset-0 h-full w-full object-cover"
               width={1600}
               height={900}
               decoding="async"
+              onLoad={() => useBootStore.getState().markReady("board-corridor")}
+              onError={() => useBootStore.getState().markReady("board-corridor")}
             />
           ) : (
           <View

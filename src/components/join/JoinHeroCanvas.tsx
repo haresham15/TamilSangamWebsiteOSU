@@ -8,6 +8,7 @@ import { useFrame } from "@react-three/fiber";
 import type * as THREE from "three";
 import { SceneView as View } from "@/components/canvas/SceneView";
 import { useWarmup } from "@/components/gl/useWarmup";
+import { useBootStore } from "@/engine/bootStore";
 import { useLocale } from "@/context/LocaleContext";
 import { CampusGate } from "./CampusGate";
 import { GateLettering } from "./GateLettering";
@@ -108,9 +109,18 @@ function MorningSky() {
 
 /** Tier C / Lite / reduced motion: a rendered still of the scene (PRD §5 static courtyard view). */
 function JoinStaticPoster({ locale }: { locale: string }) {
+  const posterRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (posterRef.current && posterRef.current.complete && posterRef.current.naturalWidth > 0) {
+      useBootStore.getState().markReady("join-morning-gates");
+    }
+  }, []);
+
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
+      ref={posterRef}
       src="/join/join-hero-poster.webp"
       alt={
         locale === "ta"
@@ -119,6 +129,8 @@ function JoinStaticPoster({ locale }: { locale: string }) {
       }
       className="absolute inset-0 h-full w-full object-cover"
       decoding="async"
+      onLoad={() => useBootStore.getState().markReady("join-morning-gates")}
+      onError={() => useBootStore.getState().markReady("join-morning-gates")}
     />
   );
 }
@@ -299,7 +311,7 @@ export function JoinHeroCanvas({ tier: propTier }: { tier?: "A" | "B" | "C" } = 
             id="hero-skip-link"
             href="#membership-form"
             onClick={handleSkipToForm}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#140C20]/85 text-[#F4F0FA] border border-[#A6F0CF]/35 backdrop-blur-md rounded-full text-xs font-mono tracking-wider hover:border-[#A6F0CF] hover:bg-[#140C20] transition-all will-change-[transform,opacity] cursor-pointer shrink-0 min-h-[44px] shadow-lg"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#140C20]/85 text-[#F4F0FA] border border-[#A6F0CF]/35 backdrop-blur-md rounded-full text-xs font-mono tracking-wider hover:border-[#A6F0CF] hover:bg-[#140C20] transition-[transform,opacity,background-color,border-color] will-change-[transform,opacity] cursor-pointer shrink-0 min-h-[44px] shadow-lg"
           >
             <span>{locale === "ta" ? "இப்போதே இணையுங்கள் ↓" : "Skip to Guestbook ↓"}</span>
             <span className="text-[10px] text-[#A6F0CF] font-body hidden md:inline">

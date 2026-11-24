@@ -12,6 +12,7 @@ import { heroScrollProgress, heroDirectorState } from "@/engine/heroScrollStore"
 import { governor } from "@/engine/governor";
 import { registerSystem } from "@/engine/masterTick";
 import { useBootStore } from "@/engine/bootStore";
+import { useWarmup } from "@/components/gl/useWarmup";
 import { evalCamera, STRAND_COUNT, WREATH_CY, WREATH_R_IN } from "./flowMath";
 import {
   generatePulliLattice,
@@ -680,23 +681,28 @@ function ScrollExpandIntroOverlay() {
   const hasTriggeredWhoosh = useRef(false);
   const lastP = useRef(-1);
   const hasInitialized = useRef(false);
+  const settledBeyondIntro = useRef(false);
 
   useEffect(() => {
-    let raf = 0;
+    const EXPAND_END = 0.12;
     const update = () => {
       const p = heroDirectorState.scrubActive
         ? heroDirectorState.scrubProgress
         : heroScrollProgress.current;
 
+      // Short-circuit once settled past the intro band until scrolled back into view
+      if (p >= EXPAND_END && settledBeyondIntro.current) {
+        return;
+      }
+
       // Skip redundant DOM mutations when progress is stationary
       if (hasInitialized.current && Math.abs(p - lastP.current) < 0.00008) {
-        raf = requestAnimationFrame(update);
         return;
       }
       lastP.current = p;
       hasInitialized.current = true;
+      settledBeyondIntro.current = p >= EXPAND_END;
 
-      const EXPAND_END = 0.12;
       const expandT = Math.min(1, Math.max(0, p / EXPAND_END));
       const easeE = expandT * expandT * (3 - 2 * expandT);
       const borderOpacity = 1 - easeE;
@@ -763,12 +769,10 @@ function ScrollExpandIntroOverlay() {
           hintRef.current.style.transform = `translate3d(0, ${10 * easeGone}px, 0)`;
         }
       }
-
-      raf = requestAnimationFrame(update);
     };
 
-    raf = requestAnimationFrame(update);
-    return () => cancelAnimationFrame(raf);
+    update();
+    return registerSystem({ order: 42, step: update });
   }, []);
 
   return (
@@ -949,9 +953,6 @@ function GoldenTamilEmblem({ isMobile, tier }: { isMobile: boolean; tier: string
  * Static (PRD §5.1): the camera's parallax supplies the motion.
  */
 function CastEmblem({ isMobile, tier }: { isMobile: boolean; tier: string }) {
-  useEffect(() => {
-    useBootStore.getState().markReady("home-kolam");
-  }, []);
   const material = useMemo(
     () =>
       createSurfaceMaterial(
@@ -1205,6 +1206,11 @@ function DustMotes({ isMobile, tier }: { isMobile: boolean; tier: string }) {
   );
 }
 
+function HomeSceneWarmup() {
+  useWarmup("home-kolam");
+  return null;
+}
+
 export function DigitalKolamHero() {
   const viewportRef = useRef<HTMLDivElement>(null);
   // static = Tier C, Lite or reduced motion: the SVG fallback, no 3D assets.
@@ -1228,12 +1234,6 @@ export function DigitalKolamHero() {
     () => true,
     () => false
   );
-
-  useEffect(() => {
-    if (mounted) {
-      useBootStore.getState().markReady("home-kolam");
-    }
-  }, [mounted]);
 
   useEffect(() => {
     if (!isWebglEnabled) return;
@@ -1269,6 +1269,7 @@ export function DigitalKolamHero() {
               <PeelAndFlowKolamMesh isMobile={isMobile} tier={tier} look="powder" />
               <Suspense fallback={null}>
                 <CastEmblem isMobile={isMobile} tier={tier} />
+                <HomeSceneWarmup />
               </Suspense>
             </>
           ) : (
@@ -1317,6 +1318,7 @@ export function DigitalKolamHero() {
               <PeelAndFlowKolamMesh isMobile={isMobile} tier={tier} look="tube" />
               <Suspense fallback={null}>
                 <GoldenTamilEmblem isMobile={isMobile} tier={tier} />
+                <HomeSceneWarmup />
               </Suspense>
             </>
           )}
@@ -1341,6 +1343,14 @@ export function DigitalKolamHero() {
  * threshold stone), so the static page keeps the same look without loading any 3D.
  */
 function StaticKolamFallback({ isMobile: _isMobile }: { isMobile: boolean }) {
+  const posterRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (posterRef.current && posterRef.current.complete && posterRef.current.naturalWidth > 0) {
+      useBootStore.getState().markReady("home-kolam");
+    }
+  }, []);
+
   return (
     <div className="absolute inset-0 z-0 overflow-hidden select-none pointer-events-none" style={{ backgroundColor: HERO_SCENE_BG }}>
       {/* Full-bleed in landscape; a 16:9 band in portrait. The mask feathers the band's own
@@ -1353,6 +1363,7 @@ function StaticKolamFallback({ isMobile: _isMobile }: { isMobile: boolean }) {
         }}
       >
         <Image
+          ref={posterRef}
           src="/home/home-hero-poster.webp"
           alt=""
           aria-hidden="true"
@@ -1361,6 +1372,8 @@ function StaticKolamFallback({ isMobile: _isMobile }: { isMobile: boolean }) {
           priority
           // Already a 77 KB WebP; served as-is so a re-rendered poster is never shadowed by a cached resize.
           unoptimized
+          onLoad={() => useBootStore.getState().markReady("home-kolam")}
+          onError={() => useBootStore.getState().markReady("home-kolam")}
           className="object-cover object-center"
         />
       </div>

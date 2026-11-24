@@ -475,11 +475,23 @@ export const DepthCarousel: React.FC<DepthCarouselProps> = ({
             onClick={() => onCardClick(i)}
           >
             <img
+              ref={(img) => {
+                if (img && img.complete && img.naturalWidth > 0) {
+                  img.classList.add("is-loaded");
+                }
+              }}
               className="depth-carousel__img"
               src={item.image}
               alt={item.alt || ""}
+              loading={i < 3 ? "eager" : "lazy"}
+              decoding="async"
               draggable={false}
+              onLoad={(e) => e.currentTarget.classList.add("is-loaded")}
               onError={(e) => {
+                if (e.currentTarget.src.includes("picnic-01.jpg")) {
+                  e.currentTarget.classList.add("is-loaded");
+                  return;
+                }
                 e.currentTarget.onerror = null;
                 e.currentTarget.src = "/events/berry-cute-picnic/picnic-01.jpg";
               }}

@@ -302,10 +302,15 @@ export function OceanBackdrop({
     handleResize();
     window.addEventListener("resize", handleResize);
 
-    // Render Loop
-    let startTime = performance.now();
+    // Render Loop (pauses cleanly when offscreen or tab hidden)
+    const startTime = performance.now();
+    let isInViewport = true;
 
     const render = (now: number) => {
+      if (!isInViewport || document.hidden) {
+        animFrameRef.current = 0;
+        return;
+      }
       const elapsed = (now - startTime) * 0.001;
 
       // Spring-interpolate depth towards target
@@ -325,12 +330,45 @@ export function OceanBackdrop({
       animFrameRef.current = requestAnimationFrame(render);
     };
 
+    const wake = () => {
+      if (isInViewport && !document.hidden && !animFrameRef.current) {
+        animFrameRef.current = requestAnimationFrame(render);
+      }
+    };
+
+    const observer =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(([entry]) => {
+            isInViewport = entry ? entry.isIntersecting : true;
+            if (!isInViewport && animFrameRef.current) {
+              cancelAnimationFrame(animFrameRef.current);
+              animFrameRef.current = 0;
+            } else {
+              wake();
+            }
+          })
+        : null;
+    observer?.observe(canvas);
+
+    const onVisibilityChange = () => {
+      if (document.hidden && animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current);
+        animFrameRef.current = 0;
+      } else {
+        wake();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     animFrameRef.current = requestAnimationFrame(render);
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      observer?.disconnect();
       if (animFrameRef.current) {
         cancelAnimationFrame(animFrameRef.current);
+        animFrameRef.current = 0;
       }
       if (gl) {
         gl.deleteProgram(program);
@@ -338,6 +376,7 @@ export function OceanBackdrop({
         gl.deleteShader(fs);
         gl.deleteBuffer(vbo);
         gl.deleteVertexArray(vao);
+        gl.getExtension("WEBGL_lose_context")?.loseContext();
       }
     };
   }, []);

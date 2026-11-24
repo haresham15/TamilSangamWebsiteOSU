@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 import type * as THREE from "three";
 import { useBootStore } from "@/engine/bootStore";
+import { rendererAdvance } from "@/engine/renderer";
 
 /**
  * useWarmup (§6.3)
@@ -63,6 +64,25 @@ export function useWarmup(sceneId: string) {
               }
             }
           }
+        });
+
+        // Flush at least one rendered WebGL frame and wait for composite before unveiling
+        await new Promise<void>((resolve) => {
+          let settled = false;
+          const finish = () => {
+            if (!settled) {
+              settled = true;
+              resolve();
+            }
+          };
+          const fallbackTid = window.setTimeout(finish, 150);
+          requestAnimationFrame(() => {
+            rendererAdvance(performance.now(), false);
+            requestAnimationFrame(() => {
+              window.clearTimeout(fallbackTid);
+              finish();
+            });
+          });
         });
 
         const durationMs = Math.round(performance.now() - startTime);

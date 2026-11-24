@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import Image from "next/image";
+import { FadeImage } from "@/components/ui/FadeImage";
 import Link from "next/link";
 import { Search, X, ChevronDown, Calendar, MapPin, Sparkles, Camera } from "lucide-react";
 import { EVENTS, type SangamEvent } from "@/data/events";
@@ -274,10 +274,10 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                   {/* Photo 1: Left tilted print with classic bottom chin */}
                   {peekingPhotos[0] && (
                     <div
-                      className="absolute h-24 w-32 -translate-x-8 translate-y-3 -rotate-6 rounded-sm border border-[#FAF6F0] bg-[#FAF6F0] p-1.5 pb-4 shadow-[0_10px_24px_rgba(0,0,0,0.6)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-x-12 group-hover:-translate-y-9 group-hover:-rotate-12 group-hover:shadow-[0_20px_36px_rgba(0,0,0,0.75)] motion-reduce:transform-none sm:h-26 sm:w-34 md:h-22 md:w-28 lg:h-24 lg:w-32"
+                      className="absolute h-24 w-32 -translate-x-8 translate-y-3 -rotate-6 rounded-sm border border-[#FAF6F0] bg-[#FAF6F0] p-1.5 pb-4 shadow-[0_10px_24px_rgba(0,0,0,0.6)] transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-x-12 group-hover:-translate-y-9 group-hover:-rotate-12 group-hover:shadow-[0_20px_36px_rgba(0,0,0,0.75)] motion-reduce:transform-none sm:h-26 sm:w-34 md:h-22 md:w-28 lg:h-24 lg:w-32"
                     >
                       <div className="relative h-full w-full overflow-hidden rounded-[1px] bg-[#140C20]">
-                        <Image
+                        <FadeImage
                           src={peekingPhotos[0]}
                           alt={`${vault.titleEn} — OSU Tamil Sangam photo archive preview`}
                           fill
@@ -299,10 +299,10 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                   {/* Photo 2: Center elevated print */}
                   {peekingPhotos[1] && (
                     <div
-                      className="absolute z-10 h-24 w-32 translate-y-1 rotate-0 rounded-sm border border-[#FAF6F0] bg-[#FAF6F0] p-1.5 pb-4 shadow-[0_12px_28px_rgba(0,0,0,0.7)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-12 group-hover:scale-105 group-hover:shadow-[0_24px_44px_rgba(0,0,0,0.85)] motion-reduce:transform-none sm:h-26 sm:w-34 md:h-22 md:w-28 lg:h-24 lg:w-32"
+                      className="absolute z-10 h-24 w-32 translate-y-1 rotate-0 rounded-sm border border-[#FAF6F0] bg-[#FAF6F0] p-1.5 pb-4 shadow-[0_12px_28px_rgba(0,0,0,0.7)] transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-12 group-hover:scale-105 group-hover:shadow-[0_24px_44px_rgba(0,0,0,0.85)] motion-reduce:transform-none sm:h-26 sm:w-34 md:h-22 md:w-28 lg:h-24 lg:w-32"
                     >
                       <div className="relative h-full w-full overflow-hidden rounded-[1px] bg-[#140C20]">
-                        <Image
+                        <FadeImage
                           src={peekingPhotos[1]}
                           alt={`${vault.titleEn} — OSU Tamil Sangam photo archive preview`}
                           fill
@@ -322,10 +322,10 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                   {/* Photo 3: Right tilted print */}
                   {peekingPhotos[2] && (
                     <div
-                      className="absolute h-24 w-32 translate-x-8 translate-y-3 rotate-6 rounded-sm border border-[#FAF6F0] bg-[#FAF6F0] p-1.5 pb-4 shadow-[0_10px_24px_rgba(0,0,0,0.6)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-12 group-hover:-translate-y-9 group-hover:rotate-12 group-hover:shadow-[0_20px_36px_rgba(0,0,0,0.75)] motion-reduce:transform-none sm:h-26 sm:w-34 md:h-22 md:w-28 lg:h-24 lg:w-32"
+                      className="absolute h-24 w-32 translate-x-8 translate-y-3 rotate-6 rounded-sm border border-[#FAF6F0] bg-[#FAF6F0] p-1.5 pb-4 shadow-[0_10px_24px_rgba(0,0,0,0.6)] transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-12 group-hover:-translate-y-9 group-hover:rotate-12 group-hover:shadow-[0_20px_36px_rgba(0,0,0,0.75)] motion-reduce:transform-none sm:h-26 sm:w-34 md:h-22 md:w-28 lg:h-24 lg:w-32"
                     >
                       <div className="relative h-full w-full overflow-hidden rounded-[1px] bg-[#140C20]">
-                        <Image
+                        <FadeImage
                           src={peekingPhotos[2]}
                           alt={`${vault.titleEn} — OSU Tamil Sangam photo archive preview`}
                           fill
@@ -346,7 +346,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                 {/* -------------------------------------------------------------
                     PACKET BODY (Front velvet sleeve with die-cut thumb notch)
                     ------------------------------------------------------------- */}
-                <div className="relative z-20 flex flex-1 flex-col justify-between rounded-2xl border border-[#D4A36A]/35 bg-[#25173B] p-6 shadow-[0_14px_45px_rgba(0,0,0,0.5)] ring-1 ring-inset ring-[#D4A36A]/20 transition-all duration-300 group-hover:border-[#D4A36A]/75 group-hover:shadow-[0_20px_55px_rgba(212,163,106,0.18)] sm:p-7 before:pointer-events-none before:absolute before:inset-0 before:rounded-2xl before:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] before:from-[#D4A36A]/[0.12] before:via-transparent before:to-transparent">
+                <div className="relative z-20 flex flex-1 flex-col justify-between rounded-2xl border border-[#D4A36A]/35 bg-[#25173B] p-6 shadow-[0_14px_45px_rgba(0,0,0,0.5)] ring-1 ring-inset ring-[#D4A36A]/20 transition-[border-color,box-shadow] duration-300 group-hover:border-[#D4A36A]/75 group-hover:shadow-[0_20px_55px_rgba(212,163,106,0.18)] sm:p-7 before:pointer-events-none before:absolute before:inset-0 before:rounded-2xl before:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] before:from-[#D4A36A]/[0.12] before:via-transparent before:to-transparent">
                   {/* Subtle curved thumb-notch cutout on top border revealing inner pocket darkness */}
                   <div
                     className="pointer-events-none absolute -top-3.5 left-1/2 -translate-x-1/2 h-4 w-20"
@@ -423,7 +423,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                           href={vault.googlePhotosUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/btn inline-flex items-center gap-1.5 rounded-lg border border-[#2BB5A8]/50 bg-[#2BB5A8]/15 px-3.5 py-2 font-mono text-xs font-semibold text-[#2BB5A8] shadow-sm transition-all hover:border-[#2BB5A8] hover:bg-[#2BB5A8]/25 hover:text-[#A6F0CF]"
+                          className="group/btn inline-flex items-center gap-1.5 rounded-lg border border-[#2BB5A8]/50 bg-[#2BB5A8]/15 px-3.5 py-2 font-mono text-xs font-semibold text-[#2BB5A8] shadow-sm transition-colors hover:border-[#2BB5A8] hover:bg-[#2BB5A8]/25 hover:text-[#A6F0CF]"
                         >
                           <span>Open Vault</span>
                           <span
@@ -515,7 +515,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
               <button
                 type="button"
                 onClick={() => setSelectedYear("all")}
-                className={`min-h-9 shrink-0 rounded-full px-4 font-mono text-xs transition-all ${
+                className={`min-h-9 shrink-0 rounded-full px-4 font-mono text-xs transition-colors ${
                   selectedYear === "all"
                     ? "border border-[#2BB5A8] bg-[#2BB5A8] font-bold text-[#0D0814] shadow-[0_2px_12px_rgba(43,181,168,0.3)]"
                     : "border border-[#D4A36A]/25 bg-[#140C20]/80 text-[#C4B7D7] hover:border-[#D4A36A]/60 hover:text-[#FAF5ED]"
@@ -533,7 +533,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                     key={year}
                     type="button"
                     onClick={() => setSelectedYear(year)}
-                    className={`min-h-9 shrink-0 rounded-full px-4 font-mono text-xs transition-all ${
+                    className={`min-h-9 shrink-0 rounded-full px-4 font-mono text-xs transition-colors ${
                       isSelected
                         ? "border border-[#2BB5A8] bg-[#2BB5A8] font-bold text-[#0D0814] shadow-[0_2px_12px_rgba(43,181,168,0.3)]"
                         : "border border-[#D4A36A]/25 bg-[#140C20]/80 text-[#C4B7D7] hover:border-[#D4A36A]/60 hover:text-[#FAF5ED]"
@@ -565,7 +565,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                 setSearchQuery("");
                 setSelectedYear("all");
               }}
-              className="mt-3.5 inline-flex items-center gap-1.5 rounded-lg border border-[#2BB5A8]/40 bg-[#2BB5A8]/10 px-4 py-1.5 font-mono text-xs font-semibold text-[#2BB5A8] hover:bg-[#2BB5A8]/20 transition-all"
+              className="mt-3.5 inline-flex items-center gap-1.5 rounded-lg border border-[#2BB5A8]/40 bg-[#2BB5A8]/10 px-4 py-1.5 font-mono text-xs font-semibold text-[#2BB5A8] hover:bg-[#2BB5A8]/20 transition-colors"
             >
               Clear search &amp; view all {allVaults.length} albums
             </button>
@@ -605,7 +605,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                           </span>
                           <div className="relative h-9 w-12 shrink-0 -rotate-2 overflow-hidden rounded-[2px] border border-[#FAF6F0] bg-[#FAF6F0] p-0.5 pb-1.5 shadow-sm transition-transform duration-300 group-hover:rotate-0">
                             <div className="relative h-full w-full overflow-hidden rounded-[1px] bg-[#140C20]">
-                              <Image
+                              <FadeImage
                                 src={vault.coverImage}
                                 alt=""
                                 fill
@@ -661,7 +661,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                             href={vault.googlePhotosUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group/btn inline-flex items-center gap-1.5 rounded-lg border border-[#2BB5A8]/35 bg-[#2BB5A8]/15 px-3 py-1.5 font-mono text-xs font-semibold text-[#2BB5A8] shadow-sm transition-all hover:border-[#2BB5A8] hover:bg-[#2BB5A8]/25 hover:text-[#A6F0CF]"
+                            className="group/btn inline-flex items-center gap-1.5 rounded-lg border border-[#2BB5A8]/35 bg-[#2BB5A8]/15 px-3 py-1.5 font-mono text-xs font-semibold text-[#2BB5A8] shadow-sm transition-colors hover:border-[#2BB5A8] hover:bg-[#2BB5A8]/25 hover:text-[#A6F0CF]"
                           >
                             <span>Open Album</span>
                             <span
@@ -678,7 +678,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                             DESKTOP 35MM FLOATING FILMSTRIP HOVER PREVIEW
                             ------------------------------------------------------------- */}
                         <div
-                          className="pointer-events-none absolute bottom-full right-36 z-50 mb-3 hidden translate-y-2 scale-95 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 motion-reduce:transform-none lg:block"
+                          className="pointer-events-none absolute bottom-full right-36 z-50 mb-3 hidden translate-y-2 scale-95 opacity-0 transition-[transform,opacity] duration-300 ease-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 motion-reduce:transform-none lg:block"
                           aria-hidden="true"
                         >
                           <div className="rounded-lg border border-[#D4A36A]/60 bg-[#090510]/98 p-3 shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-md">
@@ -697,7 +697,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                               {previewPhotos.map((photoUrl, fIdx) => (
                                 <div key={fIdx} className="flex flex-col items-center">
                                   <div className="relative h-18 w-26 overflow-hidden rounded-[1px] border border-[#271A3C] bg-[#140C20]">
-                                    <Image
+                                    <FadeImage
                                       src={photoUrl}
                                       alt=""
                                       fill
@@ -747,7 +747,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
             <button
               type="button"
               onClick={() => setShowAllVaults(true)}
-              className="inline-flex items-center gap-2 rounded-full border border-[#D4A36A]/40 bg-[#271A3C] px-5 py-2.5 font-mono text-xs font-semibold text-[#FAF5ED] transition-all hover:border-[#D4A36A]"
+              className="inline-flex items-center gap-2 rounded-full border border-[#D4A36A]/40 bg-[#271A3C] px-5 py-2.5 font-mono text-xs font-semibold text-[#FAF5ED] transition-colors hover:border-[#D4A36A]"
             >
               <span>Show All {filteredVaults.length} Vaults</span>
               <ChevronDown className="h-3.5 w-3.5 text-[#D4A36A]" />

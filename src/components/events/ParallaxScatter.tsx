@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import Image from "next/image";
+import { FadeImage } from "@/components/ui/FadeImage";
 import { LayoutGroup, motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useLiteMode } from "@/context/LiteModeContext";
 import { CinemaLightbox, LightboxPhoto } from "@/components/ui/CinemaLightbox";
@@ -77,14 +77,14 @@ export function ParallaxScatter({ photos, eventTitle, googlePhotosUrl }: Paralla
         <div
           className={`relative w-full ${profile.aspect} bg-sunbaked-sand overflow-hidden rounded-none shadow-none border-0`}
         >
-          <Image
+          <FadeImage
             src={photoSrc}
             alt={`${eventTitle} — Document ${plate}`}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             loading="lazy"
             decoding="async"
-            className="object-cover rounded-none transition-all duration-500 group-hover:scale-105"
+            className="object-cover rounded-none group-hover:scale-105"
           />
         </div>
 

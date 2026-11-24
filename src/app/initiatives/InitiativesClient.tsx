@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { FadeImage } from "@/components/ui/FadeImage";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
 import { INITIATIVE_PILLARS, ART_FORMS } from "@/data/initiatives";
@@ -123,7 +123,7 @@ export function InitiativesClient() {
         </div>
 
         <div className="lg:col-span-5 relative h-80 rounded-xl overflow-hidden border border-[rgba(212,163,106,0.25)] bg-[#1C122B] shadow-inner">
-          <Image
+          <FadeImage
             src={activePillar.imageUrl}
             alt={activePillar.titleEn}
             fill
@@ -154,11 +154,11 @@ export function InitiativesClient() {
               className="rounded-2xl bg-[#271A3C] overflow-hidden border border-[rgba(212,163,106,0.25)] hover:border-[#2BB5A8]/50 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-[border-color,box-shadow,transform] duration-200 flex flex-col justify-between group"
             >
               <div className="relative h-48 w-full overflow-hidden border-b border-[rgba(212,163,106,0.25)] bg-[#1C122B]">
-                <Image
+                <FadeImage
                   src={art.imageUrl}
                   alt={art.nameEn}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="object-cover group-hover:scale-105"
                   sizes="(max-width: 1024px) 100vw, 400px"
                 />
               </div>

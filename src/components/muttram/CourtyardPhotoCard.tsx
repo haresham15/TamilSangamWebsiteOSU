@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import { FadeImage } from "@/components/ui/FadeImage";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -38,12 +38,12 @@ export const CourtyardPhotoCard: React.FC<CourtyardPhotoCardProps> = ({
     >
       <Link href={href} onClick={onClick} className="block">
         <div className={`relative w-full ${aspectRatio} overflow-hidden bg-surface-card-dark`}>
-          <Image
+          <FadeImage
             src={imageSrc}
             alt={alt}
             fill
             sizes="(max-width: 768px) 100vw, 500px"
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            className="object-cover duration-700 group-hover:scale-105"
           />
           {tag && (
             <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-bg-sangam-deep/90 backdrop-blur-md text-[11px] font-sans font-medium text-brand-teal-dark tracking-wider uppercase shadow-sm">

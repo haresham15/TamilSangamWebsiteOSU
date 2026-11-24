@@ -3,23 +3,35 @@
 // Events hero shell. Static mode (reduced motion, Lite, Tier C) and any failure of the 3D
 // scene show a rendered still instead. The live scene is a separate chunk, so the static
 // path downloads no three.js scene code, model or textures.
-import React, { Component, type ErrorInfo, type ReactNode, useCallback, useEffect, useState } from "react";
+import React, { Component, type ErrorInfo, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useRenderMode } from "@/components/providers/useRenderMode";
+import { useBootStore } from "@/engine/bootStore";
 
 const EventsHeroView = React.lazy(() => import("./EventsHeroView"));
 
 /** Rendered from the art-pass scene at the hero beat (performer against the backlight). */
 function EventsHeroPoster() {
+  const posterRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (posterRef.current && posterRef.current.complete && posterRef.current.naturalWidth > 0) {
+      useBootStore.getState().markReady("events-arena");
+    }
+  }, []);
+
   // English alt only: a Tamil alt needs the Tamil review (docs/redesign/tamil-review.md).
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
+      ref={posterRef}
       src="/events/events-hero-poster.webp"
       alt="A concert in a steel factory hall: a performer in silhouette on a riveted stage against a blazing amber backlight, spark fountains on the deck, and a crowd holding up phone lights"
       className="absolute inset-0 h-full w-full object-cover"
       width={1600}
       height={900}
       decoding="async"
+      onLoad={() => useBootStore.getState().markReady("events-arena")}
+      onError={() => useBootStore.getState().markReady("events-arena")}
     />
   );
 }

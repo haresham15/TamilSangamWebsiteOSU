@@ -91,7 +91,7 @@ export const UnifiedFloatingDock: React.FC<UnifiedFloatingDockProps> = ({
   return (
     <aside
       aria-label="Quick tools dock"
-      className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         shouldHideDock ? "translate-y-24 opacity-0 pointer-events-none" : "translate-y-0 opacity-100 pointer-events-auto"
       }`}>
       <StarBorder className="rounded-xl shadow-[0_10px_28px_rgba(28,18,43,0.55)]" color="#C79347" trailColor="#2BB5A8" thickness={1}>

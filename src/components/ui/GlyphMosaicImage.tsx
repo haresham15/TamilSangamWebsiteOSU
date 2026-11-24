@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useLiteMode } from "@/context/LiteModeContext";
 
@@ -26,13 +26,21 @@ export const GlyphMosaicImage: React.FC<GlyphMosaicImageProps> = ({
   priority = false,
 }) => {
   const { isLiteMode } = useLiteMode();
+  const imgRef = useRef<HTMLImageElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [mosaicChars, setMosaicChars] = useState<string[]>(getInitialMosaicChars);
 
   useEffect(() => {
-    if (isLiteMode) return;
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) {
+      setIsLoaded(true);
+    }
+  }, [src]);
 
-    // Subtle character flicker effect before image finishes loading
+  useEffect(() => {
+    if (isLiteMode || isLoaded) return;
+
+    // Subtle character flicker effect strictly before image finishes loading
     const interval = setInterval(() => {
       setMosaicChars((prev) =>
         prev.map((c) => (Math.random() > 0.7 ? GLYPH_ATLAS[Math.floor(Math.random() * GLYPH_ATLAS.length)] : c))
@@ -40,7 +48,7 @@ export const GlyphMosaicImage: React.FC<GlyphMosaicImageProps> = ({
     }, 150);
 
     return () => clearInterval(interval);
-  }, [isLiteMode]);
+  }, [isLiteMode, isLoaded]);
 
   return (
     <div className={`relative overflow-hidden rounded-2xl group-data-[gl-ready=true]:bg-transparent bg-[#090b14] ${aspectRatio} ${className}`}>
@@ -57,13 +65,17 @@ export const GlyphMosaicImage: React.FC<GlyphMosaicImageProps> = ({
 
       {/* Actual High-Res Next.js Image */}
       <Image
+        ref={imgRef}
         src={src}
         alt={alt}
         fill
         priority={priority}
+        loading={priority ? undefined : "lazy"}
+        decoding="async"
         onLoad={() => setIsLoaded(true)}
-        className={`object-cover transition-all duration-700 ease-out ${
-          isLoaded ? "opacity-100 scale-100 filter-none" : "opacity-0 scale-105 blur-md"
+        onError={() => setIsLoaded(true)}
+        className={`object-cover transition-[opacity,transform] duration-500 ease-out motion-reduce:transition-none ${
+          isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105 bg-[#140C20]"
         }`}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />

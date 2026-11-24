@@ -21,9 +21,19 @@ export const GlowingKolamField: React.FC = () => {
     let isTabActive = !document.hidden;
     const mouse = { x: -1000, y: -1000, radius: 130, active: false };
 
-    // Pause rendering when tab is hidden
+    let animationFrameId = 0;
+    let lastFrameTime = 0;
+
+    // Pause rendering when tab is hidden and resume cleanly when visible
     const handleVisibilityChange = () => {
       isTabActive = !document.hidden;
+      if (!isTabActive && animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = 0;
+      } else if (isTabActive && !animationFrameId) {
+        lastFrameTime = 0;
+        animationFrameId = requestAnimationFrame(render);
+      }
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
@@ -62,18 +72,17 @@ export const GlowingKolamField: React.FC = () => {
     window.addEventListener("resize", handleResize, { passive: true });
 
     const spacing = 52;
-    let animationFrameId: number;
-    let lastFrameTime = 0;
 
     const render = (timeMs: number) => {
+      if (!isTabActive || document.hidden) {
+        animationFrameId = 0;
+        return;
+      }
       animationFrameId = requestAnimationFrame(render);
 
       // Throttle to 60fps max to save GPU battery/overhead on 120-144Hz monitors
       if (timeMs - lastFrameTime < 16.5) return;
       lastFrameTime = timeMs;
-
-      // Only draw when tab is active
-      if (!isTabActive) return;
 
       ctx.clearRect(0, 0, width, height);
 

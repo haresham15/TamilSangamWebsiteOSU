@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import { FadeImage } from "@/components/ui/FadeImage";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -37,12 +37,12 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
             <Link href={photos[0].href} onClick={onPhotoClick} className="block group">
               {/* Sharp physical corner photo (No rounded corners, no bounding card) */}
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-surface-card-dark shadow-xl shadow-stone-900/10 border border-stone-300/40">
-                <Image
+                <FadeImage
                   src={photos[0].imageSrc}
                   alt={photos[0].alt}
                   fill
                   sizes="(max-width: 768px) 100vw, 550px"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="object-cover duration-700 group-hover:scale-105"
                 />
               </div>
 
@@ -78,12 +78,12 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
             <Link href={photos[1].href} onClick={onPhotoClick} className="block group">
               {/* Sharp physical corner photo */}
               <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-card-dark shadow-2xl shadow-stone-900/15 border border-stone-300/40">
-                <Image
+                <FadeImage
                   src={photos[1].imageSrc}
                   alt={photos[1].alt}
                   fill
                   sizes="(max-width: 768px) 100vw, 750px"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="object-cover duration-700 group-hover:scale-105"
                 />
               </div>
 
@@ -119,12 +119,12 @@ export const OrganicPhotoCollage: React.FC<OrganicPhotoCollageProps> = ({
             <Link href={photos[2].href} onClick={onPhotoClick} className="block group sm:grid sm:grid-cols-12 gap-8 items-start">
               {/* Sharp physical print */}
               <div className="sm:col-span-6 relative aspect-[4/3] w-full overflow-hidden bg-surface-card-dark shadow-xl shadow-stone-900/10 border border-stone-300/40">
-                <Image
+                <FadeImage
                   src={photos[2].imageSrc}
                   alt={photos[2].alt}
                   fill
                   sizes="(max-width: 768px) 100vw, 500px"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="object-cover duration-700 group-hover:scale-105"
                 />
               </div>
 

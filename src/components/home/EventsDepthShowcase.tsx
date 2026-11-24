@@ -1,18 +1,27 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import Image from "next/image";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, MapPin, Clock, ArrowRight } from "lucide-react";
 import { EVENTS, SangamEvent } from "@/data/events";
 import { useLocale } from "@/context/LocaleContext";
 import { useAudio } from "@/context/AudioContext";
-import { DepthCarousel, DepthCarouselItem } from "@/components/ui/DepthCarousel";
+import type { DepthCarouselItem } from "@/components/ui/DepthCarousel";
 import { CourtyardHeader } from "@/components/muttram/CourtyardHeader";
 import { DialogShell } from "@/components/ui/DialogShell";
 import { Eyebrow } from "@/components/muttram/Eyebrow";
 import { MuttramButton } from "@/components/muttram/MuttramButton";
+import { FadeImage } from "@/components/ui/FadeImage";
+
+const DepthCarousel = dynamic(
+  () => import("@/components/ui/DepthCarousel").then((m) => m.DepthCarousel),
+  {
+    ssr: false,
+    loading: () => <div className="w-full h-full rounded-2xl bg-[#140C20]/40" aria-hidden="true" />,
+  }
+);
 
 interface EventsDepthShowcaseProps {
   className?: string;
@@ -196,7 +205,7 @@ export const EventsDepthShowcase: React.FC<EventsDepthShowcaseProps> = ({ classN
       >
         {/* Modal Header Banner Image */}
         <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-bg-sangam-deep">
-          <Image
+          <FadeImage
             src={activeEvent.posterImage || activeEvent.hoverImage}
             alt={`${activeEvent.titleEn} — OSU Tamil Sangam campus event at The Ohio State University`}
             fill
