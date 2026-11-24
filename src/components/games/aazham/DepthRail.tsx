@@ -147,7 +147,7 @@ export function DepthRail({ currentDepth, roundResults }: DepthRailProps) {
             >
               {/* Luminous Diver Pointer Tag */}
               <div className="flex items-center">
-                <div className="size-2 rounded-full bg-[#5EEAD4] border border-white shadow-[0_0_8px_#5EEAD4] animate-pulse" />
+                <div className="size-2 rounded-full bg-[#5EEAD4] border border-white shadow-[0_0_8px_#5EEAD4]" />
                 <div className="w-4 h-[1.5px] bg-[#5EEAD4]" />
               </div>
             </motion.div>

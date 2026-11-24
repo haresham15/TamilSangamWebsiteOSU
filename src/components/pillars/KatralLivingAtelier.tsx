@@ -211,7 +211,7 @@ export function KatralLivingAtelier() {
                     aria-label={`Listen to ${phrase.transliteration} pronunciation`}
                     title="Listen to audio pronunciation"
                   >
-                    <Volume2 className={`w-4 h-4 ${isAudioPlaying ? "animate-pulse text-[#2BB5A8]" : ""}`} />
+                    <Volume2 className={`w-4 h-4 ${isAudioPlaying ? "text-[#2BB5A8]" : ""}`} />
                   </button>
                 </div>
 

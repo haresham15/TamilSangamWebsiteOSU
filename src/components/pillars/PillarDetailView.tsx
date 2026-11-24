@@ -124,7 +124,7 @@ export function PillarDetailView({ pillar }: PillarDetailViewProps) {
               className="inline-flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-full bg-[#271A3C] hover:bg-[#352254] border border-[#C79347]/30 text-[#2BB5A8] transition-all hover:scale-105 active:scale-95"
               title={`Play ${pillar.ragaNote} frequency`}
             >
-              <Volume2 className="w-3.5 h-3.5 animate-pulse" />
+              <Volume2 className="w-3.5 h-3.5" />
               <span>Raga Mohanam: {pillar.ragaNote}</span>
             </button>
           </div>

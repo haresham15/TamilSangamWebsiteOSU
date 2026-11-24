@@ -241,10 +241,10 @@ export function SuggestionsClient() {
           <button
             type="button"
             onClick={scrollToForm}
-            className="flex items-center gap-2.5 whitespace-nowrap min-h-12 px-6 py-2.5 rounded-full border border-accent-zari bg-bg-sangam-deep/70 text-accent-zari font-sans text-xs font-semibold uppercase tracking-[0.14em] shadow-lg backdrop-blur-md transition-colors hover:bg-accent-zari/10 hover:text-ink-alabaster focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark focus-visible:ring-offset-2 focus-visible:ring-offset-bg-sangam-deep cursor-pointer"
+            className="group flex items-center gap-2.5 whitespace-nowrap min-h-12 px-6 py-2.5 rounded-full border border-accent-zari bg-bg-sangam-deep/70 text-accent-zari font-sans text-xs font-semibold uppercase tracking-[0.14em] shadow-lg backdrop-blur-md transition-colors hover:bg-accent-zari/10 hover:text-ink-alabaster focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal-dark focus-visible:ring-offset-2 focus-visible:ring-offset-bg-sangam-deep cursor-pointer"
           >
             <span>Dispatch suggestion</span>
-            <ArrowDown className="w-3.5 h-3.5 motion-safe:animate-bounce" aria-hidden="true" />
+            <ArrowDown className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-y-0.5" aria-hidden="true" />
           </button>
         </div>
       </HeroScrollStage>

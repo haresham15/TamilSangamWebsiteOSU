@@ -186,7 +186,6 @@ export function CinematicBootCurtain() {
                       cy={p.y}
                       r={p.r + 3.0}
                       fill="rgba(199, 147, 71, 0.28)"
-                      className="kolam-bindu-glow"
                     />
                     <circle cx={p.x} cy={p.y} r={p.r} fill="#C79347" />
                   </>
@@ -197,7 +196,6 @@ export function CinematicBootCurtain() {
                       cy={p.y}
                       r={p.r + 2.0}
                       fill="rgba(43, 181, 168, 0.22)"
-                      className="kolam-bindu-glow"
                     />
                     <circle cx={p.x} cy={p.y} r={p.r} fill="#2BB5A8" />
                   </>
@@ -267,10 +265,10 @@ export function CinematicBootCurtain() {
           </span>
         </div>
 
-        {/* Pure Ceremonial Breathing Status */}
+        {/* Pure Ceremonial Static Status Marker */}
         <div className="mt-4 flex items-center justify-center gap-2 font-mono text-[11px] tracking-widest text-[#CBBBA8]/80">
           <span
-            className="inline-block w-2 h-2 rounded-full bg-[#2BB5A8] shadow-[0_0_10px_#2BB5A8] animate-pulse"
+            className="inline-block w-2 h-2 rounded-full bg-[#2BB5A8] shadow-[0_0_8px_rgba(43,181,168,0.5)]"
             aria-hidden="true"
           />
           <span className="uppercase text-[#2BB5A8] tracking-[0.2em] font-medium">

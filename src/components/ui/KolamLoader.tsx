@@ -179,7 +179,6 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
                     cy={p.y}
                     r={p.r + 2.5}
                     fill="rgba(199, 147, 71, 0.25)"
-                    className={reducedMotion ? "" : "animate-pulse"}
                   />
                   <circle cx={p.x} cy={p.y} r={p.r} fill="#C79347" />
                 </>
@@ -190,7 +189,6 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
                     cy={p.y}
                     r={p.r + 1.8}
                     fill="rgba(43, 181, 168, 0.2)"
-                    className={reducedMotion ? "" : "animate-pulse"}
                   />
                   <circle cx={p.x} cy={p.y} r={p.r} fill="#2BB5A8" />
                 </>
@@ -261,12 +259,10 @@ export const KolamLoader: React.FC<KolamLoaderProps> = ({
         </span>
       </div>
 
-            {/* 3. Pure Ceremonial Breathing Status (Zero artificial progress bars or percentages) */}
+      {/* 3. Pure Ceremonial Status Marker */}
       <div className="mt-4 flex items-center justify-center gap-2 font-mono text-[11px] tracking-widest text-[#CBBBA8]/75">
         <span
-          className={`inline-block w-1.5 h-1.5 rounded-full bg-[#2BB5A8] shadow-[0_0_8px_#2BB5A8] ${
-            reducedMotion ? "" : "animate-pulse"
-          }`}
+          className="inline-block w-1.5 h-1.5 rounded-full bg-[#2BB5A8] shadow-[0_0_6px_rgba(43,181,168,0.4)]"
           aria-hidden="true"
         />
         <span className="uppercase text-[#2BB5A8] tracking-[0.18em] font-medium">

@@ -104,7 +104,7 @@ export function AazhamLivingCanvas({
       {/* Water Column Depth Metric Bar (Sticky Top) */}
       <div className="relative z-20 flex items-center justify-between px-5 py-3 border-b border-[rgba(125,96,166,0.25)] bg-[#140C20]/60 backdrop-blur-md text-xs font-mono">
         <div className="flex items-center gap-2">
-          <span className="size-2 rounded-full bg-[#A6F0CF] animate-ping" />
+          <span className="size-2 rounded-full bg-[#A6F0CF]" />
           <span className="font-bold text-[#A6F0CF]">
             {depthZone.nameEn}
           </span>

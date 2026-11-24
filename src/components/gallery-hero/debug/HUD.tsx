@@ -138,7 +138,7 @@ export function DebugHUD() {
       </div>
 
       {landmarkNote && (
-        <div className="text-[10px] text-[#55CCA2] bg-[#162a22] border border-[#55CCA2]/40 px-2 py-1 font-bold animate-pulse">
+        <div className="text-[10px] text-[#55CCA2] bg-[#162a22] border border-[#55CCA2]/40 px-2 py-1 font-bold">
           {landmarkNote}
         </div>
       )}

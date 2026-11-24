@@ -267,7 +267,7 @@ export function EventsSceneCanvas() {
       {/* 2. Bottom HUD Status & Navigation Controls */}
       <div className="absolute bottom-6 sm:bottom-8 left-4 right-4 sm:left-8 sm:right-8 z-20 flex items-center justify-between pointer-events-auto max-w-6xl mx-auto">
         <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#0C0704]/90 border border-[#B8460E]/60 text-[11px] font-mono text-[#FFD37A] backdrop-blur-md shadow-[4px_4px_0px_#050302]">
-          <span className="w-2 h-2 rounded-full bg-[#FF9A3C] animate-ping" />
+          <span className="w-2 h-2 rounded-full bg-[#FF9A3C]" />
           <span>
             {locale === "ta"
               ? "கீழே உருட்டி மேடையைக் காண்க"

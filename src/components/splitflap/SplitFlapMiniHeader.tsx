@@ -99,7 +99,7 @@ export function SplitFlapMiniHeader({ onSearchFocus }: SplitFlapMiniHeaderProps)
                   key={i}
                   className={`relative w-3.5 h-6 sm:w-4 sm:h-7 bg-[#140f0b] border border-[#261d15] flex flex-col items-center justify-center text-[#fbf7ee] font-mono text-[10px] sm:text-xs font-bold select-none overflow-hidden ${
                     i >= 18 ? "hidden md:flex" : ""
-                  } ${isCellFlipping ? "animate-pulse border-[#C79347]/35" : ""}`}
+                  } ${isCellFlipping ? "border-[#C79347]/50" : ""}`}
                 >
                   {/* Top Half */}
                   <span className="leading-none text-center">

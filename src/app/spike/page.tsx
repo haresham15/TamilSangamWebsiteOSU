@@ -561,7 +561,7 @@ export default function SpikePage() {
       >
         <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-2 mb-3">
           <span className="font-bold text-[var(--sangam-gold)] uppercase tracking-wider flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-green-400" />
             Master Clock HUD
           </span>
           <span className="text-[10px] text-[var(--text-muted)]">One Canvas / One Clock</span>

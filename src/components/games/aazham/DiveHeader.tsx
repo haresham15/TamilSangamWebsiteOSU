@@ -82,7 +82,7 @@ export function DiveHeader({
         <div className="flex flex-col min-w-0 leading-tight">
           <div className="flex items-center gap-2">
             <span
-              className="size-1.5 rounded-full shrink-0 animate-pulse"
+              className="size-1.5 rounded-full shrink-0"
               style={{ backgroundColor: zone.accent }}
             />
             <span className="font-bold text-white tracking-wider truncate">
@@ -131,7 +131,7 @@ export function DiveHeader({
             >
               <div
                 className={`size-2.5 sm:size-3 rounded-full border transition-all duration-300 ${dotBg} ${dotBorder} ${
-                  isCurrent ? "ring-2 ring-white/60 animate-pulse scale-110" : ""
+                  isCurrent ? "ring-2 ring-white/60 scale-110" : ""
                 }`}
               />
             </div>

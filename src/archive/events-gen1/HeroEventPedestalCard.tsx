@@ -143,7 +143,7 @@ export function HeroEventPedestalCard({
           {/* Eyebrow Header Lockup */}
           <div className="flex items-center justify-between border-b border-[#2d2f3d] pb-3 mb-5">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#1a140d] border border-[#F59E0B]/60 text-[#F59E0B] text-xs font-mono font-bold tracking-widest uppercase">
-              <Flame className="w-3.5 h-3.5 text-[#F59E0B] animate-pulse" />
+              <Flame className="w-3.5 h-3.5 text-[#F59E0B]" />
               <span>{locale === "ta" ? "சிறப்பு நிகழ்வு அரங்கம்" : "FLAGSHIP ARENA EVENT"}</span>
             </div>
             <span className="text-xs font-mono text-amber-300/80">

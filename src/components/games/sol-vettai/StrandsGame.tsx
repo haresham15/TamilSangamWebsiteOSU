@@ -271,7 +271,7 @@ export function StrandsGame() {
         {/* Current Traced Word Display */}
         <div className="h-8 flex items-center justify-center mb-2">
           {selectedCells.length > 0 && (
-            <span className="text-xl font-mono font-bold tracking-wider text-[#A6F0CF] animate-pulse">
+            <span className="text-xl font-mono font-bold tracking-wider text-[#A6F0CF]">
               {selectedCells.map((p) => puzzle.grid[p.r][p.c]).join("")}
             </span>
           )}
@@ -331,7 +331,7 @@ export function StrandsGame() {
                     "bg-[#A6F0CF] text-[#140C20] font-bold border-[#34D399] scale-95 shadow-[0_0_10px_#A6F0CF]";
                 } else if (isHinted) {
                   tileStyle =
-                    "bg-[#341F50] text-[#E5B869] border-[#E5B869] animate-pulse";
+                    "bg-[#341F50] text-[#E5B869] border-[#E5B869] ring-2 ring-[#E5B869]/50";
                 }
 
                 return (

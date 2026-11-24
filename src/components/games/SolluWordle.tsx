@@ -678,7 +678,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
             {/* Celebratory Sparkle Particles Effect */}
             {gameStatus === "won" && (
               <div className="absolute top-0 right-0 p-3 pointer-events-none opacity-40">
-                <Sparkles className="size-16 text-[#C79347] animate-pulse" />
+                <Sparkles className="size-16 text-[#C79347]" />
               </div>
             )}
 
@@ -719,7 +719,7 @@ export function SolluWordle({ editionKey, onSolved }: SolluWordleProps) {
                   }`}
                   title="Listen to Tamil pronunciation"
                 >
-                  <Volume2 className={`size-3.5 ${isPlayingAudio ? "animate-pulse" : ""}`} />
+                  <Volume2 className={`size-3.5 ${isPlayingAudio ? "text-[#FAF5ED]" : ""}`} />
                   <span>{isPlayingAudio ? "ஒலிக்கிறது..." : "ஒலி வடிவம் · Listen"}</span>
                 </button>
               )}

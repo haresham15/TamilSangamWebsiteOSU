@@ -243,7 +243,7 @@ export function EventsArenaCanvas() {
       <div className="absolute bottom-6 sm:bottom-8 left-4 right-20 sm:left-8 sm:right-52 z-20 flex items-center justify-between pointer-events-auto">
         {/* Left Status Pill */}
         <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#0e0703]/90 border border-[#92400e]/70 text-[11px] font-mono text-amber-300/90 backdrop-blur-md shadow-[4px_4px_0px_#080402]">
-          <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-ping" />
+          <span className="w-2 h-2 rounded-full bg-[#F59E0B]" />
           <span>
             {locale === "ta"
               ? "கீழே உருட்டவும் · கதாநாயகனைத் தொடவும்"

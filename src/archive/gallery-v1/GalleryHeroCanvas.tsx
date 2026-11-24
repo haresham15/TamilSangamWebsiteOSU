@@ -243,7 +243,7 @@ export function GalleryHeroCanvas({ onFinaleComplete }: GalleryHeroCanvasProps) 
         {/* ========================================================================= */}
         <div className="relative z-20 w-full px-4 sm:px-8 py-4 bg-gradient-to-t from-[#1F0A05]/90 via-[#1F0A05]/50 to-transparent flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-[#FFE0A8]">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-none bg-[#FFE0A8] animate-ping" />
+            <span className="w-2 h-2 rounded-none bg-[#FFE0A8]" />
             <span className="tracking-widest uppercase text-[11px]">
               6 STRINGS · HARMONIC RESONANCE · 8 POLAROID MEMORIES
             </span>

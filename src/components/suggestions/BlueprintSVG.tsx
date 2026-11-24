@@ -373,7 +373,6 @@ export function BlueprintSVG({
                 r="18"
                 fill="#55CCA2"
                 fillOpacity={isActive ? "0.3" : "0.12"}
-                className={isActive ? "animate-ping" : ""}
               />
               <circle
                 cx={pin.x}

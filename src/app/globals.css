@@ -930,17 +930,6 @@ body {
   }
 }
 
-@keyframes binduPulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.85;
-  }
-  50% {
-    transform: scale(1.3);
-    opacity: 1;
-  }
-}
-
 .kolam-weave-flow {
   stroke-dasharray: 45 55;
   stroke-dashoffset: 0;
@@ -952,11 +941,6 @@ body {
   transform-origin: 60px 60px;
   animation: kolamBreathing 3.6s ease-in-out infinite;
   will-change: transform, filter;
-}
-
-.kolam-bindu-glow {
-  transform-origin: center;
-  animation: binduPulse 2.2s ease-in-out infinite;
 }
 
 @keyframes hairlineShimmer {

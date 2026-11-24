@@ -82,9 +82,7 @@ export function AazhamPressureGauge({
 
       {/* Center Counter */}
       <div
-        className={`absolute inset-0 flex flex-col items-center justify-center font-mono ${textColor} ${
-          pulse ? "animate-pulse" : ""
-        }`}
+        className={`absolute inset-0 flex flex-col items-center justify-center font-mono ${textColor}`}
       >
         <div className="flex items-center text-xs font-bold leading-none">
           <span>{timeLeft}</span>

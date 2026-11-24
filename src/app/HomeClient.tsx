@@ -579,7 +579,7 @@ export function HomeClient() {
                   <Link
                     href="/join"
                     onClick={playClick}
-                    className="group inline-flex items-center gap-3 px-7 py-3.5 bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] font-mono text-xs sm:text-sm font-bold uppercase tracking-wider rounded-full shadow-[0_4px_24px_rgba(15,118,110,0.35)] hover:shadow-[0_8px_32px_rgba(15,118,110,0.5)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border border-[#2BB5A8]/30"
+                    className="group inline-flex items-center gap-3 px-7 py-3.5 bg-[#0F766E] hover:bg-[#0B5C56] text-[#FAF5ED] font-mono text-xs sm:text-sm font-bold uppercase tracking-wider rounded-full shadow-[0_4px_24px_rgba(15,118,110,0.35)] hover:shadow-[0_8px_32px_rgba(15,118,110,0.5)] transition-[background-color,border-color,box-shadow,transform] duration-200 hover:scale-[1.02] active:scale-[0.98] border border-[#2BB5A8]/30"
                   >
                     <span>Join the Hearth</span>
                     <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>

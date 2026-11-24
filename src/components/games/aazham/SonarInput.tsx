@@ -114,9 +114,7 @@ export function SonarInput({
             REMAINING:
           </span>
           <span
-            className={`font-bold tabular-nums tracking-wider text-sm ${timerState.textColor} ${
-              timerState.isUrgent ? "animate-pulse" : ""
-            }`}
+            className={`font-bold tabular-nums tracking-wider text-sm ${timerState.textColor}`}
             style={{
               textShadow: `0 0 8px ${timerState.glow}`,
             }}

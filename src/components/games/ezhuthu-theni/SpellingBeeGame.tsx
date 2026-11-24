@@ -252,13 +252,13 @@ export function SpellingBeeGame() {
                 {ch}
               </span>
             ))}
-            <span className="animate-pulse text-[#A6F0CF]">_</span>
+            <span className="text-[#A6F0CF]">_</span>
           </span>
         </div>
 
         {/* Error notification */}
         {errorMessage && (
-          <div className="mb-3 px-3 py-1 rounded-full bg-red-950/80 border border-red-500/50 text-red-200 text-xs font-mono flex items-center gap-1.5 animate-pulse">
+          <div className="mb-3 px-3 py-1 rounded-full bg-red-950/80 border border-red-500/50 text-red-200 text-xs font-mono flex items-center gap-1.5">
             <AlertCircle className="w-3.5 h-3.5" />
             {errorMessage}
           </div>

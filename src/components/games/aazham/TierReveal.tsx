@@ -85,7 +85,7 @@ export function TierReveal({ result, sampleAnswers }: TierRevealProps) {
 
           {/* Plunge Status Line */}
           <div className="mt-3.5 flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-[#5EEAD4]/80">
-            <span className="inline-block size-1.5 rounded-full bg-[#5EEAD4] animate-ping" />
+            <span className="inline-block size-1.5 rounded-full bg-[#5EEAD4]" />
             <span>Sinking {tierMeta.depthMeters} meters deeper into the trench...</span>
           </div>
         </>

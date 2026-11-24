@@ -205,7 +205,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
       <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div className="space-y-3.5">
           <div className="inline-flex items-center gap-2.5 rounded-full border border-[#D4A36A]/35 bg-[#25173B]/90 px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-widest text-[#D4A36A] shadow-sm backdrop-blur-md">
-            <span className="flex h-1.5 w-1.5 rounded-full bg-[#D4A36A] animate-pulse" aria-hidden="true" />
+            <span className="flex h-1.5 w-1.5 rounded-full bg-[#D4A36A]" aria-hidden="true" />
             <span>GOOGLE PHOTOS VAULTS</span>
             <span className="text-[#D4A36A]/40">❖</span>
             <span lang="ta" className="font-tamil font-normal tracking-normal text-[#D4A36A]">
@@ -372,7 +372,7 @@ export function PhotoVaultArchive({ className = "", id = "google-photos-vaults" 
                         </span>
                         {isLatest && (
                           <span className="ml-3 inline-flex items-center gap-1 rounded-sm border border-[#D4A36A] bg-[#D4A36A]/20 px-2 py-0.5 font-mono text-[10px] font-bold tracking-widest uppercase text-[#D4A36A] shadow-[0_0_12px_rgba(212,163,106,0.3)]">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#D4A36A] animate-pulse" />
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#D4A36A]" />
                             <span>LATEST</span>
                           </span>
                         )}
