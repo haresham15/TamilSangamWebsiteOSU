@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -37,7 +36,6 @@ import { Eyebrow } from "@/components/muttram/Eyebrow";
 import { EventJsonLd } from "@/components/seo/JsonLd";
 import { useTamilSpeech } from "@/lib/tamilSpeech";
 import { ThirukkuralAudioButton, PronounceableQuote } from "@/components/ui/PronounceableQuote";
-import { useDeviceTilt } from "@/hooks/useDeviceTilt";
 
 interface LivingPillar {
   id: string;
@@ -96,14 +94,6 @@ const LIVING_PILLARS: LivingPillar[] = [
 
 export function HomeClient() {
   const { playClick } = useAudio();
-  const [activePillar, setActivePillar] = useState(0);
-  const {
-    rotateX: pillarRotateX,
-    rotateY: pillarRotateY,
-    onPointerMove: onPillarPointerMove,
-    onPointerLeave: onPillarPointerLeave,
-    containerRef: pillarFrameRef,
-  } = useDeviceTilt({ maxTilt: 6, stiffness: 140, damping: 22 });
   const { isLiteMode } = useLiteMode();
   const tier = useTier();
   const reducedMotion = useReducedMotion();
@@ -597,130 +587,46 @@ export function HomeClient() {
                 </div>
               </div>
 
-              {/* Beat 2: The Living Pillars — Interactive Preview Stage (Middle 40%) */}
-              <div className="relative z-10 mt-20 sm:mt-28 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-                  {/* Left (7 Cols / 55% width): The 3 Pillars */}
-                  <div className="lg:col-span-7 flex flex-col divide-y divide-[#C79347]/20 border-y border-[#C79347]/20">
-                    {LIVING_PILLARS.map((pillar, idx) => {
-                      const isActive = activePillar === idx;
-                      return (
-                        <Link
-                          key={pillar.id}
-                          href={pillar.href}
-                          onClick={playClick}
-                          onMouseEnter={() => {
-                            setActivePillar(idx);
-                            audioLayer.playTapeClack();
-                          }}
-                          onFocus={() => setActivePillar(idx)}
-                          className={`group block py-8 sm:py-10 px-4 sm:px-6 transition-[background-color,transform] duration-300 rounded-xl ${
-                            isActive ? "bg-[#271A3C]/40" : "hover:bg-[#271A3C]/25"
-                          }`}
-                        >
-                          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
-                            <div className="flex items-start gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
-                              <span
-                                className={`font-space-mono text-sm sm:text-base font-semibold transition-colors duration-300 ${
-                                  isActive ? "text-[#2BB5A8]" : "text-[#C79347]"
-                                }`}
-                              >
-                                {pillar.num} ·
-                              </span>
-                              <div>
-                                <div className="flex items-baseline gap-3 flex-wrap">
-                                  <h3
-                                    className={`font-serif text-2xl sm:text-3xl font-medium tracking-tight transition-colors duration-300 ${
-                                      isActive ? "text-[#C79347]" : "text-[#FAF5ED] group-hover:text-[#C79347]"
-                                    }`}
-                                  >
-                                    {pillar.title}
-                                  </h3>
-                                  <span lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-sm text-[#C79347]/80">
-                                    {pillar.tamilSubtitle}
-                                  </span>
-                                </div>
-                                <p className="mt-2 font-body text-xs sm:text-sm text-[#CBBBA8] leading-relaxed max-w-xl">
-                                  {pillar.description}
-                                </p>
-                              </div>
-                            </div>
-
-                            <div className="mt-2 sm:mt-0 flex items-center gap-1.5 font-space-mono text-xs text-[#FAF5ED]/50 group-hover:text-[#2BB5A8] transition-colors shrink-0 self-end sm:self-center">
-                              <span className="hidden sm:inline">Explore</span>
-                              <span className="text-sm font-mono transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                                ↗
-                              </span>
-                            </div>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-
-                  {/* Right (5 Cols / 45% width): 4:5 Portrait Cinematic Preview Frame */}
-                  <div className="lg:col-span-5 flex justify-center">
-                    <motion.div
-                      ref={pillarFrameRef}
-                      onPointerMove={onPillarPointerMove}
-                      onPointerLeave={onPillarPointerLeave}
-                      style={{
-                        rotateX: pillarRotateX,
-                        rotateY: pillarRotateY,
-                        transformPerspective: 900,
-                        transformStyle: "preserve-3d",
-                      }}
-                      className="relative w-full max-w-md aspect-[4/5] rounded-2xl overflow-hidden bg-[#150D22] border border-[#C79347]/25 shadow-[0_24px_60px_rgba(0,0,0,0.65),0_0_40px_rgba(199,147,71,0.08)] transform-gpu"
+              {/* Beat 2: The Living Pillars — Interactive Showcase */}
+              <div className="relative z-10 mt-20 sm:mt-28 w-full max-w-5xl mx-auto px-6 sm:px-10 lg:px-12">
+                <div className="flex flex-col divide-y divide-[#C79347]/20 border-y border-[#C79347]/20">
+                  {LIVING_PILLARS.map((pillar) => (
+                    <Link
+                      key={pillar.id}
+                      href={pillar.href}
+                      onClick={playClick}
+                      onMouseEnter={() => audioLayer.playTapeClack()}
+                      className="group block py-8 sm:py-10 px-4 sm:px-6 transition-[background-color,transform] duration-300 rounded-xl hover:bg-[#271A3C]/35 focus-visible:bg-[#271A3C]/35"
                     >
-                      {/* Layered Crossfading Images */}
-                      {LIVING_PILLARS.map((pillar, idx) => (
-                        <div
-                          key={pillar.id}
-                          className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
-                            activePillar === idx ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
-                          }`}
-                        >
-                          <Image
-                            src={pillar.image}
-                            alt={pillar.imageAlt}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 100vw, 440px"
-                            priority={idx === 0}
-                            loading={idx === 0 ? "eager" : "lazy"}
-                            decoding="async"
-                          />
+                      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
+                        <div className="flex items-start gap-5 transition-transform duration-300 ease-out group-hover:translate-x-3">
+                          <span className="font-space-mono text-sm sm:text-base font-semibold text-[#C79347] group-hover:text-[#2BB5A8] transition-colors duration-300">
+                            {pillar.num} ·
+                          </span>
+                          <div>
+                            <div className="flex items-baseline gap-3 flex-wrap">
+                              <h3 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-[#FAF5ED] group-hover:text-[#C79347] transition-colors duration-300">
+                                {pillar.title}
+                              </h3>
+                              <span lang="ta" style={{ letterSpacing: 0 }} className="font-tamil text-sm text-[#C79347]/80">
+                                {pillar.tamilSubtitle}
+                              </span>
+                            </div>
+                            <p className="mt-2 font-body text-xs sm:text-sm text-[#CBBBA8] leading-relaxed max-w-2xl">
+                              {pillar.description}
+                            </p>
+                          </div>
                         </div>
-                      ))}
 
-                      {/* Soft Vignette Gradients */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#1C122B] via-[#1C122B]/35 to-transparent pointer-events-none" />
-                      <div className="absolute inset-0 bg-gradient-to-b from-[#1C122B]/40 via-transparent to-transparent pointer-events-none" />
-
-                      {/* Top Active Category Badge */}
-                      <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1C122B]/85 backdrop-blur-md border border-[#C79347]/30 text-[10px] font-mono tracking-widest uppercase text-[#C79347]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#2BB5A8] animate-pulse" />
-                        {LIVING_PILLARS[activePillar].badge}
+                        <div className="mt-2 sm:mt-0 flex items-center gap-1.5 font-space-mono text-xs text-[#FAF5ED]/50 group-hover:text-[#2BB5A8] transition-colors shrink-0 self-end sm:self-center">
+                          <span className="hidden sm:inline">Explore</span>
+                          <span className="text-sm font-mono transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                            ↗
+                          </span>
+                        </div>
                       </div>
-
-                      {/* Bottom Text in Preview Frame */}
-                      <div className="absolute bottom-6 left-6 right-6 z-10 space-y-1">
-                        <span
-                          lang="ta"
-                          style={{ letterSpacing: 0 }}
-                          className="font-tamil text-xl sm:text-2xl text-[#C79347] font-medium block drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
-                        >
-                          {LIVING_PILLARS[activePillar].tamilSubtitle}
-                        </span>
-                        <p className="font-serif text-base sm:text-lg text-[#FAF5ED] font-medium leading-snug drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                          {LIVING_PILLARS[activePillar].title}
-                        </p>
-                        <p className="text-xs font-mono text-[#2BB5A8] tracking-wider uppercase pt-1 font-semibold">
-                          {LIVING_PILLARS[activePillar].actionLabel}
-                        </p>
-                      </div>
-                    </motion.div>
-                  </div>
+                    </Link>
+                  ))}
                 </div>
               </div>
 
